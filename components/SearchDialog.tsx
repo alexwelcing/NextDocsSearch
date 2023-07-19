@@ -152,6 +152,17 @@ export function SearchDialog() {
                 >
                   What are embeddings?
                 </button>
+                <button
+                  type="button"
+                  className="px-1.5 py-0.5
+                  bg-slate-50 dark:bg-gray-500
+                  hover:bg-slate-100 dark:hover:bg-gray-600 space-x-2
+                  rounded border border-slate-200 dark:border-slate-600
+                  transition-colors"
+                  onClick={(_) => setQuery('Who is Alex Welcing?')}
+                >
+                  Who is Alex?
+                </button>
               </div>
             </div>
             <DialogFooter>
