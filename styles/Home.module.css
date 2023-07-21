@@ -1,10 +1,15 @@
 .main {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 6rem;
-  min-height: 100vh;
+  z-index: 2;
+  position: absolute;
 }
 
 .description {
@@ -14,7 +19,7 @@
   font-size: 0.85rem;
   max-width: var(--max-width);
   width: 100%;
-  z-index: 2;
+  z-index: -1;
   font-family: var(--font-mono);
 }
 
@@ -45,6 +50,17 @@
   width: var(--max-width);
   max-width: 100%;
 }
+
+.footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: .5rem 0;
+  z-index: 2; /* ensure it's above the 360° view */
+  background: rgba(5, 5, 5, 0.4);
+}
+
 
 .card {
   padding: 1rem 1.2rem;
@@ -78,6 +94,8 @@
   align-items: center;
   position: relative;
   padding: 4rem 0;
+  background: rgba(5, 5, 5, 0.7);
+  border-radius: 10px;
 }
 
 .center::before {
@@ -237,12 +255,11 @@
 
   .description div {
     align-items: flex-end;
-    pointer-events: none;
     inset: auto 0 0;
     padding: 2rem;
     height: 200px;
     background: linear-gradient(to bottom, transparent 0%, rgb(var(--background-end-rgb)) 40%);
-    z-index: 1;
+    z-index: -1;
   }
 }
 
