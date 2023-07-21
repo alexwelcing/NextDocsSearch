@@ -119,9 +119,9 @@ return (
       <Dialog open={open}>
         <DialogContent className="sm:max-w-[850px] text-black">
           <DialogHeader>
-            <DialogTitle>OpenAI powered doc search</DialogTitle>
+            <DialogTitle>Want to know Alex?</DialogTitle>
             <DialogDescription>
-              Build your own ChatGPT style search with Next.js, OpenAI & Supabase.
+              Explore my career with Next.js, OpenAI & Supabase.
             </DialogDescription>
             <hr />
             <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
@@ -151,7 +151,7 @@ return (
                     <Frown width={18} />
                   </span>
                   <span className="text-slate-700 dark:text-slate-100">
-                    Sad news, the search has failed! Please try again.
+                    Ah, sorry. Maintenance mode at the moment, come back later.
                   </span>
                 </div>
               )}
@@ -167,7 +167,7 @@ return (
 
               <div className="relative">
                 <Input
-                  placeholder="Ask a question..."
+                  placeholder="What would you want to know?"
                   name="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
