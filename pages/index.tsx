@@ -23,7 +23,7 @@ export default function Home() {
         <section className="w-full text-center">
 
           <div className="py-1 w-full flex items-center justify-center space-x-6">
-          <SearchDialog />
+            <SearchDialog />
 
             <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
               <Link href="https://github.com/alexwelcing" className="flex items-center justify-center">
@@ -35,9 +35,23 @@ export default function Home() {
                 <Image src={'/twitter.svg'} width="35" height="35" alt="Twitter logo" />
               </Link>
             </div>
+            <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
+              <Link href="https://linkedin.com/in/alexwelcing" className="flex items-center justify-center">
+              <p className="text-base mr-2">Alex on LinkedIn</p>
 
+                <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="Supabase logo" />
+              </Link>
+            </div>
+
+            <div className="w-half flex items-center justify-center absolute right-6 space-x-6">
+              <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
+                <Link href="https://supabase.com" className="flex items-center justify-center">
+                  <p className="text-base mr-2">Supabase</p>
+                  <Image src={'/supabase.svg'} width="35" height="35" alt="Supabase logo" />
+                </Link>
+              </div>
+            </div>
           </div>
-
         </section>
       </footer>
     </>
