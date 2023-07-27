@@ -10,3 +10,10 @@ export const pageview = (url: string) => {
         page_path: url,
     });
 }
+
+// New function to handle custom events
+export const trackEvent = (eventName: string, params: object = {}) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', eventName, params);
+    }
+}

@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { useCompletion } from 'ai/react'
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
+import { trackEvent } from '../lib/google-analytics'
 
 
 type QuestionKey = 'root' | 'A' | 'B';
@@ -39,6 +40,18 @@ const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
     H: "Will he come into an office?"
   }
 };
+
+// Utility function to send events to Google Analytics
+const sendGAEvent = (action: string, label: string | undefined = undefined) => {
+  // Checking if the `gtag` function exists (it should if you've integrated GA)
+  if (typeof window !== 'undefined' && typeof window.gtag !== 'undefined') {
+    // Bypassing TypeScript's type checking for this specific call
+    (window.gtag as any)('event', action, {
+      event_category: 'Chat Interaction',
+      event_label: label,
+    });
+  }
+}
 
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false);
@@ -70,6 +83,7 @@ export function SearchDialog() {
   function handleModalToggle() {
     setOpen(!open);
     setQuery('');
+    sendGAEvent('chat_opened');
   }
 
   function setQuestionsBasedOnSelection(selectedKey: string) {
@@ -90,12 +104,16 @@ export function SearchDialog() {
 const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
   e.preventDefault();
   complete(query);
+  trackEvent('question_submitted', { question_text: query });
 };
 
 return (
   <>
     <button
-      onClick={() => setOpen(true)}
+  onClick={() => {
+    setOpen(true);
+    trackEvent('chat_button_clicked', {});
+  }}
       className="text-base flex gap-2 items-center px-4 py-2 z-50 relative
       text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
       transition-colors
