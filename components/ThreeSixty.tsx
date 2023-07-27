@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import * as TWEEN from '@tweenjs/tween.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { X } from 'lucide-react';
@@ -10,23 +11,28 @@ const ThreeSixtyView: React.FC = () => {
     const [currentImage, setCurrentImage] = useState('/start.jpg');
     const mainSphereRef = useRef<THREE.Mesh | null>(null);
 
-    const updateSphereTexture = useCallback((url: string) => {
-        const sphere = mainSphereRef.current;
-        if (!sphere) return;
+    const updateTexture = useCallback((url: string) => {
+        const object = mainSphereRef.current;
+        if (!object) return;
 
-        const textureLoader = new THREE.TextureLoader().setPath('/path-to-your-assets-folder-if-any/');  // Add path if necessary
+        const textureLoader = new THREE.TextureLoader().setPath('./');
         textureLoader.load(url, (newTexture) => {
+            newTexture.generateMipmaps = false;  // Disable mipmaps
+            newTexture.minFilter = THREE.LinearFilter;  // Set minFilter to LinearFilter
             const setTextureToMaterial = (mat: THREE.Material) => {
                 if (mat instanceof THREE.MeshBasicMaterial) {
+                    if (mat.map) {
+                        mat.map.dispose();  // Dispose of the old texture
+                    }
                     mat.map = newTexture;
                     mat.needsUpdate = true;
                 }
             }
 
-            if (Array.isArray(sphere.material)) {
-                sphere.material.forEach(setTextureToMaterial);
+            if (Array.isArray(object.material)) {
+                object.material.forEach(setTextureToMaterial);
             } else {
-                setTextureToMaterial(sphere.material);
+                setTextureToMaterial(object.material);
             }
         });
     }, []);
@@ -47,8 +53,6 @@ const ThreeSixtyView: React.FC = () => {
         const geometry = new THREE.SphereGeometry(500, 60, 40);
         geometry.scale(-1, 1, 1);
 
-        updateSphereTexture(currentImage);  // Set the initial texture
-
         const material = new THREE.MeshBasicMaterial({
             map: new THREE.TextureLoader().load(currentImage),
         });
@@ -56,6 +60,8 @@ const ThreeSixtyView: React.FC = () => {
         const sphere = new THREE.Mesh(geometry, material);
         mainSphereRef.current = sphere;  // Link the ref to our sphere
         scene.add(sphere);
+
+        updateTexture(currentImage);  // Set the initial texture
 
         // Adjust the interactiveSphere
         const interactiveSphereGeometry = new THREE.SphereGeometry(1, 32, 32);
@@ -116,15 +122,15 @@ const ThreeSixtyView: React.FC = () => {
             window.removeEventListener('resize', handleResize);
             renderer.dispose();
         };
-    }, [currentImage, updateSphereTexture]); // Dependency array updated
+    }, [currentImage, updateTexture]); // Dependency array updated
 
     useEffect(() => {
-        updateSphereTexture(currentImage);
-    }, [currentImage, updateSphereTexture]);
+        updateTexture(currentImage);
+    }, [currentImage, updateTexture]);
 
     return (
         <div ref={mountRef} style={{ width: '100%', height: '100vh' }}>
-            <button onClick={() => setModalOpen(true)} className="...">Change Theme</button>
+            <button onClick={() => setModalOpen(true)} className="..."></button>
             {isModalOpen && (
                 <Dialog open={isModalOpen}>
                     <DialogContent className="sm:max-w-[850px] text-black">
@@ -138,24 +144,24 @@ const ThreeSixtyView: React.FC = () => {
                                 <X />
                             </button>
                         </DialogHeader>
-                            <button
-                                onClick={() => { setCurrentImage('/space.jpg'); setModalOpen(false); }}
-                                className="p-2 m-2 bg-blue-600 text-white rounded"
-                            >
-                                Outer space
-                            </button>
-                            <button
-                                onClick={() => { setCurrentImage('/cave.jpg'); setModalOpen(false); }}
-                                className="p-2 m-2 bg-blue-600 text-white rounded"
-                            >
-                                In the cave
-                            </button>
-                            <button
-                                onClick={() => { setCurrentImage('/train.jpg'); setModalOpen(false); }}
-                                className="p-2 m-2 bg-blue-600 text-white rounded"
-                            >
-                                On a train
-                            </button>
+                        <button
+                            onClick={() => { setCurrentImage('/space.jpg'); setModalOpen(false); }}
+                            className="dialog-button"
+                        >
+                            Outer space
+                        </button>
+                        <button
+                            onClick={() => { setCurrentImage('/cave.jpg'); setModalOpen(false); }}
+                            className="dialog-button"
+                        >
+                            In the cave
+                        </button>
+                        <button
+                            onClick={() => { setCurrentImage('/train.jpg'); setModalOpen(false); }}
+                            className="dialog-button"
+                        >
+                            On a train
+                        </button>
                     </DialogContent>
                 </Dialog>
             )}

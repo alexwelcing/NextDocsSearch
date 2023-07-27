@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>A chat with Alex.</title>
+        <title>Explore with Alex.</title>
         <meta
           name="description"
           content="Explore Alex Welcing's career in technology, consulting, and marketing."
@@ -37,7 +37,6 @@ export default function Home() {
             </div>
             <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
               <Link href="https://linkedin.com/in/alexwelcing" className="flex items-center justify-center">
-              <p className="text-base mr-2">Alex on LinkedIn</p>
 
                 <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="Supabase logo" />
               </Link>
