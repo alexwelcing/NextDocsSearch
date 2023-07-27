@@ -55,12 +55,51 @@
   width: 100%;
   position: absolute;
   bottom: 0;
-  left: 0;
   padding: .5rem 0;
   z-index: 2; /* ensure it's above the 360° view */
-  background: rgba(5, 5, 5, 0.4);
+  background: rgba(5, 5, 5, 0.9);
 }
 
+@media (max-width: 700px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.footer {
+  /* Other existing styles for footer */
+  max-height: 66px;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.expandedFooter {
+  max-height: 300px;
+}
+
+.expandButton {
+  /* You may already have other styles for this. This is just an example. */
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.expandButton:hover {
+  background-color: white;
+}
+
+.expandedButton {
+  background-color: black;
+}
+
+.expandedButton:hover {
+  background-color: white;
+}
 
 .card {
   padding: 1rem 1.2rem;
@@ -263,11 +302,6 @@
   }
 }
 
-@media (max-width: 700px) {
-  .w-half {
-    display: none;
-  }
-}
 
 /* Tablet and Smaller Desktop */
 @media (min-width: 701px) and (max-width: 1120px) {
