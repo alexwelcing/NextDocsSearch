@@ -2,9 +2,12 @@ import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import ThreeSixty from "@/components/ThreeSixty";
 import Footer from "@/components/ui/footer";
+import * as React from 'react'
+
 
 
 export default function Home() {
+  const [currentImage, setCurrentImage] = React.useState<string>("./background/scifi1.jpg");
   return (
     <>
       <Head>
@@ -15,10 +18,10 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <ThreeSixty />
+      <ThreeSixty currentImage={currentImage} />
       </main>
 
-      <Footer />
+      <Footer onImageChange={setCurrentImage} />
     </>
   );
 }
