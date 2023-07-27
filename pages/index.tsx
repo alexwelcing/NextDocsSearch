@@ -18,13 +18,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-      <ThreeSixty />
+        <ThreeSixty />
 
       </main>
 
       <footer className={styles.footer}>
         <section className="w-full text-center">
-
           <div className="py-1 w-full flex items-center justify-center space-x-6">
             <SearchDialog />
 
@@ -40,8 +39,7 @@ export default function Home() {
             </div>
             <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
               <Link href="https://linkedin.com/in/alexwelcing" className="flex items-center justify-center">
-
-                <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="Supabase logo" />
+                <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="LinkedIn logo" />
               </Link>
             </div>
 
@@ -56,6 +54,7 @@ export default function Home() {
           </div>
         </section>
       </footer>
+
     </>
   )
 }
