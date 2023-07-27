@@ -23,5 +23,5 @@ declare module 'three/addons/controls/OrbitControls.js' {
         OnConsentChanged: (callback: () => void) => void;
       };
       OptanonActiveGroups?: string;
-      gtag(type: 'config', googleAnalyticsId: string, { page_path: string });
+      gtag: (command: 'config' | 'event', targetId: string, params?: any) => void;
     }
