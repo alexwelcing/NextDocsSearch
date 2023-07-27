@@ -33,11 +33,11 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
   return (
     <footer className={`${styles.footer} ${expanded ? styles.expandedFooter : ''} transition-max-height duration-500 ease-in-out relative flex items-center`}>
 
-    <div
-      className={`${styles.expandButton} ${expanded ? styles.expandedButton : ''} absolute top-1/2 right-5 cursor-pointer transform -translate-y-1/2 p-1 rounded`}
-      onClick={() => setExpanded(!expanded)}
-    >
-      {expanded ? (
+      <div
+        className={`${styles.expandButton} ${expanded ? styles.expandedButton : ''} absolute top-1/2 ml-4 right-4 cursor-pointer transform -translate-y-1/2 p-1 rounded`}
+        onClick={() => setExpanded(!expanded)}
+      >
+        {expanded ? (
           <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#B2E03D" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus">
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
@@ -47,46 +47,40 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
         )}
-
       </div>
 
       <section className={`w-full text-center ${styles.footerContent}`}>
-        {/* Chat Bar */}
-        <div className="py-1 w-full flex flex-wrap items-center justify-center space-x-6 ">
+        <div className="py-1 w-full flex flex-wrap items-center justify-center space-x-6">
           <SearchDialog />
-          <Button className=" text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
-      transition-colors
-      rounded-md
-      border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500
-" onClick={handleChangeImage}>Change of scenery?</Button>
 
-        </div>
-        {/* Display the rest of the links only when expanded on mobile */}
-        {expanded && (
-          <div className="w-full flex items-center justify-center space-x-6">
-            <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
-              <Link href="https://github.com/alexwelcing">
-                  <Image src={'/github.svg'} width="35" height="35" alt="GitHub logo" />
-              </Link>
-            </div>
-            <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
-              <Link href="https://linkedin.com/in/alexwelcing">
-                  <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="LinkedIn logo" />
-              </Link>
-            </div>
-            <div className="w-half flex items-center justify-center space-x-6">
-              <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
+          {expanded && (
+            <div className="flex flex-col items-center space-y-4">
+              <Button className=" text-slate-500 dark:text-slate-400 mt-4 hover:text-slate-700 dark:hover:text-slate-300 transition-colors rounded-md border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500" onClick={handleChangeImage}>
+                Change of scenery?
+              </Button>
+              <div className="flex space-x-6">
+                <Link href="https://github.com/alexwelcing">
+                  <div className="opacity-40 hover:opacity-100 transition">
+                    <Image src={'/github.svg'} width="35" height="35" alt="GitHub logo" />
+                  </div>
+                </Link>
+                <Link href="https://linkedin.com/in/alexwelcing">
+                  <div className="opacity-40 hover:opacity-100 transition">
+                    <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="LinkedIn logo" />
+                  </div>
+                </Link>
                 <Link href="https://supabase.com">
+                  <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/supabase.svg'} width="35" height="35" alt="Supabase logo" />
+                  </div>
                 </Link>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </section>
     </footer>
   );
 }
-
 
 export default Footer;

@@ -17,3 +17,9 @@ declare module 'three/addons/controls/OrbitControls.js' {
       // ... You can continue to add other methods or properties you plan to use
     }
   }
+
+
+  interface Window {
+    gtag(type: 'config', googleAnalyticsId: string, { page_path: string });
+    // ... any other types or methods you might want to add or override
+  }
