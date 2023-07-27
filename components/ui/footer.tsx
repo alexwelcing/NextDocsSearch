@@ -34,7 +34,7 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
     <footer className={`${styles.footer} ${expanded ? styles.expandedFooter : ''} transition-max-height duration-500 ease-in-out relative flex items-center`}>
 
       <div
-        className={`${styles.expandButton} ${expanded ? styles.expandedButton : ''} absolute top-1/2 ml-4 right-4 cursor-pointer transform -translate-y-1/2 p-1 rounded`}
+        className={`${styles.expandButton} ${expanded ? styles.expandedButton : ''} absolute top-1/2 right-2 cursor-pointer transform -translate-y-1/2 p-1 rounded`}
         onClick={() => setExpanded(!expanded)}
       >
         {expanded ? (
