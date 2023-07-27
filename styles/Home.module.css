@@ -1,10 +1,15 @@
 .main {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 6rem;
-  min-height: 100vh;
+  padding: 0rem;
+  z-index: 2;
+  position: absolute;
 }
 
 .description {
@@ -14,7 +19,7 @@
   font-size: 0.85rem;
   max-width: var(--max-width);
   width: 100%;
-  z-index: 2;
+  z-index: -1;
   font-family: var(--font-mono);
 }
 
@@ -44,6 +49,56 @@
   grid-template-columns: repeat(4, minmax(25%, auto));
   width: var(--max-width);
   max-width: 100%;
+}
+
+.footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  padding: .5rem 0;
+  z-index: 2; /* ensure it's above the 360° view */
+  background: rgba(5, 5, 5, 0.9);
+}
+
+@media (max-width: 700px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.footer {
+  /* Other existing styles for footer */
+  max-height: 66px;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.expandedFooter {
+  max-height: 300px;
+}
+
+.expandButton {
+  /* You may already have other styles for this. This is just an example. */
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.expandButton:hover {
+  background-color: white;
+}
+
+.expandedButton {
+  background-color: black;
+}
+
+.expandedButton:hover {
+  background-color: white;
 }
 
 .card {
@@ -78,6 +133,8 @@
   align-items: center;
   position: relative;
   padding: 4rem 0;
+  background: rgba(5, 5, 5, 0.7);
+  border-radius: 10px;
 }
 
 .center::before {
@@ -237,14 +294,14 @@
 
   .description div {
     align-items: flex-end;
-    pointer-events: none;
     inset: auto 0 0;
     padding: 2rem;
     height: 200px;
     background: linear-gradient(to bottom, transparent 0%, rgb(var(--background-end-rgb)) 40%);
-    z-index: 1;
+    z-index: -1;
   }
 }
+
 
 /* Tablet and Smaller Desktop */
 @media (min-width: 701px) and (max-width: 1120px) {
@@ -271,4 +328,24 @@
   to {
     transform: rotate(0deg);
   }
+}
+
+.dialog-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem;
+    background-color: rgba(var(--card-rgb), 0.1);
+    border: 1px solid rgba(var(--card-border-rgb), 0.15);
+    border-radius: var(--border-radius);
+    color: white;
+    transition: background 200ms, border 200ms, transform 200ms;
+    font-family: var(--font-mono);
+    text-align: center;
+    cursor: pointer;
+}
+
+.dialog-button:hover {
+    background: rgba(var(--card-rgb), 0.2);
+    border: 1px solid rgba(var(--card-border-rgb), 0.3);
+    transform: translateY(-3px);
 }
