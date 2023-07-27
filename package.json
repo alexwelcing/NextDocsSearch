@@ -23,6 +23,8 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.3",
     "@radix-ui/react-label": "^2.0.1",
+    "@react-three/drei": "^9.80.0",
+    "@react-three/fiber": "^8.13.6",
     "@supabase/supabase-js": "^2.13.0",
     "@types/node": "18.15.10",
     "@types/react": "18.0.30",
@@ -36,6 +38,7 @@
     "eslint-config-next": "13.2.4",
     "github-slugger": "^2.0.0",
     "gpt3-tokenizer": "^1.1.5",
+    "gsap": "^3.12.2",
     "lucide-react": "^0.128.0",
     "mdast": "^3.0.0",
     "mdast-util-from-markdown": "^1.2.0",

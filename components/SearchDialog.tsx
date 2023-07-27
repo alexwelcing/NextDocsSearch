@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { useCompletion } from 'ai/react'
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
 
+
 type QuestionKey = 'root' | 'A' | 'B';
 type Question = {
   key: string;

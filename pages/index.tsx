@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import { SearchDialog } from '@/components/SearchDialog'
-import ThreeSixtyView from "@/components/ThreeSixty"
+import ThreeSixty from "@/components/ThreeSixty"
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -17,7 +17,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ThreeSixtyView />
+      <main className={styles.main}>
+      <ThreeSixty />
+
+      </main>
 
       <footer className={styles.footer}>
         <section className="w-full text-center">

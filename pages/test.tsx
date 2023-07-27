@@ -5,7 +5,6 @@ import ThreeSixtyView from "@/components/ThreeSixty";
 const TestPage: React.FC = () => {
     return (
         <div style={{ height: '100vh', width: '100vw' }}>
-            <ThreeSixtyView />
         </div>
     );
 };
