@@ -54,17 +54,19 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
         {/* Chat Bar */}
         <div className="py-1 w-full flex flex-wrap items-center justify-center space-x-6 ">
           <SearchDialog />
-          <Button className=" text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
+
+        </div>
+        {/* Display the rest of the links only when expanded on mobile */}
+        {expanded &&
+        (
+          <div className="w-full flex items-center justify-center space-x-6">
+            <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
+            <Button className=" text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
       transition-colors
       rounded-md
       border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500
 " onClick={handleChangeImage}>Change of scenery?</Button>
 
-        </div>
-        {/* Display the rest of the links only when expanded on mobile */}
-        {expanded && (
-          <div className="w-full flex items-center justify-center space-x-6">
-            <div className="opacity-40 transition hover:opacity-100 cursor-pointer">
               <Link href="https://github.com/alexwelcing">
                   <Image src={'/github.svg'} width="35" height="35" alt="GitHub logo" />
               </Link>
