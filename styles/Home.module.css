@@ -351,20 +351,31 @@
     transform: translateY(-3px);
 }
 
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 1.5rem;
-    color: var(--retro-5);
-    background-color: var(--retro-2);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.2s ease, color 0.2s ease;
+.gradientbg {
+  background: linear-gradient(135deg, #2A4365, #2F855A); /* two-tone gradient */
+  color: #FFFFFF; /* white color for the text on this gradient */
 }
 
-.btn:hover {
-    background-color: var(--retro-1);
-    color: var(--retro-3);
+.centeredtitle {
+  font-size: 3.5rem;
+  letter-spacing: 1.5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.landingBtn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: #61DAFB;
+  color: #20232A;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.landingBtn:hover {
+  background: #4FAFC1;
+  color: #fff;
 }
