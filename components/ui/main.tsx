@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ThreeSixty from '../ThreeSixty';
-import { SearchDialog } from '../SearchDialog';
 
 interface MainProps {
-    onImageChange: (newImage: string) => void;
+  currentImage: string;
 }
 
-const Main: React.FC<MainProps> = ({ onImageChange }) => {
-    const [currentImage, setCurrentImage] = useState<string>('./background/scifi1.jpg');
-
-    return (
-      <div className="flex flex-col h-screen w-full justify-between">
-        <div className="flex-grow relative">
-          <ThreeSixty currentImage={currentImage} />
-        </div>
+const Main: React.FC<MainProps> = ({ currentImage }) => {
+  return (
+    <div className="flex flex-col h-screen w-full justify-between">
+      <div className="flex-grow relative">
+        <ThreeSixty currentImage={currentImage} isDialogOpen={false} />
       </div>
-    );
-  }
-
+    </div>
+  );
+};
 
 export default Main;

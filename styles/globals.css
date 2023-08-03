@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '~hover.css/css/hover-min.css';
+
 
 :root {
   --max-width: 1100px;
@@ -114,4 +116,21 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    color: white;
+    background-color: #0070f3;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #0050c0;
 }

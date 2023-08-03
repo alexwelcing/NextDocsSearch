@@ -39,6 +39,7 @@
     "github-slugger": "^2.0.0",
     "gpt3-tokenizer": "^1.1.5",
     "gsap": "^3.12.2",
+    "hover.css": "^2.3.2",
     "lucide-react": "^0.128.0",
     "mdast": "^3.0.0",
     "mdast-util-from-markdown": "^1.2.0",

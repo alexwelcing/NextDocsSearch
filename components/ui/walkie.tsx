@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useCompletion } from 'ai/react';
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react';
 
-type QuestionKey = 'root' | 'A' | 'B';
+type QuestionKey = 'root' | 'A' | 'B' | 'C';
 type Question = {
     key: string;
     text: string;
@@ -19,18 +19,24 @@ interface Props {
 const Walkie: React.FC<Props> = ({ sendRequestToSupabase }) => {
     const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
         root: {
-            A: "Who is Alex?",
-            B: "Where is Alex?"
+            A: "Background Information about Alex",
+            B: "Skills and Expertise",
+            C: "Availability and Preferences"
         },
         A: {
-            C: "Has he worked anywhere?",
-            D: "Does he have skills?",
-            E: "What has he accomplished?"
+            D: "Educational qualifications?",
+            E: "Work experience?",
+            F: "Major accomplishments?"
         },
         B: {
-            F: "Is it nice there?",
-            G: "Can he travel?",
-            H: "Will he come into an office?"
+            G: "Technical skills?",
+            H: "Soft skills?",
+            I: "Certifications or courses?"
+        },
+        C: {
+            J: "Willingness to relocate?",
+            K: "Expected salary or compensation?",
+            L: "Preferred working mode?"
         }
     };
 
@@ -58,6 +64,26 @@ const Walkie: React.FC<Props> = ({ sendRequestToSupabase }) => {
             setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
         } else {
             complete(questionText);
+        }
+    };
+
+    const goBack = () => {
+        if (!query) return; // No need to go back from the root
+
+        let previousKey: QuestionKey | null = null;
+        for (const [key, value] of Object.entries(QUESTIONS_TREE)) {
+            if (Object.values(value).includes(query)) {
+                previousKey = key as QuestionKey;
+                break;
+            }
+        }
+
+        if (previousKey) {
+            setCurrentQuestions(Object.entries(QUESTIONS_TREE[previousKey]).map(([key, text]) => ({ key, text })));
+            setQuery('');
+        } else {
+            setCurrentQuestions(Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text })));
+            setQuery('');
         }
     };
 
@@ -176,6 +202,18 @@ const Walkie: React.FC<Props> = ({ sendRequestToSupabase }) => {
                                     </button>
                                 ))}
                             </div>
+                            {query && (
+                    <button
+                        className="px-1.5 py-0.5
+                    bg-slate-50 dark:bg-gray-500
+                    hover:bg-slate-100 dark:hover:bg-gray-600 space-x-2
+                    rounded border border-slate-200 dark:border-slate-600
+                    transition-colors"
+                        onClick={goBack}
+                    >
+                        Go Back
+                    </button>
+                )}
                             <DialogFooter>
                                 <Button type="submit" className="bg-red-500">
                                     Ask
@@ -183,6 +221,7 @@ const Walkie: React.FC<Props> = ({ sendRequestToSupabase }) => {
                             </DialogFooter>
                         </div>          </form>
                 </DialogContent>
+
             </Dialog>
         </>
     );

@@ -68,14 +68,15 @@
 }
 .footer {
   /* Other existing styles for footer */
-  max-height: 66px;
+  max-height: 60px;
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;
 }
 
 .expandedFooter {
-  max-height: 300px;
+  max-height: 250px;
 }
+
 
 .expandButton {
   /* You may already have other styles for this. This is just an example. */

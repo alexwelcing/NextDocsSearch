@@ -13,6 +13,7 @@ function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
   const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), []);
 
 
+
   if (Array.isArray(texture)) {
     console.error("Loaded multiple textures, but expected a single one.");
     return null;
@@ -31,18 +32,17 @@ function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
 
 interface ThreeSixtyProps {
   currentImage: string;
+  isDialogOpen: boolean;
 }
 
-function ThreeSixty({ currentImage }: ThreeSixtyProps) {
-
-
-return (
-  <Canvas>
-      <BackgroundSphere imageUrl={currentImage} />
+function ThreeSixty({ currentImage, isDialogOpen }: ThreeSixtyProps) {
+  return (
+    <Canvas>
+      <BackgroundSphere key={isDialogOpen ? "dialogOpen" : currentImage} imageUrl={currentImage} />
       <OrbitControls enableZoom={false} />
-
-  </Canvas>
-);
+    </Canvas>
+  );
 }
+
 
 export default ThreeSixty;

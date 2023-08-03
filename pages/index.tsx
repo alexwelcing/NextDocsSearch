@@ -1,21 +1,14 @@
-import Head from 'next/head';
-import styles from '@/styles/Home.module.css';
-import Main from '@/components/ui/main'; // Ensure you have the correct path to Main component
-import Footer from '@/components/ui/footer';
 import React from 'react';
-import Walkie from '@/components/ui/walkie';
+import Head from 'next/head';
+import Link from 'next/link';
+
 
 export default function Home() {
-  const [currentImage, setCurrentImage] = React.useState<string>('./background/scifi1.jpg');
-  const sendToSupabase = (query: string) => {
-    // For now, just log the query. Replace with your Supabase logic later.
-    console.log(`Sending the following query to Supabase: ${query}`);
-  };
 
   return (
     <>
       <Head>
-        <title>Explore with Alex.</title>
+      <title>Explore with Alex.</title>
         <meta
           name="description"
           content="Explore Alex Welcing's career in technology, consulting, and marketing."
@@ -23,13 +16,21 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <div className="text-4xl font-bold mb-10">
+                Welcome to Our Platform!
+            </div>
+            <div className="space-y-4">
+                <Link href="/chat">
+                    <a className="btn hvr-fade">Chat with Alex</a>
+                </Link>
+                <Link href="/viewer">
+                    <a className="btn hvr-pulse">View 360° Image</a>
+                </Link>
+            </div>
+        </div>
 
-      <main className={styles.main}>
-        <Main onImageChange={setCurrentImage} />
-        <Walkie sendRequestToSupabase={sendToSupabase} />
-      </main>
 
-      <Footer />
     </>
   );
 }
