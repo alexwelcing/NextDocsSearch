@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three';
 import * as THREE from 'three';
@@ -10,7 +10,8 @@ interface BackgroundSphereProps {
 
 function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
   const texture = useLoader(TextureLoader, imageUrl);
-  const geometry = new THREE.SphereGeometry(15, 32, 16);
+  const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), []);
+
 
   if (Array.isArray(texture)) {
     console.error("Loaded multiple textures, but expected a single one.");
@@ -33,12 +34,15 @@ interface ThreeSixtyProps {
 }
 
 function ThreeSixty({ currentImage }: ThreeSixtyProps) {
-  return (
-    <Canvas>
+
+
+return (
+  <Canvas>
       <BackgroundSphere imageUrl={currentImage} />
       <OrbitControls enableZoom={false} />
-    </Canvas>
-  );
+
+  </Canvas>
+);
 }
 
 export default ThreeSixty;

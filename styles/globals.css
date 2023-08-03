@@ -102,3 +102,16 @@ a {
     color-scheme: dark;
   }
 }
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000; /* Ensure this is above everything else but below the modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

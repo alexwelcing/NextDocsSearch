@@ -25,3 +25,15 @@ declare module 'three/addons/controls/OrbitControls.js' {
       OptanonActiveGroups?: string;
       gtag: (command: 'config' | 'event', targetId: string, params?: any) => void;
     }
+
+    export interface SearchBarProps {
+      currentImage: string;
+      onImageChange: (newImage: string) => void;
+    }
+
+    // global.d.ts
+    declare global {
+      interface Window {
+        gtag: any;
+      }
+    }
