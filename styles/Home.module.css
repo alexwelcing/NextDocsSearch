@@ -350,3 +350,21 @@
     border: 1px solid rgba(var(--card-border-rgb), 0.3);
     transform: translateY(-3px);
 }
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    color: var(--retro-5);
+    background-color: var(--retro-2);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: var(--retro-1);
+    color: var(--retro-3);
+}

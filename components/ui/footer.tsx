@@ -64,17 +64,17 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
               </Button>
 
               <div className="flex space-x-6">
-                <Link href="https://github.com/alexwelcing">
+                <Link href="https://github.com/alexwelcing" legacyBehavior>
                   <div className="opacity-80 hover:opacity-100 transition">
                     <Image src={'/github.svg'} width="35" height="35" alt="GitHub logo" />
                   </div>
                 </Link>
-                <Link href="https://linkedin.com/in/alexwelcing">
+                <Link href="https://linkedin.com/in/alexwelcing" legacyBehavior>
                   <div className="opacity-60 hover:opacity-100 transition">
                     <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="LinkedIn logo" />
                   </div>
                 </Link>
-                <Link href="https://supabase.com">
+                <Link href="https://supabase.com" legacyBehavior>
                   <div className="opacity-40 hover:opacity-80 transition">
                     <Image src={'/supabase.svg'} width="35" height="35" alt="Supabase logo" />
                   </div>
