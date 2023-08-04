@@ -3,6 +3,8 @@ import { Canvas, useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three';
 import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
+import { VRButton, XR, Controllers, Hands, useXR } from '@react-three/xr';
+
 
 interface BackgroundSphereProps {
   imageUrl: string;
@@ -33,16 +35,23 @@ function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
 interface ThreeSixtyProps {
   currentImage: string;
   isDialogOpen: boolean;
+  onChangeImage: () => void;  // New prop to handle image change
 }
 
-function ThreeSixty({ currentImage, isDialogOpen }: ThreeSixtyProps) {
+function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
   return (
-    <Canvas>
-      <BackgroundSphere key={isDialogOpen ? "dialogOpen" : currentImage} imageUrl={currentImage} />
-      <OrbitControls enableZoom={false} />
-    </Canvas>
+    <>
+      <VRButton />
+      <Canvas>
+        <XR>
+          <Controllers />
+          <Hands />
+          <BackgroundSphere key={isDialogOpen ? "dialogOpen" : currentImage} imageUrl={currentImage} />
+          <OrbitControls enableZoom={false} />
+        </XR>
+      </Canvas>
+    </>
   );
 }
-
 
 export default ThreeSixty;
