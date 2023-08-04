@@ -1,5 +1,3 @@
-'use client'
-
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,7 +13,6 @@ import { useCompletion } from 'ai/react'
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
 import { trackEvent } from '../lib/google-analytics'
 
-
 type QuestionKey = 'root' | 'A' | 'B';
 type Question = {
   key: string;
@@ -23,6 +20,13 @@ type Question = {
 };
 
 type QuestionTreeNode = Record<string, string>;
+
+type Props = {
+  onImageChange: (imageUrl: string) => void;
+  onCompletion: (response: string) => void;  // New prop
+};
+
+export function SearchDialog({ onImageChange, onCompletion }: Props) {
 
 const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   root: {
@@ -41,11 +45,8 @@ const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   }
 };
 
-// Utility function to send events to Google Analytics
 const sendGAEvent = (action: string, label: string | undefined = undefined) => {
-  // Checking if the `gtag` function exists (it should if you've integrated GA)
   if (typeof window !== 'undefined' && typeof window.gtag !== 'undefined') {
-    // Bypassing TypeScript's type checking for this specific call
     (window.gtag as any)('event', action, {
       event_category: 'Chat Interaction',
       event_label: label,
@@ -53,7 +54,6 @@ const sendGAEvent = (action: string, label: string | undefined = undefined) => {
   }
 }
 
-export function SearchDialog() {
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState<string>('');
   const { complete, completion, isLoading, error } = useCompletion({
@@ -64,21 +64,6 @@ export function SearchDialog() {
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
   );
 
-  React.useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && e.metaKey) {
-        setOpen(true);
-      }
-
-      if (e.key === 'Escape') {
-        handleModalToggle();
-      }
-    };
-
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, [handleModalToggle]);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function handleModalToggle() {
     setOpen(!open);
@@ -87,27 +72,31 @@ export function SearchDialog() {
   }
 
   function setQuestionsBasedOnSelection(selectedKey: string) {
-    const questionText = currentQuestions.find(q => q.key === selectedKey)?.text || '';
-    setQuery(questionText);  // This will set the input field value even for root questions.
+  const questionText = currentQuestions.find(q => q.key === selectedKey)?.text || '';
+  setQuery(questionText);
 
-    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey];
-    if (nextQuestionsObj) {
-        const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj);
-        setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
-    } else {
-        complete(questionText);
-    }
+  const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey];
+  if (nextQuestionsObj) {
+    const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj);
+    setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
+  } else {
+    complete(questionText);
+  }
 }
 
+React.useEffect(() => {
+  if (completion && !error) {
+    // add stuff maybe
+  }
+}, [completion, error]);
 
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    complete(query);
+    trackEvent('question_submitted', { question_text: query });
+  };
 
-const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-  e.preventDefault();
-  complete(query);
-  trackEvent('question_submitted', { question_text: query });
-};
-
-return (
+  return (
   <>
     <button
   onClick={() => {
@@ -136,7 +125,7 @@ return (
         </kbd>{' '}
       </button>
       <Dialog open={open}>
-        <DialogContent className="sm:max-w-[850px] text-black">
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Want to know Alex?</DialogTitle>
             <DialogDescription>
