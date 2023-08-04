@@ -14,6 +14,10 @@ export default function ThreeSixtyPage() {
             .then(response => response.json())
             .then(images => {
                 setBackgroundImages(images);
+                // Preload the images
+                images.forEach((image: any) => {
+                    new Image().src = `./background/${image}`;
+                });
                 const randomImage = images[Math.floor(Math.random() * images.length)];
                 setCurrentImage(`./background/${randomImage}`);
             });
