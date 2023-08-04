@@ -1,27 +1,43 @@
+import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import styles from '@/styles/Home.module.css';
-import ThreeSixty from "@/components/ThreeSixty";
-import Footer from "@/components/ui/footer";
-import * as React from 'react'
-
+import Footer from '@/components/ui/footer';
 
 
 export default function Home() {
-  const [currentImage, setCurrentImage] = React.useState<string>("./background/scifi1.jpg");
-  return (
-    <>
-      <Head>
-        <title>Explore with Alex.</title>
-        <meta name="description" content="Explore Alex Welcing's career in technology, consulting, and marketing." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    return (
+        <>
+            <Head>
+                <title>Innovative products with Alex Welcing.</title>
+                <meta name="description" content="Explore Alex Welcing's career in technology, consulting, and marketing." />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-      <main className={styles.main}>
-      <ThreeSixty currentImage={currentImage} />
-      </main>
+            <div className={styles.gradientbg + " flex flex-col items-center justify-center min-h-screen"}>
+                <div className={styles.centeredtitle}>
+                    Exploratory products with Alex Welcing.
+                </div>
+                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                    <Link href="/chat" className={styles.landingBtn}>
+                        Chat
+                    </Link>
+                    <Link href="/viewer" className={styles.landingBtn}>
+                        Explore
+                    </Link>
+                    <Link href="/about" className={styles.landingBtn}>
+                        About
+                    </Link>
+                </div>
+            </div>
+            <Footer
+                onImageChange={function (newImage: string): void {
+                    throw new Error('Function not implemented.');
+                }}
+                showChangeScenery={false}
+            />
 
-      <Footer onImageChange={setCurrentImage} />
-    </>
-  );
+        </>
+    );
 }

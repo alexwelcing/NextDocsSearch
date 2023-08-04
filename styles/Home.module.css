@@ -60,7 +60,7 @@
   background: rgba(5, 5, 5, 0.9);
 }
 
-@media (max-width: 700px) {
+@media (max-width: 250px) {
   .footer {
     flex-direction: column;
     align-items: center;
@@ -68,14 +68,15 @@
 }
 .footer {
   /* Other existing styles for footer */
-  max-height: 66px;
+  max-height: 60px;
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;
 }
 
 .expandedFooter {
-  max-height: 300px;
+  max-height: 250px;
 }
+
 
 .expandButton {
   /* You may already have other styles for this. This is just an example. */
@@ -348,4 +349,41 @@
     background: rgba(var(--card-rgb), 0.2);
     border: 1px solid rgba(var(--card-border-rgb), 0.3);
     transform: translateY(-3px);
+}
+
+.gradientbg {
+  background: linear-gradient(135deg, #3A2BE0, #DE7EA2); /* two-tone gradient */
+  color: #FFF; /* white color for the text on this gradient */
+}
+
+.centeredtitle {
+  font-size: 3.5rem;
+  letter-spacing: 1.5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  margin-bottom: 20px;
+  font-mono: 'Oxygen Mono';
+}
+
+.landingBtn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: #bf4368;
+  color: #f4d6e3;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.landingBtn:hover {
+  background: #d36188;
+  color: #fff;
+}
+
+.chatBackground {
+  background-image: url('/backgrounds/chat-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }

@@ -3,15 +3,15 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../../styles/Home.module.css';
-import { SearchDialog } from '../SearchDialog';
-import { Button } from './button'; // Ensure you're importing from the correct path
+import { Button } from './button';
 
 interface FooterProps {
   onImageChange: (newImage: string) => void;
+  showChangeScenery: boolean;
 }
 
-const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
-  const [expanded, setExpanded] = useState(false);
+const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true }) => {
+  const [expanded, setExpanded] = useState(true);
   const [images, setImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -25,9 +25,15 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
   }, []);
 
   const handleChangeImage = () => {
-    const nextIndex = (currentImageIndex + 1) % images.length;
-    setCurrentImageIndex(nextIndex);
-    onImageChange(images[nextIndex]);
+    // Fetching the image list from the API on each button click
+    fetch('/api/backgroundImages')
+      .then(response => response.json())
+      .then(data => {
+        const allImages = data.map((imageName: string) => `/background/${imageName}`);
+        // Randomize the selection
+        const randomImage = allImages[Math.floor(Math.random() * allImages.length)];
+        onImageChange(randomImage);
+      });
   };
 
   return (
@@ -49,16 +55,23 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
         )}
       </div>
 
-      <section className={`w-full text-center ${styles.footerContent}`}>
+      <section className={`w-full text-center ${styles.expandedFooter}`}>
         <div className="py-1 w-full flex flex-wrap items-center justify-center space-x-6">
-          <SearchDialog />
 
           {expanded && (
             <div className="flex flex-col items-center space-y-4">
-              <Button className=" text-slate-500 dark:text-slate-400 mt-4 hover:text-slate-700 dark:hover:text-slate-300 transition-colors rounded-md border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500" onClick={handleChangeImage}>
-                Change of scenery?
-              </Button>
+              {showChangeScenery && (
+                <Button className="text-xl bg-blue-500 text-white py-2 px-8 mt-4 hover:bg-blue-700 transition-colors rounded-md border border-blue-500 hover:border-blue-700" onClick={handleChangeImage}>
+                  Change of scenery?
+                </Button>
+              )}
+
               <div className="flex space-x-6">
+              <Link href="/">
+                  <div className="opacity-40 hover:opacity-100 transition">
+                    <Image src={'/icons/indexs.svg'} width="35" height="35" alt="Home icon" />
+                  </div>
+                </Link>
                 <Link href="https://github.com/alexwelcing">
                   <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/github.svg'} width="35" height="35" alt="GitHub logo" />
