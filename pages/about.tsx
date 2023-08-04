@@ -22,7 +22,7 @@ function About() {
                     Results-oriented leader, adept in defining product enhancements, prioritizing crucial features, and delivering solutions that directly address market challenges and meet customers’ ever-evolving needs. Recognized success creating strategic products and aligning with overall business objectives and market opportunities. Skilled at driving business growth by managing and launching business-defining projects, such as digital content management, asset management in VR experiences, subscription-based legal analysis services, and AI-enabled ads for publishers. Well-versed in fostering cross-functional collaboration, leading teams with excellence, and utilizing market insights to position products strategically and effectively. Expertise in gathering and documenting business and functional requirements to drive technical product development.
                 </p>
                 <h4 className="text-pink-700 mb-4 mt-4 text-xl font-semibold leading-tight text-primary space-y-4">Core Competencies</h4>
-                <div className="grid grid-cols-3 gap-4 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                     <div className="flex items-center space-x-2 p-2 bg-blue-100 rounded hover:bg-blue-200 transition">
                         <span className="material-icons-outlined">build</span>
                         <span>Product Development</span>

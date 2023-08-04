@@ -10,7 +10,9 @@ const Main: React.FC<MainProps> = ({ currentImage, showThreeSixty = true }) => {
   return (
     <div className="flex flex-col h-screen w-full justify-between">
       <div className="flex-grow relative">
-        { showThreeSixty && <ThreeSixty currentImage={currentImage} isDialogOpen={false} /> }
+        { showThreeSixty && <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={function (): void {
+          throw new Error('Function not implemented.');
+        } } /> }
       </div>
     </div>
   );

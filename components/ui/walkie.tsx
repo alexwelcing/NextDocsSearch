@@ -137,27 +137,82 @@ const Walkie: React.FC<Props> = ({ sendRequestToSupabase }) => {
                         </button>
                     </DialogHeader>
                     <form onSubmit={handleSubmit}>
-                        <div className="text-xs text-gray-500 dark:text-gray-100">
-                            Or try:
-                            {currentQuestions.map(({ key, text }) => (
-                                <button
-                                    key={key}
-                                    type="button"
-                                    className="mx-2 my-1 px-3 py-1  // Updated margin and padding here
-            text-sm font-medium             // Increased font size and made it medium weight
-            bg-slate-50 dark:bg-gray-500
-            hover:bg-slate-100 dark:hover:bg-gray-600
-            rounded border border-slate-200 dark:border-slate-600
-            transition-colors"
-                                    onClick={() => setQuestionsBasedOnSelection(key)}
-                                >
-                                    {text}
-                                </button>
-                            ))}
-                        </div>       </form>
-                </DialogContent>
+            <div className="grid gap-4 py-4 text-slate-700">
+              {query && (
+                <div className="flex gap-4">
+                  <span className="bg-slate-100 dark:bg-slate-300 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
+                    <User width={18} />{' '}
+                  </span>
+                  <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">{query}</p>
+                </div>
+              )}
 
-            </Dialog>
+              {isLoading && (
+                <div className="animate-spin relative flex w-5 h-5 ml-2">
+                  <Loader />
+                </div>
+              )}
+
+              {error && (
+                <div className="flex items-center gap-4">
+                  <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
+                    <Frown width={18} />
+                  </span>
+                  <span className="text-slate-700 dark:text-slate-100">
+                    Ah, sorry. Maintenance mode at the moment, come back later.
+                  </span>
+                </div>
+              )}
+
+              {completion && !error ? (
+                <div className="flex items-center gap-4 dark:text-white">
+                  <span className="bg-green-500 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
+                    <Wand width={18} className="text-white" />
+                  </span>
+                  {completion}
+                </div>
+              ) : null}
+
+              <div className="relative">
+                <Input
+                  placeholder="What would you want to know?"
+                  name="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="col-span-3"
+                />
+                <CornerDownLeft
+                  className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${
+                    query ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              </div>
+              <div className="text-xs text-gray-500 dark:text-gray-100">
+                Or try:
+                {currentQuestions.map(({ key, text }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className="px-1.5 py-0.5
+                    bg-slate-50 dark:bg-gray-500
+                    hover:bg-slate-100 dark:hover:bg-gray-600 space-x-2
+                    rounded border border-slate-200 dark:border-slate-600
+                    transition-colors"
+                    onClick={() => setQuestionsBasedOnSelection(key)}
+                  >
+                    {text}
+                  </button>
+                ))}
+              </div>
+              <DialogFooter>
+                <Button type="submit" className="bg-red-500">
+                  Ask
+                </Button>
+              </DialogFooter>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
         </>
     );
 };

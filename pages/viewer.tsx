@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import Footer from '@/components/ui/footer';
-import ThreeSixty from '@/components/ThreeSixty'; // Assuming this path is correct
+import ThreeSixty from '@/components/ThreeSixty';
 
 export default function ThreeSixtyPage() {
     const [currentImage, setCurrentImage] = useState<string>('./background/scifi1.jpg');
@@ -38,8 +38,7 @@ export default function ThreeSixtyPage() {
             </Head>
 
             <main className={styles.main}>
-                <ThreeSixty currentImage={currentImage} isDialogOpen={false} />
-                {/* Assuming you'll manage the isDialogOpen state appropriately */}
+            <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={changeImageRandomly} />
             </main>
 
             <Footer onImageChange={changeImageRandomly} showChangeScenery={true} />
