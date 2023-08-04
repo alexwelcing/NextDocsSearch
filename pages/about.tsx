@@ -65,7 +65,7 @@ function About() {
                     {/* OBSESS VR Experience */}
                     <div>
                         <h5 className="text-blue-700 mb-2 mt-0 text-xl font-medium leading-tight text-primary">ObsessVR • Product Manager @ 360 Visual Commerce Startup</h5>
-                        <h6>New York | 2022-2023</h6>
+                        <h6 className="font-medium leading-tight">New York | 2022-2023</h6>
                         <p>
                             Defined product enhancements, prioritized essential features, and delivered products that addressed market challenges and met customer needs by liaising with customers, engineering, marketing, and customer success teams.
                         </p>
@@ -82,7 +82,7 @@ function About() {
                     {/* Manatt, Phelps, & Phillips Experience */}
                     <div>
                         <h5 className="text-blue-700 mb-2 mt-0 text-xl font-medium leading-tight text-primary">Manatt, Phelps, & Phillips • Developer @ AmLaw 200 Firm</h5>
-                        <h6>New York | 2019-2022</h6>
+                        <h6 className="font-medium leading-tight">New York | 2019-2022</h6>
                         <p>
                             Led the transformation of innovative ideas into practical applications by offering specialized technical expertise and actively participated in hands-on development and design.
                         </p>
@@ -98,7 +98,7 @@ function About() {
                     {/* MANATT HEALTH Experience */}
                     <div>
                         <h5 className="text-blue-700 mb-2 mt-0 text-xl font-medium leading-tight text-primary">Manatt Health • Consultant @ Healthcare Legal Practice</h5>
-                        <h6>New York | 2017-2019</h6>
+                        <h6 className="font-medium leading-tight">New York | 2017-2019</h6>
                         <p>
                             Crafted and launched a client-exclusive publishing SaaS platform, propelling it from its beta phase to an impressive achievement of generating millions in Annual Recurring Revenue (ARR).
                         </p>
