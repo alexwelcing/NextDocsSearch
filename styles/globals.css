@@ -38,12 +38,13 @@ html, body {
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
 
-  /* Color Theme Swatches in Hex */
-  --retro-1: #6A6699;
-  --retro-2: #3A2BE0;
-  --retro-3: #B2E03D;
-  --retro-4: #941947;
-  --retro-5: #DE7EA2;
+    /* Color Theme Swatches in Hex */
+    --retro-1: #6A6699;
+    --retro-2: #3A2BE0;
+    --retro-3: #B2E03D;
+    --retro-4: #941947;
+    --retro-5: #DE7EA2;
+
 }
 
 /* Dark mode variables */
@@ -61,10 +62,6 @@ html, body {
     --callout-border-rgb: 108, 108, 108;
     --card-rgb: 100, 100, 100;
     --card-border-rgb: 200, 200, 200;
-  }
-
-  html {
-    color-scheme: dark;
   }
 }
 

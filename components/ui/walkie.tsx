@@ -103,16 +103,17 @@ const Walkie: React.FC<Props> = ({ sendRequestToSupabase }) => {
         <>
             <button
                 onClick={handleModalToggle}
-                className="text-base flex gap-2 items-center px-4 py-2 absolute top-4 right-4 z-50
+                className="text-base flex gap-2 items-center px-4 py-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50
     text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
     transition-colors
     rounded-md
     border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500
-    min-w-[300px]"
+    min-w-[300px]
+    shadow-xl bg-white dark:bg-gray-900"  // Enhanced styling here
             >
                 <Search width={15} />
                 <span className="border border-l h-5"></span>
-                <span className="inline-block ml-4">Chat...</span>
+                <span className="inline-block ml-4 text-2xl">Want to talk?</span>  {/* Increased font size */}
                 <kbd className="absolute right-3 top-2.5 pointer-events-none inline-flex h-5 select-none items-center gap-1
     rounded border border-slate-100 bg-slate-100 px-1.5
     font-mono text-[10px] font-medium
@@ -136,90 +137,24 @@ const Walkie: React.FC<Props> = ({ sendRequestToSupabase }) => {
                         </button>
                     </DialogHeader>
                     <form onSubmit={handleSubmit}>
-                        <div className="grid gap-4 py-4 text-slate-700">
-                            {query && (
-                                <div className="flex gap-4">
-                                    <span className="bg-slate-100 dark:bg-slate-300 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                                        <User width={18} />{' '}
-                                    </span>
-                                    <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">{query}</p>
-                                </div>
-                            )}
-
-                            {isLoading && (
-                                <div className="animate-spin relative flex w-5 h-5 ml-2">
-                                    <Loader />
-                                </div>
-                            )}
-
-                            {error && (
-                                <div className="flex items-center gap-4">
-                                    <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                                        <Frown width={18} />
-                                    </span>
-                                    <span className="text-slate-700 dark:text-slate-100">
-                                        Ah, sorry. Maintenance mode at the moment, come back later.
-                                    </span>
-                                </div>
-                            )}
-
-                            {completion && !error ? (
-                                <div className="flex items-center gap-4 dark:text-white">
-                                    <span className="bg-green-500 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                                        <Wand width={18} className="text-white" />
-                                    </span>
-                                    {completion}
-                                </div>
-                            ) : null}
-
-                            <div className="relative">
-                                <Input
-                                    placeholder="What would you want to know?"
-                                    name="search"
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    className="col-span-3"
-                                />
-                                <CornerDownLeft
-                                    className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${query ? 'opacity-100' : 'opacity-0'
-                                        }`}
-                                />
-                            </div>
-                            <div className="text-xs text-gray-500 dark:text-gray-100">
-                                Or try:
-                                {currentQuestions.map(({ key, text }) => (
-                                    <button
-                                        key={key}
-                                        type="button"
-                                        className="px-1.5 py-0.5
-                    bg-slate-50 dark:bg-gray-500
-                    hover:bg-slate-100 dark:hover:bg-gray-600 space-x-2
-                    rounded border border-slate-200 dark:border-slate-600
-                    transition-colors"
-                                        onClick={() => setQuestionsBasedOnSelection(key)}
-                                    >
-                                        {text}
-                                    </button>
-                                ))}
-                            </div>
-                            {query && (
-                    <button
-                        className="px-1.5 py-0.5
-                    bg-slate-50 dark:bg-gray-500
-                    hover:bg-slate-100 dark:hover:bg-gray-600 space-x-2
-                    rounded border border-slate-200 dark:border-slate-600
-                    transition-colors"
-                        onClick={goBack}
-                    >
-                        Go Back
-                    </button>
-                )}
-                            <DialogFooter>
-                                <Button type="submit" className="bg-red-500">
-                                    Ask
-                                </Button>
-                            </DialogFooter>
-                        </div>          </form>
+                        <div className="text-xs text-gray-500 dark:text-gray-100">
+                            Or try:
+                            {currentQuestions.map(({ key, text }) => (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    className="mx-2 my-1 px-3 py-1  // Updated margin and padding here
+            text-sm font-medium             // Increased font size and made it medium weight
+            bg-slate-50 dark:bg-gray-500
+            hover:bg-slate-100 dark:hover:bg-gray-600
+            rounded border border-slate-200 dark:border-slate-600
+            transition-colors"
+                                    onClick={() => setQuestionsBasedOnSelection(key)}
+                                >
+                                    {text}
+                                </button>
+                            ))}
+                        </div>       </form>
                 </DialogContent>
 
             </Dialog>

@@ -38,7 +38,7 @@ export default function ThreeSixtyPage() {
                 {/* Assuming you'll manage the isDialogOpen state appropriately */}
             </main>
 
-            <Footer onImageChange={changeImageRandomly} />
+            <Footer onImageChange={changeImageRandomly} showChangeScenery={true} />
         </>
     );
 }

@@ -7,9 +7,10 @@ import { Button } from './button';
 
 interface FooterProps {
   onImageChange: (newImage: string) => void;
+  showChangeScenery: boolean;
 }
 
-const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
+const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true }) => {
   const [expanded, setExpanded] = useState(true);
   const [images, setImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -43,39 +44,46 @@ const Footer: React.FC<FooterProps> = ({ onImageChange }) => {
         onClick={() => setExpanded(!expanded)}
       >
         {expanded ? (
-          // Use the minus SVG icon when expanded
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-            <path d="M6.75 9.25a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5z" />
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#B2E03D" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
         ) : (
-          // Use the plus SVG icon when not expanded
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-            <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" />
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#DE7EA2" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
         )}
       </div>
 
-      <section className={`w-full text-center ${styles.footerContent}`}>
+      <section className={`w-full text-center ${styles.expandedFooter}`}>
         <div className="py-1 w-full flex flex-wrap items-center justify-center space-x-6">
+
           {expanded && (
             <div className="flex flex-col items-center space-y-4">
-              <Button className="text-xl bg-blue-500 text-white py-2 px-8 mt-4 hover:bg-blue-700 transition-colors rounded-md border border-blue-500 hover:border-blue-700" onClick={handleChangeImage}>
-                Change of scenery?
-              </Button>
+              {showChangeScenery && (
+                <Button className="text-xl bg-blue-500 text-white py-2 px-8 mt-4 hover:bg-blue-700 transition-colors rounded-md border border-blue-500 hover:border-blue-700" onClick={handleChangeImage}>
+                  Change of scenery?
+                </Button>
+              )}
 
               <div className="flex space-x-6">
-                <Link href="https://github.com/alexwelcing" target="_blank" rel="noopener noreferrer">
-                  <div className="opacity-80 hover:opacity-100 transition">
+              <Link href="/">
+                  <div className="opacity-40 hover:opacity-100 transition">
+                    <Image src={'/icons/indexs.svg'} width="35" height="35" alt="Home icon" />
+                  </div>
+                </Link>
+                <Link href="https://github.com/alexwelcing">
+                  <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/github.svg'} width="35" height="35" alt="GitHub logo" />
                   </div>
                 </Link>
-                <Link href="https://linkedin.com/in/alexwelcing" target="_blank" rel="noopener noreferrer">
-                  <div className="opacity-60 hover:opacity-100 transition">
+                <Link href="https://linkedin.com/in/alexwelcing">
+                  <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="LinkedIn logo" />
                   </div>
                 </Link>
-                <Link href="https://supabase.com" target="_blank" rel="noopener noreferrer">
-                  <div className="opacity-40 hover:opacity-80 transition">
+                <Link href="https://supabase.com">
+                  <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/supabase.svg'} width="35" height="35" alt="Supabase logo" />
                   </div>
                 </Link>

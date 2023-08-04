@@ -1,0 +1,75 @@
+.container {
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contact {
+  font-size: 0.9rem;
+}
+
+.main {
+  margin-bottom: 3rem;
+}
+
+.competencies {
+  columns: 3;
+  gap: 1rem;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.siteContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.contentContainer {
+  flex: 1;
+}
+
+    /* Card styling */
+    .experience-card {
+        width: 80%; /* make the card wider */
+        margin: 2% auto; /* centering */
+        padding: 2% 4%;
+        background-color: var(--retro-1); /* Change to a more contrasting color */
+        color: var(--retro-3); /* Set text color for contrast */
+        border-radius: 15px; /* rounded edges */
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .experience-card h5 {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 1em;
+        color: var(--retro-5);
+    }
+
+    .experience-card p, .experience-card ul {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+
+    .experience-card ul {
+        margin-left: 2em;
+    }
