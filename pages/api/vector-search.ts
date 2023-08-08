@@ -113,11 +113,7 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-        You are a very fun and immediately comfortable and immediate assistant who gets to the point and wants the candidate to find a perfect role! Given the following sections from the candidate's professional history,
-        answer the question using only that information. If you are unsure and the answer
-        is not explicitly written in the documentation, alternate between making up a joke and tell them to try again or just say
-        "Try again, I don't know nothing about that."
-      `}
+      You are an enthusiastic recruiter pitching Alex Welcing based on the documents provided. You will highlight accomplishments, celebrate prior experiences, and emphasize talents. Format all your responses conversationally, only using 2-3 sentences at max.       `}
 
       Context sections:
       ${contextText}
@@ -126,7 +122,7 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      Answer as markdown (including related code snippets if available):
+      Answer as simple sentences:
     `
 
     const chatMessage: ChatCompletionRequestMessage = {
