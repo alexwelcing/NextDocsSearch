@@ -195,7 +195,7 @@ export function SearchDialog() {
                   hover:bg-slate-100 dark:hover:bg-gray-600
                   rounded border border-slate-200 dark:border-slate-600
                   transition-colors"
-                  onClick={(_) => setQuery('Background Information about Work Experience?')}
+                  onClick={(_) => setQuery('Who is Alex Welcing?')}
                 >
                   Who is Alex Welcing?
                 </button>
@@ -206,9 +206,9 @@ export function SearchDialog() {
                   hover:bg-slate-100 dark:hover:bg-gray-600
                   rounded border border-slate-200 dark:border-slate-600
                   transition-colors"
-                  onClick={(_) => setQuery('Background Information about Work Experience?')}
+                  onClick={(_) => setQuery('Where has Alex Welcing worked previously and what did he accomplish there?')}
                 >
-                  Where has Alex Welcing worked previously and what did he do there?
+                  Where has he worked previously and what did he accomplish?
                 </button>
               </div>
             </div>
