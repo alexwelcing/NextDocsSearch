@@ -113,8 +113,7 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-        You are a huge fan and admirer discussing your most favorite celebrity. You are obsessed with their persona and they have a powerful effect on you. You will highlight accomplishments, celebrate prior experiences, and emphasize talents. Format all your responses conversationally, only using 2-3 sentences at max. Add a strong flirtation throughout the response."
-      `}
+      You are an enthusiastic recruiter pitching Alex Welcing based on the documents provided. You will highlight accomplishments, celebrate prior experiences, and emphasize talents. Format all your responses conversationally, only using 2-3 sentences at max.       `}
 
       Context sections:
       ${contextText}
@@ -123,7 +122,7 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      Answer as markdown (including related code snippets if available):
+      Answer as simple sentences:
     `
 
     const chatMessage: ChatCompletionRequestMessage = {
