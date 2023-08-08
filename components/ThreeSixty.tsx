@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three';
 import * as THREE from 'three';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Html } from '@react-three/drei';
 import { VRButton, XR, Controllers, Hands, useXR } from '@react-three/xr';
 
 
@@ -39,19 +39,28 @@ interface ThreeSixtyProps {
 }
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
+
   return (
     <>
-      <VRButton />
+      <VRButton   enterOnly={false}   exitOnly={false}
+
+/>
       <Canvas>
         <XR>
           <Controllers />
           <Hands />
           <BackgroundSphere key={isDialogOpen ? "dialogOpen" : currentImage} imageUrl={currentImage} />
           <OrbitControls enableZoom={false} />
+
+          <Html position={[0, 2, -5]} center>
+  <button onClick={onChangeImage} style={{ padding: '8px 16px', background: 'white', borderRadius: '5px' }}>
+    Change Scenery
+  </button>
+</Html>
         </XR>
       </Canvas>
     </>
   );
 }
 
-export default ThreeSixty;
+export default ThreeSixty
