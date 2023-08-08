@@ -42,8 +42,11 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
 
   return (
     <>
-      <VRButton />
+
       <Canvas>
+      <VRButton   enterOnly={false}   exitOnly={false}
+
+/>
         <XR>
           <Controllers />
           <Hands />
