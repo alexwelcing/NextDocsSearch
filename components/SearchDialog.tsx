@@ -1,5 +1,3 @@
-'use client'
-
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,14 +12,50 @@ import { Input } from '@/components/ui/input'
 import { useCompletion } from 'ai/react'
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
 
+type QuestionKey = 'root' | 'A' | 'B';
+type Question = {
+  key: string;
+  text: string;
+};
+type QuestionTreeNode = Record<string, string>;
+const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
+  root: {
+    A: "Who is Alex?",
+    B: "Where is Alex?"
+  },
+  A: {
+    C: "Has he worked anywhere?",
+    D: "Does he have skills?",
+    E: "What has he accomplished?"
+  },
+  B: {
+    F: "Is it nice there?",
+    G: "Can he travel?",
+    H: "Will he come into an office?"
+  }
+};
 
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState<string>('')
+  const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
+    Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
+  );
 
   const { complete, completion, isLoading, error } = useCompletion({
     api: '/api/vector-search',
   })
+
+
+
+  React.useEffect(() => {
+    async function fetchBackgroundImage() {
+      const response = await fetch("/api/getBackgroundImages");
+      const data = await response.json();
+    }
+
+    fetchBackgroundImage();
+  }, []);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -30,14 +64,13 @@ export function SearchDialog() {
       }
 
       if (e.key === 'Escape') {
-        console.log('esc')
         handleModalToggle()
       }
     }
 
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function handleModalToggle() {
@@ -45,9 +78,21 @@ export function SearchDialog() {
     setQuery('')
   }
 
+  function setQuestionsBasedOnSelection(selectedKey: string) {
+    const questionText = currentQuestions.find((q) => q.key === selectedKey)?.text || '';
+    setQuery(questionText);
+
+    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey];
+    if (nextQuestionsObj) {
+      const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj);
+      setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
+    } else {
+      complete(questionText);
+    }
+  }
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    console.log(query)
     complete(query)
   }
 
@@ -64,7 +109,7 @@ export function SearchDialog() {
       >
         <Search width={15} />
         <span className="border border-l h-5"></span>
-        <span className="inline-block ml-4">Ask...</span>
+        <span className="inline-block ml-4">Search...</span>
         <kbd
           className="absolute right-3 top-2.5
           pointer-events-none inline-flex h-5 select-none items-center gap-1
@@ -77,12 +122,13 @@ export function SearchDialog() {
         </kbd>{' '}
       </button>
       <Dialog open={open}>
-        <DialogContent className="sm:max-w-[850px] text-black">
-          <DialogHeader>
-                        <DialogTitle>Want to know Alex?</DialogTitle>
-                        <DialogDescription>
-                            Explore my career with Next.js, OpenAI & Supabase.
-                        </DialogDescription>
+        <DialogContent
+          className={`sm:max-w-[850px] text-black  `}
+        >          <DialogHeader>
+            <DialogTitle>Want to know Alex?</DialogTitle>
+            <DialogDescription>
+              Explore my career with Next.js, OpenAI & Supabase.
+            </DialogDescription>
             <hr />
             <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
               <X className="h-4 w-4 dark:text-gray-100" />
@@ -136,9 +182,8 @@ export function SearchDialog() {
                   className="col-span-3"
                 />
                 <CornerDownLeft
-                  className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${
-                    query ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${query ? 'opacity-100' : 'opacity-0'
+                    }`}
                 />
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-100">
@@ -152,7 +197,18 @@ export function SearchDialog() {
                   transition-colors"
                   onClick={(_) => setQuery('Background Information about Work Experience?')}
                 >
-                  Background Information about Work Experience?
+                  Who is Alex Welcing?
+                </button>
+                <button
+                  type="button"
+                  className="px-1.5 py-0.5 m-2
+                  bg-slate-50 dark:bg-gray-500
+                  hover:bg-slate-100 dark:hover:bg-gray-600
+                  rounded border border-slate-200 dark:border-slate-600
+                  transition-colors"
+                  onClick={(_) => setQuery('Background Information about Work Experience?')}
+                >
+                  Where has Alex Welcing worked previously and what did he do there?
                 </button>
               </div>
             </div>
@@ -167,3 +223,5 @@ export function SearchDialog() {
     </>
   )
 }
+
+export default SearchDialog;
