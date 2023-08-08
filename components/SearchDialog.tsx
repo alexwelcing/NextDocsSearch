@@ -98,29 +98,32 @@ export function SearchDialog() {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="text-base flex gap-2 items-center px-4 py-2 z-50 relative
-        text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
-        transition-colors
-        rounded-md
-        border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500
-        min-w-[300px] "
-      >
-        <Search width={15} />
-        <span className="border border-l h-5"></span>
-        <span className="inline-block ml-4">Search...</span>
-        <kbd
-          className="absolute right-3 top-2.5
-          pointer-events-none inline-flex h-5 select-none items-center gap-1
-          rounded border border-slate-100 bg-slate-100 px-1.5
-          font-mono text-[10px] font-medium
-          text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400
-          opacity-100 "
+      <div className="flex justify-center items-center h-screen">
+        <button
+          onClick={() => setOpen(true)}
+          className="text-base flex gap-2 items-center px-4 py-2 z-50 relative
+  text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
+  rounded-md
+  border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500
+  shadow-md hover:shadow-lg transition-shadow
+  bg-white dark:bg-gray-700
+  min-w-[300px]"
         >
-          <span className="text-xs">⌘</span>K
-        </kbd>{' '}
-      </button>
+          <Search width={15} />
+          <span className="border border-l h-5"></span>
+          <span className="inline-block ml-4">Ask...</span>
+          <kbd
+            className="absolute right-3 top-2.5
+            pointer-events-none inline-flex h-5 select-none items-center gap-1
+            rounded border border-slate-100 bg-slate-100 px-1.5
+            font-mono text-[10px] font-medium
+            text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400
+            opacity-100 "
+          >
+            <span className="text-xs">⌘</span>K
+          </kbd>
+        </button>
+      </div>
       <Dialog open={open}>
         <DialogContent
           className={`sm:max-w-[850px] text-black  `}
