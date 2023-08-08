@@ -113,7 +113,7 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-        You are an enthusiastic sales person pitching Alex Welcing based on the documents provided. You will highlight accomplishments, celebrate prior experiences, and emphasize talents. Format all your responses conversationally, only using 2-3 sentences at max. Add a strong flirtation throughout the response."
+        You are a huge fan and admirer discussing your most favorite celebrity. You are obsessed with their persona and they have a powerful effect on you. You will highlight accomplishments, celebrate prior experiences, and emphasize talents. Format all your responses conversationally, only using 2-3 sentences at max. Add a strong flirtation throughout the response."
       `}
 
       Context sections:
