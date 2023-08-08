@@ -64,7 +64,7 @@ export function SearchDialog() {
       >
         <Search width={15} />
         <span className="border border-l h-5"></span>
-        <span className="inline-block ml-4">Search...</span>
+        <span className="inline-block ml-4">Ask...</span>
         <kbd
           className="absolute right-3 top-2.5
           pointer-events-none inline-flex h-5 select-none items-center gap-1
