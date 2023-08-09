@@ -19,7 +19,7 @@ function About() {
         <div className="shadow-lg p-8 rounded-lg space-y-2">
           {' '}
           {/* Increased vertical spacing */}
-          <div className="w-4/6 justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg">
+          <div className="justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg">
             <div className="text-white text-3xl mb-4">Alex Welcing | Senior Technical Product Manager</div>
             <p className="text-2xl text-slate-100 mb-4 leading-tight space-y-2">
               Results-oriented leader, adept in defining product enhancements, prioritizing crucial
@@ -28,7 +28,7 @@ function About() {
               aligning with overall business objectives and market opportunities.
             </p>
           </div>
-          <div className="w-5/6 justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg text-2xl text-slate-100 leading-tight space-y-2">
+          <div className="justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg text-2xl text-slate-100 leading-tight space-y-2">
             <p>
               Skilled at driving business growth by managing and launching business-defining projects like:
   </p>
