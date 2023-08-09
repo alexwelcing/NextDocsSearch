@@ -239,15 +239,6 @@ export function SearchDialog() {
           </button>
         ))}
 
-        <button
-          onClick={handleWantMoreClick}
-          className={`bg-slate-50 dark:bg-gray-500
-            hover:bg-slate-100 dark:hover:bg-gray-600
-            rounded border border-slate-200 dark:border-slate-600
-            transition-colors text-xs text-gray-500 dark:text-gray-100 px-1.5 py-0.5`}
-        >
-          {showMoreOptions ? 'Go Back' : 'Want More?'}
-        </button>
 
             <DialogFooter>
               <Button type="submit" className="bg-red-500">
