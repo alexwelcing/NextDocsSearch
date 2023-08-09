@@ -9,10 +9,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Innovative products with Alex Welcing.</title>
+        <title>Alex Welcing webs in New York.</title>
         <meta
           name="description"
-          content="Explore Alex Welcing's career in technology, consulting, and marketing."
+          content="Check out Alex Welcing's OpenAI experiments, Generative AI creations, and a career in technology, consulting, and marketing."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -21,7 +21,7 @@ export default function Home() {
       <div
         className={styles.gradientbg + ' flex flex-col items-center justify-center min-h-screen'}
       >
-        <div className={styles.centeredtitle}>Exploratory products with Alex Welcing.</div>
+        <div className={styles.centeredtitle}>Web experiments with Alex Welcing.</div>
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
           <Link href="/chat" className={styles.landingBtn}>
             Chat

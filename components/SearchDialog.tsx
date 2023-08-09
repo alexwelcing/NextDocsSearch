@@ -12,11 +12,13 @@ import { Input } from '@/components/ui/input'
 import { useCompletion } from 'ai/react'
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
 
-type QuestionKey = 'root' | 'A' | 'B'
 type Question = {
   key: string
   text: string
 }
+
+  type QuestionKey = 'root' | 'A' | 'B';
+
 type QuestionTreeNode = Record<string, string>
 const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   root: {
@@ -35,6 +37,9 @@ const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   },
 }
 
+const DEFAULT_QUESTIONS = Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }));
+let historyStack: QuestionKey[] = [];
+
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState<string>('')
@@ -46,14 +51,8 @@ export function SearchDialog() {
     api: '/api/vector-search',
   })
 
-  React.useEffect(() => {
-    async function fetchBackgroundImage() {
-      const response = await fetch('/api/getBackgroundImages')
-      const data = await response.json()
-    }
+  const [showMoreOptions, setShowMoreOptions] = React.useState(false);
 
-    fetchBackgroundImage()
-  }, [])
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -69,33 +68,55 @@ export function SearchDialog() {
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  function handleModalToggle() {
-    setOpen(!open)
-    setQuery('')
-  }
-
-  function setQuestionsBasedOnSelection(selectedKey: string) {
-    const questionText = currentQuestions.find((q) => q.key === selectedKey)?.text || ''
-    setQuery(questionText)
-
-    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey]
-    if (nextQuestionsObj) {
-      const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj)
-      setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })))
-    } else {
-      complete(questionText)
-    }
-  }
+  }, []);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
     complete(query)
   }
 
+  function handleModalToggle() {
+    setOpen(!open);
+    setQuery('');
+    setShowMoreOptions(false);
+    setCurrentQuestions(DEFAULT_QUESTIONS);
+    historyStack = [];
+  }
+
+  function setQuestionsBasedOnSelection(selectedKey: string) {
+    historyStack.push(selectedKey as QuestionKey);
+
+    const questionText = currentQuestions.find((q) => q.key === selectedKey)?.text || '';
+    setQuery(questionText); // This sets the selected question text to the query box
+
+    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey];
+    if (nextQuestionsObj) {
+      const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj);
+      setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
+    } else {
+      complete(questionText);
+    }
+  }
+
+
+  function handleWantMoreClick() {
+    if (showMoreOptions && historyStack.length > 1) {
+      historyStack.pop(); // Remove current level
+      const prevKey = historyStack[historyStack.length - 1];
+      const prevQuestionsObj = QUESTIONS_TREE[prevKey];
+      setCurrentQuestions(Object.entries(prevQuestionsObj).map(([key, text]) => ({ key, text })));
+    } else if (showMoreOptions && historyStack.length === 1) {
+      setShowMoreOptions(false);
+      setCurrentQuestions(DEFAULT_QUESTIONS);
+      historyStack = [];
+    } else {
+      setShowMoreOptions(true);
+    }
+  }
+
   return (
     <>
+                    <div className="relative">
       <div className="flex justify-center items-center h-screen">
         <button
           onClick={() => setOpen(true)}
@@ -193,6 +214,7 @@ export function SearchDialog() {
                 </button>
                 <button
                   type="button"
+
                   className="px-1.5 py-0.5 m-2
                   bg-slate-50 dark:bg-gray-500
                   hover:bg-slate-100 dark:hover:bg-gray-600
@@ -208,6 +230,25 @@ export function SearchDialog() {
                 </button>
               </div>
             </div>
+            {showMoreOptions && currentQuestions.map((question) => (
+          <button
+            key={question.key}
+            className="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded m-2"
+          >
+            {question.text}
+          </button>
+        ))}
+
+        <button
+          onClick={handleWantMoreClick}
+          className={`bg-slate-50 dark:bg-gray-500
+            hover:bg-slate-100 dark:hover:bg-gray-600
+            rounded border border-slate-200 dark:border-slate-600
+            transition-colors text-xs text-gray-500 dark:text-gray-100 px-1.5 py-0.5`}
+        >
+          {showMoreOptions ? 'Go Back' : 'Want More?'}
+        </button>
+
             <DialogFooter>
               <Button type="submit" className="bg-red-500">
                 Ask
@@ -216,6 +257,7 @@ export function SearchDialog() {
           </form>
         </DialogContent>
       </Dialog>
+      </div>
     </>
   )
 }
