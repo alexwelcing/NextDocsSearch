@@ -1,90 +1,95 @@
-import * as React from 'react';
+import * as React from 'react'
 import { Button } from '@/components/ui/button'
-import { useCompletion } from 'ai/react';
-import { User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { X, Loader } from 'lucide-react';
+import { useCompletion } from 'ai/react'
+import { User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { X, Loader } from 'lucide-react'
 
-
-type QuestionKey = 'root' | 'A' | 'B';
+type QuestionKey = 'root' | 'A' | 'B'
 type Question = {
-  key: string;
-  text: string;
-};
+  key: string
+  text: string
+}
 
-type QuestionTreeNode = Record<string, string>;
+type QuestionTreeNode = Record<string, string>
 
 const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   root: {
-    A: "Who is Alex?",
-    B: "Where is Alex?"
+    A: 'Who is Alex?',
+    B: 'Where is Alex?',
   },
   A: {
-    C: "Has he worked anywhere?",
-    D: "Does he have skills?",
-    E: "What has he accomplished?"
+    C: 'Has he worked anywhere?',
+    D: 'Does he have skills?',
+    E: 'What has he accomplished?',
   },
   B: {
-    F: "Is it nice there?",
-    G: "Can he travel?",
-    H: "Will he come into an office?"
-  }
-};
+    F: 'Is it nice there?',
+    G: 'Can he travel?',
+    H: 'Will he come into an office?',
+  },
+}
 
 interface SearchBarProps {
-  currentImage: string;
-  onImageChange: (imageUrl: string) => void;
+  currentImage: string
+  onImageChange: (imageUrl: string) => void
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ currentImage, onImageChange }) => {
-  const [query, setQuery] = React.useState<string>('');
+  const [query, setQuery] = React.useState<string>('')
   const { complete, completion, isLoading, error } = useCompletion({
     api: '/api/vector-search',
-  });
+  })
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
   const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
-  );
+  )
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && e.metaKey) {
-        setOpen(true);
+        setOpen(true)
       }
 
       if (e.key === 'Escape') {
-        handleModalToggle();
+        handleModalToggle()
       }
-    };
+    }
 
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, []);
+    document.addEventListener('keydown', down)
+    return () => document.removeEventListener('keydown', down)
+  }, [])
 
   function handleModalToggle() {
-    setOpen((prev) => !prev);
-    setQuery('');
+    setOpen((prev) => !prev)
+    setQuery('')
   }
 
   function setQuestionsBasedOnSelection(selectedKey: string) {
-    const questionText = currentQuestions.find((q) => q.key === selectedKey)?.text || '';
-    setQuery(questionText);
+    const questionText = currentQuestions.find((q) => q.key === selectedKey)?.text || ''
+    setQuery(questionText)
 
-    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey];
+    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey]
     if (nextQuestionsObj) {
-      const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj);
-      setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
+      const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj)
+      setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })))
     } else {
-      complete(questionText);
+      complete(questionText)
     }
   }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    complete(query);
-  };
+    e.preventDefault()
+    complete(query)
+  }
 
   return (
     <>
@@ -111,7 +116,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ currentImage, onImageChange }) =>
                     <span className="bg-slate-100 dark:bg-slate-300 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
                       <User width={18} />{' '}
                     </span>
-                    <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">{query}</p>
+                    <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">
+                      {query}
+                    </p>
                   </div>
                 )}
 
@@ -183,7 +190,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ currentImage, onImageChange }) =>
         </Dialog>
       )}
     </>
-  );
-};
+  )
+}
 
-export default SearchBar;
+export default SearchBar
