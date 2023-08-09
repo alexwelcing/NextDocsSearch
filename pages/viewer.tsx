@@ -3,6 +3,8 @@ import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import Footer from '@/components/ui/footer'
 import ThreeSixty from '@/components/ThreeSixty'
+import CircleNav from '@/components/ui/CircleNav'
+
 
 export default function ThreeSixtyPage() {
   const [currentImage, setCurrentImage] = useState<string>('./background/scifi1.jpg')
@@ -30,12 +32,14 @@ export default function ThreeSixtyPage() {
 
   return (
     <>
-      <Head>
-        <title>Explore with Alex in 360.</title>
-        <meta name="description" content="360 view of Alex Welcing's world." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+<Head>
+<title>Explore generated worlds with Alex, including in Virtual Reality!</title>
+<meta name="description" content="Explore Alex Welcing's world using VR! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products." />
+<meta name="keywords" content="Alex Welcing, product manager, product leadership, generative AI, LLM, 360, chat with documents" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/favicon.ico" />
+</Head>
+      <CircleNav />
 
       <main className={styles.main}>
         <ThreeSixty

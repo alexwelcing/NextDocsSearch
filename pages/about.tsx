@@ -14,12 +14,12 @@ function About() {
         ></meta>
       </Head>
       <CircleNav />
-      <main className="w-4/5">
+      <main className="justify-center">
 
         <div className="shadow-lg p-8 rounded-lg space-y-2">
           {' '}
           {/* Increased vertical spacing */}
-          <div className="justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg">
+          <div className="w-4/6 justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg">
             <div className="text-white text-3xl mb-4">Alex Welcing | Senior Technical Product Manager</div>
             <p className="text-2xl text-slate-100 mb-4 leading-tight space-y-2">
               Results-oriented leader, adept in defining product enhancements, prioritizing crucial
@@ -28,7 +28,7 @@ function About() {
               aligning with overall business objectives and market opportunities.
             </p>
           </div>
-          <div className="justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg text-2xl text-slate-100 leading-tight space-y-2">
+          <div className="w-5/6 justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg text-2xl text-slate-100 leading-tight space-y-2">
             <p>
               Skilled at driving business growth by managing and launching business-defining projects like:
   </p>
@@ -53,12 +53,12 @@ function About() {
               products strategically and effectively.
             </p>
           </div>
-          <div className=" bg-white shadow-lg p-8 rounded-lg space-y-4">
+          <div className=" bg-white shadow-lg p-8 rounded-lg">
 
           <h4 className="text-slate-700 text-2xl font-semibold leading-tight text-primary space-y-4">
             Core Competencies
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
             <div className="flex text-xl items-center space-x-2 p-2 bg-blue-100 rounded hover:bg-blue-200 transition">
               <span className="material-icons-outlined">build</span>
               <span>Product Development</span>

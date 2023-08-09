@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "pnpm run embeddings && next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
@@ -49,6 +50,7 @@
     "mdast-util-to-string": "^3.1.1",
     "micromark-extension-mdxjs": "^1.0.0",
     "next": "13.2.4",
+    "next-sitemap": "^4.1.8",
     "openai": "^3.3.0",
     "openai-edge": "^1.1.0",
     "react": "18.2.0",

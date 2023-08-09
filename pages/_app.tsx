@@ -4,7 +4,6 @@ import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
-import Head from 'next/head'
 
 import * as ga from '../lib/google-analytics'
 
@@ -24,7 +23,6 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Head></Head>
       <script
         src="https://cookie-cdn.cookiepro.com/scripttemplates/otSDKStub.js"
         type="text/javascript"

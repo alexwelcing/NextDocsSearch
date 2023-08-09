@@ -4,6 +4,8 @@ import styles from '@/styles/Home.module.css'
 import { SearchDialog } from '@/components/SearchDialog'
 import Footer from '@/components/ui/footer'
 import ThreeSixty from '@/components/ThreeSixty'
+import CircleNav from '@/components/ui/CircleNav'
+
 
 const Chat = () => {
   const [currentImage, setCurrentImage] = useState<string>('./background/bg1.jpg')
@@ -31,9 +33,15 @@ const Chat = () => {
 
   return (
     <>
-      <Head>
-        <title>Chat with Alex</title>
-      </Head>
+<Head>
+<title>Chat with Alex documents while enjoying fantastic generated worlds!</title>
+<meta name="description" content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products." />
+<meta name="keywords" content="Alex Welcing, product leadership, generative AI, LLM, 360, chat with documents" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/favicon.ico" />
+</Head>
+            <CircleNav />
+
 
       <main className={`${styles.main} ${styles.gradientbg}`}>
         <ThreeSixty

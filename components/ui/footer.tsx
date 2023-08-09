@@ -135,20 +135,6 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
             </div>
           )}
         </div>
-        <div className="py-1 w-full flex flex-wrap items-center justify-center space-x-6">
-          {expanded && (
-            <div className="flex flex-col items-center space-y-4">
-              {showChangeScenery && (
-                <button
-                  className="mt-4 px-4 py-2 bg-emerald-500 text-white rounded border-2 border-emerald-500 hover:border-emerald-950 hover:bg-emerald-600"
-                  onClick={() => setAboutModalOpen(true)}
-                >
-                  About Alex
-                </button>
-              )}
-            </div>
-          )}
-        </div>
       </section>
       {isAboutModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
