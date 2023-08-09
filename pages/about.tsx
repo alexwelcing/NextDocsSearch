@@ -14,7 +14,7 @@ function About() {
         ></meta>
       </Head>
       <CircleNav />
-      <main className="justify-center">
+      <main>
 
         <div className="shadow-lg p-8 rounded-lg space-y-2">
           {' '}
