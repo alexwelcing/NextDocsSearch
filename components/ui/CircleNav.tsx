@@ -15,11 +15,14 @@ const CircleNav: React.FC = () => {
           <Link className={styles.menuLink} href="/">
             Home
           </Link>
-          <Link className={styles.menuLink} href="/about">
-            About
+          <Link className={styles.menuLink} href="/chat">
+            Chat
           </Link>
           <Link className={styles.menuLink} href="/viewer">
             Explore
+          </Link>
+          <Link className={styles.menuLink} href="/about">
+            About
           </Link>
         </div>
       ) : (
