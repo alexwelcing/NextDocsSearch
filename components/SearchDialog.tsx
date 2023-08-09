@@ -51,15 +51,6 @@ export function SearchDialog() {
     api: '/api/vector-search',
   })
 
-  React.useEffect(() => {
-    async function fetchBackgroundImage() {
-      const response = await fetch('/api/getBackgroundImages')
-      const data = await response.json()
-    }
-
-    fetchBackgroundImage()
-  }, [])
-
   const [showMoreOptions, setShowMoreOptions] = React.useState(false);
 
 
@@ -223,6 +214,7 @@ export function SearchDialog() {
                 </button>
                 <button
                   type="button"
+
                   className="px-1.5 py-0.5 m-2
                   bg-slate-50 dark:bg-gray-500
                   hover:bg-slate-100 dark:hover:bg-gray-600
@@ -241,7 +233,6 @@ export function SearchDialog() {
             {showMoreOptions && currentQuestions.map((question) => (
           <button
             key={question.key}
-            onClick={() => setQuestionsBasedOnSelection(question.key)}
             className="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded m-2"
           >
             {question.text}

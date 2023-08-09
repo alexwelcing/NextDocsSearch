@@ -7,7 +7,8 @@ import ThreeSixty from '@/components/ThreeSixty'
 import CircleNav from '@/components/ui/CircleNav'
 
 const Chat = () => {
-  const [currentImage, setCurrentImage] = useState<string>('./background/bg1.jpg')
+
+  const [currentImage, setCurrentImage] = useState<string>('setCurrentImage')
   const [backgroundImages, setBackgroundImages] = useState<string[]>([])
 
   useEffect(() => {
