@@ -12,50 +12,48 @@ import { Input } from '@/components/ui/input'
 import { useCompletion } from 'ai/react'
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
 
-type QuestionKey = 'root' | 'A' | 'B';
+type QuestionKey = 'root' | 'A' | 'B'
 type Question = {
-  key: string;
-  text: string;
-};
-type QuestionTreeNode = Record<string, string>;
+  key: string
+  text: string
+}
+type QuestionTreeNode = Record<string, string>
 const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   root: {
-    A: "Who is Alex?",
-    B: "Where is Alex?"
+    A: 'Who is Alex?',
+    B: 'Where is Alex?',
   },
   A: {
-    C: "Has he worked anywhere?",
-    D: "Does he have skills?",
-    E: "What has he accomplished?"
+    C: 'Has he worked anywhere?',
+    D: 'Does he have skills?',
+    E: 'What has he accomplished?',
   },
   B: {
-    F: "Is it nice there?",
-    G: "Can he travel?",
-    H: "Will he come into an office?"
-  }
-};
+    F: 'Is it nice there?',
+    G: 'Can he travel?',
+    H: 'Will he come into an office?',
+  },
+}
 
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState<string>('')
   const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
-  );
+  )
 
   const { complete, completion, isLoading, error } = useCompletion({
     api: '/api/vector-search',
   })
 
-
-
   React.useEffect(() => {
     async function fetchBackgroundImage() {
-      const response = await fetch("/api/getBackgroundImages");
-      const data = await response.json();
+      const response = await fetch('/api/getBackgroundImages')
+      const data = await response.json()
     }
 
-    fetchBackgroundImage();
-  }, []);
+    fetchBackgroundImage()
+  }, [])
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -79,15 +77,15 @@ export function SearchDialog() {
   }
 
   function setQuestionsBasedOnSelection(selectedKey: string) {
-    const questionText = currentQuestions.find((q) => q.key === selectedKey)?.text || '';
-    setQuery(questionText);
+    const questionText = currentQuestions.find((q) => q.key === selectedKey)?.text || ''
+    setQuery(questionText)
 
-    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey];
+    const nextQuestionsObj = QUESTIONS_TREE[selectedKey as QuestionKey]
     if (nextQuestionsObj) {
-      const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj);
-      setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
+      const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj)
+      setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })))
     } else {
-      complete(questionText);
+      complete(questionText)
     }
   }
 
@@ -125,9 +123,9 @@ export function SearchDialog() {
         </button>
       </div>
       <Dialog open={open}>
-        <DialogContent
-          className={`sm:max-w-[850px] text-black  `}
-        >          <DialogHeader>
+        <DialogContent className={`sm:max-w-[850px] text-black  `}>
+          {' '}
+          <DialogHeader>
             <DialogTitle>Want to know Alex?</DialogTitle>
             <DialogDescription>
               Explore my career with Next.js, OpenAI & Supabase.
@@ -137,7 +135,6 @@ export function SearchDialog() {
               <X className="h-4 w-4 dark:text-gray-100" />
             </button>
           </DialogHeader>
-
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4 text-slate-700">
               {query && (
@@ -164,9 +161,7 @@ export function SearchDialog() {
               )}
 
               {completion && !error ? (
-                <div className="flex items-center gap-4 dark:text-white">
-                  {completion}
-                </div>
+                <div className="flex items-center gap-4 dark:text-white">{completion}</div>
               ) : null}
 
               <div className="relative">
@@ -178,8 +173,9 @@ export function SearchDialog() {
                   className="col-span-3"
                 />
                 <CornerDownLeft
-                  className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${query ? 'opacity-100' : 'opacity-0'
-                    }`}
+                  className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${
+                    query ? 'opacity-100' : 'opacity-0'
+                  }`}
                 />
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-100">
@@ -202,7 +198,11 @@ export function SearchDialog() {
                   hover:bg-slate-100 dark:hover:bg-gray-600
                   rounded border border-slate-200 dark:border-slate-600
                   transition-colors"
-                  onClick={(_) => setQuery('Where has Alex Welcing worked previously and what did he accomplish there?')}
+                  onClick={(_) =>
+                    setQuery(
+                      'Where has Alex Welcing worked previously and what did he accomplish there?'
+                    )
+                  }
                 >
                   Where has he worked previously and what did he accomplish?
                 </button>
@@ -220,4 +220,4 @@ export function SearchDialog() {
   )
 }
 
-export default SearchDialog;
+export default SearchDialog

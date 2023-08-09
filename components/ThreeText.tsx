@@ -1,8 +1,8 @@
-import { Text } from "@react-three/drei";
+import { Text } from '@react-three/drei'
 
 interface ThreeTextProps {
-  text: string;
-  position: [number, number, number];
+  text: string
+  position: [number, number, number]
 }
 
 const ThreeText: React.FC<ThreeTextProps> = ({ text, position }) => {
@@ -10,7 +10,7 @@ const ThreeText: React.FC<ThreeTextProps> = ({ text, position }) => {
     <Text position={position} color="white" fontSize={1}>
       {text}
     </Text>
-  );
-};
+  )
+}
 
-export default ThreeText;
+export default ThreeText
