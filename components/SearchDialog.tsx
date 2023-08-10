@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useCompletion } from 'ai/react'
-import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
+import { X, Loader, User, Frown, CornerDownLeft, Search, Wand, ArrowLeftCircle } from 'lucide-react'
 
 type Question = {
   key: string
@@ -99,18 +99,17 @@ export function SearchDialog() {
   }
 
 
-  function handleWantMoreClick() {
-    if (showMoreOptions && historyStack.length > 1) {
-      historyStack.pop(); // Remove current level
+  function handleGoBack() {
+    if (historyStack.length > 1) {
+      historyStack.pop();
       const prevKey = historyStack[historyStack.length - 1];
       const prevQuestionsObj = QUESTIONS_TREE[prevKey];
       setCurrentQuestions(Object.entries(prevQuestionsObj).map(([key, text]) => ({ key, text })));
-    } else if (showMoreOptions && historyStack.length === 1) {
-      setShowMoreOptions(false);
+      setShowMoreOptions(true);
+    } else {
       setCurrentQuestions(DEFAULT_QUESTIONS);
       historyStack = [];
-    } else {
-      setShowMoreOptions(true);
+      setShowMoreOptions(false);
     }
   }
 
@@ -157,9 +156,9 @@ export function SearchDialog() {
             </button>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4 text-slate-700">
+            <div className="grid gap-3 py-4 text-slate-700">
               {query && (
-                <div className="flex gap-4">
+                <div className="flex">
                   <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">{query}</p>
                 </div>
               )}
@@ -171,7 +170,7 @@ export function SearchDialog() {
               )}
 
               {error && (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                   <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
                     <Frown width={18} />
                   </span>
@@ -199,7 +198,7 @@ export function SearchDialog() {
                   }`}
                 />
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-100">
+              <div className="text-m text-gray-500 dark:text-gray-100">
                 Or try:{' '}
                 <button
                   type="button"
@@ -229,6 +228,40 @@ export function SearchDialog() {
                   Where has he worked previously and what did he accomplish?
                 </button>
               </div>
+              <div className="flex flex-wrap">
+        {historyStack.length > 0 && (
+          <button
+            className="bg-teal-100 hover:bg-teal-200 text-teal-700 p-2 rounded m-2"
+            onClick={handleGoBack}
+          >
+            <ArrowLeftCircle width={18} />
+          </button>
+        )}
+        {currentQuestions.map((question) => (
+          <button
+            key={question.key}
+            type="button"
+            className="px-1.5 py-0.5 m-2
+              bg-teal-50 dark:bg-gray-300
+              hover:bg-teal-100 dark:hover:bg-gray-400
+              rounded border border-teal-200 dark:border-gray-500
+              transition-colors"
+            onClick={() => {
+              setQuestionsBasedOnSelection(question.key);
+            }}
+          >
+            {question.text}
+          </button>
+        ))}
+      </div>
+      {showMoreOptions && currentQuestions.map((question) => (
+        <button
+          key={question.key}
+          className="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded m-2"
+        >
+          {question.text}
+        </button>
+      ))}
             </div>
             {showMoreOptions && currentQuestions.map((question) => (
           <button
