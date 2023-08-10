@@ -254,14 +254,6 @@ export function SearchDialog() {
           </button>
         ))}
       </div>
-      {showMoreOptions && currentQuestions.map((question) => (
-        <button
-          key={question.key}
-          className="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded m-2"
-        >
-          {question.text}
-        </button>
-      ))}
             </div>
 
 
