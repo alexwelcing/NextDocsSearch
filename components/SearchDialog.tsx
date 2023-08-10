@@ -93,11 +93,12 @@ export function SearchDialog() {
     if (nextQuestionsObj) {
       const nextQuestionsArray: [string, string][] = Object.entries(nextQuestionsObj);
       setCurrentQuestions(nextQuestionsArray.map(([key, text]) => ({ key, text })));
+      setShowMoreOptions(true); // Showing the 'more options' when we move to the next set of questions
     } else {
-      complete(questionText);
+      // It's a leaf node. We don't do anything for now.
+      // If you want, you can add any specific behavior here.
     }
   }
-
 
   function handleGoBack() {
     if (historyStack.length > 1) {
@@ -105,7 +106,11 @@ export function SearchDialog() {
       const prevKey = historyStack[historyStack.length - 1];
       const prevQuestionsObj = QUESTIONS_TREE[prevKey];
       setCurrentQuestions(Object.entries(prevQuestionsObj).map(([key, text]) => ({ key, text })));
-      setShowMoreOptions(true);
+      if (historyStack.length === 1) {
+        setShowMoreOptions(false); // Hide 'more options' if we're back to the root
+      } else {
+        setShowMoreOptions(true);
+      }
     } else {
       setCurrentQuestions(DEFAULT_QUESTIONS);
       historyStack = [];
