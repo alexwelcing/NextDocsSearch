@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    GOOGLE_ANALYTICS_ID: 'G-HZNLDCC1GR',
+    GOOGLE_ANALYTICS_ID: 'GTM-W24L468',
     GTM_ID: 'GTM-W24L468',
   },
 }
