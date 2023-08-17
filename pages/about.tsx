@@ -12,6 +12,18 @@ function About() {
           name="description"
           content="Alex Welcing is a Senior Technical Product Manager with 10+ years of experience in the tech industry. He is passionate about building products that solve real problems and make a difference in the world. Alex is based in New York City, but is open to remote opportunities in the US."
         ></meta>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11304249937"></script>
+<script>
+  gtag('js', new Date());
+  gtag('config', 'AW-11304249937');
+</script>
+
+<script>
+  gtag('event', 'conversion', {
+    'send_to': 'AW-11304249937/tu3aCKq_ydMYENHUpI4q'
+  });
+</script>
+
       </Head>
       <CircleNav />
       <main>
