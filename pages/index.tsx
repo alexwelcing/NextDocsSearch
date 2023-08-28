@@ -4,6 +4,7 @@ import Link from 'next/link'
 import styles from '@/styles/Home.module.css'
 import Footer from '@/components/ui/footer'
 import CircleNav from '@/components/ui/CircleNav'
+import ArticleList from '@/components/ui/ArticleList';
 
 export default function Home() {
   return (
@@ -34,6 +35,7 @@ export default function Home() {
             About my career.
           </Link>
         </div>
+        <ArticleList />
       </div>
       <Footer
         onImageChange={function (newImage: string): void {
