@@ -1,0 +1,49 @@
+.articleList {
+    font-family: var(--font-mono);
+    background-color: #212820;
+    border-radius: var(--border-radius); /* Add rounded corners */
+    box-shadow: 0px 2px 8px -1px #0000001a; /* Add shadow for depth */
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+
+  .articleUl {
+    list-style-type: none;
+    padding: 0; /* Remove default padding */
+  }
+
+  .articleLi {
+    padding: 1.2rem 1.5rem; /* Increase padding for more space */
+    border: 1px solid rgba(var(--card-border-rgb), 0.15);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+
+  .articleLi:hover {
+    background: rgba(var(--card-rgb), 0.2);
+    border: 1px solid rgba(var(--card-border-rgb), 0.3);
+    transform: scale(1.05); /* Slight enlargement on hover */
+  }
+
+  .articleLink {
+    display: flex;
+    align-items: center;
+    color: #de7ea2; /* Use the same color as the home elements for harmony */
+  }
+
+  .articleLink span {
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+
+  .articleLi:hover .articleLink span {
+    transform: rotate(360deg);
+  }
+
+  .articleTitle {
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 8px; /* Centered margin */
+    padding: 2px;
+    font-mono: 'Oxygen Mono';
+    color: #de7ea2;
+    transition: all 0.3s ease; /* Smooth transition */
+  }

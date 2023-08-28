@@ -3,7 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from '../../styles/Home.module.css'
 import { Button } from './button'
-import AboutModal from '../AboutModal' // Check this import path!
+import AboutModal from '../AboutModal'
+import { useRouter } from 'next/router'
 
 interface FooterProps {
   onImageChange: (newImage: string) => void
@@ -34,16 +35,15 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
       })
   }
 
+  const router = useRouter();
+  const isArticlePage = router.pathname.includes('/articles/');
+  const footerClass = isArticlePage ? styles.articleFooter : `${styles.footer} ${expanded ? styles.expandedFooter : ''}`;
+
   return (
-    <footer
-      className={`${styles.footer} ${
-        expanded ? styles.expandedFooter : ''
-      } transition-max-height duration-500 ease-in-out relative flex items-center`}
-    >
+    <footer className={`${footerClass} transition-max-height duration-500 ease-in-out relative flex items-center`}>
       <div
-        className={`${styles.expandButton} ${
-          expanded ? styles.expandedButton : ''
-        } absolute top-1/2 right-2 cursor-pointer transform -translate-y-1/2 p-1 rounded`}
+        className={`${styles.expandButton} ${expanded ? styles.expandedButton : ''
+          } absolute top-1/2 right-2 cursor-pointer transform -translate-y-1/2 p-1 rounded`}
         onClick={() => setExpanded(!expanded)}
       >
         {expanded ? (

@@ -269,9 +269,9 @@ async function generateEmbeddings() {
     alias: 'r',
     description: 'Refresh data',
     type: 'boolean',
-  }).argv
+  }).argv;
 
-  const shouldRefresh = argv.refresh
+  const shouldRefresh = argv.refresh;
 
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -280,7 +280,7 @@ async function generateEmbeddings() {
   ) {
     return console.log(
       'Environment variables NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, and OPENAI_KEY are required: skipping embeddings generation'
-    )
+    );
   }
 
   const supabaseClient = createClient(
@@ -292,14 +292,14 @@ async function generateEmbeddings() {
         autoRefreshToken: false,
       },
     }
-  )
+  );
 
   const embeddingSources: EmbeddingSource[] = [
     ...(await walk('pages'))
       .filter(({ path }) => /\.mdx?$/.test(path))
       .filter(({ path }) => !ignoredFiles.includes(path))
-      .map((entry) => new MarkdownEmbeddingSource('guide', entry.path)),
-  ]
+      .map((entry) => new MarkdownEmbeddingSource('article', entry.path)),
+  ];
 
   console.log(`Discovered ${embeddingSources.length} pages`)
 

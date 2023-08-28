@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import styles from '@/styles/About.module.css'
 import CircleNav from '@/components/ui/CircleNav'
 
 
@@ -19,7 +18,6 @@ function About() {
 
         <div className="shadow-lg p-8 rounded-lg space-y-2">
           {' '}
-          {/* Increased vertical spacing */}
           <div className="justify-between bg-slate-800 opacity-80 shadow-lg p-4 rounded-lg">
             <div className="text-white text-3xl mb-4">Alex Welcing | Senior Technical Product Manager</div>
             <p className="text-2xl text-slate-100 mb-4 leading-tight space-y-2">
@@ -104,7 +102,6 @@ function About() {
             Professional Experience
           </h4>
             {' '}
-            {/* Increased spacing between job cards */}
             {/* OBSESS VR Experience */}
             <div>
               <h5 className="text-blue-700 mb-2 mt-0 text-xl font-medium leading-tight text-primary">
@@ -173,7 +170,7 @@ function About() {
             </div>
           </div>
           <div className=" bg-white shadow-lg p-8 rounded-lg space-y-8">
-            {/* MANATT HEALTH Experience */}
+            {/* MANATT Experience */}
             <div>
               <h5 className="text-blue-700 mb-2 mt-0 text-xl font-medium leading-tight text-primary">
                 Manatt Health • Consultant @ Healthcare Legal Practice

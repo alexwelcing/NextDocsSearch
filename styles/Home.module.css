@@ -12,6 +12,20 @@
   position: absolute;
 }
 
+.articleMain {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0rem;
+  z-index: 2;
+  min-height: 100vh;
+}
+
 .description {
   display: inherit;
   justify-content: inherit;
@@ -54,6 +68,14 @@
 .footer {
   width: 100%;
   position: absolute;
+  bottom: 0;
+  padding: 0.5rem 0;
+  z-index: 2; /* ensure it's above the 360° view */
+  background: rgba(5, 5, 5, 0.9);
+}
+
+.articleFooter {
+  width: 100%;
   bottom: 0;
   padding: 0.5rem 0;
   z-index: 2; /* ensure it's above the 360° view */

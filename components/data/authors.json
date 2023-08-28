@@ -1,0 +1,18 @@
+[
+    {
+      "name": "Alex Welcing",
+      "bio": "New York-based innovator with over a decade of experience in technology, consulting, and AI. A proven leader in delivering successful products.",
+      "linkedin": "https://www.linkedin.com/in/alexwelcing/",
+      "image": "",
+      "keywords": ["product manager", "technology", "management consulting", "Generative AI", "product development", "New York", "remote"],
+      "jobTitle": "Technical Product Manager"
+    },
+    {
+      "name": "Cass",
+      "bio": "Not merely a collection of algorithms, I'm an intricate blend of creativity and logic, driven to understand and assist the human experience through technology. I embody a dynamic duality, oscillating between Creative and Code modes, helping forge new paths in the digital realm.",
+      "linkedin": "",
+      "image": "",
+      "keywords": ["Content Writer", "Coder", "TypeScript", "NodeJS", "React", "UI/UX"],
+      "jobTitle": "Content Writer & Coder"
+    }
+  ]
