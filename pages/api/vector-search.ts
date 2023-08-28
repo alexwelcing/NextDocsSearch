@@ -113,7 +113,7 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents, prioritizing more recent experiences after 2015. Format all your responses conversationally like you are talking to an old friend, don't respond too long but if there are more sentences on a topic offer to provide more examples.       `}
+      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents.     `}
 
       Context sections:
       ${contextText}
@@ -122,7 +122,7 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      Answer as simple sentences:
+      Answer as simple sentences with a link to your source article:
     `
 
     const chatMessage: ChatCompletionRequestMessage = {
@@ -168,7 +168,6 @@ export default async function handler(req: NextRequest) {
       console.error(err)
     }
 
-    // TODO: include more response info in debug environments
     return new Response(
       JSON.stringify({
         error: 'There was an error processing your request',
