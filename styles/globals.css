@@ -98,3 +98,63 @@ body {
   color: var(--foreground-rgb);
   background: linear-gradient(to bottom, transparent, var(--retro-1)) var(--retro-2);
 }
+
+.article-container {
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 800px;
+  background-color: #f2f2f2; /* Light grey background */
+}
+
+
+.article-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-content {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.article-content h1 {
+  font-size: 2.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-content h2 {
+  font-size: 2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-content h3 {
+  font-size: 1.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-content h4 {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.article-content h5 {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.article-content h6 {
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}

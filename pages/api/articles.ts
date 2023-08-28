@@ -11,7 +11,7 @@ interface ArticleData {
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<ArticleData[]>) {
-  const articleFolderPath = path.join(process.cwd(), 'docs', 'articles');
+  const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles');
   const filenames = fs.readdirSync(articleFolderPath);
 
   const articlesData: ArticleData[] = filenames.map((filename) => {

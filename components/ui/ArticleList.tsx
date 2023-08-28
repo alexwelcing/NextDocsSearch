@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import styles from '@/styles/ArticleList.module.css'; // Importing custom styles
 
 type ArticleData = {
   filename: string;
@@ -20,17 +18,15 @@ const ArticleList: React.FC = () => {
       .then((data) => setArticles(data));
   }, []);
 
-
   return (
-    <div className="article-list">
-      <h2>Latest Articles</h2>
-      <ul>
+    <div className={styles.articleList}>
+      <h2 className={styles.articleTitle}>Latest Articles</h2>
+      <ul className={styles.articleUl}>
         {articles.map((article, index) => (
-          <li key={index}>
+          <li key={index} className={styles.articleLi}>
             <Link href={`/articles/${article.filename.replace('.mdx', '')}`}>
-              <a>
-                {article.title} - {article.date} by {article.author.join(", ")}
-              </a>
+                <span className="material-icons-outlined align-middle mr-2">article</span>
+                {article.title}
             </Link>
           </li>
         ))}

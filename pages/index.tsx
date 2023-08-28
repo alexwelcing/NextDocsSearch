@@ -35,7 +35,9 @@ export default function Home() {
             About my career.
           </Link>
         </div>
+        <div className="pt-4">
         <ArticleList />
+        </div>
       </div>
       <Footer
         onImageChange={function (newImage: string): void {
