@@ -37,8 +37,7 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
 
   const router = useRouter();
   const isArticlePage = router.pathname.includes('/articles/');
-  const footerClass = `${styles.footer} ${expanded ? styles.expandedFooter : ''} ${isArticlePage ? styles.articleFooter : ''}`;
-
+  const footerClass = isArticlePage ? styles.articleFooter : `${styles.footer} ${expanded ? styles.expandedFooter : ''}`;
 
   return (
     <footer className={`${footerClass} transition-max-height duration-500 ease-in-out relative flex items-center`}>
