@@ -12,7 +12,7 @@
   position: absolute;
 }
 
-.articlemain {
+.articleMain {
   top: 0;
   left: 0;
   right: 0;
@@ -74,7 +74,7 @@
   background: rgba(5, 5, 5, 0.9);
 }
 
-.articlefooter {
+.articleFooter {
   width: 100%;
   bottom: 0;
   padding: 0.5rem 0;
