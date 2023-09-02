@@ -11,37 +11,44 @@ const Chat = () => {
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchImagesWhenIdle = () => {
-      fetch('/api/backgroundImages')
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((images) => {
-          setBackgroundImages(images);
-          images.forEach((image: any) => {
-            new Image().src = `./background/${image}`;
-          });
-          const randomImage = images[Math.floor(Math.random() * images.length)];
-          setCurrentImage(`./background/${randomImage}`);
-        })
-        .catch((error) => {
-          console.error('There was a problem fetching the background images:', error);
+    const fetchImages = async () => {
+      try {
+        const response = await fetch('/api/backgroundImages');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const images = await response.json();
+
+        // Pre-fetch images
+        images.forEach((image: string) => {
+          new Image().src = `./background/${image}`;
         });
+
+        setBackgroundImages(images);
+
+        // Set a random initial image
+        selectRandomImage(images);
+      } catch (error) {
+        console.error('There was a problem fetching the background images:', error);
+      }
     };
 
+    // Execute fetchImages when the browser is idle
     if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(fetchImagesWhenIdle);
+      (window as any).requestIdleCallback(fetchImages);
     } else {
-      setTimeout(fetchImagesWhenIdle, 1000);
+      setTimeout(fetchImages, 1000);
     }
   }, []);
 
-  const handleImageChange = () => {
-    const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+  const selectRandomImage = (images: string[]) => {
+    const randomImage = images[Math.floor(Math.random() * images.length)];
     setCurrentImage(`./background/${randomImage}`);
+  };
+
+  const handleImageChange = () => {
+    selectRandomImage(backgroundImages);
   };
 
   return (
