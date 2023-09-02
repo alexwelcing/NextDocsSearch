@@ -5,6 +5,8 @@ import ArticleHeader from '../components/ArticleHeader';
 import Footer from '../components/ui/footer';
 import StructuredDataComponent from '../components/StructuredData';
 import styles from '../styles/Home.module.css';
+import CircleNav from '@/components/ui/CircleNav'
+
 
 interface ArticlePageProps {
   content: string; // Markdown content here
@@ -14,18 +16,13 @@ interface ArticlePageProps {
 const ArticlePage: React.FC<ArticlePageProps> = ({ content, title }) => {
   return (
     <div className={styles.articleMain}>
+            <CircleNav />
       <ArticleContainer>
         <StructuredDataComponent />
         <ArticleHeader title={title} />
         <div className="article-content">
           <ReactMarkdown>{content}</ReactMarkdown>
         </div>
-        <Footer
-        onImageChange={function (newImage: string): void {
-          throw new Error('Function not implemented.')
-        }}
-        showChangeScenery={false}
-      />
       </ArticleContainer>
     </div>
   );

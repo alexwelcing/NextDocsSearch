@@ -1,27 +1,27 @@
-import type { NextRequest } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { codeBlock, oneLine } from 'common-tags'
-import GPT3Tokenizer from 'gpt3-tokenizer'
+import type { NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { codeBlock, oneLine } from 'common-tags';
+import GPT3Tokenizer from 'gpt3-tokenizer';
 import {
   Configuration,
   OpenAIApi,
   CreateModerationResponse,
   CreateEmbeddingResponse,
   ChatCompletionRequestMessage,
-} from 'openai-edge'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { ApplicationError, UserError } from '@/lib/errors'
+} from 'openai-edge';
+import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { ApplicationError, UserError } from '@/lib/errors';
 
-const openAiKey = process.env.OPENAI_KEY
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const openAiKey = process.env.OPENAI_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const config = new Configuration({
   apiKey: openAiKey,
-})
-const openai = new OpenAIApi(config)
+});
+const openai = new OpenAIApi(config);
 
-export const runtime = 'edge'
+export const runtime = 'edge';
 
 export default async function handler(req: NextRequest) {
   try {
@@ -113,7 +113,7 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents, prioritizing more recent experiences after 2015. Format all your responses conversationally like you are talking to an old friend, don't respond too long but if there are more sentences on a topic offer to provide more examples.       `}
+      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents.     `}
 
       Context sections:
       ${contextText}
@@ -122,7 +122,7 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      Answer as simple sentences:
+      Answer as markdown and include a link to the source article
     `
 
     const chatMessage: ChatCompletionRequestMessage = {
@@ -168,7 +168,6 @@ export default async function handler(req: NextRequest) {
       console.error(err)
     }
 
-    // TODO: include more response info in debug environments
     return new Response(
       JSON.stringify({
         error: 'There was an error processing your request',

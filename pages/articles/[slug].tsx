@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import ArticleContainer from '@/components/ArticleContainer';
 import Footer from '../../components/ui/footer';
 import ArticleHeader from '@/components/ArticleHeader';
+import CircleNav from '@/components/ui/CircleNav';
 
 interface ArticleProps {
   title: string;
@@ -16,15 +17,18 @@ interface ArticleProps {
 
 const ArticlePage: NextPage<ArticleProps> = ({ title, date, author, content }) => {
   return (
-    <ArticleContainer>
-      <ArticleHeader title={title} />
-      <div className="article-content">
-        <ReactMarkdown>{content}</ReactMarkdown>
-      </div>
-      <div><Footer onImageChange={function (newImage: string): void {
+    <div>
+      <CircleNav />
+      <ArticleContainer>
+        <ArticleHeader title={title} />
+        <div className="article-content">
+          <ReactMarkdown>{content}</ReactMarkdown>
+        </div>
+      </ArticleContainer>
+      <Footer onImageChange={function (newImage: string): void {
         throw new Error('Function not implemented.');
-      } } showChangeScenery={false} /></div>
-    </ArticleContainer>
+      }} showChangeScenery={false} />
+    </div>
   );
 };
 

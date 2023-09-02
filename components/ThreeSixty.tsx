@@ -2,9 +2,12 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { TextureLoader } from 'three'
 import * as THREE from 'three'
-import { OrbitControls, Html } from '@react-three/drei'
+import { OrbitControls, Html, Text } from '@react-three/drei'
 import { VRButton, XR, Controllers, Hands, useXR } from '@react-three/xr'
 import styled from '../node_modules/styled-components'
+import ArticleTextDisplay from './ArticleTextDisplay';
+
+
 
 const StyledButton = styled.button`
   padding: 8px 8px;
@@ -34,12 +37,19 @@ interface BackgroundSphereProps {
 }
 
 function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
-  const texture = useLoader(TextureLoader, imageUrl)
-  const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), [])
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
 
-  if (Array.isArray(texture)) {
-    console.error('Loaded multiple textures, but expected a single one.')
-    return null
+  useEffect(() => {
+    const loader = new TextureLoader();
+    loader.load(imageUrl, (loadedTexture) => {
+      setTexture(loadedTexture);
+    });
+  }, [imageUrl]);
+
+  const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), []);
+
+  if (!texture) {
+    return null;
   }
 
   return (
@@ -50,7 +60,7 @@ function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
         side={THREE.BackSide} // Important: Render the inside of the sphere
       />
     </mesh>
-  )
+  );
 }
 
 interface ThreeSixtyProps {
@@ -60,7 +70,11 @@ interface ThreeSixtyProps {
 }
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
-  return (
+  const [showArticles, setShowArticles] = useState(false);
+
+  const toggleArticlesDisplay = () => {
+    setShowArticles((prev) => !prev);
+  };  return (
     <>
       <VRButton enterOnly={false} exitOnly={false} />
       <Canvas>
@@ -72,6 +86,8 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
             imageUrl={currentImage}
           />
           <OrbitControls enableZoom={false} />
+          {showArticles && <ArticleTextDisplay />}
+
           <Html position={[28, -4, -9]} center>
             <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
           </Html>
