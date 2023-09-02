@@ -35,12 +35,19 @@ interface BackgroundSphereProps {
 }
 
 function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
-  const texture = useLoader(TextureLoader, imageUrl)
-  const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), [])
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
 
-  if (Array.isArray(texture)) {
-    console.error('Loaded multiple textures, but expected a single one.')
-    return null
+  useEffect(() => {
+    const loader = new TextureLoader();
+    loader.load(imageUrl, (loadedTexture) => {
+      setTexture(loadedTexture);
+    });
+  }, [imageUrl]);
+
+  const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), []);
+
+  if (!texture) {
+    return null;
   }
 
   return (
@@ -51,7 +58,7 @@ function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
         side={THREE.BackSide} // Important: Render the inside of the sphere
       />
     </mesh>
-  )
+  );
 }
 
 interface ThreeSixtyProps {
