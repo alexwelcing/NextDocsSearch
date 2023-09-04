@@ -203,36 +203,6 @@ export function SearchDialog() {
                   }`}
                 />
               </div>
-              <div className="text-m text-gray-500 dark:text-gray-100">
-                Or try:{' '}
-                <button
-                  type="button"
-                  className="px-1.5 py-0.5
-                  bg-slate-50 dark:bg-gray-500
-                  hover:bg-slate-100 dark:hover:bg-gray-600
-                  rounded border border-slate-200 dark:border-slate-600
-                  transition-colors"
-                  onClick={(_) => setQuery('Who is Alex Welcing?')}
-                >
-                  Who is Alex Welcing?
-                </button>
-                <button
-                  type="button"
-
-                  className="px-1.5 py-0.5 m-2
-                  bg-slate-50 dark:bg-gray-500
-                  hover:bg-slate-100 dark:hover:bg-gray-600
-                  rounded border border-slate-200 dark:border-slate-600
-                  transition-colors"
-                  onClick={(_) =>
-                    setQuery(
-                      'Where has Alex Welcing worked previously and what did he accomplish there?'
-                    )
-                  }
-                >
-                  Where has he worked previously and what did he accomplish?
-                </button>
-              </div>
               <div className="flex flex-wrap">
         {historyStack.length > 0 && (
           <button
