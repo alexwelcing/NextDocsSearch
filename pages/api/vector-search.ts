@@ -81,14 +81,14 @@ export default async function handler(req: NextRequest) {
     }: CreateEmbeddingResponse = await embeddingResponse.json()
 
     const { error: matchError, data: pageSections } = await supabaseClient.rpc(
-      'match_page_sections_with_path',
+      'match_page_sections',
       {
         embedding,
         match_threshold: 0.78,
         match_count: 10,
         min_content_length: 50,
       }
-    );
+    )
 
     if (matchError) {
       throw new ApplicationError('Failed to match page sections', matchError)
@@ -97,13 +97,10 @@ export default async function handler(req: NextRequest) {
     const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })
     let tokenCount = 0
     let contextText = ''
-    let sourceLinks = ''
 
     for (let i = 0; i < pageSections.length; i++) {
       const pageSection = pageSections[i]
       const content = pageSection.content
-      const sourcePath = pageSection.path  // Make sure this is available
-
       const encoded = tokenizer.encode(content)
       tokenCount += encoded.text.length
 
@@ -112,7 +109,6 @@ export default async function handler(req: NextRequest) {
       }
 
       contextText += `${content.trim()}\n---\n`
-      sourceLinks += `Source: [Read more here](${sourcePath})\n---\n`
     }
 
     const prompt = codeBlock`
@@ -122,15 +118,12 @@ export default async function handler(req: NextRequest) {
       Context sections:
       ${contextText}
 
-      Source Links:
-      ${sourceLinks}
-
       Question: """
       ${sanitizedQuery}
       """
 
       Answer as markdown and include a link to the source article
-    `;
+    `
 
     const chatMessage: ChatCompletionRequestMessage = {
       role: 'user',
