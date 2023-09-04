@@ -113,7 +113,7 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents.     `}
+      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents.`}
 
       Context sections:
       ${contextText}
@@ -122,7 +122,7 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      Answer as markdown and include a link to the source article
+      Answer in sentences.
     `
 
     const chatMessage: ChatCompletionRequestMessage = {
