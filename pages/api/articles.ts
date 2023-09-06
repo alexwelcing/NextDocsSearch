@@ -23,7 +23,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Articl
       filename,
       title: data.title as string,
       date: data.date as string,
-      author: data.author as string[],
+      author: data.author as string[]
     };
   });
 
