@@ -5,9 +5,8 @@ import * as THREE from 'three'
 import { OrbitControls, Html, Text } from '@react-three/drei'
 import { VRButton, XR, Controllers, Hands, useXR } from '@react-three/xr'
 import styled from '../node_modules/styled-components'
+import { ArticleData } from './ArticleTextDisplay';
 import ArticleTextDisplay from './ArticleTextDisplay';
-
-
 
 const StyledButton = styled.button`
   padding: 8px 8px;
@@ -37,14 +36,7 @@ interface BackgroundSphereProps {
 }
 
 function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
-
-  useEffect(() => {
-    const loader = new TextureLoader();
-    loader.load(imageUrl, (loadedTexture) => {
-      setTexture(loadedTexture);
-    });
-  }, [imageUrl]);
+  const texture = useLoader(TextureLoader, imageUrl);
 
   const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), []);
 
@@ -71,10 +63,13 @@ interface ThreeSixtyProps {
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
   const [showArticles, setShowArticles] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);  // State for the current article index
 
   const toggleArticlesDisplay = () => {
     setShowArticles((prev) => !prev);
-  };  return (
+  };
+
+  return (
     <>
       <VRButton enterOnly={false} exitOnly={false} />
       <Canvas>
@@ -86,10 +81,18 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
             imageUrl={currentImage}
           />
           <OrbitControls enableZoom={false} />
-          {showArticles && <ArticleTextDisplay />}
+          {showArticles &&
+            <ArticleTextDisplay
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}   // Pass down the setter function
+            />
+          }
 
           <Html position={[28, -4, -9]} center>
             <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
+          </Html>
+          <Html position={[28, -8, -9]} center>
+            <StyledButton onClick={toggleArticlesDisplay}>{showArticles ? "Hide Articles" : "Show Articles"}</StyledButton>
           </Html>
         </XR>
       </Canvas>

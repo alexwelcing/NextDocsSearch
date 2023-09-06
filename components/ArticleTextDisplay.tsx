@@ -1,57 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import { Text } from '@react-three/drei';
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, Plane } from '@react-three/drei';
 import * as THREE from 'three';
 
-interface ArticleData {
+export interface ArticleData {
   filename: string;
   title: string;
   date: string;
   author: string[];
 }
 
-const ArticleTextDisplay: React.FC = () => {
-  const [article, setArticle] = useState<ArticleData | null>(null);
+interface ArticleTextDisplayProps {
+  currentIndex: number;
+  setCurrentIndex: (index: number) => void;
+}
+
+const CircleButton: React.FC<any> = ({ label, position, onClick }) => (
+  <group position={position} onClick={onClick}>
+    <mesh>
+      <circleGeometry args={[0.75, 32]} />
+      <meshBasicMaterial color={'#de7ea2'} side={THREE.DoubleSide} />
+    </mesh>
+    <Text fontSize={0.15} color="#fff" anchorX="center" anchorY="middle">
+      {label}
+    </Text>
+  </group>
+);
+
+const ArticleTextDisplay: React.FC<ArticleTextDisplayProps> = ({ currentIndex, setCurrentIndex }) => {
+  const [articles, setArticles] = useState<ArticleData[]>([]);
+
+  const groupRef = useRef<THREE.Group | null>(null);
 
   useEffect(() => {
-    // Fetching the most recent article from the API
-    async function fetchArticle() {
+    async function fetchArticles() {
       try {
         const response = await fetch('/api/articles');
         const data: ArticleData[] = await response.json();
-        setArticle(data[0]);
+        setArticles(data);
       } catch (error) {
         console.error("Failed to fetch articles:", error);
       }
     }
 
-    fetchArticle();
+    fetchArticles();
+    if (groupRef.current) {
+      groupRef.current.lookAt(new THREE.Vector3(0, 0, 0));
+    }
   }, []);
 
-  // You might want to add loading or error states here
-  if (!article) return null;
+  const navigateTo = (index: number) => {
+    if (index >= 0 && index < articles.length) {
+      setCurrentIndex(index);
+    }
+  }
+
+  if (articles.length === 0) return null;
+  const article = articles[currentIndex];
 
   return (
-    <group>
-      {/* Background */}
-      <mesh>
-        <planeGeometry args={[4, 1]} />
+    <group ref={groupRef} position={[0, 1, -5]}>
+      <mesh position={[0, 0, 0]}>
+        <planeGeometry args={[5, 3]} />
         <meshBasicMaterial color={'#f3f3f3'} side={THREE.DoubleSide} />
       </mesh>
 
-      {/* Text */}
-      <Text
-        fontSize={0.5}
-        color="#000"
-        maxWidth={4}  // Set max width for text
-        lineHeight={1}
-        position={[0, 0, 0.2]}  // Small offset to avoid z-fighting
-
-        rotation={[0, 1, 0]}  // Rotate the text 45 degrees
-      >
+      <Text fontSize={0.2} color="#000" maxWidth={4.5} lineHeight={1.1} anchorX="center" anchorY="middle" position={[0, 1, 0.1]}>
         {`Title: ${article.title}`}
       </Text>
+
+      <Text fontSize={0.15} color="#555" maxWidth={4.5} lineHeight={1.1} anchorX="center" anchorY="middle" position={[0, 0.2, 0.1]}>
+        {`Date: ${article.date}`}
+      </Text>
+
+      <Text fontSize={0.15} color="#555" maxWidth={4.5} lineHeight={1.1} anchorX="center" anchorY="middle" position={[0, -0.5, 0.1]}>
+        {`Author: ${article.author.join(', ')}`}
+      </Text>
+
+      <CircleButton
+        label="Prev"
+        position={[-3.5, 0, 0.1]}
+        onClick={() => navigateTo(currentIndex - 1)}
+      />
+      <CircleButton
+        label="Next"
+        fontSize={1}
+        position={[3.5, 0, 0.1]}
+        onClick={() => navigateTo(currentIndex + 1)}
+      />
     </group>
-  )
+  );
 };
 
 export default ArticleTextDisplay;

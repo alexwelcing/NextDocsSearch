@@ -49,7 +49,7 @@ const CircleNav: React.FC = () => {
               href={`/articles/${article.filename.replace('.mdx', '')}`}
             >
               <div style={{ maxWidth: '80%' }}>
-              {article.title.length > 18 ? article.title.slice(0, 18) + '..' : article.title}
+              {article.title.length > 30 ? article.title.slice(0, 30) + '..' : article.title}
               </div>
             </Link>
           ))}
