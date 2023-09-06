@@ -60,6 +60,14 @@ body {
   --retro-3: #b2e03d;
   --retro-4: #941947;
   --retro-5: #de7ea2;
+
+  /* Variables for easy tweaking */
+
+  --menu-bg: #212820;
+  --btn-hover: #de7ea2;
+  --link-color: #de7ea2;
+  --btn-font: var(--font-mono);
+
 }
 
 /* Dark mode variables */

@@ -1,9 +1,24 @@
-import React, { useState } from 'react'
-import Link from 'next/link'
-import styles from '@/styles/CircleNav.module.css'
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import styles from '@/styles/CircleNav.module.css';
+
+type ArticleData = {
+  filename: string;
+  title: string;
+  date: string;
+  author: string[];
+};
 
 const CircleNav: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [shelfOpen, setShelfOpen] = useState(false);
+  const [articles, setArticles] = useState<ArticleData[]>([]);
+
+  useEffect(() => {
+    fetch('/api/articles')
+      .then(response => response.json())
+      .then(data => setArticles(data));
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -24,6 +39,20 @@ const CircleNav: React.FC = () => {
           <Link className={styles.menuLink} href="/about">
             About
           </Link>
+          <Link className={styles.menuLink} onClick={() => setShelfOpen(!shelfOpen)} href="" >
+            Articles {shelfOpen ? '▲' : '▼'}
+          </Link>
+          {shelfOpen && articles.map((article) => (
+            <Link
+              key={article.filename}
+              className={styles.menuLink}
+              href={`/articles/${article.filename.replace('.mdx', '')}`}
+            >
+              <div style={{ maxWidth: '80%' }}>
+              {article.title.length > 18 ? article.title.slice(0, 18) + '..' : article.title}
+              </div>
+            </Link>
+          ))}
         </div>
       ) : (
         <div className={isOpen ? styles.menu : styles.circle} onClick={() => setIsOpen(!isOpen)}>

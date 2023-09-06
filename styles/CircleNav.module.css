@@ -6,31 +6,37 @@
 }
 
 .circle {
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background-color: #333;
+  border-radius: 90%;
+  background-color: var(--menu-bg);
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
+  opacity: 0.75;
+  font-family: var(--btn-font);
+  box-shadow: 0px 2px 8px -1px #0000001a;
 }
 
 .circle:hover {
-  background-color: #555;
+  background-color: var(--btn-hover);
+  transform: scale(1.1);
 }
 
 .menu {
-  width: 80vw;
-  max-width: 120px;
-  background-color: white;
+  width: 90vw;
+  max-width: 350px;
+  background-color: var(--menu-bg);
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
-  border-radius: 0.5rem;
+  gap: 0.5rem;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0px 2px 8px -1px #0000001a;
 }
 
 .menu button {
@@ -39,6 +45,12 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: var(--link-color);
+  transition: color 0.3s;
+}
+
+.menu button:hover {
+  color: var(--btn-hover);
 }
 
 .menu button:focus {
@@ -47,13 +59,18 @@
 
 .menu a {
   text-decoration: none;
-  align-self: flex-end;
-  color: #6a6699;
+  align-self: flex-start;
+  color: #ddd;
+  padding: 0.2rem 0.5rem;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
 }
 
 .menu a:hover {
-  background-color: #de7ea2;
+  background-color: var(--btn-hover);
   color: #fff;
 }
