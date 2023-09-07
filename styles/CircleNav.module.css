@@ -37,10 +37,11 @@
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: 0px 2px 8px -1px #0000001a;
+  opacity: 90%;
 }
 
 .menu button {
-  align-self: flex-end;
+  align-self: flex-start;
   background-color: transparent;
   border: none;
   font-size: 1.5rem;
