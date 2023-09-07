@@ -89,7 +89,6 @@
   }
 }
 .footer {
-  /* Other existing styles for footer */
   max-height: 60px;
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;
@@ -100,7 +99,6 @@
 }
 
 .expandButton {
-  /* You may already have other styles for this. This is just an example. */
   background-color: black;
   display: flex;
   align-items: center;
