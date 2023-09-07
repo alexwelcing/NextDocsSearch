@@ -91,7 +91,7 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
           <Html position={[28, -4, -9]} center>
             <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
           </Html>
-          <Html position={[28, -8, -9]} center>
+          <Html position={[8, -3, 3]} center>
             <StyledButton onClick={toggleArticlesDisplay}>{showArticles ? "Hide Articles" : "Show Articles"}</StyledButton>
           </Html>
         </XR>

@@ -39,7 +39,10 @@ const CircleNav: React.FC = () => {
           <Link className={styles.menuLink} href="/about">
             About
           </Link>
-          <Link className={styles.menuLink} onClick={() => setShelfOpen(!shelfOpen)} href="" >
+          <Link href=""
+            className={styles.menuLink}
+            onClick={() => setShelfOpen(!shelfOpen)}
+          >
             Articles {shelfOpen ? '▲' : '▼'}
           </Link>
           {shelfOpen && articles.map((article) => (
@@ -49,7 +52,7 @@ const CircleNav: React.FC = () => {
               href={`/articles/${article.filename.replace('.mdx', '')}`}
             >
               <div style={{ maxWidth: '80%' }}>
-              {article.title.length > 30 ? article.title.slice(0, 30) + '..' : article.title}
+                {article.title.length > 30 ? article.title.slice(0, 30) + '..' : article.title}
               </div>
             </Link>
           ))}
