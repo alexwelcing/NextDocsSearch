@@ -1,35 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-function getCookieValue(cookieHeader: string | null, name: string): string | null {
-    if (!cookieHeader) return null;
-    const matches = cookieHeader.match(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
-    return matches ? matches.pop()! : null;
+const HOME_BUCKETS = ['index', 'chat'] as const;
+
+function getBucket(buckets: typeof HOME_BUCKETS) {
+  let n = cryptoRandom() * 100;
+  let percentage = 100 / buckets.length;
+
+  return (
+    buckets.find(() => {
+      n -= percentage;
+      return n <= 0;
+    }) ?? buckets[0]
+  );
+}
+
+function cryptoRandom() {
+  return crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1);
+}
+
+export default function middleware(req: NextRequest) {
+  const cookieName = 'ab-test-variant';
+  let bucket = req.cookies.get(cookieName)?.value;
+  let hasBucket = !!bucket;
+
+  // If there's no active bucket in cookies or its value is invalid, get a new one
+  if (!bucket || !HOME_BUCKETS.includes(bucket as any)) {
+    bucket = getBucket(HOME_BUCKETS);
+    hasBucket = false;
   }
 
-export function onRequest(req: NextRequest): NextResponse | void {
-  // Get the cookies from the header
-  const cookiesHeader = req.headers.get('Cookie');
-  const variantCookie = getCookieValue(cookiesHeader, 'ab-test-variant');
+  // Create a rewrite based on the bucket
+  const res = bucket === 'chat' ? NextResponse.rewrite('/chat') : NextResponse.rewrite('/');
 
-  if (variantCookie) {
-    // If the cookie exists, route based on its value
-    if (variantCookie === 'A') {
-      return NextResponse.rewrite('/');
-    } else if (variantCookie === 'B') {
-      return NextResponse.rewrite('/chat');
-    }
-  } else {
-    // If the cookie doesn't exist, assign a variant randomly and set the cookie
-    if (Math.random() < 0.5) {
-      // Assign to group A and set a cookie
-      const response = NextResponse.rewrite('/');
-      response.headers.set('Set-Cookie', 'ab-test-variant=A; Path=/; Max-Age=2592000'); // Max-Age set to 30 days
-      return response;
-    } else {
-      // Assign to group B and set a cookie
-      const response = NextResponse.rewrite('/chat');
-      response.headers.set('Set-Cookie', 'ab-test-variant=B; Path=/; Max-Age=2592000'); // Max-Age set to 30 days
-      return response;
-    }
+  // Set the bucket to the response cookies if it's not there or if its value was invalid
+  if (!hasBucket) {
+    res.cookies.set(cookieName, bucket);
   }
+
+  return res;
 }
