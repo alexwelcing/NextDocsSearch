@@ -19,6 +19,9 @@ function cryptoRandom() {
 }
 
 export default function middleware(req: NextRequest) {
+  if (req.nextUrl.pathname !== "/") {
+    return;
+  }
   const cookieName = 'ab-test-variant';
   let bucket = req.cookies.get(cookieName)?.value;
   let hasBucket = !!bucket;
