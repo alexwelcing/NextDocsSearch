@@ -4,10 +4,10 @@ import { Cone } from '@react-three/drei';
 interface ArrowButtonProps {
   direction: 'next' | 'prev';
   onClick: () => void;
-  position?: [number, number, number];
+  position?: [number, number, number]; // Add this line
 }
 
-const ArrowButton: React.FC<ArrowButtonProps> = ({ direction, onClick, position }) => {
+const ArrowButton: React.FC<ArrowButtonProps> = ({ direction, onClick }) => {
   const [hovered, setHovered] = useState(false);
 
   const handlePointerOver = () => setHovered(true);
@@ -18,7 +18,6 @@ const ArrowButton: React.FC<ArrowButtonProps> = ({ direction, onClick, position 
       onClick={onClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
-      position={position}
     >
       <Cone args={[0.2, 0.5, 32]} rotation={[0, direction === 'next' ? 0 : Math.PI, 0]}>
         <meshStandardMaterial
