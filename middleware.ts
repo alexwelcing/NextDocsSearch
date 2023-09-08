@@ -29,8 +29,13 @@ export default function middleware(req: NextRequest) {
     hasBucket = false;
   }
 
+  // Construct a fully qualified URL
+  const urlBase = req.nextUrl.protocol + "://" + req.nextUrl.hostname;
+
   // Create a rewrite based on the bucket
-  const res = bucket === 'chat' ? NextResponse.rewrite('/chat') : NextResponse.rewrite('/');
+  const res = bucket === 'chat'
+    ? NextResponse.rewrite(`${urlBase}/chat`)
+    : NextResponse.rewrite(`${urlBase}/`);
 
   // Set the bucket to the response cookies if it's not there or if its value was invalid
   if (!hasBucket) {
