@@ -1,12 +1,18 @@
-import React, { useMemo, useState, useEffect } from 'react'
-import { Canvas, useLoader } from '@react-three/fiber'
-import { TextureLoader } from 'three'
-import * as THREE from 'three'
-import { OrbitControls, Html, Text } from '@react-three/drei'
-import { VRButton, XR, Controllers, Hands, useXR } from '@react-three/xr'
-import styled from '../node_modules/styled-components'
-import { ArticleData } from './ArticleTextDisplay';
+import React, { useMemo, useState } from 'react';
+import { Canvas, useLoader } from '@react-three/fiber';
+import { TextureLoader, AmbientLight, PointLight } from 'three';
+import * as THREE from 'three';
+import { OrbitControls, Html, Sphere } from '@react-three/drei';
+import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
+import styled from '../node_modules/styled-components';
 import ArticleTextDisplay from './ArticleTextDisplay';
+import { Physics } from '@react-three/cannon';
+import PhysicsGround from './PhysicsGround';
+import BouncingBall from './BouncingBall';
+
+const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
+};
 
 const StyledButton = styled.button`
   padding: 8px 8px;
@@ -63,7 +69,7 @@ interface ThreeSixtyProps {
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
   const [showArticles, setShowArticles] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);  // State for the current article index
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const toggleArticlesDisplay = () => {
     setShowArticles((prev) => !prev);
@@ -72,32 +78,40 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
   return (
     <>
       <VRButton enterOnly={false} exitOnly={false} />
-      <Canvas>
+      <Canvas shadows>
         <XR>
+        <PhysicsEnvironment>
           <Controllers />
           <Hands />
-          <BackgroundSphere
-            key={isDialogOpen ? 'dialogOpen' : currentImage}
-            imageUrl={currentImage}
-          />
+            <PhysicsGround />
+            <BouncingBall />
+            <BackgroundSphere
+              key={isDialogOpen ? 'dialogOpen' : currentImage}
+              imageUrl={currentImage}
+            />
+          <primitive object={new AmbientLight(0xffffff, 0.5)} />
+          <primitive object={new PointLight(0xffffff, 1, 100)} position={[0, 5, 10]} castShadow />
           <OrbitControls enableZoom={false} />
-          {showArticles &&
+          {showArticles && (
             <ArticleTextDisplay
               currentIndex={currentIndex}
-              setCurrentIndex={setCurrentIndex}   // Pass down the setter function
+              setCurrentIndex={setCurrentIndex}
             />
-          }
+          )}
 
           <Html position={[28, -4, -9]} center>
             <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
           </Html>
           <Html position={[8, -3, 3]} center>
-            <StyledButton onClick={toggleArticlesDisplay}>{showArticles ? "Hide Articles" : "Show Articles"}</StyledButton>
+            <StyledButton onClick={toggleArticlesDisplay}>
+              {showArticles ? 'Hide Articles' : 'Show Articles'}
+            </StyledButton>
           </Html>
+          </PhysicsEnvironment>
         </XR>
       </Canvas>
     </>
-  )
+  );
 }
 
 export default ThreeSixty
