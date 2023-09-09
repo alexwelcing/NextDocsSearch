@@ -17,8 +17,7 @@ const Chat = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
-        const images = await response.json();
+        const images: string[] = await response.json();
 
         // Pre-fetch images
         images.forEach((image: string) => {
@@ -31,6 +30,7 @@ const Chat = () => {
         selectRandomImage(images);
       } catch (error) {
         console.error('There was a problem fetching the background images:', error);
+        // Optionally, you could inform the user that something went wrong.
       }
     };
 

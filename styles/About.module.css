@@ -1,3 +1,5 @@
+/* About.module.css */
+
 .container {
   padding: 2rem;
   font-family: Arial, sans-serif;
@@ -31,30 +33,14 @@
   gap: 1rem;
 }
 
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.siteContainer {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.contentContainer {
-  flex: 1;
-}
-
 /* Card styling */
 .experience-card {
-  width: 80%; /* make the card wider */
-  margin: 2% auto; /* centering */
+  width: 80%;
+  margin: 2% auto;
   padding: 2% 4%;
-  background-color: var(--retro-1); /* Change to a more contrasting color */
-  color: var(--retro-3); /* Set text color for contrast */
-  border-radius: 15px; /* rounded edges */
+  background-color: var(--retro-1);
+  color: var(--retro-3);
+  border-radius: 15px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -73,4 +59,17 @@ body {
 
 .experience-card ul {
   margin-left: 2em;
+}
+
+.pdf-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* You can adjust the gap as needed */
+  justify-content: center;
 }

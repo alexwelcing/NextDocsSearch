@@ -1,12 +1,21 @@
-import React, { useMemo, useState, useEffect } from 'react'
-import { Canvas, useLoader } from '@react-three/fiber'
-import { TextureLoader } from 'three'
-import * as THREE from 'three'
-import { OrbitControls, Html, Text } from '@react-three/drei'
-import { VRButton, XR, Controllers, Hands, useXR } from '@react-three/xr'
-import styled from '../node_modules/styled-components'
+import React, { useMemo, useState, useEffect } from 'react';
+import { Canvas, useLoader } from '@react-three/fiber';
+import { TextureLoader, AmbientLight, PointLight } from 'three';
+import * as THREE from 'three';
+import { OrbitControls, Html, Sphere } from '@react-three/drei';
+import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
+import styled from '../node_modules/styled-components';
+import ArticleControls from './ArticleControls';
+import { Physics } from '@react-three/cannon';
+import PhysicsGround from './PhysicsGround';
+import BouncingBall from './BouncingBall';
+import BackgroundSphere from './BackgroundSphere';
 import { ArticleData } from './ArticleTextDisplay';
-import ArticleTextDisplay from './ArticleTextDisplay';
+
+
+const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
+};
 
 const StyledButton = styled.button`
   padding: 8px 8px;
@@ -31,30 +40,6 @@ const StyledButton = styled.button`
   }
 `
 
-interface BackgroundSphereProps {
-  imageUrl: string
-}
-
-function BackgroundSphere({ imageUrl }: BackgroundSphereProps) {
-  const texture = useLoader(TextureLoader, imageUrl);
-
-  const geometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), []);
-
-  if (!texture) {
-    return null;
-  }
-
-  return (
-    <mesh geometry={geometry}>
-      <meshBasicMaterial
-        attach="material"
-        map={texture}
-        side={THREE.BackSide} // Important: Render the inside of the sphere
-      />
-    </mesh>
-  );
-}
-
 interface ThreeSixtyProps {
   currentImage: string
   isDialogOpen: boolean
@@ -63,41 +48,57 @@ interface ThreeSixtyProps {
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
   const [showArticles, setShowArticles] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);  // State for the current article index
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const toggleArticlesDisplay = () => {
     setShowArticles((prev) => !prev);
   };
 
+  const [articles, setArticles] = useState<ArticleData[]>([]);
+
+  useEffect(() => {
+    async function fetchArticles() {
+      const response = await fetch('/api/articles');
+      const data: ArticleData[] = await response.json();
+      setArticles(data);
+    }
+    fetchArticles();
+  }, []);
+
   return (
     <>
       <VRButton enterOnly={false} exitOnly={false} />
-      <Canvas>
+      <Canvas shadows>
         <XR>
-          <Controllers />
-          <Hands />
-          <BackgroundSphere
-            key={isDialogOpen ? 'dialogOpen' : currentImage}
-            imageUrl={currentImage}
-          />
-          <OrbitControls enableZoom={false} />
-          {showArticles &&
-            <ArticleTextDisplay
-              currentIndex={currentIndex}
-              setCurrentIndex={setCurrentIndex}   // Pass down the setter function
-            />
-          }
-
-          <Html position={[28, -4, -9]} center>
-            <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
-          </Html>
-          <Html position={[8, -3, 3]} center>
-            <StyledButton onClick={toggleArticlesDisplay}>{showArticles ? "Hide Articles" : "Show Articles"}</StyledButton>
-          </Html>
+          <PhysicsEnvironment>
+            <Controllers />
+            <Hands />
+            <PhysicsGround />
+            <BouncingBall />
+            <BackgroundSphere imageUrl={currentImage} transitionDuration={.5} />
+            <primitive object={new AmbientLight(0xffffff, 0.5)} />
+            <primitive object={new PointLight(0xffffff, 1, 100)} position={[0, 5, 10]} castShadow />
+            <OrbitControls enableZoom={false} />
+            {showArticles && articles.length > 0 && (
+              <ArticleControls
+                articles={articles}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+              />
+            )}
+            <Html position={[28, -4, -9]} center>
+              <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
+            </Html>
+            <Html position={[8, -3, 3]} center>
+              <StyledButton onClick={toggleArticlesDisplay}>
+                {showArticles ? 'Hide Articles' : 'Show Articles'}
+              </StyledButton>
+            </Html>
+          </PhysicsEnvironment>
         </XR>
       </Canvas>
     </>
-  )
+  );
 }
 
-export default ThreeSixty
+export default ThreeSixty;

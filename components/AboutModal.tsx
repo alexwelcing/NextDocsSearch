@@ -1,15 +1,15 @@
-import React from 'react'
-import About from '../pages/about'
+import React from 'react';
+import About from '../pages/about';
 
 interface AboutModalProps {
-  isAboutModalOpen: boolean
-  onClose: () => void
+  isAboutModalOpen: boolean;
+  onClose: () => void;
 }
 
 const AboutModal: React.FC<AboutModalProps> = ({ isAboutModalOpen, onClose }) => {
-  if (!isAboutModalOpen) return null
+  if (!isAboutModalOpen) return null;
 
-  return <About />
-}
+  return <About />;
+};
 
-export default AboutModal
+export default AboutModal;
