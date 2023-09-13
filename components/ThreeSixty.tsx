@@ -11,6 +11,7 @@ import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
 import { ArticleData } from './ArticleTextDisplay';
+import GlowingArticleDisplay from './GlowingArticleDisplay';
 
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -80,12 +81,10 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
             <primitive object={new PointLight(0xffffff, 1, 100)} position={[0, 5, 10]} castShadow />
             <OrbitControls enableZoom={false} />
             {showArticles && articles.length > 0 && (
-              <ArticleControls
-                articles={articles}
-                currentIndex={currentIndex}
-                setCurrentIndex={setCurrentIndex}
-              />
-            )}
+              <GlowingArticleDisplay article={articles[currentIndex]} currentIndex={0} setCurrentIndex={function (index: number): void {
+                throw new Error('Function not implemented.');
+              } } />
+        )}
             <Html position={[28, -4, -9]} center>
               <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
             </Html>

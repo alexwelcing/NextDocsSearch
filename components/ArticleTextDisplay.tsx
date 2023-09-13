@@ -3,6 +3,7 @@ import { Text, Plane } from '@react-three/drei';
 import * as THREE from 'three';
 
 export interface ArticleData {
+  length: number;
   filename: string;
   title: string;
   date: string;
@@ -14,7 +15,12 @@ interface ArticleTextDisplayProps {
   setCurrentIndex: (index: number) => void;
 }
 
-const LinkButton: React.FC<any> = ({ filename, position }) => {
+interface LinkButtonProps {
+  filename: string;
+  position: [number, number, number];
+}
+
+const LinkButton: React.FC<LinkButtonProps> = ({ filename, position }) => {
   const [hovered, setHover] = useState(false);
 
   return (
@@ -62,7 +68,7 @@ const ArticleTextDisplay: React.FC<ArticleTextDisplayProps> = ({ currentIndex, s
   const groupRef = useRef<THREE.Group | null>(null);
 
   useEffect(() => {
-    async function fetchArticles() {
+    const fetchArticles = async () => {
       try {
         const response = await fetch('/api/articles');
         const data: ArticleData[] = await response.json();
@@ -70,7 +76,7 @@ const ArticleTextDisplay: React.FC<ArticleTextDisplayProps> = ({ currentIndex, s
       } catch (error) {
         console.error("Failed to fetch articles:", error);
       }
-    }
+    };
 
     fetchArticles();
     if (groupRef.current) {

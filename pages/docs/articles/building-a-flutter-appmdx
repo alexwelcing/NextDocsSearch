@@ -1,0 +1,43 @@
+---
+title: "Building a Flutter App"
+author: ["Alex Welcing"]
+date: "2023-09-06"
+description: "A Flutter App that let's users create and manage 3D scenes."
+videoURL: ""
+keywords: ["Flutter", "iOS", "Android", "Web", "Generative AI", "3D", "AI", "NodeJS", "Software Engineering"]
+---
+
+graph TD
+  A[User] -->|Login/Signup| B[Authentication Service]
+  B -->|Firebase| C[Database]
+  A -->|Create/Edit Scene| D[Scene Editor]
+  D -->|R3F| E[3D Scene]
+  E -->|Save Scene| F[Object Management]
+  F -->|Firebase| C
+  A -->|View Scene| G[Scene Viewer]
+  G -->|R3F| E
+  E -->|Fetch Data| F
+  F -->|Firebase| C
+  A -->|Share Scene| H[Sharing Service]
+  H -->|Generate URL| I[URL Management]
+  I -->|Firebase| C
+  A -->|View Shared Scene| J[Shared Scene Viewer]
+  J -->|R3F| E
+  E -->|Fetch Data| F
+  F -->|Firebase| C
+
+  subgraph "Tier 1 (Free)"
+    B
+    D
+    F
+  end
+
+  subgraph "Tier 2 ($180/year)"
+    G
+    H
+  end
+
+  subgraph "Tier 3 ($600/year)"
+    I
+    J
+  end

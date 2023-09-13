@@ -7,6 +7,9 @@ import ArticleContainer from '@/components/ArticleContainer';
 import Footer from '../../components/ui/footer';
 import ArticleHeader from '@/components/ArticleHeader';
 import CircleNav from '@/components/ui/CircleNav';
+import mermaid from 'mermaid';
+import { useEffect } from 'react';
+
 
 interface ArticleProps {
   title: string;
@@ -16,6 +19,11 @@ interface ArticleProps {
 }
 
 const ArticlePage: NextPage<ArticleProps> = ({ title, date, author, content }) => {
+
+  useEffect(() => {
+    mermaid.initialize({ startOnLoad: true });
+  }, []);
+
   return (
     <div>
       <CircleNav />
