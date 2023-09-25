@@ -22,20 +22,21 @@ type Question = {
 type QuestionTreeNode = Record<string, string>
 const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   root: {
-    A: 'Who is Alex?',
-    B: 'Where is Alex?',
+    A: 'What is Alex’s management philosophy?',
+    B: 'How does Alex approach business transformation?',
   },
   A: {
-    C: 'Has he worked anywhere?',
-    D: 'Does he have skills?',
-    E: 'What has he accomplished?',
+    C: 'What leadership roles has Alex held?',
+    D: 'How does Alex foster team collaboration?',
+    E: 'What is Alex’s approach to conflict resolution?',
   },
   B: {
-    F: 'Is it nice there?',
-    G: 'Can he travel?',
-    H: 'Will he come into an office?',
+    F: 'Can Alex provide examples of successful transformations?',
+    G: 'How does Alex measure the impact of transformation?',
+    H: 'What industries has Alex consulted for?',
   },
-}
+};
+
 
 const DEFAULT_QUESTIONS = Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }));
 let historyStack: QuestionKey[] = [];
@@ -121,7 +122,7 @@ export function SearchDialog() {
   return (
     <>
                     <div className="relative">
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-80">
         <button
           onClick={() => setOpen(true)}
           className="text-base flex gap-2 items-center px-4 py-2 z-50 relative

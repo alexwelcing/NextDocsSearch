@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Text, Plane, RoundedBox } from '@react-three/drei';
+import React, { useRef } from 'react';
+import { Text, RoundedBox, useHelper, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { ArticleData } from './ArticleTextDisplay';
 
@@ -7,60 +7,55 @@ interface GlowingArticleDisplayProps {
   article: ArticleData;
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
+  showArticles: boolean;
+  title: string;
+  totalArticles: number;
 }
 
-const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ article, currentIndex, setCurrentIndex }) => {
+const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ article, currentIndex, setCurrentIndex, title, showArticles, totalArticles }) => {
   const groupRef = useRef<THREE.Group | null>(null);
-
-  const navigateTo = (index: number) => {
-    if (index >= 0 && index < article.length) {
-      setCurrentIndex(index);
-    }
-  };
+  const lightRef = useRef<THREE.PointLight | null>(null);
 
   return (
     <group ref={groupRef} position={[0, 1, -5]}>
-      {/* Main rounded rectangle for the article display */}
-      <RoundedBox args={[5, 3, 0.5]} radius={0.2} smoothness={4}>
-        <meshStandardMaterial color="white" />
+      <RoundedBox args={[8, 5, 0.5]} radius={0.2} smoothness={4}>
+        <meshStandardMaterial color={showArticles ? "white" : "gray"} />
       </RoundedBox>
 
-      {/* Article Title */}
+      {showArticles && (
+        <pointLight ref={lightRef} position={[0, 0, 0.6]} intensity={1} />
+      )}
 
-      <Text
-        fontSize={0.5} // Increased font size for better visibility
-        color="black" // Changed to black for contrast
-        anchorX="center"
-        anchorY="middle"
-        position={[0, 0, 0.6]} // Moved slightly forward in the Z-axis to avoid Z-fighting
-      >
-        {`Title: ${article.title}`}
-      </Text>
+      {showArticles && article && (
+        <>
+          <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.6]} maxWidth={4}>
+            {`${article.title}`}
+          </Text>
 
-      {/* View Article Button */}
-      <Text fontSize={0.15} color="#000" anchorX="center" anchorY="middle" position={[0, 0.5, 0.1]}>
-        View Article
-      </Text>
+          <Text
+            fontSize={0.3}
+            color="black"
+            position={[0, -0.8, 0.6]}
+            anchorX="center"
+            anchorY="middle"
+            onClick={() => window.open(`/articles/${article.filename.replace('.mdx', '')}`, '_blank')}
+          >
+            View Article
+          </Text>
+        </>
+      )}
 
-      {/* Article Date */}
-      <Text fontSize={0.15} color="#000" maxWidth={4.5} lineHeight={1.1} anchorX="center" anchorY="middle" position={[0, 0, 0.1]}>
-        {`Date: ${article.date}`}
-      </Text>
+      {showArticles && (
+        <>
+          <Html position={[-3.5, -1.4, 0.6]}>
+            <button className={currentIndex === 0 ? "text-slate-600 text-2xl" : "text-sky-600 text-2xl"} disabled={currentIndex === 0} onClick={() => setCurrentIndex(currentIndex - 1)}>&#60;</button>
+          </Html>
 
-      {/* Article Author */}
-      <Text fontSize={0.15} color="#000" maxWidth={4.5} lineHeight={1.1} anchorX="center" anchorY="middle" position={[0, -0.5, 0.1]}>
-        {`Author: ${article.author.join(', ')}`}
-      </Text>
-
-      {/* Previous Button */}
-      <Text fontSize={0.15} color="#000" anchorX="center" anchorY="middle" position={[-2, -1.5, 0.1]} onClick={() => navigateTo(currentIndex - 1)}>
-        Prev
-      </Text>
-
-      {/* Next Button */}
-      <Text fontSize={0.15} color="#000" anchorX="center" anchorY="middle" position={[2, -1.5, 0.1]} onClick={() => navigateTo(currentIndex + 1)}>
-        Next
-      </Text>
+          <Html position={[2.8, -1.4, 0.6]}>
+            <button className={currentIndex === 4 ? "text-slate-600 text-2xl" : "text-sky-600 text-2xl"} disabled={currentIndex === 4 } onClick={() => setCurrentIndex(currentIndex + 1)}>&#62;</button>
+          </Html>
+        </>
+      )}
     </group>
   );
 };
