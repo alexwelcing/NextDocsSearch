@@ -1,7 +1,7 @@
 ---
-title: "Building a Flutter App"
+title: "Building a Flutter App - In Progress"
 author: ["Alex Welcing"]
-date: "2023-09-06"
+date: "2023-09-25"
 description: "A Flutter App that lets users create and manage 3D scenes."
 videoURL: ""
 keywords: ["Flutter", "3D Scenes", "R3F", "Firebase", "User Experience", "Software Architecture", "Versioning", "Sharing", "Authentication"]
@@ -10,44 +10,3 @@ keywords: ["Flutter", "3D Scenes", "R3F", "Firebase", "User Experience", "Softwa
 # Building a Flutter App
 
 Welcome to this guide on building a Flutter app that lets users create and manage 3D scenes. Whether you're a developer looking to expand your skill set or a business aiming to offer an immersive experience, this article will provide you with the necessary know-how to build a 3D scene editor using Flutter and other technologies like R3F and Firebase.
-
-## Mermaid Graph
-
-```mermaid
-graph TD
-  A[User] -->|Login/Signup| B[Authentication Service]
-  B -->|Firebase| C[Database]
-  A -->|Create/Edit Scene| D[Scene Editor]
-  D -->|R3F| E[3D Scene]
-  E -->|Save Scene| F[Object Management]
-  F -->|Firebase| C
-  A -->|View Scene| G[Scene Viewer]
-  G -->|R3F| E
-  E -->|Fetch Data| F
-  F -->|Firebase| C
-  A -->|Share Scene| H[Sharing Service]
-  H -->|Generate URL| I[URL Management]
-  I -->|Firebase| C
-  A -->|View Shared Scene| J[Shared Scene Viewer]
-  J -->|R3F| E
-  E -->|Fetch Data| F
-  F -->|Firebase| C
-
-  subgraph "Tier 1 (Free)"
-    B
-    D
-    F
-  end
-
-  subgraph "Tier 2 ($180/year)"
-    G
-    H
-  end
-
-  subgraph "Tier 3 ($600/year)"
-    I
-    J
-  end
-```mermaid
-
-## This is the start of paragraph 2
