@@ -1,15 +1,16 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import { SearchDialog } from '@/components/SearchDialog';
 import Footer from '@/components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import dynamic from 'next/dynamic';
+import StylishFallback from '@/components/StylishFallback'; // Import StylishFallback
 
 // Lazy load ThreeSixty component
 const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
   ssr: false, // Disable server-side rendering for this component
-  loading: () => <div>Loading...</div>,
+  loading: () => <StylishFallback />, // Use StylishFallback here
 });
 
 const Chat = () => {
@@ -67,7 +68,7 @@ const Chat = () => {
       </Head>
       <CircleNav />
       <main className={`${styles.main} ${styles.gradientbg}`}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<StylishFallback />}>
           <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={handleImageChange} />
         </Suspense>
       </main>

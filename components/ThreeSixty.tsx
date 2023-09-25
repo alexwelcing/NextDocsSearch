@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls, Html } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
@@ -9,6 +9,8 @@ import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
 import { ArticleData } from './ArticleTextDisplay';
 import GlowingArticleDisplay from './GlowingArticleDisplay';
+import StylishFallback from './StylishFallback';
+
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
@@ -31,6 +33,28 @@ const StyledButton = styled.button`
     opacity: 80%;
   }
 `
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const ThreeSixtyContainer = styled.div<{ isLoaded: boolean }>`
+  width: 100vw;  // Fullscreen width
+  height: 100vh; // Fullscreen height
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+
+  ${(props) =>
+    props.isLoaded &&
+    css`
+      animation: ${fadeIn} 1s ease-in-out forwards;
+    `}
+`;
+
 interface ThreeSixtyProps {
   currentImage: string;
   isDialogOpen: boolean;
@@ -38,7 +62,8 @@ interface ThreeSixtyProps {
 }
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
-  const [showArticles, setShowArticles] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showArticles, setShowArticles] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [articles, setArticles] = useState<ArticleData[]>([]);
 
@@ -46,6 +71,7 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
     const response = await fetch('/api/articles');
     const data: ArticleData[] = await response.json();
     setArticles(data);
+    setIsLoaded(true); // Set isLoaded to true after fetching articles
   }, []);
 
   useEffect(() => {
@@ -57,7 +83,7 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
   }, []);
 
   return (
-    <>
+    <ThreeSixtyContainer isLoaded={isLoaded}>
       <VRButton enterOnly={false} exitOnly={false} />
       <Canvas shadows>
         <XR>
@@ -80,7 +106,7 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
           </PhysicsEnvironment>
         </XR>
       </Canvas>
-    </>
+    </ThreeSixtyContainer>
   );
 }
 
