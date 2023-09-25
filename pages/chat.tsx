@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import { SearchDialog } from '@/components/SearchDialog';
 import Footer from '@/components/ui/footer';
-import ThreeSixty from '@/components/ThreeSixty';
 import CircleNav from '@/components/ui/CircleNav';
+import dynamic from 'next/dynamic';
+import StylishFallback from '@/components/StylishFallback'; // Import StylishFallback
+
+// Lazy load ThreeSixty component
+const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
+  ssr: false, // Disable server-side rendering for this component
+  loading: () => <StylishFallback />, // Use StylishFallback here
+});
 
 const Chat = () => {
-  const [currentImage, setCurrentImage] = useState<string>('./background/bg1.jpg'); // Initial placeholder image
+  const [currentImage, setCurrentImage] = useState<string>('./background/bg1.jpg');
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -25,16 +32,12 @@ const Chat = () => {
         });
 
         setBackgroundImages(images);
-
-        // Set a random initial image
         selectRandomImage(images);
       } catch (error) {
         console.error('There was a problem fetching the background images:', error);
-        // Optionally, you could inform the user that something went wrong.
       }
     };
 
-    // Execute fetchImages when the browser is idle
     if ('requestIdleCallback' in window) {
       (window as any).requestIdleCallback(fetchImages);
     } else {
@@ -65,7 +68,9 @@ const Chat = () => {
       </Head>
       <CircleNav />
       <main className={`${styles.main} ${styles.gradientbg}`}>
-        <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={handleImageChange} />
+        <Suspense fallback={<StylishFallback />}>
+          <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={handleImageChange} />
+        </Suspense>
       </main>
       <SearchDialog />
       <Footer onImageChange={handleImageChange} showChangeScenery={true} />

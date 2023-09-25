@@ -1,6 +1,8 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import Script from 'next/script'
+import '@material-ui/icons';
+
 
 const GTM_ID = 'GTM-W24L468'
 

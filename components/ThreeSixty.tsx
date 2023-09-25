@@ -1,16 +1,15 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { Canvas, useLoader } from '@react-three/fiber';
-import { TextureLoader, AmbientLight, PointLight } from 'three';
-import * as THREE from 'three';
-import { OrbitControls, Html, Sphere } from '@react-three/drei';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
-import styled from '../node_modules/styled-components';
-import ArticleControls from './ArticleControls';
+import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
+import { OrbitControls, Html } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
 import { ArticleData } from './ArticleTextDisplay';
+import GlowingArticleDisplay from './GlowingArticleDisplay';
+import StylishFallback from './StylishFallback';
 
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -18,7 +17,6 @@ const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children 
 };
 
 const StyledButton = styled.button`
-  padding: 8px 8px;
   background: #de7ea2;
   border: 3px solid #6a6699;
   opacity: 80%;
@@ -26,47 +24,66 @@ const StyledButton = styled.button`
   cursor: pointer;
   font-size: 24px;
   border-radius: 10px;
+  align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: scale(1.05);
     background: #941947;
     opacity: 80%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
-  }
-
-  &:active {
-    transform: scale(0.95);
   }
 `
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const ThreeSixtyContainer = styled.div<{ isLoaded: boolean }>`
+  width: 100vw;  // Fullscreen width
+  height: 100vh; // Fullscreen height
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+
+  ${(props) =>
+    props.isLoaded &&
+    css`
+      animation: ${fadeIn} 1s ease-in-out forwards;
+    `}
+`;
 
 interface ThreeSixtyProps {
-  currentImage: string
-  isDialogOpen: boolean
-  onChangeImage: () => void
+  currentImage: string;
+  isDialogOpen: boolean;
+  onChangeImage: () => void;
 }
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
-  const [showArticles, setShowArticles] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showArticles, setShowArticles] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const toggleArticlesDisplay = () => {
-    setShowArticles((prev) => !prev);
-  };
-
   const [articles, setArticles] = useState<ArticleData[]>([]);
 
+  const fetchArticles = useCallback(async () => {
+    const response = await fetch('/api/articles');
+    const data: ArticleData[] = await response.json();
+    setArticles(data);
+    setIsLoaded(true); // Set isLoaded to true after fetching articles
+  }, []);
+
   useEffect(() => {
-    async function fetchArticles() {
-      const response = await fetch('/api/articles');
-      const data: ArticleData[] = await response.json();
-      setArticles(data);
-    }
     fetchArticles();
+  }, [fetchArticles]);
+
+  const toggleArticlesDisplay = useCallback(() => {
+    setShowArticles((prev) => !prev);
   }, []);
 
   return (
-    <>
+    <ThreeSixtyContainer isLoaded={isLoaded}>
       <VRButton enterOnly={false} exitOnly={false} />
       <Canvas shadows>
         <XR>
@@ -74,30 +91,22 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
             <Controllers />
             <Hands />
             <PhysicsGround />
+            <OrbitControls />
             <BouncingBall />
-            <BackgroundSphere imageUrl={currentImage} transitionDuration={.5} />
-            <primitive object={new AmbientLight(0xffffff, 0.5)} />
-            <primitive object={new PointLight(0xffffff, 1, 100)} position={[0, 5, 10]} castShadow />
-            <OrbitControls enableZoom={false} />
-            {showArticles && articles.length > 0 && (
-              <ArticleControls
-                articles={articles}
-                currentIndex={currentIndex}
-                setCurrentIndex={setCurrentIndex}
-              />
-            )}
-            <Html position={[28, -4, -9]} center>
-              <StyledButton onClick={onChangeImage}>Next destination?</StyledButton>
-            </Html>
-            <Html position={[8, -3, 3]} center>
+            <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+            <ambientLight intensity={0.2} position={[-2, 10, 2]} />
+            <GlowingArticleDisplay article={articles[currentIndex]} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} showArticles={showArticles} title={''} totalArticles={articles.length} />
+            <Html position={[0, -1.8, -3]} center>
               <StyledButton onClick={toggleArticlesDisplay}>
-                {showArticles ? 'Hide Articles' : 'Show Articles'}
+                <span className="material-icons-outlined">
+                  power_settings_new
+                </span>
               </StyledButton>
             </Html>
           </PhysicsEnvironment>
         </XR>
       </Canvas>
-    </>
+    </ThreeSixtyContainer>
   );
 }
 

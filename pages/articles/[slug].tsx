@@ -7,6 +7,10 @@ import ArticleContainer from '@/components/ArticleContainer';
 import Footer from '../../components/ui/footer';
 import ArticleHeader from '@/components/ArticleHeader';
 import CircleNav from '@/components/ui/CircleNav';
+import { useEffect, useState } from 'react';
+import * as mermaid from 'mermaid';
+
+
 
 interface ArticleProps {
   title: string;
@@ -31,6 +35,7 @@ const ArticlePage: NextPage<ArticleProps> = ({ title, date, author, content }) =
     </div>
   );
 };
+
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles');

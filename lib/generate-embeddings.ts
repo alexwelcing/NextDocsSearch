@@ -26,7 +26,7 @@ const ignoredFiles = ['pages/404.mdx']
  * Extracts ES literals from an `estree` `ObjectExpression`
  * into a plain JavaScript object.
  */
-function getObjectFromExpression(node: ObjectExpression) {
+function getObjectFromExpression(node: ObjectExpression): Record<string, unknown> {
   return node.properties.reduce<
     Record<string, string | number | bigint | true | RegExp | undefined>
   >((object, property) => {
@@ -41,10 +41,7 @@ function getObjectFromExpression(node: ObjectExpression) {
       return object
     }
 
-    return {
-      ...object,
-      [key]: value,
-    }
+    return {};
   }, {})
 }
 
@@ -53,7 +50,7 @@ function getObjectFromExpression(node: ObjectExpression) {
  *
  * This info is akin to frontmatter.
  */
-function extractMetaExport(mdxTree: Root) {
+function extractMetaExport(mdxTree: Root): Record<string, unknown> | undefined {
   const metaExportNode = mdxTree.children.find((node): node is MdxjsEsm => {
     return (
       node.type === 'mdxjsEsm' &&
@@ -92,7 +89,7 @@ function extractMetaExport(mdxTree: Root) {
  *
  * Useful to split a markdown file into smaller sections.
  */
-function splitTreeBy(tree: Root, predicate: (node: Content) => boolean) {
+function splitTreeBy(tree: Root, predicate: (node: Content) => boolean): Root[] {
   return tree.children.reduce<Root[]>((trees, node) => {
     const [lastTree] = trees.slice(-1)
 
@@ -102,7 +99,7 @@ function splitTreeBy(tree: Root, predicate: (node: Content) => boolean) {
     }
 
     lastTree.children.push(node)
-    return trees
+    return [];
   }, [])
 }
 
@@ -120,11 +117,6 @@ type ProcessedMdx = {
   sections: Section[]
 }
 
-/**
- * Processes MDX content for search indexing.
- * It extracts metadata, strips it of all JSX,
- * and splits it into sub-sections based on criteria.
- */
 function processMdxForSearch(content: string): ProcessedMdx {
   const checksum = createHash('sha256').update(content).digest('base64')
 
@@ -150,13 +142,27 @@ function processMdxForSearch(content: string): ProcessedMdx {
 
   if (!mdTree) {
     return {
-      checksum,
-      meta,
+      checksum: '',
+      meta: {},
       sections: [],
-    }
+    };
   }
 
   const sectionTrees = splitTreeBy(mdTree, (node) => node.type === 'heading')
+
+  type Meta = Record<string, unknown>;
+
+  type Section = {
+    content: string;
+    heading?: string;
+    slug?: string;
+  };
+
+  type ProcessedMdx = {
+    checksum: string;
+    meta: Meta;
+    sections: Section[];
+  };
 
   const slugger = new GithubSlugger()
 
@@ -181,9 +187,9 @@ function processMdxForSearch(content: string): ProcessedMdx {
 }
 
 type WalkEntry = {
-  path: string
-  parentPath?: string
-}
+  path: string;
+  parentPath?: string;
+};
 
 async function walk(dir: string, parentPath?: string): Promise<WalkEntry[]> {
   const immediateFiles = await readdir(dir)
@@ -222,30 +228,23 @@ async function walk(dir: string, parentPath?: string): Promise<WalkEntry[]> {
 }
 
 abstract class BaseEmbeddingSource {
-  checksum?: string
-  meta?: Meta
-  sections?: Section[]
+  checksum?: string;
+  meta?: Meta;
+  sections?: Section[];
 
   constructor(public source: string, public path: string, public parentPath?: string) {}
 
-  abstract load(): Promise<{
-    checksum: string
-    meta?: Meta
-    sections: Section[]
-  }>
+  abstract load(): Promise<{ checksum: string; meta?: Meta; sections: Section[] }>;
 }
 
 class MarkdownEmbeddingSource extends BaseEmbeddingSource {
-  type: 'markdown' = 'markdown'
+  type: 'markdown' = 'markdown';
 
   constructor(source: string, public filePath: string, public parentFilePath?: string) {
-    const path = filePath.replace(/^pages/, '').replace(/\.mdx?$/, '')
-    const parentPath = parentFilePath?.replace(/^pages/, '').replace(/\.mdx?$/, '')
-
-    super(source, path, parentPath)
+    super(source, filePath, parentFilePath);
   }
 
-  async load() {
+  async load(): Promise<{ checksum: string; meta?: Meta; sections: Section[] }> {
     const contents = await readFile(this.filePath, 'utf8')
 
     const { checksum, meta, sections } = processMdxForSearch(contents)
@@ -255,23 +254,23 @@ class MarkdownEmbeddingSource extends BaseEmbeddingSource {
     this.sections = sections
 
     return {
-      checksum,
-      meta,
-      sections,
-    }
+      checksum: '',
+      meta: {},
+      sections: [],
+    };
   }
 }
 
-type EmbeddingSource = MarkdownEmbeddingSource
+type EmbeddingSource = MarkdownEmbeddingSource;
 
 async function generateEmbeddings() {
   const argv = await yargs.option('refresh', {
     alias: 'r',
     description: 'Refresh data',
     type: 'boolean',
-  }).argv;
+  }).argv
 
-  const shouldRefresh = argv.refresh;
+  const shouldRefresh = argv.refresh
 
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -280,7 +279,7 @@ async function generateEmbeddings() {
   ) {
     return console.log(
       'Environment variables NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, and OPENAI_KEY are required: skipping embeddings generation'
-    );
+    )
   }
 
   const supabaseClient = createClient(
@@ -292,14 +291,14 @@ async function generateEmbeddings() {
         autoRefreshToken: false,
       },
     }
-  );
+  )
 
   const embeddingSources: EmbeddingSource[] = [
-    ...(await walk('pages'))
+    ...(await walk('docs/articles'))
       .filter(({ path }) => /\.mdx?$/.test(path))
       .filter(({ path }) => !ignoredFiles.includes(path))
-      .map((entry) => new MarkdownEmbeddingSource('article', entry.path)),
-  ];
+      .map((entry) => new MarkdownEmbeddingSource('guide', entry.path)),
+  ]
 
   console.log(`Discovered ${embeddingSources.length} pages`)
 
@@ -327,16 +326,12 @@ async function generateEmbeddings() {
         throw fetchPageError
       }
 
-      type Singular<T> = T extends any[] ? undefined : T
-
       // We use checksum to determine if this page & its sections need to be regenerated
       if (!shouldRefresh && existingPage?.checksum === checksum) {
-        const existingParentPage = existingPage?.parentPage as Singular<
-          typeof existingPage.parentPage
-        >
+        const existingParentPage = existingPage?.parentPage as { path?: string } | null;
 
         // If parent page changed, update it
-        if (existingParentPage?.path !== parentPath) {
+        if (existingParentPage && existingParentPage.path !== parentPath) {
           console.log(`[${path}] Parent page has changed. Updating to '${parentPath}'...`)
           const { error: fetchParentPageError, data: parentPage } = await supabaseClient
             .from('nods_page')
@@ -487,7 +482,7 @@ async function generateEmbeddings() {
 }
 
 async function main() {
-  await generateEmbeddings()
+  await generateEmbeddings();
 }
 
-main().catch((err) => console.error(err))
+main().catch((err) => console.error(err));
