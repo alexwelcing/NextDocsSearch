@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ElementType, forwardRef, Ref } from 'react';
+import React, { HTMLAttributes, ElementType, forwardRef, Ref, useEffect, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
 
@@ -87,9 +87,36 @@ const DialogDescription = forwardRef<ElementType<DialogDescriptionProps>, Dialog
 );
 DialogDescription.displayName = 'DialogDescription';
 
+// Custom DialogTriggerWrapper to handle the link
+const DialogTriggerWrapper: React.FC<{ link?: string; children: React.ReactNode }> = ({ link, children }) => {
+  const [pagePath, setPagePath] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/vector-search')
+      .then((response) => {
+        const pagePaths = JSON.parse(response.headers.get('X-Page-Paths') || '[]');
+        setPagePath(pagePaths[0]); // Assuming you want the first path
+      })
+      .catch((error) => {
+        console.error('API call failed:', error);
+      });
+  }, []);
+
+  return (
+    <>
+      <DialogTrigger>{children}</DialogTrigger>
+      {pagePath && (
+        <a href={pagePath} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+          Read More
+        </a>
+      )}
+    </>
+  );
+};
+
 export {
   Dialog,
-  DialogTrigger,
+  DialogTriggerWrapper as DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogFooter,
