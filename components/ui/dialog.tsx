@@ -90,6 +90,7 @@ DialogDescription.displayName = 'DialogDescription';
 // Custom DialogTriggerWrapper to handle the link
 const DialogTriggerWrapper: React.FC<{ link?: string; children: React.ReactNode }> = ({ link, children }) => {
   const [pagePath, setPagePath] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/vector-search')
@@ -99,13 +100,16 @@ const DialogTriggerWrapper: React.FC<{ link?: string; children: React.ReactNode 
       })
       .catch((error) => {
         console.error('API call failed:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   return (
     <>
       <DialogTrigger>{children}</DialogTrigger>
-      {pagePath && (
+      {!loading && pagePath && (
         <a href={pagePath} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
           Read More
         </a>
