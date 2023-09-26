@@ -43,8 +43,12 @@ const fadeIn = keyframes`
 `;
 
 const ThreeSixtyContainer = styled.div<{ isLoaded: boolean }>`
-  width: 100vw;  // Fullscreen width
-  height: 100vh; // Fullscreen height
+position: fixed;
+z-index: -1;
+top: 0;
+left: 0;
+  width: 100vw;
+  height: 100vh;
   opacity: 0;
   transition: opacity 1s ease-in-out;
 
