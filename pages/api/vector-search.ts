@@ -116,6 +116,8 @@ export default async function handler(req: NextRequest) {
       contextText += `${content.trim()}\n---\n`;
     }
 
+    const firstPagePath = pagePaths.length > 0 ? pagePaths[0] : null;
+
     const prompt = codeBlock`
       ${oneLine`
       You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents.`}
@@ -126,6 +128,8 @@ export default async function handler(req: NextRequest) {
       Question: """
       ${sanitizedQuery}
       """
+
+      ${firstPagePath ? `Link: ${firstPagePath}` : ''}
 
       Answer in sentences.
     `;
