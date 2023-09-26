@@ -44,8 +44,8 @@ const fadeIn = keyframes`
 
 const ThreeSixtyContainer = styled.div<{ isLoaded: boolean }>`
 position: fixed;
-z-index: -1;
-top: 0;
+z-index: 4;
+bottom: 0;
 left: 0;
   width: 100vw;
   height: 100vh;
