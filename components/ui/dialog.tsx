@@ -9,8 +9,8 @@ type DialogTriggerProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.
 const DialogTrigger: ElementType<DialogTriggerProps> = DialogPrimitive.Trigger;
 
 type DialogPortalProps = DialogPrimitive.DialogPortalProps;
-const DialogPortal: React.FC<DialogPortalProps> = ({ className, children, ...props }) => (
-  <DialogPrimitive.Portal className={cn(className)} {...props}>
+const DialogPortal: React.FC<DialogPortalProps> = ({ children, ...props }) => (
+  <DialogPrimitive.Portal {...props}>
     <div className="fixed inset-0 z-50 flex items-start justify-center sm:items-center">
       {children}
     </div>

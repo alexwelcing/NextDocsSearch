@@ -29,6 +29,7 @@
     "@mui/material": "^5.14.10",
     "@radix-ui/react-dialog": "^1.0.3",
     "@radix-ui/react-label": "^2.0.1",
+    "@react-spring/three": "^9.7.3",
     "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^9.80.0",
     "@react-three/fiber": "^8.13.6",

@@ -67,7 +67,7 @@ interface ThreeSixtyProps {
 
 function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showArticles, setShowArticles] = useState(true);
+  const [showArticles] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [articles, setArticles] = useState<ArticleData[]>([]);
 
@@ -83,7 +83,6 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
   }, [fetchArticles]);
 
   const toggleArticlesDisplay = useCallback(() => {
-    setShowArticles((prev) => !prev);
   }, []);
 
   return (

@@ -1,7 +1,9 @@
 import React, { useRef } from 'react';
-import { Text, RoundedBox, useHelper, Html } from '@react-three/drei';
-import * as THREE from 'three';
+import { Text, RoundedBox, Html, Cylinder, Plane } from '@react-three/drei';
+import { useSpring, animated, config } from '@react-spring/three';
 import { ArticleData } from './ArticleTextDisplay';
+import PowerButton from './PowerButton';
+import ArticleNavigationButton from './ArticleNavigationButton';
 
 interface GlowingArticleDisplayProps {
   article: ArticleData;
@@ -12,14 +14,29 @@ interface GlowingArticleDisplayProps {
   totalArticles: number;
 }
 
-const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ article, currentIndex, setCurrentIndex, title, showArticles, totalArticles }) => {
+const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({
+  article,
+  currentIndex,
+  setCurrentIndex,
+  showArticles,
+  title,
+  totalArticles,
+}) => {
   const groupRef = useRef<THREE.Group | null>(null);
   const lightRef = useRef<THREE.PointLight | null>(null);
+
+  const toggleArticlesDisplay = () => {
+  };
+
+  const { scale } = useSpring({
+    scale: showArticles ? [1, 1, 1] : [0.8, 0.8, 0.8],
+    config: config.wobbly,
+  });
 
   return (
     <group ref={groupRef} position={[0, 1, -5]}>
       <RoundedBox args={[8, 5, 0.5]} radius={0.2} smoothness={4}>
-        <meshStandardMaterial color={showArticles ? "white" : "gray"} />
+        <meshStandardMaterial color={showArticles ? 'white' : 'gray'} />
       </RoundedBox>
 
       {showArticles && (
@@ -28,7 +45,7 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ article, 
 
       {showArticles && article && (
         <>
-          <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.6]} maxWidth={4}>
+          <Text fontSize={0.3} color="black" anchorX="center" textAlign="center" anchorY="middle" position={[0, 0, 0.6]} maxWidth={4}>
             {`${article.title}`}
           </Text>
 
@@ -45,17 +62,7 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ article, 
         </>
       )}
 
-      {showArticles && (
-        <>
-          <Html position={[-3.5, -1.4, 0.6]}>
-            <button className={currentIndex === 0 ? "text-slate-600 text-2xl" : "text-sky-600 text-2xl"} disabled={currentIndex === 0} onClick={() => setCurrentIndex(currentIndex - 1)}>&#60;</button>
-          </Html>
-
-          <Html position={[2.8, -1.4, 0.6]}>
-            <button className={currentIndex === 4 ? "text-slate-600 text-2xl" : "text-sky-600 text-2xl"} disabled={currentIndex === 4 } onClick={() => setCurrentIndex(currentIndex + 1)}>&#62;</button>
-          </Html>
-        </>
-      )}
+      <PowerButton toggleDisplay={toggleArticlesDisplay} />
     </group>
   );
 };
