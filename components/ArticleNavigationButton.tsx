@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { useSpring, animated, config } from '@react-spring/three';
 import { Cylinder } from '@react-three/drei';

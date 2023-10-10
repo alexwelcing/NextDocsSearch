@@ -65,17 +65,21 @@ interface ThreeSixtyProps {
   onChangeImage: () => void;
 }
 
-function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
+const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showArticles, setShowArticles] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [articles, setArticles] = useState<ArticleData[]>([]);
 
   const fetchArticles = useCallback(async () => {
-    const response = await fetch('/api/articles');
-    const data: ArticleData[] = await response.json();
-    setArticles(data);
-    setIsLoaded(true); // Set isLoaded to true after fetching articles
+    try {
+      const response = await fetch('/api/articles');
+      const data: ArticleData[] = await response.json();
+      setArticles(data);
+      setIsLoaded(true);
+    } catch (error) {
+      console.error('Failed to fetch articles:', error);
+    }
   }, []);
 
   useEffect(() => {
@@ -83,6 +87,7 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
   }, [fetchArticles]);
 
   const toggleArticlesDisplay = useCallback(() => {
+    setShowArticles((prev) => !prev);
   }, []);
 
   return (
@@ -99,13 +104,6 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
             <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
             <ambientLight intensity={0.2} position={[-2, 10, 2]} />
             <GlowingArticleDisplay article={articles[currentIndex]} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} showArticles={showArticles} title={''} totalArticles={articles.length} />
-            <Html position={[0, -1.8, -3]} center>
-              <StyledButton onClick={toggleArticlesDisplay}>
-                <span className="material-icons-outlined">
-                  power_settings_new
-                </span>
-              </StyledButton>
-            </Html>
           </PhysicsEnvironment>
         </XR>
       </Canvas>
