@@ -10,7 +10,7 @@ import StylishFallback from '@/components/StylishFallback'; // Import StylishFal
 // Lazy load ThreeSixty component
 const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
   ssr: false, // Disable server-side rendering for this component
-  loading: () => <StylishFallback />, // Use StylishFallback here
+  loading: () => <StylishFallback />,
 });
 
 const Chat = () => {
