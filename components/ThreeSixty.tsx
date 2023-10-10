@@ -7,7 +7,6 @@ import { OrbitControls, Html } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
-import StylishFallback from './StylishFallback';
 
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -64,7 +63,7 @@ interface ThreeSixtyProps {
 }
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded] = useState(false);
 
   return (
     <ThreeSixtyContainer isLoaded={isLoaded}>
