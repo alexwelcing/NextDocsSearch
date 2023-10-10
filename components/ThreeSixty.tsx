@@ -7,8 +7,6 @@ import { OrbitControls, Html } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
-import { ArticleData } from './ArticleTextDisplay';
-import GlowingArticleDisplay from './GlowingArticleDisplay';
 import StylishFallback from './StylishFallback';
 
 
@@ -67,28 +65,6 @@ interface ThreeSixtyProps {
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showArticles, setShowArticles] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [articles, setArticles] = useState<ArticleData[]>([]);
-
-  const fetchArticles = useCallback(async () => {
-    try {
-      const response = await fetch('/api/articles');
-      const data: ArticleData[] = await response.json();
-      setArticles(data);
-      setIsLoaded(true);
-    } catch (error) {
-      console.error('Failed to fetch articles:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchArticles();
-  }, [fetchArticles]);
-
-  const toggleArticlesDisplay = useCallback(() => {
-    setShowArticles((prev) => !prev);
-  }, []);
 
   return (
     <ThreeSixtyContainer isLoaded={isLoaded}>
@@ -103,7 +79,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             <BouncingBall />
             <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
             <ambientLight intensity={0.2} position={[-2, 10, 2]} />
-            <GlowingArticleDisplay article={articles[currentIndex]} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} showArticles={showArticles} title={''} totalArticles={articles.length} />
           </PhysicsEnvironment>
         </XR>
       </Canvas>
