@@ -5,54 +5,36 @@ import { SearchDialog } from '@/components/SearchDialog';
 import Footer from '@/components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import dynamic from 'next/dynamic';
-import StylishFallback from '@/components/StylishFallback'; // Import StylishFallback
+import StylishFallback from '@/components/StylishFallback';
 
-// Lazy load ThreeSixty component
 const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
-  ssr: false, // Disable server-side rendering for this component
-  loading: () => <StylishFallback />, // Use StylishFallback here
+  ssr: false,
+  loading: () => <StylishFallback />
 });
 
 const Chat = () => {
-  const [currentImage, setCurrentImage] = useState<string>('./background/bg1.jpg');
-  const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchImages = async () => {
+    const fetchImage = async () => {
       try {
         const response = await fetch('/api/backgroundImages');
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const images: string[] = await response.json();
-
-        // Pre-fetch images
-        images.forEach((image: string) => {
-          new Image().src = `./background/${image}`;
-        });
-
-        setBackgroundImages(images);
-        selectRandomImage(images);
+        const data = await response.json();
+        setCurrentImage(data.image);
       } catch (error) {
-        console.error('There was a problem fetching the background images:', error);
+        console.error('There was a problem fetching the background image:', error);
       }
     };
 
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(fetchImages);
-    } else {
-      setTimeout(fetchImages, 1000);
-    }
+    fetchImage();
   }, []);
 
-  const selectRandomImage = (images: string[]) => {
-    const randomImage = images[Math.floor(Math.random() * images.length)];
-    setCurrentImage(`./background/${randomImage}`);
-  };
-
-  const handleImageChange = () => {
-    selectRandomImage(backgroundImages);
-  };
+  function handleImageChange(newImage: string): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <>
@@ -68,9 +50,11 @@ const Chat = () => {
       </Head>
       <CircleNav />
       <main className={`${styles.main} ${styles.gradientbg}`}>
-        <Suspense fallback={<StylishFallback />}>
-          <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={handleImageChange} />
-        </Suspense>
+        {currentImage && (
+          <Suspense fallback={<StylishFallback />}>
+            <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={handleImageChange} />
+          </Suspense>
+        )}
       </main>
       <SearchDialog />
       <Footer onImageChange={handleImageChange} showChangeScenery={true} />

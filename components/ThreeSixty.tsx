@@ -59,11 +59,15 @@ left: 0;
 interface ThreeSixtyProps {
   currentImage: string;
   isDialogOpen: boolean;
-  onChangeImage: () => void;
+  onChangeImage: (newImage: string) => void;
 }
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
-  const [isLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleImageLoaded = useCallback(() => {
+    setIsLoaded(true);
+  }, []);
 
   return (
     <ThreeSixtyContainer isLoaded={isLoaded}>
@@ -76,13 +80,17 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             <PhysicsGround />
             <OrbitControls />
             <BouncingBall />
-            <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+            <BackgroundSphere
+              imageUrl={currentImage}
+              transitionDuration={0.5}
+              onLoad={handleImageLoaded}  // Pass the callback here
+            />
             <ambientLight intensity={0.2} position={[-2, 10, 2]} />
           </PhysicsEnvironment>
         </XR>
       </Canvas>
     </ThreeSixtyContainer>
   );
-}
+};
 
 export default ThreeSixty;
