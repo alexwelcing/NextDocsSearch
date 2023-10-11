@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { VRButton, XR, Controllers, Hands } from '@react-three/xr';

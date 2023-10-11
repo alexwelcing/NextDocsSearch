@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Text, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
