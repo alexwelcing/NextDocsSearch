@@ -57,18 +57,25 @@ interface ThreeSixtyProps {
 }
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [articles, setArticles] = useState<ArticleData[]>([]);
-
-  const fetchArticles = useCallback(async () => {
-    const response = await fetch('/api/articles');
-    const data: ArticleData[] = await response.json();
-    setArticles(data);
-  }, []);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch('/api/articles');
+        const data: ArticleData[] = await response.json();
+        setArticles(data);
+      } catch (error) {
+        console.error("Failed fetching articles:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchArticles();
-  }, [fetchArticles]);
+  }, []);
 
   const article = articles[currentIndex];
 
@@ -85,15 +92,17 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             <BouncingBall />
             <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
             <ambientLight intensity={0.2} position={[-2, 10, 2]} />
-            <GlowingArticleDisplay
-                articles={articles}
-                article={article}
-                currentIndex={currentIndex}
-                setCurrentIndex={setCurrentIndex}
-                showArticles={true}
-                title="Article Title Placeholder"
-                totalArticles={articles.length}
-            />
+            {!loading && (
+              <GlowingArticleDisplay
+                  articles={articles}
+                  article={article}
+                  currentIndex={currentIndex}
+                  setCurrentIndex={setCurrentIndex}
+                  showArticles={true}
+                  title="Article Title Placeholder"
+                  totalArticles={articles.length}
+              />
+            )}
           </PhysicsEnvironment>
         </XR>
       </Canvas>
