@@ -3,10 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
 import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
-import { OrbitControls, Html } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
+import GlowingArticleDisplay from './GlowingArticleDisplay';
 
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -30,6 +31,7 @@ const StyledButton = styled.button`
     opacity: 80%;
   }
 `
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -39,21 +41,14 @@ const fadeIn = keyframes`
   }
 `;
 
-const ThreeSixtyContainer = styled.div<{ isLoaded: boolean }>`
-position: fixed;
-z-index: 4;
-bottom: 0;
-left: 0;
+const ThreeSixtyContainer = styled.div`
+  position: fixed;
+  z-index: 4;
+  bottom: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-
-  ${(props) =>
-    props.isLoaded &&
-    css`
-      animation: ${fadeIn} 1s ease-in-out forwards;
-    `}
+  opacity: 1;
 `;
 
 interface ThreeSixtyProps {
@@ -62,15 +57,12 @@ interface ThreeSixtyProps {
   onChangeImage: (newImage: string) => void;
 }
 
-const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleImageLoaded = useCallback(() => {
-    setIsLoaded(true);
-  }, []);
+const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
+  const [currentIndex, setCurrentIndex] = useState(0); // Index for the current article
 
   return (
-    <ThreeSixtyContainer isLoaded={isLoaded}>
+    <ThreeSixtyContainer>
       <VRButton enterOnly={false} exitOnly={false} />
       <Canvas shadows>
         <XR>
@@ -80,10 +72,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             <PhysicsGround />
             <OrbitControls />
             <BouncingBall />
+            <GlowingArticleDisplay
+              currentIndex={currentIndex}  // Pass the current index state
+              setCurrentIndex={setCurrentIndex}  // Pass the function to change the index
+              showArticles={true}
+              title="Article Title Placeholder"
+              totalArticles={5} // Placeholder for the total number of articles
+            />
             <BackgroundSphere
               imageUrl={currentImage}
               transitionDuration={0.5}
-              onLoad={handleImageLoaded}  // Pass the callback here
             />
             <ambientLight intensity={0.2} position={[-2, 10, 2]} />
           </PhysicsEnvironment>

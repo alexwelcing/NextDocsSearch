@@ -32,9 +32,19 @@ const Chat = () => {
     fetchImage();
   }, []);
 
-  function handleImageChange(newImage: string): void {
-    throw new Error('Function not implemented.');
+  async function handleImageChange(): Promise<void> {
+    try {
+      const response = await fetch('/api/backgroundImages');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCurrentImage(data.image);  // assuming your API returns an object with an "image" key
+    } catch (error) {
+      console.error('There was a problem fetching the background image:', error);
+    }
   }
+
 
   return (
     <>
