@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
@@ -9,8 +7,7 @@ import { OrbitControls } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
-import GlowingArticleDisplay from './GlowingArticleDisplay';
-
+import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
@@ -59,9 +56,21 @@ interface ThreeSixtyProps {
   onChangeImage: (newImage: string) => void;
 }
 
-
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
-  const [currentIndex, setCurrentIndex] = useState(0); // Index for the current article
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [articles, setArticles] = useState<ArticleData[]>([]);
+
+  const fetchArticles = useCallback(async () => {
+    const response = await fetch('/api/articles');
+    const data: ArticleData[] = await response.json();
+    setArticles(data);
+  }, []);
+
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
+
+  const article = articles[currentIndex];
 
   return (
     <ThreeSixtyContainer>
@@ -74,18 +83,17 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             <PhysicsGround />
             <OrbitControls />
             <BouncingBall />
-            <GlowingArticleDisplay
-              currentIndex={currentIndex}  // Pass the current index state
-              setCurrentIndex={setCurrentIndex}  // Pass the function to change the index
-              showArticles={true}
-              title="Article Title Placeholder"
-              totalArticles={5} // Placeholder for the total number of articles
-            />
-            <BackgroundSphere
-              imageUrl={currentImage}
-              transitionDuration={0.5}
-            />
+            <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
             <ambientLight intensity={0.2} position={[-2, 10, 2]} />
+            <GlowingArticleDisplay
+                articles={articles}
+                article={article}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+                showArticles={true}
+                title="Article Title Placeholder"
+                totalArticles={articles.length}
+            />
           </PhysicsEnvironment>
         </XR>
       </Canvas>

@@ -26,57 +26,59 @@ export const runtime = 'edge';
 export default async function handler(req: NextRequest) {
   try {
     if (!openAiKey) {
-      throw new ApplicationError('Missing environment variable OPENAI_KEY');
+      throw new ApplicationError('Missing environment variable OPENAI_KEY')
     }
 
     if (!supabaseUrl) {
-      throw new ApplicationError('Missing environment variable SUPABASE_URL');
+      throw new ApplicationError('Missing environment variable SUPABASE_URL')
     }
 
     if (!supabaseServiceKey) {
-      throw new ApplicationError('Missing environment variable SUPABASE_SERVICE_ROLE_KEY');
+      throw new ApplicationError('Missing environment variable SUPABASE_SERVICE_ROLE_KEY')
     }
 
-    const requestData = await req.json();
+    const requestData = await req.json()
 
     if (!requestData) {
-      throw new UserError('Missing request data');
+      throw new UserError('Missing request data')
     }
 
-    const { prompt: query } = requestData;
+    const { prompt: query } = requestData
 
     if (!query) {
-      throw new UserError('Missing query in request data');
+      throw new UserError('Missing query in request data')
     }
 
-    const supabaseClient = createClient(supabaseUrl, supabaseServiceKey);
+    const supabaseClient = createClient(supabaseUrl, supabaseServiceKey)
 
-    const sanitizedQuery = query.trim();
+    // Moderate the content to comply with OpenAI T&C
+    const sanitizedQuery = query.trim()
     const moderationResponse: CreateModerationResponse = await openai
       .createModeration({ input: sanitizedQuery })
-      .then((res) => res.json());
+      .then((res) => res.json())
 
-    const [results] = moderationResponse.results;
+    const [results] = moderationResponse.results
 
     if (results.flagged) {
       throw new UserError('Flagged content', {
         flagged: true,
         categories: results.categories,
-      });
+      })
     }
 
+    // Create embedding from query
     const embeddingResponse = await openai.createEmbedding({
       model: 'text-embedding-ada-002',
       input: sanitizedQuery.replaceAll('\n', ' '),
-    });
+    })
 
     if (embeddingResponse.status !== 200) {
-      throw new ApplicationError('Failed to create embedding for question', embeddingResponse);
+      throw new ApplicationError('Failed to create embedding for question', embeddingResponse)
     }
 
     const {
       data: [{ embedding }],
-    }: CreateEmbeddingResponse = await embeddingResponse.json();
+    }: CreateEmbeddingResponse = await embeddingResponse.json()
 
     const { error: matchError, data: pageSections } = await supabaseClient.rpc(
       'match_page_sections',
@@ -86,37 +88,28 @@ export default async function handler(req: NextRequest) {
         match_count: 10,
         min_content_length: 50,
       }
-    );
+    )
 
     if (matchError) {
-      throw new ApplicationError('Failed to match page sections', matchError);
+      throw new ApplicationError('Failed to match page sections', matchError)
     }
 
-    const pagePaths: string[] = [];
-    const tokenizer = new GPT3Tokenizer({ type: 'gpt3' });
-    let tokenCount = 0;
-    let contextText = '';
+    const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })
+    let tokenCount = 0
+    let contextText = ''
 
     for (let i = 0; i < pageSections.length; i++) {
-      const pageSection = pageSections[i];
-      const content = pageSection.content;
-      const path = pageSection.path;
-
-      if (path) {
-        pagePaths.push(path);
-      }
-
-      const encoded = tokenizer.encode(content);
-      tokenCount += encoded.text.length;
+      const pageSection = pageSections[i]
+      const content = pageSection.content
+      const encoded = tokenizer.encode(content)
+      tokenCount += encoded.text.length
 
       if (tokenCount >= 1500) {
-        break;
+        break
       }
 
-      contextText += `${content.trim()}\n---\n`;
+      contextText += `${content.trim()}\n---\n`
     }
-
-    const firstPagePath = pagePaths.length > 0 ? pagePaths[0] : null;
 
     const prompt = codeBlock`
       ${oneLine`
@@ -129,15 +122,13 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      ${firstPagePath ? `Link: ${firstPagePath}` : ''}
-
       Answer in sentences.
-    `;
+    `
 
     const chatMessage: ChatCompletionRequestMessage = {
       role: 'user',
       content: prompt,
-    };
+    }
 
     const response = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
@@ -145,20 +136,18 @@ export default async function handler(req: NextRequest) {
       max_tokens: 512,
       temperature: 0,
       stream: true,
-    });
+    })
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new ApplicationError('Failed to generate completion', error);
+      const error = await response.json()
+      throw new ApplicationError('Failed to generate completion', error)
     }
 
-    const stream = OpenAIStream(response);
+    // Transform the response into a readable stream
+    const stream = OpenAIStream(response)
 
-    return new StreamingTextResponse(stream, {
-      headers: {
-        'X-Page-Paths': JSON.stringify(pagePaths),
-      },
-    });
+    // Return a StreamingTextResponse, which can be consumed by the client
+    return new StreamingTextResponse(stream)
   } catch (err: unknown) {
     if (err instanceof UserError) {
       return new Response(
@@ -170,11 +159,13 @@ export default async function handler(req: NextRequest) {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
         }
-      );
+      )
     } else if (err instanceof ApplicationError) {
-      console.error(`${err.message}: ${JSON.stringify(err.data)}`);
+      // Print out application errors with their additional data
+      console.error(`${err.message}: ${JSON.stringify(err.data)}`)
     } else {
-      console.error(err);
+      // Print out unexpected errors as is to help with debugging
+      console.error(err)
     }
 
     return new Response(
@@ -185,6 +176,6 @@ export default async function handler(req: NextRequest) {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       }
-    );
+    )
   }
 }

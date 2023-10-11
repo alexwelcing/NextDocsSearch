@@ -1,3 +1,5 @@
+'use client'
+
 import React, { HTMLAttributes, ElementType, forwardRef, Ref, useEffect, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';

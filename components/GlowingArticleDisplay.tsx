@@ -1,6 +1,4 @@
-'use client'
-
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Text, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -13,6 +11,8 @@ export interface ArticleData {
 }
 
 interface GlowingArticleDisplayProps {
+    articles: ArticleData[];
+    article: ArticleData | undefined;
     currentIndex: number;
     setCurrentIndex: (index: number) => void;
     showArticles: boolean;
@@ -20,27 +20,11 @@ interface GlowingArticleDisplayProps {
     totalArticles: number;
 }
 
-const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ currentIndex, setCurrentIndex, showArticles, title, totalArticles }) => {
+const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ articles, article, currentIndex, setCurrentIndex, showArticles, title, totalArticles }) => {
     const groupRef = useRef<THREE.Group | null>(null);
     const lightRef = useRef<THREE.PointLight | null>(null);
-    const [articles, setArticles] = useState<ArticleData[]>([]);
-    const article = articles[currentIndex];
     const isBackAvailable = currentIndex > 0;
     const isNextAvailable = currentIndex < articles.length - 1;
-
-    useEffect(() => {
-        const fetchArticles = async () => {
-            try {
-                const response = await fetch('/api/articles');
-                const data: ArticleData[] = await response.json();
-                setArticles(data);
-            } catch (error) {
-                console.error("Failed to fetch articles:", error);
-            }
-        };
-
-        fetchArticles();
-    }, []);
 
     const [backHovered, setBackHovered] = useState(false);
     const [nextHovered, setNextHovered] = useState(false);
@@ -64,7 +48,7 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ currentIn
                 </>
             )}
 
-{showArticles && (
+            {showArticles && (
                 <>
                     {/* "Back" Button */}
                     <RoundedBox
@@ -98,7 +82,7 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ currentIn
                     <RoundedBox
                         args={[2.5, .6, 0.1]}
                         position={[0, -1.2, 0.6]}
-                        onClick={() => window.open(`/articles/${article.filename.replace('.mdx', '')}`, '_blank')}
+                        onClick={() => article && window.open(`/articles/${article.filename.replace('.mdx', '')}`, '_blank')}
                         onPointerOver={() => setViewHovered(true)}
                         onPointerOut={() => setViewHovered(false)}
                     >
