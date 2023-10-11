@@ -33,10 +33,10 @@ export default function Home() {
         <div className={styles.centeredtitle}>Build products with Alex Welcing.</div>
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
           <Link href="/chat" className={styles.landingBtn}>
-            Explore.
+            Explore generated worlds.
           </Link>
           <Link href="/about" className={styles.landingBtn}>
-            About.
+            Learn about my work.
           </Link>
         </div>
         <div className="pt-4">
