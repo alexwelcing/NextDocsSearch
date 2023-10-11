@@ -5,72 +5,70 @@ import { SearchDialog } from '@/components/SearchDialog';
 import Footer from '@/components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import dynamic from 'next/dynamic';
-import StylishFallback from '@/components/StylishFallback'; // Import StylishFallback
+import StylishFallback from '@/components/StylishFallback';
 
-// Lazy load ThreeSixty component
 const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
-  ssr: false, // Disable server-side rendering for this component
-  loading: () => <StylishFallback />, // Use StylishFallback here
+  ssr: false,
+  loading: () => <StylishFallback />
 });
 
 const Chat = () => {
-  const [currentImage, setCurrentImage] = useState<string>('./background/bg1.jpg');
-  const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchImages = async () => {
+    const fetchImage = async () => {
       try {
         const response = await fetch('/api/backgroundImages');
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const images: string[] = await response.json();
-
-        // Pre-fetch images
-        images.forEach((image: string) => {
-          new Image().src = `./background/${image}`;
-        });
-
-        setBackgroundImages(images);
-        selectRandomImage(images);
+        const data = await response.json();
+        setCurrentImage(data.image);
       } catch (error) {
-        console.error('There was a problem fetching the background images:', error);
+        console.error('There was a problem fetching the background image:', error);
       }
     };
 
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(fetchImages);
-    } else {
-      setTimeout(fetchImages, 1000);
-    }
+    fetchImage();
   }, []);
 
-  const selectRandomImage = (images: string[]) => {
-    const randomImage = images[Math.floor(Math.random() * images.length)];
-    setCurrentImage(`./background/${randomImage}`);
-  };
+  async function handleImageChange(): Promise<void> {
+    try {
+      const response = await fetch('/api/backgroundImages');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCurrentImage(data.image);  // assuming your API returns an object with an "image" key
+    } catch (error) {
+      console.error('There was a problem fetching the background image:', error);
+    }
+  }
 
-  const handleImageChange = () => {
-    selectRandomImage(backgroundImages);
-  };
 
   return (
     <>
-      <Head>
-        <title>Chat with Alex documents while enjoying fantastic generated worlds!</title>
-        <meta
-          name="description"
-          content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products."
-        />
-        <meta name="keywords" content="Alex Welcing, product leadership, generative AI, LLM, 360, chat with documents" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+<Head>
+  <title>Chat with Alex documents while enjoying fantastic generated worlds!</title>
+  <meta name="description" content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products." />
+  <meta name="keywords" content="Alex Welcing, product leadership, generative AI, LLM, 360, chat with documents" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.ico" />
+
+  {/* Open Graph Meta Tags */}
+  <meta property="og:title" content="Chat with Alex documents while enjoying fantastic generated worlds!" />
+  <meta property="og:description" content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products." />
+  <meta property="og:image" content="/social-preview.png" />
+  <meta property="og:url" content="https://alexwelcing.com/chat" />
+  <meta property="og:type" content="website" />
+</Head>
       <CircleNav />
       <main className={`${styles.main} ${styles.gradientbg}`}>
-        <Suspense fallback={<StylishFallback />}>
-          <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={handleImageChange} />
-        </Suspense>
+        {currentImage && (
+          <Suspense fallback={<StylishFallback />}>
+            <ThreeSixty currentImage={currentImage} isDialogOpen={false} onChangeImage={handleImageChange} />
+          </Suspense>
+        )}
       </main>
       <SearchDialog />
       <Footer onImageChange={handleImageChange} showChangeScenery={true} />

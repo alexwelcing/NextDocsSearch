@@ -3,14 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
 import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
-import { OrbitControls, Html } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
-import { ArticleData } from './ArticleTextDisplay';
-import GlowingArticleDisplay from './GlowingArticleDisplay';
-import StylishFallback from './StylishFallback';
-
+import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
@@ -33,6 +30,7 @@ const StyledButton = styled.button`
     opacity: 80%;
   }
 `
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -42,48 +40,47 @@ const fadeIn = keyframes`
   }
 `;
 
-const ThreeSixtyContainer = styled.div<{ isLoaded: boolean }>`
-  width: 100vw;  // Fullscreen width
-  height: 100vh; // Fullscreen height
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-
-  ${(props) =>
-    props.isLoaded &&
-    css`
-      animation: ${fadeIn} 1s ease-in-out forwards;
-    `}
+const ThreeSixtyContainer = styled.div`
+  position: fixed;
+  z-index: 4;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 1;
 `;
 
 interface ThreeSixtyProps {
   currentImage: string;
   isDialogOpen: boolean;
-  onChangeImage: () => void;
+  onChangeImage: (newImage: string) => void;
 }
 
-function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [showArticles, setShowArticles] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
+const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
-
-  const fetchArticles = useCallback(async () => {
-    const response = await fetch('/api/articles');
-    const data: ArticleData[] = await response.json();
-    setArticles(data);
-    setIsLoaded(true); // Set isLoaded to true after fetching articles
-  }, []);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    fetchArticles();
-  }, [fetchArticles]);
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch('/api/articles');
+        const data: ArticleData[] = await response.json();
+        setArticles(data);
+      } catch (error) {
+        console.error("Failed fetching articles:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const toggleArticlesDisplay = useCallback(() => {
-    setShowArticles((prev) => !prev);
+    fetchArticles();
   }, []);
 
+  const article = articles[currentIndex];
+
   return (
-    <ThreeSixtyContainer isLoaded={isLoaded}>
+    <ThreeSixtyContainer>
       <VRButton enterOnly={false} exitOnly={false} />
       <Canvas shadows>
         <XR>
@@ -95,19 +92,22 @@ function ThreeSixty({ currentImage, isDialogOpen, onChangeImage }: ThreeSixtyPro
             <BouncingBall />
             <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
             <ambientLight intensity={0.2} position={[-2, 10, 2]} />
-            <GlowingArticleDisplay article={articles[currentIndex]} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} showArticles={showArticles} title={''} totalArticles={articles.length} />
-            <Html position={[0, -1.8, -3]} center>
-              <StyledButton onClick={toggleArticlesDisplay}>
-                <span className="material-icons-outlined">
-                  power_settings_new
-                </span>
-              </StyledButton>
-            </Html>
+            {!loading && (
+              <GlowingArticleDisplay
+                  articles={articles}
+                  article={article}
+                  currentIndex={currentIndex}
+                  setCurrentIndex={setCurrentIndex}
+                  showArticles={true}
+                  title="Article Title Placeholder"
+                  totalArticles={articles.length}
+              />
+            )}
           </PhysicsEnvironment>
         </XR>
       </Canvas>
     </ThreeSixtyContainer>
   );
-}
+};
 
 export default ThreeSixty;

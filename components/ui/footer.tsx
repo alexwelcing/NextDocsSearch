@@ -1,39 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import styles from '../../styles/Home.module.css'
-import { Button } from './button'
-import AboutModal from '../AboutModal'
-import { useRouter } from 'next/router'
+import React, { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import styles from '../../styles/Home.module.css';
+import { Button } from './button';
+import AboutModal from '../AboutModal';
+import { useRouter } from 'next/router';
 
 interface FooterProps {
-  onImageChange: (newImage: string) => void
-  showChangeScenery: boolean
+  onImageChange: (newImage: string) => void;
+  showChangeScenery: boolean;
 }
 
 const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true }) => {
-  const [expanded, setExpanded] = useState(true)
-  const [images, setImages] = useState<string[]>([])
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [isAboutModalOpen, setAboutModalOpen] = useState(false)
-
-  useEffect(() => {
-    fetch('/api/backgroundImages')
-      .then((response) => response.json())
-      .then((data) => {
-        setImages(data.map((imageName: string) => `/background/${imageName}`))
-      })
-  }, [])
+  const [expanded, setExpanded] = useState(true);
+  const [isAboutModalOpen, setAboutModalOpen] = useState(false);
 
   const handleChangeImage = () => {
     fetch('/api/backgroundImages')
       .then((response) => response.json())
       .then((data) => {
-        const allImages = data.map((imageName: string) => `/background/${imageName}`)
-        const randomImage = allImages[Math.floor(Math.random() * allImages.length)]
-        onImageChange(randomImage)
-      })
-  }
+        onImageChange(data.image);
+      });
+  };
 
   const router = useRouter();
   const isArticleOrHomePage = router.pathname.includes('/articles/') || router.pathname === '/';
@@ -83,12 +71,7 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
             <button onClick={() => setAboutModalOpen(false)} className="float-right">
               Close
             </button>
-            <AboutModal
-              isAboutModalOpen={false}
-              onClose={function (): void {
-                throw new Error('Function not implemented.')
-              }}
-            />
+            <AboutModal isAboutModalOpen={false} onClose={() => setAboutModalOpen(false)} />
           </div>
           <div
             className="fixed inset-0 bg-black opacity-50"

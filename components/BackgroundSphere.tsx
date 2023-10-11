@@ -6,9 +6,10 @@ import * as THREE from 'three';
 interface BackgroundSphereProps {
   imageUrl: string;
   transitionDuration: number; // in seconds
+  onLoad?: () => void; // Added this callback
 }
 
-export const BackgroundSphere: React.FC<BackgroundSphereProps> = ({ imageUrl, transitionDuration }) => {
+export const BackgroundSphere: React.FC<BackgroundSphereProps> = ({ imageUrl, transitionDuration, onLoad }) => {
   const [currentTexture, setCurrentTexture] = useState<THREE.Texture | null>(null);
   const [newTexture, setNewTexture] = useState<THREE.Texture | null>(null);
   const [opacity, setOpacity] = useState(1);
@@ -20,8 +21,9 @@ export const BackgroundSphere: React.FC<BackgroundSphereProps> = ({ imageUrl, tr
     if (loadedTexture) {
       setIsTransitioning(true);
       setNewTexture(loadedTexture);
+      if (onLoad) onLoad();  // Trigger the callback when texture is loaded
     }
-  }, [loadedTexture]);
+  }, [loadedTexture, onLoad]); // Added onLoad to the dependency array
 
   useEffect(() => {
     let animationFrame: number;

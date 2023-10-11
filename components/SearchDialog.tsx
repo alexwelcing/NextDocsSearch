@@ -22,7 +22,7 @@ type Question = {
 type QuestionTreeNode = Record<string, string>
 const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   root: {
-    A: 'What is Alex’s management philosophy?',
+    A: 'What is Alex’s product management approach?',
     B: 'How does Alex approach business transformation?',
   },
   A: {

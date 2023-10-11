@@ -1,63 +1,100 @@
-import React, { useRef } from 'react';
-import { Text, RoundedBox, useHelper, Html } from '@react-three/drei';
+import React, { useRef, useState } from 'react';
+import { Text, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
-import { ArticleData } from './ArticleTextDisplay';
 
-interface GlowingArticleDisplayProps {
-  article: ArticleData;
-  currentIndex: number;
-  setCurrentIndex: (index: number) => void;
-  showArticles: boolean;
-  title: string;
-  totalArticles: number;
+export interface ArticleData {
+    length: number;
+    filename: string;
+    title: string;
+    date: string;
+    author: string[];
 }
 
-const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ article, currentIndex, setCurrentIndex, title, showArticles, totalArticles }) => {
-  const groupRef = useRef<THREE.Group | null>(null);
-  const lightRef = useRef<THREE.PointLight | null>(null);
+interface GlowingArticleDisplayProps {
+    articles: ArticleData[];
+    article: ArticleData | undefined;
+    currentIndex: number;
+    setCurrentIndex: (index: number) => void;
+    showArticles: boolean;
+    title: string;
+    totalArticles: number;
+}
 
-  return (
-    <group ref={groupRef} position={[0, 1, -5]}>
-      <RoundedBox args={[8, 5, 0.5]} radius={0.2} smoothness={4}>
-        <meshStandardMaterial color={showArticles ? "white" : "gray"} />
-      </RoundedBox>
+const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ articles, article, currentIndex, setCurrentIndex, showArticles, title, totalArticles }) => {
+    const groupRef = useRef<THREE.Group | null>(null);
+    const lightRef = useRef<THREE.PointLight | null>(null);
+    const isBackAvailable = currentIndex > 0;
+    const isNextAvailable = currentIndex < articles.length - 1;
 
-      {showArticles && (
-        <pointLight ref={lightRef} position={[0, 0, 0.6]} intensity={1} />
-      )}
+    const [backHovered, setBackHovered] = useState(false);
+    const [nextHovered, setNextHovered] = useState(false);
+    const [viewHovered, setViewHovered] = useState(false);
 
-      {showArticles && article && (
-        <>
-          <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.6]} maxWidth={4}>
-            {`${article.title}`}
-          </Text>
+    return (
+        <group ref={groupRef} position={[0, 1, -5]}>
+            <RoundedBox args={[8, 5, 0.5]} radius={0.2} smoothness={4}>
+                <meshStandardMaterial color={showArticles ? "white" : "gray"} />
+            </RoundedBox>
 
-          <Text
-            fontSize={0.3}
-            color="black"
-            position={[0, -0.8, 0.6]}
-            anchorX="center"
-            anchorY="middle"
-            onClick={() => window.open(`/articles/${article.filename.replace('.mdx', '')}`, '_blank')}
-          >
-            View Article
-          </Text>
-        </>
-      )}
+            {showArticles && (
+                <pointLight ref={lightRef} position={[0, 0, 0.6]} intensity={1} />
+            )}
 
-      {showArticles && (
-        <>
-          <Html position={[-3.5, -1.4, 0.6]}>
-            <button className={currentIndex === 0 ? "text-slate-600 text-2xl" : "text-sky-600 text-2xl"} disabled={currentIndex === 0} onClick={() => setCurrentIndex(currentIndex - 1)}>&#60;</button>
-          </Html>
+            {showArticles && article && (
+                <>
+                    <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.7]} maxWidth={4}>
+                        {`${article.title}`}
+                    </Text>
+                </>
+            )}
 
-          <Html position={[2.8, -1.4, 0.6]}>
-            <button className={currentIndex === 4 ? "text-slate-600 text-2xl" : "text-sky-600 text-2xl"} disabled={currentIndex === 4 } onClick={() => setCurrentIndex(currentIndex + 1)}>&#62;</button>
-          </Html>
-        </>
-      )}
-    </group>
-  );
+            {showArticles && (
+                <>
+                    {/* "Back" Button */}
+                    <RoundedBox
+                        args={[1.5, 0.8, 0.1]}
+                        position={[-4, -2.5, 0.6]}
+                        onClick={() => isBackAvailable && setCurrentIndex(currentIndex - 1)}
+                        onPointerOver={() => isBackAvailable && setBackHovered(true)}
+                        onPointerOut={() => setBackHovered(false)}
+                    >
+                        <meshStandardMaterial color={backHovered && isBackAvailable ? "#de7ea2" : (!isBackAvailable ? '#B0B0B0' : '#1E88E5')} />
+                        <Text fontSize={0.3} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
+                            Back
+                        </Text>
+                    </RoundedBox>
+
+                    {/* "Next" Button */}
+                    <RoundedBox
+                        args={[1.5, 0.8, 0.1]}
+                        position={[4, -2.5, 0.6]}
+                        onClick={() => isNextAvailable && setCurrentIndex(currentIndex + 1)}
+                        onPointerOver={() => isNextAvailable && setNextHovered(true)}
+                        onPointerOut={() => setNextHovered(false)}
+                    >
+                        <meshStandardMaterial color={nextHovered && isNextAvailable ? "#de7ea2" : (!isNextAvailable ? '#B0B0B0' : '#1E88E5')} />
+                        <Text fontSize={0.3} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
+                            Next
+                        </Text>
+                    </RoundedBox>
+
+                    {/* "View Article" Button */}
+                    <RoundedBox
+                        args={[2.5, .6, 0.1]}
+                        position={[0, -1.2, 0.6]}
+                        onClick={() => article && window.open(`/articles/${article.filename.replace('.mdx', '')}`, '_blank')}
+                        onPointerOver={() => setViewHovered(true)}
+                        onPointerOut={() => setViewHovered(false)}
+                    >
+                        <meshStandardMaterial color={viewHovered ? "#de7ea2" : "#1E88E5"} />
+                        <Text fontSize={0.3} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
+                            View Article
+                        </Text>
+                    </RoundedBox>
+                </>
+            )}
+        </group>
+    );
 };
 
 export default GlowingArticleDisplay;
