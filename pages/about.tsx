@@ -16,11 +16,21 @@ const About: React.FC = () => {
   return (
     <div className="siteContainer">
       <Head>
-        <title>About Alex Welcing | Product Leadership | New York, Remote US</title>
+        <title>Product Maker | Alex Welcing | Technical Product Management & Management Consulting.</title>
         <meta
           name="description"
-          content="Alex Welcing is a Senior Technical Product Manager with 10+ years of experience in the tech industry. He is passionate about building products that solve real problems and make a difference in the world. Alex is based in New York City, but is open to remote opportunities in the US."
+          content="New York innovator with 10+ years of experience in technology, consulting, and AI. Proven ability to lead and deliver successful products. Contact me today to learn more."
         />
+        <meta name="keywords" content="product manager, technology, management consulting, Generative AI, product development, New York, remote" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="Product Maker | Alex Welcing | Technical Product Management & Management Consulting." />
+        <meta property="og:description" content="New York innovator with 10+ years of experience in technology, consulting, and AI. Proven ability to lead and deliver successful products. Contact me today to learn more." />
+        <meta property="og:image" content="/social-preview.png" />
+        <meta property="og:url" content="https://alexwelcing.com/about" />
+        <meta property="og:type" content="website" />
       </Head>
 
       <header className="header">
