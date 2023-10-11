@@ -48,16 +48,20 @@ const Chat = () => {
 
   return (
     <>
-      <Head>
-        <title>Chat with Alex documents while enjoying fantastic generated worlds!</title>
-        <meta
-          name="description"
-          content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products."
-        />
-        <meta name="keywords" content="Alex Welcing, product leadership, generative AI, LLM, 360, chat with documents" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+<Head>
+  <title>Chat with Alex documents while enjoying fantastic generated worlds!</title>
+  <meta name="description" content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products." />
+  <meta name="keywords" content="Alex Welcing, product leadership, generative AI, LLM, 360, chat with documents" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.ico" />
+
+  {/* Open Graph Meta Tags */}
+  <meta property="og:title" content="Chat with Alex documents while enjoying fantastic generated worlds!" />
+  <meta property="og:description" content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI and LLM to build amazing products." />
+  <meta property="og:image" content="/social-preview.png" />
+  <meta property="og:url" content="https://alexwelcing.com" />
+  <meta property="og:type" content="website" />
+</Head>
       <CircleNav />
       <main className={`${styles.main} ${styles.gradientbg}`}>
         {currentImage && (
