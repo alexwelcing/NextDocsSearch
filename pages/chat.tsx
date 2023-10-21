@@ -6,6 +6,7 @@ import Footer from '@/components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import dynamic from 'next/dynamic';
 import StylishFallback from '@/components/StylishFallback';
+import { SupabaseDataProvider } from '@/components/SupabaseDataContext';
 
 const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
   ssr: false,
@@ -62,6 +63,7 @@ const Chat = () => {
   <meta property="og:url" content="https://alexwelcing.com/chat" />
   <meta property="og:type" content="website" />
 </Head>
+<SupabaseDataProvider>
       <CircleNav />
       <main className={`${styles.main} ${styles.gradientbg}`}>
         {currentImage && (
@@ -72,6 +74,7 @@ const Chat = () => {
       </main>
       <SearchDialog />
       <Footer onImageChange={handleImageChange} showChangeScenery={true} />
+      </SupabaseDataProvider>
     </>
   );
 };

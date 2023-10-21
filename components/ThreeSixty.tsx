@@ -4,10 +4,13 @@ import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
 import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls } from '@react-three/drei';
+import { SupabaseDataProvider } from './SupabaseDataContext';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
 import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
+import ResponseDisplay from './ResponseDisplay';
+
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
@@ -103,6 +106,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   totalArticles={articles.length}
               />
             )}
+                        <ResponseDisplay />
           </PhysicsEnvironment>
         </XR>
       </Canvas>
