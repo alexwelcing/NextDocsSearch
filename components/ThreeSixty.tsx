@@ -4,7 +4,6 @@ import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
 import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls } from '@react-three/drei';
-import { SupabaseDataProvider } from './SupabaseDataContext';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
