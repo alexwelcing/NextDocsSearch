@@ -33,7 +33,7 @@ const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   B: {
     F: 'Can Alex provide examples of successful transformations?',
     G: 'How does Alex measure the impact of transformation?',
-    H: 'What industries has Alex consulted for?',
+    H: 'In which industries has Alex contributed?',
   },
 };
 
