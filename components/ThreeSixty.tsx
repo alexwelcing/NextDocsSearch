@@ -8,6 +8,8 @@ import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
 import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
+import ResponseDisplay from './ResponseDisplay';
+
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
@@ -103,6 +105,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   totalArticles={articles.length}
               />
             )}
+                        <ResponseDisplay />
           </PhysicsEnvironment>
         </XR>
       </Canvas>
