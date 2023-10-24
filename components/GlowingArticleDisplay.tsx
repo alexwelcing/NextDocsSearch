@@ -87,7 +87,7 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ articles,
                         onPointerOut={() => setViewHovered(false)}
                     >
                         <meshStandardMaterial color={viewHovered ? "#de7ea2" : "#1E88E5"} />
-                        <Text fontSize={0.3} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
+                        <Text fontSize={0.4} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
                             View Article
                         </Text>
                     </RoundedBox>
