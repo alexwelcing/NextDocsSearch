@@ -15,10 +15,10 @@ const ResponseDisplay: React.FC = () => {
        {/** <pointLight ref={lightRef} position={[-8, 1, 3]} intensity={0.5} /> */}
       </RoundedBox>
       <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.7]} maxWidth={4}>
-        {`Question: ${chatData.question}`}
+        {`${chatData.question}`}
       </Text>
       <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, -1, 0.7]} maxWidth={4}>
-        {`Response: ${chatData.response}`}
+        {`${chatData.response}`}
       </Text>
     </group>
   );

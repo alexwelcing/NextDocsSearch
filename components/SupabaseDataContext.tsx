@@ -1,5 +1,5 @@
 // SupabaseDataContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface SupabaseData {
   id: number;
@@ -40,6 +40,28 @@ interface SupabaseDataProviderProps {
 export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ children }) => {
   const [supabaseData, setSupabaseData] = useState<SupabaseData[]>([]);
   const [chatData, setChatData] = useState<ChatData>({ question: '', response: 'Ask me anything...' });
+
+  const fetchResponse = async (question: string) => {
+    try {
+      const response = await fetch('/api/vector-search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question }),
+      });
+      const data = await response.json();
+      setChatData({ question, response: data.response });
+    } catch (error) {
+      console.error('Failed to fetch response:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (chatData.question) {
+      fetchResponse(chatData.question);
+    }
+  }, [chatData.question]);
 
   return (
     <SupabaseDataContext.Provider value={{ supabaseData, setSupabaseData, chatData, setChatData }}>
