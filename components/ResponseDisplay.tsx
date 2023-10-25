@@ -6,20 +6,32 @@ import * as THREE from 'three';
 const ResponseDisplay: React.FC = () => {
   const { chatData } = useSupabaseData();
   const groupRef = useRef<THREE.Group | null>(null);
-  const lightRef = useRef<THREE.PointLight | null>(null);
 
   return (
-    <group ref={groupRef} position={[-8, 1, 3]} rotation={[0, Math.PI / 2, 0]}>
-      <RoundedBox args={[8, 5, 0.5]} radius={0.2} smoothness={4}>
+    <group ref={groupRef} position={[-10, 1, 3]} rotation={[0, Math.PI / 2, 0]}>
+      <RoundedBox args={[10, 5, 0.5]} radius={0.2} smoothness={4}>
         <meshStandardMaterial color="gray" />
-       {/** <pointLight ref={lightRef} position={[-8, 1, 3]} intensity={0.5} /> */}
       </RoundedBox>
-      <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.7]} maxWidth={4}>
-        {`${chatData.question}`}
-      </Text>
-      <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" position={[0, -1, 0.7]} maxWidth={4}>
-        {`${chatData.response}`}
-      </Text>
+      <group position={[0, 1.5, 0.7]}>
+        <Text fontSize={0.4} color="black" anchorX="center" textAlign='center' anchorY="middle" maxWidth={8}>
+          Question
+        </Text>
+      </group>
+      <group position={[0, 1, 0.7]}>
+        <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" maxWidth={8}>
+          {chatData.question}
+        </Text>
+      </group>
+      <group position={[0, -0.5, 0.7]}>
+        <Text fontSize={0.4} color="black" anchorX="center" textAlign='center' anchorY="middle" maxWidth={8}>
+          Response
+        </Text>
+      </group>
+      <group position={[0, -1, 0.7]}>
+        <Text fontSize={0.2} color="black" anchorX="center" textAlign='center' anchorY="middle" maxWidth={8}>
+          {chatData.response}
+        </Text>
+      </group>
     </group>
   );
 };
