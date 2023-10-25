@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Button } from '@/components/ui/button'
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,19 +7,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { useCompletion } from 'ai/react'
-import { X, Loader, User, Frown, CornerDownLeft, Search, Wand, ArrowLeftCircle } from 'lucide-react'
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { useCompletion } from 'ai/react';
+import { X, Loader, User, Frown, CornerDownLeft, Search, Wand, ArrowLeftCircle } from 'lucide-react';
+import { useSupabaseData } from './SupabaseDataContext'; // Ensure this is the correct import path
 
 type Question = {
-  key: string
-  text: string
-}
+  key: string;
+  text: string;
+};
 
-  type QuestionKey = 'root' | 'A' | 'B';
+type QuestionKey = 'root' | 'A' | 'B';
 
-type QuestionTreeNode = Record<string, string>
+type QuestionTreeNode = Record<string, string>;
+
 const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   root: {
     A: 'What is Alex’s product management approach?',
@@ -37,52 +39,55 @@ const QUESTIONS_TREE: Record<QuestionKey, QuestionTreeNode> = {
   },
 };
 
-
 const DEFAULT_QUESTIONS = Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }));
 let historyStack: QuestionKey[] = [];
 
 export function SearchDialog() {
-  const [open, setOpen] = React.useState(false)
-  const [query, setQuery] = React.useState<string>('')
+  const { setChatData } = useSupabaseData(); // Destructure setChatData from the context hook
+  const [open, setOpen] = React.useState(false);
+  const [query, setQuery] = React.useState<string>('');
   const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
-  )
-
+  );
   const { complete, completion, isLoading, error } = useCompletion({
     api: '/api/vector-search',
-  })
-
+  });
   const [showMoreOptions, setShowMoreOptions] = React.useState(false);
 
-
-  React.useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && e.metaKey) {
-        setOpen(true)
-      }
-
-      if (e.key === 'Escape') {
-        handleModalToggle()
-      }
-    }
-
-    document.addEventListener('keydown', down)
-    return () => document.removeEventListener('keydown', down)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault()
-    complete(query)
-  }
-
-  function handleModalToggle() {
+  const handleModalToggle = React.useCallback(() => {
     setOpen(!open);
     setQuery('');
     setShowMoreOptions(false);
     setCurrentQuestions(DEFAULT_QUESTIONS);
     historyStack = [];
-  }
+  }, [open]);
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && e.metaKey) {
+        setOpen(true);
+      }
+
+      if (e.key === 'Escape') {
+        handleModalToggle();
+      }
+    };
+
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, [handleModalToggle]);
+
+  React.useEffect(() => {
+    if (completion && !error) {
+      setChatData((prevData) => ({ ...prevData, response: completion }));
+    }
+  }, [completion, error, setChatData]);
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    complete(query);
+    setChatData({ question: query, response: '' });
+  };
 
   function setQuestionsBasedOnSelection(selectedKey: string) {
     historyStack.push(selectedKey as QuestionKey);
@@ -121,126 +126,125 @@ export function SearchDialog() {
 
   return (
     <>
-                    <div className="relative">
-      <div className="flex justify-center items-center h-80">
-        <button
-          onClick={() => setOpen(true)}
-          className="text-base flex gap-2 items-center px-4 py-2 z-50 relative
+      <div className="relative">
+        <div className="flex justify-center items-center h-80">
+          <button
+            onClick={() => setOpen(true)}
+            className="text-base flex gap-2 items-center px-4 py-2 z-50 relative
   text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
   rounded-md
   border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500
   shadow-md hover:shadow-lg transition-shadow
   bg-white dark:bg-gray-700
   min-w-[300px]"
-        >
-          <Search width={15} />
-          <span className="border border-l h-5"></span>
-          <span className="inline-block ml-4">Ask...</span>
-          <kbd
-            className="absolute right-3 top-2.5
+          >
+            <Search width={15} />
+            <span className="border border-l h-5"></span>
+            <span className="inline-block ml-4">Ask...</span>
+            <kbd
+              className="absolute right-3 top-2.5
             pointer-events-none inline-flex h-5 select-none items-center gap-1
             rounded border border-slate-100 bg-slate-100 px-1.5
             font-mono text-[10px] font-medium
             text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400
             opacity-100 "
-          >
-            <span className="text-xs">⌘</span>K
-          </kbd>
-        </button>
-      </div>
-      <Dialog open={open}>
-        <DialogContent className={`sm:max-w-[850px] text-black  `}>
-          {' '}
-          <DialogHeader>
-            <DialogTitle>Want to know Alex?</DialogTitle>
-            <DialogDescription>
-              Explore my career with Next.js, OpenAI & Supabase.
-            </DialogDescription>
-            <hr />
-            <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
-              <X className="h-4 w-4 dark:text-gray-100" />
-            </button>
-          </DialogHeader>
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-3 py-4 text-slate-700">
-              {query && (
-                <div className="flex">
-                  <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">{query}</p>
-                </div>
-              )}
-
-              {isLoading && (
-                <div className="animate-spin relative flex w-5 h-5 ml-2">
-                  <Loader />
-                </div>
-              )}
-
-              {error && (
-                <div className="flex items-center gap-2">
-                  <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                    <Frown width={18} />
-                  </span>
-                  <span className="text-slate-700 dark:text-slate-100">
-                    Ah, sorry. Maintenance mode at the moment, come back later.
-                  </span>
-                </div>
-              )}
-
-              {completion && !error ? (
-                <div className="flex items-center gap-4 dark:text-white">{completion}</div>
-              ) : null}
-
-              <div className="relative">
-                <Input
-                  placeholder="Ask a question..."
-                  name="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="col-span-3"
-                />
-                <CornerDownLeft
-                  className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${
-                    query ? 'opacity-100' : 'opacity-0'
-                  }`}
-                />
-              </div>
-              <div className="flex flex-wrap">
-        {historyStack.length > 0 && (
-          <button
-            className="bg-teal-100 hover:bg-teal-200 text-teal-700 p-2 rounded m-2"
-            onClick={handleGoBack}
-          >
-            <ArrowLeftCircle width={18} />
+            >
+              <span className="text-xs">⌘</span>K
+            </kbd>
           </button>
-        )}
-        {currentQuestions.map((question) => (
-          <button
-            key={question.key}
-            type="button"
-            className="px-1.5 py-0.5 m-2
+        </div>
+        <Dialog open={open}>
+          <DialogContent className={`sm:max-w-[850px] text-black  `}>
+            {' '}
+            <DialogHeader>
+              <DialogTitle>Want to know Alex?</DialogTitle>
+              <DialogDescription>
+                Explore my career with Next.js, OpenAI & Supabase.
+              </DialogDescription>
+              <hr />
+              <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
+                <X className="h-4 w-4 dark:text-gray-100" />
+              </button>
+            </DialogHeader>
+            <form onSubmit={handleSubmit}>
+              <div className="grid gap-3 py-4 text-slate-700">
+                {query && (
+                  <div className="flex">
+                    <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">{query}</p>
+                  </div>
+                )}
+
+                {isLoading && (
+                  <div className="animate-spin relative flex w-5 h-5 ml-2">
+                    <Loader />
+                  </div>
+                )}
+
+                {error && (
+                  <div className="flex items-center gap-2">
+                    <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
+                      <Frown width={18} />
+                    </span>
+                    <span className="text-slate-700 dark:text-slate-100">
+                      Ah, sorry. Maintenance mode at the moment, come back later.
+                    </span>
+                  </div>
+                )}
+
+                {completion && !error ? (
+                  <div className="flex items-center gap-4 dark:text-white">{completion}</div>
+                ) : null}
+
+                <div className="relative">
+                  <Input
+                    placeholder="Ask a question..."
+                    name="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="col-span-3"
+                  />
+                  <CornerDownLeft
+                    className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${query ? 'opacity-100' : 'opacity-0'
+                      }`}
+                  />
+                </div>
+                <div className="flex flex-wrap">
+                  {historyStack.length > 0 && (
+                    <button
+                      className="bg-teal-100 hover:bg-teal-200 text-teal-700 p-2 rounded m-2"
+                      onClick={handleGoBack}
+                    >
+                      <ArrowLeftCircle width={18} />
+                    </button>
+                  )}
+                  {currentQuestions.map((question) => (
+                    <button
+                      key={question.key}
+                      type="button"
+                      className="px-1.5 py-0.5 m-2
               bg-teal-50 dark:bg-gray-300
               hover:bg-teal-100 dark:hover:bg-gray-400
               rounded border border-teal-200 dark:border-gray-500
               transition-colors"
-            onClick={() => {
-              setQuestionsBasedOnSelection(question.key);
-            }}
-          >
-            {question.text}
-          </button>
-        ))}
-      </div>
-            </div>
+                      onClick={() => {
+                        setQuestionsBasedOnSelection(question.key);
+                      }}
+                    >
+                      {question.text}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
 
-            <DialogFooter>
-              <Button type="submit" className="bg-red-500">
-                Ask
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+              <DialogFooter>
+                <Button type="submit" className="bg-red-500">
+                  Ask
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   )

@@ -1,13 +1,34 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
-import Script from 'next/script'
+import '@/styles/globals.css';
+import type { AppProps } from 'next/app';
+import Script from 'next/script';
 import '@material-ui/icons';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { trackEvent } from '@/lib/google-analytics';
 
 
 const GTM_ID = 'GTM-W24L468'
 
 function App({ Component, pageProps }: AppProps) {
-  return (
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      const urlObj = new URL(url, window.location.origin);
+      const abTestVariant = urlObj.searchParams.get('ab_test_variant');
+      if (abTestVariant) {
+        trackEvent('ab_test_variant', { variant: abTestVariant });
+      }
+    };
+
+    // Subscribe to route changes
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    // Unsubscribe from events when component unmounts
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);  return (
     <>
       <Script
         src="https://cookie-cdn.cookiepro.com/scripttemplates/otSDKStub.js"

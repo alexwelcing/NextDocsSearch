@@ -22,6 +22,7 @@ export default function middleware(req: NextRequest) {
   if (req.nextUrl.pathname !== "/") {
     return;
   }
+
   const cookieName = 'ab-test-variant';
   let bucket = req.cookies.get(cookieName)?.value;
   let hasBucket = !!bucket;
@@ -31,6 +32,9 @@ export default function middleware(req: NextRequest) {
     bucket = getBucket(HOME_BUCKETS);
     hasBucket = false;
   }
+
+  // Set a custom property to track the bucket
+  req.nextUrl.searchParams.set("ab_test_variant", bucket);
 
   // Clone the URL and modify the pathname based on the bucket
   const url = req.nextUrl.clone();
