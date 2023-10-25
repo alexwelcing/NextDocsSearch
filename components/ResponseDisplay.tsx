@@ -12,19 +12,9 @@ const ResponseDisplay: React.FC = () => {
       <RoundedBox args={[10, 5, 0.5]} radius={0.2} smoothness={4}>
         <meshStandardMaterial color="gray" />
       </RoundedBox>
-      <group position={[0, 1.5, 0.7]}>
-        <Text fontSize={0.4} color="black" anchorX="center" textAlign='center' anchorY="middle" maxWidth={8}>
-          Question
-        </Text>
-      </group>
       <group position={[0, 1, 0.7]}>
         <Text fontSize={0.3} color="black" anchorX="center" textAlign='center' anchorY="middle" maxWidth={8}>
           {chatData.question}
-        </Text>
-      </group>
-      <group position={[0, -0.5, 0.7]}>
-        <Text fontSize={0.4} color="black" anchorX="center" textAlign='center' anchorY="middle" maxWidth={8}>
-          Response
         </Text>
       </group>
       <group position={[0, -1, 0.7]}>
