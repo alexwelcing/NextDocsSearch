@@ -13,7 +13,7 @@ const PDFLinks: React.FC<PDFLinksProps> = ({ files }) => {
   };
 
   return (
-    <div className="pdf-links-container">
+    <div className="pdf-links-container flex flex-col items-center space-y-4 md:space-y-0 md:flex-row md:items-start">
       {files.map((file, index) => (
         <a
           key={index}
@@ -24,7 +24,7 @@ const PDFLinks: React.FC<PDFLinksProps> = ({ files }) => {
             backgroundColor: 'var(--retro-4)',
             color: '#ffffff',
           }}
-          className="inline-block text-center font-bold py-2 px-8 mr-4 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1"
+          className="w-full md:w-auto text-center font-bold py-2 px-8 md:mr-4 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1"
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = 'var(--btn-hover)';
           }}
