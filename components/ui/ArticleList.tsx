@@ -25,7 +25,6 @@ const ArticleList: React.FC = () => {
         {articles.map((article, index) => (
           <li key={index} className={styles.articleLi}>
             <Link href={`/articles/${article.filename.replace('.mdx', '')}`}>
-                <span className="material-icons-outlined align-middle mr-2">article</span>
                 {article.title}
             </Link>
           </li>

@@ -21,7 +21,6 @@
   .articleLi:hover {
     background: rgba(var(--card-rgb), 0.2);
     border: 1px solid rgba(var(--card-border-rgb), 0.3);
-    transform: scale(1.05); /* Slight enlargement on hover */
   }
 
   .articleLink {
