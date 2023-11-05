@@ -39,7 +39,7 @@ interface SupabaseDataProviderProps {
 
 export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ children }) => {
   const [supabaseData, setSupabaseData] = useState<SupabaseData[]>([]);
-  const [chatData, setChatData] = useState<ChatData>({ question: '', response: 'Ask me anything...' });
+  const [chatData, setChatData] = useState<ChatData>({ question: '', response: 'Waiting for your question...' });
 
   const fetchResponse = async (question: string) => {
     try {

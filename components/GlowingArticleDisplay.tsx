@@ -31,7 +31,7 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ articles,
     const [viewHovered, setViewHovered] = useState(false);
 
     return (
-        <group ref={groupRef} position={[0, 1, -5]}>
+        <group ref={groupRef} position={[0, 1, -6]}>
             <RoundedBox args={[8, 5, 0.5]} radius={0.2} smoothness={4}>
                 <meshStandardMaterial color={showArticles ? "white" : "gray"} />
             </RoundedBox>

@@ -1,35 +1,83 @@
-import React, { useRef } from 'react';
-import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+// RoundedRectangle.tsx
+import React, { useRef, useState } from 'react';
+import { Html } from '@react-three/drei';
+import { useSupabaseData } from './SupabaseDataContext';
+import styles from '../styles/RetroComputerStyles.module.css';
 
-interface RoundedRectangleProps {
-  width: number;
-  height: number;
-  radius: number;
-  color: string;
-}
+const RoundedRectangle: React.FC = () => {
+  const groupRef = useRef<THREE.Group | null>(null);
+  const [query, setQuery] = useState('');
+  const [response, setResponse] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { setChatData } = useSupabaseData(); // Destructure setChatData from the context hook
 
-const RoundedRectangle: React.FC<RoundedRectangleProps> = ({ width, height, radius, color }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError('');
 
-  // Create the rounded rectangle shape
-  const roundedRectShape = new THREE.Shape();
-  roundedRectShape.moveTo(-width / 2 + radius, -height / 2);
-  roundedRectShape.lineTo(width / 2 - radius, -height / 2);
-  roundedRectShape.quadraticCurveTo(width / 2, -height / 2, width / 2, -height / 2 + radius);
-  roundedRectShape.lineTo(width / 2, height / 2 - radius);
-  roundedRectShape.quadraticCurveTo(width / 2, height / 2, width / 2 - radius, height / 2);
-  roundedRectShape.lineTo(-width / 2 + radius, height / 2);
-  roundedRectShape.quadraticCurveTo(-width / 2, height / 2, -width / 2, height / 2 - radius);
-  roundedRectShape.lineTo(-width / 2, -height / 2 + radius);
-  roundedRectShape.quadraticCurveTo(-width / 2, -height / 2, -width / 2 + radius, -height / 2);
+    try {
+      const response = await fetch('/api/vector-search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: query }),
+      });
 
-  // Create geometry and material
-  const geometry = new THREE.ShapeGeometry(roundedRectShape);
-  const material = new THREE.MeshBasicMaterial({ color });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      let received = '';
+      if (reader) {
+        reader.read().then(function processText({ done, value }): any {
+          if (done) {
+            const answer = JSON.parse(received).answers[0];
+            setResponse(answer);
+            setChatData({ question: query, response: answer });
+            setIsLoading(false);
+            return;
+          }
+          received += new TextDecoder().decode(value);
+          return reader.read().then(processText);
+        });
+      }
+    } catch (err) {
+      setError('Failed to fetch response');
+      console.error(err);
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <mesh ref={meshRef} geometry={geometry} material={material} />
+    <group ref={groupRef} position={[12, 0, 5]} rotation={[0, Math.PI / -2, 0]}>
+      <Html position={[-4.5, 2.2, 0.26]} transform occlude>
+        <div className={styles.container}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Ask a question..."
+              className={styles.input}
+            />
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`${styles.button} ${isLoading ? styles.buttonDisabled : ''}`}
+            >
+              Send
+            </button>
+          </form>
+          {isLoading && <div>Loading...</div>}
+          {error && <div>Error: {error}</div>}
+          {response && <div>Response: {response}</div>}
+        </div>
+      </Html>
+    </group>
   );
 };
 
