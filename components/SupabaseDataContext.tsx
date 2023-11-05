@@ -50,10 +50,21 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
         },
         body: JSON.stringify({ question }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Invalid content-type. Expected application/json');
+      }
+
       const data = await response.json();
       setChatData({ question, response: data.response });
     } catch (error) {
       console.error('Failed to fetch response:', error);
+      setChatData({ question, response: 'Error fetching response' }); // Set an error response
     }
   };
 

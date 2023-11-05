@@ -30,24 +30,20 @@ const RoundedRectangle: React.FC = () => {
         throw new Error(`Error: ${response.status}`);
       }
 
-      const reader = response.body?.getReader();
-      let received = '';
-      if (reader) {
-        reader.read().then(function processText({ done, value }): any {
-          if (done) {
-            const answer = JSON.parse(received).answers[0];
-            setResponse(answer);
-            setChatData({ question: query, response: answer });
-            setIsLoading(false);
-            return;
-          }
-          received += new TextDecoder().decode(value);
-          return reader.read().then(processText);
-        });
+      // Check if the response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Invalid content-type. Expected application/json');
       }
+
+      const data = await response.json();
+      const answer = data.answers[0];
+      setResponse(answer);
+      setChatData({ question: query, response: answer });
     } catch (err) {
       setError('Failed to fetch response');
       console.error(err);
+    } finally {
       setIsLoading(false);
     }
   };
