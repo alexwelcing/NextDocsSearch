@@ -64,7 +64,7 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
       setChatData({ question, response: data.response });
     } catch (error) {
       console.error('Failed to fetch response:', error);
-      setChatData({ question, response: 'Error fetching response' }); // Set an error response
+      setChatData({ question, response: 'Hmmmm' }); // Set an error response
     }
   };
 

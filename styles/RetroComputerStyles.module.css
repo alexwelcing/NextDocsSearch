@@ -39,3 +39,26 @@
   .buttonDisabled {
     cursor: not-allowed;
   }
+
+  .submitButton {
+    background-color: black;
+    color: lime;
+    border: 1px solid lime;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    outline: lime;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  /* Center the button below the textarea */
+  .searchForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }

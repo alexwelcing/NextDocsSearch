@@ -36,9 +36,6 @@ const StylishFallback: React.FC = () => {
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade />
         <OrbitControls />
         <SpinningCube />
-        <LoadingText position={[0, -1.5, 0]}>
-          Loading...
-        </LoadingText>
       </Canvas>
       <style jsx>{`
         .fallback-container {
