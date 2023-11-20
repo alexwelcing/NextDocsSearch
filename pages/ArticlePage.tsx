@@ -2,7 +2,6 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import ArticleContainer from '../components/ArticleContainer';
 import ArticleHeader from '../components/ArticleHeader';
-import Footer from '../components/ui/footer';
 import StructuredDataComponent from '../components/StructuredData';
 import styles from '../styles/Home.module.css';
 import CircleNav from '@/components/ui/CircleNav'

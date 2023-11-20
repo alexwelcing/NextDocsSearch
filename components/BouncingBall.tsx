@@ -7,7 +7,7 @@ const BouncingBall: React.FC = () => {
   const { viewport } = useThree();
   const [ref, api] = useSphere(() => ({
     mass: 1,
-    position: [10, 5, 0],
+    position: [-10, 5, 0],
     args: [1],
     material: { restitution: 0.9 }
   }));
