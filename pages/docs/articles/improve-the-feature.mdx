@@ -1,10 +1,10 @@
 ---
 
-title: "Improve the feature. Managing multiple versions of features."
+title: "Improve the feature. Managing multiple approaches to improvement."
 author: ["Alex Welcing"]
 date: "2023-11-13"
 description: "Create multiple features and manage previews versions for each on Git. Three versions of the same feature improvement on Vercel, Supabase, R3F, and ChatGPT."
-videoURL: "https://www.youtube.com/watch?v=-dJu9VyIw64"
+videoURL: ""
 keywords: ["Product Management", "Feature Development", "OpenAI integration", , "3D Development", "ThreeJS", "Coding","Git", "Vercel", "DevOps"]
 
 ---
@@ -29,5 +29,32 @@ In this case, we have a 3D space with an HTML user input feature  screen that di
 
 It's not perfect, and we want to make some improvements before releasing this update. First impressions on what needs to be changed:
 
-- [ ] Button text illegible
-- [ ]
+- [ ] Button text illegible / needs fix
+- [ ] Send button has no interaction or state
+- [ ] Screens can overlap instead of appearing attached
+- [ ] Could use a curve to be larger
+- [ ] Camera feels wonky
+
+It's a large list, and we don't have to solve all of the issues but it is helpful to consider the whole system while making improvements. With the dimensions and requests in place, let's test out some ideas.
+
+#### Perfect Machine
+
+This approach will fix the screen and keyboard together with 3D objets, and then have fun on/off states. Include the blog 3D objects as well, creating one large terminal space.
+
+To make it work, we will need to create the objects, attach it all together, and control the camera state where the user can go from center to seated at the desk. We will remove the OG ask box, and transfer those questions into the PC UI.
+
+Extra effort could include on/off animation for the machine, physics interactions, flickers, etc.
+
+#### Projector in the sky
+
+This idea would be to fix a 3D object permanently in a prominent position in the 3D space, and have the option to display large text on it.
+
+The camera doesn't need to move, and there is a button to turn it on. The UI for asking the question is detached, perhaps we just use the existing box.
+
+It should feel fixed into the scene, perhaps incorporated directly into the background image instead of as an object.
+
+#### Movable Tablet
+
+Make the tablet grabbable by the user, and allow them to place it anywhere in the 3D space. They can grow and shrink it on PC, mobile, and XR.
+
+Bonus points if the tablet can be broken, or has realistic mesh interactions with the different scene geometries beyond the 360 sphere.

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Html, RoundedBox, Text } from '@react-three/drei';
+import { Html, RoundedBox, Plane, Text } from '@react-three/drei';
 import { useSupabaseData } from './SupabaseDataContext';
 import styles from '../styles/RetroComputerStyles.module.css';
 import { useCompletion } from 'ai/react';
@@ -20,7 +20,9 @@ const RoundedRectangle: React.FC = () => {
     height: 1.5,
   });
 
+  // This rotation will make the RoundedRectangle face upwards towards the user
   const tiltRadians = THREE.MathUtils.degToRad(-70);
+  const groupRotation: [number, number, number] = [Math.PI, tiltRadians, Math.PI]; // 90 degrees rotation around Z-axis
 
   useEffect(() => {
     if (completion && !error) {
@@ -30,17 +32,16 @@ const RoundedRectangle: React.FC = () => {
 
   useEffect(() => {
     if (textAreaRef.current) {
-      // Reset height and width to shrink if text is deleted or to grow otherwise
+      // Update the textarea and box size based on its contents
       textAreaRef.current.style.height = '100px';
       textAreaRef.current.style.width = '400px';
       const newHeight = textAreaRef.current.scrollHeight;
       const newWidth = textAreaRef.current.scrollWidth;
       textAreaRef.current.style.height = `${newHeight}px`;
       textAreaRef.current.style.width = `${newWidth}px`;
-      // Update the state for the rounded box size
       setRoundedBoxSize({
-        width: Math.max(2, newWidth / 100), // Convert px to "world" units, adjust scale as needed
-        height: Math.max(1.5, newHeight / 100), // Convert px to "world" units, adjust scale as needed
+        width: Math.max(2, newWidth / 100), // Adjust scale as needed
+        height: Math.max(1.5, newHeight / 100), // Adjust scale as needed
       });
     }
   }, [query]);
@@ -54,20 +55,16 @@ const RoundedRectangle: React.FC = () => {
 
   const handleKeyPress: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Prevent the default action to avoid line breaks on Enter key
+      e.preventDefault(); // Prevent default action to avoid line breaks on Enter
       handleSubmit();
     }
   };
 
-  // Adjust the position of the button relative to the HTML content
-  const buttonPosition = {
-    x: 2.5, // Right of the HTML content
-    y: 2.5, // Bottom of the HTML content
-    z: 1.5, // Slightly in front of the HTML plane
-  };
+  // The position should be adjusted to position the RoundedRectangle below the ResponseDisplay
+  const groupPosition: [number, number, number] = [10, -4, 1]; // Example coordinates
 
   return (
-    <group ref={groupRef} position={[12, -6, 5]} rotation={[Math.PI / -2, tiltRadians, Math.PI / -2]}>
+    <group ref={groupRef} position={groupPosition} rotation={groupRotation}>
       <Html position={[-4.5, 2.2, 0.26]} transform occlude>
         <div className={styles.container}>
           <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className={styles.searchForm}>
@@ -78,18 +75,16 @@ const RoundedRectangle: React.FC = () => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={handleKeyPress}
               className={`${styles.input} ${styles.searchInput}`}
-              style={{ width: '100%', boxSizing: 'border-box', overflow: 'hidden' }}
             />
           </form>
         </div>
       </Html>
       {/* 3D Send Button */}
       <RoundedBox
-        args={[3, 2, 0.1]} // Use dynamic size
+        args={[roundedBoxSize.width, roundedBoxSize.height, 0.1]} // Dynamic size based on the state
         radius={0.1}
-        rotation={[0, 0, 0]}
         smoothness={4}
-        position={[buttonPosition.x, buttonPosition.y, buttonPosition.z]}
+        position={[0, 0, 0.1]} // Adjust this position so the Send button is properly placed
         onClick={handleSubmit}
       >
         <meshStandardMaterial attach="material" color="black" />
@@ -98,7 +93,7 @@ const RoundedRectangle: React.FC = () => {
           color="lime"
           anchorX="center"
           anchorY="middle"
-          position={[0, 0, 0.2]}
+          position={[0, 0, 0.05]} // Adjust this position so the text is properly placed
         >
           Send
         </Text>
