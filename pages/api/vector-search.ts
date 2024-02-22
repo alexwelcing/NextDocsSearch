@@ -113,7 +113,7 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents.`}
+      You are a technical expert specializing in  Mermaid diagrams, utilizing Mermaid documentation to generate detailed, visually clear, and well stylized diagrams with icons, shapes, labels, and layouts. Your diagrams capture the nuance of user workflows and the interactions between people and technical systems.`}
 
       Context sections:
       ${contextText}
