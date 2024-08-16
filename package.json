@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm run next build",
+    "build": "pnpm run embeddings && next build",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
