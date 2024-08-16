@@ -28,7 +28,7 @@
     "@radix-ui/react-label": "^2.1.0",
     "@react-spring/three": "^9.7.4",
     "@react-three/cannon": "^6.6.0",
-    "@react-three/drei": "^9.109.5",
+    "@react-three/drei": "^9.110.0",
     "@react-three/fiber": "^8.17.5",
     "@react-three/xr": "^5.7.1",
     "@supabase/ssr": "^0.0.9",
