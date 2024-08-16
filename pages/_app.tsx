@@ -1,7 +1,6 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import Script from 'next/script';
-import '@material-ui/icons';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { trackEvent } from '@/lib/google-analytics';

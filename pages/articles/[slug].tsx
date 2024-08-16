@@ -8,7 +8,6 @@ import Footer from '../../components/ui/footer';
 import ArticleHeader from '@/components/ArticleHeader';
 import CircleNav from '@/components/ui/CircleNav';
 import { useEffect, useState } from 'react';
-import * as mermaid from 'mermaid';
 
 
 
