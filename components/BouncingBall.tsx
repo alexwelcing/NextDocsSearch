@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSphere } from '@react-three/cannon';
 import { useThree } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
@@ -9,22 +9,29 @@ const BouncingBall: React.FC = () => {
     mass: 1,
     position: [-10, 5, 0],
     args: [1],
-    material: { restitution: 0.9 }
+    material: { restitution: 0.9 },
+    linearDamping: 0.1,
+    angularDamping: 0.1,
   }));
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     api.applyForce([0, viewport.height * 100, 0], [0, 0, 0]);
-  };
+  }, [api, viewport.height]);
 
   return (
     <Sphere
       ref={ref as any}
-      args={[1, 32, 32]}
+      args={[1, 16, 16]} // Reduced from 32x32 to 16x16 for better performance
       onClick={handleClick}
-      castShadow // This sphere will cast shadows
-      receiveShadow // This sphere will also receive shadows
+      castShadow
+      receiveShadow
     >
-      <meshStandardMaterial attach="material" color="hotpink" />
+      <meshStandardMaterial
+        attach="material"
+        color="hotpink"
+        roughness={0.5}
+        metalness={0.5}
+      />
     </Sphere>
   );
 };
