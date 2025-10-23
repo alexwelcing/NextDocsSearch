@@ -62,6 +62,65 @@ const VRButtonStyled = styled.button`
   }
 `
 
+const BackgroundControlsContainer = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #de7ea2;
+  backdrop-filter: blur(10px);
+`
+
+const ToggleButton = styled.button<{ active: boolean }>`
+  background: ${props => props.active ? '#8214a0' : '#333'};
+  border: 2px solid ${props => props.active ? '#de7ea2' : '#666'};
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${props => props.active ? '#941947' : '#444'};
+    transform: scale(1.05);
+  }
+`
+
+const SplatSelector = styled.select`
+  background: #333;
+  border: 2px solid #de7ea2;
+  color: white;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #444;
+  }
+
+  option {
+    background: #333;
+    color: white;
+  }
+`
+
+const ControlLabel = styled.label`
+  color: white;
+  font-size: 12px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -87,15 +146,25 @@ interface ThreeSixtyProps {
   onChangeImage: (newImage: string) => void;
 }
 
+interface SplatFile {
+  filename: string;
+  path: string;
+  size: number;
+}
+
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [useGaussianSplat, setUseGaussianSplat] = useState(false);
+  const [availableSplats, setAvailableSplats] = useState<SplatFile[]>([]);
+  const [selectedSplat, setSelectedSplat] = useState<string>('');
+  const [hasSplats, setHasSplats] = useState(false);
 
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
 
+  // Fetch articles
   useEffect(() => {
     const fetchArticles = async () => {
       try {
@@ -110,6 +179,27 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     };
 
     fetchArticles();
+  }, []);
+
+  // Auto-detect available splat files
+  useEffect(() => {
+    const fetchSplats = async () => {
+      try {
+        const response = await fetch('/api/getSplats');
+        const data = await response.json();
+
+        if (data.hasSplats && data.splats.length > 0) {
+          setAvailableSplats(data.splats);
+          setHasSplats(true);
+          // Set first splat as default
+          setSelectedSplat(data.splats[0].path);
+        }
+      } catch (error) {
+        console.error("Failed fetching splat files:", error);
+      }
+    };
+
+    fetchSplats();
   }, []);
 
   const article = articles[currentIndex];
@@ -127,6 +217,44 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       <VRButtonStyled onClick={handleEnterVR}>
         Enter VR
       </VRButtonStyled>
+
+      {/* Background Controls - Only show if splats are detected */}
+      {hasSplats && (
+        <BackgroundControlsContainer>
+          <ControlLabel>Background Mode</ControlLabel>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <ToggleButton
+              active={!useGaussianSplat}
+              onClick={() => setUseGaussianSplat(false)}
+            >
+              Image
+            </ToggleButton>
+            <ToggleButton
+              active={useGaussianSplat}
+              onClick={() => setUseGaussianSplat(true)}
+            >
+              Splat
+            </ToggleButton>
+          </div>
+
+          {useGaussianSplat && availableSplats.length > 0 && (
+            <>
+              <ControlLabel>Select Splat</ControlLabel>
+              <SplatSelector
+                value={selectedSplat}
+                onChange={(e) => setSelectedSplat(e.target.value)}
+              >
+                {availableSplats.map((splat) => (
+                  <option key={splat.path} value={splat.path}>
+                    {splat.filename} ({(splat.size / 1024 / 1024).toFixed(1)}MB)
+                  </option>
+                ))}
+              </SplatSelector>
+            </>
+          )}
+        </BackgroundControlsContainer>
+      )}
+
       <Canvas shadows>
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
@@ -136,9 +264,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               <BouncingBall />
 
               {/* Background: Use Gaussian Splat if enabled, otherwise use sphere */}
-              {useGaussianSplat ? (
+              {useGaussianSplat && selectedSplat ? (
                 <GaussianSplatBackground
-                  splatUrl="/splats/background.splat"
+                  splatUrl={selectedSplat}
                   position={[0, 0, 0]}
                   scale={1}
                 />

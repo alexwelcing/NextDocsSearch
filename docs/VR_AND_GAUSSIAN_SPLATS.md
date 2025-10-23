@@ -40,9 +40,13 @@ Support for Gaussian Splat (.splat) files as navigable 3D backgrounds using @mkk
 
 ### How to Use Gaussian Splats
 
-1. **Add Splat Files**: Place your .splat files in `/public/splats/`
-2. **Toggle**: The component is ready to use - currently set to sphere background by default
-3. **Enable**: Change `useGaussianSplat` state to `true` in ThreeSixty component
+1. **Add Splat Files**: Place your .splat, .ply, or .ksplat files in `/public/splats/`
+2. **Auto-Detection**: The application automatically detects available splat files
+3. **UI Controls**: When splats are detected, a "Background Controls" panel appears in the top-right corner
+4. **Toggle Mode**: Click "Image" or "Splat" buttons to switch background modes
+5. **Select Splat**: Use the dropdown to choose which splat file to display
+
+No code changes needed - it's all automatic!
 
 ### Creating Gaussian Splats
 
@@ -97,6 +101,38 @@ Popular tools for creating .splat files:
 - XR store is created once and memoized for performance
 - Physics system works seamlessly in both VR and non-VR modes
 
+## UI Features
+
+### Auto-Detection
+The application automatically scans `/public/splats/` for compatible files on startup. When splat files are detected:
+- A "Background Controls" panel appears in the top-right corner
+- Toggle buttons allow switching between Image and Splat backgrounds
+- A dropdown menu lists all available splat files with file sizes
+
+### Background Controls Panel
+Located in the top-right corner (only visible when splats are detected):
+- **Background Mode**: Toggle between "Image" (sphere) and "Splat" (3D scene)
+- **Select Splat**: Dropdown showing all available splat files with their sizes
+
+## API Endpoints
+
+### GET /api/getSplats
+Returns list of available splat files in the public directory.
+
+**Response:**
+```json
+{
+  "hasSplats": true,
+  "splats": [
+    {
+      "filename": "office-scene.splat",
+      "path": "/splats/office-scene.splat",
+      "size": 26214400
+    }
+  ]
+}
+```
+
 ## Future Enhancements
 
 Potential improvements:
@@ -105,3 +141,5 @@ Potential improvements:
 - [ ] Multiple Gaussian Splat scenes with transitions
 - [ ] Teleportation movement in VR
 - [ ] Grab/throw physics interactions in VR
+- [ ] Splat preview thumbnails
+- [ ] Automatic quality adjustment based on device performance
