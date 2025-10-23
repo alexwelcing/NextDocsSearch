@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 
@@ -26,9 +26,6 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   // Opacity for crossfading from old => new
   const [newOpacity, setNewOpacity] = useState(0)
   const [isFading, setIsFading] = useState(false)
-
-  // We keep references to do manual animation via useFrame
-  const requestRef = useRef<number>()
 
   const sphereGeometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), [])
 

@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Box, Text, OrbitControls, Stars } from '@react-three/drei';
 import styled from 'styled-components';

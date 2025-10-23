@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { VRButton, XR, Controllers, Hands } from '@react-three/xr';
+// XR imports removed - API changed significantly in @react-three/xr v6
 import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls } from '@react-three/drei';
@@ -83,13 +83,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   return (
     <ThreeSixtyContainer>
-      <VRButton enterOnly={false} exitOnly={false} />
+      {/* VR support temporarily removed - @react-three/xr v6 has breaking API changes */}
       <Canvas shadows>
-        <XR>
-          <PhysicsEnvironment>
-            <Controllers />
-            <Hands />
-            <PhysicsGround />
+        <PhysicsEnvironment>
+          <PhysicsGround />
             <OrbitControls />
             <BouncingBall />
             <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
@@ -108,7 +105,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                         <RoundedRectangle />
                         <ResponseDisplay />
           </PhysicsEnvironment>
-        </XR>
       </Canvas>
     </ThreeSixtyContainer>
   );
