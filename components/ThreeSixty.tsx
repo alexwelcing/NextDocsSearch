@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { createXRStore, XR, XROrigin, XRSpace } from '@react-three/xr';
 import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Stats } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
@@ -13,7 +13,21 @@ import ResponseDisplay from './ResponseDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <Physics gravity={[0, -9.81, 0]}>{children}</Physics>;
+  return (
+    <Physics
+      gravity={[0, -9.81, 0]}
+      iterations={10}
+      tolerance={0.001}
+      allowSleep={true}
+      broadphase="SAP"
+      defaultContactMaterial={{
+        friction: 0.1,
+        restitution: 0.7,
+      }}
+    >
+      {children}
+    </Physics>
+  );
 };
 
 const StyledButton = styled.button`
@@ -255,12 +269,32 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </BackgroundControlsContainer>
       )}
 
-      <Canvas shadows>
+      <Canvas
+        shadows
+        dpr={[1, 2]}
+        performance={{ min: 0.5 }}
+        gl={{
+          powerPreference: 'high-performance',
+          antialias: false,
+          stencil: false,
+          depth: true,
+        }}
+        camera={{ position: [0, 2, 10], fov: 60 }}
+      >
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
             <PhysicsEnvironment>
               <PhysicsGround />
-              <OrbitControls />
+              <OrbitControls
+                enableDamping
+                dampingFactor={0.05}
+                rotateSpeed={0.5}
+                zoomSpeed={0.8}
+                panSpeed={0.5}
+                minDistance={5}
+                maxDistance={50}
+                maxPolarAngle={Math.PI / 2}
+              />
               <BouncingBall />
 
               {/* Background: Use Gaussian Splat if enabled, otherwise use sphere */}
@@ -293,6 +327,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             </PhysicsEnvironment>
           </XROrigin>
         </XR>
+        {/* Performance monitoring - visible in development */}
+        {process.env.NODE_ENV === 'development' && <Stats />}
       </Canvas>
     </ThreeSixtyContainer>
   );

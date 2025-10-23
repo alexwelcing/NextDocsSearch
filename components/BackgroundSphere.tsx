@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 
@@ -14,6 +14,8 @@ interface BackgroundSphereProps {
  *   2) the "new" texture sphere, which fades in once loaded
  * We only switch to the new sphere once the new texture is fully loaded,
  * so there's no momentary blank or flash.
+ *
+ * Performance optimized: Uses refs to avoid state updates in useFrame
  */
 const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   imageUrl,
@@ -23,11 +25,13 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   const [oldTexture, setOldTexture] = useState<THREE.Texture | null>(null)
   const [newTexture, setNewTexture] = useState<THREE.Texture | null>(null)
 
-  // Opacity for crossfading from old => new
-  const [newOpacity, setNewOpacity] = useState(0)
-  const [isFading, setIsFading] = useState(false)
+  // Use refs for animation to avoid setState in useFrame
+  const newOpacityRef = useRef(0)
+  const isFadingRef = useRef(false)
+  const newMaterialRef = useRef<THREE.MeshBasicMaterial>(null)
 
-  const sphereGeometry = useMemo(() => new THREE.SphereGeometry(15, 32, 16), [])
+  // Reduce polygon count for better performance
+  const sphereGeometry = useMemo(() => new THREE.SphereGeometry(15, 24, 12), [])
 
   // 1) On mount, load initial texture immediately so we have something displayed
   useEffect(() => {
@@ -46,36 +50,48 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
     loadTexture(imageUrl, (loadedTex) => {
       // Put the newly loaded texture in newTexture state at 0 opacity
       setNewTexture(loadedTex)
-      setNewOpacity(0)
-      setIsFading(true) // start crossfade
+      newOpacityRef.current = 0
+      isFadingRef.current = true // start crossfade
     })
   }, [imageUrl, oldTexture])
 
-  // 3) Animate the crossfade in a useFrame loop
+  // 3) Animate the crossfade in a useFrame loop - optimized with refs
   useFrame((_state, delta) => {
-    if (!isFading || !newTexture || !oldTexture) return
+    if (!isFadingRef.current || !newTexture || !oldTexture) return
 
     // Raise newOpacity from 0 to 1 over transitionDuration seconds
     const fadeSpeed = 1 / transitionDuration
-    const nextOpacity = Math.min(newOpacity + fadeSpeed * delta, 1)
+    const nextOpacity = Math.min(newOpacityRef.current + fadeSpeed * delta, 1)
 
-    setNewOpacity(nextOpacity)
+    newOpacityRef.current = nextOpacity
+
+    // Update material opacity directly without triggering re-render
+    if (newMaterialRef.current) {
+      newMaterialRef.current.opacity = nextOpacity
+    }
 
     // Once it hits 1, finalize the fade
     if (nextOpacity >= 1) {
       setOldTexture(newTexture) // The new becomes the old
       setNewTexture(null) // Clear the 'new' sphere
-      setNewOpacity(0)
-      setIsFading(false)
+      newOpacityRef.current = 0
+      isFadingRef.current = false
     }
   })
 
-  // A helper function to load textures with a callback
+  // A helper function to load textures with a callback - optimized settings
   function loadTexture(url: string, onTexLoad: (tex: THREE.Texture) => void) {
     const loader = new THREE.TextureLoader()
     loader.load(
       url,
-      (tex) => onTexLoad(tex),
+      (tex) => {
+        // Optimize texture settings
+        tex.generateMipmaps = true
+        tex.minFilter = THREE.LinearMipmapLinearFilter
+        tex.magFilter = THREE.LinearFilter
+        tex.anisotropy = 4 // Lower anisotropy for better performance
+        onTexLoad(tex)
+      },
       undefined, // onProgress
       (err) => console.error(`Error loading texture:`, err),
     )
@@ -100,11 +116,13 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
       {newTexture && (
         <mesh geometry={sphereGeometry}>
           <meshBasicMaterial
+            ref={newMaterialRef}
             attach="material"
             map={newTexture}
             side={THREE.BackSide}
             transparent
-            opacity={newOpacity}
+            opacity={newOpacityRef.current}
+            depthWrite={false}
           />
         </mesh>
       )}
