@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { createXRStore, XR, XROrigin, XRSpace } from '@react-three/xr';
+import { createXRStore, XR, XROrigin, XRSpace, useXRSessionModeSupported } from '@react-three/xr';
 import styled, { css, keyframes } from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls, Stats } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
-import BouncingBall from './BouncingBall';
 import BackgroundSphere from './BackgroundSphere';
 import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
 import RoundedRectangle from './RoundedRectangle';
 import ResponseDisplay from './ResponseDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
+import ClickingGame, { GameState, GameStats } from './ClickingGame';
+import GameHUD from './GameHUD';
+import GameStartOverlay from './GameStartOverlay';
+import GameLeaderboard from './GameLeaderboard';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -175,8 +178,24 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [hasSplats, setHasSplats] = useState(false);
 
+  // Game state
+  const [gameState, setGameState] = useState<GameState>('IDLE');
+  const [score, setScore] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [combo, setCombo] = useState(0);
+  const [gameStats, setGameStats] = useState<GameStats>({
+    score: 0,
+    comboMax: 0,
+    accuracy: 0,
+    totalClicks: 0,
+    successfulClicks: 0,
+  });
+
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
+
+  // Detect VR capability - only show VR button if device supports it
+  const isVRSupported = useXRSessionModeSupported('immersive-vr');
 
   // Fetch articles
   useEffect(() => {
@@ -226,11 +245,42 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
   };
 
+  // Game handlers
+  const handleGameStart = useCallback(() => {
+    setGameState('STARTING');
+    setTimeout(() => {
+      setGameState('PLAYING');
+      setScore(0);
+      setTimeRemaining(30);
+      setCombo(0);
+    }, 100);
+  }, []);
+
+  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
+    setScore(finalScore);
+    setGameStats(stats);
+    setGameState('GAME_OVER');
+  }, []);
+
+  const handlePlayAgain = useCallback(() => {
+    setGameState('IDLE');
+    setTimeout(() => {
+      handleGameStart();
+    }, 100);
+  }, [handleGameStart]);
+
+  const handleCloseLeaderboard = useCallback(() => {
+    setGameState('IDLE');
+  }, []);
+
   return (
     <ThreeSixtyContainer>
-      <VRButtonStyled onClick={handleEnterVR}>
-        Enter VR
-      </VRButtonStyled>
+      {/* Only show VR button if device supports VR */}
+      {isVRSupported && (
+        <VRButtonStyled onClick={handleEnterVR}>
+          Enter VR
+        </VRButtonStyled>
+      )}
 
       {/* Background Controls - Only show if splats are detected */}
       {hasSplats && (
@@ -295,7 +345,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 maxDistance={50}
                 maxPolarAngle={Math.PI / 2}
               />
-              <BouncingBall />
+
+              {/* Sphere Hunter Game */}
+              <ClickingGame
+                gameState={gameState}
+                onGameStart={handleGameStart}
+                onGameEnd={handleGameEnd}
+                onScoreUpdate={setScore}
+                onComboUpdate={setCombo}
+                onTimeUpdate={setTimeRemaining}
+              />
 
               {/* Background: Use Gaussian Splat if enabled, otherwise use sphere */}
               {useGaussianSplat && selectedSplat ? (
@@ -330,6 +389,29 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         {/* Performance monitoring - visible in development */}
         {process.env.NODE_ENV === 'development' && <Stats />}
       </Canvas>
+
+      {/* Game UI Overlays */}
+      {gameState === 'IDLE' && (
+        <GameStartOverlay onStart={handleGameStart} />
+      )}
+
+      {gameState === 'PLAYING' && (
+        <GameHUD
+          score={score}
+          timeRemaining={timeRemaining}
+          combo={combo}
+          isPlaying={true}
+        />
+      )}
+
+      {gameState === 'GAME_OVER' && (
+        <GameLeaderboard
+          playerScore={score}
+          playerStats={gameStats}
+          onPlayAgain={handlePlayAgain}
+          onClose={handleCloseLeaderboard}
+        />
+      )}
     </ThreeSixtyContainer>
   );
 };
