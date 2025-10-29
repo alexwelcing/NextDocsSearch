@@ -1,0 +1,265 @@
+---
+title: "TREC Legal Track Lessons: What eDiscovery Teaches AI PMs About Precision-Recall Tradeoffs"
+author: ["Alex Welcing"]
+date: "2025-07-07"
+description: "TREC Legal Track has 15 years of eDiscovery benchmarks. The hard-won lessons on precision-recall optimization apply to every enterprise AI feature."
+ogImage: "/images/og/trec-legal-precision-recall.jpg"
+keywords: ["eDiscovery", "Legal Tech", "Precision-Recall", "AI Product Manager", "Machine Learning", "Technical Product Manager", "Information Retrieval", "Legal AI"]
+---
+
+## The $2M Document Review Budget
+
+**General Counsel**: "We have 500,000 documents to review for this litigation. At $400/hour for contract attorneys, that's $2M. Can your AI reduce that?"
+
+**You** (PM): "Our AI achieves 90% recall—it'll find 90% of relevant documents."
+
+**GC**: "What about the other 10%? If we miss a smoking-gun email, we lose the case. Not acceptable."
+
+**You**: "We can tune for higher recall, but precision drops—you'll review more irrelevant documents."
+
+**GC**: "So what's the right tradeoff?"
+
+**You**: *Googles "precision recall tradeoff legal". Finds TREC Legal Track. Spends 3 hours reading. Returns with an answer.*
+
+## What TREC Legal Track Is (And Why It Matters)
+
+**TREC** = Text Retrieval Conference (NIST-sponsored, 1992-present)
+
+**Legal Track** (2006-2011): Benchmark competition for eDiscovery AI systems.
+
+**The Task**: Given a litigation topic (e.g., "Find all emails about Project X price-fixing"), rank 500,000+ documents by relevance.
+
+**The Metrics**: Precision, recall, F1, and **cost-effectiveness** (how much money does the AI save vs. manual review?).
+
+**Why PMs Care**: TREC Legal Track spent 15 years solving the **precision-recall tradeoff** for high-stakes enterprise use cases. The lessons generalize to any AI feature where:
+- Missing a relevant item is expensive (high recall required)
+- Reviewing false positives wastes time (high precision required)
+- You can't have both at 100%
+
+## The Three Cost Functions (eDiscovery Edition)
+
+### Cost 1: Review Cost
+- **What**: Attorney time reviewing documents flagged by AI
+- **Formula**: `# of flagged docs × $400/hour × 6 minutes/doc`
+- **PM Translation**: False positives are expensive (wasted attorney time)
+
+### Cost 2: Miss Cost
+- **What**: Penalty for missing relevant documents
+- **Formula**: `# of missed docs × $10,000` (court sanctions, case loss, reputational harm)
+- **PM Translation**: False negatives are **catastrophic** (regulatory/legal risk)
+
+### Cost 3: Baseline Cost
+- **What**: Manual review of all 500,000 documents (no AI)
+- **Formula**: `500,000 docs × $400/hour × 6 minutes/doc = $2M`
+- **PM Translation**: Your AI must cost less than manual review, or it's not adopted
+
+**The Optimization Problem**: Minimize `Review Cost + Miss Cost` while staying under `Baseline Cost`.
+
+## The TREC Lesson: Precision-Recall Curves Are Useless Without Cost
+
+**Bad Metric**:
+```
+Our AI achieves:
+- Precision: 85%
+- Recall: 90%
+- F1: 0.87
+```
+
+**So What?** Is that good enough to deploy? Should we tune for higher recall? The metrics don't tell you.
+
+**Good Metric**:
+```
+Scenario 1: Tune for Recall (95%)
+- Review 100,000 docs (20% of corpus)
+- Find 950 of 1,000 relevant docs (miss 50)
+- Review Cost: $400k
+- Miss Cost: $500k (50 × $10k)
+- Total Cost: $900k (saves $1.1M vs. manual review)
+
+Scenario 2: Tune for Precision (90%)
+- Review 20,000 docs (4% of corpus)
+- Find 800 of 1,000 relevant docs (miss 200)
+- Review Cost: $80k
+- Miss Cost: $2M (200 × $10k)
+- Total Cost: $2.08M (WORSE than manual review!)
+
+Scenario 3: Balanced (Precision 85%, Recall 90%)
+- Review 50,000 docs (10% of corpus)
+- Find 900 of 1,000 relevant docs (miss 100)
+- Review Cost: $200k
+- Miss Cost: $1M (100 × $10k)
+- Total Cost: $1.2M (saves $800k vs. manual review)
+```
+
+**Which scenario do you ship?** Depends on the **miss cost** your stakeholder will tolerate.
+
+## The Decision Framework (Copy-Paste for Your Feature)
+
+**Step 1: Define the Cost Function**
+
+Ask your stakeholder:
+- "What's the cost of reviewing a false positive?" (wasted time)
+- "What's the cost of missing a true positive?" (risk, lost opportunity)
+- "What's the baseline cost of doing this manually?" (status quo)
+
+**Step 2: Map Precision-Recall to Costs**
+
+Use this formula:
+```
+Total Cost = (False Positives × Review Cost per Item) + (False Negatives × Miss Cost per Item)
+```
+
+**Step 3: Find the Optimal Operating Point**
+
+- Plot precision-recall curve
+- For each point, calculate total cost
+- Pick the point with **minimum total cost**
+
+**Step 4: Validate with Stakeholders**
+
+Show them:
+- "At 90% recall, we miss 100 items, costing $1M in risk"
+- "At 95% recall, we miss 50 items, costing $500k in risk, but review cost increases $120k"
+- "Which tradeoff do you prefer?"
+
+## Real Example: Contract Review AI
+
+**Use Case**: AI flags risky clauses in vendor contracts (e.g., unlimited liability, auto-renewal).
+
+**Stakeholder**: Legal team (15 attorneys, 200 contracts/month)
+
+### Cost Analysis
+
+**False Positive** (AI flags safe clause as risky):
+- Attorney spends 10 minutes reviewing
+- Cost: $67 (attorney billable rate)
+
+**False Negative** (AI misses risky clause):
+- Contract signed with risky clause
+- Average cost: $50k (renegotiation, potential litigation)
+
+**Baseline** (manual review):
+- 200 contracts × 2 hours/contract × $400/hour = $160k/month
+
+### Precision-Recall Scenarios
+
+| Precision | Recall | FP (per 200 contracts) | FN (per 200 contracts) | Review Cost | Miss Cost | Total Cost | Savings |
+|-----------|--------|------------------------|------------------------|-------------|-----------|------------|---------|
+| 70% | 95% | 60 | 1 | $4k | $50k | $54k | $106k |
+| 85% | 90% | 30 | 2 | $2k | $100k | $102k | $58k |
+| 95% | 80% | 10 | 4 | $670 | $200k | $201k | **-$41k** |
+
+**Insight**: High-precision tuning (95%) **loses money** because miss cost dominates. Optimal: 70% precision, 95% recall.
+
+**GC's Reaction**: "I'll tolerate 60 false positives/month if we catch 95% of risky clauses. Ship it."
+
+## When to Tune for Precision vs. Recall
+
+### Tune for Recall (Minimize Misses)
+**When**:
+- Miss cost >> review cost
+- High-stakes decisions (healthcare, legal, safety)
+- Regulatory requirement (must find all instances)
+
+**Examples**:
+- Cancer screening (missing diagnosis = catastrophic)
+- Fraud detection (missing fraud = financial loss)
+- eDiscovery (missing document = court sanctions)
+
+**Tradeoff**: Users review more false positives, but tolerate it because **missing a true positive is unacceptable**.
+
+### Tune for Precision (Minimize Noise)
+**When**:
+- Review cost >> miss cost
+- Low-stakes recommendations (content, shopping)
+- User tolerance for false positives is low
+
+**Examples**:
+- News recommendations (showing irrelevant article = user ignores)
+- Search ranking (bad result = user scrolls past)
+- Spam filtering (false positive = annoying, not catastrophic)
+
+**Tradeoff**: Some true positives get missed, but users tolerate it because **false positives waste their time**.
+
+## The TREC "Technology-Assisted Review" Insight
+
+**Key Finding from TREC Legal 2009-2011**:
+
+**Continuous Active Learning** (CAL) beats traditional keyword search by **10x cost reduction**.
+
+**How It Works**:
+1. AI ranks all 500,000 docs by predicted relevance
+2. Attorneys review top-ranked docs first
+3. AI learns from attorney labels (relevant/not relevant)
+4. AI re-ranks remaining docs
+5. Repeat until stopping condition (e.g., "reviewed 50,000 docs, found 10 relevant docs in last 5,000")
+
+**Result**:
+- Traditional: Review 200,000 docs to find 90% of relevant docs
+- CAL: Review 20,000 docs to find 90% of relevant docs
+- **10x efficiency gain**
+
+**PM Takeaway**: If your AI ranks items by relevance, **prioritize review of high-confidence items first**. Don't force users to review in random order.
+
+## The "Stopping Rule" Problem
+
+**Question**: When do you stop reviewing AI-flagged items?
+
+**Bad Answer**: "Review until we hit 95% recall."  
+**Problem**: You don't know when you've hit 95% recall until you review everything (defeats the purpose).
+
+**TREC Solution**: Stopping rules based on **diminishing returns**.
+
+**Rule 1: Knee of the Curve**
+- Track: Relevant docs found per 1,000 docs reviewed
+- Stop when: Yield drops below threshold (e.g., 10 relevant docs per 1,000 reviewed)
+
+**Rule 2: Budget-Based**
+- Track: Total review cost
+- Stop when: Cost approaches baseline (no more savings)
+
+**Rule 3: Risk-Based**
+- Track: Estimated recall (via sampling)
+- Stop when: Estimated recall > 90% with 95% confidence
+
+**PM Takeaway**: Ship AI with a **recommended stopping rule**. Don't make users guess when to stop reviewing.
+
+## Checklist: Precision-Recall Audit for Your Feature
+
+- [ ] Define false positive cost (time wasted per incorrect flag)
+- [ ] Define false negative cost (risk per missed item)
+- [ ] Define baseline cost (manual process without AI)
+- [ ] Plot precision-recall curve (vary classification threshold)
+- [ ] Calculate total cost for each operating point (FP cost + FN cost)
+- [ ] Identify minimum-cost operating point
+- [ ] Validate with stakeholders (show cost tradeoffs, not just metrics)
+- [ ] Implement stopping rule (when to stop reviewing AI-flagged items)
+- [ ] Monitor post-launch: track FP rate, FN rate, user satisfaction
+
+## Common PM Mistakes
+
+**Mistake 1: Optimizing F1 Without Knowing Cost Ratio**
+- **Reality**: F1 assumes equal cost for FP and FN. Rarely true in enterprise.
+- **Fix**: Use cost-weighted metric: `Total Cost = FP × C1 + FN × C2`
+
+**Mistake 2: Shipping Without Stopping Rule**
+- **Reality**: Users don't know when to stop reviewing. They review everything (no efficiency gain).
+- **Fix**: Add UI: "Recommended stopping point: 95% estimated recall reached"
+
+**Mistake 3: Ignoring Active Learning**
+- **Reality**: Random review order wastes time (users review low-relevance items early).
+- **Fix**: Rank by AI confidence; users review high-confidence items first
+
+## The 15-Year TREC Lesson
+
+**2006**: Keyword search dominates eDiscovery. AI is experimental.  
+**2011**: Technology-Assisted Review (AI + active learning) is standard practice.  
+**2025**: Courts accept TAR as defensible (no longer "experimental").
+
+**Timeline for Enterprise AI**: 5-10 years from "experimental" to "industry standard."
+
+**If you're building enterprise AI in 2025, you're at the 2011 TREC moment.** The companies that master precision-recall optimization now will set the industry standard for the next decade.
+
+---
+
+*Alex Welcing is a Senior AI Product Manager who optimizes for cost-weighted precision-recall, not F1 scores. His features ship with stopping rules because users need to know when they've reviewed enough, not when they've reviewed everything.*

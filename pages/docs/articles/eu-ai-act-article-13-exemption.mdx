@@ -1,0 +1,209 @@
+---
+title: "The AI Act Article 13 Exemption: When You Don't Need Full Documentation"
+author: ["Alex Welcing"]
+date: "2025-04-14"
+description: "Not all AI systems require full EU AI Act compliance. Article 13 exemptions apply to AI for research, testing, and narrow use cases. Here's when you qualify—and when you don't."
+ogImage: "/images/og/eu-ai-act-article-13-exemption.jpg"
+keywords: ["EU AI Act", "Article 13", "AI Regulation", "Compliance", "AI Product Manager", "Technical Product Manager", "Research AI", "AI Governance"]
+---
+
+## The Compliance Shortcut That Backfired
+
+**Startup**: "Our AI is for research purposes. Article 13 exempts us from EU AI Act compliance."
+
+**Lawyer**: "Is it *only* for research, or do you also use it in production?"
+
+**Startup**: "Well... we test it on real customer data..."
+
+**Lawyer**: "Then you're not exempt. You need full compliance."
+
+**The Mistake**: Misreading Article 13.
+
+## What Article 13 Actually Says
+
+**EU AI Act Article 13**: AI systems developed **exclusively for research, testing, or development** are exempt from compliance requirements **until** they're placed on the market or put into service.
+
+**Key Words**:
+- **Exclusively**: Not "mostly" or "primarily"—100% research/testing
+- **Until**: The moment you use it in production, exemption ends
+
+## The Three Exemption Categories
+
+### Category 1: Pure Research (Exempt)
+
+**What Qualifies**:
+- Academic research (university labs, non-profit institutes)
+- No commercial intent
+- Results published, not productized
+- No real users (only researchers interact with the system)
+
+**Example**: PhD student trains LLM to study bias in language models. Publishes findings. Never deploys to production.
+
+**Status**: ✅ Exempt (Article 13 applies)
+
+### Category 2: Internal Testing (Exempt, Temporarily)
+
+**What Qualifies**:
+- Company tests AI internally (not on real customers)
+- No production deployment
+- Testing phase has defined end date (not indefinite)
+
+**Example**: Legal tech company tests contract AI on synthetic data + internal employee volunteers. No customer data. No production use.
+
+**Status**: ✅ Exempt **while testing**
+
+**Warning**: The moment you deploy to customers (even beta), exemption ends.
+
+### Category 3: Production Pilots (NOT Exempt)
+
+**What Doesn't Qualify**:
+- "Beta" testing with real customers
+- "Pilot" programs with paying users
+- AI in production but "still testing"
+
+**Example**: Healthcare AI deployed to 10 hospitals as "pilot." Real patients affected.
+
+**Status**: ❌ **Not exempt** (this is "putting into service"—full compliance required)
+
+## Real Example: Contract Review AI
+
+**Scenario**: Legal tech startup builds AI to flag risky clauses in vendor contracts.
+
+**Phase 1 (Exempt)**:
+- Train AI on public domain contracts (no customer data)
+- Test on synthetic examples
+- Internal QA only (no external users)
+- **Status**: ✅ Exempt (pure testing)
+
+**Phase 2 (Still Exempt, Barely)**:
+- 5 employees test AI on real contracts (internal use)
+- No customer deployment
+- No paid product
+- **Status**: ✅ Exempt (internal testing)
+
+**Phase 3 (Exemption Ends)**:
+- Launch beta to 10 law firms (real customers)
+- Contracts signed (even if free trial)
+- AI processes real client contracts
+- **Status**: ❌ **Not exempt** (AI is "in service"—compliance required)
+
+**Compliance Trigger**: The moment you give access to customers (even beta), you must comply.
+
+## The "But It's Just a Beta!" Trap
+
+**Startup Logic**: "It's a beta. We're still testing. Article 13 exempts us."
+
+**Legal Reality**: Article 13 exempts *research/testing*, not *beta products*.
+
+**The Test**:
+- Are real users affected? → Not exempt
+- Are you collecting revenue (or plan to)? → Not exempt
+- Is this a step toward commercialization? → Not exempt
+
+**If you answered "yes" to any, you're not exempt.**
+
+## When Article 13 Actually Helps
+
+**Use Case 1: University Spin-Outs**
+
+**Timeline**:
+- **Year 1-2**: PhD research (exempt)
+- **Year 3**: Spin-out company formed, still in R&D (exempt)
+- **Year 4**: First customer pilot → **compliance required**
+
+**Benefit**: 3 years to build without compliance overhead. But compliance is due before launch, not after.
+
+**Use Case 2: Pre-Product AI Experiments**
+
+**Example**: AdTech company experiments with LLM-generated ad copy (internal testing only).
+
+**Status**: Exempt **while experimenting**
+
+**Trigger**: The moment ads go live (even to 1% of users), exemption ends.
+
+**Use Case 3: Open-Source Research Models**
+
+**Example**: Researcher releases pre-trained model on Hugging Face. No commercial intent.
+
+**Status**: ✅ Exempt (pure research release)
+
+**Warning**: If someone else uses your model in production (e.g., healthcare AI), **they** need to comply (not you). But if **you** commercialize it later, compliance is on you.
+
+## Checklist: Are You Actually Exempt?
+
+Answer honestly:
+
+- [ ] Is the AI used **exclusively** for research or testing? (No production use at all)
+- [ ] Are zero external users affected? (Only internal employees/researchers)
+- [ ] Is there zero commercial intent? (No revenue, no paying customers)
+- [ ] Is the testing phase time-bound? (Not "perpetual beta")
+- [ ] Will you comply **before** deploying to customers? (Not after)
+
+**If any answer is "no," you're not exempt.**
+
+## What Happens If You Claim Exemption Incorrectly
+
+**Scenario**: Startup deploys AI to customers, claims Article 13 exemption.
+
+**EU Enforcement**:
+- Auditor requests compliance documentation
+- Startup says "We're exempt (Article 13)"
+- Auditor says "You have customers. Not exempt."
+- Startup scrambles to build compliance artifacts (3-6 months delay)
+
+**Penalties**:
+- Fines up to €30M or 6% of global revenue (for non-compliance)
+- Forced shutdown until compliant
+- Reputational harm (customers lose trust)
+
+**The Lesson**: Don't stretch exemptions to avoid compliance.
+
+## The Compliant Beta Strategy
+
+**Goal**: Test AI with real users **before** full GA, but stay compliant.
+
+**How**:
+1. **Build compliance artifacts during beta** (not after)
+2. **Limit beta scope** (10-50 users, not 10,000)
+3. **Disclose beta status** ("This is experimental AI—human review required")
+4. **Document everything** (model card, risk register, human oversight plan)
+
+**Result**: You're compliant during beta. When you go GA, you're already ready.
+
+## The Article 13 Decision Tree
+
+```
+Is your AI in production or beta with real users?
+├─ YES → Not exempt. Full compliance required.
+└─ NO → Continue
+
+Is your AI used only by internal employees/researchers?
+├─ YES → Possibly exempt. Continue.
+└─ NO → Not exempt (external users = "in service")
+
+Is there zero commercial intent (no revenue, no customers, no product plan)?
+├─ YES → Likely exempt (pure research).
+└─ NO → Not exempt (commercial R&D ≠ pure research)
+
+Do you plan to deploy to customers within 12 months?
+├─ YES → Build compliance now (exemption ends soon).
+└─ NO → Exempt for now, but re-check in 6 months.
+```
+
+## Common PM Mistakes
+
+**Mistake 1: Treating "Beta" as "Exempt"**
+- **Reality**: Beta with customers = production (not exempt)
+- **Fix**: Build compliance before beta, not after GA
+
+**Mistake 2: Assuming "Internal Testing" Lasts Forever**
+- **Reality**: Article 13 exempts time-bound testing, not perpetual pilots
+- **Fix**: Set compliance deadline (e.g., "6 months of testing, then comply or kill")
+
+**Mistake 3: Ignoring Spin-Out Transition**
+- **Reality**: University research → startup → customers = exemption ends at customer #1
+- **Fix**: Budget compliance costs into fundraising (not "we'll figure it out later")
+
+---
+
+*Alex Welcing is a Senior AI Product Manager in New York who treats EU AI Act exemptions as temporary, not permanent. His beta programs ship with compliance artifacts because Article 13 ends the moment customers arrive.*

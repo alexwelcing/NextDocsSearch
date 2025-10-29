@@ -1,0 +1,309 @@
+---
+title: "Build vs. Buy for Legal AI: The LAWS Feasibility Checklist"
+author: ["Alex Welcing"]
+date: "2025-01-08"
+description: "A practical one-page decision framework for law firms and legal tech vendors evaluating AI tools—testing Latency, Accuracy, Workflow fit, and Security before procurement."
+ogImage: "/images/og/laws-legal-ai-checklist.jpg"
+keywords: ["Legal Tech", "AI Product Manager", "Big Law", "Legal AI", "Build vs Buy", "eDiscovery", "Contract AI", "Legal Research", "Security", "Compliance", "Law Firm", "Procurement"]
+---
+
+## The Legal AI Procurement Problem
+
+A BigLaw partner asks IT: "Can we use this AI research tool?" IT asks Security. Security asks Legal. Legal asks the vendor for a security questionnaire. The vendor sends 47 pages of generic compliance docs. No one can answer: **"Will this actually work for our attorneys, and is it safe?"**
+
+Most legal AI evaluations focus on features ("it does contract review!") and miss the **operational reality**: if it's too slow, attorneys won't use it. If it hallucinates citations, it's malpractice risk. If it doesn't fit the existing workflow, adoption fails. And if Security can't audit it, procurement kills it.
+
+After shipping AI features for legal tech platforms and advising AmLaw 200 firms on vendor selection, I've seen the pattern: **successful legal AI deployments pass four tests before the pilot even starts.**
+
+**LAWS** is a one-page feasibility checklist for law firms evaluating AI tools (and for legal tech vendors designing them):
+
+- **L**atency: Is it fast enough that attorneys will use it instead of their current process?
+- **A**ccuracy: Can we measure correctness, and what happens when it's wrong?
+- **W**orkflow: Does it integrate into existing tools, or require behavior change?
+- **S**ecurity: Can we prove data safety, privilege protection, and auditability?
+
+This isn't a full RFP. It's a **15-minute filter** that kills bad fits early and focuses procurement on tools that will actually get adopted.
+
+---
+
+## The LAWS Checklist (Print & Use During Demos)
+
+### 1. Latency: Will Attorneys Actually Wait for This?
+
+**The Test**: Time the task end-to-end (attorney input → AI output → attorney review/edit).
+
+**Benchmarks**:
+- **Legal research**: Target under 10 seconds for initial results (faster than manual PACER/Westlaw navigation)
+- **Contract review**: Target under 30 seconds per page (faster than reading + highlighting)
+- **eDiscovery classification**: Target under 2 seconds per document (or it bottlenecks review workflows)
+
+**Questions to Ask Vendor**:
+- What's your p95 latency? (not average—95th percentile shows real-world experience)
+- Does latency degrade with document length? (100-page contracts vs. 10-page agreements)
+- What's your SLA if latency exceeds target? (refund? support escalation?)
+
+**Red Flags**:
+- "It depends on the document" (means: unacceptably slow for complex docs)
+- "We're working on speed improvements" (means: not production-ready)
+- Vendor can't quote p95 latency (means: they haven't instrumented it)
+
+**Example (Contract AI)**:
+- **Vendor A**: 45 seconds to extract clauses from 50-page MSA (too slow; attorneys will skim faster)
+- **Vendor B**: 12 seconds for same task (acceptable; faster than manual review)
+- **Decision**: Pilot Vendor B; negotiate SLA of sub-15-second p95
+
+---
+
+### 2. Accuracy: How Do We Know It's Right, and What If It's Wrong?
+
+**The Test**: Run the tool on 20 known-good examples (cases you've already researched, contracts you've already reviewed). Measure precision/recall.
+
+**Benchmarks**:
+- **Legal research**: 95%+ citation accuracy (zero tolerance for hallucinated cases)
+- **Contract clause extraction**: 90%+ recall (missing a liability clause = risk)
+- **eDiscovery relevance**: 80%+ recall, 70%+ precision (per TREC Legal Track standards)
+
+**Questions to Ask Vendor**:
+- How do you measure accuracy? (what's the ground-truth dataset?)
+- What's your hallucination rate? (for generative outputs like summaries)
+- What happens when the AI is wrong? (flagging? human review? liability?)
+
+**Red Flags**:
+- "Our model is state-of-the-art" (doesn't answer: is it accurate on *your* legal domain?)
+- "Accuracy is high" (no number = no accountability)
+- No mention of hallucination/error handling (means: they haven't designed for it)
+
+**Example (Legal Research Tool)**:
+- **Test**: Give tool 10 real research queries from recent matters; compare AI citations to attorney-verified results
+- **Vendor A**: 8/10 correct; 2 hallucinated citations (unacceptable—malpractice risk)
+- **Vendor B**: 10/10 correct; includes confidence scores + "verify citation" warnings
+- **Decision**: Pilot Vendor B; require monthly accuracy audits
+
+**Checklist Item**: Demand a **sample evaluation report** with precision/recall on cases similar to your firm's work (corporate M&A? litigation? IP?).
+
+---
+
+### 3. Workflow: Does This Fit How Attorneys Actually Work?
+
+**The Test**: Shadow an attorney for 1 hour doing the task manually. Map every tool they touch. Ask: "Would AI in [this step] save time or add friction?"
+
+**Integration Requirements**:
+- **Does it plug into existing tools?** (Word, Outlook, iManage, NetDocs, Westlaw, LexisNexis)
+- **Single sign-on?** (if attorneys need a separate login, adoption tanks)
+- **Export formats?** (can outputs go directly into memos/briefs, or require copy-paste?)
+
+**Questions to Ask Vendor**:
+- What's your plugin/API story? (native integrations vs. "we have an API you can use")
+- How do attorneys review/edit AI outputs? (in-tool? exported to Word?)
+- What training is required? (if >30 minutes, expect low adoption)
+
+**Red Flags**:
+- "It's a standalone platform" (means: attorneys must context-switch)
+- "We integrate via CSV export" (means: manual copy-paste workflow)
+- "Training is comprehensive" (means: too complex for busy attorneys)
+
+**Example (Contract Review)**:
+- **Vendor A**: Web app; attorneys upload contracts, review in-browser, download Word doc with redlines (3 extra steps)
+- **Vendor B**: Word plugin; AI suggests edits inline; attorney accepts/rejects in familiar UI (zero workflow change)
+- **Decision**: Pilot Vendor B; higher adoption probability
+
+**Checklist Item**: Run a **pilot with 5 attorneys** for 2 weeks. Measure: how many used it daily vs. abandoned after day 1?
+
+---
+
+### 4. Security: Can We Prove This Is Safe for Client Data?
+
+**The Test**: Send vendor your security questionnaire. Verify answers with evidence (certs, pen-test reports, BAAs).
+
+**Non-Negotiables for Law Firms**:
+- **Data residency**: Client data stays in approved jurisdictions (no offshore processing without consent)
+- **Encryption**: At rest (AES-256) + in transit (TLS 1.3+)
+- **Access logs**: Who accessed what client data, when (tamper-proof audit trail)
+- **Privilege protection**: Can the tool inadvertently expose privileged docs? (e.g., via training data contamination)
+- **Vendor liability**: Who's responsible if there's a breach or leak? (insurance? indemnification?)
+
+**Compliance Checkboxes**:
+- [ ] SOC 2 Type II (annual report, not in-progress)
+- [ ] ISO 27001 (if international clients)
+- [ ] BAA available (if health-related litigation involves PHI)
+- [ ] Pen-test report (within last 12 months; summary of critical findings)
+- [ ] Data deletion policy (how long retained? can firm request purge?)
+
+**Questions to Ask Vendor**:
+- Where is data processed/stored? (specific AWS regions, data centers)
+- Do you use client data for model training? (must be "no" or explicit opt-in)
+- What's your incident response SLA? (how fast do you notify on breach?)
+- Can we audit your logs? (or at least get monthly access reports)
+
+**Red Flags**:
+- "We're SOC 2 compliant" (ask: Type I or II? when was last audit?)
+- "Data is encrypted" (ask: what key management? who holds keys?)
+- "We don't train on your data" (get it in writing; verify in contract)
+
+**Example (eDiscovery Platform)**:
+- **Vendor A**: SOC 2 Type I (in-progress, not certified); vague on data residency
+- **Vendor B**: SOC 2 Type II (annual audit); data stays in US-East; BAA available; $5M cyber insurance
+- **Decision**: Vendor B only; Vendor A doesn't meet firm's risk threshold
+
+**Checklist Item**: Require vendor to complete your **Information Security Questionnaire** (ISQ) *before* pilot. No exceptions.
+
+---
+
+## Putting LAWS Together: Vendor Scorecard
+
+Use this during demos/pilots:
+
+| Vendor | Latency (p95) | Accuracy (test set) | Workflow Integration | Security | Pass/Fail |
+|--------|---------------|---------------------|----------------------|----------|-----------|
+| Contract AI Vendor A | 45s | 88% recall | Web app (standalone) | SOC 2 Type I (in progress) | **Fail** (latency + security) |
+| Contract AI Vendor B | 12s | 92% recall | Word plugin | SOC 2 Type II + BAA | **Pass** → Pilot |
+| Research Tool Vendor C | 8s | 95% citation accuracy | Browser extension (Westlaw) | SOC 2 Type II | **Pass** → Pilot |
+| eDiscovery Vendor D | 1.8s/doc | 82% recall, 71% precision | Relativity plugin | ISO 27001 + SOC 2 | **Pass** → Pilot |
+
+**Decision Rules**:
+- **Fail on any dimension = no pilot** (latency, accuracy, security are non-negotiable)
+- **Workflow is a tiebreaker** (if two vendors pass LAWS, pick the one with better integration)
+- **Pilot ≠ commitment** (2-week pilot with 5 attorneys; measure adoption + satisfaction before procurement)
+
+---
+
+## Case Example: AmLaw 100 Firm Evaluating Legal Research AI
+
+**Context**: Firm spends $2M/year on Westlaw/Lexis; partners want to test GenAI research tools to reduce costs.
+
+**Vendors Evaluated**: 4 (including OpenAI ChatGPT, legal-specific startups, and incumbent add-ons)
+
+### LAWS Evaluation Results:
+
+| Vendor | Latency | Accuracy | Workflow | Security | Decision |
+|--------|---------|----------|----------|----------|----------|
+| ChatGPT (OpenAI) | 5s ✅ | 60% citation accuracy ❌ | Standalone ⚠️ | No BAA ❌ | **Reject** (hallucinations + security) |
+| Legal Startup A | 15s ✅ | 95% accuracy ✅ | Browser plugin ✅ | SOC 2 Type I ⚠️ | **Wait** (security in progress) |
+| Legal Startup B | 8s ✅ | 97% accuracy ✅ | Westlaw integration ✅ | SOC 2 Type II ✅ | **Pilot** ✅ |
+| Westlaw AI Add-On | 10s ✅ | 93% accuracy ✅ | Native (zero integration) ✅ | Existing BAA ✅ | **Pilot** ✅ |
+
+### Pilot Design (2 Vendors):
+- **Duration**: 4 weeks
+- **Users**: 10 associates (5 per vendor)
+- **Tasks**: 50 real research queries (from recent matters, anonymized)
+- **Metrics**: Time saved, citation accuracy, user satisfaction (NPS)
+
+### Pilot Results:
+- **Legal Startup B**: 3.2 hrs saved per associate per week; 96% accuracy; NPS = 8/10
+- **Westlaw Add-On**: 2.1 hrs saved per week; 91% accuracy; NPS = 6/10
+
+### Procurement Decision:
+- **Winner**: Legal Startup B ($150k/year vs. Westlaw $300k/year add-on)
+- **Rollout**: 50 associates in month 1; 200 by month 3; firm-wide by month 6
+- **ROI**: $800k/year in associate time savings (3 hrs/week × 200 associates × $400/hr)
+
+**What LAWS Prevented**: Firm almost piloted ChatGPT ("it's free!") until Security flagged: no BAA, hallucinated 40% of citations in test set. LAWS killed it in 15 minutes.
+
+---
+
+## The One-Page LAWS Worksheet (Bring to Vendor Demos)
+
+```
+Vendor Name: _______________________  Date: __________
+
+1. LATENCY
+   p95 latency: ______ seconds (target: research <10s, contract <30s, eDiscovery <2s)
+   Degrades with doc length? □ Yes □ No
+   SLA if latency exceeds target? ________________________________
+   Pass? □ Yes □ No
+
+2. ACCURACY
+   Citation/extraction accuracy on test set (20 examples): ______%
+   Hallucination rate (if generative): ______%
+   Error handling (flagging/review): ________________________________
+   Pass? □ Yes □ No
+
+3. WORKFLOW
+   Integration: □ Plugin □ API □ Standalone
+   Tools supported: □ Word □ Westlaw □ iManage □ Other: __________
+   Training time: ______ minutes
+   Pilot adoption (if applicable): _____ / _____ attorneys used daily
+   Pass? □ Yes □ No
+
+4. SECURITY
+   □ SOC 2 Type II (date: ______)
+   □ ISO 27001 (if applicable)
+   □ BAA available (if handling PHI)
+   □ Pen-test report (last 12 months)
+   □ Data residency confirmed: ____________
+   □ No training on client data (in writing)
+   Pass? □ Yes □ No
+
+OVERALL DECISION:
+□ Pilot (passed all 4 tests)
+□ Wait (1-2 tests failed; vendor working on fixes)
+□ Reject (security or accuracy failure; non-negotiable)
+```
+
+---
+
+## Why LAWS Works for Legal Tech
+
+Traditional legal tech procurement takes 6–12 months because firms evaluate **everything** (features, pricing, references, legal review). LAWS focuses on the **four things that predict adoption and safety**:
+
+1. **Latency** = will attorneys use it?
+2. **Accuracy** = will it create malpractice risk?
+3. **Workflow** = will it disrupt existing processes?
+4. **Security** = will it pass our risk committee?
+
+If a tool fails any test, it won't succeed—no matter how many features it has.
+
+**When to Use LAWS**:
+- Initial vendor screening (before RFP)
+- Demo evaluations (bring the worksheet)
+- Pilot design (test LAWS assumptions with real users)
+
+**When NOT to Use LAWS**:
+- Comparing pricing (that's a separate negotiation)
+- Evaluating non-AI tools (LAWS is AI-specific)
+- Strategic partnerships (where you're co-developing, not buying off-shelf)
+
+---
+
+## For Legal Tech Vendors: Design for LAWS from Day 1
+
+If you're building for BigLaw or corporate legal, your product **must pass LAWS** to get past the pilot. Here's how:
+
+**Latency**:
+- Instrument p95 latency in your dashboards
+- Optimize for document length (100-page contracts are common)
+- Set SLAs you can actually meet (under-promise, over-deliver)
+
+**Accuracy**:
+- Build evaluation datasets for your target domains (M&A, lit, IP)
+- Measure + publish precision/recall (transparency = trust)
+- Design error UX (flag low-confidence outputs; don't hide mistakes)
+
+**Workflow**:
+- Build plugins first (Word, Outlook, Westlaw); standalone app second
+- Support SSO (Okta, Azure AD); no separate logins
+- Export to formats attorneys use (Word, PDF with redlines)
+
+**Security**:
+- Get SOC 2 Type II *before* you sell to AmLaw 100 (non-negotiable)
+- Offer BAAs (even if you don't handle PHI today; you will eventually)
+- Never train on client data without explicit opt-in (and expect them to opt out)
+
+**The Meta-Lesson**: Legal tech isn't about "cool AI." It's about **provable safety + measurable time savings + zero workflow disruption**. LAWS is how you prove all three.
+
+---
+
+## Next Steps
+
+1. **Download the LAWS worksheet** (print 5 copies for your next vendor demos)
+2. **Run LAWS on your current tools** (are they actually passing the tests?)
+3. **Pilot with constraints** (2 weeks, 5 users, clear success metrics)
+
+**Related Guides**:
+- **RIBS Framework**: Build vs. Buy decision matrix for AI features
+- **SAFE-LLM**: How to ship legal AI internally (for law firm IT teams building custom tools)
+- **Legal Tech GTM**: How to sell into BigLaw (for vendors)
+
+---
+
+*Alex Welcing is a Senior AI Product Manager specializing in legal tech and regulated-industry AI. He's shipped contract AI, research tools, and eDiscovery platforms for AmLaw 200 firms and helped procurement teams evaluate 50+ legal AI vendors. He doesn't sell legal tech—he builds the frameworks to buy it intelligently.*

@@ -9,6 +9,7 @@ import Footer from '@/components/ui/footer'
 import ArticleList from '@/components/ui/ArticleList'
 import StylishFallback from '@/components/StylishFallback'
 import styles from '@/styles/Home.module.css'
+import type { GameState } from '@/components/ClickingGame'
 
 // Dynamically import the 3D environment, same as your old Chat page
 const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
@@ -20,6 +21,7 @@ export default function HomePage() {
   // Reuse logic to fetch random background images
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
+  const [gameState, setGameState] = useState<GameState>('IDLE')
 
   async function getRandomImage() {
     try {
@@ -74,8 +76,8 @@ export default function HomePage() {
       </Head>
 
       <SupabaseDataProvider>
-        {/* Our global nav */}
-        <CircleNav />
+        {/* Our global nav - shrink during gameplay */}
+        <CircleNav isGamePlaying={gameState === 'PLAYING'} />
 
         {/*
           If in 3D mode, we show a full-screen 3D environment + chat.
@@ -89,11 +91,12 @@ export default function HomePage() {
                 currentImage={currentImage}
                 isDialogOpen={false}
                 onChangeImage={getRandomImage}
+                onGameStateChange={setGameState}
               />
             )}
 
-            {/* SearchDialog for AI chat if you want it in 3D mode */}
-            <SearchDialog />
+            {/* SearchDialog for AI chat - only show when NOT playing game */}
+            {gameState !== 'PLAYING' && <SearchDialog />}
 
             {/* Button to go back to 2D home */}
             <div className="absolute top-4 left-4 z-50">

@@ -1,0 +1,187 @@
+---
+title: "Why Your A/B Test Failed (And It's Not the AI)"
+author: ["Alex Welcing"]
+date: "2025-03-10"
+description: "AI feature shows 94% accuracy in testing but loses to baseline in A/B test. The problem isn't the model—it's novelty effect, selection bias, or metric mismatch. Here's the diagnostic checklist."
+ogImage: "/images/og/ab-test-failed-ai.jpg"
+keywords: ["A/B Testing", "AI Product Manager", "Product Analytics", "Technical Product Manager", "Experimentation", "User Research", "AI UX"]
+---
+
+## The A/B Test That Made No Sense
+
+**Week 0**: Offline testing shows 94% accuracy (beats baseline by 12pp)
+
+**Week 2**: A/B test results
+- **Treatment** (AI-powered): 58% task completion
+- **Control** (manual): 64% task completion
+
+**PM**: "The AI is more accurate. Why is adoption *worse*?"
+
+**The Answer**: The AI works. The UX doesn't.
+
+## The 5 Reasons A/B Tests Fail (Not Model Issues)
+
+### Reason 1: Novelty Effect
+
+**What Happens**: Users try new AI feature out of curiosity, then abandon it.
+
+**Symptoms**:
+- Week 1: Treatment adoption = 70%
+- Week 4: Treatment adoption = 22%
+- Control adoption: Flat at 60% (no novelty, consistent behavior)
+
+**Diagnosis**: Plot adoption over time. If treatment starts high and declines, novelty effect.
+
+**Fix**: Run A/B test for 4-6 weeks (not 2 weeks). Measure steady-state behavior, not initial curiosity.
+
+### Reason 2: Selection Bias
+
+**What Happens**: Early adopters aren't representative of average users.
+
+**Symptoms**:
+- Power users love AI feature (80% adoption)
+- Average users ignore it (15% adoption)
+- Overall A/B test: Treatment loses
+
+**Diagnosis**: Segment results by user type (power user vs. casual). If power users win but average users lose, selection bias.
+
+**Fix**: Either (a) target feature at power users only, or (b) improve UX for average users.
+
+### Reason 3: Metric Mismatch
+
+**What Happens**: You optimize for accuracy; users care about speed.
+
+**Symptoms**:
+- AI accuracy: 94% (treatment wins)
+- Task completion time: 3 minutes (treatment) vs. 1 minute (control)
+- Users prefer control (faster, even if less accurate)
+
+**Diagnosis**: Check multiple metrics (accuracy, speed, satisfaction). If AI wins on accuracy but loses on speed, metric mismatch.
+
+**Fix**: Either (a) make AI faster, or (b) communicate accuracy benefit to justify speed tradeoff.
+
+### Reason 4: Trust Calibration Failure
+
+**What Happens**: Users don't know when to trust AI, so they ignore it.
+
+**Symptoms**:
+- AI suggestion acceptance rate: 12%
+- Manual override rate: 88%
+- Users check AI, then do manual work anyway (double the effort)
+
+**Diagnosis**: Interview users. If they say "I don't know if it's right," trust calibration issue.
+
+**Fix**: Add confidence scores, show reasoning, provide examples of when AI is reliable.
+
+### Reason 5: Integration Friction
+
+**What Happens**: AI works, but workflow doesn't support it.
+
+**Symptoms**:
+- AI generates report, but user has to copy-paste into another tool
+- Users say "It's easier to just do it manually"
+- AI accuracy irrelevant if adoption is blocked by UX
+
+**Diagnosis**: Watch users interact with feature (user testing). If they struggle with mechanics (not AI quality), integration friction.
+
+**Fix**: Embed AI into existing workflow (don't force users to switch contexts).
+
+## Real Example: Legal Research AI
+
+**Feature**: AI suggests relevant case law for attorneys.
+
+**Offline Metrics**: 92% precision, 89% recall (excellent)
+
+**A/B Test (Week 2)**:
+- **Treatment**: AI-powered case search
+- **Control**: Manual Westlaw search
+- **Result**: Control wins (attorneys prefer manual)
+
+**Why?**
+
+**User Interviews Revealed**:
+1. **Trust Issue**: Attorneys didn't know when to trust AI suggestions (no confidence scores)
+2. **Integration Friction**: AI opened in new tab; attorneys had to copy-paste citations into their brief
+3. **Speed Issue**: AI took 10 seconds to load suggestions; manual search felt faster (even if less accurate)
+
+**Fixes** (3 Weeks):
+1. Added confidence scores (High/Medium/Low) + reasoning
+2. Added "Insert into brief" button (one-click integration)
+3. Pre-loaded AI suggestions in background (perceived speed: instant)
+
+**Re-Test (Week 6)**:
+- **Treatment (v2)**: 73% adoption
+- **Control**: 58% adoption
+- **Treatment wins** (same AI, better UX)
+
+## The Diagnostic Checklist
+
+Run this if your A/B test fails:
+
+**Metric Analysis**:
+- [ ] Check multiple metrics (adoption, accuracy, speed, satisfaction)
+- [ ] Identify which metrics treatment wins vs. loses
+- [ ] Confirm you're measuring what users actually care about
+
+**User Segmentation**:
+- [ ] Break down results by user type (power user, casual, new)
+- [ ] Check if treatment wins for some segments but loses overall
+- [ ] Consider targeting feature at winning segments only
+
+**Temporal Analysis**:
+- [ ] Plot adoption over time (Week 1, 2, 3, 4)
+- [ ] Check for novelty effect (high initial adoption that drops)
+- [ ] Run test for 4-6 weeks (not 2 weeks)
+
+**Qualitative Research**:
+- [ ] Interview 5 users from treatment group (why did you use/ignore AI?)
+- [ ] Watch user sessions (where do they struggle?)
+- [ ] Check support tickets (what complaints exist?)
+
+**UX Audit**:
+- [ ] Measure time-to-first-use (is AI discoverable?)
+- [ ] Measure time-to-value (how long until AI provides useful output?)
+- [ ] Check integration (does AI fit into existing workflow?)
+
+## When the Model *Is* the Problem
+
+**Symptom**: After fixing UX, adoption still low.
+
+**Tests**:
+- [ ] Check offline accuracy on production data (not just test set)
+- [ ] Compare AI performance to user expectations (is 89% "good enough"?)
+- [ ] Test on edge cases (does AI fail on hard examples users care about?)
+
+**If Model Is the Problem**:
+- Retrain on production data (test set may not represent real usage)
+- Raise confidence threshold (only show high-confidence predictions)
+- Add human-in-the-loop (AI suggests, human confirms)
+
+## The Statistical Significance Trap
+
+**Bad Conclusion**: "Treatment lost by 2pp. Kill the feature."
+
+**Reality Check**:
+- Sample size: 100 users
+- Confidence interval: ±8pp
+- **Not statistically significant** (could be noise)
+
+**Good Conclusion**: "Inconclusive. Need 1,000+ users for significance."
+
+**Rule**: Don't kill features based on underpowered A/B tests.
+
+## Checklist: Before You Declare A/B Test a Failure
+
+- [ ] Ran for 4+ weeks (not just 2)
+- [ ] Sample size sufficient for statistical significance (use power calculator)
+- [ ] Checked multiple metrics (not just primary KPI)
+- [ ] Segmented by user type (power user vs. casual)
+- [ ] Conducted user interviews (5+ users from treatment group)
+- [ ] Audited UX (speed, integration, trust signals)
+- [ ] Verified model accuracy on production data (not just test set)
+
+**If you haven't done all of these, the test isn't conclusive.**
+
+---
+
+*Alex Welcing is a Senior AI Product Manager in New York who runs 4-week A/B tests and interviews users before declaring failures. His AI features ship with UX fixes, not just model improvements.*

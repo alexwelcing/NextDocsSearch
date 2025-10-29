@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 interface GameStartOverlayProps {
   onStart: () => void;
+  isCountingDown?: boolean;
+  countdown?: number;
 }
 
 const pulse = keyframes`
@@ -126,7 +128,20 @@ const GoldenOrbIcon = styled(OrbIcon)`
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
 `;
 
-const GameStartOverlay: React.FC<GameStartOverlayProps> = ({ onStart }) => {
+const GameStartOverlay: React.FC<GameStartOverlayProps> = ({ onStart, isCountingDown, countdown }) => {
+  // If counting down, show countdown instead of instructions
+  if (isCountingDown && countdown !== undefined) {
+    return (
+      <OverlayContainer>
+        <ContentBox>
+          <Title style={{ fontSize: '120px', margin: 0 }}>
+            {countdown > 0 ? countdown : 'GO!'}
+          </Title>
+        </ContentBox>
+      </OverlayContainer>
+    );
+  }
+
   return (
     <OverlayContainer>
       <ContentBox>

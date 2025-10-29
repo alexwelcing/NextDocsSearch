@@ -1,0 +1,172 @@
+---
+title: "From Benchmark to Business Metric: Why Your AI Roadmap Needs Both"
+author: ["Alex Welcing"]
+date: "2025-02-03"
+description: "F1 scores don't convince executives. Support ticket deflection does. How to map offline evaluation metrics to business outcomes that fund your next AI feature."
+ogImage: "/images/og/benchmark-to-business-metric.jpg"
+keywords: ["AI Product Manager", "Product Strategy", "KPI", "Business Metrics", "ROI", "Technical Product Manager", "A/B Testing", "Product Analytics"]
+---
+
+## The Exec Review That Killed the Roadmap
+
+**PM**: "Our new AI feature achieved 94% accuracy on the benchmark."  
+**CFO**: "What does that mean for revenue?"  
+**PM**: "Well, users like accurate results..."  
+**CFO**: "Show me adoption, retention, or cost savings. Otherwise, we're not funding Q2."
+
+I've sat through this conversation a dozen times. The PM has a technically excellent feature. The exec team has a P&L to defend. And no one built the **bridge from lab metrics to business value**.
+
+## The Two-Metric System
+
+Every AI feature needs **two measurement layers**:
+
+**Offline Metrics** (can we build it?)
+- Precision, recall, F1, accuracy
+- Measured on locked evaluation datasets
+- Answers: "Is the model good enough to ship?"
+
+**Business Metrics** (should we build it?)
+- Support ticket deflection, sales cycle time, NPS, ARR
+- Measured in production with real users
+- Answers: "Does this move a KPI the company cares about?"
+
+**The Gap**: Most teams optimize offline metrics and hope business value follows. It rarely does.
+
+## How to Map Metrics (Before You Write Code)
+
+**Step 1: Start with the Business Outcome**
+
+Ask: "If this AI feature works perfectly, what changes?"
+
+Examples:
+- "Support tickets decrease" → measure ticket volume before/after
+- "Sales reps close faster" → measure days from lead to close
+- "Physicians save time" → measure hours spent on documentation
+
+**Step 2: Identify the Causal Path**
+
+Why would the AI feature cause that outcome?
+
+Example (AI contract review):
+- AI extracts risky clauses faster than manual review →
+- Attorneys spend less time reading full contracts →
+- Contract review cycle time decreases →
+- Sales cycles shorten (legal review isn't the bottleneck)
+
+**Step 3: Define Success Criteria for Both Layers**
+
+| Layer | Metric | Target | How Measured |
+|-------|--------|--------|--------------|
+| Offline | Clause extraction recall | >90% | Golden eval set (100 contracts) |
+| Online | Attorney review time | -30% | Time tracking in contract management system |
+| Business | Sales cycle time (legal phase) | -20% | CRM data (days in legal review stage) |
+
+**Why This Works**: If offline metric hits 90%, but review time doesn't drop, you know the problem isn't model accuracy—it's workflow integration. You fix UX, not the model.
+
+## Real Example: Healthcare AI Summary Feature
+
+**Offline Metric**:
+- Physician agreement with AI summaries: 89%
+- Measured on 200 annotated patient notes
+
+**Claimed Business Value**:
+- "Physicians will save time writing notes"
+
+**What Actually Happened**:
+- Physicians still wrote notes from scratch (didn't trust AI summaries)
+- Time savings: 0 minutes
+- Adoption: 12% after 3 months
+
+**Root Cause Analysis**:
+- Offline metric (89% agreement) was **necessary but not sufficient**
+- Missing metric: "Physician edits AI summary instead of writing from scratch"
+- We optimized for accuracy; users needed **trust + edit affordance**
+
+**Fix**:
+- Added "Edit AI summary" button (low-friction workflow)
+- Logged: accepted/edited/rejected summaries
+- New adoption: 68% in month 1 post-redesign
+- Time savings: 4.2 hours/physician/week
+- **Business metric unlocked**: $180k/year in physician time savings
+
+## The Metric Cascade (Template)
+
+Use this to connect lab work to business value:
+
+```
+Feature: [AI capability]
+
+Offline Metric (pre-launch):
+- What: [Precision/recall/accuracy on specific task]
+- Target: [X% on locked eval set]
+- Pass/Fail: Model must hit target before A/B test
+
+Online Metric (A/B test, 2-4 weeks):
+- What: [User behavior change]
+- Target: [Treatment group shows +X% vs. control]
+- Examples: Time on task ↓, completion rate ↑, error rate ↓
+
+Business Metric (post-rollout, 90 days):
+- What: [KPI the company tracks quarterly]
+- Target: [Move by X% with attribution to this feature]
+- Examples: Support cost ↓, NPS ↑, ARR ↑, churn ↓
+
+Cost Metric (ongoing):
+- What: [Infra cost per user/query]
+- Target: [< $X per month at scale]
+- Cap: Feature cost must be <50% of business value unlocked
+```
+
+## When Offline Metrics Lie
+
+**Case 1: High Accuracy, Zero Adoption**
+- **Metric**: 95% citation accuracy (legal research tool)
+- **Reality**: Attorneys don't use it (workflow doesn't integrate with Westlaw)
+- **Lesson**: Measure "queries per attorney per day," not just accuracy
+
+**Case 2: Good Model, Wrong Task**
+- **Metric**: 92% F1 on contract clause extraction
+- **Reality**: Attorneys needed clause *summarization*, not extraction
+- **Lesson**: Offline metric measured the wrong task; business value never materialized
+
+**Case 3: Offline Wins, Online Fails**
+- **Metric**: 88% recall on support ticket classification
+- **Reality**: Users re-route tickets manually (AI categories don't match mental model)
+- **Lesson**: Offline eval set didn't reflect production edge cases
+
+## The 90-Day Rule
+
+**If you can't measure business impact within 90 days of GA, kill the feature.**
+
+Exceptions:
+- Platform capabilities (internal APIs, infra) → measure adoption by internal teams
+- Long-sales-cycle products (enterprise SaaS) → measure pipeline velocity or NPS
+- Experiments/bets → timebox, then decide
+
+Non-exceptions:
+- "It's strategic" → Still needs a business metric (market share, brand perception, retention)
+- "Users will love it eventually" → If adoption is under 20% after 90 days, it's DOA
+
+## Checklist: Does Your AI Feature Have Both Metrics?
+
+- [ ] Offline metric tied to locked evaluation dataset
+- [ ] Online metric measures user behavior change (A/B testable)
+- [ ] Business metric maps to quarterly KPI (support cost, NPS, ARR, cycle time)
+- [ ] Causal path documented (why AI → behavior → business outcome)
+- [ ] Success criteria defined before launch (not retroactively)
+- [ ] Monthly review: track all three metric layers for 90 days
+- [ ] Kill criteria: if business metric doesn't move, rollback or pivot
+
+## The Pitch That Funds Your Roadmap
+
+**Weak Pitch**:
+"Our AI model is 94% accurate. We should ship it."
+
+**Strong Pitch**:
+"Our AI model hits 90% recall on the eval set. In beta, it reduced attorney contract review time by 28%. Projected annual value: $400k in time savings. Cost: $50k/year (infra + maintenance). 8x ROI. Recommend GA rollout."
+
+**Which one gets funded?**
+
+---
+
+*Alex Welcing is a Senior AI Product Manager who maps offline metrics to business value before writing PRDs. His features ship with ROI projections, not accuracy percentages.*

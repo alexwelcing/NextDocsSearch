@@ -1,0 +1,234 @@
+---
+title: "The Feature Flag Hierarchy: Why Your AI Needs More Than On/Off"
+author: ["Alex Welcing"]
+date: "2025-01-09"
+description: "Simple feature flags aren't enough for AI. You need gradual rollouts, confidence thresholds, and model version toggles. Here's the 4-layer system that prevents incidents."
+ogImage: "/images/og/feature-flag-hierarchy-ai.jpg"
+keywords: ["Feature Flags", "AI Product Manager", "Gradual Rollout", "Technical Product Manager", "Risk Management", "AI Deployment", "Production AI"]
+---
+
+## The Rollout That Went Too Fast
+
+**9 AM**: New AI model deployed to 100% of users (v2.4 replaces v2.3)
+
+**9:15 AM**: Support tickets start flowing in
+
+**9:45 AM**: 50+ complaints about "weird AI responses"
+
+**10:00 AM**: PM realizes: can't rollback to v2.3 without full redeploy (45 minutes)
+
+**10:30 AM**: CEO asks: "Why didn't we test this on 10% of users first?"
+
+**PM**: "We don't have gradual rollout. It's all-or-nothing."
+
+**The Fix That Should've Been There**: Multi-layer feature flags for AI.
+
+## The 4-Layer Feature Flag System
+
+### Layer 1: Kill Switch (On/Off)
+```javascript
+if (!featureFlags.aiEnabled) {
+  return fallbackBehavior(); // Manual mode
+}
+```
+
+**Use**: Emergency disable
+
+**Control**: PM, on-call engineer
+
+**Response Time**: Under 2 minutes
+
+### Layer 2: Rollout Percentage (0-100%)
+```javascript
+const rolloutPercent = featureFlags.aiRolloutPercent; // 0, 10, 50, 100
+
+if (userHash % 100 < rolloutPercent) {
+  return getAISuggestion();
+} else {
+  return fallbackBehavior();
+}
+```
+
+**Use**: Gradual rollout (10% → 50% → 100%)
+
+**Control**: PM
+
+**Response Time**: 5 minutes
+
+### Layer 3: Confidence Threshold (0.0-1.0)
+```javascript
+const minConfidence = featureFlags.aiMinConfidence; // 0.7, 0.8, 0.9
+
+if (aiConfidence >= minConfidence) {
+  return aiSuggestion;
+} else {
+  return null; // Don't show low-confidence predictions
+}
+```
+
+**Use**: Reduce false positives without full disable
+
+**Control**: PM, data scientist
+
+**Response Time**: 5 minutes
+
+### Layer 4: Model Version Selector
+```javascript
+const modelVersion = featureFlags.aiModelVersion; // "v2.3" or "v2.4"
+
+const model = loadModel(modelVersion);
+```
+
+**Use**: A/B test new models, instant rollback
+
+**Control**: ML engineer, PM
+
+**Response Time**: 10 minutes
+
+## Real Example: Legal Research AI
+
+**Feature**: AI suggests relevant case law
+
+**Rollout Plan**:
+
+**Week 1**: Launch to 10% of users
+- Feature flag: `aiEnabled = true`, `rolloutPercent = 10`
+- Monitor: Accuracy, user feedback, error rate
+- Result: 2% of users report irrelevant suggestions
+
+**Week 1 (Day 3)**: Raise confidence threshold
+- Adjust: `minConfidence = 0.7 → 0.8`
+- Result: Irrelevant suggestions drop to 0.5%
+
+**Week 2**: Expand to 50%
+- Adjust: `rolloutPercent = 50`
+- Monitor: No new issues
+- Result: Stable performance
+
+**Week 3**: Full rollout
+- Adjust: `rolloutPercent = 100`
+- Result: 81% adoption, clean metrics
+
+**What If We'd Gone 0→100% on Day 1?**
+- 2,000 users see bad suggestions (vs. 200)
+- 10x support ticket volume
+- Customer trust erosion (hard to recover)
+
+## The Gradual Rollout Playbook
+
+**Phase 1: Internal Alpha (1% or 100 users)**
+- **Who**: Your team, friendly customers
+- **Duration**: 3-7 days
+- **Goal**: Catch obvious bugs
+
+**Phase 2: Beta (10%)**
+- **Who**: Random user sample
+- **Duration**: 1-2 weeks
+- **Goal**: Measure real-world metrics (accuracy, adoption, support load)
+
+**Phase 3: Majority (50%)**
+- **Who**: Half your users
+- **Duration**: 1 week
+- **Goal**: Confirm metrics hold at scale
+
+**Phase 4: General Availability (100%)**
+- **Who**: Everyone
+- **Duration**: Ongoing
+- **Goal**: Monitor for regression
+
+**Stopping Criteria** (rollback if any):
+- Error rate exceeds 2x baseline
+- User complaints exceed 3x baseline
+- Accuracy drops below target (e.g., under 85%)
+
+## The Confidence Threshold Decision Tree
+
+```
+User reports: "AI is often wrong"
+├─ Check: What's the false positive rate?
+│   ├─ FP rate <5% → Not a model issue (user expectation calibration)
+│   └─ FP rate >10% → Model issue
+│       └─ Action: Raise minConfidence (0.7 → 0.8)
+│           ├─ FP rate drops to <5% → Keep new threshold
+│           └─ FP rate still high → Rollback to previous model
+```
+
+## Checklist: Does Your AI Have Sufficient Controls?
+
+- [ ] Kill switch (on/off, under 2 min response)
+- [ ] Rollout percentage (0-100%, adjustable without deploy)
+- [ ] Confidence threshold (tunable, affects precision)
+- [ ] Model version selector (A/B test, instant rollback)
+- [ ] User allowlist/blocklist (VIP customers get stable version)
+- [ ] Monitoring dashboard (tracks metrics by rollout cohort)
+- [ ] Automated rollback trigger (if error rate spikes, auto-disable)
+
+**If you're missing any, you're flying blind.**
+
+## The Model Version A/B Test
+
+**Scenario**: New model (v2.4) claims 3% accuracy improvement over v2.3.
+
+**Bad Approach**: Deploy v2.4 to 100%, hope it works.
+
+**Good Approach**: A/B test for 2 weeks.
+
+```javascript
+const userCohort = assignCohort(userId); // "control" or "treatment"
+
+if (userCohort === "treatment") {
+  model = loadModel("v2.4");
+} else {
+  model = loadModel("v2.3");
+}
+```
+
+**Measure**:
+- Accuracy (treatment vs. control)
+- User satisfaction (NPS, feedback)
+- Adoption (% of users who use feature)
+
+**Decision Criteria**:
+- If treatment accuracy ≥ control + 2pp → ship v2.4 to 100%
+- If treatment accuracy < control → rollback, retrain
+- If treatment adoption < control → UX issue, not model issue
+
+**Timeline**: 2 weeks (sufficient sample size for statistical significance).
+
+## The Auto-Rollback Pattern
+
+**Problem**: Error rate spikes overnight (you're asleep). By morning, 500 users affected.
+
+**Solution**: Auto-rollback trigger.
+
+```javascript
+// Monitoring job runs every 5 minutes
+if (errorRate > 2 * baseline) {
+  featureFlags.aiEnabled = false; // Auto-disable
+  alertPM("AI auto-disabled due to error spike");
+}
+```
+
+**Why This Works**: 5-minute detection + instant disable = max 5 users affected (vs. 500).
+
+**Tradeoff**: False positives (auto-disable when not needed) → PM re-enables after checking.
+
+**Verdict**: Better to auto-disable and check than to let errors compound.
+
+## Common Mistakes
+
+**Mistake 1: No Rollout Percentage**
+- **Bad**: Deploy to 100% immediately
+- **Good**: 10% → 50% → 100% over 3 weeks
+
+**Mistake 2: Hardcoded Confidence Threshold**
+- **Bad**: Threshold = 0.7 (requires code change to adjust)
+- **Good**: Threshold in config (adjust in 5 minutes)
+
+**Mistake 3: No Model Version Control**
+- **Bad**: New model overwrites old (can't rollback)
+- **Good**: Both versions deployed, feature flag selects which to use
+
+---
+
+*Alex Welcing is a Senior AI Product Manager in New York who deploys AI features with 4-layer feature flags. His rollouts are gradual, his rollbacks are instant, and his incidents are rare.*

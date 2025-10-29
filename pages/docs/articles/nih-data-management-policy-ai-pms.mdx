@@ -1,0 +1,249 @@
+---
+title: "NIH Data Management Policy for AI PMs: What It Means If You Use Health Data"
+author: ["Alex Welcing"]
+date: "2025-05-05"
+description: "NIH's 2023 Data Management and Sharing Policy now applies to AI research using federally-funded health datasets. Here's the compliance playbook for product teams."
+ogImage: "/images/og/nih-data-management-ai.jpg"
+keywords: ["Healthcare AI", "NIH Policy", "Data Management", "AI Product Manager", "HIPAA", "Research Compliance", "Technical Product Manager", "Health Data"]
+---
+
+## The Partnership That Hit a Wall
+
+**You**: "We'd like to use your de-identified patient dataset to train our diagnostic AI."
+
+**Academic Medical Center**: "Great! Do you have an NIH-compliant Data Management and Sharing Plan?"
+
+**You**: "A what?"
+
+**AMC**: "NIH requires one for any research using federally-funded data. No plan, no data access. Sorry."
+
+If you're building healthcare AI and using **NIH-funded datasets, academic partnerships, or public health data**—you're now subject to the NIH Data Management and Sharing (DMS) Policy, effective January 2023.
+
+This isn't theoretical. I've seen product roadmaps delayed 3-6 months because teams didn't know they needed DMS plans before accessing training data.
+
+## What the NIH Policy Actually Requires
+
+**Scope**: Any research funded by NIH (even partially) must have a Data Management and Sharing Plan.
+
+**Who's Affected**:
+- Academic researchers (obviously)
+- Industry partners using NIH-funded datasets
+- Startups collaborating with university hospitals
+- Anyone training AI models on All of Us, ClinVar, dbGaP, or similar
+
+**What You Need**:
+
+### 1. Data Management Plan (DMP)
+- **What data are you collecting/using?** (type, volume, format)
+- **Where will you store it?** (cloud provider, encryption, access controls)
+- **How will you preserve it?** (retention period, versioning, backups)
+
+### 2. Data Sharing Plan (DSP)
+- **What will you share?** (raw data, processed data, model outputs)
+- **When will you share it?** (immediately, after publication, never)
+- **Where will you deposit it?** (repository: Zenodo, Dryad, institutional repo)
+- **Who can access it?** (public, researchers only, controlled-access)
+
+**PM Translation**: You can't just train a model on NIH data and walk away. You must document **data provenance, storage, and sharing commitments**—or lose access.
+
+## The Three Sharing Tiers
+
+NIH allows flexibility based on sensitivity:
+
+### Tier 1: No Sharing (Rare)
+- **When**: Data contains identifiable patient info (HIPAA violations if shared)
+- **Justification Required**: Must explain why sharing is impossible
+- **Example**: Clinical notes with names/dates still visible
+
+**PM Takeaway**: If your data is this sensitive, you won't get NIH funding. De-identify first.
+
+### Tier 2: Controlled Access (Common for Healthcare AI)
+- **When**: Data is de-identified but still sensitive (genomics, rare diseases)
+- **Repository**: dbGaP, controlled-access institutional repo
+- **Access Process**: Researchers request access, IRB/DAC approves
+
+**PM Takeaway**: You can use this data, but you must commit to depositing your **processed datasets and model outputs** in a controlled-access repo within 12 months of publication.
+
+### Tier 3: Open Access (Best for Collaboration)
+- **When**: Data is fully de-identified, low re-identification risk
+- **Repository**: Zenodo, Dryad, GitHub (with DOI)
+- **Access Process**: Anyone can download
+
+**PM Takeaway**: If you can anonymize enough to go open-access, you maximize citations and research impact. But healthcare data rarely qualifies.
+
+## Real Example: Diagnostic AI for Rare Disease
+
+**Project**: Train AI to detect rare genetic disorder from patient imaging + genomics.
+
+**Data Sources**:
+- 5,000 de-identified MRI scans (from NIH-funded biobank)
+- 5,000 genomic sequences (from dbGaP, controlled-access)
+
+### Step 1: Write Data Management Plan
+
+**What data are you using?**
+- MRI scans: 5,000 DICOM files, 2TB total
+- Genomics: 5,000 VCF files, 500GB total
+- Annotations: Expert labels (disease/no disease) for each patient
+
+**Where will you store it?**
+- AWS S3 (encrypted at rest, AES-256)
+- Access controls: PM, 3 data scientists, 2 clinical collaborators (7 people total)
+- No data leaves secure environment (no local downloads)
+
+**How will you preserve it?**
+- Retention: 7 years post-publication (NIH minimum)
+- Versioning: Dataset v1.0 (initial), v1.1 (added 500 cases), v2.0 (re-labeled)
+- Backups: Daily snapshots to separate S3 bucket (different region)
+
+### Step 2: Write Data Sharing Plan
+
+**What will you share?**
+- **Raw data**: NO (still contains quasi-identifiers like rare mutation patterns)
+- **Processed features**: YES (aggregated imaging features, not full scans)
+- **Model weights**: YES (trained model for reproducibility)
+- **Evaluation code**: YES (GitHub repo, open-access)
+
+**When will you share?**
+- Upon publication (estimated 18 months from project start)
+- Model weights embargoed for 6 months (commercial advantage)
+
+**Where will you deposit?**
+- Processed features: dbGaP (controlled-access, researchers request approval)
+- Model weights: Zenodo (open-access after embargo)
+- Code: GitHub (open-access immediately)
+
+**Who can access?**
+- Controlled-access: Researchers with IRB approval + data use agreement
+- Open-access: Anyone (code, model after embargo)
+
+### Step 3: Get Approval
+
+- Submit DMS plan to NIH (part of grant application or partnership agreement)
+- IRB reviews data use (confirms HIPAA compliance)
+- Data Access Committee (DAC) approves access to dbGaP genomics
+
+**Timeline**: 2 months from "we want the data" to "we have access."
+
+**What Happens If We Skip This?**
+- NIH revokes data access
+- Academic partner terminates collaboration
+- Can't publish in NIH-funded journals (no DMS plan = desk rejection)
+
+## The "We're a Startup, Not Academics" Trap
+
+**You Might Think**: "We're not applying for NIH grants. This doesn't apply."
+
+**You're Still In Scope If**:
+- You partner with a university hospital (they have NIH funding)
+- You use public datasets like All of Us, ClinVar, dbGaP (all NIH-funded)
+- You hire postdocs or researchers who brought NIH data with them
+- You publish in journals that require NIH compliance (JAMA, NEJM, Nature Medicine)
+
+**The Policy Follows the Data, Not the Funding.**
+
+If the dataset was created with NIH money, you must comply—even if you're a for-profit company.
+
+## The DMS Plan Template (Copy-Paste)
+
+Use this for your next academic partnership:
+
+```
+DATA MANAGEMENT PLAN
+
+1. Data Type and Volume
+- [X] imaging scans, [Y] genomic sequences, [Z] clinical annotations
+- Total size: [N] TB
+- Format: DICOM, VCF, CSV
+
+2. Storage and Security
+- Platform: AWS S3 / Google Cloud Storage / Azure Blob
+- Encryption: AES-256 at rest, TLS 1.3 in transit
+- Access Controls: Role-based (PM, data scientists, clinical collaborators)
+- Audit Logs: All access logged, reviewed monthly
+
+3. Preservation
+- Retention Period: 7 years post-publication (NIH minimum)
+- Versioning: Dataset v1.0 (initial), v1.x (minor updates), v2.0 (breaking changes)
+- Backups: Daily snapshots, 30-day retention, separate geographic region
+
+DATA SHARING PLAN
+
+1. What Will Be Shared
+- [ ] Raw data (if de-identified and low re-identification risk)
+- [x] Processed features (aggregated, anonymized)
+- [x] Model weights (for reproducibility)
+- [x] Code (GitHub, Apache 2.0 license)
+
+2. Sharing Timeline
+- Upon publication OR within 12 months of project completion
+- Embargo period (if applicable): [N] months for competitive advantage
+
+3. Repository
+- Controlled-Access: dbGaP, ICPSR, institutional repository
+- Open-Access: Zenodo, Dryad, GitHub (with DOI)
+
+4. Access Conditions
+- Controlled-Access: Requires IRB approval + Data Use Agreement
+- Open-Access: CC BY 4.0 license (attribution required)
+
+5. Non-Sharing Justification (if applicable)
+- Data contains identifiable info → HIPAA prohibits sharing
+- Commercial IP → Sharing model architecture but not proprietary training process
+```
+
+## Checklist: Before Requesting NIH-Funded Data
+
+- [ ] Confirm data source has NIH funding (check dataset documentation)
+- [ ] Write Data Management Plan (storage, security, retention)
+- [ ] Write Data Sharing Plan (what, when, where, who)
+- [ ] Get IRB approval (if using patient data)
+- [ ] Sign Data Use Agreement with data provider
+- [ ] Identify repository for depositing outputs (dbGaP, Zenodo, etc.)
+- [ ] Set calendar reminder: share data within 12 months of publication
+- [ ] Budget for long-term storage (7 years × data size × cloud costs)
+
+## Why This Matters Beyond Compliance
+
+**Strategic Benefit 1: Academic Partnerships**
+- Universities won't collaborate without DMS plans
+- Having one ready accelerates partnerships from 6 months → 2 months
+
+**Strategic Benefit 2: Reproducibility**
+- Sharing code + model weights = more citations
+- Other researchers validate your work = stronger evidence for product claims
+
+**Strategic Benefit 3: Regulatory Trust**
+- FDA increasingly asks: "Can you reproduce your training results?"
+- DMS plan = yes, here's the versioned dataset, code, and evaluation protocol
+
+**Strategic Benefit 4: IP Protection**
+- Controlled-access sharing protects competitive advantage
+- You share enough for reproducibility, not enough for competitors to clone
+
+## Common PM Mistakes
+
+**Mistake 1: Assuming "De-identified" = "Can Share Freely"**
+- **Reality**: De-identified ≠ anonymous. Rare diseases, genomics, and imaging can still re-identify patients.
+- **Fix**: Use controlled-access repositories (dbGaP, not GitHub).
+
+**Mistake 2: Not Budgeting for Storage Costs**
+- **Reality**: 7 years × 2TB × $0.023/GB/month (S3) = $3,900. Plus egress fees.
+- **Fix**: Include long-term storage in project budget.
+
+**Mistake 3: Waiting Until Publication to Write DMS Plan**
+- **Reality**: NIH requires plan **before** data access. Retroactive plans get rejected.
+- **Fix**: Write DMS plan as part of partnership agreement, not post-hoc.
+
+## The 10-Year Horizon
+
+**Coming Soon**:
+- **NIH AI/ML Supplement** (rumored 2025-2026): Specific requirements for model sharing, adversarial testing, bias audits
+- **Medicare/Medicaid Alignment**: CMS may require NIH-style DMS plans for AI reimbursement
+- **FDA PreCert**: Digital health companies may need DMS plans for regulatory approval
+
+**If you build healthcare AI, treat NIH compliance as table stakes—not a nice-to-have.**
+
+---
+
+*Alex Welcing is a Senior AI Product Manager who writes Data Management Plans before requesting training data. His projects ship faster because academic partnerships don't stall on compliance paperwork.*

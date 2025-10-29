@@ -285,15 +285,35 @@ const GameLeaderboard: React.FC<GameLeaderboardProps> = ({
   const fetchLeaderboard = useCallback(async () => {
     try {
       const response = await fetch('/api/game/get-leaderboard');
-      const data = await response.json();
-      setLeaderboard(data.leaderboard || []);
+      
+      // Check if response is ok and has content
+      if (!response.ok) {
+        console.error('Leaderboard API error:', response.status, response.statusText);
+        setLeaderboard([]);
+        setIsTopFive(true); // Allow submission if API is down
+        return;
+      }
+
+      const text = await response.text();
+      if (!text) {
+        console.warn('Empty response from leaderboard API');
+        setLeaderboard([]);
+        setIsTopFive(true);
+        return;
+      }
+
+      const data = JSON.parse(text);
+      const leaderboardData = data.leaderboard || [];
+      setLeaderboard(leaderboardData);
 
       // Check if player made top 5
-      if (data.leaderboard.length < 5 || playerScore > data.leaderboard[4].score) {
+      if (leaderboardData.length < 5 || playerScore > leaderboardData[4]?.score) {
         setIsTopFive(true);
       }
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);
+      setLeaderboard([]);
+      setIsTopFive(true); // Allow submission even if fetch fails
     } finally {
       setLoading(false);
     }

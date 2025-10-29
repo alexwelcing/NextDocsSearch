@@ -1,0 +1,214 @@
+---
+title: "EU AI Act Deadlines: What US AI PMs Need to Know Before August 2026"
+author: ["Alex Welcing"]
+date: "2025-04-07"
+description: "The EU AI Act isn't just a European problem. If you sell to EU customers or use EU data, your AI features have compliance deadlines starting in 2026."
+ogImage: "/images/og/eu-ai-act-deadlines.jpg"
+keywords: ["EU AI Act", "AI Regulation", "Compliance", "AI Product Manager", "International Product", "Technical Product Manager", "GDPR", "AI Governance"]
+---
+
+## The Slack Message That Changes Your Roadmap
+
+**VP Sales**: "Just closed a 100-seat deal with a German law firm. Contract signed, pending compliance review."
+
+**You** (PM): "Great! What compliance?"
+
+**VP Sales**: "EU AI Act. Legal says we need to classify our AI features as 'high-risk' or 'limited-risk' and provide conformity documentation by August 2026. Can we do that?"
+
+**You**: *Googles "EU AI Act". Finds 144-page regulation. Panics.*
+
+If your product touches EU users, EU data, or EU customers—**you're in scope**. The EU AI Act isn't GDPR 2.0 (where you could mostly ignore it if you're US-based). This one has teeth, and the deadlines start in 2026.
+
+## The Four Risk Categories (Simplified)
+
+The EU AI Act classifies AI systems into four tiers:
+
+### 1. Unacceptable Risk (Banned)
+- Social scoring by governments
+- Exploiting vulnerabilities of children/disabled persons
+- Real-time biometric surveillance in public (with exceptions)
+
+**PM Takeaway**: If you're building consumer SaaS, you're probably fine. If you're building govtech or public safety tools, consult EU legal immediately.
+
+### 2. High-Risk (Heavy Compliance)
+- AI in critical infrastructure (healthcare, transport, utilities)
+- AI in employment/hiring decisions
+- AI in law enforcement or justice systems
+- AI in education (scoring, admissions)
+
+**Obligations**:
+- Risk management system (documented + tested)
+- Data governance (quality, bias testing, provenance)
+- Technical documentation (model card, architecture, training data)
+- Human oversight (human-in-the-loop for critical decisions)
+- Conformity assessment (third-party audit for some categories)
+
+**PM Takeaway**: If your AI makes hiring recommendations, grades students, or supports medical decisions—you're high-risk. Budget 3-6 months for compliance before selling in EU.
+
+### 3. Limited Risk (Transparency Only)
+- Chatbots, deepfakes, AI-generated content
+- AI that interacts with humans (must disclose "you're talking to AI")
+
+**Obligations**:
+- Inform users they're interacting with AI
+- Label AI-generated images/videos/audio
+
+**PM Takeaway**: If you built a GPT-powered chatbot, add a disclaimer: "This is an AI assistant." That's 80% of compliance.
+
+### 4. Minimal Risk (No Regulation)
+- Spam filters, recommendation engines (non-critical)
+- AI in video games
+
+**PM Takeaway**: Most consumer SaaS features fall here. No EU AI Act obligations beyond general GDPR compliance.
+
+## The Timeline That Matters
+
+| Date | Requirement |
+|------|-------------|
+| **Feb 2, 2025** | Banned AI systems (Unacceptable Risk) must be removed |
+| **Aug 2, 2026** | High-Risk AI systems must comply (documentation, audits, testing) |
+| **Aug 2, 2027** | All AI systems must comply (including Limited Risk transparency rules) |
+
+**Critical Insight**: If you're selling to EU healthcare, legal, or HR customers—**you have until August 2026 to build compliance artifacts**. That's 16 months from now (as of April 2025).
+
+## What "Compliance" Actually Means (High-Risk AI)
+
+**Legal wants artifacts. Here's the list**:
+
+### 1. Risk Management System
+- Document: What could go wrong? (bias, errors, misuse)
+- Test: Red-teaming, adversarial testing, edge case evaluation
+- Monitor: Ongoing accuracy/bias tracking post-launch
+
+**PM Deliverable**: Risk register (NIST-style) + quarterly evaluation reports
+
+### 2. Data Governance
+- Document: Where did training data come from? (provenance)
+- Test: Is it representative? (demographic parity, bias metrics)
+- Monitor: Detect drift (are production inputs shifting from training distribution?)
+
+**PM Deliverable**: Data card (sources, dates, sampling method, bias testing results)
+
+### 3. Technical Documentation
+- Model architecture
+- Training procedure (hyperparameters, compute, duration)
+- Evaluation metrics (accuracy, fairness, robustness)
+- Human oversight mechanisms
+
+**PM Deliverable**: Model card + system architecture diagram + human-in-the-loop workflow
+
+### 4. Human Oversight
+- Identify: Where do humans review AI decisions?
+- Empower: Can humans override the AI? (kill switch, manual review)
+- Train: Are reviewers trained to spot AI errors?
+
+**PM Deliverable**: Human oversight plan (who reviews, when, how to override)
+
+### 5. Conformity Assessment (For Some High-Risk Categories)
+- Third-party audit required for: biometric ID, critical infrastructure, law enforcement
+- Self-assessment allowed for: HR tools, education, credit scoring
+
+**PM Deliverable**: Internal audit report OR third-party conformity certificate
+
+## Real Example: AI Resume Screening Tool
+
+**Product**: AI analyzes resumes, ranks candidates for recruiters.
+
+**EU AI Act Classification**: **High-Risk** (employment/HR decision-making)
+
+### Compliance Checklist
+
+**Risk Management**:
+- Risk: AI discriminates against protected classes (age, gender, nationality)
+- Test: Demographic parity analysis (acceptance rate by group)
+- Result: Female candidates accepted at 92% rate of male candidates (within 5pp threshold)
+- Mitigation: Re-weighted training data; added fairness constraint
+
+**Data Governance**:
+- Training data: 50,000 resumes from US/EU companies (2020-2024)
+- Bias testing: Analyzed by gender (imputed from names), nationality (from address)
+- Drift detection: Monthly analysis of production resumes vs. training distribution
+
+**Technical Documentation**:
+- Model: Fine-tuned BERT, 110M parameters
+- Training: 8 A100 hours, learning rate 2e-5, batch size 32
+- Evaluation: AUC 0.87 on held-out set; fairness metrics pass demographic parity
+- Human oversight: Recruiters review all AI recommendations; 15% override rate
+
+**Human Oversight Plan**:
+- AI ranks top 20 candidates per job
+- Recruiter reviews all 20 (AI doesn't auto-reject anyone)
+- Recruiter can request explanations (feature importance scores)
+- Override tracking: 15% of AI #1 picks aren't interviewed (recruiter chooses #3-5 instead)
+
+**Conformity Assessment**:
+- Self-assessment allowed (HR tool, not biometric or law enforcement)
+- Internal audit: PM + legal + data scientist sign off on risk register
+- Documentation stored for 10 years (EU AI Act record-keeping requirement)
+
+**Timeline**: 4 months from "we need to comply" to "artifacts ready for EU sales."
+
+## The "We Don't Sell in EU" Trap
+
+**You Might Think**: "We're a US company. We don't have EU customers. We're safe."
+
+**You're In Scope If**:
+- You process EU citizens' data (even if they're your US customer's employees)
+- You use EU-sourced training data (scraping EU websites, EU datasets)
+- Your customer is a multinational with EU subsidiaries (they'll ask for compliance)
+- You plan to expand to EU in next 2-3 years (retroactive compliance is expensive)
+
+**GDPR Lesson**: Many US companies ignored GDPR until EU customers demanded compliance. Then they scrambled to retrofit data processing agreements, privacy policies, and consent flows.
+
+**Don't repeat the mistake with EU AI Act.**
+
+## The One-Page EU AI Act Decision Tree
+
+```
+Does your AI system operate in the EU or process EU data?
+├─ NO → You're out of scope (for now)
+└─ YES → Continue
+
+Is your AI system banned? (social scoring, mass surveillance, exploiting vulnerabilities)
+├─ YES → Stop. Redesign or exit EU market.
+└─ NO → Continue
+
+Is your AI system high-risk? (healthcare, HR, law enforcement, education, credit scoring)
+├─ YES → Full compliance required by Aug 2026
+│         - Risk management system
+│         - Data governance + bias testing
+│         - Technical documentation
+│         - Human oversight plan
+│         - Conformity assessment (self or third-party)
+└─ NO → Continue
+
+Is your AI system limited-risk? (chatbot, deepfake, AI-generated content)
+├─ YES → Transparency required by Aug 2027
+│         - Disclose "This is AI"
+│         - Label AI-generated media
+└─ NO → Minimal risk. GDPR applies; EU AI Act does not.
+```
+
+## Checklist: Start Now If You're High-Risk
+
+- [ ] Classify your AI features (high-risk, limited-risk, minimal-risk)
+- [ ] Identify EU customers or EU data in your product
+- [ ] Assign DRI for EU AI Act compliance (PM + legal + data lead)
+- [ ] Build risk register (failure modes, testing, mitigation)
+- [ ] Document data governance (sources, bias testing, drift detection)
+- [ ] Create model card + technical documentation
+- [ ] Define human oversight plan (where, who, how to override)
+- [ ] Schedule internal audit or third-party conformity assessment
+- [ ] Set reminders: Aug 2026 (high-risk), Aug 2027 (limited-risk)
+
+## The Strategic Opportunity
+
+**While competitors scramble in 2026, you can win EU deals now by being compliance-ready early.**
+
+EU healthcare systems, law firms, and enterprises are **already asking for EU AI Act alignment** in RFPs. If you have the artifacts ready, you differentiate from vendors who say "we'll be compliant eventually."
+
+**Compliance isn't a cost center. It's a sales enabler.**
+
+---
+
+*Alex Welcing is a Senior AI Product Manager who treats EU AI Act compliance like a product requirement, not an afterthought. His features ship with conformity documentation before the regulatory deadline.*

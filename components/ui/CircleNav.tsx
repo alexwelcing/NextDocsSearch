@@ -9,7 +9,11 @@ type ArticleData = {
   author: string[];
 };
 
-const CircleNav: React.FC = () => {
+interface CircleNavProps {
+  isGamePlaying?: boolean;
+}
+
+const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [shelfOpen, setShelfOpen] = useState(false);
   const [articles, setArticles] = useState<ArticleData[]>([]);
@@ -21,7 +25,10 @@ const CircleNav: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={isGamePlaying ? { transform: 'scale(0.5)', opacity: 0.5 } : {}}
+    >
       {isOpen ? (
         <div className={styles.menu}>
           <button onClick={() => setIsOpen(false)} className={styles.closeBtn}>

@@ -1,0 +1,355 @@
+---
+title: "The RIBS Framework: How to Prioritize AI Opportunities in Regulated Organizations"
+author: ["Alex Welcing"]
+date: "2025-01-13"
+description: "A practical decision framework for enterprise PMs choosing which AI features to build—evaluating Readiness, Impact, Build vs. Buy, and Safeguards before writing a line of code."
+ogImage: "/images/og/ribs-framework.jpg"
+keywords: ["AI Product Manager", "Product Strategy", "Technical Product Manager", "Applied AI", "Enterprise AI", "Build vs Buy", "AI Governance", "Feature Prioritization", "ROI", "Risk Management", "Compliance"]
+---
+
+## The AI Backlog Problem
+
+Your backlog has 47 "AI-powered" feature ideas. Sales wants contract auto-generation. Support wants ticket classification. Finance wants spend anomaly detection. Legal says "nothing ships without audit trails." Security says "prove it won't leak PII." And your CTO asks, "Which of these actually moves ARR?"
+
+Most enterprise AI roadmaps die from **prioritization paralysis**—teams spend months debating feasibility while competitors ship. Or worse, they build the *easiest* feature (not the most valuable) and wonder why adoption flatlines.
+
+After shipping AI features across healthcare, legal tech, and consulting platforms—and sitting through dozens of "should we build this?" debates—I codified the pattern that separates features that ship from features that stall.
+
+**RIBS** is a four-question framework for **ruthless AI feature prioritization**:
+
+- **R**eadiness: Do we have the data, infrastructure, and expertise to ship this safely?
+- **I**mpact: What business metric moves, by how much, and for whom?
+- **B**uild vs. Buy: Should we own this capability, or integrate a vendor?
+- **S**afeguards: What controls must we implement to pass compliance review?
+
+This isn't a scoring rubric. It's a **kill-or-commit filter** that forces honest conversations about feasibility, value, and risk *before* you allocate eng capacity.
+
+---
+
+## The RIBS Framework: Four Questions to Answer First
+
+### 1. Readiness: Can We Actually Build This?
+
+**The Trap**: Teams assume "we have data" means "we can build AI." Then they discover the data is unlabeled, inconsistent, or legally off-limits.
+
+**What to Audit**:
+
+```
+Data Readiness (3-point check):
+□ Volume: Do we have 500+ examples of the task? (bare minimum for eval set + fine-tuning)
+□ Quality: Are examples labeled by domain experts? (not crowdsourced guesses)
+□ Legality: Can we use this data for training/eval without violating contracts, privacy laws, or IP agreements?
+
+Infrastructure Readiness:
+□ Can we deploy models with <3s latency at peak load?
+□ Do we have observability for LLM calls (logging, metrics, tracing)?
+□ Is there a rollback mechanism if guardrails trip?
+
+Expertise Readiness:
+□ Do we have 1+ person who can debug prompt issues in production?
+□ Can we red-team adversarial inputs internally, or do we need a vendor?
+□ Does Legal/Security understand the risk surface well enough to approve?
+```
+
+**Real Example (Healthcare Platform)**:
+
+**Feature Idea**: "AI-generated patient summaries for physicians"
+
+**Readiness Audit**:
+- ✅ Data: 12,000 anonymized patient notes with physician-written summaries (golden training set)
+- ✅ Infrastructure: Existing LLM API with 2.1s p95 latency, logging pipeline ready
+- ❌ Legality: Legal flagged: "Can't use real PHI for fine-tuning without BAAs + consent"
+
+**Decision**: Pivot to **synthetic data** for fine-tuning + real data for eval only (with explicit consent). Delayed 6 weeks, but avoided a HIPAA breach.
+
+**Readiness Red Flags** (kill signals):
+- "We'll label the data as we go" → No. Build eval set first or don't start.
+- "We'll handle latency later" → No. If you can't hit sub-3-second latency now, you won't ship GA.
+- "Legal will figure it out" → No. Get written approval on data use *before* model selection.
+
+---
+
+### 2. Impact: What Actually Moves?
+
+**The Trap**: Teams ship "cool" AI features that users ignore because they don't solve a painful, frequent problem.
+
+**What to Quantify**:
+
+```
+Business Impact (must answer all three):
+1. Which KPI moves? (support tickets, sales cycle time, NPS, churn, ARR)
+2. By how much? (target: +15% minimum to justify build cost)
+3. For whom? (segment, persona, or use case—not "everyone")
+
+User Impact:
+1. How often does this problem occur? (daily? weekly? monthly?)
+2. What's the current workaround? (manual process, spreadsheet, external tool)
+3. Will users trust the AI output, or will they verify anyway? (if always-verify, impact = time saved on verification, not task elimination)
+
+Feasibility of Measurement:
+1. Can we A/B test this? (or is it all-or-nothing rollout?)
+2. Can we instrument before/after metrics? (baseline data exists?)
+3. How long until we know if it worked? (30 days? 90 days?)
+```
+
+**Real Example (Legal Tech Platform)**:
+
+**Feature Idea**: "AI contract clause extraction"
+
+**Impact Audit**:
+- **KPI**: Reduce contract review time for junior associates
+- **Target**: Save 2 hours per contract (baseline: 6 hours manual → 4 hours with AI assist)
+- **Frequency**: Firm reviews 200 contracts/month
+- **ROI**: 400 associate hours/month saved = $120k/year (at $300/hr blended rate)
+- **Trust**: Associates will verify AI extractions → impact is "time to verify < time to read full contract"
+
+**A/B Plan**: 10% of contracts route to AI-assist group; compare review time + accuracy.
+
+**Outcome**: Shipped. 28% time savings in beta. Became upsell feature: $50k ARR in first year.
+
+**Impact Red Flags** (kill signals):
+- "It's cool, users will love it" → No metric = no prioritization.
+- "We can't measure this" → Then don't build it.
+- "Impact is cultural/long-term" → Fine for bets, not for Q1 commitments.
+
+---
+
+### 3. Build vs. Buy: Should We Own This?
+
+**The Trap**: Teams default to "we'll build it" because vendors feel expensive, then spend 6 months reinventing a $500/month SaaS.
+
+**What to Evaluate**:
+
+```
+Build Signals (when to own the capability):
+□ This is core differentiation (competitors can't easily copy)
+□ We have proprietary data that makes our version better
+□ We'll iterate on this weekly (vendor release cycles are too slow)
+□ Integration costs > build costs (vendor API limits, latency, or data residency issues)
+
+Buy Signals (when to integrate a vendor):
+□ This is table-stakes (users expect it, but won't pay extra)
+□ Vendor has better accuracy/scale than we can achieve in 6 months
+□ We lack domain expertise (e.g., medical coding, legal citation validation)
+□ Compliance burden is high (vendor has certifications we don't: SOC2, HIPAA, ISO)
+
+TCO Worksheet:
+Build Cost = (eng time × hourly rate) + (infra cost) + (ongoing maintenance)
+Buy Cost = (vendor annual fee) + (integration time) + (vendor risk/lock-in premium)
+
+If Build Cost < 2× Buy Cost → Consider building.
+If Buy Cost < 1.5× Build Cost → Integrate vendor.
+If costs are within 20% → Choose based on strategic control (own = differentiation; buy = speed to market).
+```
+
+**Real Example (Consulting Platform)**:
+
+**Feature Idea**: "AI-powered meeting summarization"
+
+**Build vs. Buy Analysis**:
+- **Build Cost**: 2 eng for 3 months = $180k (loaded) + $2k/month infra = $204k year 1
+- **Buy Cost**: Vendor (Fireflies/Otter) = $15/user/month × 500 users = $90k/year
+- **Differentiation Test**: Summarization is table-stakes; no proprietary edge
+- **Decision**: **Buy**. Integrated Fireflies in 2 weeks. Saved $114k + 6 months.
+
+**Real Example (Healthcare Platform)**:
+
+**Feature Idea**: "Clinical decision support (drug interaction alerts)"
+
+**Build vs. Buy Analysis**:
+- **Build Cost**: High (need medical NLP expertise + FDA compliance)
+- **Buy Cost**: Vendor (First Databank) = $50k/year + integration (4 weeks)
+- **Risk**: Liability for errors; vendor has malpractice insurance + established case law
+- **Decision**: **Buy**. Our differentiation is workflow, not drug databases.
+
+**Build vs. Buy Red Flags**:
+- "We can build this cheaper" → Count maintenance, not just initial build.
+- "We'll own the data" → If vendor returns structured data, you still own insights.
+- "Vendor lock-in is scary" → Write contracts with data export clauses.
+
+---
+
+### 4. Safeguards: What Controls Are Non-Negotiable?
+
+**The Trap**: Teams discover compliance requirements *after* the model is trained, then spend months retrofitting audit trails.
+
+**What to Design Upfront**:
+
+```
+Compliance Safeguards (by regulation):
+
+HIPAA/PHI:
+□ BAAs with all vendors touching data
+□ Logging: who accessed what, when (tamper-proof audit trail)
+□ Encryption: at rest + in transit
+□ De-identification: can we use synthetic data for training?
+
+GDPR/PII:
+□ Data minimization: only collect what's needed for the task
+□ Right to deletion: can we purge user data on request?
+□ Data residency: EU data stays in EU (vendor compliance check)
+
+SOC2/Security:
+□ RBAC: principle of least privilege for model access
+□ Red-teaming: adversarial tests for prompt injection, jailbreaks, PII leaks
+□ Incident response: playbook for "AI said something wrong" escalations
+
+Industry-Specific:
+□ Legal: citation accuracy, privilege logs, chain of custody
+□ Finance: model explainability (why did we flag this transaction?)
+□ Healthcare: clinical validation (FDA pathways if diagnostic use)
+
+Ethical/Trust:
+□ Bias audits: disaggregate metrics by demographic (if user data includes protected classes)
+□ Transparency: can users see why AI made a decision?
+□ Human override: can users reject AI recommendations without friction?
+```
+
+**Real Example (Legal Tech Platform)**:
+
+**Feature Idea**: "AI contract risk scoring"
+
+**Safeguards Audit**:
+- **Compliance**: SOC2 Type II required (existing certification covers this)
+- **Explainability**: Legal team demands "show me the risky clauses" (not just a score)
+- **Audit Trail**: Log every contract analyzed + AI score + human override (retained 7 years per firm policy)
+- **Bias**: Test on 100 contracts across jurisdictions/industries; flag if accuracy varies >10%
+
+**Design Constraints**:
+- Risk score must link to specific clauses (not black-box)
+- Attorneys can override score + log rationale
+- Monthly bias report to GC
+
+**Outcome**: Passed legal review in 2 weeks (because safeguards were in PRD from day 1).
+
+**Safeguard Red Flags**:
+- "We'll add logging later" → No. Instrumentation is a Day 1 requirement.
+- "Legal will tell us what they need" → No. You tell Legal what's feasible + negotiate.
+- "This is low-risk" → If it touches user data or makes decisions, it's regulated.
+
+---
+
+## Putting RIBS Together: A Decision Matrix
+
+| Feature Idea | Readiness | Impact | Build vs. Buy | Safeguards | Decision |
+|--------------|-----------|--------|---------------|------------|----------|
+| Contract clause extraction | ✅ 5k labeled examples | ✅ $120k/yr savings | **Build** (proprietary legal templates) | ⚠️ Need citation audit trail | **Ship Q1** |
+| Meeting summarization | ✅ Easy integration | ✅ $50k/yr time savings | **Buy** (commodity feature) | ✅ Vendor is SOC2 | **Integrate Q1** |
+| Drug interaction alerts | ❌ No medical expertise | ✅ High liability reduction | **Buy** (FDA-cleared vendor) | ✅ Vendor has insurance | **Integrate Q2** |
+| Custom legal research | ⚠️ Need citation accuracy eval | ⚠️ Unknown usage frequency | **Wait** (run user research first) | ⚠️ Hallucination risk | **Validate first** |
+| Patient summary AI | ✅ 12k examples | ✅ 4 hrs/physician/week | **Build** (PHI stays internal) | ❌ No BAA for synthetic data yet | **Blocked until legal approves** |
+
+**How to Use This**:
+1. Score each feature on all four dimensions (✅ = ready, ⚠️ = gaps, ❌ = blocker)
+2. **Only ship** if Readiness = ✅, Impact = ✅, and Safeguards ≠ ❌
+3. **Build vs. Buy** is a tiebreaker (both can work; pick based on strategic control)
+4. **Kill anything** with ❌ in Readiness or Safeguards (gaps are shippable; blockers are not)
+
+---
+
+## Case Study: RIBS in Action (Real Consulting Platform Roadmap)
+
+**Context**: Q1 planning; eng capacity for 2 AI features. 6 proposals from Sales, Support, Product.
+
+### Proposals (Summarized):
+
+1. **AI Meeting Notes** (Sales): "Clients want meeting summaries"
+2. **Contract Risk Scoring** (Legal): "Flag risky terms in MSAs"
+3. **Spend Anomaly Detection** (Finance): "Catch unusual expenses"
+4. **Custom Chatbot** (Marketing): "Answer RFP questions with AI"
+5. **Time-Entry Auto-Classification** (Product): "Reduce consultants' admin time"
+6. **Proposal Auto-Generation** (Sales): "Draft proposals from templates"
+
+### RIBS Evaluation:
+
+| Feature | Readiness | Impact | Build vs. Buy | Safeguards | Score |
+|---------|-----------|--------|---------------|------------|-------|
+| 1. Meeting Notes | ✅ | ⚠️ (nice-to-have) | **Buy** (vendors exist) | ✅ | **Integrate (fast win)** |
+| 2. Contract Risk | ✅ | ✅ ($200k/yr legal review savings) | **Build** (proprietary clauses) | ✅ (audit trail ready) | **Ship Q1 🎯** |
+| 3. Spend Anomaly | ⚠️ (limited training data) | ✅ (reduce fraud) | **Buy** (fintech vendors) | ✅ | **Integrate Q2** |
+| 4. Custom Chatbot | ❌ (no eval dataset) | ❌ (unclear ROI) | **Buy?** (but why) | ⚠️ (hallucination risk) | **Kill** ❌ |
+| 5. Time-Entry Classify | ✅ | ✅ (2hrs/consultant/week) | **Build** (proprietary taxonomy) | ✅ | **Ship Q1 🎯** |
+| 6. Proposal Gen | ⚠️ (templates exist, but quality?) | ⚠️ (usage TBD) | **Build** (differentiation) | ⚠️ (review required) | **Beta Q2** |
+
+### Decisions:
+- **Ship Q1**: Contract Risk Scoring + Time-Entry Classification (highest impact, ready to go)
+- **Integrate Q1**: Meeting Notes (vendor in 2 weeks; frees eng capacity)
+- **Q2 Pipeline**: Spend Anomaly (buy), Proposal Gen (beta with design partners)
+- **Kill**: Custom Chatbot (no clear ROI; hallucination risk outweighs speculative value)
+
+**Outcome**:
+- Q1: Shipped both features on time; $400k annualized value (legal savings + consultant time)
+- Q2: Integrated spend anomaly vendor ($30k/yr vs. $150k to build)
+- Marketing chatbot: reframed as "FAQ database" (no AI); shipped static solution in 3 weeks
+
+**What RIBS Prevented**: Spending 4 months building a chatbot no one wanted.
+
+---
+
+## The RIBS One-Page Worksheet (Print & Use)
+
+```
+Feature Name: _______________________________
+
+1. READINESS (✅ / ⚠️ / ❌)
+   Data:    □ 500+ examples  □ Labeled by experts  □ Legal to use
+   Infra:   □ <3s latency    □ Logging ready       □ Rollback exists
+   Expertise: □ Can debug prompts  □ Can red-team  □ Legal approval path clear
+
+2. IMPACT (✅ / ⚠️ / ❌)
+   KPI: ________________  Target: ______%  Frequency: __________
+   ROI: $________/year   Measurement: □ A/B  □ Before/After  □ Survey
+   Trust: Users will □ Accept  □ Verify  □ Ignore
+
+3. BUILD VS. BUY
+   □ Build (core differentiation, proprietary data, high iteration rate)
+   □ Buy (table-stakes, vendor better, compliance burden high)
+   TCO: Build $______  Buy $______  Delta: ______%
+
+4. SAFEGUARDS (✅ / ⚠️ / ❌)
+   Compliance: □ HIPAA  □ GDPR  □ SOC2  □ Industry-specific
+   Controls:   □ Audit trail  □ Encryption  □ RBAC  □ Red-teamed
+   Ethics:     □ Bias audit  □ Explainability  □ Human override
+
+DECISION:
+□ Ship (all ✅, no ❌)
+□ Integrate (Buy + ✅ Safeguards)
+□ Validate (⚠️ in Impact → run user research)
+□ Block (❌ in Readiness or Safeguards)
+□ Kill (no clear Impact or unresolvable blockers)
+```
+
+---
+
+## Why RIBS Scales
+
+Most prioritization frameworks are **aspirational** ("rate 1–5 on strategic value"). RIBS is **operational**—it surfaces blockers early and forces you to choose Build vs. Buy based on economics, not ego.
+
+**When to Use RIBS**:
+- Quarterly roadmap planning (score all proposals)
+- Feature discovery (before writing PRDs)
+- Exec reviews ("here's why we're not building X")
+
+**When NOT to Use RIBS**:
+- Research spikes (bets are fine; just timebox them)
+- Firefighting (production incidents don't need RIBS)
+- Technical debt (refactoring is a different prioritization model)
+
+**The Meta-Lesson**: Enterprise AI isn't about "can we build this?" It's about "should we, and if so, how do we de-risk it?" RIBS turns that question into a 30-minute conversation instead of a 3-month debate.
+
+---
+
+## Next Steps
+
+1. **Run RIBS on your top 5 AI ideas** (you'll kill 2–3 immediately)
+2. **Share the worksheet with stakeholders** (Sales/Legal/Security fill out their sections)
+3. **Commit to the top 2** (the ones with all ✅ and clear Build/Buy answer)
+
+**Related Frameworks**:
+- **SAFE-LLM**: How to ship the features you prioritize with RIBS (launch runbook)
+- **LAWS**: Legal-tech-specific feasibility test (Latency, Accuracy, Workflow, Security)
+- **PM Who Codes**: How to prototype fast enough to validate Impact assumptions
+
+---
+
+*Alex Welcing is a Senior AI Product Manager with 1,000+ production commits, specializing in applied AI for regulated industries. He ships enterprise AI features that pass compliance review and move business metrics—not demos that die in legal.*

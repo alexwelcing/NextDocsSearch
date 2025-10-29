@@ -1,0 +1,221 @@
+---
+title: "The NIH BRAIN Initiative Data Standard: What It Means for Neuroscience AI"
+author: ["Alex Welcing"]
+date: "2025-05-12"
+description: "Building AI for neuroscience research? NIH BRAIN Initiative requires BIDS data format, NWB metadata, and DANDI Archive deposits. Here's the compliance playbook."
+ogImage: "/images/og/nih-brain-initiative-data-standard.jpg"
+keywords: ["NIH BRAIN Initiative", "Neuroscience AI", "Healthcare AI", "AI Product Manager", "Data Standards", "Research Compliance", "Technical Product Manager"]
+---
+
+## The Academic Partnership That Hit a Data Wall
+
+**Neuroscience Lab**: "We'd like to train your AI on our fMRI and electrophysiology datasets."
+
+**PM**: "Great! Send us the data."
+
+**Lab**: "It's in BIDS format with NWB metadata. Can you ingest that?"
+
+**PM**: "What's BIDS? We use CSV."
+
+**Lab**: "NIH BRAIN Initiative requires BIDS. No exceptions. If you can't handle it, we can't collaborate."
+
+**PM**: *Googles "BIDS" and discovers a 6-month integration project.*
+
+## What NIH BRAIN Initiative Requires
+
+**Scope**: Any research funded by NIH BRAIN Initiative (launched 2014, now $400M+/year) must follow data sharing standards.
+
+**Who's Affected**:
+- Academic neuroscience labs (obviously)
+- AI startups collaborating with universities
+- Companies training models on brain imaging, neural recordings, or behavioral data
+
+**The Standards**:
+
+### 1. BIDS (Brain Imaging Data Structure)
+**What**: Standardized folder/file naming for neuroimaging data (fMRI, EEG, MEG)
+
+**Example**:
+```
+dataset/
+  sub-01/
+    anat/
+      sub-01_T1w.nii.gz       # Anatomical MRI scan
+    func/
+      sub-01_task-memory_bold.nii.gz  # Functional MRI
+  participants.tsv             # Metadata (age, sex, diagnosis)
+```
+
+**Why This Matters**: If your AI expects `patient_123_scan.nii`, but data comes in BIDS format, you'll need a conversion pipeline.
+
+### 2. NWB (Neurodata Without Borders)
+**What**: HDF5-based format for electrophysiology, optogenetics, and behavioral data
+
+**Example**: Neural spike times, LFP recordings, behavioral timestamps
+
+**Why This Matters**: Raw CSV files won't cut it. NWB includes rich metadata (electrode coordinates, recording device, experiment protocol).
+
+### 3. DANDI Archive
+**What**: NIH-funded data repository for BRAIN Initiative datasets
+
+**Requirement**: Funded researchers must deposit data in DANDI within 12 months of publication
+
+**Why This Matters**: If you partner with a BRAIN-funded lab, they'll eventually publish the data you trained on. Your model card must reference the DANDI deposit.
+
+## Real Example: Seizure Prediction AI
+
+**Project**: Train AI to predict epileptic seizures from EEG data.
+
+**Data Source**: NIH BRAIN-funded lab at major university.
+
+**Step 1: Understand the Data Format**
+
+**Lab provides**:
+- 50 patients × 24-hour EEG recordings
+- BIDS format: `sub-01_task-rest_eeg.edf`
+- Metadata: `participants.tsv` (age, sex, seizure frequency)
+
+**Our pipeline expects**:
+- CSV files: `patient_id, timestamp, eeg_channel_1, ..., eeg_channel_32`
+
+**Gap**: Need BIDS → CSV converter.
+
+**Solution**: Use MNE-Python (open-source library) to read BIDS-formatted EEG and export to CSV.
+
+```python
+import mne
+from mne_bids import BIDSPath, read_raw_bids
+
+# Read BIDS-formatted EEG
+bids_path = BIDSPath(subject='01', task='rest', datatype='eeg', root='dataset/')
+raw = read_raw_bids(bids_path)
+
+# Export to CSV
+df = raw.to_data_frame()
+df.to_csv('sub-01_eeg.csv')
+```
+
+**Time Investment**: 2 days to write converter, 1 day to test on all 50 patients.
+
+**Step 2: Document Data Provenance**
+
+**Model Card Requirement**: Where did training data come from?
+
+**Our Answer**:
+- **Source**: NIH BRAIN Initiative grant R01-NS123456 (PI: Dr. Smith, University X)
+- **Format**: BIDS-compliant EEG (50 subjects, 24-hour recordings)
+- **Metadata**: Age 18-65, diagnosed epilepsy, seizure frequency 1-10/month
+- **Repository**: Data will be deposited in DANDI Archive (DOI pending, post-publication)
+
+**Why This Matters**: Auditors will ask, "Can you reproduce your training results?" If data is in DANDI, answer is "Yes—here's the DOI."
+
+**Step 3: Comply with Data Sharing Plan**
+
+**NIH Requirement**: If we publish using this data, we must share our processed datasets.
+
+**What We Share**:
+- **Raw data**: No (already in DANDI from lab)
+- **Processed features**: Yes (seizure annotations, spectral features)
+- **Model weights**: Yes (trained model for reproducibility)
+- **Code**: Yes (GitHub repo, Apache 2.0 license)
+
+**Where We Share**:
+- Processed features → DANDI (controlled-access)
+- Model weights → Zenodo (open-access)
+- Code → GitHub (open-access)
+
+**Timeline**: Within 12 months of publication (NIH policy).
+
+## The BIDS Conversion Checklist
+
+If you're integrating BIDS data:
+
+- [ ] Install MNE-Python or PyBIDS (Python libraries for BIDS)
+- [ ] Identify data types in dataset (fMRI, EEG, MEG, behavioral)
+- [ ] Write conversion script (BIDS → your internal format)
+- [ ] Validate: Check that subject IDs, timestamps, channels align
+- [ ] Document mapping (which BIDS fields map to your schema)
+- [ ] Test on 5 subjects before running on full dataset
+
+**Common Pitfall**: BIDS uses `sub-01` (zero-padded), but your pipeline expects `patient_1`. Mismatch causes data loss.
+
+## The NWB Integration Challenge
+
+**Problem**: NWB files are HDF5 (binary), not CSV (text).
+
+**Solution**: Use PyNWB library.
+
+```python
+from pynwb import NWBHDF5IO
+
+# Read NWB file
+io = NWBHDF5IO('sub-01_ephys.nwb', 'r')
+nwbfile = io.read()
+
+# Extract spike times
+units = nwbfile.units
+spike_times = units['spike_times'][0]  # First neuron
+
+# Extract behavioral data
+behavior = nwbfile.processing['behavior']['position']
+```
+
+**Time Investment**: 3-5 days to learn PyNWB, write extraction code, test.
+
+**When to Use**: If your AI needs electrophysiology data (spike trains, LFP, calcium imaging).
+
+## When You DON'T Need BIDS/NWB
+
+**Exemptions**:
+- You're not using NIH BRAIN-funded data
+- You're using commercial datasets (not academic collaborations)
+- Your AI doesn't use neuroimaging or electrophysiology (e.g., clinical notes AI)
+
+**But**: If you ever plan to publish in neuroscience journals, BIDS is becoming the de facto standard. Supporting it future-proofs your pipeline.
+
+## The DANDI Archive Strategy
+
+**What to Deposit**:
+- Processed datasets (with annotations, labels, derived features)
+- Code (data processing scripts, training code)
+- Model weights (for reproducibility)
+
+**What Not to Deposit**:
+- Raw data (if it's already in DANDI from the original lab)
+- Proprietary algorithms (if you're commercializing)
+
+**Access Control**:
+- **Open Access**: If data is fully de-identified, low re-identification risk
+- **Controlled Access**: If data contains sensitive info (rare disease, genomics)
+
+**Timeline**: Deposit within 12 months of publication (NIH policy).
+
+## Checklist: Are You BRAIN Initiative Compliant?
+
+- [ ] Data is BIDS-formatted (or you have a conversion pipeline)
+- [ ] Metadata is complete (participants.tsv with demographics)
+- [ ] NWB integration (if using electrophysiology)
+- [ ] Data provenance documented (grant number, PI, institution)
+- [ ] Data sharing plan written (what, when, where)
+- [ ] DANDI deposit scheduled (within 12 months of publication)
+- [ ] Code and model weights ready to share (GitHub + Zenodo)
+
+**If any box is unchecked and you're using BRAIN data, you have gaps.**
+
+## Common PM Mistakes
+
+**Mistake 1: Assuming CSV is Universal**
+- **Reality**: Neuroscience uses BIDS (neuroimaging) and NWB (electrophysiology), not CSV
+- **Fix**: Budget 1-2 weeks for data format integration
+
+**Mistake 2: Ignoring Data Sharing Requirements**
+- **Reality**: NIH requires sharing within 12 months of publication
+- **Fix**: Write Data Management Plan before requesting data (not after publication)
+
+**Mistake 3: Not Crediting the Original Dataset**
+- **Reality**: BRAIN datasets have DOIs, PIs, and grant numbers—cite them
+- **Fix**: Include full citation in model card and publications
+
+---
+
+*Alex Welcing is a Senior AI Product Manager in New York who integrates BIDS and NWB data formats because neuroscience AI requires it. His academic partnerships don't stall on data pipelines because format conversion is in the project plan.*

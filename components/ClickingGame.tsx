@@ -4,7 +4,7 @@ import GameOrb from './GameOrb';
 import ParticleExplosion from './ParticleExplosion';
 import * as THREE from 'three';
 
-export type GameState = 'IDLE' | 'STARTING' | 'PLAYING' | 'GAME_OVER';
+export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
 
 interface Orb {
   id: string;
@@ -50,12 +50,24 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
   const [comboMax, setComboMax] = useState(0);
   const [totalClicks, setTotalClicks] = useState(0);
   const [successfulClicks, setSuccessfulClicks] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const timeElapsedRef = useRef(0);
   const nextSpawnTimeRef = useRef(0);
   const orbIdCounterRef = useRef(0);
 
   const gameDuration = 30; // 30 seconds
+  const maxOrbs = isMobile ? 3 : 6; // Limit concurrent orbs on mobile
+
+  // Detect mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Notify parent of updates
   useEffect(() => {
@@ -108,15 +120,21 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
     }
   }, [gameState, resetGame, spawnIdleOrbsMemoized]);
 
-  // Generate random position on a sphere
+  // Generate random position on a sphere - shooting gallery style (front-facing arc)
   const getRandomPosition = (): [number, number, number] => {
     const radius = 8 + Math.random() * 6; // Between 8-14 units from center
-    const theta = Math.random() * Math.PI * 2; // Random angle around Y axis
-    const phi = Math.PI / 4 + Math.random() * (Math.PI / 3); // Upper hemisphere (avoid floor)
 
-    const x = radius * Math.sin(phi) * Math.cos(theta);
+    // Constrain to 160-degree arc in front of camera (80 degrees left/right of center)
+    // theta: horizontal angle - limit to ±80 degrees (±1.396 radians) from forward (0)
+    const maxTheta = (80 * Math.PI) / 180; // 80 degrees in radians
+    const theta = -maxTheta + Math.random() * (maxTheta * 2); // -80 to +80 degrees
+
+    // phi: vertical angle - keep in upper hemisphere, slightly lower range for better targeting
+    const phi = Math.PI / 4 + Math.random() * (Math.PI / 4); // 45-90 degrees from top
+
+    const x = radius * Math.sin(phi) * Math.sin(theta); // Note: sin(theta) for forward-facing
     const y = radius * Math.cos(phi);
-    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const z = -radius * Math.sin(phi) * Math.cos(theta); // Negative Z is forward
 
     return [x, y, z];
   };
@@ -158,9 +176,10 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
 
   // Calculate spawn rate based on time elapsed
   const getSpawnInterval = (timeElapsed: number): number => {
-    if (timeElapsed < 10) return 0.5; // 2 per second
-    if (timeElapsed < 20) return 0.25; // 4 per second
-    return 0.167; // 6 per second
+    const multiplier = isMobile ? 2 : 1; // Slower spawn on mobile
+    if (timeElapsed < 10) return 0.5 * multiplier; // 2 per second (1 on mobile)
+    if (timeElapsed < 20) return 0.25 * multiplier; // 4 per second (2 on mobile)
+    return 0.167 * multiplier; // 6 per second (3 on mobile)
   };
 
   // Game loop
@@ -185,8 +204,8 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
       return;
     }
 
-    // Spawn new orbs based on time
-    if (timeElapsedRef.current >= nextSpawnTimeRef.current) {
+    // Spawn new orbs based on time - but respect max concurrent orbs
+    if (timeElapsedRef.current >= nextSpawnTimeRef.current && orbs.length < maxOrbs) {
       spawnOrb();
       nextSpawnTimeRef.current = timeElapsedRef.current + getSpawnInterval(timeElapsedRef.current);
     }
@@ -198,13 +217,16 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
       // Remove orb
       setOrbs((prev) => prev.filter((o) => o.id !== orbId));
 
-      // Add explosion
+      // Add explosion (limit to 5 concurrent explosions for performance)
       const explosion: Explosion = {
         id: `explosion-${Date.now()}-${Math.random()}`,
         position,
         color: isGolden ? '#FFD700' : '#00BFFF',
       };
-      setExplosions((prev) => [...prev, explosion]);
+      setExplosions((prev) => {
+        const updated = [...prev, explosion];
+        return updated.slice(-5); // Keep only last 5 explosions
+      });
 
       // Update score and combo
       const newCombo = combo + 1;
