@@ -14,13 +14,16 @@ import ClickingGame, { GameState, GameStats } from './ClickingGame';
 import GameHUD from './GameHUD';
 import GameStartOverlay from './GameStartOverlay';
 import GameLeaderboard from './GameLeaderboard';
+import BouncingBall from './BouncingBall';
+import PerformanceMonitor from './PerformanceMonitor';
+import CameraController from './CameraController';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Physics
       gravity={[0, -9.81, 0]}
-      iterations={10}
-      tolerance={0.001}
+      iterations={5}
+      tolerance={0.01}
       allowSleep={true}
       broadphase="SAP"
       defaultContactMaterial={{
@@ -161,6 +164,7 @@ interface ThreeSixtyProps {
   currentImage: string;
   isDialogOpen: boolean;
   onChangeImage: (newImage: string) => void;
+  onGameStateChange?: (gameState: GameState) => void;
 }
 
 interface SplatFile {
@@ -169,7 +173,7 @@ interface SplatFile {
   size: number;
 }
 
-const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage }) => {
+const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -177,12 +181,24 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [availableSplats, setAvailableSplats] = useState<SplatFile[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [hasSplats, setHasSplats] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile devices
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Game state
   const [gameState, setGameState] = useState<GameState>('IDLE');
   const [score, setScore] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(30);
   const [combo, setCombo] = useState(0);
+  const [countdown, setCountdown] = useState(3);
   const [gameStats, setGameStats] = useState<GameStats>({
     score: 0,
     comboMax: 0,
@@ -190,6 +206,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     totalClicks: 0,
     successfulClicks: 0,
   });
+
+  // Notify parent of game state changes
+  useEffect(() => {
+    if (onGameStateChange) {
+      onGameStateChange(gameState);
+    }
+  }, [gameState, onGameStateChange]);
 
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
@@ -246,14 +269,33 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   };
 
   // Game handlers
-  const handleGameStart = useCallback(() => {
+  // Step 1: Bouncing ball click shows overlay (STARTING state)
+  const handleBallClick = useCallback(() => {
     setGameState('STARTING');
-    setTimeout(() => {
-      setGameState('PLAYING');
-      setScore(0);
-      setTimeRemaining(30);
-      setCombo(0);
-    }, 100);
+  }, []);
+
+  // Step 2: User clicks "Start" in overlay - begin countdown
+  const handleGameStart = useCallback(() => {
+    setGameState('COUNTDOWN');
+    setCountdown(3);
+    setScore(0);
+    setCombo(0);
+    
+    // Countdown: 3, 2, 1, GO!
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval);
+          // After countdown, start the game
+          setTimeout(() => {
+            setGameState('PLAYING');
+            setTimeRemaining(30);
+          }, 500); // Brief pause on "GO!"
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   }, []);
 
   const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
@@ -265,9 +307,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const handlePlayAgain = useCallback(() => {
     setGameState('IDLE');
     setTimeout(() => {
-      handleGameStart();
+      handleBallClick();
     }, 100);
-  }, [handleGameStart]);
+  }, [handleBallClick]);
 
   const handleCloseLeaderboard = useCallback(() => {
     setGameState('IDLE');
@@ -282,8 +324,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </VRButtonStyled>
       )}
 
-      {/* Background Controls - Only show if splats are detected */}
-      {hasSplats && (
+      {/* Background Controls - Only show if splats are detected AND not playing game or countdown */}
+      {hasSplats && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
         <BackgroundControlsContainer>
           <ControlLabel>Background Mode</ControlLabel>
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -320,30 +362,36 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       )}
 
       <Canvas
-        shadows
-        dpr={[1, 2]}
-        performance={{ min: 0.5 }}
+        shadows={false}
+        dpr={isMobile ? [0.3, 0.8] : [0.5, 1.5]}
+        performance={{ min: 0.1 }}
         gl={{
           powerPreference: 'high-performance',
           antialias: false,
           stencil: false,
           depth: true,
+          alpha: false,
         }}
-        camera={{ position: [0, 2, 10], fov: 60 }}
+        camera={{ position: [0, 2, 10], fov: isMobile ? 70 : 60 }}
       >
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
             <PhysicsEnvironment>
               <PhysicsGround />
+
+              {/* Camera controller for smooth game start transition */}
+              <CameraController gameState={gameState} />
+
               <OrbitControls
                 enableDamping
-                dampingFactor={0.05}
+                dampingFactor={0.1}
                 rotateSpeed={0.5}
                 zoomSpeed={0.8}
                 panSpeed={0.5}
                 minDistance={5}
                 maxDistance={50}
                 maxPolarAngle={Math.PI / 2}
+                enablePan={false}
               />
 
               {/* Sphere Hunter Game */}
@@ -356,8 +404,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 onTimeUpdate={setTimeRemaining}
               />
 
-              {/* Background: Use Gaussian Splat if enabled, otherwise use sphere */}
-              {useGaussianSplat && selectedSplat ? (
+              {/* Bouncing Ball - visible only in IDLE state */}
+              {gameState === 'IDLE' && (
+                <BouncingBall onActivate={handleBallClick} />
+              )}
+
+              {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
+              {useGaussianSplat && selectedSplat && !isMobile && gameState !== 'PLAYING' ? (
                 <GaussianSplatBackground
                   splatUrl={selectedSplat}
                   position={[0, 0, 0]}
@@ -367,8 +420,22 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
               )}
 
-              <ambientLight intensity={0.2} position={[-2, 10, 2]} />
-              {!loading && (
+              <ambientLight intensity={0.6} />
+              <directionalLight
+                position={[10, 10, 5]}
+                intensity={0.8}
+              />
+              <directionalLight
+                position={[-10, 10, -5]}
+                intensity={0.5}
+              />
+              <hemisphereLight
+                args={['#ffffff', '#8844bb', 0.4]}
+                position={[0, 50, 0]}
+              />
+
+              {/* Only show articles and response display when NOT playing game or in countdown */}
+              {!loading && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
                 <GlowingArticleDisplay
                   articles={articles}
                   article={article}
@@ -379,8 +446,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   totalArticles={articles.length}
                 />
               )}
-              <RoundedRectangle />
-              <ResponseDisplay />
+
+              {gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
+                <>
+                  <RoundedRectangle />
+                  <ResponseDisplay />
+                </>
+              )}
 
               {/* XR Controllers - controller models will be automatically rendered by XR component */}
             </PhysicsEnvironment>
@@ -390,9 +462,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         {process.env.NODE_ENV === 'development' && <Stats />}
       </Canvas>
 
+      {/* Performance Monitor - outside Canvas */}
+      {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
+
       {/* Game UI Overlays */}
-      {gameState === 'IDLE' && (
-        <GameStartOverlay onStart={handleGameStart} />
+      {(gameState === 'STARTING' || gameState === 'COUNTDOWN') && (
+        <GameStartOverlay
+          onStart={handleGameStart}
+          isCountingDown={gameState === 'COUNTDOWN'}
+          countdown={countdown}
+        />
       )}
 
       {gameState === 'PLAYING' && (

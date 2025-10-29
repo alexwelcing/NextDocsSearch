@@ -1,0 +1,248 @@
+---
+title: "The eDiscovery TAR Protocol Your Opposing Counsel Will Challenge"
+author: ["Alex Welcing"]
+date: "2025-07-14"
+description: "Judges now accept Technology-Assisted Review in litigation—but opposing counsel will challenge your methodology. Here's the defensible TAR workflow that passes court scrutiny."
+ogImage: "/images/og/ediscovery-tar-protocol.jpg"
+keywords: ["eDiscovery", "Technology-Assisted Review", "Legal Tech", "AI Product Manager", "Litigation", "Technical Product Manager", "Legal AI", "TAR"]
+---
+
+## The Deposition Question You Couldn't Answer
+
+**Opposing Counsel**: "You used AI to select documents for production. Explain your methodology."
+
+**Attorney**: "We trained a model on relevant documents and it ranked the rest."
+
+**OC**: "How many documents did you train it on?"
+
+**Attorney**: "I... don't know. The vendor handled that."
+
+**OC**: "So you can't prove you didn't withhold relevant documents? I move to compel full manual review—all 500,000 documents."
+
+**Judge**: "Motion granted."
+
+**The Cost**: $2M in manual review that could've been avoided with a defensible TAR protocol.
+
+## What Makes TAR "Defensible" in Court
+
+**Three Requirements** (established in *Da Silva Moore v. Publicis*, 2012 and subsequent cases):
+
+1. **Transparency**: Disclose your methodology to opposing counsel
+2. **Proportionality**: Demonstrate TAR is more cost-effective than manual review
+3. **Quality Control**: Prove your TAR process achieved reasonable recall
+
+**Key Insight**: You don't need 100% recall. Courts accept 75-80% if the process is defensible.
+
+## The 7-Step Defensible TAR Workflow
+
+### Step 1: Seed Set Creation (Control Set)
+
+**What**: Senior attorney reviews 500-2,000 documents, labels as relevant/not relevant.
+
+**Why**: This "trains" the AI on what relevance looks like.
+
+**Documentation**:
+- Who labeled? (name, role, years of experience)
+- How many docs? (minimum: 500; recommended: 1,500-2,000)
+- Criteria? (written relevance guidelines, shared with opposing counsel)
+
+**Mistake to Avoid**: Using junior associates (opposing counsel will argue they're not qualified).
+
+### Step 2: Model Training
+
+**What**: AI learns from seed set, ranks all 500,000 documents by predicted relevance.
+
+**Documentation**:
+- Algorithm used (e.g., "SVM with TF-IDF features" or "fine-tuned BERT")
+- Training parameters (iterations, cross-validation folds)
+- Who trained it? (vendor name or in-house data scientist)
+
+**Mistake to Avoid**: "Black box" vendor models (you must be able to explain how it works).
+
+### Step 3: Continuous Active Learning (CAL)
+
+**What**: Attorney reviews top-ranked documents first. AI learns from each review, re-ranks remaining docs.
+
+**Example**:
+- Round 1: Attorney reviews top 1,000 docs, finds 300 relevant
+- AI learns from 300 new relevant examples
+- Round 2: AI re-ranks, attorney reviews next 1,000
+- Repeat until stopping rule
+
+**Documentation**:
+- How many rounds? (typically 5-10)
+- How many docs per round? (500-2,000)
+- What was the yield per round? (e.g., 30% relevant → 10% relevant → stopping)
+
+### Step 4: Quality Control Sampling
+
+**What**: After CAL, randomly sample 200-500 docs from the "not relevant" pile. Have attorney review.
+
+**Why**: Proves you didn't miss relevant docs.
+
+**Documentation**:
+- Sample size (minimum: 200; recommended: 500)
+- Who reviewed? (senior attorney, same person who labeled seed set)
+- Results: How many were actually relevant? (target: under 5%)
+
+**Red Flag**: If >10% of "not relevant" sample is actually relevant → model is under-performing, need to retrain.
+
+### Step 5: Recall Estimation
+
+**What**: Estimate: Of all relevant documents in the 500,000-doc corpus, what % did we find?
+
+**Formula** (simplified):
+```
+Estimated Recall = Relevant Docs Found / (Relevant Docs Found + Relevant Docs Missed in Sample)
+```
+
+**Example**:
+- Found 5,000 relevant docs via TAR
+- QC sample of 500 docs from "not relevant" pile found 10 relevant docs
+- Extrapolate: If 10/500 = 2%, then estimated 2% of 495,000 "not relevant" docs = 9,900 missed
+- Recall = 5,000 / (5,000 + 9,900) = 34% ← **FAIL** (too low)
+
+**Target**: 75%+ recall
+
+**Mistake to Avoid**: Not estimating recall (opposing counsel will assume you missed everything).
+
+### Step 6: Proportionality Analysis
+
+**What**: Prove TAR saved money compared to manual review.
+
+**Documentation**:
+```
+Manual Review Cost:
+- 500,000 docs × 6 minutes/doc × $400/hour = $2,000,000
+
+TAR Cost:
+- Seed set: 2,000 docs × 6 min/doc × $400/hour = $8,000
+- CAL: 10,000 docs × 6 min/doc × $400/hour = $40,000
+- QC sample: 500 docs × 6 min/doc × $400/hour = $2,000
+- Vendor fee: $50,000
+- Total: $100,000
+
+Savings: $1,900,000 (95% cost reduction)
+```
+
+**Why This Matters**: Judge weighs cost vs. benefit. If TAR saves $1.9M and achieves 78% recall, it's defensible.
+
+### Step 7: Cooperation with Opposing Counsel
+
+**What**: Disclose methodology before starting TAR. Invite opposing counsel to negotiate protocol.
+
+**Example Communication**:
+```
+Subject: Proposed TAR Protocol for Document Review
+
+Opposing Counsel,
+
+We propose using Technology-Assisted Review for this case. Proposed methodology:
+
+1. Seed set: 2,000 docs, labeled by Senior Partner [Name]
+2. Algorithm: SVM with TF-IDF (vendor: Relativity)
+3. Continuous active learning: 5-10 rounds
+4. QC sampling: 500 docs from "not relevant" pile
+5. Target recall: 75%+
+
+We're open to discussing this protocol. Please advise if you have concerns.
+
+Regards,
+[Attorney]
+```
+
+**Why This Matters**: Courts favor cooperation. If you negotiate upfront, opposing counsel can't challenge later.
+
+## Real Example: Contract Dispute Litigation
+
+**Case**: Vendor sues client for breach of contract. 500,000 emails to review.
+
+**TAR Protocol**:
+
+**Seed Set** (Week 1):
+- Senior attorney reviews 1,500 emails
+- Labels 400 as relevant (contract discussions, payment disputes)
+- Documents relevance criteria: "Any email mentioning contract terms, payment, deliverables, or disputes"
+
+**Model Training** (Week 1):
+- Vendor (Relativity) trains SVM classifier
+- Accuracy on held-out test set: 87%
+
+**Continuous Active Learning** (Weeks 2-4):
+- Round 1: Review top 2,000 emails, 35% relevant (700 docs)
+- Round 2: Review next 2,000, 28% relevant (560 docs)
+- Round 3: Review next 2,000, 18% relevant (360 docs)
+- Round 4: Review next 2,000, 9% relevant (180 docs)
+- **Stopping rule met**: Yield dropped below 10%
+
+**Quality Control** (Week 5):
+- Random sample of 500 emails from "not relevant" pile
+- Senior attorney reviews: 12 are actually relevant (2.4%)
+- Extrapolate: ~12,000 relevant docs missed
+
+**Recall Estimation**:
+- Found: 1,800 relevant docs (via CAL)
+- Missed (estimated): 12,000
+- Recall: 1,800 / (1,800 + 12,000) = 13% ← **PROBLEM**
+
+**Fix** (Week 6):
+- Retrain model with stricter relevance criteria
+- Re-run CAL (3 more rounds)
+- New QC sample: 500 docs, 8 relevant (1.6%)
+- New recall estimate: 78% ← **PASS**
+
+**Production** (Week 7):
+- Produce 2,100 relevant docs to opposing counsel
+- Disclose TAR methodology (seed set size, algorithm, recall estimate)
+
+**Opposing Counsel's Challenge**:
+- "You only achieved 78% recall. What about the other 22%?"
+
+**Attorney's Response**:
+- "Manual review rarely exceeds 80% recall (studies show 60-70% is typical)."
+- "TAR cost $120k vs. $2M for manual review."
+- "Court in *Da Silva Moore* accepted 75% recall as reasonable."
+
+**Judge's Ruling**: TAR protocol is defensible. No additional review required.
+
+## The TAR Transparency Checklist
+
+Disclose these to opposing counsel:
+
+- [ ] Seed set size and labeling criteria
+- [ ] Algorithm/vendor used
+- [ ] Number of CAL rounds
+- [ ] Documents reviewed per round (and yield)
+- [ ] QC sample size and results
+- [ ] Estimated recall
+- [ ] Cost comparison (TAR vs. manual review)
+
+**If you withhold any of these, opposing counsel will cry foul.**
+
+## Common PM Mistakes (For Legal Tech Products)
+
+**Mistake 1: Not Documenting Seed Set Creation**
+- **Reality**: If you can't prove who labeled and how many docs, TAR is challengeable
+- **Fix**: Log every label (user ID, timestamp, relevance decision)
+
+**Mistake 2: No Recall Estimation**
+- **Reality**: Opposing counsel will assume recall is 50% if you don't estimate it
+- **Fix**: Build QC sampling into your TAR workflow (not optional)
+
+**Mistake 3: "Black Box" Models**
+- **Reality**: If attorney can't explain the algorithm, judge may reject TAR
+- **Fix**: Use interpretable models (SVM, logistic regression) OR provide model cards for deep learning
+
+## Checklist: Is Your TAR Product Court-Ready?
+
+- [ ] Logs seed set creation (who, when, how many, criteria)
+- [ ] Supports continuous active learning (multi-round review)
+- [ ] Generates QC sample (random sample from "not relevant")
+- [ ] Estimates recall (not just precision)
+- [ ] Exports TAR protocol report (for disclosure to opposing counsel)
+- [ ] Documents cost savings (TAR vs. manual review)
+- [ ] Provides model card (algorithm, parameters, interpretability)
+
+---
+
+*Alex Welcing is a Senior AI Product Manager in New York who builds legal tech products that pass court scrutiny. His TAR workflows are defensible because transparency, proportionality, and quality control are product requirements, not afterthoughts.*

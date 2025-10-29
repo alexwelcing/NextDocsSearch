@@ -1,0 +1,239 @@
+---
+title: "Trust Calibration: The UX Problem That Breaks AI Adoption"
+author: ["Alex Welcing"]
+date: "2025-06-02"
+description: "Users either blindly trust AI (dangerous) or never trust it (zero adoption). How to design for the Goldilocks zone: appropriate reliance."
+ogImage: "/images/og/trust-calibration-ai-ux.jpg"
+keywords: ["AI UX", "Trust", "Product Design", "AI Product Manager", "Human-AI Interaction", "User Research", "Technical Product Manager", "AI Adoption"]
+---
+
+## The Feature That No One Uses
+
+**Metrics After 3 Months**:
+- AI accuracy: 92% (exceeds target)
+- User adoption: 18% (misses target by 62pp)
+
+**User interview #1**: "I don't trust it. What if it's wrong?"  
+**User interview #2**: "I trust it completely. It's AI!"  
+**User interview #3**: "I tried it once. It gave a weird answer. Never used it again."
+
+**The diagnosis**: Not an accuracy problem. A **trust calibration problem**.
+
+Your users don't know **when to trust the AI and when to double-check**. So they default to extremes: never trust, or always trust. Both kill adoption.
+
+## The Trust Calibration Spectrum
+
+```
+Under-Reliance               Appropriate Reliance               Over-Reliance
+(Zero Adoption)              (Goldilocks Zone)                   (Dangerous)
+    ↓                               ↓                                  ↓
+User ignores AI          User checks AI on hard          User blindly accepts
+even when it's           cases, accepts on easy          all AI outputs,
+correct                  cases                           including errors
+```
+
+**The Goal**: Design UX that pushes users toward **appropriate reliance**—trust when the AI is confident and correct, double-check when it's uncertain or error-prone.
+
+## Why Trust Calibration Fails (Three Anti-Patterns)
+
+### Anti-Pattern 1: No Confidence Signal
+
+**Bad UX**:
+```
+AI Result: "The patient likely has Type 2 Diabetes."
+[No indication of confidence]
+```
+
+**User Mental Model**: "Is this 60% confident or 99% confident? I have no idea. Better ignore it."
+
+**Good UX**:
+```
+AI Result: "The patient likely has Type 2 Diabetes."
+Confidence: High (94%)
+Reasoning: Elevated HbA1c (7.2%), fasting glucose (140 mg/dL), BMI 32
+```
+
+**Why It Works**: User knows this is a high-confidence prediction. They can **trust without blind acceptance** (they see the reasoning).
+
+### Anti-Pattern 2: Invisible Errors
+
+**Bad UX**:
+- AI makes mistake on edge case
+- User discovers error during critical moment (e.g., client meeting)
+- User loses trust permanently
+
+**User Mental Model**: "It was wrong once. I can't trust it anymore."
+
+**Good UX**:
+- AI flags uncertain predictions: "Low Confidence (61%)—manual review recommended"
+- User **expects** occasional low-confidence outputs
+- Trust isn't binary (perfect or broken)—it's calibrated per prediction
+
+**Why It Works**: Users develop mental model: "Green = trust, yellow = verify, red = don't use." They don't abandon the tool after one error.
+
+### Anti-Pattern 3: No Feedback Loop
+
+**Bad UX**:
+- User corrects AI mistake
+- AI doesn't learn
+- Same mistake repeats
+
+**User Mental Model**: "Why bother correcting it if nothing changes?"
+
+**Good UX**:
+- User marks AI output as incorrect
+- System logs feedback: "Thanks! We'll improve this prediction type."
+- Next week, similar case → AI gets it right
+- User sees: "We improved accuracy on [case type] based on your feedback"
+
+**Why It Works**: User feels **agency**. Trust isn't "take it or leave it"—it's a partnership.
+
+## Real Example: Legal Research AI
+
+**Feature**: AI suggests relevant case law for attorneys.
+
+**Initial Design** (Under-Reliance):
+- AI returns 20 cases
+- No confidence scores
+- No reasoning
+- Attorneys ignore AI, manually search Westlaw (zero adoption)
+
+**Redesign 1: Add Confidence**:
+- AI returns 20 cases **with confidence scores** (High/Medium/Low)
+- Attorneys trust High-confidence cases (75% adoption on those)
+- Still ignore Medium/Low (overall adoption: 35%)
+
+**Redesign 2: Show Reasoning**:
+- High-confidence cases show **why** (keyword match, citation frequency, jurisdiction)
+- Medium-confidence cases flag **risk**: "This case is from a different jurisdiction—verify applicability"
+- Attorneys now use Medium-confidence cases as **research leads** (adoption: 62%)
+
+**Redesign 3: Feedback Loop**:
+- Attorneys mark cases as "relevant" or "not relevant"
+- AI learns: "Cases from 9th Circuit often irrelevant for this attorney (practices in 2nd Circuit)"
+- Precision improves from 68% → 79% over 3 months
+- Adoption hits 81% (attorneys trust the AI because it **adapts to their practice**)
+
+## The Confidence Display Framework
+
+**Three Components** (show all three, or users won't calibrate):
+
+### 1. Confidence Score
+- **Numeric** (e.g., 87%) OR **Categorical** (High/Medium/Low)
+- **Color-coded**: Green (High), Yellow (Medium), Red (Low)
+
+### 2. Reasoning
+- **Why** the AI is confident (or uncertain)
+- **Key signals**: "Based on patient age (65), symptom duration (>3 months), lab results (HbA1c 7.2%)"
+- **Missing info**: "Unable to assess cardiovascular risk—no cholesterol data"
+
+### 3. Recommendation
+- **High confidence**: "Accept this recommendation"
+- **Medium confidence**: "Verify with [source]"
+- **Low confidence**: "Manual review required—AI insufficient data"
+
+## Designing for Over-Reliance (The Dangerous Case)
+
+**Scenario**: Physician uses AI diagnostic tool. AI is 92% accurate. Physician **stops checking** the 8% of errors.
+
+**Why Over-Reliance Happens**:
+- AI is "usually right" → user develops **automation complacency**
+- Checking takes time → user optimizes for speed, not accuracy
+- Errors are rare → user forgets they exist
+
+**How to Prevent**:
+
+### 1. Force Interaction on Critical Decisions
+- **Bad**: AI auto-fills diagnosis; physician clicks "Submit"
+- **Good**: AI suggests diagnosis; physician must **type confirmation** ("I confirm Type 2 Diabetes")
+
+**Why It Works**: Typing forces cognitive engagement. Physician re-reads AI output before confirming.
+
+### 2. Randomized Human Review Prompts
+- 10% of AI predictions (randomly selected) require human review **even if confidence is high**
+- User must document: "I reviewed AI reasoning and agree" OR "I reviewed and disagree because..."
+
+**Why It Works**: User can't develop "click-through" habit. Random checks keep cognitive engagement active.
+
+### 3. Error Highlighting (Not Hiding)
+- When AI makes mistake, **show the error prominently**: "Last week, AI misclassified 2 cases—here's what happened"
+- Monthly summary: "AI accuracy this month: 91%. Errors: [list]"
+
+**Why It Works**: Users maintain **healthy skepticism**. They don't forget the AI can fail.
+
+## The "Goldilocks Zone" Checklist
+
+Use this to audit your AI feature:
+
+**Under-Reliance Prevention** (boost adoption):
+- [ ] Confidence scores visible (High/Medium/Low or numeric)
+- [ ] Reasoning shown (why AI is confident/uncertain)
+- [ ] Success stories visible ("AI saved users X hours this month")
+- [ ] Errors flagged proactively (don't let users discover them during critical moments)
+
+**Over-Reliance Prevention** (reduce danger):
+- [ ] Force interaction on critical decisions (no auto-accept)
+- [ ] Randomized human review prompts (even on high-confidence outputs)
+- [ ] Error transparency (show mistakes, don't hide them)
+- [ ] Calibration training ("Here are 10 examples—which should you trust?")
+
+**Feedback Loop** (improve over time):
+- [ ] Users can mark AI outputs as correct/incorrect
+- [ ] System logs feedback + re-trains periodically
+- [ ] Users see improvements ("Accuracy on [case type] improved 8pp this quarter")
+
+## When to Use Each Design Pattern
+
+| User Behavior | Root Cause | Design Fix |
+|---------------|------------|------------|
+| Never uses AI (under-reliance) | Doesn't know when to trust | Add confidence scores + reasoning |
+| Blindly accepts all AI (over-reliance) | Automation complacency | Force interaction on critical decisions |
+| Uses once, abandons (fragile trust) | One error → permanent distrust | Flag low-confidence predictions proactively |
+| Uses AI but corrects errors (good!) | Wants partnership, not oracle | Add feedback loop + show improvements |
+
+## The CHI Research That Validates This
+
+**Human-AI Interaction studies (CHI, CSCW)** show:
+
+1. **Confidence displays improve calibration** (users trust high-confidence outputs, verify low-confidence)
+2. **Explanations reduce over-reliance** (users who see reasoning check AI outputs more)
+3. **Error transparency increases long-term trust** (hiding errors → fragile trust; showing errors → resilient trust)
+
+**PM Takeaway**: Trust calibration isn't a soft UX problem. It's an **engineering requirement**.
+
+## Common PM Mistakes
+
+**Mistake 1: Assuming "High Accuracy = High Adoption"**
+- **Reality**: 92% accuracy with zero trust signals = 18% adoption
+- **Fix**: Ship confidence scores + reasoning, not just accurate predictions
+
+**Mistake 2: Hiding Errors**
+- **Reality**: Users discover errors during critical moments → trust collapses
+- **Fix**: Proactively flag uncertain predictions; errors become expected, not shocking
+
+**Mistake 3: No Feedback Mechanism**
+- **Reality**: Users correct AI mistakes but see no improvement → "Why bother?"
+- **Fix**: Log corrections, retrain monthly, show users the impact of their feedback
+
+## The Two-Week Trust Audit
+
+**Week 1: Measure Current State**
+- Log confidence scores for all AI predictions
+- Track: How often do users accept high-confidence outputs? Low-confidence?
+- Interview 5 users: "When do you trust the AI? When do you double-check?"
+
+**Week 2: Implement Fixes**
+- Add confidence display (High/Medium/Low)
+- Show reasoning for top 3 predictions
+- Add feedback button ("Mark as correct/incorrect")
+
+**Month 3: Measure Impact**
+- Adoption on high-confidence outputs: [target: >70%]
+- Verification rate on low-confidence outputs: [target: >80%]
+- Error discovery in critical moments: [target: near 0%]
+
+**If trust calibration improves → adoption follows.**
+
+---
+
+*Alex Welcing is a Senior AI Product Manager who designs for appropriate reliance, not blind trust. His AI features ship with confidence scores because users need to know when to double-check, not just when to accept.*

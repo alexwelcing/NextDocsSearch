@@ -1,0 +1,310 @@
+---
+title: "The AI PM's September Checklist: Audit Season Prep for Q4 Compliance"
+author: ["Alex Welcing"]
+date: "2025-09-01"
+description: "Q4 brings SOC2 audits, HIPAA reviews, and year-end compliance checks. Here's the 30-day checklist to get your AI features audit-ready before November."
+ogImage: "/images/og/september-compliance-checklist.jpg"
+keywords: ["AI Governance", "Compliance", "SOC2", "HIPAA", "AI Product Manager", "Audit Preparation", "Technical Product Manager", "Risk Management"]
+---
+
+## The October Email You Don't Want
+
+**Subject**: SOC2 Audit Kickoff — Nov 1
+
+**Auditor**: "We'll need documentation for all AI/ML systems deployed in 2025. Please provide by Oct 25:
+- Model cards with training data provenance
+- Risk registers with mitigation evidence
+- Incident response logs
+- Access control policies
+- Data retention schedules"
+
+**You** (PM, realizing none of this exists): "I'll… get back to you."
+
+**September is AI compliance prep month.** If you ship AI features in regulated industries (healthcare, finance, legal, enterprise SaaS), Q4 audits are coming. The companies that pass on the first try? They spent September building the artifacts.
+
+## Why September (The Audit Calendar)
+
+**October-December**: Peak audit season
+- SOC2 Type II (annual audits for SaaS companies)
+- HIPAA compliance reviews (healthcare)
+- ISO 27001 renewals (enterprise security)
+- Year-end risk committee reviews
+
+**September**: Last chance to fix gaps before auditors arrive.
+
+**What Happens If You're Not Ready**:
+- Audit findings (non-conformities) → delayed certification
+- Customer trust erosion (SOC2 report has "exceptions")
+- Contract renewals blocked (enterprise buyers demand clean audits)
+- Remediation scramble (team drops roadmap work to fix gaps)
+
+**What Happens If You Are Ready**:
+- Clean audit (zero findings)
+- Faster enterprise sales (SOC2 report is a competitive advantage)
+- Team focus (no Q4 fire drills)
+
+## The 30-Day Checklist (Week-by-Week)
+
+### Week 1 (Sep 1-7): Inventory Your AI Features
+
+**Goal**: Know what you shipped this year.
+
+**Tasks**:
+- [ ] List all AI/ML features in production (name, launch date, user-facing or internal)
+- [ ] Identify high-risk features (healthcare data, PII, automated decisions affecting users)
+- [ ] Tag features by compliance scope (HIPAA, SOC2, GDPR, EU AI Act)
+- [ ] Assign DRI (Directly Responsible Individual) for each feature
+
+**Template**:
+| Feature | Launch Date | Risk Level | Compliance Scope | DRI |
+|---------|-------------|------------|------------------|-----|
+| AI email suggestions | Jan 2025 | Medium | SOC2 | PM: Sarah |
+| Patient diagnosis assistant | Mar 2025 | High | HIPAA, SOC2 | PM: Alex |
+| Resume screening | Jun 2025 | High | GDPR, EU AI Act | PM: Jordan |
+
+**Why This Matters**: Auditors will ask, "Show me all AI systems." If you say "I don't know," audit fails immediately.
+
+### Week 2 (Sep 8-14): Build Model Cards
+
+**Goal**: Document what the AI does, how it was trained, and what risks exist.
+
+**Tasks** (per AI feature):
+- [ ] Create model card (model architecture, training data, eval metrics)
+- [ ] Document data provenance (where training data came from, dates, sampling method)
+- [ ] List known limitations (edge cases, bias risks, accuracy boundaries)
+- [ ] Define human oversight plan (who reviews AI outputs, when, how to override)
+
+**Model Card Template**:
+```
+MODEL CARD: [Feature Name]
+
+1. MODEL DETAILS
+- Architecture: [e.g., Fine-tuned GPT-4, BERT classifier, XGBoost]
+- Version: [e.g., v2.3, deployed Aug 15, 2025]
+- Training Date: [e.g., Aug 1-10, 2025]
+- Compute: [e.g., 8 A100 GPUs, 24 hours]
+
+2. INTENDED USE
+- Primary Use Case: [e.g., Suggest email responses for support tickets]
+- Users: [e.g., Customer support team, 50 agents]
+- Out-of-Scope Uses: [e.g., Not for legal advice, medical diagnosis]
+
+3. TRAINING DATA
+- Source: [e.g., Internal support ticket database, 2020-2024]
+- Volume: [e.g., 500,000 tickets, 2M tokens]
+- Sampling: [e.g., Random sample, stratified by ticket category]
+- Preprocessing: [e.g., De-identified PII, removed spam tickets]
+- Bias Risks: [e.g., Overrepresents US English, underrepresents non-English]
+
+4. EVALUATION
+- Metrics: [e.g., Accuracy 89%, F1 0.87, Precision 0.85, Recall 0.90]
+- Test Set: [e.g., 10,000 held-out tickets, same time range]
+- Fairness Testing: [e.g., Demographic parity within 5pp across user segments]
+
+5. LIMITATIONS
+- Edge Cases: [e.g., Struggles with sarcasm, multi-language tickets]
+- Known Failures: [e.g., 8% false positive rate on urgent tickets]
+- Not Suitable For: [e.g., Legal/medical content, customer complaints]
+
+6. HUMAN OVERSIGHT
+- Review Process: [e.g., Agent reviews all AI suggestions before sending]
+- Override Rate: [e.g., 15% of suggestions modified or rejected]
+- Escalation: [e.g., Agents flag bad suggestions → PM reviews weekly]
+```
+
+**Time Investment**: 2-4 hours per feature.
+
+**Why This Matters**: SOC2 and HIPAA auditors will ask, "How do you ensure AI quality?" Model card = your answer.
+
+### Week 3 (Sep 15-21): Document Risk Registers
+
+**Goal**: Prove you've identified risks and mitigated them.
+
+**Tasks** (per AI feature):
+- [ ] Create risk register (failure modes, likelihood, impact, mitigation)
+- [ ] Document testing evidence (adversarial testing, bias audits, edge case eval)
+- [ ] Log incidents (if AI failed, what happened, how you fixed it)
+- [ ] Define monitoring plan (what metrics track post-launch, alert thresholds)
+
+**Risk Register Template**:
+| Risk | Likelihood | Impact | Mitigation | Evidence | Status |
+|------|------------|--------|------------|----------|--------|
+| AI hallucinates citation | High | High | Human review required; citation validator | Eval report (95% accuracy) | Mitigated |
+| Bias against non-English speakers | Medium | Medium | Demographic parity testing; quarterly audit | Fairness audit (within 5pp) | Mitigated |
+| Data leak (PII in training set) | Low | Critical | De-identification pipeline; access controls | Penetration test (passed) | Mitigated |
+| Model degrades over time | Medium | Medium | Monthly accuracy tracking; auto-alert if under 85% | Monitoring dashboard (live) | Active |
+
+**Time Investment**: 3-5 hours per feature.
+
+**Why This Matters**: Auditors will ask, "What could go wrong?" Risk register = proof you thought about it (and fixed it).
+
+### Week 4 (Sep 22-30): Audit Prep Dry Run
+
+**Goal**: Simulate the audit. Find gaps before the auditor does.
+
+**Tasks**:
+- [ ] Review all model cards + risk registers (are they complete?)
+- [ ] Check access controls (who can modify AI models? logs exist?)
+- [ ] Verify data retention (are training datasets backed up per policy?)
+- [ ] Test incident response (can you disable AI feature in under 5 minutes?)
+- [ ] Collect evidence (screenshots, logs, test results)
+- [ ] Identify gaps (missing docs, untested controls, incomplete logs)
+
+**Dry Run Checklist**:
+- [ ] Can you show model card for every AI feature?
+- [ ] Can you show risk register with mitigation evidence?
+- [ ] Can you show human oversight plan (who reviews, when, how)?
+- [ ] Can you show incident response plan (kill switch, escalation, RCA process)?
+- [ ] Can you show monitoring dashboard (accuracy, error rate, user feedback)?
+- [ ] Can you show access logs (who accessed training data, when)?
+- [ ] Can you show data retention schedule (how long you keep data, why)?
+
+**If any answer is "no," you have gaps. Fix them before Oct 1.**
+
+## The Five Audit Questions (And How to Answer Them)
+
+### Q1: "How do you ensure AI quality?"
+**Bad Answer**: "We test the model before launch."
+
+**Good Answer**: "We use a three-layer eval process:
+1. **Offline**: Locked eval set (1,000 examples), quarterly re-eval
+2. **Online**: A/B test (2-week pilot, 10% of users)
+3. **Monitoring**: Real-time accuracy tracking, alert if under 85%
+
+Evidence: Eval reports, A/B test results, monitoring dashboard screenshots."
+
+### Q2: "What happens if the AI fails?"
+**Bad Answer**: "We'd fix it."
+
+**Good Answer**: "We have a documented incident response plan:
+1. **Kill switch**: Feature flag, under 2 minute response time
+2. **Escalation**: PM paged, reviews within 1 hour
+3. **Root cause**: Post-mortem within 48 hours
+
+Evidence: Runbook (link), feature flag screenshot, past incident post-mortem (if applicable)."
+
+### Q3: "How do you prevent bias?"
+**Bad Answer**: "We use diverse training data."
+
+**Good Answer**: "We test for demographic parity across user segments:
+- **Metric**: Acceptance rate within 5pp across gender/race/age
+- **Frequency**: Quarterly fairness audit
+- **Action**: If parity violated, retrain with balanced sampling
+
+Evidence: Fairness audit report (latest: Aug 2025), demographic parity test results."
+
+### Q4: "Who can access AI training data?"
+**Bad Answer**: "Our data science team."
+
+**Good Answer**: "Access is role-based with audit logs:
+- **Approved roles**: PM, ML engineer, data scientist (7 people)
+- **Access process**: Request → manager approval → log entry
+- **Audit**: Monthly review of access logs by security team
+
+Evidence: Access control policy (doc link), access log export (last 90 days)."
+
+### Q5: "How do you handle user data in AI?"
+**Bad Answer**: "We de-identify it."
+
+**Good Answer**: "We follow a documented data lifecycle:
+1. **Collection**: User consent (privacy policy, opt-in)
+2. **Processing**: De-identification (remove PII, hash IDs)
+3. **Retention**: 7 years for training data, 90 days for logs
+4. **Deletion**: Automated purge after retention period
+
+Evidence: Privacy policy (link), de-identification code (GitHub), retention schedule (table), deletion job logs (cron output)."
+
+## Real Example: Healthcare AI Feature (HIPAA Audit)
+
+**Feature**: AI-generated patient summaries for physicians.
+
+**Audit Date**: Nov 15, 2025
+
+**September Prep**:
+
+**Week 1**: Inventoried feature (high-risk, HIPAA scope, DRI: PM Alex)
+
+**Week 2**: Built model card
+- Training data: 10,000 de-identified patient notes (2020-2024)
+- Eval: 89% physician agreement, tested on 200 notes
+- Limitations: Struggles with rare diseases, multi-comorbidity cases
+
+**Week 3**: Documented risk register
+- Risk: PHI leak in training set → Mitigation: De-identification pipeline, passed penetration test
+- Risk: Inaccurate summary → Mitigation: Physician review required (100% of summaries)
+- Risk: Model degrades → Mitigation: Monthly eval on locked test set, alert if under 85%
+
+**Week 4**: Dry run
+- Model card: ✅ Complete
+- Risk register: ✅ Complete
+- Access logs: ✅ Exported (last 90 days)
+- Incident response: ✅ Tested kill switch (under 2 minute response time)
+- **Gap found**: Data retention schedule not documented → Fixed (7-year policy added to wiki)
+
+**Audit Result (Nov 15)**: **Zero findings.** HIPAA certification renewed.
+
+**Time Investment**: 12 hours (Sept prep) vs. 40+ hours (remediation if gaps found).
+
+## Checklist: Are You Audit-Ready?
+
+**Documentation**:
+- [ ] Model card for every AI feature (architecture, training data, eval, limitations)
+- [ ] Risk register with mitigation evidence (testing, monitoring, controls)
+- [ ] Human oversight plan (who reviews, when, how to override)
+- [ ] Incident response plan (kill switch, escalation, post-mortem process)
+
+**Evidence**:
+- [ ] Evaluation reports (offline metrics, A/B test results)
+- [ ] Fairness audits (demographic parity, bias testing)
+- [ ] Access logs (who accessed training data, when)
+- [ ] Monitoring dashboards (accuracy, error rate, user feedback)
+
+**Processes**:
+- [ ] Data retention schedule (how long you keep data, why)
+- [ ] Privacy policy (user consent, data use, deletion rights)
+- [ ] Incident response runbook (step-by-step, tested)
+- [ ] Quarterly review cadence (re-eval models, update risk registers)
+
+**If any box is unchecked, you have gaps. Fix them in September, not October.**
+
+## The September Sprint Template
+
+**Sprint Goal**: Make all AI features audit-ready by Oct 1.
+
+**Week 1 Tasks**:
+- [ ] PM: Inventory AI features (table with name, risk, scope, DRI)
+- [ ] PM: Assign features to team members for documentation
+
+**Week 2 Tasks**:
+- [ ] ML: Write model cards (1 per feature, 2-4 hours each)
+- [ ] PM: Review model cards (completeness, clarity)
+
+**Week 3 Tasks**:
+- [ ] PM + ML: Write risk registers (1 per feature, 3-5 hours each)
+- [ ] PM: Collect mitigation evidence (eval reports, test results, logs)
+
+**Week 4 Tasks**:
+- [ ] PM: Dry run audit (simulate auditor questions, find gaps)
+- [ ] PM + Eng: Fix gaps (missing docs, untested controls, incomplete logs)
+- [ ] PM: Package artifacts (Dropbox folder for auditor)
+
+**Standup Questions**:
+- What AI feature are you documenting this week?
+- Any blockers (missing data, unclear ownership)?
+- Are you on track for Oct 1 deadline?
+
+## The Pitch to Your Eng Lead
+
+**PM**: "We need to spend September building compliance artifacts for our AI features. 12-16 hours of team time total."
+
+**Eng Lead**: "We're already behind on roadmap. Can this wait?"
+
+**PM**: "If we don't have this ready, the audit will find gaps. Remediation takes 40+ hours. We'll lose Q4 to fire drills. And if we fail SOC2, enterprise deals freeze."
+
+**Eng Lead**: "What's the alternative?"
+
+**PM**: "12 hours now, or 40+ hours in November. Your call."
+
+---
+
+*Alex Welcing is a Senior AI Product Manager who treats compliance like a product feature, not an afterthought. His AI systems pass audits on the first try because September is documentation month, not scramble season.*

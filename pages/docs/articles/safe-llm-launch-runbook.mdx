@@ -1,0 +1,290 @@
+---
+title: "The SAFE-LLM Launch Runbook for Enterprise AI Product Managers"
+author: ["Alex Welcing"]
+date: "2025-01-06"
+description: "A practical framework for shipping GenAI features in regulated environments—covering scoping, alignment, feedback loops, evaluation, and launch governance that passes compliance review."
+ogImage: "/images/og/safe-llm-runbook.jpg"
+keywords: ["AI Product Manager", "GenAI", "LLM", "Technical Product Manager", "Launch Runbook", "Enterprise AI", "Governance", "Compliance", "Feature Launch", "Applied AI", "HIPAA", "SOC2", "AB Testing"]
+---
+
+## Why Enterprise AI Launches Fail (And How to Prevent It)
+
+Most GenAI features die in legal review or post-launch escalations—not because the technology failed, but because **the launch plan never accounted for enterprise constraints**. Security wants audit trails. Legal demands guardrails. Compliance needs proof of data minimization. And all three expect these controls *before* general availability.
+
+After shipping 1,000+ production commits across AI features in healthcare, legal tech, and consulting platforms, I've learned that **the gap between research demo and enterprise shipment isn't technical—it's operational**. The SAFE-LLM framework codifies the patterns that pass CISO, GC, and compliance review on the first submission.
+
+**SAFE-LLM** stands for:
+- **Scoping**: Problem framing + evaluation dataset design
+- **Alignment**: Stakeholder sync on metrics, risks, and kill criteria
+- **Feedback loops**: Human-in-the-loop + observability
+- **Evaluation**: Offline metrics → online A/B → business KPIs
+- **Launch governance**: Rollout plan, red-teaming, and documentation
+
+This isn't waterfall. It's a **checklist for shipping safely at speed** in organizations that treat compliance as a product requirement, not an afterthought.
+
+---
+
+## The SAFE-LLM Framework
+
+### 1. Scoping: Start with Evaluation, Not Features
+
+**The Research Standard**: NeurIPS and ICML now require artifact checklists—code, data, and reproducibility details. Enterprise AI should adopt the same discipline: define your evaluation dataset *before* you write the PRD.
+
+**What This Looks Like in Practice**:
+
+```
+Step 1: Define task success in user terms
+- "Summarize patient notes" → "Reduce physician review time by 30% without missing critical symptoms"
+- "Generate contract clauses" → "Drafts pass senior attorney approval 80%+ of the time"
+
+Step 2: Build a golden dataset (100–500 examples)
+- Source: real user inputs (anonymized/synthetic if needed)
+- Labels: expert judgments or existing outcomes
+- Coverage: edge cases, adversarial inputs, domain jargon
+
+Step 3: Lock the eval set version
+- Treat it like a unit test suite—no tweaking after tuning starts
+- Version control + access logs (who modified what, when)
+```
+
+**Why This Matters**: If you can't measure it offline, you can't defend it to legal. A reproducible eval set becomes your **safety case artifact**.
+
+**PM Checklist**:
+- [ ] Task definition with quantified success criteria
+- [ ] 100+ labeled examples covering happy path + edge cases
+- [ ] Version-controlled dataset with provenance (source, date, annotator)
+- [ ] Offline baseline metric (e.g., GPT-4 on locked eval = 72% F1)
+
+---
+
+### 2. Alignment: Pre-Commit to Kill Criteria
+
+**The Causal Inference Principle**: Before you run an A/B test, declare your decision rule. If you move the metric but can't explain *why*, you're in data-mining territory—not science.
+
+**What This Looks Like in Practice**:
+
+```
+Stakeholder Alignment Doc (1-pager):
+
+1. Success Metric (online)
+   - Primary: support ticket deflection rate (target: +15%)
+   - Secondary: CSAT ≥4.0/5, avg resolution time ↓20%
+
+2. Guardrail Metrics
+   - Hallucination rate <5% (sampled via human review)
+   - Latency p95 <3s
+   - Cost per query <$0.08
+
+3. Kill Criteria (auto-rollback if any trigger)
+   - Error rate >2%
+   - User complaints >10/day mentioning "wrong info"
+   - Security alert on PII leakage
+
+4. Rollout Plan
+   - Week 1: 5% internal beta
+   - Week 2: 10% GA if no kills
+   - Week 4: 50% if guardrails hold
+   - Week 6: 100% or rollback
+```
+
+**Why This Matters**: Your CISO and GC will ask, "What happens if it hallucinates?" If your answer is "we'll monitor," you'll get a no. If your answer is "we auto-rollback at 5% hallucination rate based on sampled review," you'll get approval.
+
+**PM Checklist**:
+- [ ] 1-page alignment doc signed by Eng, Legal, Security, Support
+- [ ] Declared kill criteria with auto-rollback triggers
+- [ ] Metrics dashboard live *before* experiment starts
+- [ ] Escalation DRI (who gets paged if guardrails trip)
+
+---
+
+### 3. Feedback Loops: Human-in-the-Loop by Default
+
+**The HCI Research**: CHI studies show users over-rely on AI when confidence signals are missing. Calibrated UX—flagging uncertainty, enabling corrections—reduces automation bias.
+
+**What This Looks Like in Practice**:
+
+```
+Design Pattern: Confidence + Correction
+
+User sees:
+┌────────────────────────────────────┐
+│ AI-generated summary (90% confident)│
+│ [👍 Looks good] [✏️ Edit] [🚫 Reject]│
+└────────────────────────────────────┘
+└─ Logging: accepted/edited/rejected + session ID
+
+Backend:
+- Log every interaction (user ID, input, output, feedback, timestamp)
+- Sample 5% of "accepted" outputs for expert review
+- Flag outputs where model confidence <70% for mandatory review
+```
+
+**Why This Matters**: You need a **human review corpus** to prove accuracy in audits. "Our model is 95% accurate" won't fly. "We sampled 500 accepted outputs; experts agreed 92% of the time" will.
+
+**PM Checklist**:
+- [ ] Thumbs-up/down or edit affordance in UX
+- [ ] Sampling plan: X% of outputs reviewed by domain experts
+- [ ] Logging schema: input, output, user feedback, reviewer judgment
+- [ ] Monthly review SLA: report accuracy/hallucination trends to stakeholders
+
+---
+
+### 4. Evaluation: Offline → Online → Business
+
+**The NIST AI RMF**: Map technical metrics to organizational risks. "Accuracy" is a lab metric. "Support ticket deflection" is a business metric. Your roadmap needs both.
+
+**What This Looks Like in Practice**:
+
+```
+Metric Cascade:
+
+Offline (pre-launch):
+- F1 on golden eval set: 78%
+- Latency p95: 2.1s
+- Cost per 1k queries: $4.20
+
+Online (A/B, week 1–2):
+- Treatment group sees +12% ticket deflection
+- CSAT: 4.2 vs. 4.1 control (not sig)
+- Error rate: 0.8% (within SLA)
+
+Business (post-rollout, month 1–3):
+- Support ticket volume ↓18% (compound effect)
+- Avg resolution time ↓22%
+- ARR impact: $240k annualized from support cost savings
+```
+
+**Why This Matters**: Your exec review isn't "the model works." It's "we shipped measurable value and contained risk."
+
+**PM Checklist**:
+- [ ] Offline metrics tied to eval dataset (reproducible)
+- [ ] Online A/B with pre-declared success criteria
+- [ ] Business KPIs tracked for 90 days post-rollout
+- [ ] Monthly readout: what changed, what we learned, next bets
+
+---
+
+### 5. Launch Governance: The Six-Artifact Standard
+
+**The EU AI Act Context**: High-risk AI systems require technical documentation, conformity assessments, and post-market monitoring. Even if you're not EU-regulated *today*, this is where procurement standards are headed.
+
+**What This Looks Like in Practice**:
+
+**Launch Artifacts (templates ready before GA)**:
+
+1. **Model Card** (1 page)
+   - Model version, training data summary, intended use, limitations
+   - Example: "GPT-4-turbo, fine-tuned on 10k anonymized case summaries; not for diagnostic use"
+
+2. **Evaluation Report** (2–3 pages)
+   - Offline metrics on locked eval set
+   - Online A/B results + statistical significance
+   - Guardrail performance (hallucination rate, latency, cost)
+
+3. **Risk Register** (1 page)
+   - Top 5 risks, mitigations, owners
+   - Example: "Hallucination → human review required for confidence below 70%"
+
+4. **Data Provenance Log** (table)
+   - Training/eval data sources, licenses, PII handling
+   - Retention policy + deletion SLA
+
+5. **Red-Team Report** (1–2 pages)
+   - Adversarial test results (jailbreaks, prompt injections, PII leaks)
+   - Mitigations deployed (input filters, output validators)
+
+6. **Rollout Plan** (1 page)
+   - Staged rollout % + timeline
+   - Kill criteria + rollback playbook
+   - Escalation contacts
+
+**Why This Matters**: When legal or compliance asks "show me the documentation," you hand them six PDFs and a dashboard link. Approval in under 48 hours instead of a 3-month review cycle.
+
+**PM Checklist**:
+- [ ] All six artifacts drafted before GA
+- [ ] Artifacts version-controlled (like code)
+- [ ] Legal/Security/Compliance sign-off on final versions
+- [ ] Post-launch: update artifacts if metrics/risks change
+
+---
+
+## Case Example: Shipping a Legal-Research Assistant (90-Day Sprint)
+
+**Context**: AmLaw 200 firm wants GenAI to summarize case law for associates. Must not hallucinate citations, must log all queries for privilege review, must stay SOC2 compliant.
+
+**SAFE-LLM in Action**:
+
+### Weeks 1–2: Scoping
+- Built golden eval set: 200 real research queries (anonymized), labeled by senior attorneys
+- Baseline: GPT-4 on eval = 68% citation accuracy (unacceptable)
+- Task redefinition: "Retrieve top 5 cases + generate 2-sentence summaries" instead of freeform drafting
+
+### Week 3: Alignment
+- Kill criteria: citation hallucination >5%, latency >5s, any PII leak
+- Stakeholder doc signed by GC, IT, KM partner
+
+### Weeks 4–6: Feedback Loops + Eval
+- Added "Verify citations" button (forces attorney review before use)
+- Logged all queries + attorney edits
+- A/B test (10% beta): citation accuracy 89%, latency 3.2s, zero PII incidents
+
+### Weeks 7–8: Governance
+- Six artifacts completed: model card, eval report, risk register, data log, red-team report, rollout plan
+- Legal review: approved in 5 days (artifacts answered all questions upfront)
+
+### Weeks 9–12: Rollout
+- Staged: 10% → 25% → 50% → 100% over 4 weeks
+- Business outcome: associates saved 4.2 hrs/week on research; firm tracked $180k/year in associate time savings
+
+**What Made This Work**: We didn't argue "the model is good enough." We showed reproducible evals, guardrails, logging, and a rollback plan. The artifacts did the persuading.
+
+---
+
+## The SAFE-LLM Launch Checklist (Print This)
+
+**Before You Write Code**:
+- [ ] Golden eval dataset (100+ examples, version-controlled)
+- [ ] Offline baseline metric
+- [ ] Stakeholder alignment doc with kill criteria
+
+**During Development**:
+- [ ] Human-in-the-loop affordance in UX
+- [ ] Logging: input, output, user feedback, confidence scores
+- [ ] Red-team tests for adversarial inputs
+
+**Before A/B Launch**:
+- [ ] Metrics dashboard live (offline + online + guardrails)
+- [ ] Rollback automation (kill criteria → auto-disable feature)
+- [ ] Sampling plan for human review (5–10% of outputs)
+
+**Before General Availability**:
+- [ ] Six launch artifacts drafted and signed
+- [ ] Legal/Security/Compliance approval in writing
+- [ ] Escalation playbook (who gets paged, when, what actions)
+
+**Post-Launch (First 90 Days)**:
+- [ ] Weekly metrics review with stakeholders
+- [ ] Monthly artifact updates if risks/metrics change
+- [ ] Quarterly business KPI readout (tie to ARR/cost/NPS)
+
+---
+
+## Why This Framework Scales
+
+**SAFE-LLM isn't about process theater**—it's about embedding the discipline of reproducible research into product delivery. When you start with evaluation datasets, declare kill criteria, log feedback loops, and ship artifacts, you're not slowing down. You're **de-risking the path to GA**.
+
+The companies that ship AI at scale (and keep shipping) treat compliance as a product surface, not a gate. This runbook is how you build that muscle.
+
+**Next Steps**:
+- Adapt this checklist for your next AI feature
+- Start with the eval dataset (even 50 examples beats zero)
+- Share the stakeholder alignment template with your CISO
+
+If you found this useful, see the companion pieces:
+- **RIBS Framework**: How to prioritize AI opportunities (Readiness, Impact, Build vs. Buy, Safeguards)
+- **PM Who Codes**: Building a prompt evaluation harness in under 2 days
+- **Legal Tech Playbook**: Selling into Big Law with defensibility-first design
+
+---
+
+*Alex Welcing is a Senior AI Product Manager and builder with 1,000+ production commits, specializing in applied AI for regulated industries (legal, healthcare, consulting). He frameworks enterprise AI delivery to pass compliance review on the first try.*

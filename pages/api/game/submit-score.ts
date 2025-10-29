@@ -14,6 +14,15 @@ export default async function handler(
   }
 
   try {
+    // Check for required environment variables
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase credentials');
+      return res.status(200).json({
+        success: false,
+        error: 'Leaderboard not configured',
+      });
+    }
+
     const {
       player_name,
       score,
@@ -64,7 +73,10 @@ export default async function handler(
 
     if (error) {
       console.error('Supabase error:', error);
-      return res.status(500).json({ error: 'Failed to save score', details: error.message });
+      return res.status(200).json({ 
+        success: false, 
+        error: 'Failed to save score',
+      });
     }
 
     // Return the inserted record
@@ -74,6 +86,9 @@ export default async function handler(
     });
   } catch (error: any) {
     console.error('Error submitting score:', error);
-    return res.status(500).json({ error: 'Internal server error', details: error.message });
+    return res.status(200).json({ 
+      success: false, 
+      error: 'Internal server error',
+    });
   }
 }

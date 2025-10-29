@@ -1,0 +1,230 @@
+---
+title: "The September Retro: What Your AI Team Learned in Q3 (And What to Fix in Q4)"
+author: ["Alex Welcing"]
+date: "2025-09-08"
+description: "Q3 is over. Time to audit: Which AI features shipped on time? Which got delayed? What patterns emerge? Here's the retrospective template that turns lessons into Q4 action items."
+ogImage: "/images/og/september-retro-q3-ai-team.jpg"
+keywords: ["Team Retrospective", "AI Product Manager", "Product Leadership", "Agile", "Technical Product Manager", "Team Management", "Process Improvement"]
+---
+
+## The Q3 Review That Exposed the Real Blockers
+
+**CEO**: "We planned to ship 6 AI features in Q3. We shipped 3. What happened?"
+
+**PM**: "Well, Feature A got delayed by compliance, Feature B by data quality issues, Feature C by..."
+
+**CEO**: "Are these one-offs, or do we have systemic problems?"
+
+**PM**: *Realizes no one has been tracking delay patterns.*
+
+**The Fix**: Monthly retrospectives → identify patterns → fix root causes (not symptoms).
+
+## The Q3 Retrospective Framework
+
+**Three Questions**:
+1. **What shipped?** (wins)
+2. **What didn't ship?** (delays)
+3. **What patterns emerge?** (systemic issues)
+
+**Output**: Action items for Q4 (not just "we'll try harder").
+
+## Real Q3 Retrospective: Legal Tech Startup
+
+**Team**: 5 engineers, 2 PMs, 1 data scientist
+
+**Q3 Goals**: Ship 6 AI features
+
+**Results**: 3 shipped, 3 delayed
+
+### What Shipped (Wins)
+
+**Feature 1**: Contract clause extraction AI (deployed Aug 15)
+- **Why it shipped**: Model was ready by July, UX was simple (one button), compliance already approved for previous feature (no new review needed)
+
+**Feature 2**: AI-powered search (deployed Aug 22)
+- **Why it shipped**: Used existing model (no retraining), frontend-only changes, no PII concerns
+
+**Feature 3**: Legal citation validator (deployed Sep 10)
+- **Why it shipped**: PM wrote compliance docs in advance (no delay waiting for legal team)
+
+### What Didn't Ship (Delays)
+
+**Feature 4**: AI contract summarization (planned July, now Oct)
+- **Delay cause**: Legal review took 6 weeks (not 2 weeks as estimated)
+- **Root cause**: PM didn't know legal team was understaffed in July (vacation season)
+
+**Feature 5**: Bias detection in hiring docs (planned Aug, now Nov)
+- **Delay cause**: Training data quality issues (50% of labels were wrong, had to re-label)
+- **Root cause**: PM didn't QA the labeled dataset before training started
+
+**Feature 6**: Multi-language support (planned Sep, now Q1 2026)
+- **Delay cause**: Model accuracy in Spanish was 68% (vs. 89% in English)—not shippable
+- **Root cause**: PM assumed "fine-tune on Spanish data" would work; didn't test early enough
+
+### Patterns (Systemic Issues)
+
+**Pattern 1: Compliance Reviews Take 4-6 Weeks (Not 2)**
+- **Impact**: 2 of 3 delays were compliance-related
+- **Fix**: Start compliance docs 8 weeks before planned launch (not 4 weeks)
+
+**Pattern 2: Data Quality Not Checked Until Training Starts**
+- **Impact**: 1 feature delayed 3 months to re-label data
+- **Fix**: Add "Data QA Week" to project plan (before training, not during)
+
+**Pattern 3: Multi-Language Features Underestimated**
+- **Impact**: Spanish model took 2x longer than expected (low accuracy, needed more data)
+- **Fix**: Add 4-week buffer for non-English features; test on small dataset first
+
+## The Action Items Template
+
+**For Each Pattern, Define**:
+1. **Problem**: What went wrong?
+2. **Root Cause**: Why did it happen?
+3. **Fix**: What will we change in Q4?
+4. **Owner**: Who's responsible?
+5. **Deadline**: When will this be implemented?
+
+**Example**:
+
+| Problem | Root Cause | Fix | Owner | Deadline |
+|---------|------------|-----|-------|----------|
+| Compliance reviews take 6 weeks (not 2) | PM didn't account for legal team workload | Start compliance docs 8 weeks before launch; check legal team calendar for conflicts | PM (Alex) | Oct 1 |
+| Data quality issues delay training | No QA process for labeled datasets | Add "Data QA Week" to project template; PM reviews 10% sample before training starts | PM + Data Scientist | Oct 1 |
+| Multi-language features underestimated | Assumed fine-tuning on Spanish data would work without testing | Spike: Test on 100 Spanish examples before committing to feature; add 4-week buffer to estimate | Data Scientist | Oct 15 |
+
+## The "Start, Stop, Continue" Exercise
+
+**For Each Team Member, Ask**:
+
+**START doing** (new practices):
+- Start writing compliance docs 8 weeks before launch
+- Start QA'ing labeled data before training
+- Start testing multi-language features on small datasets first
+
+**STOP doing** (bad habits):
+- Stop assuming compliance reviews take 2 weeks (they take 6)
+- Stop training models on unvalidated data
+- Stop estimating multi-language features same as English
+
+**CONTINUE doing** (what's working):
+- Continue writing model cards upfront (Feature 3 shipped on time because docs were ready)
+- Continue reusing existing models when possible (Feature 2 shipped fast)
+- Continue UX simplicity (one-button features ship faster than complex workflows)
+
+## The Velocity Tracking Dashboard
+
+**Track These Metrics Q3 → Q4**:
+
+| Metric | Q3 Actual | Q4 Target |
+|--------|-----------|-----------|
+| Features shipped on time | 50% (3 of 6) | 75% (6 of 8) |
+| Compliance review time | 6 weeks | 4 weeks (with 8-week lead time) |
+| Data quality issues (features delayed) | 33% (1 of 3 delays) | 10% (max 1 delay) |
+| Model accuracy on first attempt | 67% (2 of 3 hit target) | 85% (7 of 8 hit target) |
+
+**How to Use This**: Monthly check-in (are we on track to hit Q4 targets?).
+
+## Real Examples of Q3 Learnings
+
+**Startup A (Healthcare AI)**:
+- **Q3 Lesson**: "Red-teaming takes 2 weeks, not 1 day"
+- **Q4 Fix**: Add 2-week red-team sprint to every AI feature (before security review)
+
+**Startup B (Legal Tech)**:
+- **Q3 Lesson**: "Attorneys need training on AI features (not just docs)"
+- **Q4 Fix**: Add 1-week training period for each feature (PM runs 3 workshops with attorneys)
+
+**Startup C (AdTech)**:
+- **Q3 Lesson**: "A/B tests need 4 weeks, not 2 weeks, for statistical significance"
+- **Q4 Fix**: Extend all A/B tests to 4 weeks; if sample size is too small, expand to 10% of users (not 5%)
+
+## The Blameless Post-Mortem Culture
+
+**Bad Retro**:
+- "Feature 4 was delayed because [Engineer] didn't finish the model on time."
+
+**Good Retro**:
+- "Feature 4 was delayed because we didn't account for compliance review time. Root cause: PM estimated 2 weeks, actual was 6 weeks. Fix: PM will check legal team calendar and add 8-week buffer in Q4."
+
+**Why This Matters**: Blame kills learning. Focus on systems, not individuals.
+
+## The Q4 Commitments (Based on Q3 Learnings)
+
+**Commitment 1: Compliance Docs Start 8 Weeks Before Launch**
+- **What Changed**: PM writes model card, risk register, and red-team report during development (not after)
+- **Impact**: No compliance delays in Q4
+
+**Commitment 2: Data QA Week (Before Training)**
+- **What Changed**: PM + data scientist review 10% sample of labeled data; fix quality issues before training starts
+- **Impact**: No data quality delays in Q4
+
+**Commitment 3: Multi-Language Spike (Before Committing to Feature)**
+- **What Changed**: Test on 100 examples in target language; if accuracy is under 80%, add 4-week buffer or kill feature
+- **Impact**: No multi-language surprises in Q4
+
+**Commitment 4: A/B Tests Run for 4 Weeks (Not 2)**
+- **What Changed**: All A/B tests extended to 4 weeks for statistical significance
+- **Impact**: No "inconclusive test" delays in Q4
+
+## Checklist: Is Your Q3 Retro Actionable?
+
+- [ ] Documented: What shipped vs. what didn't
+- [ ] Identified: 3-5 patterns (not just one-off issues)
+- [ ] Defined: Action items with owners and deadlines
+- [ ] Committed: Specific process changes for Q4 (not "we'll try harder")
+- [ ] Measured: Velocity metrics to track improvement (Q3 vs. Q4)
+- [ ] Blameless: Focused on systems, not individuals
+
+**If any box is unchecked, your retro won't drive change.**
+
+## The Monthly Retro Cadence
+
+**Don't wait for Q4 to reflect on Q3. Run monthly retros**:
+
+**July Retro**:
+- What shipped in June? What delayed?
+- 1-2 action items for July
+
+**August Retro**:
+- What shipped in July? What delayed?
+- Did July action items work? (If not, adjust)
+
+**September Retro (Q3 Summary)**:
+- Roll up patterns from July + August + September
+- Define Q4 process changes
+
+**Why This Works**: Monthly retros catch patterns early (not 3 months later when memory fades).
+
+## The One-Page Q3 Summary (For Your CEO)
+
+```
+Q3 RETROSPECTIVE: AI FEATURES
+
+SHIPPED:
+✅ Contract clause extraction (Aug 15)
+✅ AI-powered search (Aug 22)
+✅ Legal citation validator (Sep 10)
+
+DELAYED:
+❌ Contract summarization (Oct, was July) - Compliance review took 6 weeks
+❌ Bias detection (Nov, was Aug) - Data quality issues (re-labeling)
+❌ Multi-language support (Q1 2026, was Sep) - Spanish accuracy too low
+
+PATTERNS:
+1. Compliance reviews take 6 weeks (not 2) → Fix: Start docs 8 weeks before launch
+2. Data quality not checked until training starts → Fix: Add Data QA Week
+3. Multi-language features underestimated → Fix: Test on small dataset first; add buffer
+
+Q4 TARGETS:
+- Ship 6 of 8 features on time (75% vs. 50% in Q3)
+- Zero compliance delays (with 8-week lead time)
+- Zero data quality delays (with QA Week)
+
+CONFIDENCE: High (process changes address root causes, not symptoms)
+```
+
+**Time to Prepare**: 2 hours (but saves weeks of delays in Q4).
+
+---
+
+*Alex Welcing is a Senior AI Product Manager in New York who runs monthly retrospectives and quarterly pattern analysis. His Q4 features ship on time because Q3 lessons turn into process changes, not just "lessons learned" docs that no one reads.*

@@ -44,7 +44,8 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   // 2) If imageUrl changes, load the new texture but don't fade until it's fully loaded
   useEffect(() => {
     // If the same image is reloaded, skip
-    if (oldTexture && oldTexture.image?.src.includes(imageUrl)) {
+    // @ts-ignore - accessing custom userData property
+    if (oldTexture && oldTexture.userData?.sourceUrl === imageUrl) {
       return
     }
     loadTexture(imageUrl, (loadedTex) => {
@@ -85,11 +86,29 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
     loader.load(
       url,
       (tex) => {
-        // Optimize texture settings
+        // Optimize texture settings for better performance
         tex.generateMipmaps = true
         tex.minFilter = THREE.LinearMipmapLinearFilter
         tex.magFilter = THREE.LinearFilter
-        tex.anisotropy = 4 // Lower anisotropy for better performance
+        tex.anisotropy = 2 // Reduced from 4 to 2 for better performance
+
+        // Store the original URL on the texture for comparison
+        // @ts-ignore - adding custom property to THREE.Texture
+        tex.userData.sourceUrl = url
+
+        // Reduce texture resolution if too large (helps with FPS drops)
+        const maxSize = 2048 // Max texture dimension
+        if (tex.image && (tex.image.width > maxSize || tex.image.height > maxSize)) {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          const scale = Math.min(maxSize / tex.image.width, maxSize / tex.image.height)
+          canvas.width = tex.image.width * scale
+          canvas.height = tex.image.height * scale
+          ctx?.drawImage(tex.image, 0, 0, canvas.width, canvas.height)
+          tex.image = canvas
+          tex.needsUpdate = true
+        }
+
         onTexLoad(tex)
       },
       undefined, // onProgress

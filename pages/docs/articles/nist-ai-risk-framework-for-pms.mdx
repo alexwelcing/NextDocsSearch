@@ -1,0 +1,186 @@
+---
+title: "The NIST AI Risk Framework: What Product Managers Actually Need to Know"
+author: ["Alex Welcing"]
+date: "2025-03-03"
+description: "NIST AI RMF 1.0 and the Generative AI Profile are now the standard for AI governance. Here's how to translate policy documents into launch checklists."
+ogImage: "/images/og/nist-ai-risk-framework.jpg"
+keywords: ["AI Governance", "NIST AI RMF", "Risk Management", "AI Product Manager", "Compliance", "Technical Product Manager", "Enterprise AI", "Responsible AI"]
+---
+
+## The Email from Legal
+
+**Subject**: AI Feature Launch Review—NIST AI RMF Compliance Required
+
+**Legal**: "Before GA, we need sign-off that this AI feature aligns with NIST AI Risk Management Framework 1.0. Please provide the following artifacts..."
+
+**You**: *Opens 50-page NIST PDF. Closes it. Googles "NIST AI RMF for product managers."*
+
+This email is coming. If you're shipping enterprise AI in 2025, NIST AI RMF is the **de facto standard** for governance—especially in healthcare, finance, and government.
+
+The framework isn't prescriptive ("you must do X"). It's a vocabulary for describing AI risk. Here's how to translate it into artifacts your legal team recognizes.
+
+## NIST AI RMF: The 30-Second Version
+
+**Four Functions** (like phases of a product lifecycle):
+
+1. **GOVERN**: Policies, accountability, documentation standards
+2. **MAP**: Identify risks before you build
+3. **MEASURE**: Test and evaluate (offline + online)
+4. **MANAGE**: Mitigate, monitor, respond to incidents
+
+**Key Insight**: This isn't a waterfall process. You revisit all four functions throughout the AI lifecycle (pre-launch, post-launch, ongoing).
+
+## What Each Function Means for PMs
+
+### GOVERN (Who's Accountable?)
+
+**NIST Says**: "Establish roles, policies, and oversight mechanisms."
+
+**PM Translation**:
+- Who's the Responsible Individual for this AI feature? (PM, eng lead, domain expert)
+- What's the approval process for launch? (PM → legal → CISO → exec sponsor)
+- Where's the risk register? (Living doc, reviewed monthly)
+
+**Deliverable**:
+- **AI Feature Charter**: One-pager with accountable DRI, risk appetite, escalation path
+
+### MAP (What Could Go Wrong?)
+
+**NIST Says**: "Identify and categorize AI risks in context."
+
+**PM Translation**:
+- What failure modes exist? (hallucinations, bias, latency spikes, data leaks)
+- Who gets harmed if this fails? (end users, internal teams, compliance)
+- What's the impact? (reputational, financial, legal, safety)
+
+**Deliverable**:
+- **Risk Register**: Table with failure mode, likelihood, impact, mitigation status
+
+Example:
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| AI hallucinates legal citation | High | High (attorney relies on bad law) | Human review required; citation validation layer |
+| Bias in hiring recommendations | Medium | High (EEOC violation) | Demographic parity testing; quarterly audit |
+| Data leak in training set | Low | Critical (HIPAA breach) | De-identification pipeline; access controls |
+
+### MEASURE (How Do You Know It's Safe?)
+
+**NIST Says**: "Evaluate AI system performance and trustworthiness."
+
+**PM Translation**:
+- What offline metrics prove safety? (bias metrics, adversarial testing, accuracy on edge cases)
+- What online metrics detect degradation? (user error reports, hallucination rate, latency p95)
+- How often do you re-evaluate? (monthly for high-risk, quarterly for low-risk)
+
+**Deliverable**:
+- **Evaluation Report**: Model card + test results + monitoring plan
+
+### MANAGE (What Happens When Things Break?)
+
+**NIST Says**: "Respond to and recover from AI incidents."
+
+**PM Translation**:
+- What's the kill switch? (feature flag, manual override, rollback plan)
+- Who gets paged if accuracy drops? (on-call PM, eng, domain expert)
+- What's the post-incident process? (root cause analysis, policy update, re-test)
+
+**Deliverable**:
+- **Incident Response Plan**: Escalation tree + rollback procedure + comms template
+
+## Real Example: Legal Research AI Feature
+
+**Feature**: AI-generated case law summaries for attorneys.
+
+### GOVERN
+- **DRI**: Senior PM (legal tech)
+- **Approval Chain**: PM → in-house counsel → CISO → CTO
+- **Risk Appetite**: Zero tolerance for fabricated citations
+
+### MAP
+- **Risk 1**: Hallucinated citations → High likelihood, High impact
+- **Risk 2**: Outdated precedents → Medium likelihood, Medium impact
+- **Risk 3**: Bias toward recent cases → Low likelihood, Low impact
+
+### MEASURE
+- **Offline**: 95% citation accuracy on 200-case eval set
+- **Online**: User flags for hallucinations (target: under 1% of queries)
+- **Re-eval**: Monthly run on locked eval set; quarterly refresh with new cases
+
+### MANAGE
+- **Kill Switch**: Feature flag in production; PM can disable in under 2 minutes
+- **Escalation**: Hallucination reports → Slack alert → PM reviews within 24 hours
+- **Incident Plan**: If accuracy drops below 90% → pause rollout, retrain, re-test
+
+**Result**: Legal signed off in 2 weeks (vs. typical 6-week review) because artifacts mapped directly to NIST functions.
+
+## The NIST AI RMF Generative AI Profile
+
+**New as of July 2024**: Specific guidance for LLMs and generative AI.
+
+**Key Additions**:
+- **Confabulation** (hallucinations): Test for factual errors, especially in high-stakes domains
+- **Harmful Content**: Red-team for jailbreaks, toxicity, PII leaks
+- **Data Provenance**: Document training data sources (IP risk, bias risk)
+- **Human-AI Configuration**: Clarify when human review is required
+
+**PM Takeaway**: If you're using GPT-4, Claude, or Gemini, your legal team will ask about the Generative AI Profile. Have answers for confabulation testing, red-teaming, and human-in-the-loop workflows.
+
+## The One-Page NIST Checklist
+
+Use this for pre-launch reviews:
+
+**GOVERN**
+- [ ] Responsible Individual (DRI) identified
+- [ ] Risk appetite defined (zero tolerance vs. acceptable error rate)
+- [ ] Escalation path documented
+
+**MAP**
+- [ ] Failure modes identified (hallucinations, bias, latency, leaks)
+- [ ] Risk register created (likelihood × impact for each risk)
+- [ ] Harm scenarios documented (who's affected, how)
+
+**MEASURE**
+- [ ] Offline metrics defined (accuracy, fairness, robustness)
+- [ ] Online metrics tracked (error reports, drift detection)
+- [ ] Re-evaluation schedule set (monthly/quarterly)
+
+**MANAGE**
+- [ ] Kill switch ready (feature flag, rollback plan)
+- [ ] Incident response plan written (who, what, when)
+- [ ] Post-incident process defined (RCA, policy update)
+
+## Why NIST Matters (Even If You're Not Regulated)
+
+**You Don't Work for the Government. Why Care?**
+
+Three reasons:
+
+1. **Legal Defense**: If your AI causes harm, plaintiffs will ask, "Did you follow industry standards?" NIST AI RMF is the standard.
+
+2. **Enterprise Sales**: F500 buyers ask, "How do you manage AI risk?" If you say "We follow NIST," procurement accelerates.
+
+3. **Regulatory Anticipation**: EU AI Act, state-level AI bills, and federal agencies all reference NIST. Compliance now = less scrambling later.
+
+## Common PM Mistakes with NIST
+
+**Mistake 1: Treating It Like a One-Time Checklist**
+- **Reality**: NIST is a lifecycle framework. You re-map risks post-launch as new edge cases emerge.
+
+**Mistake 2: Delegating to Legal Only**
+- **Reality**: PMs own the risk register and evaluation plan. Legal reviews; PMs execute.
+
+**Mistake 3: Assuming "We Use OpenAI" = Compliance**
+- **Reality**: NIST applies to your *application*, not just the model. You still need evals, monitoring, and incident plans.
+
+## The Artifact Library (Copy-Paste for Your Next Launch)
+
+1. **AI Feature Charter** (GOVERN): DRI, risk appetite, approval chain
+2. **Risk Register** (MAP): Failure modes, likelihood, impact, mitigations
+3. **Evaluation Report** (MEASURE): Model card, test results, monitoring plan
+4. **Incident Response Plan** (MANAGE): Kill switch, escalation tree, RCA process
+
+**Time Investment**: 4-6 hours upfront. Saves 3-4 weeks in legal review.
+
+---
+
+*Alex Welcing is a Senior AI Product Manager who writes NIST-compliant risk registers before writing PRDs. His features pass legal reviews faster because governance artifacts exist before the code does.*

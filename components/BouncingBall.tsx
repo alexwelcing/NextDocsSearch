@@ -3,11 +3,15 @@ import { useSphere } from '@react-three/cannon';
 import { useThree } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
 
-const BouncingBall: React.FC = () => {
+interface BouncingBallProps {
+  onActivate?: () => void;
+}
+
+const BouncingBall: React.FC<BouncingBallProps> = ({ onActivate }) => {
   const { viewport } = useThree();
   const [ref, api] = useSphere(() => ({
     mass: 1,
-    position: [-10, 5, 0],
+    position: [0, 5, 0],
     args: [1],
     material: { restitution: 0.9 },
     linearDamping: 0.1,
@@ -15,22 +19,27 @@ const BouncingBall: React.FC = () => {
   }));
 
   const handleClick = useCallback(() => {
+    // Apply force for visual feedback
     api.applyForce([0, viewport.height * 100, 0], [0, 0, 0]);
-  }, [api, viewport.height]);
+    // Trigger game activation
+    if (onActivate) {
+      onActivate();
+    }
+  }, [api, viewport.height, onActivate]);
 
   return (
     <Sphere
       ref={ref as any}
-      args={[1, 16, 16]} // Reduced from 32x32 to 16x16 for better performance
+      args={[1, 12, 12]}
       onClick={handleClick}
-      castShadow
-      receiveShadow
     >
       <meshStandardMaterial
         attach="material"
         color="hotpink"
-        roughness={0.5}
-        metalness={0.5}
+        roughness={0.3}
+        metalness={0.7}
+        emissive="hotpink"
+        emissiveIntensity={0.5}
       />
     </Sphere>
   );

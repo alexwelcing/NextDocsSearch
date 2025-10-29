@@ -1,0 +1,135 @@
+---
+title: "Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code"
+author: ["Alex Welcing"]
+date: "2025-01-02"
+description: "NeurIPS and ICML now require artifact checklists. Enterprise AI teams should adopt the same discipline—version control your evaluation datasets or prepare for audit failures."
+ogImage: "/images/og/reproducible-ai-evals.jpg"
+keywords: ["AI Product Manager", "Machine Learning", "Evaluation", "Reproducibility", "Technical Product Manager", "MLOps", "Data Management", "AI Governance"]
+---
+
+## The Audit Question You Can't Answer
+
+Your exec team asks: "How do we know this AI feature is still accurate six months after launch?" You say, "We tested it thoroughly." They ask: "Show me the test results." You realize: **the evaluation dataset changed three times since launch, and no one versioned it**.
+
+This isn't a hypothetical. I've watched legal reviews stall for weeks because teams couldn't reproduce their original accuracy claims. The model was identical. The test data had drifted.
+
+## What NeurIPS Taught Enterprise AI
+
+NeurIPS and ICML now require **artifact checklists**—researchers must publish code, data, and reproduction instructions. The standard is simple: if another team can't reproduce your results, your paper gets flagged.
+
+Enterprise AI should adopt the same discipline. Your evaluation dataset is an artifact. Version it like code, or accept that your accuracy claims are aspirational.
+
+## The Three-Commit Standard
+
+```
+Eval Dataset as Code:
+
+Commit 1: Initial Dataset (v1.0)
+- 100 labeled examples, sourced from Q4 2024 support tickets
+- Annotator: Senior analyst (internal ID: SA-003)
+- Date: 2024-12-15
+- Hash: a3f7b2c (immutable)
+
+Commit 2: Dataset Expansion (v1.1)
+- +50 edge cases from production errors (Jan 2025)
+- Annotator: Same (SA-003)
+- Date: 2025-01-10
+- Hash: d8e4f9a
+- Change log: "Added failure modes from first 2 weeks GA"
+
+Commit 3: Domain Shift (v2.0)
+- New use case (switched from support → sales)
+- Re-labeled all 150 examples for new context
+- Annotator: Sales ops lead (SO-012)
+- Date: 2025-03-01
+- Hash: k2m9n5p
+- Breaking change: Not comparable to v1.x
+```
+
+**Why This Matters**: When legal asks, "Can you prove accuracy hasn't degraded?"—you run the current model on eval dataset v1.0 (locked hash) and compare to launch metrics. If you didn't version the dataset, you're guessing.
+
+## What to Version (Minimum Viable Reproducibility)
+
+**Dataset Files**:
+- Examples (input + expected output)
+- Labels (who annotated, when, what criteria)
+- Metadata (source, date range, sampling method)
+
+**Evaluation Scripts**:
+- Scoring logic (precision/recall/F1 calculations)
+- Dependencies (library versions)
+- Random seeds (if sampling for human review)
+
+**Results Logs**:
+- Model version + eval dataset version + timestamp
+- Raw scores (not just "92% accurate"—log per-example results)
+- Failure analysis (which examples failed, why)
+
+**Access Control**:
+- Read-only after creation (no silent edits)
+- Audit trail (who accessed, when)
+- Approval process for new versions (PM + domain expert sign-off)
+
+## Real Example: Healthcare AI Feature
+
+**Feature**: AI-generated patient summaries for physicians.
+
+**V1.0 Eval Set** (Launch, Dec 2024):
+- 200 patient notes (anonymized)
+- Labeled by 3 senior physicians
+- Accuracy baseline: 89% (physician agreement with AI summaries)
+- Version locked: commit hash `f7a3b9e`
+
+**Month 3 Post-Launch** (March 2025):
+- Exec asks: "Is accuracy still 89%?"
+- Team runs **current model** on **v1.0 eval set** (same hash)
+- Result: 91% (improvement! Model fine-tuning worked)
+- Audit-ready answer: "Yes, accuracy improved 2pp since launch; test data unchanged"
+
+**What If We Hadn't Versioned?**
+- Team would've said, "We think it's still good"
+- Legal would've demanded proof
+- 3-week delay for new labeling effort
+- Risk committee blocks feature expansion
+
+## The One-Command Standard
+
+Make evaluation reproducible with one command:
+
+```bash
+# Reproduces launch accuracy
+$ python eval.py --model v1.2.0 --dataset v1.0 --output results/2025-03-15.json
+
+Output:
+Model: gpt-4-turbo-20241215
+Dataset: eval_set_v1.0 (hash: f7a3b9e, 200 examples)
+Precision: 0.89
+Recall: 0.91
+F1: 0.90
+Runtime: 42s
+Cost: $0.18
+```
+
+If another PM can't run this command and get the same results, your reproducibility fails.
+
+## Checklist: Is Your Eval Set Production-Ready?
+
+- [ ] Dataset stored in version control (Git, DVC, or artifact repo)
+- [ ] Each version has immutable hash + change log
+- [ ] Evaluation script is deterministic (same input → same output)
+- [ ] Results include: model version, dataset version, timestamp, raw scores
+- [ ] Access is read-only after creation (no silent edits)
+- [ ] New versions require PM + domain expert approval
+- [ ] Monthly audit: current model on v1.0 dataset (track drift)
+
+## Why This Isn't Over-Engineering
+
+Versioning eval sets takes 10 minutes. Reproducing accuracy claims without versioned data takes 3 weeks.
+
+When your CISO asks, "Prove this AI feature is still safe," you'll either show a reproducible eval pipeline—or scramble to recreate the evidence.
+
+**Reproducibility isn't a research luxury. It's an enterprise requirement.**
+
+---
+
+*Alex Welcing is a Senior AI Product Manager with 1,000+ production commits. He versions evaluation datasets like code because audits don't accept "we tested it once in 2024."*
