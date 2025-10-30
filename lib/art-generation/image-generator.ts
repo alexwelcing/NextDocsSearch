@@ -44,12 +44,12 @@ export async function generateImage(
       model: 'dall-e-3',
       prompt: options.prompt,
       n: 1,
-      size: options.size,
-      quality: options.quality || 'hd',
-      style: options.style || 'vivid',
-    })
+      size: options.size as any, // DALL-E 3 sizes not in old openai package types
+      quality: options.quality || 'hd' as any,
+      style: options.style || 'vivid' as any,
+    } as any)
 
-    const imageData = response.data.data[0]
+    const imageData = response.data.data[0] as any
 
     if (!imageData.url) {
       throw new Error('No image URL returned from OpenAI')
