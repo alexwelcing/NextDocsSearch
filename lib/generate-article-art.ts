@@ -129,8 +129,8 @@ async function main() {
   console.log('\n🎨 NextDocs Article Art Generator')
   console.log('================================\n')
 
-  // Check for OpenAI API key
-  if (!process.env.OPENAI_KEY) {
+  // Check for OpenAI API key (not needed for dry-run)
+  if (!process.env.OPENAI_KEY && !argv.dryRun) {
     console.error('❌ Error: OPENAI_KEY environment variable is not set')
     console.error('   Please set your OpenAI API key in .env.local')
     process.exit(1)
