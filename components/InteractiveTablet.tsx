@@ -13,18 +13,30 @@ interface ArticleData {
   length?: number;
 }
 
+interface LeaderboardEntry {
+  id: number;
+  player_name: string;
+  score: number;
+  combo_max: number;
+  accuracy: number;
+  created_at: string;
+}
+
 interface InteractiveTabletProps {
   initialPosition?: [number, number, number];
   isGamePlaying?: boolean;
   articles?: ArticleData[];
+  onStartGame?: () => void;
 }
 
 type ViewMode = 'chat' | 'blog';
+type PageMode = 1 | 2;
 
 export default function InteractiveTablet({
   initialPosition = [0, 2, 5],
   isGamePlaying = false,
-  articles = []
+  articles = [],
+  onStartGame
 }: InteractiveTabletProps) {
   // State management
   const [isPoweredOn, setIsPoweredOn] = useState(true);
@@ -33,6 +45,9 @@ export default function InteractiveTablet({
   const [isGrabbed, setIsGrabbed] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [currentArticleIndex, setCurrentArticleIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState<PageMode>(1);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
 
   // Data from context
   const { chatData, setChatData } = useSupabaseData();
@@ -141,6 +156,52 @@ export default function InteractiveTablet({
     });
   }, [isPoweredOn, displayArticles.length]);
 
+  // Fetch leaderboard
+  const fetchLeaderboard = useCallback(async () => {
+    setLoadingLeaderboard(true);
+    try {
+      const response = await fetch('/api/game/get-leaderboard');
+      if (!response.ok) {
+        console.error('Leaderboard API error:', response.status);
+        setLeaderboard([]);
+        return;
+      }
+      const text = await response.text();
+      if (!text) {
+        setLeaderboard([]);
+        return;
+      }
+      const data = JSON.parse(text);
+      setLeaderboard(data.leaderboard || []);
+    } catch (error) {
+      console.error('Failed to fetch leaderboard:', error);
+      setLeaderboard([]);
+    } finally {
+      setLoadingLeaderboard(false);
+    }
+  }, []);
+
+  // Fetch leaderboard when switching to page 2
+  useEffect(() => {
+    if (currentPage === 2 && isPoweredOn) {
+      fetchLeaderboard();
+    }
+  }, [currentPage, isPoweredOn, fetchLeaderboard]);
+
+  // Navigate pages
+  const changePage = useCallback((page: PageMode) => {
+    if (!isPoweredOn) return;
+    setCurrentPage(page);
+  }, [isPoweredOn]);
+
+  // Handle play game
+  const handlePlayGame = useCallback((e: any) => {
+    e.stopPropagation();
+    if (isPoweredOn && onStartGame) {
+      onStartGame();
+    }
+  }, [isPoweredOn, onStartGame]);
+
   // Hide during gameplay
   if (isGamePlaying) {
     return null;
@@ -210,8 +271,8 @@ export default function InteractiveTablet({
           />
         </mesh>
 
-        {/* View mode toggle buttons */}
-        {isPoweredOn && (
+        {/* Page 1: View mode toggle buttons */}
+        {isPoweredOn && currentPage === 1 && (
           <>
             <mesh
               position={[-tabletWidth / 4, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.02]}
@@ -257,6 +318,48 @@ export default function InteractiveTablet({
           </>
         )}
 
+        {/* Page 2: High Scores title */}
+        {isPoweredOn && currentPage === 2 && (
+          <Text
+            position={[0, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.03]}
+            fontSize={0.2}
+            color="#FFD700"
+            anchorX="center"
+            anchorY="middle"
+            fontWeight="bold"
+          >
+            🏆 HIGH SCORES 🏆
+          </Text>
+        )}
+
+        {/* Page navigation dots */}
+        {isPoweredOn && (
+          <>
+            <mesh
+              position={[-0.15, -tabletHeight / 2 + 0.5, tabletDepth / 2 + 0.02]}
+              onClick={() => changePage(1)}
+            >
+              <circleGeometry args={[0.08, 16]} />
+              <meshStandardMaterial
+                color={currentPage === 1 ? "#00ff88" : "#666666"}
+                emissive={currentPage === 1 ? "#00ff88" : "#666666"}
+                emissiveIntensity={currentPage === 1 ? 0.5 : 0.2}
+              />
+            </mesh>
+            <mesh
+              position={[0.15, -tabletHeight / 2 + 0.5, tabletDepth / 2 + 0.02]}
+              onClick={() => changePage(2)}
+            >
+              <circleGeometry args={[0.08, 16]} />
+              <meshStandardMaterial
+                color={currentPage === 2 ? "#00ff88" : "#666666"}
+                emissive={currentPage === 2 ? "#00ff88" : "#666666"}
+                emissiveIntensity={currentPage === 2 ? 0.5 : 0.2}
+              />
+            </mesh>
+          </>
+        )}
+
         {/* HTML content overlay for interactive UI */}
         {isPoweredOn && (
           <Html
@@ -280,7 +383,7 @@ export default function InteractiveTablet({
               overflowY: 'auto',
               fontFamily: 'monospace',
             }}>
-              {viewMode === 'chat' ? (
+              {currentPage === 1 && viewMode === 'chat' ? (
                 <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   {/* Chat Response Display */}
                   <div style={{
@@ -347,7 +450,7 @@ export default function InteractiveTablet({
                     </button>
                   </div>
                 </div>
-              ) : (
+              ) : currentPage === 1 && viewMode === 'blog' ? (
                 <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                   {/* Article Display */}
                   <div style={{
@@ -438,7 +541,121 @@ export default function InteractiveTablet({
                     View Article
                   </button>
                 </div>
-              )}
+              ) : currentPage === 2 ? (
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  {/* High Scores Display */}
+                  <div style={{
+                    flex: 1,
+                    overflowY: 'auto',
+                    marginBottom: '12px',
+                  }}>
+                    {loadingLeaderboard ? (
+                      <div style={{
+                        color: '#de7ea2',
+                        textAlign: 'center',
+                        padding: '20px',
+                        fontSize: '14px',
+                      }}>
+                        Loading leaderboard...
+                      </div>
+                    ) : leaderboard.length === 0 ? (
+                      <div style={{
+                        color: '#888888',
+                        textAlign: 'center',
+                        padding: '20px',
+                        fontSize: '14px',
+                      }}>
+                        Be the first to set a high score!
+                      </div>
+                    ) : (
+                      leaderboard.map((entry, index) => (
+                        <div
+                          key={entry.id}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '12px',
+                            margin: '8px 0',
+                            background: index === 0 ? 'linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent)' :
+                                       index === 1 ? 'linear-gradient(90deg, rgba(192, 192, 192, 0.2), transparent)' :
+                                       index === 2 ? 'linear-gradient(90deg, rgba(205, 127, 50, 0.2), transparent)' :
+                                       'rgba(255, 255, 255, 0.05)',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                          }}
+                        >
+                          <div style={{
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                            width: '40px',
+                            textAlign: 'center',
+                            color: index === 0 ? '#FFD700' :
+                                   index === 1 ? '#C0C0C0' :
+                                   index === 2 ? '#CD7F32' :
+                                   '#de7ea2',
+                          }}>
+                            #{index + 1}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{
+                              fontSize: '14px',
+                              fontWeight: 'bold',
+                              color: '#ffffff',
+                              marginBottom: '4px',
+                            }}>
+                              {entry.player_name}
+                            </div>
+                            <div style={{
+                              fontSize: '10px',
+                              color: '#888888',
+                            }}>
+                              Combo: {entry.combo_max}x • Accuracy: {entry.accuracy.toFixed(1)}%
+                            </div>
+                          </div>
+                          <div style={{
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                            color: '#FFD700',
+                          }}>
+                            {entry.score.toLocaleString()}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Play Game Button */}
+                  <button
+                    onClick={handlePlayGame}
+                    style={{
+                      background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                      border: '3px solid white',
+                      borderRadius: '12px',
+                      padding: '16px 32px',
+                      color: '#000000',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      cursor: 'pointer',
+                      textTransform: 'uppercase',
+                      letterSpacing: '1px',
+                      fontFamily: 'monospace',
+                      boxShadow: '0 0 20px rgba(255, 215, 0, 0.5)',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                      e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.8)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
+                    }}
+                  >
+                    🎮 Play Game
+                  </button>
+                </div>
+              ) : null}
             </div>
           </Html>
         )}

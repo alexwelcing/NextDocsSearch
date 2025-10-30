@@ -441,6 +441,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   initialPosition={[0, 3, 5]}
                   isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
                   articles={articles}
+                  onStartGame={handleBallClick}
                 />
               )}
 
