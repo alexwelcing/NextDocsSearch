@@ -59,6 +59,8 @@ export default function HomePage() {
           content="Alex Welcing, Product Management, 3D environment, Generative AI, Next.js"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://alexwelcing.com" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
