@@ -10,6 +10,7 @@ import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
 import RoundedRectangle from './RoundedRectangle';
 import ResponseDisplay from './ResponseDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
+import InteractiveTablet from './InteractiveTablet';
 import ClickingGame, { GameState, GameStats } from './ClickingGame';
 import GameHUD from './GameHUD';
 import GameStartOverlay from './GameStartOverlay';
@@ -434,24 +435,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 position={[0, 50, 0]}
               />
 
-              {/* Only show articles and response display when NOT playing game or in countdown */}
-              {!loading && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
-                <GlowingArticleDisplay
+              {/* Interactive Tablet - replaces old floating UI (GlowingArticleDisplay, RoundedRectangle, ResponseDisplay) */}
+              {!loading && (
+                <InteractiveTablet
+                  initialPosition={[0, 3, 5]}
+                  isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
                   articles={articles}
-                  article={article}
-                  currentIndex={currentIndex}
-                  setCurrentIndex={setCurrentIndex}
-                  showArticles={true}
-                  title="Article Title Placeholder"
-                  totalArticles={articles.length}
                 />
-              )}
-
-              {gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
-                <>
-                  <RoundedRectangle />
-                  <ResponseDisplay />
-                </>
               )}
 
               {/* XR Controllers - controller models will be automatically rendered by XR component */}
