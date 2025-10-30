@@ -23,6 +23,8 @@ const About: React.FC = () => {
         />
         <meta name="keywords" content="product manager, technology, management consulting, Generative AI, product development, New York, remote" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://alexwelcing.com/about" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}

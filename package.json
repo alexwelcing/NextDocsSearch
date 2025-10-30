@@ -10,7 +10,11 @@
     "lint": "next lint",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "embeddings": "tsx lib/generate-embeddings.ts",
-    "embeddings:refresh": "tsx lib/generate-embeddings.ts --refresh"
+    "embeddings:refresh": "tsx lib/generate-embeddings.ts --refresh",
+    "generate:art": "tsx lib/generate-article-art.ts",
+    "generate:art:refresh": "tsx lib/generate-article-art.ts --refresh",
+    "generate:art:force": "tsx lib/generate-article-art.ts --force",
+    "generate:art:dry-run": "tsx lib/generate-article-art.ts --dry-run"
   },
   "prettier": {
     "trailingComma": "es5",

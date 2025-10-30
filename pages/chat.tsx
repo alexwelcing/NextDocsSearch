@@ -51,6 +51,8 @@ const Chat = () => {
         />
         <meta name="keywords" content="Alex Welcing, product leadership, generative AI, LLM, 360" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://alexwelcing.com/chat" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
