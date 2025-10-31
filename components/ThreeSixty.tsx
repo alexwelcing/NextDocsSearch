@@ -18,6 +18,8 @@ import GameLeaderboard from './GameLeaderboard';
 import BouncingBall from './BouncingBall';
 import PerformanceMonitor from './PerformanceMonitor';
 import CameraController from './CameraController';
+import SeasonalEffects from './SeasonalEffects';
+import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -183,6 +185,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Seasonal theme state
+  const [currentSeason, setCurrentSeason] = useState<Season>(getCurrentSeason());
+  const [seasonalTheme, setSeasonalTheme] = useState<SeasonalTheme>(getSeasonalTheme(currentSeason));
 
   // Detect mobile devices
   useEffect(() => {
@@ -419,6 +425,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               ) : (
                 <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+              )}
+
+              {/* Seasonal particle effects (snow, leaves, etc.) */}
+              {!isMobile && gameState !== 'PLAYING' && (
+                <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
               <ambientLight intensity={0.6} />
