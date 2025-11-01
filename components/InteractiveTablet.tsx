@@ -4,6 +4,7 @@ import { Html, RoundedBox, Text } from '@react-three/drei';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 import { useSupabaseData } from './SupabaseDataContext';
+import QuizSystem from './QuizSystem';
 
 interface ArticleData {
   title: string;
@@ -29,7 +30,7 @@ interface InteractiveTabletProps {
   onStartGame?: () => void;
 }
 
-type ViewMode = 'chat' | 'blog';
+type ViewMode = 'chat' | 'blog' | 'quiz';
 type PageMode = 1 | 2;
 
 export default function InteractiveTablet({
@@ -68,9 +69,9 @@ export default function InteractiveTablet({
   const tabletHeight = isExpanded ? 6 : 3;
   const tabletDepth = 0.2;
 
-  // Physics body for the tablet
+  // Physics body for the tablet (mass: 0 = no gravity)
   const [ref, api] = useBox<THREE.Mesh>(() => ({
-    mass: 1,
+    mass: 0,
     position: initialPosition,
     args: [tabletWidth, tabletHeight, tabletDepth],
     material: {
@@ -95,17 +96,28 @@ export default function InteractiveTablet({
     }
   }, [isGrabbed, gl]);
 
-  // Follow pointer when grabbed
+  // Follow pointer when grabbed and always face camera
   useFrame(() => {
-    if (isGrabbed && groupRef.current) {
-      const target = new THREE.Vector3();
-      camera.getWorldDirection(target);
-      target.multiplyScalar(6);
-      target.add(camera.position);
+    if (groupRef.current && ref.current) {
+      // Make tablet always face the camera (billboard effect)
+      const cameraWorldPos = new THREE.Vector3();
+      camera.getWorldPosition(cameraWorldPos);
+      groupRef.current.lookAt(cameraWorldPos);
 
-      api.position.set(target.x, target.y, target.z);
-      api.velocity.set(0, 0, 0);
-      api.angularVelocity.set(0, 0, 0);
+      // Sync physics body rotation with visual rotation
+      ref.current.rotation.copy(groupRef.current.rotation);
+
+      // Handle grabbed state - follow camera
+      if (isGrabbed) {
+        const target = new THREE.Vector3();
+        camera.getWorldDirection(target);
+        target.multiplyScalar(6);
+        target.add(camera.position);
+
+        api.position.set(target.x, target.y, target.z);
+        api.velocity.set(0, 0, 0);
+        api.angularVelocity.set(0, 0, 0);
+      }
     }
   });
 
@@ -275,10 +287,10 @@ export default function InteractiveTablet({
         {isPoweredOn && currentPage === 1 && (
           <>
             <mesh
-              position={[-tabletWidth / 4, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.02]}
+              position={[-tabletWidth / 3, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.02]}
               onClick={() => switchViewMode('chat')}
             >
-              <planeGeometry args={[1, 0.3]} />
+              <planeGeometry args={[0.85, 0.3]} />
               <meshStandardMaterial
                 color={viewMode === 'chat' ? "#00ff88" : "#333333"}
                 emissive={viewMode === 'chat' ? "#00ff88" : "#333333"}
@@ -286,8 +298,8 @@ export default function InteractiveTablet({
               />
             </mesh>
             <Text
-              position={[-tabletWidth / 4, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.03]}
-              fontSize={0.15}
+              position={[-tabletWidth / 3, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.03]}
+              fontSize={0.13}
               color={viewMode === 'chat' ? "#000000" : "#ffffff"}
               anchorX="center"
               anchorY="middle"
@@ -296,10 +308,10 @@ export default function InteractiveTablet({
             </Text>
 
             <mesh
-              position={[tabletWidth / 4, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.02]}
+              position={[0, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.02]}
               onClick={() => switchViewMode('blog')}
             >
-              <planeGeometry args={[1, 0.3]} />
+              <planeGeometry args={[0.85, 0.3]} />
               <meshStandardMaterial
                 color={viewMode === 'blog' ? "#00ff88" : "#333333"}
                 emissive={viewMode === 'blog' ? "#00ff88" : "#333333"}
@@ -307,13 +319,34 @@ export default function InteractiveTablet({
               />
             </mesh>
             <Text
-              position={[tabletWidth / 4, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.03]}
-              fontSize={0.15}
+              position={[0, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.03]}
+              fontSize={0.13}
               color={viewMode === 'blog' ? "#000000" : "#ffffff"}
               anchorX="center"
               anchorY="middle"
             >
               Blog
+            </Text>
+
+            <mesh
+              position={[tabletWidth / 3, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.02]}
+              onClick={() => switchViewMode('quiz')}
+            >
+              <planeGeometry args={[0.85, 0.3]} />
+              <meshStandardMaterial
+                color={viewMode === 'quiz' ? "#00ff88" : "#333333"}
+                emissive={viewMode === 'quiz' ? "#00ff88" : "#333333"}
+                emissiveIntensity={0.3}
+              />
+            </mesh>
+            <Text
+              position={[tabletWidth / 3, tabletHeight / 2 - 0.3, tabletDepth / 2 + 0.03]}
+              fontSize={0.13}
+              color={viewMode === 'quiz' ? "#000000" : "#ffffff"}
+              anchorX="center"
+              anchorY="middle"
+            >
+              Quiz
             </Text>
           </>
         )}
@@ -383,7 +416,13 @@ export default function InteractiveTablet({
               overflowY: 'auto',
               fontFamily: 'monospace',
             }}>
-              {currentPage === 1 && viewMode === 'chat' ? (
+              {currentPage === 1 && viewMode === 'quiz' ? (
+                <QuizSystem
+                  articleFilename={displayArticles[currentArticleIndex]?.filename || ''}
+                  articleTitle={displayArticles[currentArticleIndex]?.title || ''}
+                  onClose={() => setViewMode('blog')}
+                />
+              ) : currentPage === 1 && viewMode === 'chat' ? (
                 <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   {/* Chat Response Display */}
                   <div style={{
