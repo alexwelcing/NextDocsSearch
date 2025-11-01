@@ -144,6 +144,38 @@ const ControlLabel = styled.label`
   letter-spacing: 1px;
 `
 
+const SeasonIndicator = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid #de7ea2;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+
+const SeasonButton = styled.button<{ active: boolean }>`
+  background: ${props => props.active ? '#8214a0' : 'transparent'};
+  border: 1px solid ${props => props.active ? '#de7ea2' : '#666'};
+  color: white;
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
+
+  &:hover {
+    background: ${props => props.active ? '#941947' : '#333'};
+    border-color: #de7ea2;
+  }
+`
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -186,9 +218,34 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Seasonal theme state
-  const [currentSeason, setCurrentSeason] = useState<Season>(getCurrentSeason());
+  // Seasonal theme state (with query param support)
+  const [currentSeason, setCurrentSeason] = useState<Season>(() => {
+    // Check for season query parameter
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const seasonParam = params.get('season');
+      return getCurrentSeason(seasonParam);
+    }
+    return getCurrentSeason();
+  });
   const [seasonalTheme, setSeasonalTheme] = useState<SeasonalTheme>(getSeasonalTheme(currentSeason));
+
+  // Update season when query params change
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const params = new URLSearchParams(window.location.search);
+      const seasonParam = params.get('season');
+      const newSeason = getCurrentSeason(seasonParam);
+      if (newSeason !== currentSeason) {
+        setCurrentSeason(newSeason);
+        setSeasonalTheme(getSeasonalTheme(newSeason));
+      }
+    };
+
+    // Listen for URL changes (for SPAs)
+    window.addEventListener('popstate', handleUrlChange);
+    return () => window.removeEventListener('popstate', handleUrlChange);
+  }, [currentSeason]);
 
   // Detect mobile devices
   useEffect(() => {
@@ -320,6 +377,24 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   const handleCloseLeaderboard = useCallback(() => {
     setGameState('IDLE');
+  }, []);
+
+  // Handle season change
+  const handleSeasonChange = useCallback((season: Season) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('season', season);
+    window.history.pushState({}, '', url.toString());
+    setCurrentSeason(season);
+    setSeasonalTheme(getSeasonalTheme(season));
+  }, []);
+
+  const handleSeasonReset = useCallback(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('season');
+    window.history.pushState({}, '', url.toString());
+    const defaultSeason = getCurrentSeason();
+    setCurrentSeason(defaultSeason);
+    setSeasonalTheme(getSeasonalTheme(defaultSeason));
   }, []);
 
   return (
@@ -493,6 +568,56 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onClose={handleCloseLeaderboard}
         />
       )}
+
+      {/* Season Selector */}
+      <SeasonIndicator>
+        <ControlLabel style={{ margin: 0, fontSize: '10px', marginRight: '4px' }}>
+          Season:
+        </ControlLabel>
+        <SeasonButton
+          active={currentSeason === 'spring'}
+          onClick={() => handleSeasonChange('spring')}
+        >
+          🌸 Spring
+        </SeasonButton>
+        <SeasonButton
+          active={currentSeason === 'summer'}
+          onClick={() => handleSeasonChange('summer')}
+        >
+          ☀️ Summer
+        </SeasonButton>
+        <SeasonButton
+          active={currentSeason === 'autumn'}
+          onClick={() => handleSeasonChange('autumn')}
+        >
+          🍂 Autumn
+        </SeasonButton>
+        <SeasonButton
+          active={currentSeason === 'winter'}
+          onClick={() => handleSeasonChange('winter')}
+        >
+          ❄️ Winter
+        </SeasonButton>
+        <SeasonButton
+          active={currentSeason === 'halloween'}
+          onClick={() => handleSeasonChange('halloween')}
+        >
+          🎃 Halloween
+        </SeasonButton>
+        <SeasonButton
+          active={currentSeason === 'christmas'}
+          onClick={() => handleSeasonChange('christmas')}
+        >
+          🎄 Christmas
+        </SeasonButton>
+        <SeasonButton
+          active={false}
+          onClick={handleSeasonReset}
+          style={{ marginLeft: '4px', borderColor: '#888' }}
+        >
+          Auto
+        </SeasonButton>
+      </SeasonIndicator>
     </ThreeSixtyContainer>
   );
 };

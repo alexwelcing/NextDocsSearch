@@ -95,9 +95,18 @@ const specialHolidays: HolidayDate[] = [
 
 /**
  * Determines the current season based on the current date
+ * @param override Optional season override (from query params, etc.)
  * @returns The current season
  */
-export function getCurrentSeason(): Season {
+export function getCurrentSeason(override?: string | null): Season {
+  // If there's an override, use it (if valid)
+  if (override) {
+    const normalized = override.toLowerCase() as Season;
+    if (['winter', 'spring', 'summer', 'autumn', 'halloween', 'christmas'].includes(normalized)) {
+      return normalized;
+    }
+  }
+
   const now = new Date();
   const month = now.getMonth(); // 0-11
   const day = now.getDate();
@@ -124,6 +133,17 @@ export function getCurrentSeason(): Season {
   }
   // Autumn: September, October, November
   return 'autumn';
+}
+
+/**
+ * Validates if a string is a valid season
+ * @param season The season string to validate
+ * @returns True if valid season
+ */
+export function isValidSeason(season: string | null | undefined): boolean {
+  if (!season) return false;
+  const normalized = season.toLowerCase();
+  return ['winter', 'spring', 'summer', 'autumn', 'halloween', 'christmas'].includes(normalized);
 }
 
 /**

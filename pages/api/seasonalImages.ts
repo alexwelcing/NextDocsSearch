@@ -23,8 +23,9 @@ export default function handler(
   res: NextApiResponse<ResponseData | ErrorData>
 ) {
   try {
-    // Get current season
-    const currentSeason = getCurrentSeason();
+    // Get current season (with optional query param override)
+    const seasonOverride = req.query.season as string | undefined;
+    const currentSeason = getCurrentSeason(seasonOverride);
     const theme = getSeasonalTheme(currentSeason);
 
     // Read all background images
