@@ -59,27 +59,27 @@ const StyledButton = styled.button`
 
 const VRButtonStyled = styled.button`
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #8214a0;
-  border: 3px solid #de7ea2;
-  color: white;
-  padding: 15px 30px;
-  font-size: 18px;
-  border-radius: 10px;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(130, 20, 160, 0.5);
+  border: 1px solid rgba(222, 126, 162, 0.5);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 6px 12px;
+  font-size: 11px;
+  border-radius: 4px;
   cursor: pointer;
   z-index: 1000;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
 
   &:hover {
-    transform: translateX(-50%) scale(1.05);
-    background: #941947;
-    box-shadow: 0 0 20px rgba(222, 126, 162, 0.5);
+    background: rgba(130, 20, 160, 0.8);
+    border-color: rgba(222, 126, 162, 0.8);
+    color: white;
   }
 
   &:disabled {
-    background: #666;
+    background: rgba(102, 102, 102, 0.3);
     cursor: not-allowed;
     opacity: 0.5;
   }
@@ -87,47 +87,46 @@ const VRButtonStyled = styled.button`
 
 const BackgroundControlsContainer = styled.div`
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 15px;
-  border-radius: 10px;
-  border: 2px solid #de7ea2;
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(222, 126, 162, 0.3);
+  backdrop-filter: blur(5px);
 `
 
 const ToggleButton = styled.button<{ active: boolean }>`
-  background: ${props => props.active ? '#8214a0' : '#333'};
-  border: 2px solid ${props => props.active ? '#de7ea2' : '#666'};
-  color: white;
-  padding: 10px 20px;
-  font-size: 14px;
-  border-radius: 8px;
+  background: ${props => props.active ? 'rgba(130, 20, 160, 0.7)' : 'rgba(51, 51, 51, 0.5)'};
+  border: 1px solid ${props => props.active ? 'rgba(222, 126, 162, 0.5)' : 'rgba(102, 102, 102, 0.3)'};
+  color: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  font-size: 10px;
+  border-radius: 3px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: ${props => props.active ? '#941947' : '#444'};
-    transform: scale(1.05);
+    background: ${props => props.active ? 'rgba(148, 25, 71, 0.8)' : 'rgba(68, 68, 68, 0.6)'};
   }
 `
 
 const SplatSelector = styled.select`
-  background: #333;
-  border: 2px solid #de7ea2;
-  color: white;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 8px;
+  background: rgba(51, 51, 51, 0.5);
+  border: 1px solid rgba(222, 126, 162, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 4px 6px;
+  font-size: 10px;
+  border-radius: 3px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: #444;
+    background: rgba(68, 68, 68, 0.6);
   }
 
   option {
@@ -137,11 +136,11 @@ const SplatSelector = styled.select`
 `
 
 const ControlLabel = styled.label`
-  color: white;
-  font-size: 12px;
-  margin-bottom: 5px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  margin-bottom: 2px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 `
 
 const SeasonIndicator = styled.div`
@@ -409,19 +408,19 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       {/* Background Controls - Only show if splats are detected AND not playing game or countdown */}
       {hasSplats && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
         <BackgroundControlsContainer>
-          <ControlLabel>Background Mode</ControlLabel>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <ControlLabel>BG</ControlLabel>
+          <div style={{ display: 'flex', gap: '3px' }}>
             <ToggleButton
               active={!useGaussianSplat}
               onClick={() => setUseGaussianSplat(false)}
             >
-              Image
+              IMG
             </ToggleButton>
             <ToggleButton
               active={useGaussianSplat}
               onClick={() => setUseGaussianSplat(true)}
             >
-              Splat
+              SPL
             </ToggleButton>
           </div>
 
