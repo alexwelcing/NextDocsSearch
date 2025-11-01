@@ -569,8 +569,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {/* Season Selector */}
-      <SeasonIndicator>
+      {/* Season Selector - Hidden */}
+      <SeasonIndicator style={{ display: 'none' }}>
         <ControlLabel style={{ margin: 0, fontSize: '10px', marginRight: '4px' }}>
           Season:
         </ControlLabel>
