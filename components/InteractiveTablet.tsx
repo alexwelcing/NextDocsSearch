@@ -43,7 +43,7 @@ export default function InteractiveTablet({
   const [isPoweredOn, setIsPoweredOn] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('chat');
-  const [isGrabbed, setIsGrabbed] = useState(false);
+  const [isSlidOut, setIsSlidOut] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [currentArticleIndex, setCurrentArticleIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState<PageMode>(1);
@@ -69,10 +69,14 @@ export default function InteractiveTablet({
   const tabletHeight = isExpanded ? 6 : 3;
   const tabletDepth = 0.2;
 
+  // Define positions for slide animation
+  const hiddenPosition: [number, number, number] = [-6, 3, 5]; // Off-screen left, barely visible
+  const visiblePosition: [number, number, number] = [0, 3, 5]; // Centered on screen
+
   // Physics body for the tablet (mass: 0 = no gravity)
   const [ref, api] = useBox<THREE.Mesh>(() => ({
     mass: 0,
-    position: initialPosition,
+    position: hiddenPosition,
     args: [tabletWidth, tabletHeight, tabletDepth],
     material: {
       friction: 0.5,
@@ -80,23 +84,15 @@ export default function InteractiveTablet({
     }
   }));
 
-  // Handle grabbing/dragging
-  const handlePointerDown = useCallback((e: any) => {
+  // Handle tablet body click to toggle slide
+  const handleTabletClick = useCallback((e: any) => {
     e.stopPropagation();
     if (!isPoweredOn) return;
 
-    setIsGrabbed(true);
-    gl.domElement.style.cursor = 'grabbing';
-  }, [isPoweredOn, gl]);
+    setIsSlidOut(prev => !prev);
+  }, [isPoweredOn]);
 
-  const handlePointerUp = useCallback(() => {
-    if (isGrabbed) {
-      setIsGrabbed(false);
-      gl.domElement.style.cursor = 'grab';
-    }
-  }, [isGrabbed, gl]);
-
-  // Follow pointer when grabbed and always face camera
+  // Handle slide animation and billboard effect
   useFrame(() => {
     if (groupRef.current && ref.current) {
       // Make tablet always face the camera (billboard effect)
@@ -107,26 +103,21 @@ export default function InteractiveTablet({
       // Sync physics body rotation with visual rotation
       ref.current.rotation.copy(groupRef.current.rotation);
 
-      // Handle grabbed state - follow camera
-      if (isGrabbed) {
-        const target = new THREE.Vector3();
-        camera.getWorldDirection(target);
-        target.multiplyScalar(6);
-        target.add(camera.position);
+      // Animate slide in/out
+      const targetPosition = isSlidOut ? visiblePosition : hiddenPosition;
+      const currentPosition = ref.current.position;
 
-        api.position.set(target.x, target.y, target.z);
-        api.velocity.set(0, 0, 0);
-        api.angularVelocity.set(0, 0, 0);
-      }
+      // Smooth transition using lerp
+      const speed = 0.1;
+      const newX = THREE.MathUtils.lerp(currentPosition.x, targetPosition[0], speed);
+      const newY = THREE.MathUtils.lerp(currentPosition.y, targetPosition[1], speed);
+      const newZ = THREE.MathUtils.lerp(currentPosition.z, targetPosition[2], speed);
+
+      api.position.set(newX, newY, newZ);
+      api.velocity.set(0, 0, 0);
+      api.angularVelocity.set(0, 0, 0);
     }
   });
-
-  // Handle pointer events
-  useEffect(() => {
-    const handleGlobalPointerUp = () => handlePointerUp();
-    window.addEventListener('pointerup', handleGlobalPointerUp);
-    return () => window.removeEventListener('pointerup', handleGlobalPointerUp);
-  }, [handlePointerUp]);
 
   // Toggle power
   const togglePower = useCallback((e: any) => {
@@ -226,7 +217,7 @@ export default function InteractiveTablet({
   return (
     <group ref={groupRef}>
       {/* Main tablet body */}
-      <mesh ref={ref} onPointerDown={handlePointerDown}>
+      <mesh ref={ref} onClick={handleTabletClick}>
         <RoundedBox args={[tabletWidth, tabletHeight, tabletDepth]} radius={0.1} smoothness={4}>
           <meshStandardMaterial
             color="#1a1a2e"
@@ -393,8 +384,8 @@ export default function InteractiveTablet({
           </>
         )}
 
-        {/* HTML content overlay for interactive UI */}
-        {isPoweredOn && (
+        {/* HTML content overlay for interactive UI - only show when slid out */}
+        {isPoweredOn && isSlidOut && (
           <Html
             position={[0, -0.2, tabletDepth / 2 + 0.02]}
             transform
