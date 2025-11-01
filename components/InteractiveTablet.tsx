@@ -398,7 +398,6 @@ export default function InteractiveTablet({
           <Html
             position={[0, -0.2, tabletDepth / 2 + 0.02]}
             transform
-            occlude
             style={{
               width: `${(tabletWidth - 0.8) * 100}px`,
               height: `${(tabletHeight - 1.2) * 100}px`,
