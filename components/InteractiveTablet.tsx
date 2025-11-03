@@ -131,8 +131,8 @@ export default function InteractiveTablet({
   return (
     <>
       <group ref={groupRef}>
-        {/* Main tablet body */}
-        <mesh ref={ref} onClick={handleTabletClick}>
+        {/* Main tablet body (physics body) */}
+        <mesh ref={ref}>
           <RoundedBox args={[tabletWidth, tabletHeight, tabletDepth]} radius={0.1} smoothness={4}>
             <meshStandardMaterial
               color="#1a1a2e"
@@ -140,110 +140,116 @@ export default function InteractiveTablet({
               roughness={0.2}
             />
           </RoundedBox>
-
-          {/* Screen - front face */}
-          <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
-            <planeGeometry args={[tabletWidth - 0.4, tabletHeight - 0.4]} />
-            <meshStandardMaterial
-              color={screenColor}
-              emissive={screenEmissive}
-              emissiveIntensity={isPoweredOn ? 0.5 : 0}
-              metalness={0.1}
-              roughness={0.9}
-            />
-          </mesh>
-
-          {/* Light emission when powered on */}
-          {isPoweredOn && (
-            <pointLight
-              position={[0, 0, 1]}
-              color="#4488ff"
-              intensity={2}
-              distance={8}
-            />
-          )}
-
-          {/* Power button - bottom left */}
-          <mesh
-            position={[-tabletWidth / 2 + 0.3, -tabletHeight / 2 + 0.2, tabletDepth / 2 + 0.02]}
-            onClick={togglePower}
-          >
-            <circleGeometry args={[0.12, 16]} />
-            <meshStandardMaterial
-              color={isPoweredOn ? "#00ff88" : "#ff0000"}
-              emissive={isPoweredOn ? "#00ff88" : "#880000"}
-              emissiveIntensity={0.5}
-            />
-          </mesh>
-
-          {/* Preview content on screen when powered on */}
-          {isPoweredOn && (
-            <>
-              {/* Main icon */}
-              <Text
-                position={[0, 0.3, tabletDepth / 2 + 0.03]}
-                fontSize={0.5}
-                color="#00ff88"
-                anchorX="center"
-                anchorY="middle"
-              >
-                ▶
-              </Text>
-
-              {/* Title */}
-              <Text
-                position={[0, -0.2, tabletDepth / 2 + 0.03]}
-                fontSize={0.18}
-                color="#4488ff"
-                anchorX="center"
-                anchorY="middle"
-                fontWeight="bold"
-              >
-                TERMINAL
-              </Text>
-
-              {/* Hint text - pulsing */}
-              <Text
-                position={[0, -0.8, tabletDepth / 2 + 0.03]}
-                fontSize={0.12}
-                color={new THREE.Color(0x00ff88).multiplyScalar(0.5 + pulseAnimation * 0.5)}
-                anchorX="center"
-                anchorY="middle"
-              >
-                Click to Open
-              </Text>
-
-              {/* Feature indicators */}
-              <Text
-                position={[-1.2, 0.6, tabletDepth / 2 + 0.03]}
-                fontSize={0.08}
-                color="#888888"
-                anchorX="center"
-                anchorY="middle"
-              >
-                💬 Chat
-              </Text>
-              <Text
-                position={[0, 0.6, tabletDepth / 2 + 0.03]}
-                fontSize={0.08}
-                color="#888888"
-                anchorX="center"
-                anchorY="middle"
-              >
-                📄 Articles
-              </Text>
-              <Text
-                position={[1.2, 0.6, tabletDepth / 2 + 0.03]}
-                fontSize={0.08}
-                color="#888888"
-                anchorX="center"
-                anchorY="middle"
-              >
-                🎮 Game
-              </Text>
-            </>
-          )}
         </mesh>
+
+        {/* Clickable overlay for opening terminal - covers the whole tablet */}
+        <mesh position={[0, 0, 0]} onClick={handleTabletClick}>
+          <boxGeometry args={[tabletWidth, tabletHeight, tabletDepth]} />
+          <meshBasicMaterial transparent opacity={0} />
+        </mesh>
+
+        {/* Screen - front face */}
+        <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
+          <planeGeometry args={[tabletWidth - 0.4, tabletHeight - 0.4]} />
+          <meshStandardMaterial
+            color={screenColor}
+            emissive={screenEmissive}
+            emissiveIntensity={isPoweredOn ? 0.5 : 0}
+            metalness={0.1}
+            roughness={0.9}
+          />
+        </mesh>
+
+        {/* Light emission when powered on */}
+        {isPoweredOn && (
+          <pointLight
+            position={[0, 0, 1]}
+            color="#4488ff"
+            intensity={2}
+            distance={8}
+          />
+        )}
+
+        {/* Power button - bottom left */}
+        <mesh
+          position={[-tabletWidth / 2 + 0.3, -tabletHeight / 2 + 0.2, tabletDepth / 2 + 0.02]}
+          onClick={togglePower}
+        >
+          <circleGeometry args={[0.12, 16]} />
+          <meshStandardMaterial
+            color={isPoweredOn ? "#00ff88" : "#ff0000"}
+            emissive={isPoweredOn ? "#00ff88" : "#880000"}
+            emissiveIntensity={0.5}
+          />
+        </mesh>
+
+        {/* Preview content on screen when powered on */}
+        {isPoweredOn && (
+          <>
+            {/* Main icon */}
+            <Text
+              position={[0, 0.3, tabletDepth / 2 + 0.03]}
+              fontSize={0.5}
+              color="#00ff88"
+              anchorX="center"
+              anchorY="middle"
+            >
+              ▶
+            </Text>
+
+            {/* Title */}
+            <Text
+              position={[0, -0.2, tabletDepth / 2 + 0.03]}
+              fontSize={0.18}
+              color="#4488ff"
+              anchorX="center"
+              anchorY="middle"
+              fontWeight="bold"
+            >
+              TERMINAL
+            </Text>
+
+            {/* Hint text - pulsing */}
+            <Text
+              position={[0, -0.8, tabletDepth / 2 + 0.03]}
+              fontSize={0.12}
+              color={new THREE.Color(0x00ff88).multiplyScalar(0.5 + pulseAnimation * 0.5)}
+              anchorX="center"
+              anchorY="middle"
+            >
+              Click to Open
+            </Text>
+
+            {/* Feature indicators */}
+            <Text
+              position={[-1.2, 0.6, tabletDepth / 2 + 0.03]}
+              fontSize={0.08}
+              color="#888888"
+              anchorX="center"
+              anchorY="middle"
+            >
+              💬 Chat
+            </Text>
+            <Text
+              position={[0, 0.6, tabletDepth / 2 + 0.03]}
+              fontSize={0.08}
+              color="#888888"
+              anchorX="center"
+              anchorY="middle"
+            >
+              📄 Articles
+            </Text>
+            <Text
+              position={[1.2, 0.6, tabletDepth / 2 + 0.03]}
+              fontSize={0.08}
+              color="#888888"
+              anchorX="center"
+              anchorY="middle"
+            >
+              🎮 Game
+            </Text>
+          </>
+        )}
       </group>
 
       {/* Terminal Interface Overlay */}
