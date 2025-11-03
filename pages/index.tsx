@@ -4,12 +4,15 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { SupabaseDataProvider } from '@/components/SupabaseDataContext'
 import { SearchDialog } from '@/components/SearchDialog'
+import QuestNotification from '@/components/QuestNotification'
+import AchievementUnlock from '@/components/AchievementUnlock'
 import CircleNav from '@/components/ui/CircleNav'
 import Footer from '@/components/ui/footer'
 import ArticleList from '@/components/ui/ArticleList'
 import StylishFallback from '@/components/StylishFallback'
 import styles from '@/styles/Home.module.css'
 import type { GameState } from '@/components/ClickingGame'
+import { useJourney } from '@/components/JourneyContext'
 
 // Dynamically import the 3D environment, same as your old Chat page
 const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
@@ -22,6 +25,19 @@ export default function HomePage() {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
   const [gameState, setGameState] = useState<GameState>('IDLE')
+
+  // Journey system
+  const { achievements } = useJourney()
+  const [currentAchievement, setCurrentAchievement] = useState<typeof achievements[0] | null>(null)
+
+  // Watch for new achievements
+  useEffect(() => {
+    const unlockedAchievements = achievements.filter(a => a.unlocked)
+    if (unlockedAchievements.length > 0) {
+      const latest = unlockedAchievements[unlockedAchievements.length - 1]
+      setCurrentAchievement(latest)
+    }
+  }, [achievements])
 
   async function getRandomImage() {
     try {
@@ -99,6 +115,15 @@ export default function HomePage() {
 
             {/* SearchDialog for AI chat - only show when NOT playing game */}
             {gameState !== 'PLAYING' && <SearchDialog />}
+
+            {/* Journey UI - Quest Tracker */}
+            {gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && <QuestNotification />}
+
+            {/* Achievement Unlock Popup */}
+            <AchievementUnlock
+              achievement={currentAchievement}
+              onDismiss={() => setCurrentAchievement(null)}
+            />
 
             {/* Button to go back to 2D home */}
             <div className="absolute top-4 left-4 z-50">
