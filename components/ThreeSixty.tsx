@@ -23,6 +23,7 @@ import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
+import { useJourney } from './JourneyContext';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -285,6 +286,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     successfulClicks: 0,
   });
 
+  // Journey tracking
+  const { completeQuest, updateStats, currentQuest } = useJourney();
+
   // Notify parent of game state changes
   useEffect(() => {
     if (onGameStateChange) {
@@ -403,7 +407,20 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setScore(finalScore);
     setGameStats(stats);
     setGameState('GAME_OVER');
-  }, []);
+
+    // Track quest completion
+    updateStats('highestGameScore', finalScore);
+
+    // Complete play-game quest on first game completion
+    if (currentQuest?.id === 'play-game') {
+      completeQuest('play-game');
+    }
+
+    // Complete leaderboard-rank quest if score >= 5000
+    if (finalScore >= 5000) {
+      completeQuest('leaderboard-rank');
+    }
+  }, [updateStats, currentQuest, completeQuest]);
 
   const handlePlayAgain = useCallback(() => {
     setGameState('IDLE');
