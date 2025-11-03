@@ -131,22 +131,20 @@ export default function InteractiveTablet({
   return (
     <>
       <group ref={groupRef}>
-        {/* Main tablet body (physics body) */}
-        <mesh ref={ref}>
-          <RoundedBox args={[tabletWidth, tabletHeight, tabletDepth]} radius={0.1} smoothness={4}>
-            <meshStandardMaterial
-              color="#1a1a2e"
-              metalness={0.8}
-              roughness={0.2}
-            />
-          </RoundedBox>
-        </mesh>
-
-        {/* Clickable overlay for opening terminal - covers the whole tablet */}
-        <mesh position={[0, 0, 0]} onClick={handleTabletClick}>
-          <boxGeometry args={[tabletWidth, tabletHeight, tabletDepth]} />
-          <meshBasicMaterial transparent opacity={0} />
-        </mesh>
+        {/* Main tablet body (physics body) - using RoundedBox directly */}
+        <RoundedBox
+          ref={ref}
+          args={[tabletWidth, tabletHeight, tabletDepth]}
+          radius={0.1}
+          smoothness={4}
+          onClick={handleTabletClick}
+        >
+          <meshStandardMaterial
+            color="#1a1a2e"
+            metalness={0.8}
+            roughness={0.2}
+          />
+        </RoundedBox>
 
         {/* Screen - front face */}
         <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
