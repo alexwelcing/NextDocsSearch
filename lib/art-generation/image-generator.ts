@@ -5,17 +5,16 @@
  * for blog articles using the signature NextDocs Quantum Aesthetic style.
  */
 
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
 import fs from 'fs'
 import path from 'path'
 import https from 'https'
 import sharp from 'sharp'
 
 // Initialize OpenAI client
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_KEY,
 })
-const openai = new OpenAIApi(configuration)
 
 export interface ImageGenerationOptions {
   prompt: string
@@ -40,16 +39,16 @@ export async function generateImage(
   console.log(`   Quality: ${options.quality || 'hd'}`)
 
   try {
-    const response = await openai.createImage({
+    const response = await openai.images.generate({
       model: 'dall-e-3',
       prompt: options.prompt,
       n: 1,
-      size: options.size as any, // DALL-E 3 sizes not in old openai package types
-      quality: options.quality || 'hd' as any,
-      style: options.style || 'vivid' as any,
-    } as any)
+      size: options.size,
+      quality: options.quality || 'hd',
+      style: options.style || 'vivid',
+    })
 
-    const imageData = response.data.data[0] as any
+    const imageData = response.data[0]
 
     if (!imageData.url) {
       throw new Error('No image URL returned from OpenAI')
