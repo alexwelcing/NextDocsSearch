@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSupabaseData } from './SupabaseDataContext';
+import { useJourney } from './JourneyContext';
 import QuizSystem from './QuizSystem';
 
 interface ArticleData {
@@ -41,14 +42,16 @@ export default function TerminalInterface({
   const [currentPage, setCurrentPage] = useState<PageMode>(1);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+  const [lockedTabHover, setLockedTabHover] = useState<string | null>(null);
 
   const { chatData, setChatData } = useSupabaseData();
+  const { isFeatureUnlocked, completeQuest, updateStats, currentQuest } = useJourney();
 
-  const displayArticles = articles.length > 0 ? articles : [
+  const displayArticles = useMemo(() => articles.length > 0 ? articles : [
     { title: "Getting Started", date: "2024-10-01", author: ["Team"] },
     { title: "Advanced Features", date: "2024-10-15", author: ["Team"] },
     { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
-  ];
+  ], [articles]);
 
   // Handle ESC key to close
   useEffect(() => {
@@ -96,8 +99,33 @@ export default function TerminalInterface({
     if (chatInput.trim()) {
       setChatData({ question: chatInput, response: chatData.response });
       setChatInput('');
+
+      // Track quest completion and stats
+      updateStats('questionsAsked', 1);
+      if (currentQuest?.id === 'first-question') {
+        completeQuest('first-question');
+      }
     }
-  }, [chatInput, setChatData, chatData.response]);
+  }, [chatInput, setChatData, chatData.response, updateStats, currentQuest, completeQuest]);
+
+  // Track when user views an article
+  useEffect(() => {
+    if (viewMode === 'blog' && displayArticles[currentArticleIndex]) {
+      const articleTitle = displayArticles[currentArticleIndex].title;
+
+      // Track article read
+      updateStats('articlesRead', [articleTitle]);
+
+      // Complete quest if active
+      if (currentQuest?.id === 'read-article') {
+        // Give user 2 seconds to actually read before completing
+        const timer = setTimeout(() => {
+          completeQuest('read-article');
+        }, 2000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [viewMode, currentArticleIndex, displayArticles, currentQuest, completeQuest, updateStats]);
 
   const navigateArticle = useCallback((direction: 'prev' | 'next') => {
     setCurrentArticleIndex(prev => {
@@ -206,21 +234,23 @@ export default function TerminalInterface({
                 APPS
               </button>
               <button
-                onClick={() => setCurrentPage(2)}
+                onClick={() => isFeatureUnlocked('leaderboard') && setCurrentPage(2)}
+                disabled={!isFeatureUnlocked('leaderboard')}
                 style={{
                   background: currentPage === 2 ? 'rgba(255, 215, 0, 0.2)' : 'transparent',
                   border: currentPage === 2 ? '2px solid #FFD700' : '2px solid rgba(255, 215, 0, 0.2)',
                   borderRadius: '8px',
                   padding: '8px 16px',
-                  color: currentPage === 2 ? '#FFD700' : '#888',
-                  cursor: 'pointer',
+                  color: !isFeatureUnlocked('leaderboard') ? '#444' : (currentPage === 2 ? '#FFD700' : '#888'),
+                  cursor: !isFeatureUnlocked('leaderboard') ? 'not-allowed' : 'pointer',
                   fontSize: '14px',
                   fontWeight: 'bold',
                   fontFamily: 'monospace',
                   transition: 'all 0.2s ease',
+                  opacity: !isFeatureUnlocked('leaderboard') ? 0.4 : 1,
                 }}
               >
-                🏆 LEADERBOARD
+                {!isFeatureUnlocked('leaderboard') && '🔒 '}🏆 LEADERBOARD
               </button>
             </div>
           </div>
@@ -262,41 +292,78 @@ export default function TerminalInterface({
                 display: 'flex',
                 gap: '0',
                 padding: '20px 30px 0',
+                position: 'relative',
               }}>
-                {(['chat', 'blog', 'quiz'] as ViewMode[]).map((mode) => (
-                  <button
-                    key={mode}
-                    onClick={() => setViewMode(mode)}
-                    style={{
-                      flex: 1,
-                      background: viewMode === mode
-                        ? 'linear-gradient(180deg, rgba(68, 136, 255, 0.3), rgba(68, 136, 255, 0.1))'
-                        : 'transparent',
-                      border: 'none',
-                      borderBottom: viewMode === mode ? '3px solid #00ff88' : '3px solid transparent',
-                      padding: '15px 20px',
-                      color: viewMode === mode ? '#00ff88' : '#888',
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      fontFamily: 'monospace',
-                      textTransform: 'uppercase',
-                      transition: 'all 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (viewMode !== mode) {
-                        e.currentTarget.style.color = '#aaa';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (viewMode !== mode) {
-                        e.currentTarget.style.color = '#888';
-                      }
-                    }}
-                  >
-                    {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : '❓ QUIZ'}
-                  </button>
-                ))}
+                {(['chat', 'blog', 'quiz'] as ViewMode[]).map((mode) => {
+                  const featureMap = { chat: 'chat', blog: 'articles', quiz: 'quiz' };
+                  const isLocked = !isFeatureUnlocked(featureMap[mode]);
+
+                  return (
+                    <div key={mode} style={{ flex: 1, position: 'relative' }}>
+                      <button
+                        onClick={() => !isLocked && setViewMode(mode)}
+                        onMouseEnter={(e) => {
+                          if (isLocked) {
+                            setLockedTabHover(mode);
+                          } else if (viewMode !== mode) {
+                            e.currentTarget.style.color = '#aaa';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (isLocked) {
+                            setLockedTabHover(null);
+                          } else if (viewMode !== mode) {
+                            e.currentTarget.style.color = '#888';
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          background: viewMode === mode
+                            ? 'linear-gradient(180deg, rgba(68, 136, 255, 0.3), rgba(68, 136, 255, 0.1))'
+                            : 'transparent',
+                          border: 'none',
+                          borderBottom: viewMode === mode ? '3px solid #00ff88' : '3px solid transparent',
+                          padding: '15px 20px',
+                          color: isLocked ? '#444' : (viewMode === mode ? '#00ff88' : '#888'),
+                          cursor: isLocked ? 'not-allowed' : 'pointer',
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          fontFamily: 'monospace',
+                          textTransform: 'uppercase',
+                          transition: 'all 0.2s ease',
+                          opacity: isLocked ? 0.4 : 1,
+                          position: 'relative',
+                        }}
+                      >
+                        {isLocked && '🔒 '}
+                        {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : '❓ QUIZ'}
+                      </button>
+
+                      {/* Locked Tooltip */}
+                      {isLocked && lockedTabHover === mode && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          marginTop: '8px',
+                          background: 'rgba(0, 0, 0, 0.9)',
+                          border: '1px solid #ff4444',
+                          borderRadius: '8px',
+                          padding: '12px 16px',
+                          zIndex: 1000,
+                          whiteSpace: 'nowrap',
+                          fontSize: '13px',
+                          color: '#ff8888',
+                          fontFamily: 'monospace',
+                          pointerEvents: 'none',
+                        }}>
+                          🔒 Complete current quest to unlock
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Content Display */}
