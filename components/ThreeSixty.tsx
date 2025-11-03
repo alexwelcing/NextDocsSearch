@@ -20,6 +20,7 @@ import PerformanceMonitor from './PerformanceMonitor';
 import CameraController from './CameraController';
 import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
+import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 
@@ -229,6 +230,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     return false;
   });
   const [cinematicComplete, setCinematicComplete] = useState(!showCinematicIntro);
+  const [cinematicProgress, setCinematicProgress] = useState(0);
 
   // Seasonal theme state (with query param support)
   const [currentSeason, setCurrentSeason] = useState<Season>(() => {
@@ -348,6 +350,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const handleCinematicComplete = useCallback(() => {
     setCinematicComplete(true);
     setShowCinematicIntro(false);
+    setCinematicProgress(1);
     if (typeof window !== 'undefined') {
       localStorage.setItem('hasWatchedIntro', 'true');
     }
@@ -356,9 +359,14 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const handleCinematicSkip = useCallback(() => {
     setCinematicComplete(true);
     setShowCinematicIntro(false);
+    setCinematicProgress(1);
     if (typeof window !== 'undefined') {
       localStorage.setItem('hasWatchedIntro', 'true');
     }
+  }, []);
+
+  const handleCinematicProgress = useCallback((progress: number) => {
+    setCinematicProgress(progress);
   }, []);
 
   // Game handlers
@@ -442,6 +450,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onClick={() => {
             setCinematicComplete(false);
             setShowCinematicIntro(true);
+            setCinematicProgress(0);
             if (typeof window !== 'undefined') {
               localStorage.removeItem('hasWatchedIntro');
             }
@@ -563,18 +572,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
-              <ambientLight intensity={0.6} />
-              <directionalLight
-                position={[10, 10, 5]}
-                intensity={0.8}
-              />
-              <directionalLight
-                position={[-10, 10, -5]}
-                intensity={0.5}
-              />
-              <hemisphereLight
-                args={['#ffffff', '#8844bb', 0.4]}
-                position={[0, 50, 0]}
+              {/* Dynamic Scene Lighting */}
+              <SceneLighting
+                isCinematic={showCinematicIntro && !cinematicComplete}
+                cinematicProgress={cinematicProgress}
               />
 
               {/* Interactive Tablet - replaces old floating UI (GlowingArticleDisplay, RoundedRectangle, ResponseDisplay) */}
@@ -603,6 +604,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         <CinematicIntro
           onComplete={handleCinematicComplete}
           onSkip={handleCinematicSkip}
+          onProgressUpdate={handleCinematicProgress}
         />
       )}
 

@@ -3,56 +3,74 @@ import React, { useEffect, useState } from 'react';
 interface CinematicIntroProps {
   onComplete: () => void;
   onSkip: () => void;
+  onProgressUpdate?: (progress: number) => void;
 }
 
-export default function CinematicIntro({ onComplete, onSkip }: CinematicIntroProps) {
+export default function CinematicIntro({ onComplete, onSkip, onProgressUpdate }: CinematicIntroProps) {
   const [phase, setPhase] = useState<'black' | 'waking' | 'opening' | 'awareness' | 'discovery' | 'complete'>('black');
   const [fadeOpacity, setFadeOpacity] = useState(1);
   const [textOpacity, setTextOpacity] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     // Phase 1: Black screen (eyes closed) - 1.5s
     const timer1 = setTimeout(() => {
       setPhase('waking');
+      setProgress(0.1);
+      onProgressUpdate?.(0.1);
     }, 1500);
 
     // Phase 2: First signs of waking - 2s
     const timer2 = setTimeout(() => {
       setFadeOpacity(0.8);
+      setProgress(0.2);
+      onProgressUpdate?.(0.2);
     }, 1500);
 
     // Phase 3: Eyes starting to open - 3.5s
     const timer3 = setTimeout(() => {
       setPhase('opening');
       setFadeOpacity(0.5);
+      setProgress(0.4);
+      onProgressUpdate?.(0.4);
     }, 3500);
 
     // Phase 4: Eyes opening more - 5s
     const timer4 = setTimeout(() => {
       setFadeOpacity(0.2);
       setTextOpacity(1);
+      setProgress(0.6);
+      onProgressUpdate?.(0.6);
     }, 5000);
 
     // Phase 5: Full awareness - 7s
     const timer5 = setTimeout(() => {
       setPhase('awareness');
       setFadeOpacity(0);
+      setProgress(0.75);
+      onProgressUpdate?.(0.75);
     }, 7000);
 
     // Phase 6: Narrative begins - 8s
     const timer6 = setTimeout(() => {
       setTextOpacity(1);
+      setProgress(0.85);
+      onProgressUpdate?.(0.85);
     }, 8000);
 
     // Phase 7: Discovery moment - 11s
     const timer7 = setTimeout(() => {
       setPhase('discovery');
+      setProgress(0.95);
+      onProgressUpdate?.(0.95);
     }, 11000);
 
     // Phase 8: Complete - 15s
     const timer8 = setTimeout(() => {
       setPhase('complete');
       setTextOpacity(0);
+      setProgress(1);
+      onProgressUpdate?.(1);
     }, 15000);
 
     // Phase 9: Transition to game - 16.5s
@@ -71,7 +89,7 @@ export default function CinematicIntro({ onComplete, onSkip }: CinematicIntroPro
       clearTimeout(timer8);
       clearTimeout(timer9);
     };
-  }, [onComplete]);
+  }, [onComplete, onProgressUpdate]);
 
   const getNarrativeText = () => {
     switch (phase) {
