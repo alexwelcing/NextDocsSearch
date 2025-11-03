@@ -57,6 +57,12 @@ const argv = yargs(hideBin(process.argv))
     description: 'Show what would be generated without actually generating',
     default: false,
   })
+  .option('skip-confirm', {
+    alias: 'y',
+    type: 'boolean',
+    description: 'Skip the 5-second confirmation countdown',
+    default: false,
+  })
   .help()
   .parseSync()
 
@@ -204,11 +210,17 @@ async function main() {
     return
   }
 
-  // Confirm with user
-  console.log('⚠️  This will generate images using OpenAI DALL-E 3.')
-  console.log('   Press Ctrl+C to cancel, or wait 5 seconds to continue...\n')
+  // Confirm with user (unless --skip-confirm or in CI environment)
+  const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true'
+  const shouldSkipConfirm = argv.skipConfirm || isCI
 
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  if (!shouldSkipConfirm) {
+    console.log('⚠️  This will generate images using OpenAI DALL-E 3.')
+    console.log('   Press Ctrl+C to cancel, or wait 5 seconds to continue...\n')
+    await new Promise((resolve) => setTimeout(resolve, 5000))
+  } else {
+    console.log('▶️  Starting image generation...\n')
+  }
 
   // Process each article
   let successCount = 0

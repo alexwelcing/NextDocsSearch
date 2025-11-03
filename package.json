@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm run embeddings && next build",
+    "prebuild": "pnpm run generate:art:safe && pnpm run embeddings",
+    "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
@@ -12,6 +13,7 @@
     "embeddings": "tsx lib/generate-embeddings.ts",
     "embeddings:refresh": "tsx lib/generate-embeddings.ts --refresh",
     "generate:art": "tsx lib/generate-article-art.ts",
+    "generate:art:safe": "tsx lib/generate-article-art-safe.ts",
     "generate:art:refresh": "tsx lib/generate-article-art.ts --refresh",
     "generate:art:force": "tsx lib/generate-article-art.ts --force",
     "generate:art:dry-run": "tsx lib/generate-article-art.ts --dry-run"
