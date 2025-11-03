@@ -585,6 +585,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
                   articles={articles}
                   onStartGame={handleBallClick}
+                  cinematicRevealProgress={
+                    showCinematicIntro && !cinematicComplete
+                      ? Math.max(0, (cinematicProgress - 0.7) / 0.3) // Reveal starts at 70% progress
+                      : 1 // Fully visible when not in cinematic
+                  }
                 />
               )}
 

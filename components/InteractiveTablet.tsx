@@ -29,18 +29,21 @@ interface InteractiveTabletProps {
   isGamePlaying?: boolean;
   articles?: ArticleData[];
   onStartGame?: () => void;
+  cinematicRevealProgress?: number; // 0-1, controls fade-in during cinematic
 }
 
 export default function InteractiveTablet({
   initialPosition = [0, 2, 5],
   isGamePlaying = false,
   articles = [],
-  onStartGame
+  onStartGame,
+  cinematicRevealProgress = 1,
 }: InteractiveTabletProps) {
   // State management
   const [isPoweredOn, setIsPoweredOn] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [pulseAnimation, setPulseAnimation] = useState(0);
+  const [revealScale, setRevealScale] = useState(cinematicRevealProgress);
 
   // Data from context (for preview display)
   const { chatData } = useSupabaseData();
@@ -96,6 +99,14 @@ export default function InteractiveTablet({
 
       // Pulse animation for hint text
       setPulseAnimation(Math.sin(state.clock.elapsedTime * 2) * 0.5 + 0.5);
+
+      // Cinematic reveal animation - smooth scale transition
+      const targetScale = cinematicRevealProgress;
+      setRevealScale(prev => THREE.MathUtils.lerp(prev, targetScale, 0.1));
+
+      // Apply scale to group
+      const easeScale = easeOutElastic(revealScale);
+      groupRef.current.scale.set(easeScale, easeScale, easeScale);
     }
   });
 
@@ -244,4 +255,14 @@ export default function InteractiveTablet({
       />
     </>
   );
+}
+
+// Easing function for elastic "pop" effect on reveal
+function easeOutElastic(x: number): number {
+  const c4 = (2 * Math.PI) / 3;
+  return x === 0
+    ? 0
+    : x === 1
+    ? 1
+    : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
 }
