@@ -18,8 +18,12 @@ import GameLeaderboard from './GameLeaderboard';
 import BouncingBall from './BouncingBall';
 import PerformanceMonitor from './PerformanceMonitor';
 import CameraController from './CameraController';
+import CinematicCamera from './CinematicCamera';
+import CinematicIntro from './CinematicIntro';
+import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
+import { useJourney } from './JourneyContext';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -217,6 +221,18 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Cinematic intro state - check localStorage to see if already watched
+  const [showCinematicIntro, setShowCinematicIntro] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hasWatchedIntro = localStorage.getItem('hasWatchedIntro');
+      // Show intro if not watched yet, or if user manually wants to see it
+      return !hasWatchedIntro;
+    }
+    return false;
+  });
+  const [cinematicComplete, setCinematicComplete] = useState(!showCinematicIntro);
+  const [cinematicProgress, setCinematicProgress] = useState(0);
+
   // Seasonal theme state (with query param support)
   const [currentSeason, setCurrentSeason] = useState<Season>(() => {
     // Check for season query parameter
@@ -269,6 +285,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     totalClicks: 0,
     successfulClicks: 0,
   });
+
+  // Journey tracking
+  const { completeQuest, updateStats, currentQuest } = useJourney();
 
   // Notify parent of game state changes
   useEffect(() => {
@@ -331,6 +350,29 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
   };
 
+  // Cinematic intro handlers
+  const handleCinematicComplete = useCallback(() => {
+    setCinematicComplete(true);
+    setShowCinematicIntro(false);
+    setCinematicProgress(1);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hasWatchedIntro', 'true');
+    }
+  }, []);
+
+  const handleCinematicSkip = useCallback(() => {
+    setCinematicComplete(true);
+    setShowCinematicIntro(false);
+    setCinematicProgress(1);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hasWatchedIntro', 'true');
+    }
+  }, []);
+
+  const handleCinematicProgress = useCallback((progress: number) => {
+    setCinematicProgress(progress);
+  }, []);
+
   // Game handlers
   // Step 1: Bouncing ball click shows overlay (STARTING state)
   const handleBallClick = useCallback(() => {
@@ -365,7 +407,20 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setScore(finalScore);
     setGameStats(stats);
     setGameState('GAME_OVER');
-  }, []);
+
+    // Track quest completion
+    updateStats('highestGameScore', finalScore);
+
+    // Complete play-game quest on first game completion
+    if (currentQuest?.id === 'play-game') {
+      completeQuest('play-game');
+    }
+
+    // Complete leaderboard-rank quest if score >= 5000
+    if (finalScore >= 5000) {
+      completeQuest('leaderboard-rank');
+    }
+  }, [updateStats, currentQuest, completeQuest]);
 
   const handlePlayAgain = useCallback(() => {
     setGameState('IDLE');
@@ -402,6 +457,23 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       {isVRSupported && (
         <VRButtonStyled onClick={handleEnterVR}>
           Enter VR
+        </VRButtonStyled>
+      )}
+
+      {/* Replay Intro Button - Only show after intro has been completed */}
+      {cinematicComplete && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
+        <VRButtonStyled
+          style={{ bottom: 'auto', top: '10px', left: '10px' }}
+          onClick={() => {
+            setCinematicComplete(false);
+            setShowCinematicIntro(true);
+            setCinematicProgress(0);
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('hasWatchedIntro');
+            }
+          }}
+        >
+          ▶ Replay Intro
         </VRButtonStyled>
       )}
 
@@ -460,20 +532,31 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             <PhysicsEnvironment>
               <PhysicsGround />
 
-              {/* Camera controller for smooth game start transition */}
-              <CameraController gameState={gameState} />
+              {/* Cinematic camera for intro sequence */}
+              {showCinematicIntro && !cinematicComplete && (
+                <CinematicCamera
+                  isPlaying={true}
+                  onComplete={handleCinematicComplete}
+                />
+              )}
 
-              <OrbitControls
-                enableDamping
-                dampingFactor={0.1}
-                rotateSpeed={0.5}
-                zoomSpeed={0.8}
-                panSpeed={0.5}
-                minDistance={5}
-                maxDistance={50}
-                maxPolarAngle={Math.PI / 2}
-                enablePan={false}
-              />
+              {/* Camera controller for smooth game start transition */}
+              {cinematicComplete && <CameraController gameState={gameState} />}
+
+              {/* OrbitControls - disabled during cinematic intro */}
+              {cinematicComplete && (
+                <OrbitControls
+                  enableDamping
+                  dampingFactor={0.1}
+                  rotateSpeed={0.5}
+                  zoomSpeed={0.8}
+                  panSpeed={0.5}
+                  minDistance={5}
+                  maxDistance={50}
+                  maxPolarAngle={Math.PI / 2}
+                  enablePan={false}
+                />
+              )}
 
               {/* Sphere Hunter Game */}
               <ClickingGame
@@ -506,18 +589,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
-              <ambientLight intensity={0.6} />
-              <directionalLight
-                position={[10, 10, 5]}
-                intensity={0.8}
-              />
-              <directionalLight
-                position={[-10, 10, -5]}
-                intensity={0.5}
-              />
-              <hemisphereLight
-                args={['#ffffff', '#8844bb', 0.4]}
-                position={[0, 50, 0]}
+              {/* Dynamic Scene Lighting */}
+              <SceneLighting
+                isCinematic={showCinematicIntro && !cinematicComplete}
+                cinematicProgress={cinematicProgress}
               />
 
               {/* Interactive Tablet - replaces old floating UI (GlowingArticleDisplay, RoundedRectangle, ResponseDisplay) */}
@@ -527,6 +602,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
                   articles={articles}
                   onStartGame={handleBallClick}
+                  cinematicRevealProgress={
+                    showCinematicIntro && !cinematicComplete
+                      ? Math.max(0, (cinematicProgress - 0.7) / 0.3) // Reveal starts at 70% progress
+                      : 1 // Fully visible when not in cinematic
+                  }
                 />
               )}
 
@@ -540,6 +620,15 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
       {/* Performance Monitor - outside Canvas */}
       {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
+
+      {/* Cinematic Intro Overlay */}
+      {showCinematicIntro && !cinematicComplete && (
+        <CinematicIntro
+          onComplete={handleCinematicComplete}
+          onSkip={handleCinematicSkip}
+          onProgressUpdate={handleCinematicProgress}
+        />
+      )}
 
       {/* Game UI Overlays */}
       {(gameState === 'STARTING' || gameState === 'COUNTDOWN') && (

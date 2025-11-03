@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { QuizQuestion } from '../pages/api/quiz';
+import { useJourney } from './JourneyContext';
 
 interface QuizSystemProps {
   articleFilename: string;
@@ -22,6 +23,10 @@ export default function QuizSystem({ articleFilename, articleTitle, onClose }: Q
   const [score, setScore] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>([]);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [questsProcessed, setQuestsProcessed] = useState(false);
+
+  // Journey tracking
+  const { completeQuest, updateStats, unlockAchievement, currentQuest } = useJourney();
 
   // Fetch quiz questions
   useEffect(() => {
@@ -54,6 +59,34 @@ export default function QuizSystem({ articleFilename, articleTitle, onClose }: Q
 
     fetchQuiz();
   }, [articleFilename]);
+
+  // Track quiz completion and quest progression
+  useEffect(() => {
+    if (quizComplete && !questsProcessed && questions.length > 0) {
+      setQuestsProcessed(true);
+
+      const percentage = Math.round((score / questions.length) * 100);
+
+      // Update stats
+      updateStats('quizzesTaken', 1);
+      updateStats('highestQuizScore', percentage);
+
+      // Complete take-quiz quest
+      if (currentQuest?.id === 'take-quiz') {
+        completeQuest('take-quiz');
+      }
+
+      // Complete quiz-mastery quest if score >= 80%
+      if (percentage >= 80) {
+        completeQuest('quiz-mastery');
+      }
+
+      // Unlock Scholar achievement for perfect score
+      if (percentage === 100) {
+        unlockAchievement('scholar');
+      }
+    }
+  }, [quizComplete, questsProcessed, score, questions.length, currentQuest, completeQuest, updateStats, unlockAchievement]);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -102,6 +135,7 @@ export default function QuizSystem({ articleFilename, articleTitle, onClose }: Q
     setScore(0);
     setAnsweredQuestions(new Array(questions.length).fill(false));
     setQuizComplete(false);
+    setQuestsProcessed(false);
   };
 
   if (loading) {
@@ -152,6 +186,7 @@ export default function QuizSystem({ articleFilename, articleTitle, onClose }: Q
 
   if (quizComplete) {
     const percentage = Math.round((score / questions.length) * 100);
+    const masteryAchieved = percentage >= 80;
 
     return (
       <div style={{
@@ -183,6 +218,45 @@ export default function QuizSystem({ articleFilename, articleTitle, onClose }: Q
           {percentage}%
           {percentage >= 80 ? ' - Excellent!' : percentage >= 60 ? ' - Good job!' : ' - Keep studying!'}
         </div>
+
+        {/* Mastery Achievement Message */}
+        {masteryAchieved && (
+          <div style={{
+            marginTop: '8px',
+            padding: '12px 16px',
+            background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(68, 136, 255, 0.2))',
+            border: '2px solid #00ff88',
+            borderRadius: '8px',
+            textAlign: 'center',
+            animation: 'glow 2s ease-in-out infinite',
+          }}>
+            <div style={{
+              fontSize: '18px',
+              color: '#00ff88',
+              marginBottom: '4px',
+            }}>
+              🎮 Quest Complete!
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: '#ffffff',
+            }}>
+              You&apos;ve mastered the knowledge! The Game is now unlocked.
+            </div>
+          </div>
+        )}
+
+        {/* Perfect Score Achievement */}
+        {percentage === 100 && (
+          <div style={{
+            fontSize: '16px',
+            color: '#FFD700',
+            textShadow: '0 0 10px rgba(255, 215, 0, 0.5)',
+          }}>
+            🎓 Perfect Score! Scholar Achievement Unlocked!
+          </div>
+        )}
+
         <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
           <button
             onClick={handleRestartQuiz}
@@ -214,6 +288,18 @@ export default function QuizSystem({ articleFilename, articleTitle, onClose }: Q
             Close
           </button>
         </div>
+
+        {/* Glow animation for mastery achievement */}
+        <style>{`
+          @keyframes glow {
+            0%, 100% {
+              box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            }
+            50% {
+              box-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 0 0 30px rgba(0, 255, 136, 0.4);
+            }
+          }
+        `}</style>
       </div>
     );
   }
