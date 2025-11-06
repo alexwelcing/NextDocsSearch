@@ -22,6 +22,8 @@ import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
+import KnowledgeArchive, { KnowledgeArchiveSimple } from './KnowledgeArchive';
+import KnowledgeBaseUI from './KnowledgeBaseUI';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { useJourney } from './JourneyContext';
 
@@ -271,6 +273,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Knowledge Base state
+  const [isKnowledgeBaseOpen, setIsKnowledgeBaseOpen] = useState(false);
 
   // Game state
   const [gameState, setGameState] = useState<GameState>('IDLE');
@@ -610,6 +615,21 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
+              {/* R3F Knowledge Archive - positioned to the left of the tablet */}
+              {!loading && cinematicComplete && (
+                isMobile ? (
+                  <KnowledgeArchiveSimple
+                    position={[-6, 3, 3]}
+                    onClick={() => setIsKnowledgeBaseOpen(true)}
+                  />
+                ) : (
+                  <KnowledgeArchive
+                    position={[-6, 3, 3]}
+                    onClick={() => setIsKnowledgeBaseOpen(true)}
+                  />
+                )
+              )}
+
               {/* XR Controllers - controller models will be automatically rendered by XR component */}
             </PhysicsEnvironment>
           </XROrigin>
@@ -656,6 +676,12 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onClose={handleCloseLeaderboard}
         />
       )}
+
+      {/* R3F Knowledge Base UI Overlay */}
+      <KnowledgeBaseUI
+        isOpen={isKnowledgeBaseOpen}
+        onClose={() => setIsKnowledgeBaseOpen(false)}
+      />
 
       {/* Season Selector - Hidden */}
       <SeasonIndicator style={{ display: 'none' }}>
