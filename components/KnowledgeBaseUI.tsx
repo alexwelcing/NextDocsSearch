@@ -102,7 +102,7 @@ export default function KnowledgeBaseUI({ isOpen, onClose }: KnowledgeBaseUIProp
 
             <Stats>
               Showing {filteredTopics.length} of {R3F_KNOWLEDGE_INDEX.length} topics
-              {searchQuery && ` matching "${searchQuery}"`}
+              {searchQuery && ` matching &ldquo;${searchQuery}&rdquo;`}
             </Stats>
 
             <TopicGrid>
@@ -212,7 +212,7 @@ function ArticleView({ topic, onBack }: { topic: R3FTopic; onBack: () => void })
         <p>
           This article will be written as an incident report, maintenance log, or field notes
           from IT professionals in 2045-2055 dealing with legacy {topic.title.toLowerCase()} implementations
-          from the "Primitive 3D Era" of 2025.
+          from the &ldquo;Primitive 3D Era&rdquo; of 2025.
         </p>
 
         <GenerateSection>
