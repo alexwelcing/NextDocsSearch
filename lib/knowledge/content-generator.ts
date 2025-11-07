@@ -74,7 +74,7 @@ function generateTags(topic: R3FTopic, metadata: StoryMetadata): string[] {
     'software maintenance',
   ];
 
-  return [...new Set([...baseTags, ...specificTags])];
+  return Array.from(new Set([...baseTags, ...specificTags]));
 }
 
 /**

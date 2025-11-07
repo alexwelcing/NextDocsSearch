@@ -169,7 +169,7 @@ export default function KnowledgeArchive({
           color="#ffffff"
           anchorX="center"
           anchorY="middle"
-          opacity={0.8}
+          fillOpacity={0.8}
         >
           Tales from the Future
         </Text>
@@ -194,7 +194,7 @@ export default function KnowledgeArchive({
             color="#ffffff"
             anchorX="center"
             anchorY="middle"
-            opacity={0.8}
+            fillOpacity={0.8}
           >
             ▶ CLICK TO ACCESS ◀
           </Text>
@@ -315,7 +315,7 @@ export function KnowledgeArchiveSimple({
           color="#ffffff"
           anchorX="center"
           anchorY="middle"
-          opacity={0.8}
+          fillOpacity={0.8}
         >
           Knowledge Base
         </Text>
