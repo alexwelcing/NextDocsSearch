@@ -615,16 +615,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* R3F Knowledge Archive - positioned to the left of the tablet */}
+              {/* R3F Knowledge Archive - positioned to the right of the tablet */}
               {!loading && cinematicComplete && (
                 isMobile ? (
                   <KnowledgeArchiveSimple
-                    position={[-6, 3, 3]}
+                    position={[6, 3, 5]}
                     onClick={() => setIsKnowledgeBaseOpen(true)}
                   />
                 ) : (
                   <KnowledgeArchive
-                    position={[-6, 3, 3]}
+                    position={[6, 3, 5]}
                     onClick={() => setIsKnowledgeBaseOpen(true)}
                   />
                 )
