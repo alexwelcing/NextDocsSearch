@@ -33,7 +33,7 @@ interface InteractiveTabletProps {
 }
 
 export default function InteractiveTablet({
-  initialPosition = [0, 2, 5],
+  initialPosition = [0, 2.5, 4], // Closer and slightly higher
   isGamePlaying = false,
   articles = [],
   onStartGame,
@@ -44,6 +44,9 @@ export default function InteractiveTablet({
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [pulseAnimation, setPulseAnimation] = useState(0);
   const [revealScale, setRevealScale] = useState(cinematicRevealProgress);
+  const [floatOffset, setFloatOffset] = useState(0);
+  const [breatheScale, setBreatheScale] = useState(1);
+  const [screenGlow, setScreenGlow] = useState(0.5);
 
   // Data from context (for preview display)
   const { chatData } = useSupabaseData();
@@ -59,10 +62,10 @@ export default function InteractiveTablet({
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
 
-  // Fixed tablet dimensions
-  const tabletWidth = 4;
-  const tabletHeight = 3;
-  const tabletDepth = 0.2;
+  // BIGGER tablet dimensions for better presence
+  const tabletWidth = 6;
+  const tabletHeight = 4.5;
+  const tabletDepth = 0.25;
 
   // Physics body for the tablet (mass: 0 = no gravity)
   const [ref, api] = useBox<THREE.Mesh>(() => ({
@@ -85,6 +88,8 @@ export default function InteractiveTablet({
   // Handle billboard effect and animations
   useFrame((state) => {
     if (groupRef.current && ref.current) {
+      const time = state.clock.elapsedTime;
+
       // Make tablet always face the camera (billboard effect)
       const cameraWorldPos = new THREE.Vector3();
       camera.getWorldPosition(cameraWorldPos);
@@ -93,19 +98,33 @@ export default function InteractiveTablet({
       // Sync physics body rotation with visual rotation
       ref.current.rotation.copy(groupRef.current.rotation);
 
-      // Keep position stable
+      // Gentle floating animation (up and down)
+      const floatAmount = Math.sin(time * 0.5) * 0.15; // Slower, more graceful
+      setFloatOffset(floatAmount);
+
+      // Breathing animation (subtle scale pulse)
+      const breathe = 1 + Math.sin(time * 0.8) * 0.015; // Very subtle
+      setBreatheScale(breathe);
+
+      // Screen glow pulses gently
+      const glowPulse = 0.6 + Math.sin(time * 0.4) * 0.2;
+      setScreenGlow(glowPulse);
+
+      // Keep position stable (with float offset)
+      const currentPos = initialPosition;
+      api.position.set(currentPos[0], currentPos[1] + floatAmount, currentPos[2]);
       api.velocity.set(0, 0, 0);
       api.angularVelocity.set(0, 0, 0);
 
       // Pulse animation for hint text
-      setPulseAnimation(Math.sin(state.clock.elapsedTime * 2) * 0.5 + 0.5);
+      setPulseAnimation(Math.sin(time * 2) * 0.5 + 0.5);
 
       // Cinematic reveal animation - smooth scale transition
       const targetScale = cinematicRevealProgress;
       setRevealScale(prev => THREE.MathUtils.lerp(prev, targetScale, 0.1));
 
-      // Apply scale to group
-      const easeScale = easeOutElastic(revealScale);
+      // Apply scale to group (includes breathe)
+      const easeScale = easeOutElastic(revealScale) * breatheScale;
       groupRef.current.scale.set(easeScale, easeScale, easeScale);
     }
   });
@@ -131,41 +150,72 @@ export default function InteractiveTablet({
   return (
     <>
       <group ref={groupRef}>
-        {/* Main tablet body (physics body) - using RoundedBox directly */}
+        {/* Main tablet body (physics body) - Sleek dark frame */}
         <RoundedBox
           ref={ref}
           args={[tabletWidth, tabletHeight, tabletDepth]}
-          radius={0.1}
-          smoothness={4}
+          radius={0.15}
+          smoothness={8}
           onClick={handleTabletClick}
         >
           <meshStandardMaterial
-            color="#1a1a2e"
-            metalness={0.8}
-            roughness={0.2}
+            color="#0a0a0f"
+            metalness={0.9}
+            roughness={0.15}
+            envMapIntensity={1.5}
           />
         </RoundedBox>
 
-        {/* Screen - front face */}
+        {/* Screen - front face with dynamic glow */}
         <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
-          <planeGeometry args={[tabletWidth - 0.4, tabletHeight - 0.4]} />
+          <planeGeometry args={[tabletWidth - 0.5, tabletHeight - 0.5]} />
           <meshStandardMaterial
             color={screenColor}
             emissive={screenEmissive}
-            emissiveIntensity={isPoweredOn ? 0.5 : 0}
-            metalness={0.1}
-            roughness={0.9}
+            emissiveIntensity={isPoweredOn ? screenGlow * 0.8 : 0}
+            metalness={0.05}
+            roughness={0.85}
+            transparent
+            opacity={0.98}
           />
         </mesh>
 
-        {/* Light emission when powered on */}
+        {/* Rim light glow around screen */}
         {isPoweredOn && (
-          <pointLight
-            position={[0, 0, 1]}
-            color="#4488ff"
-            intensity={2}
-            distance={8}
-          />
+          <mesh position={[0, 0, tabletDepth / 2 + 0.005]}>
+            <planeGeometry args={[tabletWidth - 0.35, tabletHeight - 0.35]} />
+            <meshBasicMaterial
+              color="#4488ff"
+              transparent
+              opacity={screenGlow * 0.15}
+            />
+          </mesh>
+        )}
+
+        {/* Screen light emission - stronger and more dynamic */}
+        {isPoweredOn && (
+          <>
+            <pointLight
+              position={[0, 0, 1.5]}
+              color="#4488ff"
+              intensity={screenGlow * 3}
+              distance={12}
+              decay={2}
+            />
+            {/* Rim lights for depth */}
+            <pointLight
+              position={[tabletWidth / 2, 0, 0.5]}
+              color="#00ffaa"
+              intensity={screenGlow * 0.8}
+              distance={4}
+            />
+            <pointLight
+              position={[-tabletWidth / 2, 0, 0.5]}
+              color="#00ffaa"
+              intensity={screenGlow * 0.8}
+              distance={4}
+            />
+          </>
         )}
 
         {/* Power button - bottom left */}
