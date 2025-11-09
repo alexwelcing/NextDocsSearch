@@ -1,6 +1,59 @@
 import * as THREE from 'three';
-import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 import { ParsedPrompt, BaseShape, GeometryModifiers } from './types';
+
+/**
+ * Simple geometry merger for combining multiple geometries
+ */
+function mergeBufferGeometries(geometries: THREE.BufferGeometry[]): THREE.BufferGeometry | null {
+  if (geometries.length === 0) return null;
+  if (geometries.length === 1) return geometries[0];
+
+  const merged = new THREE.BufferGeometry();
+  const attributes: { [key: string]: Float32Array[] } = {};
+  let totalVertices = 0;
+
+  // Collect all attributes
+  for (const geometry of geometries) {
+    const position = geometry.attributes.position;
+    if (!position) continue;
+
+    totalVertices += position.count;
+
+    // Collect position attribute
+    if (!attributes.position) attributes.position = [];
+    attributes.position.push(position.array as Float32Array);
+
+    // Collect normal attribute if exists
+    if (geometry.attributes.normal) {
+      if (!attributes.normal) attributes.normal = [];
+      attributes.normal.push(geometry.attributes.normal.array as Float32Array);
+    }
+  }
+
+  // Merge position attributes
+  if (attributes.position) {
+    const mergedPosition = new Float32Array(totalVertices * 3);
+    let offset = 0;
+    for (const arr of attributes.position) {
+      mergedPosition.set(arr, offset);
+      offset += arr.length;
+    }
+    merged.setAttribute('position', new THREE.BufferAttribute(mergedPosition, 3));
+  }
+
+  // Merge normal attributes
+  if (attributes.normal && attributes.normal.length === geometries.length) {
+    const mergedNormal = new Float32Array(totalVertices * 3);
+    let offset = 0;
+    for (const arr of attributes.normal) {
+      mergedNormal.set(arr, offset);
+      offset += arr.length;
+    }
+    merged.setAttribute('normal', new THREE.BufferAttribute(mergedNormal, 3));
+  }
+
+  return merged;
+}
 
 /**
  * Build geometry from parsed prompt configuration

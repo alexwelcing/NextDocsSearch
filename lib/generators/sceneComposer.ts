@@ -90,7 +90,7 @@ function mergeConfigs(template: ParsedPrompt, custom: ParsedPrompt): ParsedPromp
       particles: custom.atmosphere.particles || template.atmosphere.particles,
     },
     animations: custom.animations || template.animations,
-    tags: [...new Set([...(template.tags || []), ...(custom.tags || [])])],
+    tags: Array.from(new Set((template.tags || []).concat(custom.tags || []))),
   };
 }
 

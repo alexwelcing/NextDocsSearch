@@ -5,39 +5,51 @@ import { MaterialConfig } from './types';
  * Build Three.js material from configuration
  */
 export function buildMaterial(config: MaterialConfig): THREE.Material {
-  const material = new THREE.MeshStandardMaterial({
-    color: config.color,
-    roughness: config.roughness,
-    metalness: config.metalness,
-    transparent: config.transparent || false,
-    opacity: config.opacity !== undefined ? config.opacity : 1,
-    wireframe: config.wireframe || false,
-  });
+  // Use MeshPhysicalMaterial if we have advanced properties
+  const needsPhysical = config.transmission !== undefined ||
+                        config.ior !== undefined ||
+                        config.thickness !== undefined ||
+                        config.clearcoat !== undefined;
 
-  // Add emissive properties
-  if (config.emissive) {
-    material.emissive = new THREE.Color(config.emissive);
-    material.emissiveIntensity = config.emissiveIntensity || 1;
+  if (needsPhysical) {
+    const material = new THREE.MeshPhysicalMaterial({
+      color: config.color,
+      roughness: config.roughness,
+      metalness: config.metalness,
+      transparent: config.transparent || false,
+      opacity: config.opacity !== undefined ? config.opacity : 1,
+      wireframe: config.wireframe || false,
+      transmission: config.transmission || 0,
+      ior: config.ior || 1.5,
+      thickness: config.thickness || 0,
+      clearcoat: config.clearcoat || 0,
+    });
+
+    // Add emissive properties
+    if (config.emissive) {
+      material.emissive = new THREE.Color(config.emissive);
+      material.emissiveIntensity = config.emissiveIntensity || 1;
+    }
+
+    return material;
+  } else {
+    const material = new THREE.MeshStandardMaterial({
+      color: config.color,
+      roughness: config.roughness,
+      metalness: config.metalness,
+      transparent: config.transparent || false,
+      opacity: config.opacity !== undefined ? config.opacity : 1,
+      wireframe: config.wireframe || false,
+    });
+
+    // Add emissive properties
+    if (config.emissive) {
+      material.emissive = new THREE.Color(config.emissive);
+      material.emissiveIntensity = config.emissiveIntensity || 1;
+    }
+
+    return material;
   }
-
-  // Add physical properties for glass/transmission
-  if (config.transmission !== undefined) {
-    (material as any).transmission = config.transmission;
-  }
-
-  if (config.ior !== undefined) {
-    material.ior = config.ior;
-  }
-
-  if (config.thickness !== undefined) {
-    (material as any).thickness = config.thickness;
-  }
-
-  if (config.clearcoat !== undefined) {
-    material.clearcoat = config.clearcoat;
-  }
-
-  return material;
 }
 
 /**

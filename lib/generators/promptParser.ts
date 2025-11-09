@@ -557,7 +557,7 @@ function generateTags(
   if (prompt.includes('glow')) tags.push('glowing');
   if (prompt.includes('float')) tags.push('floating');
 
-  return [...new Set(tags)];
+  return Array.from(new Set(tags));
 }
 
 /**

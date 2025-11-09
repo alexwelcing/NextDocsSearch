@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { OpenAI } from 'openai';
+import { Configuration, OpenAIApi } from 'openai-edge';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const config = new Configuration({
+  apiKey: process.env.OPENAI_KEY,
 });
+const openai = new OpenAIApi(config);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -18,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Use OpenAI to enhance the prompt for 3D generation
-    const completion = await openai.chat.completions.create({
+    const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
         {
@@ -42,7 +43,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       temperature: 0.8,
     });
 
-    const enhancedPrompt = completion.choices[0]?.message?.content || prompt;
+    const data = await completion.json();
+    const enhancedPrompt = data.choices?.[0]?.message?.content || prompt;
 
     return res.status(200).json({
       original: prompt,
