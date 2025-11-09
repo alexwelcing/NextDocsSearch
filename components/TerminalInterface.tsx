@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
 import QuizSystem from './QuizSystem';
+import CreationStudio from './CreationStudio';
 
 interface ArticleData {
   title: string;
@@ -27,7 +28,7 @@ interface TerminalInterfaceProps {
   onStartGame?: () => void;
 }
 
-type ViewMode = 'chat' | 'blog' | 'quiz';
+type ViewMode = 'chat' | 'blog' | 'quiz' | 'create';
 type PageMode = 1 | 2;
 
 export default function TerminalInterface({
@@ -294,8 +295,8 @@ export default function TerminalInterface({
                 padding: '20px 30px 0',
                 position: 'relative',
               }}>
-                {(['chat', 'blog', 'quiz'] as ViewMode[]).map((mode) => {
-                  const featureMap = { chat: 'chat', blog: 'articles', quiz: 'quiz' };
+                {(['chat', 'blog', 'quiz', 'create'] as ViewMode[]).map((mode) => {
+                  const featureMap = { chat: 'chat', blog: 'articles', quiz: 'quiz', create: 'creation-studio' };
                   const isLocked = !isFeatureUnlocked(featureMap[mode]);
 
                   return (
@@ -336,7 +337,7 @@ export default function TerminalInterface({
                         }}
                       >
                         {isLocked && '🔒 '}
-                        {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : '❓ QUIZ'}
+                        {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : mode === 'quiz' ? '❓ QUIZ' : '✨ CREATE'}
                       </button>
 
                       {/* Locked Tooltip */}
@@ -627,6 +628,10 @@ export default function TerminalInterface({
                     articleTitle={displayArticles[currentArticleIndex]?.title || ''}
                     onClose={() => setViewMode('blog')}
                   />
+                )}
+
+                {viewMode === 'create' && (
+                  <CreationStudio onClose={() => setViewMode('chat')} />
                 )}
               </div>
             </>

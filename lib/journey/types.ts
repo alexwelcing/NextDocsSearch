@@ -29,6 +29,9 @@ export interface JourneyProgress {
     highestQuizScore: number;
     gamesPlayed: number;
     highestGameScore: number;
+    creationsGenerated: number;
+    creationsSaved: number;
+    templatesUsed: number;
   };
 }
 
@@ -97,6 +100,36 @@ export const QUESTS: Quest[] = [
     objective: 'Score 5000+ points in Sphere Hunter',
     completed: false,
     requirement: 'play-game',
+  },
+
+  // Creation Quests (unlocked after Exploration phase)
+  {
+    id: 'first-creation',
+    phase: 3,
+    title: 'Creator\'s Awakening',
+    description: 'Bend reality to your imagination',
+    objective: 'Generate your first 3D creation',
+    completed: false,
+    requirement: 'read-article',
+    unlocks: ['creation-studio'],
+  },
+  {
+    id: 'horror-template',
+    phase: 4,
+    title: 'Architect of Nightmares',
+    description: 'Embrace the darkness within',
+    objective: 'Use a horror template to create',
+    completed: false,
+    requirement: 'first-creation',
+  },
+  {
+    id: 'save-creation',
+    phase: 4,
+    title: 'Preserve the Vision',
+    description: 'Your creations deserve immortality',
+    objective: 'Save a creation to your gallery',
+    completed: false,
+    requirement: 'first-creation',
   },
 ];
 
@@ -204,6 +237,50 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: 'True Seeker',
     description: 'Discovered the hidden message',
     icon: '🔮',
+    unlocked: false,
+    hidden: true,
+  },
+  // Creation Achievements
+  {
+    id: 'first-creation',
+    title: 'Genesis',
+    description: 'Generated your first 3D creation',
+    icon: '✨',
+    unlocked: false,
+  },
+  {
+    id: 'nightmare-architect',
+    title: 'Nightmare Architect',
+    description: 'Created a horror object with level 7+ intensity',
+    icon: '🌑',
+    unlocked: false,
+  },
+  {
+    id: 'creation-saved',
+    title: 'Curator',
+    description: 'Saved a creation to your gallery',
+    icon: '💾',
+    unlocked: false,
+  },
+  {
+    id: 'prolific-creator',
+    title: 'Prolific Creator',
+    description: 'Generated 10 different creations',
+    icon: '🎨',
+    unlocked: false,
+  },
+  {
+    id: 'template-master',
+    title: 'Template Master',
+    description: 'Used 5 different templates',
+    icon: '📐',
+    unlocked: false,
+  },
+  {
+    id: 'hybrid-visionary',
+    title: 'Hybrid Visionary',
+    description: 'Created a hybrid horror-editorial piece',
+    icon: '🔀',
     unlocked: false,
     hidden: true,
   },
