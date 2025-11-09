@@ -190,7 +190,9 @@ function createCharacterGeometry(config: CharacterConfig): THREE.BufferGeometry 
   if (config.characterType === 'humanoid') {
     geometry = createHumanoidGeometry();
   } else if (config.characterType === 'creature') {
-    geometry = createCreatureGeometry(config.features?.hasTail || false);
+    // Check if skeleton has tail bones
+    const hasTail = config.skeleton.bones.some(bone => bone.name === 'tail_base');
+    geometry = createCreatureGeometry(hasTail);
   } else {
     geometry = new THREE.BoxGeometry(1, 2, 0.5);
   }
