@@ -191,6 +191,31 @@ function applyDistortion(
       const pulseFactor = Math.sin(Date.now() * 0.001 * frequency) * 0.5 + 0.5;
       offset.copy(vertex).normalize().multiplyScalar(pulseFactor * intensity * 0.1);
       break;
+
+    case 'erosion':
+      const erosionNoise = simplex3D(vertex.x * 3, vertex.y * 3, vertex.z * 3);
+      if (Math.abs(erosionNoise) > 0.5) {
+        offset.copy(vertex).multiplyScalar(-erosionNoise * intensity * 0.2);
+      }
+      break;
+
+    case 'stretch':
+      offset.y = simplex3D(vertex.x, vertex.y, vertex.z) * intensity * 0.5;
+      break;
+
+    case 'shatter':
+      const shatterNoise = simplex3D(vertex.x * 4, vertex.y * 4, vertex.z * 4);
+      if (shatterNoise > 0.3) {
+        offset.copy(vertex).normalize().multiplyScalar(shatterNoise * intensity * 0.4);
+      }
+      break;
+
+    case 'glitch':
+      const glitchFactor = Math.random() > 0.95 ? Math.random() : 0;
+      offset.x = (Math.random() - 0.5) * glitchFactor * intensity;
+      offset.y = (Math.random() - 0.5) * glitchFactor * intensity;
+      offset.z = (Math.random() - 0.5) * glitchFactor * intensity;
+      break;
   }
 
   return offset;

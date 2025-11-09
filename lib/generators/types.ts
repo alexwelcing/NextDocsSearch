@@ -20,7 +20,8 @@ export type DistortionType =
   | 'stretch'
   | 'melt'
   | 'shatter'
-  | 'pulse';
+  | 'pulse'
+  | 'glitch';
 
 export type AnimationType =
   | 'rotate'
