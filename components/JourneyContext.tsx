@@ -12,6 +12,7 @@ interface JourneyContextType {
   achievements: Achievement[];
   unlockAchievement: (achievementId: string) => void;
   resetJourney: () => void;
+  updateCreationProgress: (type: 'generated' | 'saved' | 'template_used', count: number) => void;
 }
 
 const JourneyContext = createContext<JourneyContextType | undefined>(undefined);
@@ -28,6 +29,9 @@ const INITIAL_PROGRESS: JourneyProgress = {
     highestQuizScore: 0,
     gamesPlayed: 0,
     highestGameScore: 0,
+    creationsGenerated: 0,
+    creationsSaved: 0,
+    templatesUsed: 0,
   },
 };
 
@@ -173,6 +177,46 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     ));
   }, [progress.achievements]);
 
+  const updateCreationProgress = useCallback((type: 'generated' | 'saved' | 'template_used', count: number) => {
+    setProgress(prev => {
+      const newStats = { ...prev.stats };
+
+      if (type === 'generated') {
+        newStats.creationsGenerated = (newStats.creationsGenerated || 0) + count;
+
+        // Complete first-creation quest
+        if (newStats.creationsGenerated === 1) {
+          completeQuest('first-creation');
+        }
+
+        // Check prolific creator achievement
+        if (newStats.creationsGenerated >= 10) {
+          unlockAchievement('prolific-creator');
+        }
+      } else if (type === 'saved') {
+        newStats.creationsSaved = (newStats.creationsSaved || 0) + count;
+
+        // Complete save-creation quest
+        if (newStats.creationsSaved === 1) {
+          completeQuest('save-creation');
+        }
+      } else if (type === 'template_used') {
+        newStats.templatesUsed = (newStats.templatesUsed || 0) + count;
+
+        // Check template master achievement
+        if (newStats.templatesUsed >= 5) {
+          unlockAchievement('template-master');
+        }
+      }
+
+      return {
+        ...prev,
+        stats: newStats,
+      };
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const resetJourney = useCallback(() => {
     setProgress(INITIAL_PROGRESS);
     setAchievements(ACHIEVEMENTS.map(ach => ({ ...ach, unlocked: false })));
@@ -194,6 +238,7 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
         achievements,
         unlockAchievement,
         resetJourney,
+        updateCreationProgress,
       }}
     >
       {children}
