@@ -53,7 +53,6 @@ export default function RiggedCharacter({
       color: config.materials.baseColor,
       roughness: config.materials.roughness,
       metalness: config.materials.metalness,
-      skinning: true, // Enable skinning
     });
 
     // Create skinned mesh
