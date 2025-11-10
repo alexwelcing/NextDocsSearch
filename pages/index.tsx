@@ -24,7 +24,7 @@ export default function HomePage() {
   const router = useRouter();
   const { markArticleRead } = useTrophy();
 
-  // Detect mobile
+  // Detect mobile and prevent scroll
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(
@@ -37,7 +37,20 @@ export default function HomePage() {
 
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
   }, []);
 
   // Handle article selection from world view
@@ -49,25 +62,25 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Content Universe Explorer | Alex Welcing</title>
+        <title>Alex Welcing - AI Product Manager</title>
         <meta
           name="description"
-          content="Explore articles through an immersive arcade-style universe. Navigate nebulous worlds and unlock content through exploration."
+          content="Navigate through space to explore AI product insights. Built like an arcade game because documentation should be fun."
         />
         <meta
           name="keywords"
-          content="Alex Welcing, Product Management, AI, Content Explorer, Interactive Portfolio"
+          content="Alex Welcing, Product Management, AI, Interactive Portfolio"
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
-        <meta property="og:title" content="Content Universe Explorer | Alex Welcing" />
+        <meta property="og:title" content="Alex Welcing - AI Product Manager" />
         <meta
           property="og:description"
-          content="Explore articles through an immersive arcade-style universe."
+          content="Navigate through space to explore AI product insights. Built like an arcade game because documentation should be fun."
         />
         <meta property="og:image" content="/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com" />
@@ -126,19 +139,14 @@ const HelpOverlay: React.FC = () => {
   return (
     <HelpModal onClick={handleDismiss}>
       <HelpContent onClick={(e) => e.stopPropagation()}>
-        <HelpTitle>Welcome to the Content Universe</HelpTitle>
+        <HelpTitle>Your docs shouldn&apos;t be boring</HelpTitle>
         <HelpText>
-          <p>Explore articles organized into themed worlds:</p>
-          <ul>
-            <li><strong>2D Space View:</strong> Navigate between worlds as nebulous clusters</li>
-            <li><strong>360° World View:</strong> Tap a world to dive into its immersive environment</li>
-            <li><strong>Fog Reveal:</strong> Reading articles unveils hidden parts of each world</li>
-            <li><strong>Trophies:</strong> Unlock achievements by completing worlds</li>
-          </ul>
-          <p><em>Your progress is saved for this browser session only.</em></p>
+          <p>So I built mine like a space shooter.</p>
+          <p>Tap the glowing clusters. Read about AI product management. Watch the fog clear as you unlock each world.</p>
+          <p><em>Session-based. No tracking. Just exploration.</em></p>
         </HelpText>
         <HelpCloseButton onClick={handleDismiss}>
-          Let&apos;s Explore
+          Start
         </HelpCloseButton>
       </HelpContent>
     </HelpModal>
@@ -150,9 +158,12 @@ const HelpOverlay: React.FC = () => {
 const Container = styled.div`
   width: 100%;
   height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow: hidden;
   background: #000308;
-  position: relative;
+  touch-action: none;
 `;
 
 const LoadingScreen = styled.div`

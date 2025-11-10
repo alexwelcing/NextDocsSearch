@@ -147,14 +147,15 @@ export const SpaceNavigator: React.FC<SpaceNavigatorProps> = ({
 
   // Render loop
   const render = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    try {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const { width, height } = dimensions;
-    const camera = cameraRef.current;
+      const { width, height } = dimensions;
+      const camera = cameraRef.current;
 
     // Smooth camera interpolation
     camera.x += (camera.targetX - camera.x) * 0.1;
@@ -265,8 +266,12 @@ export const SpaceNavigator: React.FC<SpaceNavigatorProps> = ({
       }
     });
 
-    // Continue animation
-    animationFrameRef.current = requestAnimationFrame(render);
+      // Continue animation
+      animationFrameRef.current = requestAnimationFrame(render);
+    } catch (error) {
+      console.error('Render error:', error);
+      // Stop render loop on error to prevent crash loops
+    }
   }, [dimensions, worldToScreen, getWorldProgress, isWorldCompleted, createParticle]);
 
   // Start render loop
@@ -348,9 +353,12 @@ export const SpaceNavigator: React.FC<SpaceNavigatorProps> = ({
 const Container = styled.div`
   width: 100%;
   height: 100vh;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow: hidden;
   background: #000308;
+  touch-action: none;
 `;
 
 const StyledCanvas = styled.canvas`
