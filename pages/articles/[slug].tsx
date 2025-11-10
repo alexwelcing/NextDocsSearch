@@ -306,13 +306,21 @@ const ArticlePage: NextPage<ArticleProps> = ({
   const defaultOgImage = `${siteUrl}/og-default.png`;
   const { markArticleRead } = useTrophy();
 
+  // Get worldId from URL query
+  const worldId = router.query.worldId as string | undefined;
+
   // Mark article as read when component mounts
   useEffect(() => {
     markArticleRead(slug);
   }, [slug, markArticleRead]);
 
   const handleBackToWorld = () => {
-    router.push('/');
+    // If we have a worldId, return to that world view, otherwise return to all worlds
+    if (worldId) {
+      router.push(`/?worldId=${worldId}`);
+    } else {
+      router.push('/');
+    }
   };
 
   return (

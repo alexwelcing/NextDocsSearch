@@ -24,6 +24,11 @@ export default function HomePage() {
   const router = useRouter();
   const { markArticleRead } = useTrophy();
 
+  // Get worldId from URL query if returning from article
+  const initialWorldId = router.query.worldId
+    ? parseInt(router.query.worldId as string, 10)
+    : null;
+
   // Detect mobile and prevent scroll
   useEffect(() => {
     const checkMobile = () => {
@@ -54,9 +59,9 @@ export default function HomePage() {
   }, []);
 
   // Handle article selection from world view
-  const handleArticleSelect = (slug: string) => {
-    // Navigate to article page
-    router.push(`/articles/${slug}`);
+  const handleArticleSelect = (slug: string, worldId: number) => {
+    // Navigate to article page with worldId so we can return to the same world
+    router.push(`/articles/${slug}?worldId=${worldId}`);
   };
 
   return (
@@ -95,6 +100,7 @@ export default function HomePage() {
         <WorldExplorer
           isMobile={isMobile}
           onArticleSelect={handleArticleSelect}
+          initialWorldId={initialWorldId}
         />
 
         {/* Help overlay for first-time users */}

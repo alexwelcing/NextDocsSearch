@@ -25,34 +25,68 @@ export const FogRevealSphere: React.FC<FogRevealSphereProps> = ({
   const meshRef = useRef<THREE.Mesh>(null);
   const { getFogRevealData } = useTrophy();
 
-  // Create fallback texture (gradient based on world color)
-  const fallbackTexture = useMemo(() => {
+  // Create procedural 360 texture (star field with world color nebula)
+  const texture = useMemo(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 256;
+    canvas.width = 2048;
+    canvas.height = 1024;
     const ctx = canvas.getContext('2d');
-    if (ctx) {
-      const gradient = ctx.createLinearGradient(0, 0, 512, 256);
-      gradient.addColorStop(0, '#000000');
-      gradient.addColorStop(0.5, world.color);
-      gradient.addColorStop(1, '#000000');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 512, 256);
-    }
-    const texture = new THREE.CanvasTexture(canvas);
-    return texture;
-  }, [world.color]);
 
-  // Try to load the 360 background texture, fallback to gradient
-  const texture = fallbackTexture;
+    if (ctx) {
+      // Black space background
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, 2048, 1024);
+
+      // Add stars
+      for (let i = 0; i < 1000; i++) {
+        const x = Math.random() * 2048;
+        const y = Math.random() * 1024;
+        const size = Math.random() * 2;
+        const brightness = Math.random();
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+        ctx.fillRect(x, y, size, size);
+      }
+
+      // Add world-colored nebula clouds
+      const nebulaClouds = 5;
+      for (let i = 0; i < nebulaClouds; i++) {
+        const x = (Math.random() * 2048);
+        const y = (Math.random() * 1024);
+        const radius = 200 + Math.random() * 400;
+
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, `${world.color}40`); // 25% opacity
+        gradient.addColorStop(0.5, `${world.color}20`); // 12% opacity
+        gradient.addColorStop(1, `${world.color}00`); // transparent
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 2048, 1024);
+      }
+    }
+
+    const canvasTexture = new THREE.CanvasTexture(canvas);
+    canvasTexture.needsUpdate = true;
+    return canvasTexture;
+  }, [world.color]);
 
   // Get reveal data for this world
   const revealData = getFogRevealData(world.id);
+
+  // Debug logging
+  useEffect(() => {
+    console.log(`[FogReveal] World ${world.id} (${world.name}):`, {
+      totalArticles: world.articles.length,
+      articlesRead: revealData.articlesRead,
+      readCount: revealData.articlesRead.length,
+    });
+  }, [world.id, world.name, world.articles.length, revealData.articlesRead]);
 
   // Create fog reveal positions uniform (array of vec4: x=phi, y=theta, z=radius, w=intensity)
   const revealPositions = useMemo(() => {
     const positions = new Float32Array(20 * 4); // Support up to 20 articles
     let index = 0;
+    let revealCount = 0;
 
     world.articles.forEach((article, i) => {
       if (i >= 20) return; // Max 20 articles per world
@@ -60,12 +94,18 @@ export const FogRevealSphere: React.FC<FogRevealSphereProps> = ({
       const isRead = revealData.articlesRead.includes(article.slug);
       const intensity = isRead ? 1.0 : 0.0;
 
+      if (isRead) {
+        revealCount++;
+        console.log(`[FogReveal] Article "${article.slug}" is read - revealing at phi=${article.phi.toFixed(2)}, theta=${article.theta.toFixed(2)}`);
+      }
+
       positions[index++] = article.phi;
       positions[index++] = article.theta;
       positions[index++] = article.radius;
       positions[index++] = intensity;
     });
 
+    console.log(`[FogReveal] Total reveals active: ${revealCount}/${world.articles.length}`);
     return positions;
   }, [world.articles, revealData.articlesRead]);
 

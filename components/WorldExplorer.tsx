@@ -22,16 +22,18 @@ type ViewMode = 'space' | 'world' | 'transitioning';
 
 interface WorldExplorerProps {
   isMobile?: boolean;
-  onArticleSelect?: (slug: string) => void;
+  onArticleSelect?: (slug: string, worldId: number) => void;
+  initialWorldId?: number | null; // For returning from article view
 }
 
 export const WorldExplorer: React.FC<WorldExplorerProps> = ({
   isMobile = false,
   onArticleSelect,
+  initialWorldId = null,
 }) => {
-  const [viewMode, setViewMode] = useState<ViewMode>('space');
-  const [selectedWorldId, setSelectedWorldId] = useState<number | null>(null);
-  const [transitionProgress, setTransitionProgress] = useState(0);
+  const [viewMode, setViewMode] = useState<ViewMode>(initialWorldId ? 'world' : 'space');
+  const [selectedWorldId, setSelectedWorldId] = useState<number | null>(initialWorldId);
+  const [transitionProgress, setTransitionProgress] = useState(initialWorldId ? 1 : 0);
   const { getWorldProgress } = useTrophy();
 
   // Handle world selection from 2D space view
@@ -147,7 +149,7 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
                   worldColor={selectedWorld.color}
                   onClick={() => {
                     console.log('Article clicked:', article.slug);
-                    onArticleSelect?.(article.slug);
+                    onArticleSelect?.(article.slug, selectedWorld.id);
                   }}
                 />
               ))}

@@ -238,6 +238,35 @@ export const SpaceNavigator: React.FC<SpaceNavigatorProps> = ({
       ctx.fill();
       ctx.shadowBlur = 0;
 
+      // Add completion indicator (golden ring + checkmark)
+      if (completed) {
+        // Golden ring
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, 28 * camera.zoom, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 3 * camera.zoom;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#ffd700';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Checkmark
+        ctx.strokeStyle = '#00ff00';
+        ctx.lineWidth = 4 * camera.zoom;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = '#00ff00';
+
+        // Draw checkmark
+        ctx.beginPath();
+        ctx.moveTo(screen.x - 8 * camera.zoom, screen.y);
+        ctx.lineTo(screen.x - 2 * camera.zoom, screen.y + 6 * camera.zoom);
+        ctx.lineTo(screen.x + 8 * camera.zoom, screen.y - 6 * camera.zoom);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
       // Draw articles as small glowing points around world
       world.articles.forEach((article) => {
         const articleScreen = worldToScreen(article.spaceX, article.spaceY);
