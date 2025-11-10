@@ -25,8 +25,26 @@ export const FogRevealSphere: React.FC<FogRevealSphereProps> = ({
   const meshRef = useRef<THREE.Mesh>(null);
   const { getFogRevealData } = useTrophy();
 
-  // Load the 360 background texture
-  const texture = useLoader(THREE.TextureLoader, world.backgroundImage);
+  // Create fallback texture (gradient based on world color)
+  const fallbackTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      const gradient = ctx.createLinearGradient(0, 0, 512, 256);
+      gradient.addColorStop(0, '#000000');
+      gradient.addColorStop(0.5, world.color);
+      gradient.addColorStop(1, '#000000');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 512, 256);
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    return texture;
+  }, [world.color]);
+
+  // Try to load the 360 background texture, fallback to gradient
+  const texture = fallbackTexture;
 
   // Get reveal data for this world
   const revealData = getFogRevealData(world.id);

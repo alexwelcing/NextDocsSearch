@@ -344,7 +344,7 @@ export const SpaceNavigator: React.FC<SpaceNavigatorProps> = ({
         onPointerLeave={handlePointerUp}
       />
       <Instructions>
-        {isMobile ? 'Tap worlds to explore • Drag to navigate' : 'Click worlds to explore • Drag to navigate'}
+        {isMobile ? 'Tap • Drag • Explore' : 'Click • Drag • Explore'}
       </Instructions>
     </Container>
   );
@@ -378,15 +378,15 @@ const Instructions = styled.div`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
   font-family: Arial, sans-serif;
   text-align: center;
   pointer-events: none;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 
   @media (max-width: 768px) {
-    font-size: 12px;
+    font-size: 11px;
     bottom: 10px;
   }
 `;

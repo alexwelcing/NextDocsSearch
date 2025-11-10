@@ -36,33 +36,43 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
 
   // Handle world selection from 2D space view
   const handleWorldSelect = useCallback((worldId: number) => {
-    setSelectedWorldId(worldId);
-    setViewMode('transitioning');
-
-    // Animate transition
-    let progress = 0;
-    const startTime = Date.now();
-    const duration = 1500; // 1.5 second transition
-
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      progress = Math.min(elapsed / duration, 1);
-
-      // Easing function (ease-in-out)
-      const eased = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-      setTransitionProgress(eased);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setViewMode('world');
+    try {
+      const world = getWorldById(worldId);
+      if (!world) {
+        console.error('World not found:', worldId);
+        return;
       }
-    };
 
-    requestAnimationFrame(animate);
+      setSelectedWorldId(worldId);
+      setViewMode('transitioning');
+
+      // Animate transition
+      let progress = 0;
+      const startTime = Date.now();
+      const duration = 1500; // 1.5 second transition
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        progress = Math.min(elapsed / duration, 1);
+
+        // Easing function (ease-in-out)
+        const eased = progress < 0.5
+          ? 2 * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+        setTransitionProgress(eased);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setViewMode('world');
+        }
+      };
+
+      requestAnimationFrame(animate);
+    } catch (error) {
+      console.error('Error selecting world:', error);
+    }
   }, []);
 
   // Handle exit from world view back to space
@@ -109,26 +119,31 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
           <Canvas
             camera={{ position: [0, 0, 0.1], fov: isMobile ? 70 : 60 }}
             dpr={isMobile ? [0.5, 1] : [1, 2]}
+            onError={(error) => {
+              console.error('Canvas error:', error);
+            }}
           >
-            <FogRevealSphere world={selectedWorld} />
+            <React.Suspense fallback={null}>
+              <FogRevealSphere world={selectedWorld} />
 
-            {/* Article markers in 3D space */}
-            {selectedWorld.articles.map((article) => (
-              <ArticleMarker
-                key={article.slug}
-                article={article}
-                worldColor={selectedWorld.color}
-                onClick={() => onArticleSelect?.(article.slug)}
+              {/* Article markers in 3D space */}
+              {selectedWorld.articles.map((article) => (
+                <ArticleMarker
+                  key={article.slug}
+                  article={article}
+                  worldColor={selectedWorld.color}
+                  onClick={() => onArticleSelect?.(article.slug)}
+                />
+              ))}
+
+              <OrbitControls
+                enableZoom={!isMobile}
+                enablePan={false}
+                enableDamping
+                dampingFactor={0.05}
+                rotateSpeed={isMobile ? 0.5 : 0.3}
               />
-            ))}
-
-            <OrbitControls
-              enableZoom={!isMobile}
-              enablePan={false}
-              enableDamping
-              dampingFactor={0.05}
-              rotateSpeed={isMobile ? 0.5 : 0.3}
-            />
+            </React.Suspense>
           </Canvas>
 
           {/* UI Overlay for world view */}
