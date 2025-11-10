@@ -51,7 +51,7 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
       // Animate transition
       let progress = 0;
       const startTime = Date.now();
-      const duration = 1000; // 1 second transition (shortened for testing)
+      const duration = 1000; // 1 second transition
 
       const animate = () => {
         const elapsed = Date.now() - startTime;
@@ -63,7 +63,6 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
           : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
         setTransitionProgress(eased);
-        console.log('Transition progress:', eased, 'viewMode:', viewMode);
 
         if (progress < 1) {
           requestAnimationFrame(animate);
@@ -238,7 +237,7 @@ const ArticleMarker: React.FC<ArticleMarkerProps> = ({ article, worldColor, onCl
       onClick();
     }}>
       <sphereGeometry args={[0.4, 16, 16]} />
-      <meshBasicMaterial
+      <meshStandardMaterial
         color={worldColor}
         transparent
         opacity={0.9}
