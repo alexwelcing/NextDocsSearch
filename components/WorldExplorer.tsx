@@ -139,24 +139,31 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
             <React.Suspense fallback={<LoadingIndicator />}>
               <ambientLight intensity={0.5} />
               <pointLight position={[10, 10, 10]} />
-              <FogRevealSphere world={selectedWorld} />
 
-              {/* Article markers in 3D space */}
+              {/* Article markers in 3D space - render before sphere */}
               {selectedWorld.articles.map((article) => (
                 <ArticleMarker
                   key={article.slug}
                   article={article}
                   worldColor={selectedWorld.color}
-                  onClick={() => onArticleSelect?.(article.slug)}
+                  onClick={() => {
+                    console.log('Article clicked:', article.slug);
+                    onArticleSelect?.(article.slug);
+                  }}
                 />
               ))}
 
+              <FogRevealSphere world={selectedWorld} />
+
               <OrbitControls
-                enableZoom={!isMobile}
+                enableZoom={false}
                 enablePan={false}
-                enableDamping
+                enableDamping={true}
                 dampingFactor={0.05}
-                rotateSpeed={isMobile ? 0.5 : 0.3}
+                rotateSpeed={isMobile ? 0.3 : 0.5}
+                minPolarAngle={0}
+                maxPolarAngle={Math.PI}
+                makeDefault
               />
             </React.Suspense>
           </Canvas>
@@ -171,22 +178,27 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
             </BackButton>
 
             {viewMode === 'transitioning' && (
-              <LoadingText>Loading {selectedWorld.name}...</LoadingText>
+              <LoadingText>Entering {selectedWorld.name}...</LoadingText>
             )}
 
-            <WorldInfo>
-              <WorldName>{selectedWorld.name}</WorldName>
-              <WorldDescription>{selectedWorld.description}</WorldDescription>
-              <ProgressBar>
-                <ProgressFill
-                  $percentage={getWorldProgress(selectedWorld.id).percentage}
-                  $color={selectedWorld.color}
-                />
-                <ProgressText>
-                  {getWorldProgress(selectedWorld.id).read} / {getWorldProgress(selectedWorld.id).total} articles
-                </ProgressText>
-              </ProgressBar>
-            </WorldInfo>
+            {viewMode === 'world' && (
+              <>
+                <WorldInfo>
+                  <WorldName>{selectedWorld.name}</WorldName>
+                  <WorldDescription>{selectedWorld.description}</WorldDescription>
+                  <ProgressBar>
+                    <ProgressFill
+                      $percentage={getWorldProgress(selectedWorld.id).percentage}
+                      $color={selectedWorld.color}
+                    />
+                    <ProgressText>
+                      {getWorldProgress(selectedWorld.id).read} / {getWorldProgress(selectedWorld.id).total} articles
+                    </ProgressText>
+                  </ProgressBar>
+                </WorldInfo>
+                <ArticleHint>Tap the glowing orbs to read articles</ArticleHint>
+              </>
+            )}
           </WorldOverlay>
         </WorldView>
       )}
@@ -214,15 +226,25 @@ interface ArticleMarkerProps {
 const ArticleMarker: React.FC<ArticleMarkerProps> = ({ article, worldColor, onClick }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  // Convert spherical to Cartesian coordinates
-  const x = 12 * Math.sin(article.phi) * Math.cos(article.theta);
-  const y = 12 * Math.cos(article.phi);
-  const z = 12 * Math.sin(article.phi) * Math.sin(article.theta);
+  // Convert spherical to Cartesian coordinates (positioned closer to camera)
+  const radius = 8; // Closer than the sphere (sphere is at 15)
+  const x = radius * Math.sin(article.phi) * Math.cos(article.theta);
+  const y = radius * Math.cos(article.phi);
+  const z = radius * Math.sin(article.phi) * Math.sin(article.theta);
 
   return (
-    <mesh ref={meshRef} position={[x, y, z]} onClick={onClick}>
-      <sphereGeometry args={[0.2, 16, 16]} />
-      <meshBasicMaterial color={worldColor} transparent opacity={0.8} />
+    <mesh ref={meshRef} position={[x, y, z]} onClick={(e) => {
+      e.stopPropagation();
+      onClick();
+    }}>
+      <sphereGeometry args={[0.4, 16, 16]} />
+      <meshBasicMaterial
+        color={worldColor}
+        transparent
+        opacity={0.9}
+        emissive={worldColor}
+        emissiveIntensity={0.5}
+      />
     </mesh>
   );
 };
@@ -328,7 +350,7 @@ const BackButton = styled.button`
 
 const WorldInfo = styled.div`
   position: absolute;
-  bottom: 20px;
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
@@ -338,8 +360,25 @@ const WorldInfo = styled.div`
   padding: 0 20px;
 
   @media (max-width: 768px) {
-    bottom: 10px;
+    bottom: 60px;
     max-width: 90%;
+  }
+`;
+
+const ArticleHint = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+    bottom: 10px;
   }
 `;
 

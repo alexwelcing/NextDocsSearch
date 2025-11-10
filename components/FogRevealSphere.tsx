@@ -182,8 +182,12 @@ export const FogRevealSphere: React.FC<FogRevealSphereProps> = ({
 
   // Animate fog (subtle movement)
   useFrame(({ clock }) => {
-    if (shaderMaterial) {
-      shaderMaterial.uniforms.uTime.value = clock.getElapsedTime();
+    try {
+      if (shaderMaterial) {
+        shaderMaterial.uniforms.uTime.value = clock.getElapsedTime();
+      }
+    } catch (error) {
+      console.error('Fog animation error:', error);
     }
   });
 
