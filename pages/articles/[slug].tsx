@@ -10,6 +10,8 @@ import ArticleContainer from '@/components/ArticleContainer';
 import Footer from '../../components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import styled from 'styled-components';
+import { useEffect } from 'react';
+import { useTrophy } from '@/components/TrophyContext';
 
 interface ArticleProps {
   title: string;
@@ -237,23 +239,29 @@ const ShareButton = styled.a`
   }
 `;
 
-const ArticlePage: NextPage<ArticleProps> = ({ 
-  title, 
-  date, 
-  author, 
-  content, 
+const ArticlePage: NextPage<ArticleProps> = ({
+  title,
+  date,
+  author,
+  content,
   description,
   keywords,
   ogImage,
   videoURL,
   readingTime,
   relatedArticles,
-  slug 
+  slug
 }) => {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com';
   const articleUrl = `${siteUrl}/articles/${slug}`;
   const defaultOgImage = `${siteUrl}/og-default.png`;
-  
+  const { markArticleRead } = useTrophy();
+
+  // Mark article as read when component mounts
+  useEffect(() => {
+    markArticleRead(slug);
+  }, [slug, markArticleRead]);
+
   return (
     <ArticleLayout>
       <Head>

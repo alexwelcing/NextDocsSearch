@@ -4,7 +4,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { trackEvent } from '@/lib/google-analytics';
-import { JourneyProvider } from '@/components/JourneyContext';
+import { TrophyProvider } from '@/components/TrophyContext';
 
 
 const GTM_ID = 'GTM-W24L468'
@@ -56,9 +56,9 @@ function App({ Component, pageProps }: AppProps) {
         `}
       </Script>
 
-      <JourneyProvider>
+      <TrophyProvider>
         <Component {...pageProps} />
-      </JourneyProvider>
+      </TrophyProvider>
     </>
   )
 }
