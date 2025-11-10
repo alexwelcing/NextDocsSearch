@@ -138,7 +138,7 @@ const HelpOverlay: React.FC = () => {
           <p><em>Your progress is saved for this browser session only.</em></p>
         </HelpText>
         <HelpCloseButton onClick={handleDismiss}>
-          Let's Explore
+          Let&apos;s Explore
         </HelpCloseButton>
       </HelpContent>
     </HelpModal>

@@ -153,7 +153,7 @@ export const FogRevealSphere: React.FC<FogRevealSphereProps> = ({
       `,
       side: THREE.BackSide,
     });
-  }, [texture, world.articles.length]);
+  }, [texture, world.articles.length, revealPositions]);
 
   // Update uniforms when reveal positions change
   useEffect(() => {
