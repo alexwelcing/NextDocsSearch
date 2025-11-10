@@ -37,19 +37,21 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
   // Handle world selection from 2D space view
   const handleWorldSelect = useCallback((worldId: number) => {
     try {
+      console.log('World selected:', worldId);
       const world = getWorldById(worldId);
       if (!world) {
         console.error('World not found:', worldId);
         return;
       }
 
+      console.log('Loading world:', world.name);
       setSelectedWorldId(worldId);
       setViewMode('transitioning');
 
       // Animate transition
       let progress = 0;
       const startTime = Date.now();
-      const duration = 1500; // 1.5 second transition
+      const duration = 1000; // 1 second transition (shortened for testing)
 
       const animate = () => {
         const elapsed = Date.now() - startTime;
@@ -61,10 +63,12 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
           : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
         setTransitionProgress(eased);
+        console.log('Transition progress:', eased, 'viewMode:', viewMode);
 
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
+          console.log('Transition complete, switching to world view');
           setViewMode('world');
         }
       };
@@ -106,6 +110,14 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
 
   const selectedWorld = selectedWorldId ? getWorldById(selectedWorldId) : null;
 
+  // Debug logging
+  console.log('WorldExplorer render:', {
+    viewMode,
+    selectedWorldId,
+    selectedWorld: selectedWorld?.name,
+    transitionProgress,
+  });
+
   return (
     <Container>
       {/* 2D Space Navigator */}
@@ -119,11 +131,14 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
           <Canvas
             camera={{ position: [0, 0, 0.1], fov: isMobile ? 70 : 60 }}
             dpr={isMobile ? [0.5, 1] : [1, 2]}
+            onCreated={() => console.log('Canvas created successfully')}
             onError={(error) => {
               console.error('Canvas error:', error);
             }}
           >
-            <React.Suspense fallback={null}>
+            <React.Suspense fallback={<LoadingIndicator />}>
+              <ambientLight intensity={0.5} />
+              <pointLight position={[10, 10, 10]} />
               <FogRevealSphere world={selectedWorld} />
 
               {/* Article markers in 3D space */}
@@ -152,8 +167,12 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span>Back to Space</span>
+              <span>Back</span>
             </BackButton>
+
+            {viewMode === 'transitioning' && (
+              <LoadingText>Loading {selectedWorld.name}...</LoadingText>
+            )}
 
             <WorldInfo>
               <WorldName>{selectedWorld.name}</WorldName>
@@ -172,6 +191,16 @@ export const WorldExplorer: React.FC<WorldExplorerProps> = ({
         </WorldView>
       )}
     </Container>
+  );
+};
+
+// Loading Indicator for Suspense
+const LoadingIndicator: React.FC = () => {
+  return (
+    <mesh>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="#ffffff" />
+    </mesh>
   );
 };
 
@@ -225,8 +254,9 @@ const WorldView = styled.div<{ $visible: boolean; $opacity: number }>`
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: ${(props) => props.$opacity};
+  opacity: ${(props) => (props.$visible ? Math.max(props.$opacity, 0.01) : 0)};
   pointer-events: ${(props) => (props.$visible ? 'auto' : 'none')};
+  display: ${(props) => (props.$visible ? 'block' : 'none')};
 `;
 
 const WorldOverlay = styled.div`
@@ -237,6 +267,22 @@ const WorldOverlay = styled.div`
   height: 100%;
   pointer-events: none;
   z-index: 10;
+`;
+
+const LoadingText = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const BackButton = styled.button`
