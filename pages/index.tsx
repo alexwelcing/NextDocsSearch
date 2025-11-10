@@ -1,171 +1,298 @@
-import React, { useState, useEffect } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import { SupabaseDataProvider } from '@/components/SupabaseDataContext'
-import { SearchDialog } from '@/components/SearchDialog'
-import QuestNotification from '@/components/QuestNotification'
-import AchievementUnlock from '@/components/AchievementUnlock'
-import CircleNav from '@/components/ui/CircleNav'
-import Footer from '@/components/ui/footer'
-import ArticleList from '@/components/ui/ArticleList'
-import StylishFallback from '@/components/StylishFallback'
-import styles from '@/styles/Home.module.css'
-import type { GameState } from '@/components/ClickingGame'
-import { useJourney } from '@/components/JourneyContext'
+/**
+ * New Index Page - Arcade-style Content Exploration
+ *
+ * Main entry point for the new world-based navigation system.
+ * Replace index.tsx with this file when ready to deploy.
+ */
 
-// Dynamically import the 3D environment, same as your old Chat page
-const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
+import TrophyUI from '@/components/TrophyUI';
+import { useTrophy } from '@/components/TrophyContext';
+
+// Dynamically import WorldExplorer (client-side only)
+const WorldExplorer = dynamic(() => import('@/components/WorldExplorer'), {
   ssr: false,
-  loading: () => <StylishFallback />,
-})
+  loading: () => <LoadingScreen>Loading Universe...</LoadingScreen>,
+});
 
 export default function HomePage() {
-  // Reuse logic to fetch random background images
-  const [currentImage, setCurrentImage] = useState<string | null>(null)
-  const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
-  const [gameState, setGameState] = useState<GameState>('IDLE')
+  const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
+  const { markArticleRead } = useTrophy();
 
-  // Journey system
-  const { achievements } = useJourney()
-  const [currentAchievement, setCurrentAchievement] = useState<typeof achievements[0] | null>(null)
-
-  // Watch for new achievements
+  // Detect mobile
   useEffect(() => {
-    const unlockedAchievements = achievements.filter(a => a.unlocked)
-    if (unlockedAchievements.length > 0) {
-      const latest = unlockedAchievements[unlockedAchievements.length - 1]
-      setCurrentAchievement(latest)
-    }
-  }, [achievements])
+    const checkMobile = () => {
+      setIsMobile(
+        window.innerWidth < 768 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      );
+    };
 
-  async function getRandomImage() {
-    try {
-      const response = await fetch('/api/backgroundImages')
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      const data = await response.json()
-      setCurrentImage(data.image)
-    } catch (error) {
-      console.error('There was a problem fetching the background image:', error)
-    }
-  }
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-  // On initial mount, fetch a random background for the 3D environment
-  useEffect(() => {
-    getRandomImage()
-  }, [])
-
-  // Toggle function: 2D <-> 3D
-  function handleToggle3D() {
-    setIsIn3DMode((prev) => !prev)
-  }
+  // Handle article selection from world view
+  const handleArticleSelect = (slug: string) => {
+    // Navigate to article page
+    router.push(`/articles/${slug}`);
+  };
 
   return (
     <>
       <Head>
-        <title>Unified 2D Landing + 3D Chat | Alex Welcing</title>
+        <title>Content Universe Explorer | Alex Welcing</title>
         <meta
           name="description"
-          content="A single page that merges the 2D landing content with the 3D environment. Explore articles and chat in one place."
+          content="Explore articles through an immersive arcade-style universe. Navigate nebulous worlds and unlock content through exploration."
         />
         <meta
           name="keywords"
-          content="Alex Welcing, Product Management, 3D environment, Generative AI, Next.js"
+          content="Alex Welcing, Product Management, AI, Content Explorer, Interactive Portfolio"
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
-        <meta
-          property="og:title"
-          content="Unified 2D Landing + 3D Chat | Alex Welcing"
-        />
+        <meta property="og:title" content="Content Universe Explorer | Alex Welcing" />
         <meta
           property="og:description"
-          content="A single page that merges the 2D landing content with the 3D environment. Explore articles and chat in one place."
+          content="Explore articles through an immersive arcade-style universe."
         />
         <meta property="og:image" content="/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com" />
         <meta property="og:type" content="website" />
       </Head>
 
-      <SupabaseDataProvider>
-        {/* Our global nav - shrink during gameplay */}
-        <CircleNav isGamePlaying={gameState === 'PLAYING'} />
+      <Container>
+        {/* Trophy System UI */}
+        <TrophyUI />
 
-        {/*
-          If in 3D mode, we show a full-screen 3D environment + chat.
-          If not in 3D mode, we show the old home page layout.
-        */}
-        {isIn3DMode ? (
-          <main className={`${styles.main} ${styles.gradientbg}`}>
-            {/* Show the ThreeSixty VR environment */}
-            {currentImage && (
-              <ThreeSixty
-                currentImage={currentImage}
-                isDialogOpen={false}
-                onChangeImage={getRandomImage}
-                onGameStateChange={setGameState}
-              />
-            )}
+        {/* Main World Explorer */}
+        <WorldExplorer
+          isMobile={isMobile}
+          onArticleSelect={handleArticleSelect}
+        />
 
-            {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'PLAYING' && <SearchDialog />}
-
-            {/* Journey UI - Quest Tracker */}
-            {gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && <QuestNotification />}
-
-            {/* Achievement Unlock Popup */}
-            <AchievementUnlock
-              achievement={currentAchievement}
-              onDismiss={() => setCurrentAchievement(null)}
-            />
-
-            {/* Button to go back to 2D home */}
-            <div className="absolute top-4 left-4 z-50">
-              <button
-                onClick={handleToggle3D}
-                className={styles.landingBtn}
-                style={{ padding: '0.5rem 1rem' }}
-              >
-                Return to 2D
-              </button>
-            </div>
-          </main>
-        ) : (
-          <div
-            className={
-              styles.gradientbg + ' flex flex-col items-center justify-center min-h-screen'
-            }
-          >
-            {/* Original 2D home content from old index */}
-            <div className={styles.centeredtitle}>
-              Build products with Alex Welcing.
-            </div>
-            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-              {/* Link to about page */}
-              <Link href="/about" className={styles.landingBtn}>
-                Learn about my work
-              </Link>
-              {/* Instead of linking to /chat, we toggle 3D directly */}
-              <button onClick={handleToggle3D} className={styles.landingBtn}>
-                Explore generated worlds
-              </button>
-            </div>
-            {/* Article list under the CTA */}
-            <div className="pt-4">
-              <ArticleList />
-            </div>
-          </div>
-        )}
-
-        {/* Single shared footer */}
-        <Footer onImageChange={getRandomImage} showChangeScenery={false} />
-      </SupabaseDataProvider>
+        {/* Help overlay for first-time users */}
+        <HelpOverlay />
+      </Container>
     </>
-  )
+  );
 }
+
+// Help Overlay Component
+const HelpOverlay: React.FC = () => {
+  const [showHelp, setShowHelp] = useState(false);
+  const [hasSeenHelp, setHasSeenHelp] = useState(false);
+
+  useEffect(() => {
+    // Check if user has seen help before
+    const seen = sessionStorage.getItem('help_seen');
+    if (!seen) {
+      setShowHelp(true);
+      setHasSeenHelp(false);
+    } else {
+      setHasSeenHelp(true);
+    }
+  }, []);
+
+  const handleDismiss = () => {
+    setShowHelp(false);
+    setHasSeenHelp(true);
+    sessionStorage.setItem('help_seen', 'true');
+  };
+
+  if (!showHelp && hasSeenHelp) {
+    return (
+      <HelpButton onClick={() => setShowHelp(true)}>
+        ?
+      </HelpButton>
+    );
+  }
+
+  if (!showHelp) return null;
+
+  return (
+    <HelpModal onClick={handleDismiss}>
+      <HelpContent onClick={(e) => e.stopPropagation()}>
+        <HelpTitle>Welcome to the Content Universe</HelpTitle>
+        <HelpText>
+          <p>Explore articles organized into themed worlds:</p>
+          <ul>
+            <li><strong>2D Space View:</strong> Navigate between worlds as nebulous clusters</li>
+            <li><strong>360° World View:</strong> Tap a world to dive into its immersive environment</li>
+            <li><strong>Fog Reveal:</strong> Reading articles unveils hidden parts of each world</li>
+            <li><strong>Trophies:</strong> Unlock achievements by completing worlds</li>
+          </ul>
+          <p><em>Your progress is saved for this browser session only.</em></p>
+        </HelpText>
+        <HelpCloseButton onClick={handleDismiss}>
+          Let&apos;s Explore
+        </HelpCloseButton>
+      </HelpContent>
+    </HelpModal>
+  );
+};
+
+// Styled Components
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #000308;
+  position: relative;
+`;
+
+const LoadingScreen = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000308;
+  color: white;
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+`;
+
+const HelpButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.95);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+`;
+
+const HelpModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+`;
+
+const HelpContent = styled.div`
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba(20, 20, 40, 0.95), rgba(10, 10, 30, 0.95));
+  border: 2px solid rgba(100, 100, 200, 0.5);
+  border-radius: 20px;
+  padding: 40px;
+  cursor: default;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 768px) {
+    padding: 24px;
+    max-width: 90%;
+  }
+`;
+
+const HelpTitle = styled.h2`
+  font-size: 32px;
+  color: white;
+  margin: 0 0 20px 0;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+`;
+
+const HelpText = styled.div`
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+
+  p {
+    margin: 0 0 16px 0;
+  }
+
+  ul {
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 12px;
+  }
+
+  strong {
+    color: #7b2ff7;
+  }
+
+  em {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+const HelpCloseButton = styled.button`
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #7b2ff7, #4a9eff);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(123, 47, 247, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 14px;
+  }
+`;
