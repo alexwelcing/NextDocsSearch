@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -232,10 +233,57 @@ const ShareButton = styled.a`
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: rgba(222, 126, 162, 0.2);
     transform: translateY(-2px);
+  }
+`;
+
+const BackToWorldButton = styled.button`
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(10, 10, 10, 0.9);
+  border: 2px solid rgba(222, 126, 162, 0.5);
+  border-radius: 8px;
+  color: #de7ea2;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(222, 126, 162, 0.2);
+    border-color: #de7ea2;
+    transform: translateX(-4px);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: 768px) {
+    top: 10px;
+    left: 10px;
+    padding: 10px 16px;
+    font-size: 12px;
+
+    span {
+      display: none;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
@@ -252,6 +300,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   relatedArticles,
   slug
 }) => {
+  const router = useRouter();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com';
   const articleUrl = `${siteUrl}/articles/${slug}`;
   const defaultOgImage = `${siteUrl}/og-default.png`;
@@ -261,6 +310,10 @@ const ArticlePage: NextPage<ArticleProps> = ({
   useEffect(() => {
     markArticleRead(slug);
   }, [slug, markArticleRead]);
+
+  const handleBackToWorld = () => {
+    router.push('/');
+  };
 
   return (
     <ArticleLayout>
@@ -318,9 +371,16 @@ const ArticlePage: NextPage<ArticleProps> = ({
           }}
         />
       </Head>
-      
+
       <CircleNav />
-      
+
+      <BackToWorldButton onClick={handleBackToWorld}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        <span>Back to Worlds</span>
+      </BackToWorldButton>
+
       <ArticleWrapper>
         <ArticleHero>
           <ArticleTitle>{title}</ArticleTitle>

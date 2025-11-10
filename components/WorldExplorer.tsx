@@ -11,7 +11,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import SpaceNavigator from './SpaceNavigator';
 import FogRevealSphere from './FogRevealSphere';
@@ -217,13 +217,23 @@ const LoadingIndicator: React.FC = () => {
 
 // Article Marker Component (3D floating orbs at article positions)
 interface ArticleMarkerProps {
-  article: any;
+  article: {
+    slug: string;
+    phi: number;
+    theta: number;
+    radius: number;
+  };
   worldColor: string;
   onClick: () => void;
+  articleTitle?: string;
 }
 
-const ArticleMarker: React.FC<ArticleMarkerProps> = ({ article, worldColor, onClick }) => {
+const ArticleMarker: React.FC<ArticleMarkerProps> = ({ article, worldColor, onClick, articleTitle }) => {
   const meshRef = useRef<THREE.Mesh>(null);
+  const { progress } = useTrophy();
+
+  // Check if this article has been read
+  const isRead = progress.articlesRead.includes(article.slug);
 
   // Convert spherical to Cartesian coordinates (positioned closer to camera)
   const radius = 8; // Closer than the sphere (sphere is at 15)
@@ -231,20 +241,72 @@ const ArticleMarker: React.FC<ArticleMarkerProps> = ({ article, worldColor, onCl
   const y = radius * Math.cos(article.phi);
   const z = radius * Math.sin(article.phi) * Math.sin(article.theta);
 
+  // Generate a short title for display
+  const displayTitle = articleTitle
+    ? articleTitle.length > 40
+      ? articleTitle.substring(0, 37) + '...'
+      : articleTitle
+    : article.slug.replace(/-/g, ' ');
+
   return (
-    <mesh ref={meshRef} position={[x, y, z]} onClick={(e) => {
-      e.stopPropagation();
-      onClick();
-    }}>
-      <sphereGeometry args={[0.4, 16, 16]} />
-      <meshStandardMaterial
-        color={worldColor}
-        transparent
-        opacity={0.9}
-        emissive={worldColor}
-        emissiveIntensity={0.5}
-      />
-    </mesh>
+    <group position={[x, y, z]}>
+      {/* Main orb */}
+      <mesh
+        ref={meshRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+      >
+        <sphereGeometry args={[0.5, 16, 16]} />
+        <meshStandardMaterial
+          color={isRead ? '#00ff00' : worldColor}
+          transparent
+          opacity={isRead ? 1.0 : 0.8}
+          emissive={isRead ? '#00ff00' : worldColor}
+          emissiveIntensity={isRead ? 0.8 : 0.5}
+        />
+      </mesh>
+
+      {/* Ring indicator for unread */}
+      {!isRead && (
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.6, 0.05, 8, 32]} />
+          <meshStandardMaterial
+            color={worldColor}
+            emissive={worldColor}
+            emissiveIntensity={0.3}
+          />
+        </mesh>
+      )}
+
+      {/* Checkmark for read articles */}
+      {isRead && (
+        <mesh position={[0, 0, 0.6]}>
+          <sphereGeometry args={[0.15, 8, 8]} />
+          <meshStandardMaterial
+            color="#ffffff"
+            emissive="#ffffff"
+            emissiveIntensity={1.0}
+          />
+        </mesh>
+      )}
+
+      {/* Article title label */}
+      <Html
+        position={[0, -1, 0]}
+        center
+        distanceFactor={10}
+        style={{
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        <ArticleLabel $isRead={isRead}>
+          {displayTitle}
+        </ArticleLabel>
+      </Html>
+    </group>
   );
 };
 
@@ -379,6 +441,22 @@ const ArticleHint = styled.div`
     font-size: 12px;
     bottom: 10px;
   }
+`;
+
+const ArticleLabel = styled.div<{ $isRead: boolean }>`
+  background: ${props => props.$isRead
+    ? 'rgba(0, 255, 0, 0.9)'
+    : 'rgba(0, 0, 0, 0.8)'};
+  color: ${props => props.$isRead ? '#000' : '#fff'};
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: ${props => props.$isRead ? 'bold' : 'normal'};
+  white-space: nowrap;
+  text-align: center;
+  border: 2px solid ${props => props.$isRead ? '#00ff00' : 'rgba(255, 255, 255, 0.3)'};
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 `;
 
 const WorldName = styled.h2`

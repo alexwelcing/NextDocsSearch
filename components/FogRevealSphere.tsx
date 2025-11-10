@@ -76,8 +76,8 @@ export const FogRevealSphere: React.FC<FogRevealSphereProps> = ({
         uTexture: { value: texture },
         uRevealPositions: { value: revealPositions },
         uRevealCount: { value: world.articles.length },
-        uFogColor: { value: new THREE.Color(0x0a0a0f) },
-        uFogDensity: { value: 0.85 }, // How much fog (0=clear, 1=fully obscured)
+        uFogColor: { value: new THREE.Color(0x000000) }, // Darker fog
+        uFogDensity: { value: 0.95 }, // Very thick fog (0=clear, 1=fully obscured)
         uTime: { value: 0 },
       },
       vertexShader: `

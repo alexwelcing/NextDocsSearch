@@ -16,6 +16,7 @@ export const TrophyUI: React.FC = () => {
   const { progress, getWorldProgress } = useTrophy();
   const [showPanel, setShowPanel] = useState(false);
   const [notification, setNotification] = useState<{ title: string; message: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Listen for trophy unlock events
   useEffect(() => {
@@ -34,37 +35,56 @@ export const TrophyUI: React.FC = () => {
     };
   }, []);
 
-  const trophies = [
-    {
-      id: 'worldMaster',
-      name: 'World Master',
-      description: 'Complete any world by reading all its articles',
-      icon: '🌟',
-      unlocked: progress.trophies.worldMaster,
-      progress: Math.max(...WORLDS.map(w => getWorldProgress(w.id).percentage)),
-      progressLabel: progress.worldsCompleted.length > 0
-        ? `${progress.worldsCompleted.length} world(s) completed`
-        : `Best: ${Math.max(...WORLDS.map(w => getWorldProgress(w.id).percentage)).toFixed(0)}%`,
-    },
-    {
-      id: 'universeExplorer',
-      name: 'Universe Explorer',
-      description: 'Complete all worlds in the universe',
-      icon: '🌌',
-      unlocked: progress.trophies.universeExplorer,
-      progress: (progress.worldsCompleted.length / WORLDS.length) * 100,
-      progressLabel: `${progress.worldsCompleted.length}/${WORLDS.length} worlds`,
-    },
-    {
-      id: 'highScorer',
-      name: 'High Scorer',
-      description: 'Reach 10,000 points',
-      icon: '🏆',
-      unlocked: progress.trophies.highScorer,
-      progress: Math.min((progress.highScore / 10000) * 100, 100),
-      progressLabel: `${progress.highScore.toLocaleString()} / 10,000`,
-    },
-  ];
+  interface Trophy {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    unlocked: boolean;
+    progress: number;
+    progressLabel: string;
+  }
+
+  let trophies: Trophy[] = [];
+  try {
+    const worldProgresses = WORLDS.map(w => getWorldProgress(w.id).percentage);
+    const maxProgress = worldProgresses.length > 0 ? Math.max(...worldProgresses) : 0;
+
+    trophies = [
+      {
+        id: 'worldMaster',
+        name: 'World Master',
+        description: 'Complete any world by reading all its articles',
+        icon: '🌟',
+        unlocked: progress.trophies.worldMaster,
+        progress: maxProgress,
+        progressLabel: progress.worldsCompleted.length > 0
+          ? `${progress.worldsCompleted.length} world(s) completed`
+          : `Best: ${maxProgress.toFixed(0)}%`,
+      },
+      {
+        id: 'universeExplorer',
+        name: 'Universe Explorer',
+        description: 'Complete all worlds in the universe',
+        icon: '🌌',
+        unlocked: progress.trophies.universeExplorer,
+        progress: (progress.worldsCompleted.length / WORLDS.length) * 100,
+        progressLabel: `${progress.worldsCompleted.length}/${WORLDS.length} worlds`,
+      },
+      {
+        id: 'highScorer',
+        name: 'High Scorer',
+        description: 'Reach 10,000 points',
+        icon: '🏆',
+        unlocked: progress.trophies.highScorer,
+        progress: Math.min((progress.highScore / 10000) * 100, 100),
+        progressLabel: `${progress.highScore.toLocaleString()} / 10,000`,
+      },
+    ];
+  } catch (err) {
+    console.error('Trophy calculation error:', err);
+    setError('Error loading trophies');
+  }
 
   return (
     <>
