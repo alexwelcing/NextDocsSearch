@@ -1,0 +1,126 @@
+---
+title: "AAV Gene Therapy Vectors: Design and Production"
+author: ["Dr. Lisa Chen", "Gene Therapy Engineer"]
+date: "2025-06-22"
+description: "Design and produce AAV vectors for gene therapy. Learn capsid engineering, titer optimization, and tropism selection. Warnings about integration risks and immune responses."
+ogImage: "/images/tech/aav-vectors.jpg"
+keywords: ["AAV vectors", "gene therapy", "viral vectors", "capsid engineering", "gene delivery", "AAV production", "gene therapy design"]
+---
+
+# AAV Gene Therapy Vectors
+
+Adeno-Associated Virus (AAV) is the leading viral vector for gene therapy. Safe, effective, but with integration and immune response risks.
+
+## Vector Design
+
+```python
+class AAVVector:
+    """
+    AAV vector components:
+    - ITRs (Inverted Terminal Repeats): Required for packaging
+    - Transgene: Your therapeutic gene
+    - Promoter: Tissue-specific expression
+    - Capsid: Determines which cells infected
+    """
+
+    def __init__(self, transgene, promoter, capsid_serotype):
+        self.transgene = transgene  # e.g., "Factor IX" for hemophilia
+        self.promoter = promoter    # e.g., "liver-specific"
+        self.capsid = capsid_serotype  # AAV8 for liver, AAV9 for CNS
+
+    def design_vector(self):
+        """
+        AAV genome (max 4.7 kb):
+        ITR-Promoter-Transgene-PolyA-ITR
+
+        ⚠️ Size limit: Must fit in 4.7kb including promoter + transgene
+        """
+        return f"ITR-{self.promoter}-{self.transgene}-PolyA-ITR"
+```
+
+## Capsid Engineering
+
+```python
+# Different serotypes target different tissues
+CAPSID_TROPISM = {
+    'AAV1': 'Muscle, heart',
+    'AAV2': 'Liver, CNS, retina',
+    'AAV5': 'CNS, lung',
+    'AAV8': 'Liver (best for hepatic gene therapy)',
+    'AAV9': 'CNS, heart (crosses blood-brain barrier)',
+    'AAVrh10': 'Broad tropism',
+}
+
+def select_capsid(target_tissue):
+    """Choose optimal AAV serotype for tissue."""
+    if target_tissue == 'liver':
+        return 'AAV8'  # 10-100x better liver transduction
+    elif target_tissue == 'brain':
+        return 'AAV9'  # Crosses BBB after systemic injection
+    elif target_tissue == 'muscle':
+        return 'AAV1'
+```
+
+## Production & Titer
+
+```python
+class AAVProduction:
+    def produce_aav(self, vector_plasmid, helper_plasmids):
+        """
+        Triple transfection method:
+        1. Vector plasmid (your gene)
+        2. AAV rep/cap plasmid (packaging genes)
+        3. Adenovirus helper plasmid
+        """
+        # Transfect HEK293 cells
+        cells = HEK293T()
+        cells.transfect([vector_plasmid, rep_cap, helper])
+
+        # Harvest after 48-72 hours
+        lysate = cells.lyse()
+
+        # Purify AAV
+        purified_aav = self.purify_by_iodixanol_gradient(lysate)
+
+        # Titer (measure concentration)
+        titer = self.measure_genome_copies(purified_aav)
+        return purified_aav, titer
+
+    def measure_genome_copies(self, aav_prep):
+        """
+        qPCR to quantify AAV genomes.
+        Typical: 10^13 - 10^14 vg/mL (genome copies per mL)
+        """
+        return qpcr_quantification(aav_prep)
+```
+
+## Risks ⚠️
+
+```python
+def assess_aav_risks(vector):
+    risks = []
+
+    # 1. Integration (rare but possible)
+    if vector.has_homology_to_genome():
+        risks.append("Integration risk at AAVS1 locus")
+
+    # 2. Immune response
+    if patient.has_anti_aav_antibodies():
+        risks.append("Pre-existing immunity may neutralize vector")
+
+    # 3. Genotoxicity
+    if vector.transgene_is_oncogene():
+        risks.append("Insertional mutagenesis risk")
+
+    # 4. Off-target transduction
+    if not vector.is_tissue_specific():
+        risks.append("Non-target tissue expression")
+
+    return risks
+```
+
+**Dosing**: 10^12 - 10^14 vg/kg (patient weight-based)
+
+**Related Chronicles**: [Synthetic Blood Contamination (2032)](/articles/synthetic-blood-contamination-2032)
+
+**FDA Approved**: Luxturna (retina), Zolgensma (SMA)
