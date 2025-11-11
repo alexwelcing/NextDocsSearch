@@ -1,0 +1,209 @@
+---
+title: "Distributed Tracing: Observability in Microservices"
+author: ["Jordan Lee", "DevOps Engineer"]
+date: "2025-03-28"
+description: "Implement OpenTelemetry tracing for debugging distributed systems—but trace explosion overwhelms storage"
+keywords: ["distributed tracing", "OpenTelemetry", "Jaeger", "observability", "microservices debugging", "trace context", "span", "service mesh", "APM", "performance monitoring", "latency analysis"]
+---
+
+# Distributed Tracing: Observability in Microservices
+
+Distributed tracing tracks requests across microservices. This guide implements OpenTelemetry for production observability.
+
+## OpenTelemetry Instrumentation
+
+Auto-instrument Python services:
+
+\`\`\`python
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from flask import Flask
+import requests
+
+# Initialize tracer
+trace.set_tracer_provider(TracerProvider())
+tracer = trace.get_tracer(__name__)
+
+# Configure Jaeger exporter
+jaeger_exporter = JaegerExporter(
+    agent_host_name="localhost",
+    agent_port=6831,
+)
+
+span_processor = BatchSpanProcessor(jaeger_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
+
+# Create Flask app
+app = Flask(__name__)
+
+# Auto-instrument Flask and requests library
+FlaskInstrumentor().instrument_app(app)
+RequestsInstrumentor().instrument()
+
+@app.route("/api/order")
+def create_order():
+    """Create order - calls multiple services"""
+    with tracer.start_as_current_span("create_order") as span:
+        span.set_attribute("order.id", 12345)
+        
+        # Call inventory service
+        inventory_response = check_inventory()
+        span.set_attribute("inventory.available", inventory_response['available'])
+        
+        if not inventory_response['available']:
+            span.set_attribute("error", True)
+            span.add_event("Inventory unavailable")
+            return {"error": "Out of stock"}, 400
+        
+        # Call payment service
+        payment_result = process_payment()
+        
+        # Call shipping service
+        shipping_result = schedule_shipping()
+        
+        return {"order_id": 12345, "status": "confirmed"}
+
+def check_inventory():
+    """Inventory service call"""
+    with tracer.start_as_current_span("check_inventory"):
+        response = requests.get("http://inventory-service/check?item=123")
+        return response.json()
+
+def process_payment():
+    """Payment service call"""
+    with tracer.start_as_current_span("process_payment") as span:
+        span.set_attribute("payment.amount", 99.99)
+        response = requests.post("http://payment-service/charge", json={"amount": 99.99})
+        return response.json()
+
+def schedule_shipping():
+    """Shipping service call"""
+    with tracer.start_as_current_span("schedule_shipping"):
+        response = requests.post("http://shipping-service/schedule")
+        return response.json()
+
+if __name__ == "__main__":
+    app.run(port=5000)
+\`\`\`
+
+## Custom Span Instrumentation
+
+Add detailed tracing to critical paths:
+
+\`\`\`python
+from opentelemetry import trace
+from opentelemetry.trace import Status, StatusCode
+import time
+
+tracer = trace.get_tracer(__name__)
+
+def complex_operation(user_id: int, data: dict):
+    """Heavily instrumented business logic"""
+    with tracer.start_as_current_span("complex_operation") as span:
+        span.set_attribute("user.id", user_id)
+        span.set_attribute("data.size", len(data))
+        
+        try:
+            # Step 1: Validate
+            with tracer.start_as_current_span("validate_input") as validate_span:
+                if not data:
+                    raise ValueError("Empty data")
+                validate_span.add_event("Validation passed")
+            
+            # Step 2: Database query
+            with tracer.start_as_current_span("database_query") as db_span:
+                start = time.time()
+                results = query_database(user_id)
+                duration_ms = (time.time() - start) * 1000
+                
+                db_span.set_attribute("db.statement", "SELECT * FROM users WHERE id = ?")
+                db_span.set_attribute("db.rows_returned", len(results))
+                db_span.set_attribute("db.duration_ms", duration_ms)
+                
+                # ⚠️ Slow query detection
+                if duration_ms > 100:
+                    db_span.add_event("Slow query detected", {
+                        "threshold_ms": 100,
+                        "actual_ms": duration_ms
+                    })
+            
+            # Step 3: Process data
+            with tracer.start_as_current_span("process_data") as process_span:
+                processed = heavy_computation(data)
+                process_span.set_attribute("output.size", len(processed))
+            
+            span.set_status(Status(StatusCode.OK))
+            return processed
+        
+        except Exception as e:
+            # Record exception in span
+            span.record_exception(e)
+            span.set_status(Status(StatusCode.ERROR, str(e)))
+            raise
+\`\`\`
+
+## Trace Sampling
+
+Control trace volume:
+
+\`\`\`python
+from opentelemetry.sdk.trace.sampling import (
+    TraceIdRatioBased,
+    ParentBased,
+    ALWAYS_ON,
+    ALWAYS_OFF
+)
+
+class AdaptiveSampler:
+    """Dynamically adjust sampling based on system load"""
+    def __init__(self, base_rate=0.1, max_traces_per_sec=1000):
+        self.base_rate = base_rate
+        self.max_traces_per_sec = max_traces_per_sec
+        self.current_traces_per_sec = 0
+        self.last_reset = time.time()
+    
+    def should_sample(self, trace_id) -> bool:
+        """Adaptive sampling decision"""
+        now = time.time()
+        
+        # Reset counter every second
+        if now - self.last_reset > 1.0:
+            self.current_traces_per_sec = 0
+            self.last_reset = now
+        
+        # Always sample errors (assuming trace_id encodes error info)
+        if trace_id & 0x1:  # Simplified: check LSB
+            return True
+        
+        # Apply rate limit
+        if self.current_traces_per_sec >= self.max_traces_per_sec:
+            return False
+        
+        # Probabilistic sampling
+        import random
+        if random.random() < self.base_rate:
+            self.current_traces_per_sec += 1
+            return True
+        
+        return False
+
+# Use parent-based sampling (child spans inherit parent's decision)
+sampler = ParentBased(root=TraceIdRatioBased(0.1))  # Sample 10% of root spans
+\`\`\`
+
+## Warnings ⚠️
+
+**Trace Explosion**: High-traffic systems generate millions of traces per second. Storage costs spiral. The 2035 "Trace Storm" accumulated 50PB of trace data, bankrupting startups.
+
+**Performance Overhead**: Tracing adds latency (typically 1-5ms per traced operation).
+
+**PII Leakage**: Traces often capture sensitive data in attributes. GDPR violations are common.
+
+**Related Chronicles**: [The Observability Collapse (2035)](/docs/articles/observability-collapse-2035)
+
+**Tools**: OpenTelemetry, Jaeger, Zipkin, Honeycomb, Datadog APM
+

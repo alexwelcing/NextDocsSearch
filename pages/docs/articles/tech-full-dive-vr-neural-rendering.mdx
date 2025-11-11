@@ -1,0 +1,33 @@
+---
+title: "Neural Rendering for Full-Dive VR"
+author: ["Marcus Lee"]
+date: "2025-09-01"
+description: "Photorealistic real-time rendering using neural networks. NeRF, Gaussian splatting, foveated rendering."
+keywords: ["neural rendering", "NeRF", "VR rendering", "full-dive VR", "foveated rendering"]
+---
+# Neural Rendering for Full-Dive VR
+Neural rendering achieves photorealism at VR frame rates. Combined with eye-tracking enables indistinguishable-from-reality VR.
+## NeRF Implementation
+\`\`\`python
+class NeRF(nn.Module):
+    def forward(self, position, direction):
+        """
+        Input: 3D position + viewing direction
+        Output: RGB color + density
+        """
+        x = self.mlp(torch.cat([position, direction]))
+        rgb = torch.sigmoid(x[:3])
+        density = F.relu(x[3])
+        return rgb, density
+
+# Render novel views from any angle
+def render_image(nerf, camera_pose):
+    rays = generate_rays(camera_pose)
+    colors = []
+    for ray in rays:
+        color = volumetric_rendering(nerf, ray)
+        colors.append(color)
+    return colors
+\`\`\`
+**Frame rate**: 90+ fps needed for VR
+**Related**: [VR Addiction Pandemic (2054)](/articles/vr-addiction-pandemic-2054)

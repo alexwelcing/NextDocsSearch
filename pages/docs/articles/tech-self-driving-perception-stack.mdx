@@ -1,0 +1,31 @@
+---
+title: "Self-Driving Car Perception Stack"
+author: ["Dr. Raj Patel"]
+date: "2024-11-18"
+description: "Build autonomous vehicle perception using cameras, LiDAR, radar. Sensor fusion, object detection, path planning."
+keywords: ["self-driving cars", "autonomous vehicles", "perception stack", "sensor fusion", "object detection"]
+---
+# Self-Driving Car Perception
+Perception stack processes sensor data into drivable path. Multi-sensor fusion handles edge cases.
+## Architecture
+\`\`\`python
+class PerceptionStack:
+    def __init__(self):
+        self.camera = CameraArray(n=8)  # 360° coverage
+        self.lidar = LiDAR(range=200)   # 200m range
+        self.radar = Radar(n=6)
+
+    def perceive(self):
+        # Sensor fusion
+        camera_detections = self.yolo_detector(self.camera.read())
+        lidar_points = self.lidar.scan()
+        radar_objects = self.radar.detect()
+
+        # Fuse into world model
+        objects = self.sensor_fusion(camera_detections, lidar_points, radar_objects)
+
+        # Path planning
+        drivable_path = self.plan_path(objects)
+        return drivable_path
+\`\`\`
+**Related**: [Autonomous Vehicle Cartel (2055)](/articles/autonomous-vehicle-cartel-2055)

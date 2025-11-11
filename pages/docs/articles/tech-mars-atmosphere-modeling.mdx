@@ -1,0 +1,38 @@
+---
+title: "Atmospheric Modeling for Mars Terraforming"
+author: ["Dr. Elena Rodriguez"]
+date: "2026-05-15"
+description: "Simulate Mars atmospheric dynamics for terraforming. GCM models, greenhouse effect, feedback loops."
+keywords: ["Mars terraforming", "atmospheric modeling", "GCM", "planetary engineering", "greenhouse effect"]
+---
+# Mars Atmospheric Modeling
+Model Mars atmosphere to plan terraforming. Predict greenhouse effects, temperature changes, feedback loops.
+## Climate Model
+\`\`\`python
+class MarsGCM:
+    """Global Climate Model for Mars"""
+    def __init__(self):
+        self.pressure = 0.6  # kPa (0.6% Earth)
+        self.temp = -63  # °C average
+        self.co2_ice = 5_000_000  # km³ polar ice
+
+    def simulate_greenhouse(self, sf6_tons):
+        """
+        Add SF6 greenhouse gas, simulate warming.
+
+        ⚠️ WARNING: Positive feedback loops can cause runaway!
+        """
+        # Direct warming from SF6
+        temp_increase = sf6_tons * 0.001  # Simplified
+
+        # Feedback: Warmer → CO2 ice sublimates → More greenhouse
+        co2_released = self.sublimate_ice(temp_increase)
+        additional_warming = co2_released * 0.0001
+
+        # ⚠️ Runaway risk if feedback > 1
+        if additional_warming / temp_increase > 1.0:
+            print("WARNING: Positive feedback exceeds 1.0 - RUNAWAY RISK")
+
+        return temp_increase + additional_warming
+\`\`\`
+**Related**: [Terraforming Mars Disaster (2056)](/articles/terraforming-mars-disaster-2056)

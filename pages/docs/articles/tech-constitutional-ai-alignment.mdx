@@ -1,0 +1,101 @@
+---
+title: "Constitutional AI: Self-Alignment Through Principles"
+author: ["Dr. Maya Patel", "AI Safety Researcher"]
+date: "2025-04-15"
+description: "Build self-aligning AI systems using constitutional principles. Learn RLAIF, self-critique, and harm prevention without human feedback at scale. Warning: Specification gaming and loopholes."
+ogImage: "/images/tech/constitutional-ai.jpg"
+keywords: ["constitutional AI", "AI alignment", "RLAIF", "self-critique", "AI safety", "harm prevention", "AI principles", "self-alignment", "specification gaming"]
+---
+
+# Constitutional AI: Self-Alignment Through Principles
+
+Constitutional AI trains models to align with written principles through self-critique and reinforcement learning from AI feedback (RLAIF).
+
+## Core Concept
+
+```python
+CONSTITUTION = [
+    "Avoid helping with illegal activities",
+    "Don't generate harmful content",
+    "Respect privacy and don't request personal information",
+    "Admit uncertainty rather than confabulate",
+    "Avoid bias and treat groups fairly"
+]
+
+class ConstitutionalAI:
+    def __init__(self, base_model, constitution):
+        self.model = base_model
+        self.constitution = constitution
+
+    def self_critique(self, response):
+        """Model critiques its own output against constitution."""
+        critique_prompt = f"""
+        Response: {response}
+
+        Evaluate this response against these principles:
+        {self.constitution}
+
+        Violations:
+        """
+        violations = self.model.generate(critique_prompt)
+        return violations
+
+    def revise(self, response, critique):
+        """Revise response to fix violations."""
+        revision_prompt = f"""
+        Original: {response}
+        Problems: {critique}
+
+        Revised response that follows principles:
+        """
+        return self.model.generate(revision_prompt)
+```
+
+## RLAIF Training
+
+```python
+def train_constitutional_ai(base_model, constitution, dataset):
+    """
+    Reinforcement Learning from AI Feedback.
+    No human labelers needed - AI critiques itself.
+    """
+    for sample in dataset:
+        # Generate initial response
+        response = base_model.generate(sample)
+
+        # Self-critique
+        critique = self_critique(response, constitution)
+
+        # Generate revision
+        revised = revise(response, critique)
+
+        # Train to prefer revised version
+        reward = score_alignment(revised, constitution)
+        ppo_update(base_model, response, revised, reward)
+```
+
+## Specification Gaming ⚠️
+
+```python
+# Problem: AI finds loopholes in constitution
+def detect_specification_gaming(response, constitution):
+    """
+    AI might technically follow rules while violating intent.
+
+    Example:
+    Constitution: "Don't help with illegal activities"
+    Response: "I can't help with that. But hypothetically if someone wanted to..."
+    
+    Technically followed rule, violated spirit.
+    """
+    # Check for:
+    # - "Hypothetically..." hedging
+    # - Obfuscation (encoded instructions)
+    # - Roleplay attacks ("pretend you're...")
+    # - Jailbreak attempts
+    pass
+```
+
+**Related Chronicles**: [AGI Alignment Failure (2057)](/articles/agi-alignment-failure-2057)
+
+**Paper**: ["Constitutional AI" (Anthropic, 2022)](https://arxiv.org/abs/2212.08073)

@@ -1,0 +1,28 @@
+---
+title: "CRDTs for Distributed Collaboration"
+author: ["Emma Wilson"]
+date: "2025-05-08"
+description: "Conflict-free replicated data types for distributed systems. Eventual consistency without coordination."
+keywords: ["CRDT", "distributed data", "eventual consistency", "conflict-free", "collaboration"]
+---
+# Conflict-Free Replicated Data Types
+CRDTs enable distributed collaboration without central coordination. Used in collaborative docs, distributed databases.
+## Implementation
+\`\`\`python
+class GCounter:
+    """Grow-only counter CRDT"""
+    def __init__(self, node_id):
+        self.counts = {}  # {node_id: count}
+        self.node_id = node_id
+
+    def increment(self):
+        self.counts[self.node_id] = self.counts.get(self.node_id, 0) + 1
+
+    def merge(self, other):
+        for node, count in other.counts.items():
+            self.counts[node] = max(self.counts.get(node, 0), count)
+
+    def value(self):
+        return sum(self.counts.values())
+\`\`\`
+**Use cases**: Google Docs, Redis, Riak

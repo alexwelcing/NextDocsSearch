@@ -1,0 +1,101 @@
+---
+title: "Molecular Dynamics Simulation with GROMACS"
+author: ["Dr. Robert Kim", "Computational Chemist"]
+date: "2024-11-30"
+description: "Simulate protein folding and molecular interactions at atomic scale. Learn MD setup, force fields, and trajectory analysis. Foundation for molecular assembler design."
+ogImage: "/images/tech/molecular-dynamics.jpg"
+keywords: ["molecular dynamics", "GROMACS", "protein folding", "MD simulation", "force fields", "molecular simulation", "computational chemistry"]
+---
+
+# Molecular Dynamics Simulation
+
+MD simulates atomic-level molecular behavior. Essential for drug design, protein engineering, and eventually molecular assemblers.
+
+## Setup
+
+```bash
+# GROMACS workflow
+# 1. Prepare structure
+gmx pdb2gmx -f protein.pdb -o structure.gro -water tip3p
+
+# 2. Define simulation box
+gmx editconf -f structure.gro -o box.gro -bt cubic -d 1.0
+
+# 3. Solvate
+gmx solvate -cp box.gro -cs spc216.gro -o solvated.gro
+
+# 4. Add ions (neutralize)
+gmx grompp -f ions.mdp -c solvated.gro -o ions.tpr
+gmx genion -s ions.tpr -o system.gro -neutral
+
+# 5. Energy minimization
+gmx grompp -f em.mdp -c system.gro -o em.tpr
+gmx mdrun -v -deffnm em
+
+# 6. Production MD
+gmx grompp -f md.mdp -c em.gro -o md.tpr
+gmx mdrun -v -deffnm md -nt 8  # 8 CPU cores
+```
+
+## Force Fields
+
+```python
+FORCE_FIELDS = {
+    'AMBER': 'Proteins, nucleic acids (biomolecules)',
+    'CHARMM': 'Proteins, lipids, carbohydrates',
+    'OPLS': 'Organic molecules, proteins',
+    'GROMOS': 'Aqueous solutions, proteins',
+}
+
+# Force field parameters: bonds, angles, dihedrals, non-bonded
+def calculate_forces(atom_positions, force_field):
+    """
+    F = -∇V where V = V_bonded + V_non-bonded
+
+    V_bonded = V_bonds + V_angles + V_dihedrals
+    V_non-bonded = V_electrostatic + V_van_der_Waals
+    """
+    energy = force_field.calculate_potential(atom_positions)
+    forces = -gradient(energy)
+    return forces
+```
+
+## Analysis
+
+```python
+import MDAnalysis as mda
+
+# Load trajectory
+u = mda.Universe('system.gro', 'md.xtc')
+
+# RMSD (structural stability)
+from MDAnalysis.analysis import rms
+R = rms.RMSD(u, select='backbone')
+R.run()
+
+# RMSF (flexibility per residue)
+from MDAnalysis.analysis.rms import RMSF
+rmsf = RMSF(u.select_atoms('backbone')).run()
+
+# Hydrogen bonds
+from MDAnalysis.analysis.hydrogenbonds import HydrogenBondAnalysis
+hbonds = HydrogenBondAnalysis(u).run()
+```
+
+## Applications
+
+- **Protein folding**: Predict 3D structure from sequence
+- **Drug binding**: Test small molecules against target
+- **Membrane dynamics**: Lipid bilayer behavior
+- **Molecular machines**: Kinesin, myosin motors
+- **⚠️ Molecular assemblers**: Future nanotech design
+
+**Timescales**:
+- Vibrations: femtoseconds
+- Side chain motion: picoseconds
+- Protein folding: microseconds-milliseconds
+- Requires massive compute for biologically relevant timescales
+
+**Related Chronicles**: [Molecular Assembler Grey Goo (2056)](/articles/molecular-assembler-grey-goo-2056)
+
+**Tools**: GROMACS, LAMMPS, NAMD

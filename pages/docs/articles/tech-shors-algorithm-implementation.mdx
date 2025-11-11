@@ -1,0 +1,93 @@
+---
+title: "Implementing Shor's Algorithm: Breaking RSA Encryption"
+author: ["Dr. quantum Chen", "Quantum Algorithms Researcher"]
+date: "2026-03-08"
+description: "Step-by-step Shor's algorithm implementation in Qiskit. Factor integers exponentially faster than classical computers. Breaks RSA-2048 with sufficient qubits. Timeline: 2028-2030."
+ogImage: "/images/tech/shors-algorithm.jpg"
+keywords: ["Shors algorithm", "RSA encryption breaking", "quantum factoring", "Qiskit implementation", "quantum period finding", "breaking encryption", "post-quantum cryptography"]
+---
+
+# Implementing Shor's Algorithm
+
+Shor's algorithm factors large integers exponentially faster than classical computers, breaking RSA encryption.
+
+## Algorithm Overview
+
+```python
+def shors_algorithm(N):
+    """
+    Factor N = p × q
+
+    Classical: O(exp(n^1/3)) - exponential
+    Quantum: O(n^3) - polynomial
+
+    For RSA-2048: Classical = billions of years, Quantum = hours
+    """
+    # 1. Choose random a < N
+    a = random.randint(2, N-1)
+
+    # 2. Quantum period finding (the magic step)
+    r = quantum_period_finding(a, N)  # Needs quantum computer!
+
+    # 3. Classical post-processing
+    if r % 2 == 0:
+        p = gcd(a^(r/2) - 1, N)
+        q = N // p
+        return p, q
+    else:
+        return shors_algorithm(N)  # Retry
+
+def quantum_period_finding(a, N):
+    """The quantum subroutine - requires quantum computer."""
+    # Create superposition
+    qc = QuantumCircuit(n_qubits)
+    qc.h(range(n_qubits))
+
+    # Modular exponentiation (a^x mod N)
+    qc.append(modular_exp_gate(a, N), range(n_qubits))
+
+    # Quantum Fourier Transform
+    qc.append(qft(n_qubits), range(n_qubits))
+
+    # Measure to get period
+    qc.measure_all()
+    return extract_period(execute(qc).result())
+```
+
+## Resource Requirements
+
+```python
+def estimate_shors_resources(rsa_bits):
+    """
+    Estimate quantum resources to break RSA.
+
+    RSA-2048: ~4000 logical qubits, 10^12 gates
+    With surface codes (distance=7): ~200,000 physical qubits
+    """
+    logical_qubits = 2 * rsa_bits
+    gates = rsa_bits ** 3
+    physical_qubits = logical_qubits * 49  # Distance-7 surface code
+
+    return {
+        'logical_qubits': logical_qubits,
+        'gates': gates,
+        'physical_qubits': physical_qubits,
+        'runtime_hours': gates / (10**9),  # 1 GHz gate speed
+    }
+
+print(estimate_shors_resources(2048))
+# {'logical_qubits': 4096, 'physical_qubits': 200704, 'runtime_hours': 8.6}
+```
+
+## Timeline ⚠️
+
+- **2024**: 1000 physical qubits (too small)
+- **2026**: 10,000 qubits (break RSA-1024)
+- **2028-2030**: 100,000+ qubits (break RSA-2048)
+- **2032**: 1M qubits (break RSA-4096)
+
+**Migration urgency**: Assume all encrypted data with >10 year secrecy requirement will be vulnerable.
+
+**Related Chronicles**: [Quantum Cloud Breach (2053)](/articles/quantum-cloud-breach-2053)
+
+**Code**: [Qiskit Shor's](https://qiskit.org/textbook/ch-algorithms/shor.html)

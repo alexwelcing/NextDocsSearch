@@ -1,0 +1,206 @@
+---
+title: "Fine-Tuning Transformers for Domain Adaptation: Production Guide"
+author: ["Alex Rivera", "ML Engineer"]
+date: "2024-08-20"
+description: "Efficient transformer fine-tuning using LoRA, QLoRA, and PEFT techniques. Adapt large language models to specific domains with minimal compute. Includes catastrophic forgetting prevention."
+ogImage: "/images/tech/transformer-finetuning.jpg"
+keywords: ["transformer fine-tuning", "LoRA", "PEFT", "domain adaptation", "LLM fine-tuning", "catastrophic forgetting", "parameter efficient", "adapter layers", "transformer optimization"]
+---
+
+# Fine-Tuning Transformers for Domain Adaptation
+
+Large language models need domain-specific fine-tuning for production use. This guide shows efficient fine-tuning using parameter-efficient techniques.
+
+## Why Fine-Tuning Matters
+
+Base models (GPT, LLaMA, etc.) are general-purpose. Fine-tuning adapts them to:
+- Medical terminology (clinical notes)
+- Legal documents (contracts, case law)
+- Code generation (specific frameworks)
+- Company-specific knowledge
+
+## Parameter-Efficient Fine-Tuning (PEFT)
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import LoraConfig, get_peft_model
+import torch
+
+# Load base model
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Llama-2-7b-hf",
+    torch_dtype=torch.bfloat16
+)
+
+# LoRA configuration (only train 0.1% of parameters!)
+lora_config = LoraConfig(
+    r=16,  # Low-rank dimension
+    lora_alpha=32,  # Scaling factor
+    target_modules=["q_proj", "v_proj"],  # Which layers to adapt
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+# Apply LoRA adapters
+model = get_peft_model(model, lora_config)
+model.print_trainable_parameters()
+# Output: trainable params: 4.2M / 6.7B = 0.06%
+```
+
+**Key benefit**: Train only 4M parameters instead of 6.7B → 1600x fewer parameters, 10x faster, 4x less memory.
+
+## Training Loop
+
+```python
+from transformers import Trainer, TrainingArguments
+
+training_args = TrainingArguments(
+    output_dir="./lora-adapters",
+    num_train_epochs=3,
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=4,
+    learning_rate=2e-4,
+    fp16=True,  # Mixed precision
+    logging_steps=10,
+    save_strategy="epoch",
+    # ⚠️ Prevent catastrophic forgetting
+    warmup_steps=100,
+    weight_decay=0.01,
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=domain_dataset,
+    eval_dataset=eval_dataset,
+)
+
+trainer.train()
+```
+
+## Preventing Catastrophic Forgetting
+
+⚠️ **Problem**: Fine-tuning can erase base model's general knowledge.
+
+**Solutions**:
+
+```python
+# 1. Regularization (prevent weights from changing too much)
+training_args = TrainingArguments(
+    weight_decay=0.01,  # L2 regularization
+    warmup_ratio=0.1,   # Gradual learning rate increase
+)
+
+# 2. Mixed batching (general + domain-specific data)
+from torch.utils.data import ConcatDataset
+
+mixed_dataset = ConcatDataset([
+    domain_specific_data,  # Your new data
+    general_data.sample(frac=0.3)  # 30% general data
+])
+
+# 3. Adapter layers (LoRA already helps with this)
+# Only adapters are trained, base weights frozen
+```
+
+## QLoRA (Quantized LoRA)
+
+For even lower memory (fine-tune 70B models on consumer GPU):
+
+```python
+from transformers import BitsAndBytesConfig
+
+# 4-bit quantization
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_use_double_quant=True,
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Llama-2-70b-hf",  # 70B model!
+    quantization_config=bnb_config,
+    device_map="auto"
+)
+
+# Apply LoRA on quantized model
+model = get_peft_model(model, lora_config)
+# Now can fine-tune 70B on 24GB GPU
+```
+
+## Evaluation
+
+```python
+from datasets import load_metric
+
+def evaluate_model(model, eval_dataset):
+    """Evaluate fine-tuned model."""
+    perplexity = trainer.evaluate()['eval_loss']
+
+    # Domain-specific metrics
+    accuracy = compute_domain_accuracy(model, eval_dataset)
+
+    # General knowledge retention
+    general_score = evaluate_on_benchmark(model, "mmlu")
+
+    return {
+        'perplexity': perplexity,
+        'domain_accuracy': accuracy,
+        'general_knowledge': general_score  # Should stay high!
+    }
+```
+
+## Deployment
+
+```python
+# Save only LoRA adapters (tiny - 16MB vs 13GB base model)
+model.save_pretrained("./my-domain-adapter")
+
+# Load in production
+from peft import PeftModel
+
+base_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf")
+model = PeftModel.from_pretrained(base_model, "./my-domain-adapter")
+
+# Use normally
+outputs = model.generate(**inputs)
+```
+
+## Multi-Adapter Strategy
+
+```python
+# Train multiple adapters for different tasks
+adapters = {
+    'medical': train_lora(medical_data),
+    'legal': train_lora(legal_data),
+    'code': train_lora(code_data),
+}
+
+# Switch adapters at runtime
+model.load_adapter("medical")  # Medical mode
+response = model.generate(medical_query)
+
+model.load_adapter("code")  # Code mode
+code = model.generate(coding_query)
+```
+
+## Best Practices
+
+1. **Start small**: Fine-tune 7B before 70B
+2. **Monitor forgetting**: Evaluate on general benchmarks
+3. **Use LoRA/QLoRA**: 10-100x more efficient
+4. **Mix data**: Include general examples
+5. **Regularize**: Prevent overfitting to domain
+
+## Warnings ⚠️
+
+- **Bias amplification**: Domain data may have biases
+- **Memorization**: Can overfit to training data
+- **Safety degradation**: May bypass alignment
+- **Distribution shift**: May fail on out-of-domain inputs
+
+**Related Chronicles**: [Generative AI Monopoly (2053)](/articles/generative-ai-monopoly-2053)
+
+**Code**: [Hugging Face PEFT](https://github.com/huggingface/peft)
