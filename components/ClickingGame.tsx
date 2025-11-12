@@ -257,36 +257,49 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
   }, []);
 
   // Handle click on orb (for tracking accuracy)
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback((e: any) => {
     if (gameState === 'PLAYING') {
       setTotalClicks((prev) => prev + 1);
+      // Check if we hit an orb - if the event has a stopPropagation call,
+      // it means we hit an orb (handled by GameOrb component)
+      // If not, it's a miss (click on background)
     }
   }, [gameState]);
 
   return (
-    <group onClick={handleClick}>
-      {/* Render orbs */}
-      {orbs.map((orb) => (
-        <GameOrb
-          key={orb.id}
-          position={orb.position}
-          isGolden={orb.isGolden}
-          lifetime={gameState === 'IDLE' ? 999999 : 3} // Idle orbs don't despawn
-          onHit={(points) => handleOrbHit(orb.id, points, orb.position, orb.isGolden)}
-          onMiss={() => handleOrbMiss(orb.id)}
-        />
-      ))}
+    <>
+      {/* Invisible full-sphere click detector for accuracy tracking */}
+      {gameState === 'PLAYING' && (
+        <mesh onClick={handleClick} position={[0, 0, 0]}>
+          <sphereGeometry args={[50, 32, 32]} />
+          <meshBasicMaterial transparent opacity={0} side={2} />
+        </mesh>
+      )}
 
-      {/* Render explosions */}
-      {explosions.map((explosion) => (
-        <ParticleExplosion
-          key={explosion.id}
-          position={explosion.position}
-          color={explosion.color}
-          onComplete={() => handleExplosionComplete(explosion.id)}
-        />
-      ))}
-    </group>
+      <group>
+        {/* Render orbs */}
+        {orbs.map((orb) => (
+          <GameOrb
+            key={orb.id}
+            position={orb.position}
+            isGolden={orb.isGolden}
+            lifetime={gameState === 'IDLE' ? 999999 : 3} // Idle orbs don't despawn
+            onHit={(points) => handleOrbHit(orb.id, points, orb.position, orb.isGolden)}
+            onMiss={() => handleOrbMiss(orb.id)}
+          />
+        ))}
+
+        {/* Render explosions */}
+        {explosions.map((explosion) => (
+          <ParticleExplosion
+            key={explosion.id}
+            position={explosion.position}
+            color={explosion.color}
+            onComplete={() => handleExplosionComplete(explosion.id)}
+          />
+        ))}
+      </group>
+    </>
   );
 };
 

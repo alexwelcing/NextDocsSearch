@@ -10,7 +10,7 @@ import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
 import RoundedRectangle from './RoundedRectangle';
 import ResponseDisplay from './ResponseDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
-import InteractiveTablet from './InteractiveTablet';
+import InteractiveTablet, { TabletMode } from './InteractiveTablet';
 import ClickingGame, { GameState, GameStats } from './ClickingGame';
 import GameHUD from './GameHUD';
 import GameStartOverlay from './GameStartOverlay';
@@ -22,6 +22,9 @@ import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
+import GiantScreen from './GiantScreen';
+import NavalInterface from './NavalInterface';
+import ArticleBrowser from './ArticleBrowser';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { useJourney } from './JourneyContext';
 
@@ -289,6 +292,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
 
+  // Tablet mode state
+  const [tabletMode, setTabletMode] = useState<TabletMode>(null);
+  const [quietMode, setQuietMode] = useState(false);
+
   // Notify parent of game state changes
   useEffect(() => {
     if (onGameStateChange) {
@@ -433,6 +440,27 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setGameState('IDLE');
   }, []);
 
+  // Handle tablet mode changes
+  const handleTabletModeChange = useCallback((mode: TabletMode) => {
+    setTabletMode(mode);
+
+    if (mode === 'play') {
+      // Start game
+      handleBallClick();
+      setTabletMode(null);
+    } else if (mode === 'quiet') {
+      // Enable quiet mode
+      setQuietMode(true);
+    } else {
+      // Disable quiet mode for other modes
+      setQuietMode(false);
+    }
+  }, [handleBallClick]);
+
+  const handleCloseGiantScreen = useCallback(() => {
+    setTabletMode(null);
+  }, []);
+
   // Handle season change
   const handleSeasonChange = useCallback((season: Season) => {
     const url = new URL(window.location.href);
@@ -453,15 +481,15 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   return (
     <ThreeSixtyContainer>
-      {/* Only show VR button if device supports VR */}
-      {isVRSupported && (
+      {/* Only show VR button if device supports VR and not in quiet mode */}
+      {isVRSupported && !quietMode && (
         <VRButtonStyled onClick={handleEnterVR}>
           Enter VR
         </VRButtonStyled>
       )}
 
-      {/* Replay Intro Button - Only show after intro has been completed */}
-      {cinematicComplete && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
+      {/* Replay Intro Button - Only show after intro has been completed and not in quiet mode */}
+      {cinematicComplete && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && !quietMode && (
         <VRButtonStyled
           style={{ bottom: 'auto', top: '10px', left: '10px' }}
           onClick={() => {
@@ -477,8 +505,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </VRButtonStyled>
       )}
 
-      {/* Background Controls - Only show if splats are detected AND not playing game or countdown */}
-      {hasSplats && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
+      {/* Background Controls - Only show if splats are detected AND not playing game or countdown AND not in quiet mode */}
+      {hasSplats && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && !quietMode && (
         <BackgroundControlsContainer>
           <ControlLabel>BG</ControlLabel>
           <div style={{ display: 'flex', gap: '3px' }}>
@@ -601,14 +629,25 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   initialPosition={[0, 3, 5]}
                   isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
                   articles={articles}
-                  onStartGame={handleBallClick}
+                  onModeChange={handleTabletModeChange}
                   cinematicRevealProgress={
                     showCinematicIntro && !cinematicComplete
                       ? Math.max(0, (cinematicProgress - 0.7) / 0.3) // Reveal starts at 70% progress
                       : 1 // Fully visible when not in cinematic
                   }
+                  quietMode={quietMode}
                 />
               )}
+
+              {/* Giant Screen for Ask and Browse modes */}
+              <GiantScreen
+                isVisible={tabletMode === 'ask' || tabletMode === 'browse'}
+                onClose={handleCloseGiantScreen}
+                title={tabletMode === 'ask' ? 'NAVAL TERMINAL' : 'ARTICLE DATABASE'}
+              >
+                {tabletMode === 'ask' && <NavalInterface />}
+                {tabletMode === 'browse' && <ArticleBrowser articles={articles} />}
+              </GiantScreen>
 
               {/* XR Controllers - controller models will be automatically rendered by XR component */}
             </PhysicsEnvironment>
@@ -630,8 +669,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {/* Game UI Overlays */}
-      {(gameState === 'STARTING' || gameState === 'COUNTDOWN') && (
+      {/* Game UI Overlays - hidden in quiet mode */}
+      {(gameState === 'STARTING' || gameState === 'COUNTDOWN') && !quietMode && (
         <GameStartOverlay
           onStart={handleGameStart}
           isCountingDown={gameState === 'COUNTDOWN'}
@@ -639,7 +678,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {gameState === 'PLAYING' && (
+      {gameState === 'PLAYING' && !quietMode && (
         <GameHUD
           score={score}
           timeRemaining={timeRemaining}
@@ -648,7 +687,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {gameState === 'GAME_OVER' && (
+      {gameState === 'GAME_OVER' && !quietMode && (
         <GameLeaderboard
           playerScore={score}
           playerStats={gameStats}

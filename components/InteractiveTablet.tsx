@@ -4,8 +4,6 @@ import { Html, RoundedBox, Text } from '@react-three/drei';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 import { useSupabaseData } from './SupabaseDataContext';
-import QuizSystem from './QuizSystem';
-import TerminalInterface from './TerminalInterface';
 
 interface ArticleData {
   title: string;
@@ -15,253 +13,263 @@ interface ArticleData {
   length?: number;
 }
 
-interface LeaderboardEntry {
-  id: number;
-  player_name: string;
-  score: number;
-  combo_max: number;
-  accuracy: number;
-  created_at: string;
-}
+export type TabletMode = 'ask' | 'browse' | 'play' | 'quiet' | null;
 
 interface InteractiveTabletProps {
   initialPosition?: [number, number, number];
   isGamePlaying?: boolean;
   articles?: ArticleData[];
-  onStartGame?: () => void;
-  cinematicRevealProgress?: number; // 0-1, controls fade-in during cinematic
+  onModeChange?: (mode: TabletMode) => void;
+  cinematicRevealProgress?: number;
+  quietMode?: boolean;
 }
 
 export default function InteractiveTablet({
   initialPosition = [0, 2, 5],
   isGamePlaying = false,
   articles = [],
-  onStartGame,
+  onModeChange,
   cinematicRevealProgress = 1,
+  quietMode = false,
 }: InteractiveTabletProps) {
-  // State management
-  const [isPoweredOn, setIsPoweredOn] = useState(true);
-  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [currentMode, setCurrentMode] = useState<TabletMode>(null);
   const [pulseAnimation, setPulseAnimation] = useState(0);
   const [revealScale, setRevealScale] = useState(cinematicRevealProgress);
 
-  // Data from context (for preview display)
-  const { chatData } = useSupabaseData();
-
-  // Use provided articles or fallback to default
-  const displayArticles = articles.length > 0 ? articles : [
-    { title: "Getting Started", date: "2024-10-01", author: ["Team"] },
-    { title: "Advanced Features", date: "2024-10-15", author: ["Team"] },
-    { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
-  ];
-
-  // Three.js hooks
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
 
-  // Fixed tablet dimensions
-  const tabletWidth = 4;
-  const tabletHeight = 3;
-  const tabletDepth = 0.2;
+  // Tablet dimensions - more industrial, rectangular
+  const tabletWidth = 3;
+  const tabletHeight = 4;
+  const tabletDepth = 0.3;
 
-  // Physics body for the tablet (mass: 0 = no gravity)
+  // Physics body
   const [ref, api] = useBox<THREE.Mesh>(() => ({
     mass: 0,
     position: initialPosition,
     args: [tabletWidth, tabletHeight, tabletDepth],
     material: {
-      friction: 0.5,
-      restitution: 0.3
+      friction: 0.8,
+      restitution: 0.1
     }
   }));
 
-  // Handle tablet click to open terminal
-  const handleTabletClick = useCallback((e: any) => {
+  const handleModeClick = useCallback((mode: TabletMode) => (e: any) => {
     e.stopPropagation();
-    if (!isPoweredOn) return;
-    setTerminalOpen(true);
-  }, [isPoweredOn]);
+    const newMode = currentMode === mode ? null : mode;
+    setCurrentMode(newMode);
+    onModeChange?.(newMode);
+  }, [currentMode, onModeChange]);
 
-  // Handle billboard effect and animations
+  // Billboard effect and animations
   useFrame((state) => {
     if (groupRef.current && ref.current) {
-      // Make tablet always face the camera (billboard effect)
       const cameraWorldPos = new THREE.Vector3();
       camera.getWorldPosition(cameraWorldPos);
       groupRef.current.lookAt(cameraWorldPos);
-
-      // Sync physics body rotation with visual rotation
       ref.current.rotation.copy(groupRef.current.rotation);
 
-      // Keep position stable
       api.velocity.set(0, 0, 0);
       api.angularVelocity.set(0, 0, 0);
 
-      // Pulse animation for hint text
       setPulseAnimation(Math.sin(state.clock.elapsedTime * 2) * 0.5 + 0.5);
 
-      // Cinematic reveal animation - smooth scale transition
+      // Handle quiet mode - tablet moves down out of view
+      if (quietMode) {
+        const currentPos = groupRef.current.position;
+        const targetY = -5; // Move down below view
+        groupRef.current.position.y = THREE.MathUtils.lerp(currentPos.y, targetY, 0.05);
+      } else {
+        const currentPos = groupRef.current.position;
+        const targetY = initialPosition[1];
+        groupRef.current.position.y = THREE.MathUtils.lerp(currentPos.y, targetY, 0.05);
+      }
+
+      // Cinematic reveal
       const targetScale = cinematicRevealProgress;
       setRevealScale(prev => THREE.MathUtils.lerp(prev, targetScale, 0.1));
-
-      // Apply scale to group
       const easeScale = easeOutElastic(revealScale);
       groupRef.current.scale.set(easeScale, easeScale, easeScale);
     }
   });
 
-  // Toggle power
-  const togglePower = useCallback((e: any) => {
-    e.stopPropagation();
-    setIsPoweredOn(prev => !prev);
-    if (terminalOpen) {
-      setTerminalOpen(false); // Close terminal if powered off
-    }
-  }, [terminalOpen]);
-
-  // Hide during gameplay
-  if (isGamePlaying) {
+  // Hide during gameplay (except in quiet mode where tablet is just lowered)
+  if (isGamePlaying && !quietMode) {
     return null;
   }
 
-  // Screen colors based on state
-  const screenEmissive = isPoweredOn ? new THREE.Color(0x4488ff) : new THREE.Color(0x000000);
-  const screenColor = isPoweredOn ? new THREE.Color(0x88ccff) : new THREE.Color(0x222222);
+  // Mode button configuration
+  const modes = [
+    {
+      name: 'ask' as TabletMode,
+      label: 'ASK',
+      color: '#00ff88',
+      position: [0, 1.2, 0] as [number, number, number],
+      description: 'NAVAL INTERFACE'
+    },
+    {
+      name: 'browse' as TabletMode,
+      label: 'BROWSE',
+      color: '#4488ff',
+      position: [0, 0.4, 0] as [number, number, number],
+      description: 'ARTICLE DATABASE'
+    },
+    {
+      name: 'play' as TabletMode,
+      label: 'PLAY',
+      color: '#ffaa00',
+      position: [0, -0.4, 0] as [number, number, number],
+      description: 'SPHERE HUNTER'
+    },
+    {
+      name: 'quiet' as TabletMode,
+      label: 'QUIET',
+      color: '#ff4444',
+      position: [0, -1.2, 0] as [number, number, number],
+      description: 'OBSERVATION MODE'
+    },
+  ];
 
   return (
-    <>
-      <group ref={groupRef}>
-        {/* Main tablet body (physics body) - using RoundedBox directly */}
-        <RoundedBox
-          ref={ref}
-          args={[tabletWidth, tabletHeight, tabletDepth]}
-          radius={0.1}
-          smoothness={4}
-          onClick={handleTabletClick}
-        >
-          <meshStandardMaterial
-            color="#1a1a2e"
-            metalness={0.8}
-            roughness={0.2}
-          />
-        </RoundedBox>
+    <group ref={groupRef}>
+      {/* Main metal body - industrial dark steel */}
+      <RoundedBox
+        ref={ref}
+        args={[tabletWidth, tabletHeight, tabletDepth]}
+        radius={0.05}
+        smoothness={2}
+      >
+        <meshStandardMaterial
+          color="#1a1a1a"
+          metalness={0.9}
+          roughness={0.4}
+          envMapIntensity={1.5}
+        />
+      </RoundedBox>
 
-        {/* Screen - front face */}
-        <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
-          <planeGeometry args={[tabletWidth - 0.4, tabletHeight - 0.4]} />
-          <meshStandardMaterial
-            color={screenColor}
-            emissive={screenEmissive}
-            emissiveIntensity={isPoweredOn ? 0.5 : 0}
-            metalness={0.1}
-            roughness={0.9}
-          />
-        </mesh>
+      {/* Brushed metal panel on front */}
+      <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
+        <planeGeometry args={[tabletWidth - 0.3, tabletHeight - 0.3]} />
+        <meshStandardMaterial
+          color="#2a2a2a"
+          metalness={0.8}
+          roughness={0.6}
+        />
+      </mesh>
 
-        {/* Light emission when powered on */}
-        {isPoweredOn && (
-          <pointLight
-            position={[0, 0, 1]}
-            color="#4488ff"
-            intensity={2}
-            distance={8}
-          />
-        )}
+      {/* Mode buttons and indicators */}
+      {modes.map((mode) => {
+        const isActive = currentMode === mode.name;
 
-        {/* Power button - bottom left */}
-        <mesh
-          position={[-tabletWidth / 2 + 0.3, -tabletHeight / 2 + 0.2, tabletDepth / 2 + 0.02]}
-          onClick={togglePower}
-        >
-          <circleGeometry args={[0.12, 16]} />
-          <meshStandardMaterial
-            color={isPoweredOn ? "#00ff88" : "#ff0000"}
-            emissive={isPoweredOn ? "#00ff88" : "#880000"}
-            emissiveIntensity={0.5}
-          />
-        </mesh>
+        return (
+          <group key={mode.label} position={mode.position}>
+            {/* Glass indicator light - cylinder */}
+            <mesh position={[-0.8, 0, tabletDepth / 2 + 0.03]}>
+              <cylinderGeometry args={[0.08, 0.08, 0.04, 16]} />
+              <meshStandardMaterial
+                color={isActive ? mode.color : '#222222'}
+                emissive={isActive ? mode.color : '#000000'}
+                emissiveIntensity={isActive ? 0.8 : 0}
+                metalness={0.1}
+                roughness={0.1}
+                transparent={true}
+                opacity={0.9}
+              />
+            </mesh>
 
-        {/* Preview content on screen when powered on */}
-        {isPoweredOn && (
-          <>
-            {/* Main icon */}
+            {/* Glass cover rim - darker metal */}
+            <mesh position={[-0.8, 0, tabletDepth / 2 + 0.05]}>
+              <torusGeometry args={[0.09, 0.015, 8, 24]} />
+              <meshStandardMaterial
+                color="#0a0a0a"
+                metalness={0.95}
+                roughness={0.3}
+              />
+            </mesh>
+
+            {/* Point light when active */}
+            {isActive && (
+              <pointLight
+                position={[-0.8, 0, 0.5]}
+                color={mode.color}
+                intensity={1.5}
+                distance={3}
+              />
+            )}
+
+            {/* Engraved label text */}
             <Text
-              position={[0, 0.3, tabletDepth / 2 + 0.03]}
-              fontSize={0.5}
-              color="#00ff88"
-              anchorX="center"
-              anchorY="middle"
-            >
-              ▶
-            </Text>
-
-            {/* Title */}
-            <Text
-              position={[0, -0.2, tabletDepth / 2 + 0.03]}
+              position={[0.2, 0.08, tabletDepth / 2 + 0.02]}
               fontSize={0.18}
-              color="#4488ff"
-              anchorX="center"
+              color="#888888"
+              anchorX="left"
               anchorY="middle"
-              fontWeight="bold"
+              font="/fonts/RobotoMono-Bold.ttf"
+              letterSpacing={0.1}
             >
-              TERMINAL
+              {mode.label}
             </Text>
 
-            {/* Hint text - pulsing */}
+            {/* Smaller description text */}
             <Text
-              position={[0, -0.8, tabletDepth / 2 + 0.03]}
-              fontSize={0.12}
-              color={new THREE.Color(0x00ff88).multiplyScalar(0.5 + pulseAnimation * 0.5)}
-              anchorX="center"
+              position={[0.2, -0.08, tabletDepth / 2 + 0.02]}
+              fontSize={0.08}
+              color="#555555"
+              anchorX="left"
               anchorY="middle"
+              font="/fonts/RobotoMono-Regular.ttf"
             >
-              Click to Open
+              {mode.description}
             </Text>
 
-            {/* Feature indicators */}
-            <Text
-              position={[-1.2, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
-              anchorX="center"
-              anchorY="middle"
+            {/* Invisible clickable area */}
+            <mesh
+              position={[0, 0, tabletDepth / 2 + 0.02]}
+              onClick={handleModeClick(mode.name)}
             >
-              💬 Chat
-            </Text>
-            <Text
-              position={[0, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
-              anchorX="center"
-              anchorY="middle"
-            >
-              📄 Articles
-            </Text>
-            <Text
-              position={[1.2, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
-              anchorX="center"
-              anchorY="middle"
-            >
-              🎮 Game
-            </Text>
-          </>
-        )}
-      </group>
+              <planeGeometry args={[2.2, 0.5]} />
+              <meshBasicMaterial
+                transparent={true}
+                opacity={0}
+              />
+            </mesh>
+          </group>
+        );
+      })}
 
-      {/* Terminal Interface Overlay */}
-      <TerminalInterface
-        isOpen={terminalOpen}
-        onClose={() => setTerminalOpen(false)}
-        articles={displayArticles}
-        onStartGame={onStartGame}
-      />
-    </>
+      {/* Decorative screws in corners */}
+      {[
+        [-1.2, 1.7],
+        [1.2, 1.7],
+        [-1.2, -1.7],
+        [1.2, -1.7],
+      ].map(([x, y], i) => (
+        <mesh key={i} position={[x, y, tabletDepth / 2 + 0.01]}>
+          <cylinderGeometry args={[0.05, 0.05, 0.02, 6]} />
+          <meshStandardMaterial
+            color="#1a1a1a"
+            metalness={0.9}
+            roughness={0.5}
+          />
+        </mesh>
+      ))}
+
+      {/* Serial number engraving - bottom */}
+      <Text
+        position={[0, -1.7, tabletDepth / 2 + 0.02]}
+        fontSize={0.06}
+        color="#333333"
+        anchorX="center"
+        anchorY="middle"
+        font="/fonts/RobotoMono-Regular.ttf"
+      >
+        MK-IV CONTROL PANEL • SN: 2024-NDX-001
+      </Text>
+    </group>
   );
 }
 
-// Easing function for elastic "pop" effect on reveal
 function easeOutElastic(x: number): number {
   const c4 = (2 * Math.PI) / 3;
   return x === 0
