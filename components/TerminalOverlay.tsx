@@ -29,6 +29,8 @@ interface TerminalOverlayProps {
   onStartGame?: () => void;
 }
 
+// Tab modes: chat is always available, others locked by quest system
+// Added 'leaderboard' as a new tab for game scores display
 type TabMode = 'chat' | 'articles' | 'quiz' | 'create' | 'leaderboard';
 
 /**
@@ -260,7 +262,7 @@ export default function TerminalOverlay({
               textShadow: '0 0 15px rgba(0, 255, 136, 0.8)',
             }}
           >
-            â–  TERMINAL
+            ▶ TERMINAL
           </h2>
           <button
             onClick={onClose}
@@ -453,7 +455,7 @@ export default function TerminalOverlay({
                     opacity: currentArticleIndex === 0 ? 0.5 : 1,
                   }}
                 >
-                  â—€ PREV
+                  ◀ PREV
                 </button>
                 <button
                   onClick={() => handleArticleView(Math.min(displayArticles.length - 1, currentArticleIndex + 1))}
@@ -474,7 +476,7 @@ export default function TerminalOverlay({
                     opacity: currentArticleIndex === displayArticles.length - 1 ? 0.5 : 1,
                   }}
                 >
-                  NEXT â–¶
+                  NEXT ▶
                 </button>
               </div>
             </div>
