@@ -22,8 +22,8 @@ import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
-import TerminalAccessButton from './TerminalAccessButton';
-import TerminalInterface from './TerminalInterface';
+import TerminalButton from './TerminalButton';
+import TerminalOverlay from './TerminalOverlay';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { useJourney } from './JourneyContext';
 
@@ -288,8 +288,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     successfulClicks: 0,
   });
 
-  // Terminal control state
-  const [forceTerminalOpen, setForceTerminalOpen] = useState(false);
+  // Terminal control state - simple and rock-solid
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   // Journey tracking
@@ -606,18 +605,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <InteractiveTablet
                   initialPosition={[0, 3, 5]}
                   isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
-                  articles={articles}
-                  onStartGame={handleBallClick}
                   cinematicRevealProgress={
                     showCinematicIntro && !cinematicComplete
                       ? Math.max(0, (cinematicProgress - 0.7) / 0.3) // Reveal starts at 70% progress
                       : 1 // Fully visible when not in cinematic
                   }
-                  forceTerminalOpen={forceTerminalOpen}
-                  onTerminalStateChange={(isOpen) => {
-                    setIsTerminalOpen(isOpen);
-                    if (isOpen) setForceTerminalOpen(false); // Reset force flag once opened
-                  }}
                 />
               )}
 
@@ -718,21 +710,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </SeasonButton>
       </SeasonIndicator>
 
-      {/* Terminal Access Button - Fallback 2D button to open terminal */}
-      {!isTerminalOpen && (
-        <TerminalAccessButton
-          onClick={() => setIsTerminalOpen(true)}
-          isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
-        />
-      )}
-
-      {/* Terminal Interface - 2D overlay rendered outside Canvas for proper display */}
-      <TerminalInterface
+      {/* Terminal Button - Simple, always visible button */}
+      <TerminalButton
+        onClick={() => setIsTerminalOpen(true)}
         isOpen={isTerminalOpen}
-        onClose={() => {
-          setIsTerminalOpen(false);
-          setForceTerminalOpen(false);
-        }}
+      />
+
+      {/* Terminal Overlay - Brand new, rock-solid terminal display */}
+      <TerminalOverlay
+        isOpen={isTerminalOpen}
+        onClose={() => setIsTerminalOpen(false)}
         articles={articles}
         onStartGame={handleBallClick}
       />
