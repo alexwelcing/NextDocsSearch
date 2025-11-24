@@ -29,13 +29,12 @@ interface TerminalOverlayProps {
   onStartGame?: () => void;
 }
 
-// Tab modes: chat is always available, others locked by quest system
-// Added 'leaderboard' as a new tab for game scores display
+// Terminal tab modes - chat is always unlocked, others require quest completion
 type TabMode = 'chat' | 'articles' | 'quiz' | 'create' | 'leaderboard';
 
 /**
- * Brand new, simplified terminal overlay.
- * Completely independent from 3D scene, rock-solid state management.
+ * Simplified terminal overlay component with external state control.
+ * Completely independent from 3D scene for reliable rendering.
  */
 export default function TerminalOverlay({
   isOpen,

@@ -6,8 +6,8 @@ interface TerminalButtonProps {
 }
 
 /**
- * Simple, rock-solid terminal button that's always visible and clickable.
- * Completely independent from the 3D scene.
+ * Reliable terminal button component.
+ * Always visible and clickable, completely independent from the 3D scene.
  */
 export default function TerminalButton({ onClick, isOpen }: TerminalButtonProps) {
   if (isOpen) return null; // Hide when terminal is open

@@ -288,7 +288,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     successfulClicks: 0,
   });
 
-  // Terminal control state - simple and rock-solid
+  // Terminal control state - simplified external management
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   // Journey tracking
