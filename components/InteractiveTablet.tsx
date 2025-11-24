@@ -1,62 +1,34 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Html, RoundedBox, Text } from '@react-three/drei';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
-import { useSupabaseData } from './SupabaseDataContext';
-import QuizSystem from './QuizSystem';
-import TerminalInterface from './TerminalInterface';
 
-interface ArticleData {
-  title: string;
-  date: string;
-  author: string[];
-  filename?: string;
-  length?: number;
-}
-
-interface LeaderboardEntry {
-  id: number;
-  player_name: string;
-  score: number;
-  combo_max: number;
-  accuracy: number;
-  created_at: string;
-}
+/**
+ * Interactive 3D tablet component - now purely decorative.
+ * Previously controlled terminal opening via click, but terminal is now
+ * managed externally via TerminalButton/TerminalOverlay for reliability.
+ * Retained for visual consistency and potential future 3D interaction.
+ */
 
 interface InteractiveTabletProps {
   initialPosition?: [number, number, number];
   isGamePlaying?: boolean;
-  articles?: ArticleData[];
-  onStartGame?: () => void;
   cinematicRevealProgress?: number; // 0-1, controls fade-in during cinematic
 }
 
 export default function InteractiveTablet({
   initialPosition = [0, 2.5, 4], // Closer and slightly higher
   isGamePlaying = false,
-  articles = [],
-  onStartGame,
   cinematicRevealProgress = 1,
 }: InteractiveTabletProps) {
-  // State management
+  // State management - tablet is now purely decorative
   const [isPoweredOn, setIsPoweredOn] = useState(true);
-  const [terminalOpen, setTerminalOpen] = useState(false);
   const [pulseAnimation, setPulseAnimation] = useState(0);
   const [revealScale, setRevealScale] = useState(cinematicRevealProgress);
   const [floatOffset, setFloatOffset] = useState(0);
   const [breatheScale, setBreatheScale] = useState(1);
   const [screenGlow, setScreenGlow] = useState(0.5);
-
-  // Data from context (for preview display)
-  const { chatData } = useSupabaseData();
-
-  // Use provided articles or fallback to default
-  const displayArticles = articles.length > 0 ? articles : [
-    { title: "Getting Started", date: "2024-10-01", author: ["Team"] },
-    { title: "Advanced Features", date: "2024-10-15", author: ["Team"] },
-    { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
-  ];
 
   // Three.js hooks
   const { camera } = useThree();
@@ -78,12 +50,12 @@ export default function InteractiveTablet({
     }
   }));
 
-  // Handle tablet click to open terminal
+  // Click handler stops event propagation to prevent camera controls from activating
+  // when user clicks the decorative tablet in the 3D scene
   const handleTabletClick = useCallback((e: any) => {
     e.stopPropagation();
-    if (!isPoweredOn) return;
-    setTerminalOpen(true);
-  }, [isPoweredOn]);
+    // Terminal controlled externally - no action needed here
+  }, []);
 
   // Handle billboard effect and animations
   useFrame((state) => {
@@ -133,10 +105,7 @@ export default function InteractiveTablet({
   const togglePower = useCallback((e: any) => {
     e.stopPropagation();
     setIsPoweredOn(prev => !prev);
-    if (terminalOpen) {
-      setTerminalOpen(false); // Close terminal if powered off
-    }
-  }, [terminalOpen]);
+  }, []);
 
   // Hide during gameplay
   if (isGamePlaying) {
@@ -300,13 +269,7 @@ export default function InteractiveTablet({
         )}
       </group>
 
-      {/* Terminal Interface Overlay */}
-      <TerminalInterface
-        isOpen={terminalOpen}
-        onClose={() => setTerminalOpen(false)}
-        articles={displayArticles}
-        onStartGame={onStartGame}
-      />
+      {/* Terminal Interface is now rendered at ThreeSixty level, not here */}
     </>
   );
 }

@@ -22,6 +22,8 @@ import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
+import TerminalButton from './TerminalButton';
+import TerminalOverlay from './TerminalOverlay';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { useJourney } from './JourneyContext';
 
@@ -285,6 +287,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     totalClicks: 0,
     successfulClicks: 0,
   });
+
+  // Terminal control state - simplified external management
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
@@ -600,8 +605,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <InteractiveTablet
                   initialPosition={[0, 3, 5]}
                   isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
-                  articles={articles}
-                  onStartGame={handleBallClick}
                   cinematicRevealProgress={
                     showCinematicIntro && !cinematicComplete
                       ? Math.max(0, (cinematicProgress - 0.7) / 0.3) // Reveal starts at 70% progress
@@ -706,6 +709,20 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           Auto
         </SeasonButton>
       </SeasonIndicator>
+
+      {/* Terminal Button - Simple, always visible button */}
+      <TerminalButton
+        onClick={() => setIsTerminalOpen(true)}
+        isOpen={isTerminalOpen}
+      />
+
+      {/* Terminal Overlay - Brand new, rock-solid terminal display */}
+      <TerminalOverlay
+        isOpen={isTerminalOpen}
+        onClose={() => setIsTerminalOpen(false)}
+        articles={articles}
+        onStartGame={handleBallClick}
+      />
     </ThreeSixtyContainer>
   );
 };

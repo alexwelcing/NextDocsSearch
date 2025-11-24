@@ -3,6 +3,7 @@ import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
 import QuizSystem from './QuizSystem';
 import CreationStudio from './CreationStudio';
+import { R3FTopic, R3F_KNOWLEDGE_INDEX, searchTopics, getTopicsByCategory } from '../lib/knowledge/r3f-taxonomy';
 
 interface ArticleData {
   title: string;
@@ -231,21 +232,41 @@ export default function TerminalInterface({
               ▶ TERMINAL
             </div>
 
-            {/* Page Navigation */}
-            <div style={{ display: 'flex', gap: '10px' }}>
+            {/* Page Navigation - Enhanced Physical Toggle Design */}
+            <div style={{ display: 'flex', gap: '12px' }}>
               <button
                 onClick={() => setCurrentPage(1)}
+                onMouseEnter={(e) => {
+                  if (currentPage !== 1) {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(68, 136, 255, 0.5)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentPage !== 1) {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+                  }
+                }}
                 style={{
-                  background: currentPage === 1 ? 'rgba(68, 136, 255, 0.3)' : 'transparent',
-                  border: currentPage === 1 ? '2px solid #4488ff' : '2px solid rgba(68, 136, 255, 0.2)',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                  color: currentPage === 1 ? '#4488ff' : '#888',
+                  background: currentPage === 1 
+                    ? 'linear-gradient(135deg, rgba(68, 136, 255, 0.4), rgba(0, 255, 136, 0.3))' 
+                    : 'linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(10, 10, 15, 0.6))',
+                  border: currentPage === 1 ? '3px solid #4488ff' : '3px solid rgba(68, 136, 255, 0.3)',
+                  borderRadius: '10px',
+                  padding: '12px 24px',
+                  color: currentPage === 1 ? '#ffffff' : '#aaa',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16px',
                   fontWeight: 'bold',
                   fontFamily: 'monospace',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.3s ease',
+                  boxShadow: currentPage === 1 
+                    ? '0 4px 15px rgba(68, 136, 255, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.1)' 
+                    : '0 2px 8px rgba(0, 0, 0, 0.3)',
+                  textShadow: currentPage === 1 ? '0 0 10px rgba(68, 136, 255, 0.8)' : 'none',
+                  transform: currentPage === 1 ? 'scale(1.05)' : 'scale(1)',
+                  letterSpacing: '1.5px',
                 }}
               >
                 APPS
@@ -253,18 +274,38 @@ export default function TerminalInterface({
               <button
                 onClick={() => isFeatureUnlocked('leaderboard') && setCurrentPage(2)}
                 disabled={!isFeatureUnlocked('leaderboard')}
+                onMouseEnter={(e) => {
+                  if (currentPage !== 2 && isFeatureUnlocked('leaderboard')) {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.5)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentPage !== 2 && isFeatureUnlocked('leaderboard')) {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+                  }
+                }}
                 style={{
-                  background: currentPage === 2 ? 'rgba(255, 215, 0, 0.2)' : 'transparent',
-                  border: currentPage === 2 ? '2px solid #FFD700' : '2px solid rgba(255, 215, 0, 0.2)',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                  color: !isFeatureUnlocked('leaderboard') ? '#444' : (currentPage === 2 ? '#FFD700' : '#888'),
+                  background: currentPage === 2 
+                    ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3))' 
+                    : 'linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(10, 10, 15, 0.6))',
+                  border: currentPage === 2 ? '3px solid #FFD700' : '3px solid rgba(255, 215, 0, 0.3)',
+                  borderRadius: '10px',
+                  padding: '12px 24px',
+                  color: !isFeatureUnlocked('leaderboard') ? '#555' : (currentPage === 2 ? '#ffffff' : '#aaa'),
                   cursor: !isFeatureUnlocked('leaderboard') ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16px',
                   fontWeight: 'bold',
                   fontFamily: 'monospace',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.3s ease',
                   opacity: !isFeatureUnlocked('leaderboard') ? 0.4 : 1,
+                  boxShadow: currentPage === 2 
+                    ? '0 4px 15px rgba(255, 215, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.1)' 
+                    : '0 2px 8px rgba(0, 0, 0, 0.3)',
+                  textShadow: currentPage === 2 ? '0 0 10px rgba(255, 215, 0, 0.8)' : 'none',
+                  transform: currentPage === 2 ? 'scale(1.05)' : 'scale(1)',
+                  letterSpacing: '1.5px',
                 }}
               >
                 {!isFeatureUnlocked('leaderboard') && '🔒 '}🏆 LEADERBOARD
@@ -304,10 +345,10 @@ export default function TerminalInterface({
         <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           {currentPage === 1 ? (
             <>
-              {/* View Mode Tabs */}
+              {/* View Mode Tabs - Enhanced Physical Toggle Design */}
               <div style={{
                 display: 'flex',
-                gap: '0',
+                gap: '12px',
                 padding: '20px 30px 0',
                 position: 'relative',
               }}>
@@ -323,33 +364,45 @@ export default function TerminalInterface({
                           if (isLocked) {
                             setLockedTabHover(mode);
                           } else if (viewMode !== mode) {
-                            e.currentTarget.style.color = '#aaa';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(68, 136, 255, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.1)';
                           }
                         }}
                         onMouseLeave={(e) => {
                           if (isLocked) {
                             setLockedTabHover(null);
                           } else if (viewMode !== mode) {
-                            e.currentTarget.style.color = '#888';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.05)';
                           }
                         }}
                         style={{
                           width: '100%',
                           background: viewMode === mode
-                            ? 'linear-gradient(180deg, rgba(68, 136, 255, 0.3), rgba(68, 136, 255, 0.1))'
-                            : 'transparent',
-                          border: 'none',
-                          borderBottom: viewMode === mode ? '3px solid #00ff88' : '3px solid transparent',
-                          padding: '15px 20px',
-                          color: isLocked ? '#444' : (viewMode === mode ? '#00ff88' : '#888'),
+                            ? 'linear-gradient(135deg, rgba(0, 255, 136, 0.25), rgba(68, 136, 255, 0.25))'
+                            : 'linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(10, 10, 15, 0.8))',
+                          border: viewMode === mode 
+                            ? '3px solid #00ff88' 
+                            : '3px solid rgba(68, 136, 255, 0.4)',
+                          borderRadius: '12px',
+                          padding: '18px 16px',
+                          color: isLocked ? '#666' : (viewMode === mode ? '#00ff88' : '#ffffff'),
                           cursor: isLocked ? 'not-allowed' : 'pointer',
-                          fontSize: '16px',
+                          fontSize: '18px',
                           fontWeight: 'bold',
                           fontFamily: 'monospace',
                           textTransform: 'uppercase',
-                          transition: 'all 0.2s ease',
+                          transition: 'all 0.3s ease',
                           opacity: isLocked ? 0.4 : 1,
                           position: 'relative',
+                          boxShadow: viewMode === mode
+                            ? '0 6px 20px rgba(0, 255, 136, 0.4), inset 0 -3px 8px rgba(0, 255, 136, 0.2), inset 0 3px 8px rgba(255, 255, 255, 0.1)'
+                            : '0 4px 12px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.05)',
+                          textShadow: viewMode === mode
+                            ? '0 0 10px rgba(0, 255, 136, 0.6), 0 0 20px rgba(0, 255, 136, 0.3)'
+                            : 'none',
+                          transform: viewMode === mode ? 'translateY(-3px)' : 'translateY(0)',
+                          letterSpacing: '1px',
                         }}
                       >
                         {isLocked && '🔒 '}
