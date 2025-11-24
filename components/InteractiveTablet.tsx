@@ -3,7 +3,13 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Html, RoundedBox, Text } from '@react-three/drei';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
-// InteractiveTablet is now purely decorative - terminal controlled externally
+
+/**
+ * Interactive 3D tablet component - now purely decorative.
+ * Previously controlled terminal opening via click, but terminal is now
+ * managed externally via TerminalButton/TerminalOverlay for reliability.
+ * Retained for visual consistency and potential future 3D interaction.
+ */
 
 interface InteractiveTabletProps {
   initialPosition?: [number, number, number];
@@ -44,10 +50,11 @@ export default function InteractiveTablet({
     }
   }));
 
-  // Tablet is now purely decorative - terminal opens via separate button
+  // Click handler stops event propagation to prevent camera controls from activating
+  // when user clicks the decorative tablet in the 3D scene
   const handleTabletClick = useCallback((e: any) => {
     e.stopPropagation();
-    // No action needed - terminal controlled externally
+    // Terminal controlled externally - no action needed here
   }, []);
 
   // Handle billboard effect and animations

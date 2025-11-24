@@ -34,7 +34,9 @@ type TabMode = 'chat' | 'articles' | 'quiz' | 'create' | 'leaderboard';
 
 /**
  * Simplified terminal overlay component with external state control.
- * Completely independent from 3D scene for reliable rendering.
+ * State is managed by parent component (ThreeSixty) via isOpen/onClose props.
+ * This pattern ensures reliable rendering independent from the 3D scene context.
+ * Benefits: Clearer state flow, easier debugging, no Canvas-related rendering issues.
  */
 export default function TerminalOverlay({
   isOpen,
