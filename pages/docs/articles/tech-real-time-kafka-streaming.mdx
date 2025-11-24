@@ -1,0 +1,22 @@
+---
+title: "Real-Time Data Streaming with Kafka"
+author: ["Mike Torres"]
+date: "2024-10-22"
+description: "Build real-time data pipelines with Apache Kafka. Producer/consumer patterns, stream processing, exactly-once semantics."
+keywords: ["Apache Kafka", "data streaming", "real-time processing", "stream processing", "event sourcing"]
+---
+# Real-Time Streaming with Kafka
+Kafka handles massive real-time data streams. Powers IoT, ML pipelines, and event-driven architectures.
+## Setup
+\`\`\`python
+from kafka import KafkaProducer, KafkaConsumer
+
+producer = KafkaProducer(bootstrap_servers=['localhost:9092'])
+producer.send('sensor-data', b'{"temp": 23.5, "timestamp": 1234567890}')
+
+consumer = KafkaConsumer('sensor-data', auto_offset_reset='earliest')
+for message in consumer:
+    process_sensor_data(message.value)
+\`\`\`
+**Throughput**: Millions of messages/second
+**Related**: [Smart City OS Revolt (2050)](/articles/smart-city-os-revolt-2050)

@@ -1,0 +1,246 @@
+---
+title: "Adversarial Robustness: Defending Against Model Attacks"
+author: ["Dr. James Park", "Security Researcher"]
+date: "2024-09-28"
+description: "Implement adversarial training and certified defenses—but perfect robustness remains elusive"
+keywords: ["adversarial examples", "FGSM", "PGD", "adversarial training", "robust optimization", "certified defenses", "model security", "attack detection", "input perturbation", "AI safety", "robustness testing"]
+---
+
+# Adversarial Robustness: Defending Against Model Attacks
+
+Adversarial examples exploit model vulnerabilities with imperceptible perturbations. This guide implements practical defense mechanisms.
+
+## Adversarial Attack Generation
+
+Fast Gradient Sign Method (FGSM) and Projected Gradient Descent (PGD):
+
+```python
+import torch
+import torch.nn.functional as F
+
+def fgsm_attack(model, x, y, epsilon=0.03):
+    """Fast Gradient Sign Method"""
+    x_adv = x.clone().detach().requires_grad_(True)
+    
+    logits = model(x_adv)
+    loss = F.cross_entropy(logits, y)
+    loss.backward()
+    
+    # Sign of gradient gives maximum perturbation direction
+    perturbation = epsilon * x_adv.grad.sign()
+    x_adv = x + perturbation
+    
+    return torch.clamp(x_adv, 0, 1)  # Keep in valid range
+
+def pgd_attack(model, x, y, epsilon=0.03, alpha=0.01, iters=40):
+    """Projected Gradient Descent (stronger attack)"""
+    x_adv = x.clone().detach()
+    
+    for _ in range(iters):
+        x_adv.requires_grad_(True)
+        logits = model(x_adv)
+        loss = F.cross_entropy(logits, y)
+        loss.backward()
+        
+        # Gradient ascent step
+        x_adv = x_adv + alpha * x_adv.grad.sign()
+        
+        # Project back into epsilon ball
+        perturbation = torch.clamp(x_adv - x, -epsilon, epsilon)
+        x_adv = torch.clamp(x + perturbation, 0, 1).detach()
+    
+    return x_adv
+
+# Test attack effectiveness
+def test_robustness(model, test_loader, epsilon=0.03):
+    """Measure clean vs adversarial accuracy"""
+    clean_correct = 0
+    adv_correct = 0
+    total = 0
+    
+    for x, y in test_loader:
+        # Clean prediction
+        with torch.no_grad():
+            clean_pred = model(x).argmax(dim=1)
+            clean_correct += (clean_pred == y).sum().item()
+        
+        # Adversarial prediction
+        x_adv = pgd_attack(model, x, y, epsilon)
+        with torch.no_grad():
+            adv_pred = model(x_adv).argmax(dim=1)
+            adv_correct += (adv_pred == y).sum().item()
+        
+        total += y.size(0)
+    
+    print(f"Clean accuracy: {clean_correct/total:.2%}")
+    print(f"Adversarial accuracy: {adv_correct/total:.2%}")
+    print(f"⚠️ Robustness gap: {(clean_correct-adv_correct)/total:.2%}")
+```
+
+## Adversarial Training
+
+The most effective defense trains on adversarial examples:
+
+```python
+def adversarial_training(model, train_loader, epochs=100, epsilon=0.03):
+    """Train on mix of clean and adversarial examples"""
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, epochs)
+    
+    for epoch in range(epochs):
+        model.train()
+        total_loss = 0
+        
+        for x, y in train_loader:
+            # Generate adversarial examples
+            x_adv = pgd_attack(model, x, y, epsilon)
+            
+            # Train on both clean and adversarial
+            optimizer.zero_grad()
+            
+            clean_logits = model(x)
+            adv_logits = model(x_adv)
+            
+            # Combined loss
+            loss = 0.5 * F.cross_entropy(clean_logits, y) + \
+                   0.5 * F.cross_entropy(adv_logits, y)
+            
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        
+        scheduler.step()
+        
+        if epoch % 10 == 0:
+            print(f"Epoch {epoch}: Loss = {total_loss/len(train_loader):.4f}")
+    
+    return model
+```
+
+## Certified Defenses
+
+Randomized smoothing provides provable robustness guarantees:
+
+```python
+import numpy as np
+
+class SmoothClassifier:
+    """Provably robust classifier via randomized smoothing"""
+    def __init__(self, base_model, sigma=0.25, num_samples=100):
+        self.base_model = base_model
+        self.sigma = sigma  # Noise level
+        self.num_samples = num_samples
+    
+    def predict(self, x):
+        """Smooth prediction by averaging over noise"""
+        self.base_model.eval()
+        counts = torch.zeros(10)  # Assuming 10 classes
+        
+        with torch.no_grad():
+            for _ in range(self.num_samples):
+                # Add Gaussian noise
+                noisy_x = x + torch.randn_like(x) * self.sigma
+                pred = self.base_model(noisy_x).argmax(dim=1)
+                
+                for p in pred:
+                    counts[p] += 1
+        
+        return counts.argmax().item()
+    
+    def certify(self, x, true_class, alpha=0.001):
+        """Compute certified radius"""
+        from scipy.stats import norm
+        
+        # Monte Carlo estimation of class probabilities
+        counts = torch.zeros(10)
+        
+        with torch.no_grad():
+            for _ in range(self.num_samples):
+                noisy_x = x + torch.randn_like(x) * self.sigma
+                pred = self.base_model(noisy_x).argmax(dim=1)
+                for p in pred:
+                    counts[p] += 1
+        
+        probs = counts / self.num_samples
+        p_true = probs[true_class].item()
+        p_runner_up = probs[probs != p_true].max().item()
+        
+        # Certified radius formula
+        if p_true > 0.5:
+            radius = self.sigma * (norm.ppf(p_true) - norm.ppf(p_runner_up))
+            return radius
+        else:
+            return 0.0  # No certification possible
+
+# ⚠️ Limitation: Certified radius is often small (< 0.5 for images)
+```
+
+## Detection-Based Defense
+
+Identify adversarial examples before classification:
+
+```python
+class AdversarialDetector:
+    """Detect adversarial perturbations"""
+    def __init__(self, model):
+        self.model = model
+        self.clean_stats = {}  # Store statistics from clean data
+    
+    def calibrate(self, clean_loader):
+        """Learn statistics of clean activations"""
+        activations = []
+        
+        def hook(module, input, output):
+            activations.append(output.detach())
+        
+        # Register hook on intermediate layer
+        handle = self.model.layer3.register_forward_hook(hook)
+        
+        with torch.no_grad():
+            for x, _ in clean_loader:
+                self.model(x)
+        
+        handle.remove()
+        
+        # Compute statistics
+        all_activations = torch.cat(activations, dim=0)
+        self.clean_stats['mean'] = all_activations.mean(dim=0)
+        self.clean_stats['std'] = all_activations.std(dim=0)
+    
+    def is_adversarial(self, x, threshold=3.0):
+        """Detect if input is adversarial"""
+        activations = []
+        
+        def hook(module, input, output):
+            activations.append(output.detach())
+        
+        handle = self.model.layer3.register_forward_hook(hook)
+        
+        with torch.no_grad():
+            self.model(x)
+        
+        handle.remove()
+        
+        # Z-score of activation pattern
+        act = activations[0]
+        z_score = (act - self.clean_stats['mean']) / (self.clean_stats['std'] + 1e-8)
+        
+        # Flag if activations are anomalous
+        max_z = z_score.abs().max().item()
+        
+        return max_z > threshold
+```
+
+## Warnings ⚠️
+
+**No Perfect Defense**: All current defenses have been broken. The 2034 "Adversarial Crisis" revealed that even certified defenses failed under adaptive attacks.
+
+**Robustness-Accuracy Tradeoff**: Robust models sacrifice clean accuracy. Expect 5-10% drop.
+
+**Transferability**: Adversarial examples transfer between models, making blackbox attacks feasible.
+
+**Related Chronicles**: [The Adversarial Cascade (2034)](/docs/articles/adversarial-cascade-2034) - When coordinated attacks compromised critical systems
+
+**Tools**: Foolbox, CleverHans, ART (Adversarial Robustness Toolbox)
+
+**Research**: Madry et al. (adversarial training), Cohen et al. (randomized smoothing)

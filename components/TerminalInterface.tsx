@@ -2,13 +2,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
 import QuizSystem from './QuizSystem';
-import {
-  R3F_KNOWLEDGE_INDEX,
-  R3F_CATEGORIES,
-  getTopicsByCategory,
-  searchTopics,
-  type R3FTopic,
-} from '../lib/knowledge/r3f-taxonomy';
+import CreationStudio from './CreationStudio';
 
 interface ArticleData {
   title: string;
@@ -34,7 +28,7 @@ interface TerminalInterfaceProps {
   onStartGame?: () => void;
 }
 
-type ViewMode = 'chat' | 'blog' | 'quiz' | 'knowledge';
+type ViewMode = 'chat' | 'blog' | 'quiz' | 'create';
 type PageMode = 1 | 2;
 
 export default function TerminalInterface({
@@ -317,8 +311,8 @@ export default function TerminalInterface({
                 padding: '20px 30px 0',
                 position: 'relative',
               }}>
-                {(['chat', 'blog', 'quiz', 'knowledge'] as ViewMode[]).map((mode) => {
-                  const featureMap = { chat: 'chat', blog: 'articles', quiz: 'quiz', knowledge: 'chat' };
+                {(['chat', 'blog', 'quiz', 'create'] as ViewMode[]).map((mode) => {
+                  const featureMap = { chat: 'chat', blog: 'articles', quiz: 'quiz', create: 'creation-studio' };
                   const isLocked = !isFeatureUnlocked(featureMap[mode]);
 
                   return (
@@ -359,7 +353,7 @@ export default function TerminalInterface({
                         }}
                       >
                         {isLocked && '🔒 '}
-                        {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : mode === 'quiz' ? '❓ QUIZ' : '🔮 R3F KNOWLEDGE'}
+                        {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : mode === 'quiz' ? '❓ QUIZ' : '✨ CREATE'}
                       </button>
 
                       {/* Locked Tooltip */}
@@ -652,265 +646,8 @@ export default function TerminalInterface({
                   />
                 )}
 
-                {viewMode === 'knowledge' && (
-                  selectedTopic ? (
-                    // Topic Detail View
-                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                      <button
-                        onClick={() => setSelectedTopic(null)}
-                        style={{
-                          background: 'transparent',
-                          border: '2px solid #00ffaa',
-                          color: '#00ffaa',
-                          padding: '10px 20px',
-                          borderRadius: '8px',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          fontFamily: 'monospace',
-                          alignSelf: 'flex-start',
-                          transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(0, 255, 170, 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                        }}
-                      >
-                        ← Back to Topics
-                      </button>
-
-                      <div style={{
-                        flex: 1,
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        border: '2px solid #00ffaa',
-                        borderRadius: '12px',
-                        padding: '24px',
-                        overflowY: 'auto',
-                      }}>
-                        <div style={{ color: '#00ffaa', fontSize: '12px', fontFamily: 'monospace', marginBottom: '8px' }}>
-                          {selectedTopic.category}
-                        </div>
-                        <h2 style={{ color: '#fff', fontSize: '24px', margin: '0 0 12px 0' }}>
-                          {selectedTopic.title}
-                        </h2>
-                        <div style={{ color: '#888', fontSize: '14px', fontStyle: 'italic', marginBottom: '20px' }}>
-                          {selectedTopic.subcategory}
-                        </div>
-
-                        <div style={{
-                          display: 'flex',
-                          gap: '12px',
-                          marginBottom: '24px',
-                          flexWrap: 'wrap',
-                        }}>
-                          <span style={{
-                            background: 'rgba(255, 136, 0, 0.2)',
-                            border: '1px solid #ff8800',
-                            color: '#ff8800',
-                            padding: '4px 12px',
-                            borderRadius: '6px',
-                            fontSize: '12px',
-                            fontFamily: 'monospace',
-                          }}>
-                            {selectedTopic.difficulty.toUpperCase()}
-                          </span>
-                          <span style={{
-                            background: 'rgba(0, 136, 255, 0.2)',
-                            border: '1px solid #0088ff',
-                            color: '#0088ff',
-                            padding: '4px 12px',
-                            borderRadius: '6px',
-                            fontSize: '12px',
-                            fontFamily: 'monospace',
-                          }}>
-                            SEO: {selectedTopic.seoValue}/10
-                          </span>
-                        </div>
-
-                        <div style={{ color: '#aaa', fontSize: '14px', lineHeight: '1.8', marginBottom: '20px' }}>
-                          <strong style={{ color: '#fff' }}>Keywords:</strong> {selectedTopic.keywords.join(', ')}
-                        </div>
-
-                        <div style={{
-                          background: 'rgba(0, 255, 170, 0.05)',
-                          border: '1px solid #00ffaa',
-                          borderRadius: '8px',
-                          padding: '16px',
-                          fontSize: '14px',
-                          color: '#ddd',
-                          lineHeight: '1.6',
-                        }}>
-                          <div style={{ color: '#00ffaa', fontWeight: 'bold', marginBottom: '12px' }}>
-                            📚 About this topic:
-                          </div>
-                          This is a comprehensive R3F knowledge topic covering {selectedTopic.title.toLowerCase()}.
-                          Perfect for learning about {selectedTopic.subcategory.toLowerCase()} in React Three Fiber applications.
-                          <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(0, 255, 170, 0.2)' }}>
-                            <strong style={{ color: '#00ffaa' }}>🎯 Want to learn more?</strong><br />
-                            Generate a full tech-horror story article about this topic using:<br />
-                            <code style={{
-                              display: 'block',
-                              background: 'rgba(0, 0, 0, 0.5)',
-                              padding: '8px',
-                              borderRadius: '4px',
-                              marginTop: '8px',
-                              fontSize: '12px',
-                              color: '#00ff88',
-                            }}>
-                              npm run generate:knowledge -- --count 1
-                            </code>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    // Topic List View
-                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                      <div style={{
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        padding: '16px',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(0, 255, 170, 0.2)',
-                      }}>
-                        <input
-                          type="text"
-                          placeholder="🔍 Search R3F topics..."
-                          value={knowledgeSearch}
-                          onChange={(e) => setKnowledgeSearch(e.target.value)}
-                          style={{
-                            width: '100%',
-                            background: 'rgba(0, 0, 0, 0.5)',
-                            border: '1px solid rgba(0, 255, 170, 0.3)',
-                            borderRadius: '8px',
-                            padding: '12px 16px',
-                            color: '#fff',
-                            fontSize: '14px',
-                            fontFamily: 'monospace',
-                          }}
-                        />
-                      </div>
-
-                      <div style={{
-                        display: 'flex',
-                        gap: '8px',
-                        overflowX: 'auto',
-                        padding: '4px',
-                      }}>
-                        <button
-                          onClick={() => setSelectedCategory(null)}
-                          style={{
-                            background: !selectedCategory ? 'rgba(0, 255, 170, 0.2)' : 'transparent',
-                            border: `1px solid ${!selectedCategory ? '#00ffaa' : '#666'}`,
-                            color: !selectedCategory ? '#00ffaa' : '#888',
-                            padding: '8px 16px',
-                            borderRadius: '6px',
-                            fontSize: '12px',
-                            fontFamily: 'monospace',
-                            cursor: 'pointer',
-                            whiteSpace: 'nowrap',
-                            transition: 'all 0.2s ease',
-                          }}
-                        >
-                          All ({R3F_KNOWLEDGE_INDEX.length})
-                        </button>
-                        {Object.values(R3F_CATEGORIES).map(cat => (
-                          <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
-                            style={{
-                              background: selectedCategory === cat ? 'rgba(0, 255, 170, 0.2)' : 'transparent',
-                              border: `1px solid ${selectedCategory === cat ? '#00ffaa' : '#666'}`,
-                              color: selectedCategory === cat ? '#00ffaa' : '#888',
-                              padding: '8px 16px',
-                              borderRadius: '6px',
-                              fontSize: '12px',
-                              fontFamily: 'monospace',
-                              cursor: 'pointer',
-                              whiteSpace: 'nowrap',
-                              transition: 'all 0.2s ease',
-                            }}
-                          >
-                            {cat}
-                          </button>
-                        ))}
-                      </div>
-
-                      <div style={{
-                        color: '#00ffaa',
-                        fontSize: '12px',
-                        fontFamily: 'monospace',
-                      }}>
-                        Showing {filteredTopics.length} topics
-                      </div>
-
-                      <div style={{
-                        flex: 1,
-                        overflowY: 'auto',
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                        gap: '12px',
-                        paddingRight: '8px',
-                      }}>
-                        {filteredTopics.map(topic => (
-                          <div
-                            key={topic.id}
-                            onClick={() => setSelectedTopic(topic)}
-                            style={{
-                              background: 'rgba(0, 0, 0, 0.3)',
-                              border: '1px solid rgba(0, 255, 170, 0.3)',
-                              borderRadius: '10px',
-                              padding: '16px',
-                              cursor: 'pointer',
-                              transition: 'all 0.2s ease',
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.border = '1px solid #00ffaa';
-                              e.currentTarget.style.background = 'rgba(0, 255, 170, 0.05)';
-                              e.currentTarget.style.transform = 'translateY(-2px)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.border = '1px solid rgba(0, 255, 170, 0.3)';
-                              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)';
-                              e.currentTarget.style.transform = 'translateY(0)';
-                            }}
-                          >
-                            <div style={{ color: '#00ffaa', fontSize: '10px', fontFamily: 'monospace', marginBottom: '8px' }}>
-                              {topic.category}
-                            </div>
-                            <div style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold', marginBottom: '6px', lineHeight: '1.3' }}>
-                              {topic.title}
-                            </div>
-                            <div style={{ color: '#888', fontSize: '12px', marginBottom: '12px' }}>
-                              {topic.subcategory}
-                            </div>
-                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                              <span style={{
-                                background: 'rgba(255, 136, 0, 0.2)',
-                                color: '#ff8800',
-                                padding: '2px 8px',
-                                borderRadius: '4px',
-                                fontSize: '10px',
-                                fontFamily: 'monospace',
-                              }}>
-                                {topic.difficulty}
-                              </span>
-                              <span style={{
-                                background: 'rgba(0, 136, 255, 0.2)',
-                                color: '#0088ff',
-                                padding: '2px 8px',
-                                borderRadius: '4px',
-                                fontSize: '10px',
-                                fontFamily: 'monospace',
-                              }}>
-                                SEO: {topic.seoValue}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )
+                {viewMode === 'create' && (
+                  <CreationStudio onClose={() => setViewMode('chat')} />
                 )}
               </div>
             </>

@@ -1,0 +1,28 @@
+---
+title: "Vector Database Optimization for Semantic Search"
+author: ["Dr. Alan Chang"]
+date: "2025-07-14"
+description: "Build efficient vector databases for AI embedding search. HNSW, IVF, product quantization."
+keywords: ["vector database", "semantic search", "embeddings", "HNSW", "similarity search"]
+---
+# Vector Database Optimization
+Vector DBs power semantic search, RAG, and AI memory. Optimize for billion-scale embedding search.
+## Implementation
+\`\`\`python
+import faiss
+import numpy as np
+
+# Index for billion vectors
+d = 768  # Embedding dimension
+index = faiss.IndexHNSWFlat(d, 32)  # HNSW with 32 neighbors
+
+# Add vectors
+embeddings = np.random.random((1_000_000, d)).astype('float32')
+index.add(embeddings)
+
+# Search
+query = np.random.random((1, d)).astype('float32')
+D, I = index.search(query, k=10)  # Top 10 nearest neighbors
+\`\`\`
+**Performance**: Sub-millisecond search in billion-vector DB
+**Tools**: Pinecone, Milvus, Weaviate

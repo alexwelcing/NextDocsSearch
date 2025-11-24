@@ -1,0 +1,41 @@
+---
+title: "Service Mesh with Istio: Secure Microservice Communication"
+author: ["Taylor Martinez", "Cloud Architect"]
+date: "2025-10-17"
+description: "Deploy Istio for traffic management and mTLS—but misconfiguration causes cascading failures"
+keywords: ["service mesh", "Istio", "Envoy proxy", "mTLS", "traffic management", "circuit breaker", "rate limiting", "canary deployment", "service discovery", "microservices security", "mesh configuration"]
+---
+
+# Service Mesh with Istio: Secure Microservice Communication
+
+Istio provides traffic management, security, and observability for microservices. This guide covers production deployment patterns.
+
+## Istio Installation
+
+Deploy Istio control plane:
+
+\`\`\`bash
+# Install Istio
+istioctl install --set profile=production
+
+# Enable sidecar injection for namespace
+kubectl label namespace default istio-injection=enabled
+
+# Verify installation
+kubectl get pods -n istio-system
+\`\`\`
+
+## Mutual TLS Configuration
+
+Enforce encrypted communication:
+
+\`\`\`yaml
+# peer-authentication.yaml - Enforce mTLS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  mtls:
+    mode: STRICT  # Require mTLS for all traffic
