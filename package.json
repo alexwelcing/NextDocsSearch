@@ -17,7 +17,10 @@
     "generate:art:dry-run": "tsx lib/generate-article-art.ts --dry-run",
     "generate:knowledge": "tsx scripts/generate-knowledge-base.ts",
     "generate:knowledge:all": "tsx scripts/generate-knowledge-base.ts --all",
-    "generate:knowledge:seo": "tsx scripts/generate-knowledge-base.ts --high-seo"
+    "generate:knowledge:seo": "tsx scripts/generate-knowledge-base.ts --high-seo",
+    "timeline:generate": "tsx scripts/generate-article.ts",
+    "timeline:test": "tsx scripts/test-timeline-system.ts",
+    "timeline:dry-run": "tsx scripts/generate-article.ts --dry-run"
   },
   "prettier": {
     "trailingComma": "es5",
