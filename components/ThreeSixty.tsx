@@ -23,6 +23,7 @@ import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import TerminalAccessButton from './TerminalAccessButton';
+import TerminalInterface from './TerminalInterface';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { useJourney } from './JourneyContext';
 
@@ -720,10 +721,21 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       {/* Terminal Access Button - Fallback 2D button to open terminal */}
       {!isTerminalOpen && (
         <TerminalAccessButton
-          onClick={() => setForceTerminalOpen(true)}
+          onClick={() => setIsTerminalOpen(true)}
           isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
         />
       )}
+
+      {/* Terminal Interface - 2D overlay rendered outside Canvas for proper display */}
+      <TerminalInterface
+        isOpen={isTerminalOpen}
+        onClose={() => {
+          setIsTerminalOpen(false);
+          setForceTerminalOpen(false);
+        }}
+        articles={articles}
+        onStartGame={handleBallClick}
+      />
     </ThreeSixtyContainer>
   );
 };

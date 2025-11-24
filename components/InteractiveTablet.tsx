@@ -5,7 +5,7 @@ import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 import { useSupabaseData } from './SupabaseDataContext';
 import QuizSystem from './QuizSystem';
-import TerminalInterface from './TerminalInterface';
+// TerminalInterface moved to ThreeSixty level for proper 2D overlay rendering
 
 interface ArticleData {
   title: string;
@@ -318,13 +318,7 @@ export default function InteractiveTablet({
         )}
       </group>
 
-      {/* Terminal Interface Overlay */}
-      <TerminalInterface
-        isOpen={terminalOpen}
-        onClose={() => setTerminalOpen(false)}
-        articles={displayArticles}
-        onStartGame={onStartGame}
-      />
+      {/* Terminal Interface is now rendered at ThreeSixty level, not here */}
     </>
   );
 }
