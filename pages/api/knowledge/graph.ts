@@ -6,6 +6,10 @@ import {
   type R3FTopic,
 } from '../../../lib/knowledge/r3f-taxonomy';
 
+// Performance configuration
+const MAX_TOPICS_FOR_FULL_GRAPH = 200; // Limit for O(n²) edge generation
+const MAX_EDGES_PER_NODE = 10; // Limit edges per node to prevent graph complexity explosion
+
 interface TopicNode {
   id: string;
   title: string;
@@ -63,24 +67,35 @@ export default function handler(
     }));
 
     // Build edges based on relationships
+    // Note: This has O(n²) complexity, but with ~100 topics it's acceptable
+    // For larger datasets (>200 topics), consider pre-computing relationships or using a graph database
     const edges: TopicEdge[] = [];
     const topicMap = new Map(topics.map(t => [t.id, t]));
+    const edgeCountMap = new Map<string, number>(); // Track edges per node
+
+    // Only generate full graph if topic count is reasonable
+    if (topics.length > MAX_TOPICS_FOR_FULL_GRAPH) {
+      console.warn(`Topic count (${topics.length}) exceeds MAX_TOPICS_FOR_FULL_GRAPH (${MAX_TOPICS_FOR_FULL_GRAPH}). Limiting edge generation.`);
+    }
 
     topics.forEach(topic => {
+      let topicEdgeCount = 0;
+      
       // Connect topics in same category
       topics.forEach(otherTopic => {
-        if (topic.id !== otherTopic.id) {
-          // Same category relationship
-          if (topic.category === otherTopic.category) {
+        if (topic.id !== otherTopic.id && topicEdgeCount < MAX_EDGES_PER_NODE) {
+          // Same category relationship (only for moderate graphs)
+          if (topic.category === otherTopic.category && topics.length <= MAX_TOPICS_FOR_FULL_GRAPH) {
             edges.push({
               source: topic.id,
               target: otherTopic.id,
               weight: 0.5,
               relationship: 'category',
             });
+            topicEdgeCount++;
           }
 
-          // Shared keywords
+          // Shared keywords (higher priority, always include)
           const sharedKeywords = topic.keywords.filter(k =>
             otherTopic.keywords.includes(k)
           );
@@ -91,19 +106,22 @@ export default function handler(
               weight: sharedKeywords.length * 0.3,
               relationship: 'keyword',
             });
+            topicEdgeCount++;
           }
 
-          // Same difficulty (learning path)
-          if (topic.difficulty === otherTopic.difficulty) {
+          // Same difficulty (learning path) - only for moderate graphs
+          if (topic.difficulty === otherTopic.difficulty && topics.length <= MAX_TOPICS_FOR_FULL_GRAPH) {
             edges.push({
               source: topic.id,
               target: otherTopic.id,
               weight: 0.2,
               relationship: 'difficulty',
             });
+            topicEdgeCount++;
           }
 
           // Prerequisite relationships (beginner -> intermediate -> advanced -> expert)
+          // Always include these as they're important for learning paths
           const difficultyOrder = ['beginner', 'intermediate', 'advanced', 'expert'];
           const topicDiffIdx = difficultyOrder.indexOf(topic.difficulty);
           const otherDiffIdx = difficultyOrder.indexOf(otherTopic.difficulty);
@@ -116,6 +134,7 @@ export default function handler(
               weight: 0.8,
               relationship: 'prerequisite',
             });
+            topicEdgeCount++;
           }
         }
       });

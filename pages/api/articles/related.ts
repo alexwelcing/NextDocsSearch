@@ -3,6 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
+// Constants for scoring algorithm
+const MIN_WORD_LENGTH = 3; // Minimum word length for title similarity matching
+
 interface ArticleData {
   filename: string;
   title: string;
@@ -100,8 +103,8 @@ export default function handler(
     }
 
     // Title similarity (basic word matching)
-    const targetWords = targetArticle.title.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-    const articleWords = article.title.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+    const targetWords = targetArticle.title.toLowerCase().split(/\s+/).filter(w => w.length > MIN_WORD_LENGTH);
+    const articleWords = article.title.toLowerCase().split(/\s+/).filter(w => w.length > MIN_WORD_LENGTH);
     const sharedWords = targetWords.filter(w => articleWords.includes(w)).length;
     score += sharedWords;
 

@@ -566,7 +566,13 @@ export default function TerminalInterface({
                         </div>
                         
                         <button
-                          onClick={() => window.open(`/articles/${currentArticleIndex}`, '_blank')}
+                          onClick={() => {
+                            // Use filename if available, otherwise use index
+                            const articlePath = selectedArticle.filename 
+                              ? `/articles/${selectedArticle.filename.replace('.mdx', '')}`
+                              : `/articles/${currentArticleIndex}`;
+                            window.open(articlePath, '_blank');
+                          }}
                           style={{
                             marginTop: '30px',
                             background: 'linear-gradient(135deg, #4488ff, #00ff88)',

@@ -28,8 +28,13 @@ export default function RelatedArticles({
     const scored = allArticles
       .map((article, index) => {
         // Don't include the current article
-        if (article.filename === currentArticle.filename && 
-            article.title === currentArticle.title) {
+        // Use both filename and title for comparison to handle cases where filename might be undefined
+        const isSameArticle = (
+          (article.filename && currentArticle.filename && article.filename === currentArticle.filename) ||
+          (!article.filename && !currentArticle.filename && article.title === currentArticle.title)
+        );
+        
+        if (isSameArticle) {
           return { article, index, score: -1 };
         }
 
