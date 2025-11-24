@@ -154,7 +154,7 @@ export default function TerminalInterface({
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 1000,
+        zIndex: 2000, // Higher than CircleNav (1000) to ensure proper layering
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
