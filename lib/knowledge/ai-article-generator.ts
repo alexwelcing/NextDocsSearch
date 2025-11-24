@@ -162,13 +162,16 @@ function extractKeywords(topic: string, content: string, timeline: TimelineType)
  */
 function generateSlug(title: string, timeline: TimelineType): string {
   const prefix = timeline === 'present' ? 'present' : 'future';
-  const timestamp = Date.now().toString(36);
+  // Use crypto for unique ID to avoid collisions
+  const uniqueId = typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID().slice(0, 8)
+    : Date.now().toString(36);
   const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 
-  return `${prefix}-${slug}-${timestamp}`;
+  return `${prefix}-${slug}-${uniqueId}`;
 }
 
 /**
@@ -261,9 +264,11 @@ export function generateFilename(article: GeneratedArticle): string {
 
 /**
  * Estimate cost for article generation
+ * Note: Pricing based on OpenAI rates as of November 2024
+ * GPT-4-turbo: $0.01/1K input, $0.03/1K output
+ * Check https://openai.com/pricing for current rates
  */
 export function estimateGenerationCost(): { tokens: number; cost: number } {
-  // GPT-4-turbo pricing: $0.01/1K input tokens, $0.03/1K output tokens
   const estimatedInputTokens = 1500; // System + user prompt
   const estimatedOutputTokens = 3000; // Article content
   const inputCost = (estimatedInputTokens / 1000) * 0.01;

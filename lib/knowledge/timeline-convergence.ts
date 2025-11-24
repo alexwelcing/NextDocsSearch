@@ -143,7 +143,7 @@ export const FUTURE_TOPICS = [
 
 /**
  * Calculate current convergence percentage
- * Based on articles published and proximity to convergence points
+ * Based on proximity to convergence points
  */
 export function calculateConvergence(state: TimelineState): number {
   const totalPoints = CONVERGENCE_POINTS.length;
@@ -161,14 +161,7 @@ export function calculateConvergence(state: TimelineState): number {
   const nextPointIndex = CONVERGENCE_POINTS.indexOf(nextPoint);
   const baseConvergence = (nextPointIndex / totalPoints) * 100;
   
-  // Add bonus convergence for article balance
-  const { present = 0, future = 0 } = state.lastArticlePublished;
-  const presentCount = present ? 1 : 0;
-  const futureCount = future ? 1 : 0;
-  const balance = 1 - Math.abs(presentCount - futureCount) / (presentCount + futureCount || 1);
-  const balanceBonus = balance * 5; // Up to 5% bonus
-  
-  return Math.min(100, baseConvergence + balanceBonus);
+  return Math.min(100, baseConvergence);
 }
 
 /**
