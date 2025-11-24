@@ -12,27 +12,27 @@ export default function CinematicCamera({ isPlaying, onComplete }: CinematicCame
   const startTime = useRef<number | null>(null);
   const completed = useRef(false);
 
-  // Cinematic sequence keyframes - memoized to prevent recreation
+  // Cinematic sequence keyframes - MORE DRAMATIC with closer camera
   const keyframes = useMemo(() => ({
     start: {
-      position: new THREE.Vector3(0, 5, 15), // Far back, looking down
+      position: new THREE.Vector3(0, 8, 20), // Much further back for dramatic arrival
       lookAt: new THREE.Vector3(0, 0, 0),
-      fov: 45,
+      fov: 40, // Tighter FOV for cinematic feel
     },
     mid: {
-      position: new THREE.Vector3(2, 4, 12), // Slowly moving forward and to the side
-      lookAt: new THREE.Vector3(0, 2, 0),
-      fov: 50,
+      position: new THREE.Vector3(3, 5, 14), // Sweeping arc movement
+      lookAt: new THREE.Vector3(0, 2.5, 4), // Already looking toward tablet
+      fov: 48,
     },
     tabletReveal: {
-      position: new THREE.Vector3(0, 3, 10), // Focusing on tablet area
-      lookAt: new THREE.Vector3(0, 3, 5), // Looking at where tablet will be
+      position: new THREE.Vector3(0, 3.5, 9), // Closer to tablet
+      lookAt: new THREE.Vector3(0, 2.5, 4), // Direct focus on tablet
       fov: 55,
     },
     final: {
-      position: new THREE.Vector3(0, 2, 10), // Normal gameplay position
-      lookAt: new THREE.Vector3(0, 2, 0),
-      fov: 60,
+      position: new THREE.Vector3(0, 2.5, 7.5), // MUCH CLOSER - tablet fills view
+      lookAt: new THREE.Vector3(0, 2.5, 4),
+      fov: 65, // Wider FOV for immersion
     },
   }), []);
 
@@ -54,7 +54,7 @@ export default function CinematicCamera({ isPlaying, onComplete }: CinematicCame
     if (!isPlaying || completed.current || !startTime.current) return;
 
     const elapsed = (Date.now() - startTime.current) / 1000; // seconds
-    const duration = 16; // Total cinematic duration
+    const duration = 12; // Faster, more dynamic (was 16)
 
     if (elapsed >= duration) {
       completed.current = true;
@@ -66,26 +66,26 @@ export default function CinematicCamera({ isPlaying, onComplete }: CinematicCame
     let progress = elapsed / duration;
     progress = easeInOutCubic(progress); // Smooth easing
 
-    // Determine which keyframe pair we're between
+    // Determine which keyframe pair we're between - FASTER transitions
     let fromKey: keyof typeof keyframes;
     let toKey: keyof typeof keyframes;
     let segmentProgress: number;
 
-    if (progress < 0.3) {
-      // 0-30%: start to mid
+    if (progress < 0.25) {
+      // 0-25%: start to mid (quick intro)
       fromKey = 'start';
       toKey = 'mid';
-      segmentProgress = progress / 0.3;
-    } else if (progress < 0.6) {
-      // 30-60%: mid to tabletReveal
+      segmentProgress = progress / 0.25;
+    } else if (progress < 0.55) {
+      // 25-55%: mid to tabletReveal (approach)
       fromKey = 'mid';
       toKey = 'tabletReveal';
-      segmentProgress = (progress - 0.3) / 0.3;
+      segmentProgress = (progress - 0.25) / 0.3;
     } else {
-      // 60-100%: tabletReveal to final
+      // 55-100%: tabletReveal to final (dramatic dolly-in)
       fromKey = 'tabletReveal';
       toKey = 'final';
-      segmentProgress = (progress - 0.6) / 0.4;
+      segmentProgress = (progress - 0.55) / 0.45;
     }
 
     // Smooth the segment progress

@@ -14,7 +14,10 @@
     "generate:art": "tsx lib/generate-article-art.ts",
     "generate:art:refresh": "tsx lib/generate-article-art.ts --refresh",
     "generate:art:force": "tsx lib/generate-article-art.ts --force",
-    "generate:art:dry-run": "tsx lib/generate-article-art.ts --dry-run"
+    "generate:art:dry-run": "tsx lib/generate-article-art.ts --dry-run",
+    "generate:knowledge": "tsx scripts/generate-knowledge-base.ts",
+    "generate:knowledge:all": "tsx scripts/generate-knowledge-base.ts --all",
+    "generate:knowledge:seo": "tsx scripts/generate-knowledge-base.ts --high-seo"
   },
   "prettier": {
     "trailingComma": "es5",

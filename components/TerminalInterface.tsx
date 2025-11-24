@@ -45,6 +45,11 @@ export default function TerminalInterface({
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [lockedTabHover, setLockedTabHover] = useState<string | null>(null);
 
+  // R3F Knowledge state
+  const [knowledgeSearch, setKnowledgeSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<R3FTopic | null>(null);
+
   const { chatData, setChatData } = useSupabaseData();
   const { isFeatureUnlocked, completeQuest, updateStats, currentQuest } = useJourney();
 
@@ -53,6 +58,17 @@ export default function TerminalInterface({
     { title: "Advanced Features", date: "2024-10-15", author: ["Team"] },
     { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
   ], [articles]);
+
+  // Filtered R3F knowledge topics
+  const filteredTopics = useMemo(() => {
+    let topics = R3F_KNOWLEDGE_INDEX;
+    if (knowledgeSearch) {
+      topics = searchTopics(knowledgeSearch);
+    } else if (selectedCategory) {
+      topics = getTopicsByCategory(selectedCategory);
+    }
+    return topics;
+  }, [knowledgeSearch, selectedCategory]);
 
   // Handle ESC key to close
   useEffect(() => {

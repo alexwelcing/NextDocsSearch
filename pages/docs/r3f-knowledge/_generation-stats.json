@@ -1,0 +1,36 @@
+{
+  "totalGenerated": 5,
+  "generationDate": "2025-11-06T03:13:04.619Z",
+  "topics": {
+    "r3f-vr-setup": {
+      "count": 1,
+      "difficulty": "advanced",
+      "category": "XR & Immersive",
+      "seoScore": 9
+    },
+    "r3f-pmndrs-ecosystem": {
+      "count": 1,
+      "difficulty": "intermediate",
+      "category": "Ecosystem & Libraries",
+      "seoScore": 8
+    },
+    "r3f-demand-rendering": {
+      "count": 1,
+      "difficulty": "advanced",
+      "category": "Performance & Optimization",
+      "seoScore": 7
+    },
+    "r3f-texture-optimization": {
+      "count": 1,
+      "difficulty": "intermediate",
+      "category": "Performance & Optimization",
+      "seoScore": 8
+    },
+    "r3f-custom-effects": {
+      "count": 1,
+      "difficulty": "expert",
+      "category": "Post-Processing",
+      "seoScore": 6
+    }
+  }
+}
