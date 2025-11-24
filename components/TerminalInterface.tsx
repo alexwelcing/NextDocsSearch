@@ -3,14 +3,10 @@ import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
 import QuizSystem from './QuizSystem';
 import CreationStudio from './CreationStudio';
-
-interface ArticleData {
-  title: string;
-  date: string;
-  author: string[];
-  filename?: string;
-  length?: number;
-}
+import ArticleBrowser, { type ArticleData } from './ArticleBrowser';
+import KnowledgeGraph from './KnowledgeGraph';
+import RelatedArticles from './RelatedArticles';
+import { type R3FTopic } from '../lib/knowledge/r3f-taxonomy';
 
 interface LeaderboardEntry {
   id: number;
@@ -28,7 +24,7 @@ interface TerminalInterfaceProps {
   onStartGame?: () => void;
 }
 
-type ViewMode = 'chat' | 'blog' | 'quiz' | 'create';
+type ViewMode = 'chat' | 'blog' | 'quiz' | 'create' | 'knowledge';
 type PageMode = 1 | 2;
 
 export default function TerminalInterface({
@@ -40,14 +36,14 @@ export default function TerminalInterface({
   const [viewMode, setViewMode] = useState<ViewMode>('chat');
   const [chatInput, setChatInput] = useState('');
   const [currentArticleIndex, setCurrentArticleIndex] = useState(0);
+  const [selectedArticle, setSelectedArticle] = useState<ArticleData | null>(null);
+  const [showArticleDetail, setShowArticleDetail] = useState(false);
   const [currentPage, setCurrentPage] = useState<PageMode>(1);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [lockedTabHover, setLockedTabHover] = useState<string | null>(null);
 
-  // R3F Knowledge state
-  const [knowledgeSearch, setKnowledgeSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // Knowledge graph state
   const [selectedTopic, setSelectedTopic] = useState<R3FTopic | null>(null);
 
   const { chatData, setChatData } = useSupabaseData();
@@ -59,27 +55,21 @@ export default function TerminalInterface({
     { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
   ], [articles]);
 
-  // Filtered R3F knowledge topics
-  const filteredTopics = useMemo(() => {
-    let topics = R3F_KNOWLEDGE_INDEX;
-    if (knowledgeSearch) {
-      topics = searchTopics(knowledgeSearch);
-    } else if (selectedCategory) {
-      topics = getTopicsByCategory(selectedCategory);
-    }
-    return topics;
-  }, [knowledgeSearch, selectedCategory]);
-
   // Handle ESC key to close
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        onClose();
+        // If showing article detail, go back to list first
+        if (showArticleDetail) {
+          setShowArticleDetail(false);
+        } else {
+          onClose();
+        }
       }
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, showArticleDetail]);
 
   // Fetch leaderboard when switching to page 2
   const fetchLeaderboard = useCallback(async () => {
@@ -125,33 +115,27 @@ export default function TerminalInterface({
     }
   }, [chatInput, setChatData, chatData.response, updateStats, currentQuest, completeQuest]);
 
-  // Track when user views an article
-  useEffect(() => {
-    if (viewMode === 'blog' && displayArticles[currentArticleIndex]) {
-      const articleTitle = displayArticles[currentArticleIndex].title;
+  // Handle article selection from browser
+  const handleArticleSelect = useCallback((article: ArticleData, index: number) => {
+    setSelectedArticle(article);
+    setCurrentArticleIndex(index);
+    setShowArticleDetail(true);
 
-      // Track article read
-      updateStats('articlesRead', [articleTitle]);
+    // Track article read
+    updateStats('articlesRead', [article.title]);
 
-      // Complete quest if active
-      if (currentQuest?.id === 'read-article') {
-        // Give user 2 seconds to actually read before completing
-        const timer = setTimeout(() => {
-          completeQuest('read-article');
-        }, 2000);
-        return () => clearTimeout(timer);
-      }
+    // Complete quest if active
+    if (currentQuest?.id === 'read-article') {
+      setTimeout(() => {
+        completeQuest('read-article');
+      }, 2000);
     }
-  }, [viewMode, currentArticleIndex, displayArticles, currentQuest, completeQuest, updateStats]);
+  }, [updateStats, currentQuest, completeQuest]);
 
-  const navigateArticle = useCallback((direction: 'prev' | 'next') => {
-    setCurrentArticleIndex(prev => {
-      if (direction === 'prev') {
-        return prev > 0 ? prev - 1 : displayArticles.length - 1;
-      }
-      return (prev + 1) % displayArticles.length;
-    });
-  }, [displayArticles.length]);
+  // Navigate back from article detail
+  const handleBackToList = useCallback(() => {
+    setShowArticleDetail(false);
+  }, []);
 
   const handlePlayGame = useCallback(() => {
     if (onStartGame) {
@@ -311,9 +295,23 @@ export default function TerminalInterface({
                 padding: '20px 30px 0',
                 position: 'relative',
               }}>
-                {(['chat', 'blog', 'quiz', 'create'] as ViewMode[]).map((mode) => {
-                  const featureMap = { chat: 'chat', blog: 'articles', quiz: 'quiz', create: 'creation-studio' };
+                {(['chat', 'blog', 'knowledge', 'quiz', 'create'] as ViewMode[]).map((mode) => {
+                  const featureMap = { 
+                    chat: 'chat', 
+                    blog: 'articles', 
+                    knowledge: 'articles', // Knowledge graph requires articles unlocked
+                    quiz: 'quiz', 
+                    create: 'creation-studio' 
+                  };
                   const isLocked = !isFeatureUnlocked(featureMap[mode]);
+
+                  const modeLabels = {
+                    chat: '💬 AI CHAT',
+                    blog: '📄 ARTICLES',
+                    knowledge: '🕸️ GRAPH',
+                    quiz: '❓ QUIZ',
+                    create: '✨ CREATE',
+                  };
 
                   return (
                     <div key={mode} style={{ flex: 1, position: 'relative' }}>
@@ -353,7 +351,7 @@ export default function TerminalInterface({
                         }}
                       >
                         {isLocked && '🔒 '}
-                        {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : mode === 'quiz' ? '❓ QUIZ' : '✨ CREATE'}
+                        {modeLabels[mode]}
                       </button>
 
                       {/* Locked Tooltip */}
@@ -501,65 +499,28 @@ export default function TerminalInterface({
                 )}
 
                 {viewMode === 'blog' && (
-                  <div style={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '30px',
-                  }}>
-                    {/* Article Card */}
+                  showArticleDetail && selectedArticle ? (
+                    // Article Detail View with Related Articles
                     <div style={{
-                      width: '100%',
-                      maxWidth: '700px',
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      border: '2px solid rgba(68, 136, 255, 0.3)',
-                      borderRadius: '16px',
-                      padding: '40px',
-                      textAlign: 'center',
-                    }}>
-                      <h2 style={{
-                        color: '#00ff88',
-                        fontSize: '28px',
-                        marginBottom: '20px',
-                        textShadow: '0 0 15px rgba(0, 255, 136, 0.3)',
-                      }}>
-                        {displayArticles[currentArticleIndex]?.title || 'No Articles'}
-                      </h2>
-                      <div style={{
-                        color: '#888',
-                        fontSize: '14px',
-                        marginBottom: '8px',
-                      }}>
-                        📅 {displayArticles[currentArticleIndex]?.date || ''}
-                      </div>
-                      <div style={{
-                        color: '#4488ff',
-                        fontSize: '14px',
-                      }}>
-                        ✍️ by {displayArticles[currentArticleIndex]?.author?.join(', ') || 'Unknown'}
-                      </div>
-                    </div>
-
-                    {/* Navigation */}
-                    <div style={{
+                      height: '100%',
                       display: 'flex',
-                      gap: '16px',
-                      alignItems: 'center',
+                      flexDirection: 'column',
+                      gap: '20px',
                     }}>
+                      {/* Back Button */}
                       <button
-                        onClick={() => navigateArticle('prev')}
+                        onClick={handleBackToList}
                         style={{
                           background: 'rgba(68, 136, 255, 0.2)',
                           border: '2px solid rgba(68, 136, 255, 0.5)',
                           borderRadius: '10px',
-                          padding: '12px 24px',
+                          padding: '10px 20px',
                           color: '#4488ff',
                           cursor: 'pointer',
-                          fontSize: '15px',
+                          fontSize: '14px',
                           fontWeight: 'bold',
                           fontFamily: 'monospace',
+                          alignSelf: 'flex-start',
                           transition: 'all 0.2s ease',
                         }}
                         onMouseEnter={(e) => {
@@ -571,71 +532,91 @@ export default function TerminalInterface({
                           e.currentTarget.style.transform = 'translateX(0)';
                         }}
                       >
-                        ← PREV
+                        ← Back to List
                       </button>
 
+                      {/* Article Card */}
                       <div style={{
-                        color: '#666',
-                        fontSize: '14px',
+                        background: 'rgba(0, 0, 0, 0.3)',
+                        border: '2px solid rgba(68, 136, 255, 0.3)',
+                        borderRadius: '16px',
+                        padding: '40px',
+                        textAlign: 'center',
                       }}>
-                        {currentArticleIndex + 1} / {displayArticles.length}
+                        <h2 style={{
+                          color: '#00ff88',
+                          fontSize: '28px',
+                          marginBottom: '20px',
+                          textShadow: '0 0 15px rgba(0, 255, 136, 0.3)',
+                        }}>
+                          {selectedArticle.title}
+                        </h2>
+                        <div style={{
+                          color: '#888',
+                          fontSize: '14px',
+                          marginBottom: '8px',
+                        }}>
+                          📅 {selectedArticle.date}
+                        </div>
+                        <div style={{
+                          color: '#4488ff',
+                          fontSize: '14px',
+                        }}>
+                          ✍️ by {selectedArticle.author?.join(', ') || 'Unknown'}
+                        </div>
+                        
+                        <button
+                          onClick={() => window.open(`/articles/${currentArticleIndex}`, '_blank')}
+                          style={{
+                            marginTop: '30px',
+                            background: 'linear-gradient(135deg, #4488ff, #00ff88)',
+                            border: 'none',
+                            borderRadius: '12px',
+                            padding: '16px 48px',
+                            color: '#ffffff',
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                            cursor: 'pointer',
+                            fontFamily: 'monospace',
+                            textTransform: 'uppercase',
+                            boxShadow: '0 6px 20px rgba(68, 136, 255, 0.4)',
+                            transition: 'all 0.2s ease',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-3px)';
+                            e.currentTarget.style.boxShadow = '0 8px 25px rgba(68, 136, 255, 0.6)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(68, 136, 255, 0.4)';
+                          }}
+                        >
+                          📖 Read Full Article
+                        </button>
                       </div>
 
-                      <button
-                        onClick={() => navigateArticle('next')}
-                        style={{
-                          background: 'rgba(68, 136, 255, 0.2)',
-                          border: '2px solid rgba(68, 136, 255, 0.5)',
-                          borderRadius: '10px',
-                          padding: '12px 24px',
-                          color: '#4488ff',
-                          cursor: 'pointer',
-                          fontSize: '15px',
-                          fontWeight: 'bold',
-                          fontFamily: 'monospace',
-                          transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(68, 136, 255, 0.3)';
-                          e.currentTarget.style.transform = 'translateX(3px)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(68, 136, 255, 0.2)';
-                          e.currentTarget.style.transform = 'translateX(0)';
-                        }}
-                      >
-                        NEXT →
-                      </button>
+                      {/* Related Articles */}
+                      <RelatedArticles
+                        currentArticle={selectedArticle}
+                        allArticles={displayArticles}
+                        onArticleSelect={handleArticleSelect}
+                      />
                     </div>
+                  ) : (
+                    // Article Browser (List/Grid View)
+                    <ArticleBrowser
+                      articles={displayArticles}
+                      onArticleSelect={handleArticleSelect}
+                      itemsPerPage={12}
+                    />
+                  )
+                )}
 
-                    <button
-                      onClick={() => window.open(`/articles/${currentArticleIndex}`, '_blank')}
-                      style={{
-                        background: 'linear-gradient(135deg, #4488ff, #00ff88)',
-                        border: 'none',
-                        borderRadius: '12px',
-                        padding: '16px 48px',
-                        color: '#ffffff',
-                        fontWeight: 'bold',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        fontFamily: 'monospace',
-                        textTransform: 'uppercase',
-                        boxShadow: '0 6px 20px rgba(68, 136, 255, 0.4)',
-                        transition: 'all 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-3px)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(68, 136, 255, 0.6)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(68, 136, 255, 0.4)';
-                      }}
-                    >
-                      📖 Read Full Article
-                    </button>
-                  </div>
+                {viewMode === 'knowledge' && (
+                  <KnowledgeGraph
+                    selectedTopic={selectedTopic}
+                    onTopicSelect={setSelectedTopic}
+                  />
                 )}
 
                 {viewMode === 'quiz' && (
