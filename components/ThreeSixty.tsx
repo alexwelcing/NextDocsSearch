@@ -22,6 +22,7 @@ import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
+import TerminalAccessButton from './TerminalAccessButton';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { useJourney } from './JourneyContext';
 
@@ -285,6 +286,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     totalClicks: 0,
     successfulClicks: 0,
   });
+
+  // Terminal control state
+  const [forceTerminalOpen, setForceTerminalOpen] = useState(false);
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
@@ -607,6 +612,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                       ? Math.max(0, (cinematicProgress - 0.7) / 0.3) // Reveal starts at 70% progress
                       : 1 // Fully visible when not in cinematic
                   }
+                  forceTerminalOpen={forceTerminalOpen}
+                  onTerminalStateChange={(isOpen) => {
+                    setIsTerminalOpen(isOpen);
+                    if (isOpen) setForceTerminalOpen(false); // Reset force flag once opened
+                  }}
                 />
               )}
 
@@ -706,6 +716,14 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           Auto
         </SeasonButton>
       </SeasonIndicator>
+
+      {/* Terminal Access Button - Fallback 2D button to open terminal */}
+      {!isTerminalOpen && (
+        <TerminalAccessButton
+          onClick={() => setForceTerminalOpen(true)}
+          isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
+        />
+      )}
     </ThreeSixtyContainer>
   );
 };

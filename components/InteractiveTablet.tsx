@@ -30,6 +30,8 @@ interface InteractiveTabletProps {
   articles?: ArticleData[];
   onStartGame?: () => void;
   cinematicRevealProgress?: number; // 0-1, controls fade-in during cinematic
+  forceTerminalOpen?: boolean; // External control to force terminal open
+  onTerminalStateChange?: (isOpen: boolean) => void; // Callback when terminal state changes
 }
 
 export default function InteractiveTablet({
@@ -38,10 +40,26 @@ export default function InteractiveTablet({
   articles = [],
   onStartGame,
   cinematicRevealProgress = 1,
+  forceTerminalOpen = false,
+  onTerminalStateChange,
 }: InteractiveTabletProps) {
   // State management
   const [isPoweredOn, setIsPoweredOn] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  
+  // Handle external terminal control
+  useEffect(() => {
+    if (forceTerminalOpen && !terminalOpen) {
+      setTerminalOpen(true);
+    }
+  }, [forceTerminalOpen, terminalOpen]);
+  
+  // Notify parent of terminal state changes
+  useEffect(() => {
+    if (onTerminalStateChange) {
+      onTerminalStateChange(terminalOpen);
+    }
+  }, [terminalOpen, onTerminalStateChange]);
   const [pulseAnimation, setPulseAnimation] = useState(0);
   const [revealScale, setRevealScale] = useState(cinematicRevealProgress);
   const [floatOffset, setFloatOffset] = useState(0);
