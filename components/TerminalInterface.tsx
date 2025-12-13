@@ -3,6 +3,12 @@ import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
 import QuizSystem from './QuizSystem';
 import CreationStudio from './CreationStudio';
+import {
+  type R3FTopic,
+  R3F_KNOWLEDGE_INDEX,
+  searchTopics,
+  getTopicsByCategory,
+} from '@/lib/knowledge/r3f-taxonomy';
 
 interface ArticleData {
   title: string;

@@ -1,0 +1,40 @@
+{
+  "id": "default",
+  "name": "Default Environment",
+  "description": "The default 360 scene - ready for your Marble Labs worlds",
+  "version": "1.0.0",
+  "assets": {
+    "fallbackPanorama": "/backgrounds/default.jpg"
+  },
+  "camera": {
+    "initial": [0, 2, 10],
+    "target": [0, 0, 0],
+    "fov": 60,
+    "constraints": {
+      "minDistance": 5,
+      "maxDistance": 50,
+      "minPolarAngle": 0.1,
+      "maxPolarAngle": 1.5708,
+      "enablePan": false
+    }
+  },
+  "lighting": {
+    "preset": "day",
+    "ambient": 0.5,
+    "directionalIntensity": 0.9,
+    "shadowsEnabled": false,
+    "envMapIntensity": 1
+  },
+  "atmosphere": {
+    "fog": {
+      "enabled": false
+    },
+    "particles": {
+      "type": "none"
+    }
+  },
+  "meta": {
+    "tags": ["default", "starter"],
+    "author": "System"
+  }
+}
