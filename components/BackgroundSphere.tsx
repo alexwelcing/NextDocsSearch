@@ -98,14 +98,15 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
 
         // Reduce texture resolution if too large (helps with FPS drops)
         const maxSize = 2048 // Max texture dimension
-        if (tex.image && (tex.image.width > maxSize || tex.image.height > maxSize)) {
+        const img = tex.image as HTMLImageElement
+        if (img && (img.width > maxSize || img.height > maxSize)) {
           const canvas = document.createElement('canvas')
           const ctx = canvas.getContext('2d')
-          const scale = Math.min(maxSize / tex.image.width, maxSize / tex.image.height)
-          canvas.width = tex.image.width * scale
-          canvas.height = tex.image.height * scale
-          ctx?.drawImage(tex.image, 0, 0, canvas.width, canvas.height)
-          tex.image = canvas
+          const scale = Math.min(maxSize / img.width, maxSize / img.height)
+          canvas.width = img.width * scale
+          canvas.height = img.height * scale
+          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height)
+          tex.source.data = canvas as unknown as typeof tex.source.data
           tex.needsUpdate = true
         }
 
