@@ -8,8 +8,7 @@
  * - Game integration
  */
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Html } from '@react-three/drei';
+import React, { useState, useCallback, useEffect } from 'react';
 import IdeaHub from './IdeaHub';
 import IdeaContent from './IdeaContent';
 import type { IdeaOrbData, OrbContent, IdeaGameStats } from './types';
@@ -251,22 +250,6 @@ export default function IdeaExperience({
         onClose={handleContentClose}
         onAction={handleContentAction}
       />
-
-      {/* Progress hint */}
-      {!engagedContent && !gameActive && (
-        <Html position={[0, -1.5, 0]} center>
-          <div
-            style={{
-              color: 'rgba(255,255,255,0.5)',
-              fontSize: '10px',
-              fontFamily: 'monospace',
-              textAlign: 'center',
-            }}
-          >
-            Explore the orbs or click the core to awaken ideas
-          </div>
-        </Html>
-      )}
     </group>
   );
 }
