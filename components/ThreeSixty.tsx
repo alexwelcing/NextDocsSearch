@@ -8,12 +8,19 @@ import PhysicsGround from './PhysicsGround';
 import BackgroundSphere from './BackgroundSphere';
 import type { ArticleData } from './GlowingArticleDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
+import InteractiveTablet from './InteractiveTablet';
+import ClickingGame, { GameStats } from './ClickingGame';
+import GameHUD from './GameHUD';
+import GameStartOverlay from './GameStartOverlay';
+import GameLeaderboard from './GameLeaderboard';
+import BouncingBall from './BouncingBall';
 import PerformanceMonitor from './PerformanceMonitor';
+import CameraController from './CameraController';
 import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
-import { IdeaExperience } from './ideas';
+import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 
 // Re-export GameState type for compatibility
@@ -177,8 +184,22 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   });
   const [seasonalTheme, setSeasonalTheme] = useState<SeasonalTheme>(getSeasonalTheme(currentSeason));
 
-  // Game state - now managed by IdeaExperience, but we track for UI purposes
+  // Game state
   const [gameState, setGameState] = useState<GameState>('IDLE');
+  const [score, setScore] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [combo, setCombo] = useState(0);
+  const [countdown, setCountdown] = useState(3);
+  const [gameStats, setGameStats] = useState<GameStats>({
+    score: 0,
+    comboMax: 0,
+    accuracy: 0,
+    totalClicks: 0,
+    successfulClicks: 0,
+  });
+
+  // Journey tracking
+  const { completeQuest, updateStats, currentQuest } = useJourney();
 
   // Update season when query params change
   useEffect(() => {
@@ -287,13 +308,57 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setCinematicProgress(progress);
   }, []);
 
-  // Handle game state changes from IdeaExperience
-  const handleIdeaGameStateChange = useCallback((state: string) => {
-    if (state === 'playing') {
-      setGameState('PLAYING');
-    } else {
-      setGameState('IDLE');
+  // Game handlers
+  const handleBallClick = useCallback(() => {
+    setGameState('STARTING');
+  }, []);
+
+  const handleGameStart = useCallback(() => {
+    setGameState('COUNTDOWN');
+    setCountdown(3);
+    setScore(0);
+    setCombo(0);
+
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval);
+          setTimeout(() => {
+            setGameState('PLAYING');
+            setTimeRemaining(30);
+          }, 500);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
+    setScore(finalScore);
+    setGameStats(stats);
+    setGameState('GAME_OVER');
+
+    updateStats('highestGameScore', finalScore);
+
+    if (currentQuest?.id === 'play-game') {
+      completeQuest('play-game');
     }
+
+    if (finalScore >= 5000) {
+      completeQuest('leaderboard-rank');
+    }
+  }, [updateStats, currentQuest, completeQuest]);
+
+  const handlePlayAgain = useCallback(() => {
+    setGameState('IDLE');
+    setTimeout(() => {
+      handleBallClick();
+    }, 100);
+  }, [handleBallClick]);
+
+  const handleCloseLeaderboard = useCallback(() => {
+    setGameState('IDLE');
   }, []);
 
   return (
@@ -385,6 +450,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
+              {/* Camera controller for smooth game transitions */}
+              {cinematicComplete && <CameraController gameState={gameState} />}
+
               {/* OrbitControls - disabled during cinematic intro */}
               {cinematicComplete && (
                 <OrbitControls
@@ -400,12 +468,33 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* IdeaExperience - Unified spatial content and game system */}
-              {!loading && cinematicComplete && (
-                <IdeaExperience
+              {/* Sphere Hunter Game */}
+              <ClickingGame
+                gameState={gameState}
+                onGameStart={handleGameStart}
+                onGameEnd={handleGameEnd}
+                onScoreUpdate={setScore}
+                onComboUpdate={setCombo}
+                onTimeUpdate={setTimeRemaining}
+              />
+
+              {/* Bouncing Ball - visible only in IDLE state */}
+              {gameState === 'IDLE' && (
+                <BouncingBall onActivate={handleBallClick} />
+              )}
+
+              {/* Interactive Tablet - main menu interface */}
+              {!loading && (
+                <InteractiveTablet
+                  initialPosition={[0, 3, 5]}
+                  isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
                   articles={articles}
-                  position={[0, 2, 0]}
-                  onGameStateChange={handleIdeaGameStateChange}
+                  onStartGame={handleBallClick}
+                  cinematicRevealProgress={
+                    showCinematicIntro && !cinematicComplete
+                      ? Math.max(0, (cinematicProgress - 0.7) / 0.3)
+                      : 1
+                  }
                 />
               )}
 
@@ -446,6 +535,33 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onComplete={handleCinematicComplete}
           onSkip={handleCinematicSkip}
           onProgressUpdate={handleCinematicProgress}
+        />
+      )}
+
+      {/* Game UI Overlays */}
+      {(gameState === 'STARTING' || gameState === 'COUNTDOWN') && (
+        <GameStartOverlay
+          onStart={handleGameStart}
+          isCountingDown={gameState === 'COUNTDOWN'}
+          countdown={countdown}
+        />
+      )}
+
+      {gameState === 'PLAYING' && (
+        <GameHUD
+          score={score}
+          timeRemaining={timeRemaining}
+          combo={combo}
+          isPlaying={true}
+        />
+      )}
+
+      {gameState === 'GAME_OVER' && (
+        <GameLeaderboard
+          playerScore={score}
+          playerStats={gameStats}
+          onPlayAgain={handlePlayAgain}
+          onClose={handleCloseLeaderboard}
         />
       )}
     </ThreeSixtyContainer>
