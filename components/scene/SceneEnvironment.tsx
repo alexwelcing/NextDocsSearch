@@ -7,7 +7,7 @@
  * - Environment map integration
  */
 
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import * as THREE from 'three';
@@ -212,6 +212,13 @@ export function SceneSpotlight({
   const spotRef = useRef<THREE.SpotLight>(null);
   const targetRef = useRef<THREE.Object3D>(null);
 
+  // Set target after mount to avoid type issues with r182
+  useEffect(() => {
+    if (spotRef.current && targetRef.current) {
+      spotRef.current.target = targetRef.current;
+    }
+  }, []);
+
   return (
     <>
       <object3D ref={targetRef} position={target} />
@@ -222,7 +229,6 @@ export function SceneSpotlight({
         penumbra={penumbra}
         intensity={intensity}
         color={color}
-        target={targetRef.current ?? undefined}
         castShadow={false}
       />
     </>
