@@ -215,7 +215,8 @@ export function SceneSpotlight({
   // Set target after mount to avoid type issues with r182
   useEffect(() => {
     if (spotRef.current && targetRef.current) {
-      spotRef.current.target = targetRef.current;
+      // Type assertion needed due to r182 Object3D generic conflicts
+      (spotRef.current as unknown as { target: THREE.Object3D }).target = targetRef.current;
     }
   }, []);
 
