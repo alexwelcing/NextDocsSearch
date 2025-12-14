@@ -1,29 +1,23 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { createXRStore, XR, XROrigin, XRSpace, useXRSessionModeSupported } from '@react-three/xr';
-import styled, { css, keyframes } from 'styled-components';
+import { createXRStore, XR, XROrigin, useXRSessionModeSupported } from '@react-three/xr';
+import styled from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls, Stats } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BackgroundSphere from './BackgroundSphere';
-import GlowingArticleDisplay, { ArticleData } from './GlowingArticleDisplay';
-import RoundedRectangle from './RoundedRectangle';
-import ResponseDisplay from './ResponseDisplay';
+import type { ArticleData } from './GlowingArticleDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
-import InteractiveTablet from './InteractiveTablet';
-import ClickingGame, { GameState, GameStats } from './ClickingGame';
-import GameHUD from './GameHUD';
-import GameStartOverlay from './GameStartOverlay';
-import GameLeaderboard from './GameLeaderboard';
-import BouncingBall from './BouncingBall';
 import PerformanceMonitor from './PerformanceMonitor';
-import CameraController from './CameraController';
 import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
+import { IdeaExperience } from './ideas';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
-import { useJourney } from './JourneyContext';
+
+// Re-export GameState type for compatibility
+export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -42,24 +36,6 @@ const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children 
     </Physics>
   );
 };
-
-const StyledButton = styled.button`
-  background: #de7ea2;
-  border: 3px solid #6a6699;
-  opacity: 80%;
-  color: white;
-  cursor: pointer;
-  font-size: 24px;
-  border-radius: 10px;
-  align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: scale(1.05);
-    background: #941947;
-    opacity: 80%;
-  }
-`
 
 const VRButtonStyled = styled.button`
   position: absolute;
@@ -147,47 +123,6 @@ const ControlLabel = styled.label`
   letter-spacing: 0.5px;
 `
 
-const SeasonIndicator = styled.div`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 2px solid #de7ea2;
-  backdrop-filter: blur(10px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`
-
-const SeasonButton = styled.button<{ active: boolean }>`
-  background: ${props => props.active ? '#8214a0' : 'transparent'};
-  border: 1px solid ${props => props.active ? '#de7ea2' : '#666'};
-  color: white;
-  padding: 4px 8px;
-  font-size: 11px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: capitalize;
-
-  &:hover {
-    background: ${props => props.active ? '#941947' : '#333'};
-    border-color: #de7ea2;
-  }
-`
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
 const ThreeSixtyContainer = styled.div`
   position: fixed;
   z-index: 4;
@@ -214,7 +149,6 @@ interface SplatFile {
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [useGaussianSplat, setUseGaussianSplat] = useState(false);
   const [availableSplats, setAvailableSplats] = useState<SplatFile[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
@@ -225,7 +159,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [showCinematicIntro, setShowCinematicIntro] = useState(() => {
     if (typeof window !== 'undefined') {
       const hasWatchedIntro = localStorage.getItem('hasWatchedIntro');
-      // Show intro if not watched yet, or if user manually wants to see it
       return !hasWatchedIntro;
     }
     return false;
@@ -235,7 +168,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Seasonal theme state (with query param support)
   const [currentSeason, setCurrentSeason] = useState<Season>(() => {
-    // Check for season query parameter
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const seasonParam = params.get('season');
@@ -244,6 +176,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     return getCurrentSeason();
   });
   const [seasonalTheme, setSeasonalTheme] = useState<SeasonalTheme>(getSeasonalTheme(currentSeason));
+
+  // Game state - now managed by IdeaExperience, but we track for UI purposes
+  const [gameState, setGameState] = useState<GameState>('IDLE');
 
   // Update season when query params change
   useEffect(() => {
@@ -257,7 +192,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       }
     };
 
-    // Listen for URL changes (for SPAs)
     window.addEventListener('popstate', handleUrlChange);
     return () => window.removeEventListener('popstate', handleUrlChange);
   }, [currentSeason]);
@@ -271,23 +205,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  // Game state
-  const [gameState, setGameState] = useState<GameState>('IDLE');
-  const [score, setScore] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(30);
-  const [combo, setCombo] = useState(0);
-  const [countdown, setCountdown] = useState(3);
-  const [gameStats, setGameStats] = useState<GameStats>({
-    score: 0,
-    comboMax: 0,
-    accuracy: 0,
-    totalClicks: 0,
-    successfulClicks: 0,
-  });
-
-  // Journey tracking
-  const { completeQuest, updateStats, currentQuest } = useJourney();
 
   // Notify parent of game state changes
   useEffect(() => {
@@ -329,7 +246,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         if (data.hasSplats && data.splats.length > 0) {
           setAvailableSplats(data.splats);
           setHasSplats(true);
-          // Set first splat as default
           setSelectedSplat(data.splats[0].path);
         }
       } catch (error) {
@@ -339,8 +255,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
     fetchSplats();
   }, []);
-
-  const article = articles[currentIndex];
 
   const handleEnterVR = async () => {
     try {
@@ -373,82 +287,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setCinematicProgress(progress);
   }, []);
 
-  // Game handlers
-  // Step 1: Bouncing ball click shows overlay (STARTING state)
-  const handleBallClick = useCallback(() => {
-    setGameState('STARTING');
-  }, []);
-
-  // Step 2: User clicks "Start" in overlay - begin countdown
-  const handleGameStart = useCallback(() => {
-    setGameState('COUNTDOWN');
-    setCountdown(3);
-    setScore(0);
-    setCombo(0);
-    
-    // Countdown: 3, 2, 1, GO!
-    const countdownInterval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval);
-          // After countdown, start the game
-          setTimeout(() => {
-            setGameState('PLAYING');
-            setTimeRemaining(30);
-          }, 500); // Brief pause on "GO!"
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }, []);
-
-  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
-    setScore(finalScore);
-    setGameStats(stats);
-    setGameState('GAME_OVER');
-
-    // Track quest completion
-    updateStats('highestGameScore', finalScore);
-
-    // Complete play-game quest on first game completion
-    if (currentQuest?.id === 'play-game') {
-      completeQuest('play-game');
+  // Handle game state changes from IdeaExperience
+  const handleIdeaGameStateChange = useCallback((state: string) => {
+    if (state === 'playing') {
+      setGameState('PLAYING');
+    } else {
+      setGameState('IDLE');
     }
-
-    // Complete leaderboard-rank quest if score >= 5000
-    if (finalScore >= 5000) {
-      completeQuest('leaderboard-rank');
-    }
-  }, [updateStats, currentQuest, completeQuest]);
-
-  const handlePlayAgain = useCallback(() => {
-    setGameState('IDLE');
-    setTimeout(() => {
-      handleBallClick();
-    }, 100);
-  }, [handleBallClick]);
-
-  const handleCloseLeaderboard = useCallback(() => {
-    setGameState('IDLE');
-  }, []);
-
-  // Handle season change
-  const handleSeasonChange = useCallback((season: Season) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('season', season);
-    window.history.pushState({}, '', url.toString());
-    setCurrentSeason(season);
-    setSeasonalTheme(getSeasonalTheme(season));
-  }, []);
-
-  const handleSeasonReset = useCallback(() => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete('season');
-    window.history.pushState({}, '', url.toString());
-    const defaultSeason = getCurrentSeason();
-    setCurrentSeason(defaultSeason);
-    setSeasonalTheme(getSeasonalTheme(defaultSeason));
   }, []);
 
   return (
@@ -461,7 +306,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       )}
 
       {/* Replay Intro Button - Only show after intro has been completed */}
-      {cinematicComplete && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
+      {cinematicComplete && gameState !== 'PLAYING' && (
         <VRButtonStyled
           style={{ bottom: 'auto', top: '10px', left: '10px' }}
           onClick={() => {
@@ -477,8 +322,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </VRButtonStyled>
       )}
 
-      {/* Background Controls - Only show if splats are detected AND not playing game or countdown */}
-      {hasSplats && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && (
+      {/* Background Controls - Only show if splats are detected AND not playing game */}
+      {hasSplats && gameState !== 'PLAYING' && (
         <BackgroundControlsContainer>
           <ControlLabel>BG</ControlLabel>
           <div style={{ display: 'flex', gap: '3px' }}>
@@ -540,9 +385,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* Camera controller for smooth game start transition */}
-              {cinematicComplete && <CameraController gameState={gameState} />}
-
               {/* OrbitControls - disabled during cinematic intro */}
               {cinematicComplete && (
                 <OrbitControls
@@ -558,19 +400,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* Sphere Hunter Game */}
-              <ClickingGame
-                gameState={gameState}
-                onGameStart={handleGameStart}
-                onGameEnd={handleGameEnd}
-                onScoreUpdate={setScore}
-                onComboUpdate={setCombo}
-                onTimeUpdate={setTimeRemaining}
-              />
-
-              {/* Bouncing Ball - visible only in IDLE state */}
-              {gameState === 'IDLE' && (
-                <BouncingBall onActivate={handleBallClick} />
+              {/* IdeaExperience - Unified spatial content and game system */}
+              {!loading && cinematicComplete && (
+                <IdeaExperience
+                  articles={articles}
+                  position={[0, 2, 0]}
+                  onGameStateChange={handleIdeaGameStateChange}
+                />
               )}
 
               {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
@@ -594,23 +430,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 isCinematic={showCinematicIntro && !cinematicComplete}
                 cinematicProgress={cinematicProgress}
               />
-
-              {/* Interactive Tablet - replaces old floating UI (GlowingArticleDisplay, RoundedRectangle, ResponseDisplay) */}
-              {!loading && (
-                <InteractiveTablet
-                  initialPosition={[0, 3, 5]}
-                  isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
-                  articles={articles}
-                  onStartGame={handleBallClick}
-                  cinematicRevealProgress={
-                    showCinematicIntro && !cinematicComplete
-                      ? Math.max(0, (cinematicProgress - 0.7) / 0.3) // Reveal starts at 70% progress
-                      : 1 // Fully visible when not in cinematic
-                  }
-                />
-              )}
-
-              {/* XR Controllers - controller models will be automatically rendered by XR component */}
             </PhysicsEnvironment>
           </XROrigin>
         </XR>
@@ -629,83 +448,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onProgressUpdate={handleCinematicProgress}
         />
       )}
-
-      {/* Game UI Overlays */}
-      {(gameState === 'STARTING' || gameState === 'COUNTDOWN') && (
-        <GameStartOverlay
-          onStart={handleGameStart}
-          isCountingDown={gameState === 'COUNTDOWN'}
-          countdown={countdown}
-        />
-      )}
-
-      {gameState === 'PLAYING' && (
-        <GameHUD
-          score={score}
-          timeRemaining={timeRemaining}
-          combo={combo}
-          isPlaying={true}
-        />
-      )}
-
-      {gameState === 'GAME_OVER' && (
-        <GameLeaderboard
-          playerScore={score}
-          playerStats={gameStats}
-          onPlayAgain={handlePlayAgain}
-          onClose={handleCloseLeaderboard}
-        />
-      )}
-
-      {/* Season Selector - Hidden */}
-      <SeasonIndicator style={{ display: 'none' }}>
-        <ControlLabel style={{ margin: 0, fontSize: '10px', marginRight: '4px' }}>
-          Season:
-        </ControlLabel>
-        <SeasonButton
-          active={currentSeason === 'spring'}
-          onClick={() => handleSeasonChange('spring')}
-        >
-          🌸 Spring
-        </SeasonButton>
-        <SeasonButton
-          active={currentSeason === 'summer'}
-          onClick={() => handleSeasonChange('summer')}
-        >
-          ☀️ Summer
-        </SeasonButton>
-        <SeasonButton
-          active={currentSeason === 'autumn'}
-          onClick={() => handleSeasonChange('autumn')}
-        >
-          🍂 Autumn
-        </SeasonButton>
-        <SeasonButton
-          active={currentSeason === 'winter'}
-          onClick={() => handleSeasonChange('winter')}
-        >
-          ❄️ Winter
-        </SeasonButton>
-        <SeasonButton
-          active={currentSeason === 'halloween'}
-          onClick={() => handleSeasonChange('halloween')}
-        >
-          🎃 Halloween
-        </SeasonButton>
-        <SeasonButton
-          active={currentSeason === 'christmas'}
-          onClick={() => handleSeasonChange('christmas')}
-        >
-          🎄 Christmas
-        </SeasonButton>
-        <SeasonButton
-          active={false}
-          onClick={handleSeasonReset}
-          style={{ marginLeft: '4px', borderColor: '#888' }}
-        >
-          Auto
-        </SeasonButton>
-      </SeasonIndicator>
     </ThreeSixtyContainer>
   );
 };
