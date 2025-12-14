@@ -68,7 +68,7 @@ export default function InteractiveTablet({
   const tabletDepth = 0.25;
 
   // Physics body for the tablet (mass: 0 = no gravity)
-  const [ref, api] = useBox<THREE.Mesh>(() => ({
+  const [ref, api] = useBox(() => ({
     mass: 0,
     position: initialPosition,
     args: [tabletWidth, tabletHeight, tabletDepth],
@@ -152,7 +152,7 @@ export default function InteractiveTablet({
       <group ref={groupRef}>
         {/* Main tablet body (physics body) - Sleek dark frame */}
         <RoundedBox
-          ref={ref}
+          ref={ref as any}
           args={[tabletWidth, tabletHeight, tabletDepth]}
           radius={0.15}
           smoothness={8}
