@@ -7,7 +7,6 @@ module.exports = {
   priority: 0.7,
   sitemapSize: 7000,
   exclude: [
-    '/ArticlePage', // Exclude component pages
     '/api/*', // Exclude API routes
     '/404', // Exclude 404 page
   ],
