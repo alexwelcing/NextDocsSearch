@@ -7,6 +7,7 @@ import matter from 'gray-matter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import ArticleContainer from '@/components/ArticleContainer';
+import StructuredData from '../../components/StructuredData';
 import Footer from '../../components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import styled from 'styled-components';
@@ -53,7 +54,7 @@ const ArticleTitle = styled.h1`
   color: #ffffff;
   margin-bottom: 20px;
   line-height: 1.2;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -72,7 +73,7 @@ const MetaItem = styled.span`
   display: flex;
   align-items: center;
   gap: 8px;
-  
+
   &:before {
     content: '●';
     color: #de7ea2;
@@ -83,7 +84,7 @@ const ArticleContent = styled.div`
   font-size: 1.125rem;
   line-height: 1.8;
   color: #e0e0e0;
-  
+
   h2 {
     font-size: 2rem;
     color: #ffffff;
@@ -91,37 +92,37 @@ const ArticleContent = styled.div`
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(222, 126, 162, 0.2);
   }
-  
+
   h3 {
     font-size: 1.5rem;
     color: #de7ea2;
     margin: 40px 0 15px;
   }
-  
+
   p {
     margin-bottom: 1.5rem;
   }
-  
+
   a {
     color: #de7ea2;
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: border-color 0.3s ease;
-    
+
     &:hover {
       border-bottom-color: #de7ea2;
     }
   }
-  
+
   ul, ol {
     margin: 1.5rem 0;
     padding-left: 2rem;
   }
-  
+
   li {
     margin-bottom: 0.75rem;
   }
-  
+
   code {
     background: rgba(222, 126, 162, 0.1);
     padding: 2px 6px;
@@ -129,7 +130,7 @@ const ArticleContent = styled.div`
     font-family: 'Monaco', 'Courier New', monospace;
     font-size: 0.9em;
   }
-  
+
   pre {
     background: rgba(0, 0, 0, 0.4);
     padding: 20px;
@@ -137,13 +138,13 @@ const ArticleContent = styled.div`
     overflow-x: auto;
     margin: 2rem 0;
     border: 1px solid rgba(222, 126, 162, 0.2);
-    
+
     code {
       background: none;
       padding: 0;
     }
   }
-  
+
   img {
     max-width: 100%;
     height: auto;
@@ -151,7 +152,7 @@ const ArticleContent = styled.div`
     margin: 2rem 0;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   }
-  
+
   blockquote {
     border-left: 4px solid #de7ea2;
     padding-left: 20px;
@@ -189,19 +190,19 @@ const RelatedCard = styled(Link)`
   border: 1px solid rgba(222, 126, 162, 0.2);
   text-decoration: none;
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-4px);
     border-color: #de7ea2;
     box-shadow: 0 10px 30px rgba(222, 126, 162, 0.2);
   }
-  
+
   h3 {
     color: #de7ea2;
     font-size: 1.125rem;
     margin-bottom: 10px;
   }
-  
+
   p {
     color: #b8b8b8;
     font-size: 0.9rem;
@@ -230,40 +231,40 @@ const ShareButton = styled.a`
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: rgba(222, 126, 162, 0.2);
     transform: translateY(-2px);
   }
 `;
 
-const ArticlePage: NextPage<ArticleProps> = ({ 
-  title, 
-  date, 
-  author, 
-  content, 
+const ArticlePage: NextPage<ArticleProps> = ({
+  title,
+  date,
+  author,
+  content,
   description,
   keywords,
   ogImage,
   videoURL,
   readingTime,
   relatedArticles,
-  slug 
+  slug
 }) => {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com';
   const articleUrl = `${siteUrl}/articles/${slug}`;
   const defaultOgImage = `${siteUrl}/og-default.png`;
-  
+
   return (
     <ArticleLayout>
       <Head>
         {/* Primary Meta Tags */}
-        <title>{title} | Your Site Name</title>
+        <title>{title} | Alex Welcing</title>
         <meta name="title" content={title} />
         <meta name="description" content={description || `Read ${title} and more insights.`} />
         {keywords && <meta name="keywords" content={keywords.join(', ')} />}
         <meta name="author" content={author.join(', ')} />
-        
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="article" />
         <meta property="og:url" content={articleUrl} />
@@ -272,47 +273,42 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="og:image" content={ogImage || defaultOgImage} />
         <meta property="article:published_time" content={date} />
         <meta property="article:author" content={author.join(', ')} />
-        
+
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={articleUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description || `Read ${title}`} />
         <meta property="twitter:image" content={ogImage || defaultOgImage} />
-        
+
         {/* Canonical URL */}
         <link rel="canonical" href={articleUrl} />
-        
-        {/* JSON-LD Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Article',
-              headline: title,
-              description: description,
-              image: ogImage || defaultOgImage,
-              datePublished: date,
-              author: author.map(name => ({
-                '@type': 'Person',
-                name: name
-              })),
-              publisher: {
-                '@type': 'Organization',
-                name: 'Your Site Name',
-                logo: {
-                  '@type': 'ImageObject',
-                  url: `${siteUrl}/logo.png`
-                }
-              }
-            })
-          }}
-        />
       </Head>
-      
+
+      <StructuredData
+        type="Article"
+        data={{
+          headline: title,
+          description: description,
+          image: ogImage || defaultOgImage,
+          datePublished: date,
+          author: author.map(name => ({
+            '@type': 'Person',
+            name: name
+          })),
+          publisher: {
+            '@type': 'Organization',
+            name: 'Alex Welcing',
+            logo: {
+              '@type': 'ImageObject',
+              url: `${siteUrl}/logo.png`
+            }
+          }
+        }}
+      />
+
       <CircleNav />
-      
+
       <ArticleWrapper>
         <ArticleHero>
           <ArticleTitle>{title}</ArticleTitle>
@@ -322,7 +318,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             <MetaItem>{readingTime} min read</MetaItem>
           </ArticleMeta>
         </ArticleHero>
-        
+
         {videoURL && (
           <div style={{ margin: '2rem 0' }}>
             <iframe
@@ -336,22 +332,22 @@ const ArticlePage: NextPage<ArticleProps> = ({
             />
           </div>
         )}
-        
+
         <ArticleContent>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {content}
           </ReactMarkdown>
         </ArticleContent>
-        
+
         <ShareButtons>
-          <ShareButton 
+          <ShareButton
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
           >
             🐦 Share on Twitter
           </ShareButton>
-          <ShareButton 
+          <ShareButton
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -359,7 +355,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             💼 Share on LinkedIn
           </ShareButton>
         </ShareButtons>
-        
+
         {relatedArticles.length > 0 && (
           <RelatedArticles>
             <RelatedTitle>Related Articles</RelatedTitle>
@@ -374,7 +370,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
           </RelatedArticles>
         )}
       </ArticleWrapper>
-      
+
       <Footer onImageChange={() => {}} showChangeScenery={false} />
     </ArticleLayout>
   );

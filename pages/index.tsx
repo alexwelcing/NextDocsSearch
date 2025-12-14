@@ -65,14 +65,14 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Unified 2D Landing + 3D Chat | Alex Welcing</title>
+        <title>Alex Welcing – Senior AI Product Manager & Inventor</title>
         <meta
           name="description"
-          content="A single page that merges the 2D landing content with the 3D environment. Explore articles and chat in one place."
+          content="Senior AI Product Manager & Inventor specializing in generative AI applications, machine learning product strategy, and cross-functional leadership."
         />
         <meta
           name="keywords"
-          content="Alex Welcing, Product Management, 3D environment, Generative AI, Next.js"
+          content="Alex Welcing, Product Management, AI Product Manager, Generative AI, Machine Learning, Product Strategy"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
@@ -82,11 +82,11 @@ export default function HomePage() {
         {/* Open Graph Meta Tags */}
         <meta
           property="og:title"
-          content="Unified 2D Landing + 3D Chat | Alex Welcing"
+          content="Alex Welcing – Senior AI Product Manager & Inventor"
         />
         <meta
           property="og:description"
-          content="A single page that merges the 2D landing content with the 3D environment. Explore articles and chat in one place."
+          content="Senior AI Product Manager & Inventor specializing in generative AI applications, machine learning product strategy, and cross-functional leadership."
         />
         <meta property="og:image" content="/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com" />
@@ -143,9 +143,9 @@ export default function HomePage() {
             }
           >
             {/* Original 2D home content from old index */}
-            <div className={styles.centeredtitle}>
-              Build products with Alex Welcing.
-            </div>
+            <h1 className={styles.centeredtitle}>
+              Alex Welcing – Senior AI Product Manager & Inventor
+            </h1>
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
               {/* Link to about page */}
               <Link href="/about" className={styles.landingBtn}>

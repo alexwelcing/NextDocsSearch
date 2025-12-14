@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import CircleNav from '@/components/ui/CircleNav';
 import PDFLinks from '@/components/PDFLinks';
+import StructuredData from '@/components/StructuredData';
 
 
 const About: React.FC = () => {
@@ -16,24 +17,39 @@ const About: React.FC = () => {
   return (
     <div className="siteContainer">
       <Head>
-        <title>Product Maker | Alex Welcing | Technical Product Management & Management Consulting.</title>
+        <title>Alex Welcing – Senior AI Product Manager & Inventor</title>
         <meta
           name="description"
-          content="New York innovator with 10+ years of experience in technology, consulting, and AI. Proven ability to lead and deliver successful products. Contact me today to learn more."
+          content="Senior AI Product Manager & Inventor with 10+ years of experience in generative AI, machine learning strategy, and cross-functional leadership. Based in New York."
         />
-        <meta name="keywords" content="product manager, technology, management consulting, Generative AI, product development, New York, remote" />
+        <meta name="keywords" content="Alex Welcing, AI Product Manager, Generative AI, Machine Learning, Product Strategy, Management Consulting, New York" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/about" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
-        <meta property="og:title" content="Product Maker | Alex Welcing | Technical Product Management & Management Consulting." />
-        <meta property="og:description" content="New York innovator with 10+ years of experience in technology, consulting, and AI. Proven ability to lead and deliver successful products. Contact me today to learn more." />
+        <meta property="og:title" content="Alex Welcing – Senior AI Product Manager & Inventor" />
+        <meta property="og:description" content="Senior AI Product Manager & Inventor with 10+ years of experience in generative AI, machine learning strategy, and cross-functional leadership." />
         <meta property="og:image" content="/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com/about" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="profile" />
       </Head>
+
+      <StructuredData
+        type="Person"
+        data={{
+          name: "Alex Welcing",
+          jobTitle: "Senior AI Product Manager & Inventor",
+          url: "https://alexwelcing.com",
+          sameAs: [
+            "https://www.linkedin.com/in/alexwelcing",
+            "https://github.com/alexwelcing",
+            "https://twitter.com/alexwelcing"
+          ],
+          description: "Senior AI Product Manager & Inventor specializing in generative AI applications and machine learning product strategy."
+        }}
+      />
 
       <header className="header">
         <CircleNav />
