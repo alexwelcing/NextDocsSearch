@@ -37,6 +37,17 @@ export default function InteractiveTablet({
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Toggle tablet with keyboard shortcut
   useEffect(() => {
@@ -71,50 +82,42 @@ export default function InteractiveTablet({
     setTerminalOpen(true);
   }, []);
 
-  // Hide during gameplay
   if (isGamePlaying) return null;
 
   return (
     <>
-      {/* Pip-Boy raise button - bottom center */}
+      {/* Pip-Boy raise button */}
       {!isRaised && (
-        <div
+        <button
           onClick={handleRaise}
           style={{
             position: 'fixed',
-            bottom: '20px',
+            bottom: isMobile ? '16px' : '24px',
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 100,
-            cursor: 'pointer',
-            padding: '12px 24px',
-            background: 'rgba(0, 0, 0, 0.8)',
-            border: '1px solid #333',
-            borderRadius: '4px',
+            padding: isMobile ? '14px 28px' : '12px 24px',
+            background: 'rgba(0, 0, 0, 0.85)',
+            border: '1px solid #0f0',
+            borderRadius: '6px',
             color: '#0f0',
             fontFamily: 'monospace',
-            fontSize: '12px',
-            transition: 'all 0.2s ease',
+            fontSize: isMobile ? '14px' : '13px',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#0f0';
-            e.currentTarget.style.background = 'rgba(0, 20, 0, 0.9)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = '#333';
-            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
+            gap: '10px',
+            boxShadow: '0 4px 20px rgba(0, 255, 0, 0.2)',
+            touchAction: 'manipulation',
           }}
         >
-          <span style={{ fontSize: '16px' }}>▲</span>
-          <span>TERMINAL</span>
-          <span style={{ color: '#555', fontSize: '10px' }}>[TAB]</span>
-        </div>
+          <span>▲</span>
+          <span>MENU</span>
+          {!isMobile && <span style={{ color: '#555', fontSize: '10px' }}>[TAB]</span>}
+        </button>
       )}
 
-      {/* Pip-Boy tablet - slides up from bottom */}
+      {/* Pip-Boy tablet */}
       <div
         style={{
           position: 'fixed',
@@ -123,25 +126,25 @@ export default function InteractiveTablet({
           transform: `translateX(-50%) translateY(${isRaised ? '0' : '100%'})`,
           zIndex: 500,
           transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          width: 'min(95vw, 500px)',
+          width: isMobile ? '100vw' : 'min(95vw, 420px)',
+          maxHeight: isMobile ? '70vh' : '60vh',
         }}
       >
-        {/* Tablet frame */}
         <div
           style={{
             background: '#0a0a0a',
-            border: '2px solid #222',
+            border: isMobile ? 'none' : '2px solid #1a1a1a',
             borderBottom: 'none',
-            borderRadius: '12px 12px 0 0',
+            borderRadius: isMobile ? '16px 16px 0 0' : '12px 12px 0 0',
             overflow: 'hidden',
-            boxShadow: '0 -10px 40px rgba(0, 255, 0, 0.1)',
+            boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.8)',
           }}
         >
           {/* Handle bar */}
           <div
             onClick={handleLower}
             style={{
-              padding: '8px',
+              padding: isMobile ? '12px' : '8px',
               background: '#111',
               borderBottom: '1px solid #222',
               cursor: 'pointer',
@@ -149,104 +152,109 @@ export default function InteractiveTablet({
               justifyContent: 'center',
               alignItems: 'center',
               gap: '8px',
+              touchAction: 'manipulation',
             }}
           >
             <div style={{
-              width: '40px',
+              width: '48px',
               height: '4px',
               background: '#333',
               borderRadius: '2px',
             }} />
-            <span style={{
-              color: '#444',
-              fontSize: '10px',
-              fontFamily: 'monospace',
-            }}>
-              [ESC] to close
-            </span>
           </div>
 
-          {/* Screen content */}
-          <div
-            onClick={handleOpenTerminal}
-            style={{
-              padding: '24px',
-              cursor: 'pointer',
-              minHeight: '200px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '16px',
-            }}
-          >
+          {/* Quick menu */}
+          <div style={{
+            padding: isMobile ? '20px 16px' : '20px 24px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+          }}>
+            {/* Main actions */}
             <div style={{
-              color: '#0f0',
-              fontSize: '36px',
-              fontFamily: 'monospace',
-            }}>
-              {'>_'}
-            </div>
-            <div style={{
-              color: '#0f0',
-              fontSize: '16px',
-              fontFamily: 'monospace',
-              fontWeight: 'bold',
-              letterSpacing: '3px',
-            }}>
-              TERMINAL
-            </div>
-            <div style={{
-              color: '#555',
-              fontSize: '11px',
-              fontFamily: 'monospace',
-            }}>
-              click to open
-            </div>
-
-            {/* Quick actions */}
-            <div style={{
-              display: 'flex',
-              gap: '12px',
-              marginTop: '16px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '10px',
             }}>
               {[
-                { label: 'CHAT', action: handleOpenTerminal },
-                { label: 'GAME', action: () => { onStartGame?.(); handleLower(); } },
-                { label: 'SCENE', action: handleOpenTerminal },
+                { label: 'ASK AI', icon: '>', action: handleOpenTerminal },
+                { label: 'GAME', icon: '#', action: () => { onStartGame?.(); handleLower(); } },
+                { label: 'SCENE', icon: '*', action: handleOpenTerminal },
+                { label: 'ABOUT', icon: '?', action: handleOpenTerminal },
               ].map((item) => (
                 <button
                   key={item.label}
-                  onClick={(e) => { e.stopPropagation(); item.action(); }}
+                  onClick={item.action}
                   style={{
-                    padding: '8px 16px',
-                    background: 'transparent',
-                    border: '1px solid #333',
-                    borderRadius: '4px',
-                    color: '#666',
+                    padding: isMobile ? '16px' : '14px',
+                    background: '#111',
+                    border: '1px solid #222',
+                    borderRadius: '8px',
+                    color: '#0f0',
                     fontFamily: 'monospace',
-                    fontSize: '11px',
+                    fontSize: isMobile ? '13px' : '12px',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#0f0';
-                    e.currentTarget.style.color = '#0f0';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#333';
-                    e.currentTarget.style.color = '#666';
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    touchAction: 'manipulation',
                   }}
                 >
+                  <span style={{ color: '#0a0' }}>{item.icon}</span>
                   {item.label}
                 </button>
               ))}
+            </div>
+
+            {/* Navigation links */}
+            <div style={{
+              borderTop: '1px solid #222',
+              paddingTop: '12px',
+              display: 'flex',
+              justifyContent: 'center',
+              gap: isMobile ? '20px' : '16px',
+              flexWrap: 'wrap',
+            }}>
+              {[
+                { label: 'Home', href: '/' },
+                { label: 'Articles', href: '/articles' },
+                { label: 'GitHub', href: 'https://github.com/alexwelcing', external: true },
+                { label: 'LinkedIn', href: 'https://linkedin.com/in/alexwelcing', external: true },
+              ].map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.external ? '_blank' : undefined}
+                  rel={link.external ? 'noopener noreferrer' : undefined}
+                  style={{
+                    color: '#555',
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    textDecoration: 'none',
+                    padding: '4px 8px',
+                  }}
+                >
+                  {link.label}
+                  {link.external && ' ↗'}
+                </a>
+              ))}
+            </div>
+
+            {/* Close hint */}
+            <div style={{
+              textAlign: 'center',
+              color: '#333',
+              fontSize: '10px',
+              fontFamily: 'monospace',
+            }}>
+              {isMobile ? 'tap handle to close' : 'ESC or tap handle to close'}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Full terminal interface */}
+      {/* Full terminal */}
       <TerminalInterface
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
