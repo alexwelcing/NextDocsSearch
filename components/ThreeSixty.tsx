@@ -11,9 +11,7 @@ import GaussianSplatBackground from './GaussianSplatBackground';
 import InteractiveTablet from './InteractiveTablet';
 import ClickingGame, { GameStats } from './ClickingGame';
 import GameHUD from './GameHUD';
-import GameStartOverlay from './GameStartOverlay';
 import GameLeaderboard from './GameLeaderboard';
-import BouncingBall from './BouncingBall';
 import PerformanceMonitor from './PerformanceMonitor';
 import CameraController from './CameraController';
 import CinematicCamera from './CinematicCamera';
@@ -297,12 +295,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setCinematicProgress(progress);
   }, []);
 
-  // Game handlers
-  const handleBallClick = useCallback(() => {
-    setGameState('STARTING');
-  }, []);
-
-  const handleGameStart = useCallback(() => {
+  // Game handlers - start game directly from terminal
+  const handleStartGame = useCallback(() => {
     setGameState('COUNTDOWN');
     setCountdown(3);
     setScore(0);
@@ -342,9 +336,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const handlePlayAgain = useCallback(() => {
     setGameState('IDLE');
     setTimeout(() => {
-      handleBallClick();
+      handleStartGame();
     }, 100);
-  }, [handleBallClick]);
+  }, [handleStartGame]);
 
   const handleCloseLeaderboard = useCallback(() => {
     setGameState('IDLE');
@@ -425,17 +419,12 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               {/* Sphere Hunter Game */}
               <ClickingGame
                 gameState={gameState}
-                onGameStart={handleGameStart}
+                onGameStart={handleStartGame}
                 onGameEnd={handleGameEnd}
                 onScoreUpdate={setScore}
                 onComboUpdate={setCombo}
                 onTimeUpdate={setTimeRemaining}
               />
-
-              {/* Bouncing Ball - visible only in IDLE state */}
-              {gameState === 'IDLE' && (
-                <BouncingBall onActivate={handleBallClick} />
-              )}
 
               {/* Interactive Tablet - main menu interface */}
               {!loading && (
@@ -443,7 +432,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   initialPosition={[0, 3, 5]}
                   isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
                   articles={articles}
-                  onStartGame={handleBallClick}
+                  onStartGame={handleStartGame}
                   cinematicRevealProgress={
                     showCinematicIntro && !cinematicComplete
                       ? Math.max(0, (cinematicProgress - 0.7) / 0.3)
@@ -495,13 +484,26 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {/* Game UI Overlays */}
-      {(gameState === 'STARTING' || gameState === 'COUNTDOWN') && (
-        <GameStartOverlay
-          onStart={handleGameStart}
-          isCountingDown={gameState === 'COUNTDOWN'}
-          countdown={countdown}
-        />
+      {/* Countdown overlay - minimal */}
+      {gameState === 'COUNTDOWN' && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(0, 0, 0, 0.7)',
+          zIndex: 1000,
+        }}>
+          <div style={{
+            fontSize: '120px',
+            fontWeight: 'bold',
+            color: '#0f0',
+            fontFamily: 'monospace',
+          }}>
+            {countdown || 'GO'}
+          </div>
+        </div>
       )}
 
       {gameState === 'PLAYING' && (

@@ -79,7 +79,7 @@ const Chat = () => {
           )}
         </main>
         <SearchDialog />
-        <Footer onImageChange={handleImageChange} showChangeScenery={true} />
+        <Footer onImageChange={handleImageChange} showChangeScenery={false} />
       </SupabaseDataProvider>
     </>
   )
