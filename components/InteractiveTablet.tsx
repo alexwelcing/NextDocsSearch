@@ -1,8 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Html, RoundedBox } from '@react-three/drei';
-import { useBox } from '@react-three/cannon';
-import * as THREE from 'three';
+import React, { useState, useCallback, useEffect } from 'react';
 import TerminalInterface from './TerminalInterface';
 
 interface ArticleData {
@@ -32,181 +28,230 @@ interface InteractiveTabletProps {
 }
 
 export default function InteractiveTablet({
-  initialPosition = [0, 2.5, 4],
   isGamePlaying = false,
   articles = [],
   onStartGame,
-  cinematicRevealProgress = 1,
   onChangeScenery,
   availableScenery = [],
   currentScenery,
 }: InteractiveTabletProps) {
+  const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const [hovered, setHovered] = useState(false);
 
-  const { camera } = useThree();
-  const groupRef = useRef<THREE.Group>(null);
+  // Toggle tablet with keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        e.preventDefault();
+        if (!isGamePlaying) {
+          setIsRaised(prev => !prev);
+        }
+      }
+      if (e.key === 'Escape' && isRaised) {
+        setIsRaised(false);
+        setTerminalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isGamePlaying, isRaised]);
 
-  const tabletWidth = 3.2;
-  const tabletHeight = 2.4;
-  const tabletDepth = 0.12;
+  const handleRaise = useCallback(() => {
+    if (!isGamePlaying) {
+      setIsRaised(true);
+    }
+  }, [isGamePlaying]);
 
-  const [ref, api] = useBox(() => ({
-    mass: 0,
-    position: initialPosition,
-    args: [tabletWidth, tabletHeight, tabletDepth],
-  }));
+  const handleLower = useCallback(() => {
+    setIsRaised(false);
+    setTerminalOpen(false);
+  }, []);
 
-  const handleClick = useCallback(() => {
+  const handleOpenTerminal = useCallback(() => {
     setTerminalOpen(true);
   }, []);
 
-  useFrame((state) => {
-    if (groupRef.current && ref.current) {
-      const time = state.clock.elapsedTime;
-
-      // Face camera
-      const cameraPos = new THREE.Vector3();
-      camera.getWorldPosition(cameraPos);
-      groupRef.current.lookAt(cameraPos);
-      ref.current.rotation.copy(groupRef.current.rotation);
-
-      // Float
-      const floatY = Math.sin(time * 0.5) * 0.08;
-      api.position.set(initialPosition[0], initialPosition[1] + floatY, initialPosition[2]);
-      api.velocity.set(0, 0, 0);
-      api.angularVelocity.set(0, 0, 0);
-
-      // Scale reveal
-      const scale = Math.min(cinematicRevealProgress, 1);
-      groupRef.current.scale.setScalar(scale);
-    }
-  });
-
+  // Hide during gameplay
   if (isGamePlaying) return null;
 
   return (
     <>
-      <group ref={groupRef}>
-        {/* Tablet frame - dark */}
-        <RoundedBox
-          ref={ref as unknown as React.RefObject<THREE.Mesh>}
-          args={[tabletWidth, tabletHeight, tabletDepth]}
-          radius={0.08}
-          smoothness={4}
-          onClick={handleClick}
-          onPointerOver={() => setHovered(true)}
-          onPointerOut={() => setHovered(false)}
-        >
-          <meshStandardMaterial
-            color="#1a1a1a"
-            metalness={0.7}
-            roughness={0.3}
-          />
-        </RoundedBox>
-
-        {/* Screen - dark with subtle border glow */}
-        <mesh position={[0, 0, tabletDepth / 2 + 0.002]}>
-          <planeGeometry args={[tabletWidth - 0.25, tabletHeight - 0.25]} />
-          <meshBasicMaterial color="#0a0a0a" />
-        </mesh>
-
-        {/* Screen border glow */}
-        <mesh position={[0, 0, tabletDepth / 2 + 0.001]}>
-          <planeGeometry args={[tabletWidth - 0.2, tabletHeight - 0.2]} />
-          <meshBasicMaterial
-            color={hovered ? "#00ff00" : "#003300"}
-            transparent
-            opacity={0.3}
-          />
-        </mesh>
-
-        {/* HTML content on screen */}
-        <Html
-          position={[0, 0, tabletDepth / 2 + 0.01]}
-          transform
-          occlude
+      {/* Pip-Boy raise button - bottom center */}
+      {!isRaised && (
+        <div
+          onClick={handleRaise}
           style={{
-            width: '280px',
-            height: '200px',
-            pointerEvents: 'auto',
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 100,
+            cursor: 'pointer',
+            padding: '12px 24px',
+            background: 'rgba(0, 0, 0, 0.8)',
+            border: '1px solid #333',
+            borderRadius: '4px',
+            color: '#0f0',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            transition: 'all 0.2s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#0f0';
+            e.currentTarget.style.background = 'rgba(0, 20, 0, 0.9)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#333';
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
           }}
         >
+          <span style={{ fontSize: '16px' }}>▲</span>
+          <span>TERMINAL</span>
+          <span style={{ color: '#555', fontSize: '10px' }}>[TAB]</span>
+        </div>
+      )}
+
+      {/* Pip-Boy tablet - slides up from bottom */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: '50%',
+          transform: `translateX(-50%) translateY(${isRaised ? '0' : '100%'})`,
+          zIndex: 500,
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          width: 'min(95vw, 500px)',
+        }}
+      >
+        {/* Tablet frame */}
+        <div
+          style={{
+            background: '#0a0a0a',
+            border: '2px solid #222',
+            borderBottom: 'none',
+            borderRadius: '12px 12px 0 0',
+            overflow: 'hidden',
+            boxShadow: '0 -10px 40px rgba(0, 255, 0, 0.1)',
+          }}
+        >
+          {/* Handle bar */}
           <div
-            onClick={handleClick}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            onClick={handleLower}
             style={{
-              width: '100%',
-              height: '100%',
-              background: '#0d0d0d',
-              border: `1px solid ${hovered ? '#00ff00' : '#333'}`,
-              borderRadius: '4px',
+              padding: '8px',
+              background: '#111',
+              borderBottom: '1px solid #222',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <div style={{
+              width: '40px',
+              height: '4px',
+              background: '#333',
+              borderRadius: '2px',
+            }} />
+            <span style={{
+              color: '#444',
+              fontSize: '10px',
+              fontFamily: 'monospace',
+            }}>
+              [ESC] to close
+            </span>
+          </div>
+
+          {/* Screen content */}
+          <div
+            onClick={handleOpenTerminal}
+            style={{
+              padding: '24px',
+              cursor: 'pointer',
+              minHeight: '200px',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              cursor: 'pointer',
-              fontFamily: 'monospace',
-              transition: 'border-color 0.2s',
-              padding: '16px',
-              boxSizing: 'border-box',
+              gap: '16px',
             }}
           >
             <div style={{
-              color: '#00ff00',
-              fontSize: '32px',
-              marginBottom: '8px',
+              color: '#0f0',
+              fontSize: '36px',
+              fontFamily: 'monospace',
             }}>
               {'>_'}
             </div>
             <div style={{
-              color: '#00ff00',
-              fontSize: '14px',
+              color: '#0f0',
+              fontSize: '16px',
+              fontFamily: 'monospace',
               fontWeight: 'bold',
-              letterSpacing: '2px',
-              marginBottom: '16px',
+              letterSpacing: '3px',
             }}>
               TERMINAL
             </div>
             <div style={{
-              color: hovered ? '#00ff00' : '#555',
+              color: '#555',
               fontSize: '11px',
-              transition: 'color 0.2s',
+              fontFamily: 'monospace',
             }}>
-              {hovered ? '[ CLICK TO OPEN ]' : 'click to open'}
+              click to open
             </div>
+
+            {/* Quick actions */}
             <div style={{
               display: 'flex',
-              gap: '16px',
-              marginTop: '20px',
-              fontSize: '10px',
-              color: '#444',
+              gap: '12px',
+              marginTop: '16px',
             }}>
-              <span>chat</span>
-              <span>game</span>
-              <span>scene</span>
+              {[
+                { label: 'CHAT', action: handleOpenTerminal },
+                { label: 'GAME', action: () => { onStartGame?.(); handleLower(); } },
+                { label: 'SCENE', action: handleOpenTerminal },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  onClick={(e) => { e.stopPropagation(); item.action(); }}
+                  style={{
+                    padding: '8px 16px',
+                    background: 'transparent',
+                    border: '1px solid #333',
+                    borderRadius: '4px',
+                    color: '#666',
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#0f0';
+                    e.currentTarget.style.color = '#0f0';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '#333';
+                    e.currentTarget.style.color = '#666';
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
             </div>
           </div>
-        </Html>
+        </div>
+      </div>
 
-        {/* Subtle glow light */}
-        {hovered && (
-          <pointLight
-            position={[0, 0, 0.5]}
-            color="#00ff00"
-            intensity={0.5}
-            distance={3}
-            decay={2}
-          />
-        )}
-      </group>
-
+      {/* Full terminal interface */}
       <TerminalInterface
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
         articles={articles}
-        onStartGame={onStartGame}
+        onStartGame={() => { onStartGame?.(); handleLower(); setTerminalOpen(false); }}
         onChangeScenery={onChangeScenery}
         availableScenery={availableScenery}
         currentScenery={currentScenery}

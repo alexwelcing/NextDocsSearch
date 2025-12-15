@@ -426,24 +426,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 onTimeUpdate={setTimeRemaining}
               />
 
-              {/* Interactive Tablet - main menu interface */}
-              {!loading && (
-                <InteractiveTablet
-                  initialPosition={[0, 3, 5]}
-                  isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
-                  articles={articles}
-                  onStartGame={handleStartGame}
-                  cinematicRevealProgress={
-                    showCinematicIntro && !cinematicComplete
-                      ? Math.max(0, (cinematicProgress - 0.7) / 0.3)
-                      : 1
-                  }
-                  onChangeScenery={handleSceneryChange}
-                  availableScenery={sceneryOptions}
-                  currentScenery={currentSceneryPath}
-                />
-              )}
-
               {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
               {useGaussianSplat && selectedSplat && !isMobile && gameState !== 'PLAYING' ? (
                 <GaussianSplatBackground
@@ -474,6 +456,18 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
       {/* Performance Monitor - outside Canvas */}
       {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
+
+      {/* Pip-Boy style tablet - slides up from bottom */}
+      {!loading && (
+        <InteractiveTablet
+          isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
+          articles={articles}
+          onStartGame={handleStartGame}
+          onChangeScenery={handleSceneryChange}
+          availableScenery={sceneryOptions}
+          currentScenery={currentSceneryPath}
+        />
+      )}
 
       {/* Cinematic Intro Overlay */}
       {showCinematicIntro && !cinematicComplete && (
