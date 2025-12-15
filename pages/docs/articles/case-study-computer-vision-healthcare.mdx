@@ -1,0 +1,56 @@
+---
+title: "Case Study: Computer Vision Pipeline for Healthcare Diagnostics"
+author: ["Alex Welcing"]
+date: "2025-12-18"
+description: "Developing a regulatory-compliant computer vision system for medical imaging analysis."
+keywords: ["Computer Vision", "Healthcare AI", "Medical Imaging", "Case Study", "FDA Compliance", "Deep Learning"]
+---
+
+# Case Study: Computer Vision Pipeline for Healthcare Diagnostics
+
+Deploying AI in healthcare is fundamentally different from deploying it in consumer tech. The cost of a false negative isn't a lost click—it's a missed diagnosis. This case study explores the development of a Computer Vision system for automated anomaly detection in medical imaging, with a specific focus on the intersection of deep learning and FDA regulatory compliance.
+
+## Executive Summary
+
+*   **The Goal:** Assist radiologists by automatically flagging potential abnormalities in Chest X-Rays (CXR) and MRIs, prioritizing urgent cases.
+*   **The Result:** The system achieved **99.5% sensitivity** for critical conditions (like Pneumothorax), reducing radiologist turnaround time by **40%** and decreasing false negatives by **15%**.
+
+## Technical Approach
+
+### 1. Model Architecture
+We utilized a two-stage pipeline:
+*   **Classification:** An ensemble of **EfficientNet-B7** and **ResNet-152** models to classify the image as "Normal" or "Abnormal" with high confidence.
+*   **Segmentation:** A **U-Net** architecture to generate a heat map (mask) precisely localizing the abnormality. This is crucial for trust—the doctor needs to know *where* the AI is looking.
+
+### 2. Data Strategy
+Data scarcity and privacy are major hurdles.
+*   **Dataset:** We curated 500,000 anonymized studies.
+*   **Augmentation:** We used aggressive data augmentation (rotation, contrast, noise) to make the model robust to different X-ray machine manufacturers.
+*   **Federated Learning:** To train across multiple hospital systems without moving patient data (HIPAA compliance), we implemented Federated Learning, where the model travels to the data, not the other way around.
+
+## The Regulatory Challenge (FDA SaMD)
+
+Building the model was only 30% of the work. Getting it cleared as **Software as a Medical Device (SaMD)** under FDA 510(k) was the real challenge.
+
+### Explainability & Trust
+"Black box" models are unacceptable in medicine.
+*   **Solution:** We implemented **Grad-CAM** (Gradient-weighted Class Activation Mapping). When the model predicts "Pneumonia," it overlays a heatmap showing the pixels that influenced that decision. If the model is looking at a ruler or a bone instead of the lung tissue, the doctor can immediately spot the error.
+
+### Validation & Bias
+The FDA requires proof that the model works across diverse populations (age, gender, race, device type).
+*   **Solution:** We conducted a multi-center clinical validation study. We specifically tested for algorithmic bias to ensure the model performed equally well across all demographic groups, retraining where disparities were found.
+
+## Implementation: Human-in-the-Loop
+
+We designed the system not to replace radiologists, but to augment them.
+*   **Triage Mode:** The AI runs in the background. If it detects a critical issue (e.g., a collapsed lung), it moves that patient to the top of the radiologist's worklist.
+*   **Second Reader:** After a radiologist makes a diagnosis, the AI offers a "second opinion" if it disagrees, prompting a re-review.
+
+## Outcomes
+
+*   **Clinical Impact:** The "Second Reader" mode caught 15% more early-stage pathologies that were initially missed by tired radiologists during night shifts.
+*   **Operational Efficiency:** Average reporting time for critical cases dropped from 4 hours to 45 minutes.
+
+## Future Directions
+
+We are now moving from 2D X-rays to 3D Volumetric analysis (CT scans), which adds a dimension of complexity (literally). We are also exploring **Multimodal Transformers** that can combine the pixel data from the X-ray with the text data from the patient's Electronic Health Record (EHR) for a more holistic diagnosis.

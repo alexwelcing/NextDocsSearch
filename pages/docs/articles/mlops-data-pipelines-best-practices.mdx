@@ -1,0 +1,74 @@
+---
+title: "MLOps & Data Pipelines: The Backbone of Scalable AI Products"
+author: ["Alex Welcing"]
+date: "2025-12-21"
+description: "Why MLOps is critical for product success. A guide to CI/CD for ML, model monitoring, and data versioning."
+keywords: ["MLOps", "Data Pipelines", "CI/CD", "Model Monitoring", "AI Infrastructure", "Scalability"]
+---
+
+# MLOps & Data Pipelines: The Backbone of Scalable AI Products
+
+In traditional software, code is the primary artifact. If the code doesn't change, the software's behavior doesn't change.
+
+In AI, **Code + Data = Model**. Even if your code is frozen, if your input data changes, your product breaks.
+
+This is why **MLOps** (Machine Learning Operations) is not just "DevOps for AI"—it is a fundamental requirement for product reliability. As a PM, you don't need to configure Kubernetes clusters, but you must champion the infrastructure that keeps your product alive.
+
+## What is MLOps?
+
+MLOps is the set of practices that aims to deploy and maintain machine learning models in production reliably and efficiently. It shifts the focus from "Model-Centric" (tweaking hyperparameters in a notebook) to "Data-Centric" (engineering the pipeline that feeds the model).
+
+## Key Components of an MLOps Stack
+
+When reviewing your engineering team's architecture, look for these five pillars:
+
+### 1. Data Versioning (The "Time Machine")
+*   **The Problem:** A user complains about a bug. The engineer says, "It works on my machine." Why? Because they are training on today's data, but the model was trained on last month's data.
+*   **The Solution:** Tools like **DVC (Data Version Control)** or **Pachyderm**. They allow you to version control datasets just like Git version controls code.
+*   **PM Benefit:** Reproducibility. You can roll back the *data* state to debug issues.
+
+### 2. Feature Stores (The "Single Source of Truth")
+*   **The Problem:** "Training-Serving Skew." The Data Scientist calculates "average user spend" using a complex SQL query for training. The Backend Engineer re-implements it in Java for the app, but slightly differently. The model fails.
+*   **The Solution:** A Feature Store (e.g., **Feast**, **Tecton**). Features are defined once and served consistently to both training and production.
+*   **PM Benefit:** Velocity. Engineers stop rewriting data pipelines for every new model.
+
+### 3. Experiment Tracking (The "Lab Notebook")
+*   **The Problem:** "We had a model last week that performed better, but I overwrote the weights."
+*   **The Solution:** Tools like **MLflow** or **Weights & Biases**. Every run is logged with its parameters, metrics, and artifacts.
+*   **PM Benefit:** Visibility. You can see exactly which experiments are working and justify R&D spend.
+
+### 4. Model Registry (The "App Store")
+*   **The Problem:** Deploying the wrong model version to production.
+*   **The Solution:** A central repository where models are versioned, tagged (e.g., `staging`, `production`), and approved.
+*   **PM Benefit:** Governance. You can enforce sign-offs before a model goes live.
+
+### 5. Serving & Monitoring (The "Smoke Alarm")
+*   **The Problem:** The model is silent. It doesn't crash, it just starts giving bad answers because the world changed (Drift).
+*   **The Solution:** Monitoring tools (e.g., **Arize**, **Fiddler**) that track data drift and performance degradation.
+*   **PM Benefit:** Reliability. You get alerted *before* users churn.
+
+## The "Hidden Technical Debt" of ML
+
+Google published a famous paper titled *"Machine Learning: The High Interest Credit Card of Technical Debt."* It argues that in ML systems, the ML code is only a tiny fraction (maybe 5%) of the system. The rest is plumbing: data collection, verification, resource management, and monitoring.
+
+**Strategic Takeaway:** If your roadmap is 100% "New Features" and 0% "Pipeline Infrastructure," you are building a house of cards.
+
+## Building the Pipeline: CI/CT/CD
+
+A mature AI product team moves through three levels of automation:
+
+1.  **Continuous Integration (CI):** Automated tests for your data validation and model code.
+2.  **Continuous Training (CT):** The system automatically detects when data has drifted and triggers a re-training job without human intervention.
+3.  **Continuous Deployment (CD):** The newly trained model is automatically deployed to a "Canary" subset of users, evaluated, and then rolled out fully.
+
+## The PM's Role in MLOps
+
+You are not the architect, but you are the **investor**.
+
+*   **Prioritize Infrastructure:** Dedicate 20-30% of sprint capacity to MLOps tasks.
+*   **Define SLAs:** Set requirements for "Model Freshness" (e.g., "The recommendation model must update every hour"). This dictates the infrastructure needs.
+*   **Demand Observability:** Ask, "How will we know if this model starts failing silently?"
+
+## Conclusion
+
+MLOps is the difference between a cool demo and a scalable business. By investing in data pipelines and monitoring, you ensure that your AI product doesn't just launch—it survives and thrives in the real world.

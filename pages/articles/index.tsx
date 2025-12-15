@@ -21,7 +21,7 @@ export default function ArticlesIndex() {
         <div className="w-full max-w-4xl">
           <ArticleList />
         </div>
-        
+
         <div className="mt-8">
           <Link href="/" className={styles.landingBtn}>
             Back to Home

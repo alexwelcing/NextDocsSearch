@@ -1,0 +1,78 @@
+---
+title: "Leading Cross-Functional AI Teams: Bridging Research and Product"
+author: ["Alex Welcing"]
+date: "2025-12-23"
+description: "Best practices for managing diverse teams of data scientists, ML engineers, and product designers."
+keywords: ["AI Leadership", "Cross-Functional Teams", "Product Management", "Data Science", "Team Culture", "Agile for AI"]
+---
+
+# Leading Cross-Functional AI Teams: Bridging Research and Product
+
+Building AI products requires a diverse cast of characters: Data Scientists (DS) who think in probabilities, Software Engineers (SWE) who think in deterministic systems, and Product Managers (PM) who think in user value.
+
+Friction is inevitable. The DS wants two more weeks to improve accuracy by 1%. The SWE wants to freeze the API spec today. The PM wants to launch yesterday.
+
+Leading these teams isn't about forcing everyone to think the same way; it's about creating a translation layer and a shared culture of delivery.
+
+## The "Two Cultures" Problem
+
+To lead effectively, you must understand the fundamental motivations of your team members.
+
+*   **The Scientist (DS/Research):**
+    *   *Motivation:* Novelty, state-of-the-art performance, publication-worthy results.
+    *   *Fear:* Being wrong, releasing a "dumb" model.
+    *   *Process:* Exploratory, non-linear.
+*   **The Engineer (SWE/MLOps):**
+    *   *Motivation:* Stability, scalability, clean code, uptime.
+    *   *Fear:* Technical debt, breaking production, on-call paging.
+    *   *Process:* Structured, iterative (Agile/Scrum).
+
+**The Conflict:** Scientists view code as a means to an experiment. Engineers view code as the product itself.
+
+## Strategies for Alignment
+
+### 1. Shared Language & Definitions
+Ambiguity is the enemy. Define your terms early.
+*   **"Done":** Does "done" mean the model has 90% accuracy in a notebook? Or does it mean the model is wrapped in a container, has unit tests, and is deployed to a staging endpoint? (Hint: It's the latter).
+*   **"Baseline":** Always start with a heuristic or simple baseline (e.g., Logistic Regression). This gives the DS a target to beat and the SWE an interface to build against immediately.
+
+### 2. Dual-Track Agile for AI
+Standard Scrum often fails for AI because research doesn't fit into 2-week sprints.
+*   **Track 1: Discovery (Research):** Kanban-style. Focus on experimentation. Output = Validated Model Artifact or "Learning" (if it failed).
+*   **Track 2: Delivery (Engineering):** Scrum-style. Focus on integration, infrastructure, and UI. Output = Production Feature.
+*   **The Handshake:** The output of Track 1 becomes the input for Track 2.
+
+### 3. The "Embedded" Model
+Avoid the "Center of Excellence" silo where DS throws models over the wall to Engineering.
+*   **Squad Structure:** Embed Data Scientists *into* the product squad alongside Backend Engineers and Designers. They should attend the same stand-ups and care about the same user metrics.
+
+## Managing Expectations
+
+### Probabilistic Timelines
+Stakeholders love Gantt charts. AI hates them.
+*   **Strategy:** Instead of promising "The model will be ready on Nov 1st," promise "We will evaluate the feasibility of the model by Nov 1st."
+*   **Time-Boxing:** Give research a strict time box (e.g., 4 weeks). If the model isn't good enough by then, ship the baseline or pivot. Do not allow "infinite optimization."
+
+### The "PoC Trap"
+Many AI teams get stuck in "Proof of Concept" purgatory.
+*   **Rule:** No PoC without a path to production. Before starting a PoC, agree on the deployment architecture and the success metric threshold required to go live.
+
+## Hiring & Retention
+
+### What to look for in "Product Data Scientists"
+*   **Pragmatism:** Someone who prefers a simple model that works over a complex one that doesn't.
+*   **Communication:** Can they explain *why* the model made a prediction to a non-technical stakeholder?
+*   **Engineering Chops:** They don't need to be DevOps experts, but they should be comfortable with Git, writing clean functions, and basic APIs.
+
+### Creating Career Paths
+*   **Individual Contributors (IC):** Ensure there is a path for "Principal Data Scientist" that is equivalent to "Principal Engineer," so they don't feel forced into management to progress.
+
+## Rituals for Success
+
+1.  **The "Fail" Celebration:** If an experiment fails, celebrate the learning. "We learned that user behavior X does not predict outcome Y." This reduces the fear of failure and encourages bold experimentation.
+2.  **Demo Days:** Force the team to show *working software*, not just Jupyter notebooks. Even if it's a rough Streamlit app, seeing the model in action changes the conversation.
+3.  **Joint Post-Mortems:** When things break (and they will), have DS and SWE debug together. It builds empathy for each other's constraints.
+
+## Conclusion
+
+Leading cross-functional AI teams is an exercise in empathy and translation. Your job as a leader is to protect the researchers' need for exploration while enforcing the engineers' need for rigor, all while keeping the product's need for value front and center. When you get this balance right, you don't just build models; you build magic.

@@ -150,8 +150,8 @@ export default function HomePage() {
                 <Link href="#work" className="bg-white text-indigo-600 px-8 py-3 rounded-full font-bold hover:bg-opacity-90 transition text-center">
                   View Work
                 </Link>
-                <button 
-                  onClick={handleToggle3D} 
+                <button
+                  onClick={handleToggle3D}
                   className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-indigo-600 transition"
                 >
                   Explore 3D World
