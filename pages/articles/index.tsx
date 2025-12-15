@@ -29,7 +29,7 @@ export default function ArticlesIndex() {
         </div>
       </main>
 
-      <Footer showChangeScenery={false} />
+      <Footer showChangeScenery={false} onImageChange={() => {}} />
     </div>
   );
 }
