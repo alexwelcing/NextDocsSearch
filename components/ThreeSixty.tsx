@@ -8,12 +8,17 @@ import PhysicsGround from './PhysicsGround';
 import BackgroundSphere from './BackgroundSphere';
 import type { ArticleData } from './GlowingArticleDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
+import InteractiveTablet from './InteractiveTablet';
+import ClickingGame, { GameStats } from './ClickingGame';
+import GameHUD from './GameHUD';
+import GameLeaderboard from './GameLeaderboard';
 import PerformanceMonitor from './PerformanceMonitor';
+import CameraController from './CameraController';
 import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
-import { IdeaExperience } from './ideas';
+import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 
 // Re-export GameState type for compatibility
@@ -65,63 +70,6 @@ const VRButtonStyled = styled.button`
   }
 `
 
-const BackgroundControlsContainer = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid rgba(222, 126, 162, 0.3);
-  backdrop-filter: blur(5px);
-`
-
-const ToggleButton = styled.button<{ active: boolean }>`
-  background: ${props => props.active ? 'rgba(130, 20, 160, 0.7)' : 'rgba(51, 51, 51, 0.5)'};
-  border: 1px solid ${props => props.active ? 'rgba(222, 126, 162, 0.5)' : 'rgba(102, 102, 102, 0.3)'};
-  color: rgba(255, 255, 255, 0.9);
-  padding: 4px 8px;
-  font-size: 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${props => props.active ? 'rgba(148, 25, 71, 0.8)' : 'rgba(68, 68, 68, 0.6)'};
-  }
-`
-
-const SplatSelector = styled.select`
-  background: rgba(51, 51, 51, 0.5);
-  border: 1px solid rgba(222, 126, 162, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 4px 6px;
-  font-size: 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(68, 68, 68, 0.6);
-  }
-
-  option {
-    background: #333;
-    color: white;
-  }
-`
-
-const ControlLabel = styled.label`
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 9px;
-  margin-bottom: 2px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-`
 
 const ThreeSixtyContainer = styled.div`
   position: fixed;
@@ -144,6 +92,13 @@ interface SplatFile {
   filename: string;
   path: string;
   size: number;
+}
+
+interface SceneryOption {
+  id: string;
+  name: string;
+  type: 'image' | 'splat';
+  path: string;
 }
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
@@ -177,8 +132,22 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   });
   const [seasonalTheme, setSeasonalTheme] = useState<SeasonalTheme>(getSeasonalTheme(currentSeason));
 
-  // Game state - now managed by IdeaExperience, but we track for UI purposes
+  // Game state
   const [gameState, setGameState] = useState<GameState>('IDLE');
+  const [score, setScore] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [combo, setCombo] = useState(0);
+  const [countdown, setCountdown] = useState(3);
+  const [gameStats, setGameStats] = useState<GameStats>({
+    score: 0,
+    comboMax: 0,
+    accuracy: 0,
+    totalClicks: 0,
+    successfulClicks: 0,
+  });
+
+  // Journey tracking
+  const { completeQuest, updateStats, currentQuest } = useJourney();
 
   // Update season when query params change
   useEffect(() => {
@@ -215,6 +184,45 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
+
+  // Build scenery options for the tablet menu
+  const sceneryOptions = useMemo<SceneryOption[]>(() => {
+    const options: SceneryOption[] = [];
+
+    // Add current image as an option
+    options.push({
+      id: 'current-panorama',
+      name: 'Default Panorama',
+      type: 'image',
+      path: currentImage,
+    });
+
+    // Add available splats
+    availableSplats.forEach((splat, i) => {
+      options.push({
+        id: `splat-${i}`,
+        name: splat.filename.replace('.splat', ''),
+        type: 'splat',
+        path: splat.path,
+      });
+    });
+
+    return options;
+  }, [currentImage, availableSplats]);
+
+  // Handle scenery change from tablet
+  const handleSceneryChange = useCallback((scenery: SceneryOption) => {
+    if (scenery.type === 'splat') {
+      setUseGaussianSplat(true);
+      setSelectedSplat(scenery.path);
+    } else {
+      setUseGaussianSplat(false);
+      onChangeImage(scenery.path);
+    }
+  }, [onChangeImage]);
+
+  // Get current scenery path for tablet display
+  const currentSceneryPath = useGaussianSplat ? selectedSplat : currentImage;
 
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
@@ -287,13 +295,53 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setCinematicProgress(progress);
   }, []);
 
-  // Handle game state changes from IdeaExperience
-  const handleIdeaGameStateChange = useCallback((state: string) => {
-    if (state === 'playing') {
-      setGameState('PLAYING');
-    } else {
-      setGameState('IDLE');
+  // Game handlers - start game directly from terminal
+  const handleStartGame = useCallback(() => {
+    setGameState('COUNTDOWN');
+    setCountdown(3);
+    setScore(0);
+    setCombo(0);
+
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval);
+          setTimeout(() => {
+            setGameState('PLAYING');
+            setTimeRemaining(30);
+          }, 500);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
+    setScore(finalScore);
+    setGameStats(stats);
+    setGameState('GAME_OVER');
+
+    updateStats('highestGameScore', finalScore);
+
+    if (currentQuest?.id === 'play-game') {
+      completeQuest('play-game');
     }
+
+    if (finalScore >= 5000) {
+      completeQuest('leaderboard-rank');
+    }
+  }, [updateStats, currentQuest, completeQuest]);
+
+  const handlePlayAgain = useCallback(() => {
+    setGameState('IDLE');
+    setTimeout(() => {
+      handleStartGame();
+    }, 100);
+  }, [handleStartGame]);
+
+  const handleCloseLeaderboard = useCallback(() => {
+    setGameState('IDLE');
   }, []);
 
   return (
@@ -322,42 +370,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </VRButtonStyled>
       )}
 
-      {/* Background Controls - Only show if splats are detected AND not playing game */}
-      {hasSplats && gameState !== 'PLAYING' && (
-        <BackgroundControlsContainer>
-          <ControlLabel>BG</ControlLabel>
-          <div style={{ display: 'flex', gap: '3px' }}>
-            <ToggleButton
-              active={!useGaussianSplat}
-              onClick={() => setUseGaussianSplat(false)}
-            >
-              IMG
-            </ToggleButton>
-            <ToggleButton
-              active={useGaussianSplat}
-              onClick={() => setUseGaussianSplat(true)}
-            >
-              SPL
-            </ToggleButton>
-          </div>
-
-          {useGaussianSplat && availableSplats.length > 0 && (
-            <>
-              <ControlLabel>Select Splat</ControlLabel>
-              <SplatSelector
-                value={selectedSplat}
-                onChange={(e) => setSelectedSplat(e.target.value)}
-              >
-                {availableSplats.map((splat) => (
-                  <option key={splat.path} value={splat.path}>
-                    {splat.filename} ({(splat.size / 1024 / 1024).toFixed(1)}MB)
-                  </option>
-                ))}
-              </SplatSelector>
-            </>
-          )}
-        </BackgroundControlsContainer>
-      )}
+      {/* Background controls moved to tablet menu */}
 
       <Canvas
         shadows={false}
@@ -385,6 +398,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
+              {/* Camera controller for smooth game transitions */}
+              {cinematicComplete && <CameraController gameState={gameState} />}
+
               {/* OrbitControls - disabled during cinematic intro */}
               {cinematicComplete && (
                 <OrbitControls
@@ -400,14 +416,15 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* IdeaExperience - Unified spatial content and game system */}
-              {!loading && cinematicComplete && (
-                <IdeaExperience
-                  articles={articles}
-                  position={[0, 2, 0]}
-                  onGameStateChange={handleIdeaGameStateChange}
-                />
-              )}
+              {/* Sphere Hunter Game */}
+              <ClickingGame
+                gameState={gameState}
+                onGameStart={handleStartGame}
+                onGameEnd={handleGameEnd}
+                onScoreUpdate={setScore}
+                onComboUpdate={setCombo}
+                onTimeUpdate={setTimeRemaining}
+              />
 
               {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
               {useGaussianSplat && selectedSplat && !isMobile && gameState !== 'PLAYING' ? (
@@ -440,12 +457,64 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       {/* Performance Monitor - outside Canvas */}
       {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
 
+      {/* Pip-Boy style tablet - slides up from bottom */}
+      {!loading && (
+        <InteractiveTablet
+          isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
+          articles={articles}
+          onStartGame={handleStartGame}
+          onChangeScenery={handleSceneryChange}
+          availableScenery={sceneryOptions}
+          currentScenery={currentSceneryPath}
+        />
+      )}
+
       {/* Cinematic Intro Overlay */}
       {showCinematicIntro && !cinematicComplete && (
         <CinematicIntro
           onComplete={handleCinematicComplete}
           onSkip={handleCinematicSkip}
           onProgressUpdate={handleCinematicProgress}
+        />
+      )}
+
+      {/* Countdown overlay - minimal */}
+      {gameState === 'COUNTDOWN' && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(0, 0, 0, 0.7)',
+          zIndex: 1000,
+        }}>
+          <div style={{
+            fontSize: '120px',
+            fontWeight: 'bold',
+            color: '#0f0',
+            fontFamily: 'monospace',
+          }}>
+            {countdown || 'GO'}
+          </div>
+        </div>
+      )}
+
+      {gameState === 'PLAYING' && (
+        <GameHUD
+          score={score}
+          timeRemaining={timeRemaining}
+          combo={combo}
+          isPlaying={true}
+        />
+      )}
+
+      {gameState === 'GAME_OVER' && (
+        <GameLeaderboard
+          playerScore={score}
+          playerStats={gameStats}
+          onPlayAgain={handlePlayAgain}
+          onClose={handleCloseLeaderboard}
         />
       )}
     </ThreeSixtyContainer>

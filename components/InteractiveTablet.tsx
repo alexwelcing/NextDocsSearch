@@ -1,10 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Html, RoundedBox, Text } from '@react-three/drei';
-import { useBox } from '@react-three/cannon';
-import * as THREE from 'three';
-import { useSupabaseData } from './SupabaseDataContext';
-import QuizSystem from './QuizSystem';
+import React, { useState, useCallback, useEffect } from 'react';
 import TerminalInterface from './TerminalInterface';
 
 interface ArticleData {
@@ -15,13 +9,11 @@ interface ArticleData {
   length?: number;
 }
 
-interface LeaderboardEntry {
-  id: number;
-  player_name: string;
-  score: number;
-  combo_max: number;
-  accuracy: number;
-  created_at: string;
+interface SceneryOption {
+  id: string;
+  name: string;
+  type: 'image' | 'splat';
+  path: string;
 }
 
 interface InteractiveTabletProps {
@@ -29,294 +21,241 @@ interface InteractiveTabletProps {
   isGamePlaying?: boolean;
   articles?: ArticleData[];
   onStartGame?: () => void;
-  cinematicRevealProgress?: number; // 0-1, controls fade-in during cinematic
+  cinematicRevealProgress?: number;
+  onChangeScenery?: (scenery: SceneryOption) => void;
+  availableScenery?: SceneryOption[];
+  currentScenery?: string;
 }
 
 export default function InteractiveTablet({
-  initialPosition = [0, 2.5, 4], // Closer and slightly higher
   isGamePlaying = false,
   articles = [],
   onStartGame,
-  cinematicRevealProgress = 1,
+  onChangeScenery,
+  availableScenery = [],
+  currentScenery,
 }: InteractiveTabletProps) {
-  // State management
-  const [isPoweredOn, setIsPoweredOn] = useState(true);
+  const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const [pulseAnimation, setPulseAnimation] = useState(0);
-  const [revealScale, setRevealScale] = useState(cinematicRevealProgress);
-  const [floatOffset, setFloatOffset] = useState(0);
-  const [breatheScale, setBreatheScale] = useState(1);
-  const [screenGlow, setScreenGlow] = useState(0.5);
 
-  // Data from context (for preview display)
-  const { chatData } = useSupabaseData();
+  // Toggle tablet with keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        e.preventDefault();
+        if (!isGamePlaying) {
+          setIsRaised(prev => !prev);
+        }
+      }
+      if (e.key === 'Escape' && isRaised) {
+        setIsRaised(false);
+        setTerminalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isGamePlaying, isRaised]);
 
-  // Use provided articles or fallback to default
-  const displayArticles = articles.length > 0 ? articles : [
-    { title: "Getting Started", date: "2024-10-01", author: ["Team"] },
-    { title: "Advanced Features", date: "2024-10-15", author: ["Team"] },
-    { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
-  ];
-
-  // Three.js hooks
-  const { camera } = useThree();
-  const groupRef = useRef<THREE.Group>(null);
-
-  // BIGGER tablet dimensions for better presence
-  const tabletWidth = 6;
-  const tabletHeight = 4.5;
-  const tabletDepth = 0.25;
-
-  // Physics body for the tablet (mass: 0 = no gravity)
-  const [ref, api] = useBox(() => ({
-    mass: 0,
-    position: initialPosition,
-    args: [tabletWidth, tabletHeight, tabletDepth],
-    material: {
-      friction: 0.5,
-      restitution: 0.3
+  const handleRaise = useCallback(() => {
+    if (!isGamePlaying) {
+      setIsRaised(true);
     }
-  }));
+  }, [isGamePlaying]);
 
-  // Handle tablet click to open terminal
-  const handleTabletClick = useCallback((e: any) => {
-    e.stopPropagation();
-    if (!isPoweredOn) return;
+  const handleLower = useCallback(() => {
+    setIsRaised(false);
+    setTerminalOpen(false);
+  }, []);
+
+  const handleOpenTerminal = useCallback(() => {
     setTerminalOpen(true);
-  }, [isPoweredOn]);
-
-  // Handle billboard effect and animations
-  useFrame((state) => {
-    if (groupRef.current && ref.current) {
-      const time = state.clock.elapsedTime;
-
-      // Make tablet always face the camera (billboard effect)
-      const cameraWorldPos = new THREE.Vector3();
-      camera.getWorldPosition(cameraWorldPos);
-      groupRef.current.lookAt(cameraWorldPos);
-
-      // Sync physics body rotation with visual rotation
-      ref.current.rotation.copy(groupRef.current.rotation);
-
-      // Gentle floating animation (up and down)
-      const floatAmount = Math.sin(time * 0.5) * 0.15; // Slower, more graceful
-      setFloatOffset(floatAmount);
-
-      // Breathing animation (subtle scale pulse)
-      const breathe = 1 + Math.sin(time * 0.8) * 0.015; // Very subtle
-      setBreatheScale(breathe);
-
-      // Screen glow pulses gently
-      const glowPulse = 0.6 + Math.sin(time * 0.4) * 0.2;
-      setScreenGlow(glowPulse);
-
-      // Keep position stable (with float offset)
-      const currentPos = initialPosition;
-      api.position.set(currentPos[0], currentPos[1] + floatAmount, currentPos[2]);
-      api.velocity.set(0, 0, 0);
-      api.angularVelocity.set(0, 0, 0);
-
-      // Pulse animation for hint text
-      setPulseAnimation(Math.sin(time * 2) * 0.5 + 0.5);
-
-      // Cinematic reveal animation - smooth scale transition
-      const targetScale = cinematicRevealProgress;
-      setRevealScale(prev => THREE.MathUtils.lerp(prev, targetScale, 0.1));
-
-      // Apply scale to group (includes breathe)
-      const easeScale = easeOutElastic(revealScale) * breatheScale;
-      groupRef.current.scale.set(easeScale, easeScale, easeScale);
-    }
-  });
-
-  // Toggle power
-  const togglePower = useCallback((e: any) => {
-    e.stopPropagation();
-    setIsPoweredOn(prev => !prev);
-    if (terminalOpen) {
-      setTerminalOpen(false); // Close terminal if powered off
-    }
-  }, [terminalOpen]);
+  }, []);
 
   // Hide during gameplay
-  if (isGamePlaying) {
-    return null;
-  }
-
-  // Screen colors based on state
-  const screenEmissive = isPoweredOn ? new THREE.Color(0x4488ff) : new THREE.Color(0x000000);
-  const screenColor = isPoweredOn ? new THREE.Color(0x88ccff) : new THREE.Color(0x222222);
+  if (isGamePlaying) return null;
 
   return (
     <>
-      <group ref={groupRef}>
-        {/* Main tablet body (physics body) - Sleek dark frame */}
-        <RoundedBox
-          ref={ref as any}
-          args={[tabletWidth, tabletHeight, tabletDepth]}
-          radius={0.15}
-          smoothness={8}
-          onClick={handleTabletClick}
+      {/* Pip-Boy raise button - bottom center */}
+      {!isRaised && (
+        <div
+          onClick={handleRaise}
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 100,
+            cursor: 'pointer',
+            padding: '12px 24px',
+            background: 'rgba(0, 0, 0, 0.8)',
+            border: '1px solid #333',
+            borderRadius: '4px',
+            color: '#0f0',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            transition: 'all 0.2s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#0f0';
+            e.currentTarget.style.background = 'rgba(0, 20, 0, 0.9)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#333';
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
+          }}
         >
-          <meshStandardMaterial
-            color="#0a0a0f"
-            metalness={0.9}
-            roughness={0.15}
-            envMapIntensity={1.5}
-          />
-        </RoundedBox>
+          <span style={{ fontSize: '16px' }}>▲</span>
+          <span>TERMINAL</span>
+          <span style={{ color: '#555', fontSize: '10px' }}>[TAB]</span>
+        </div>
+      )}
 
-        {/* Screen - front face with dynamic glow */}
-        <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
-          <planeGeometry args={[tabletWidth - 0.5, tabletHeight - 0.5]} />
-          <meshStandardMaterial
-            color={screenColor}
-            emissive={screenEmissive}
-            emissiveIntensity={isPoweredOn ? screenGlow * 0.8 : 0}
-            metalness={0.05}
-            roughness={0.85}
-            transparent
-            opacity={0.98}
-          />
-        </mesh>
-
-        {/* Rim light glow around screen */}
-        {isPoweredOn && (
-          <mesh position={[0, 0, tabletDepth / 2 + 0.005]}>
-            <planeGeometry args={[tabletWidth - 0.35, tabletHeight - 0.35]} />
-            <meshBasicMaterial
-              color="#4488ff"
-              transparent
-              opacity={screenGlow * 0.15}
-            />
-          </mesh>
-        )}
-
-        {/* Screen light emission - stronger and more dynamic */}
-        {isPoweredOn && (
-          <>
-            <pointLight
-              position={[0, 0, 1.5]}
-              color="#4488ff"
-              intensity={screenGlow * 3}
-              distance={12}
-              decay={2}
-            />
-            {/* Rim lights for depth */}
-            <pointLight
-              position={[tabletWidth / 2, 0, 0.5]}
-              color="#00ffaa"
-              intensity={screenGlow * 0.8}
-              distance={4}
-            />
-            <pointLight
-              position={[-tabletWidth / 2, 0, 0.5]}
-              color="#00ffaa"
-              intensity={screenGlow * 0.8}
-              distance={4}
-            />
-          </>
-        )}
-
-        {/* Power button - bottom left */}
-        <mesh
-          position={[-tabletWidth / 2 + 0.3, -tabletHeight / 2 + 0.2, tabletDepth / 2 + 0.02]}
-          onClick={togglePower}
+      {/* Pip-Boy tablet - slides up from bottom */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: '50%',
+          transform: `translateX(-50%) translateY(${isRaised ? '0' : '100%'})`,
+          zIndex: 500,
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          width: 'min(95vw, 500px)',
+        }}
+      >
+        {/* Tablet frame */}
+        <div
+          style={{
+            background: '#0a0a0a',
+            border: '2px solid #222',
+            borderBottom: 'none',
+            borderRadius: '12px 12px 0 0',
+            overflow: 'hidden',
+            boxShadow: '0 -10px 40px rgba(0, 255, 0, 0.1)',
+          }}
         >
-          <circleGeometry args={[0.12, 16]} />
-          <meshStandardMaterial
-            color={isPoweredOn ? "#00ff88" : "#ff0000"}
-            emissive={isPoweredOn ? "#00ff88" : "#880000"}
-            emissiveIntensity={0.5}
-          />
-        </mesh>
+          {/* Handle bar */}
+          <div
+            onClick={handleLower}
+            style={{
+              padding: '8px',
+              background: '#111',
+              borderBottom: '1px solid #222',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <div style={{
+              width: '40px',
+              height: '4px',
+              background: '#333',
+              borderRadius: '2px',
+            }} />
+            <span style={{
+              color: '#444',
+              fontSize: '10px',
+              fontFamily: 'monospace',
+            }}>
+              [ESC] to close
+            </span>
+          </div>
 
-        {/* Preview content on screen when powered on */}
-        {isPoweredOn && (
-          <>
-            {/* Main icon */}
-            <Text
-              position={[0, 0.3, tabletDepth / 2 + 0.03]}
-              fontSize={0.5}
-              color="#00ff88"
-              anchorX="center"
-              anchorY="middle"
-            >
-              ▶
-            </Text>
-
-            {/* Title */}
-            <Text
-              position={[0, -0.2, tabletDepth / 2 + 0.03]}
-              fontSize={0.18}
-              color="#4488ff"
-              anchorX="center"
-              anchorY="middle"
-              fontWeight="bold"
-            >
+          {/* Screen content */}
+          <div
+            onClick={handleOpenTerminal}
+            style={{
+              padding: '24px',
+              cursor: 'pointer',
+              minHeight: '200px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '16px',
+            }}
+          >
+            <div style={{
+              color: '#0f0',
+              fontSize: '36px',
+              fontFamily: 'monospace',
+            }}>
+              {'>_'}
+            </div>
+            <div style={{
+              color: '#0f0',
+              fontSize: '16px',
+              fontFamily: 'monospace',
+              fontWeight: 'bold',
+              letterSpacing: '3px',
+            }}>
               TERMINAL
-            </Text>
+            </div>
+            <div style={{
+              color: '#555',
+              fontSize: '11px',
+              fontFamily: 'monospace',
+            }}>
+              click to open
+            </div>
 
-            {/* Hint text - pulsing */}
-            <Text
-              position={[0, -0.8, tabletDepth / 2 + 0.03]}
-              fontSize={0.12}
-              color={new THREE.Color(0x00ff88).multiplyScalar(0.5 + pulseAnimation * 0.5)}
-              anchorX="center"
-              anchorY="middle"
-            >
-              Click to Open
-            </Text>
+            {/* Quick actions */}
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              marginTop: '16px',
+            }}>
+              {[
+                { label: 'CHAT', action: handleOpenTerminal },
+                { label: 'GAME', action: () => { onStartGame?.(); handleLower(); } },
+                { label: 'SCENE', action: handleOpenTerminal },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  onClick={(e) => { e.stopPropagation(); item.action(); }}
+                  style={{
+                    padding: '8px 16px',
+                    background: 'transparent',
+                    border: '1px solid #333',
+                    borderRadius: '4px',
+                    color: '#666',
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#0f0';
+                    e.currentTarget.style.color = '#0f0';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '#333';
+                    e.currentTarget.style.color = '#666';
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Feature indicators */}
-            <Text
-              position={[-1.2, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
-              anchorX="center"
-              anchorY="middle"
-            >
-              💬 Chat
-            </Text>
-            <Text
-              position={[0, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
-              anchorX="center"
-              anchorY="middle"
-            >
-              📄 Articles
-            </Text>
-            <Text
-              position={[1.2, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
-              anchorX="center"
-              anchorY="middle"
-            >
-              🎮 Game
-            </Text>
-          </>
-        )}
-      </group>
-
-      {/* Terminal Interface Overlay */}
+      {/* Full terminal interface */}
       <TerminalInterface
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
-        articles={displayArticles}
-        onStartGame={onStartGame}
+        articles={articles}
+        onStartGame={() => { onStartGame?.(); handleLower(); setTerminalOpen(false); }}
+        onChangeScenery={onChangeScenery}
+        availableScenery={availableScenery}
+        currentScenery={currentScenery}
       />
     </>
   );
-}
-
-// Easing function for elastic "pop" effect on reveal
-function easeOutElastic(x: number): number {
-  const c4 = (2 * Math.PI) / 3;
-  return x === 0
-    ? 0
-    : x === 1
-    ? 1
-    : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
 }

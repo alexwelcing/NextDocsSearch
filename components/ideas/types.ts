@@ -138,9 +138,9 @@ export const ORB_COLORS = {
  */
 export const DEFAULT_HUB_CONFIG: IdeaHubConfig = {
   rings: [
-    { radius: 3, orbCount: 4, elevation: 0, rotationSpeed: 0.1 },
-    { radius: 5, orbCount: 6, elevation: 0.5, rotationSpeed: -0.05 },
-    { radius: 7, orbCount: 8, elevation: -0.5, rotationSpeed: 0.03 },
+    { radius: 4, orbCount: 3, elevation: 0.5, rotationSpeed: 0.08 },
+    { radius: 7, orbCount: 5, elevation: 1, rotationSpeed: -0.04 },
+    { radius: 10, orbCount: 6, elevation: 0, rotationSpeed: 0.02 },
   ],
   game: {
     duration: 30,

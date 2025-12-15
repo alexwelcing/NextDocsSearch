@@ -1,14 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
-import QuizSystem from './QuizSystem';
-import CreationStudio from './CreationStudio';
-import {
-  type R3FTopic,
-  R3F_KNOWLEDGE_INDEX,
-  searchTopics,
-  getTopicsByCategory,
-} from '@/lib/knowledge/r3f-taxonomy';
 
 interface ArticleData {
   title: string;
@@ -27,54 +19,42 @@ interface LeaderboardEntry {
   created_at: string;
 }
 
+interface SceneryOption {
+  id: string;
+  name: string;
+  type: 'image' | 'splat';
+  path: string;
+  thumbnail?: string;
+}
+
 interface TerminalInterfaceProps {
   isOpen: boolean;
   onClose: () => void;
   articles?: ArticleData[];
   onStartGame?: () => void;
+  onChangeScenery?: (scenery: SceneryOption) => void;
+  availableScenery?: SceneryOption[];
+  currentScenery?: string;
 }
 
-type ViewMode = 'chat' | 'blog' | 'quiz' | 'create';
-type PageMode = 1 | 2;
+type ViewMode = 'home' | 'chat' | 'game' | 'scenery' | 'about';
 
 export default function TerminalInterface({
   isOpen,
   onClose,
   articles = [],
-  onStartGame
+  onStartGame,
+  onChangeScenery,
+  availableScenery = [],
+  currentScenery,
 }: TerminalInterfaceProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('chat');
+  const [viewMode, setViewMode] = useState<ViewMode>('home');
   const [chatInput, setChatInput] = useState('');
-  const [currentArticleIndex, setCurrentArticleIndex] = useState(0);
-  const [currentPage, setCurrentPage] = useState<PageMode>(1);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
-  const [lockedTabHover, setLockedTabHover] = useState<string | null>(null);
-
-  // R3F Knowledge state
-  const [knowledgeSearch, setKnowledgeSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedTopic, setSelectedTopic] = useState<R3FTopic | null>(null);
 
   const { chatData, setChatData } = useSupabaseData();
-  const { isFeatureUnlocked, completeQuest, updateStats, currentQuest } = useJourney();
-
-  const displayArticles = useMemo(() => articles.length > 0 ? articles : [
-    { title: "Getting Started", date: "2024-10-01", author: ["Team"] },
-    { title: "Advanced Features", date: "2024-10-15", author: ["Team"] },
-    { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
-  ], [articles]);
-
-  // Filtered R3F knowledge topics
-  const filteredTopics = useMemo(() => {
-    let topics = R3F_KNOWLEDGE_INDEX;
-    if (knowledgeSearch) {
-      topics = searchTopics(knowledgeSearch);
-    } else if (selectedCategory) {
-      topics = getTopicsByCategory(selectedCategory);
-    }
-    return topics;
-  }, [knowledgeSearch, selectedCategory]);
+  const { updateStats, currentQuest, completeQuest } = useJourney();
 
   // Handle ESC key to close
   useEffect(() => {
@@ -87,13 +67,12 @@ export default function TerminalInterface({
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
-  // Fetch leaderboard when switching to page 2
+  // Fetch leaderboard when viewing game tab
   const fetchLeaderboard = useCallback(async () => {
     setLoadingLeaderboard(true);
     try {
       const response = await fetch('/api/game/get-leaderboard');
       if (!response.ok) {
-        console.error('Leaderboard API error:', response.status);
         setLeaderboard([]);
         return;
       }
@@ -113,17 +92,15 @@ export default function TerminalInterface({
   }, []);
 
   useEffect(() => {
-    if (currentPage === 2 && isOpen) {
+    if (viewMode === 'game' && isOpen) {
       fetchLeaderboard();
     }
-  }, [currentPage, isOpen, fetchLeaderboard]);
+  }, [viewMode, isOpen, fetchLeaderboard]);
 
   const handleChatSubmit = useCallback(async () => {
     if (chatInput.trim()) {
       setChatData({ question: chatInput, response: chatData.response });
       setChatInput('');
-
-      // Track quest completion and stats
       updateStats('questionsAsked', 1);
       if (currentQuest?.id === 'first-question') {
         completeQuest('first-question');
@@ -131,42 +108,22 @@ export default function TerminalInterface({
     }
   }, [chatInput, setChatData, chatData.response, updateStats, currentQuest, completeQuest]);
 
-  // Track when user views an article
-  useEffect(() => {
-    if (viewMode === 'blog' && displayArticles[currentArticleIndex]) {
-      const articleTitle = displayArticles[currentArticleIndex].title;
-
-      // Track article read
-      updateStats('articlesRead', [articleTitle]);
-
-      // Complete quest if active
-      if (currentQuest?.id === 'read-article') {
-        // Give user 2 seconds to actually read before completing
-        const timer = setTimeout(() => {
-          completeQuest('read-article');
-        }, 2000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [viewMode, currentArticleIndex, displayArticles, currentQuest, completeQuest, updateStats]);
-
-  const navigateArticle = useCallback((direction: 'prev' | 'next') => {
-    setCurrentArticleIndex(prev => {
-      if (direction === 'prev') {
-        return prev > 0 ? prev - 1 : displayArticles.length - 1;
-      }
-      return (prev + 1) % displayArticles.length;
-    });
-  }, [displayArticles.length]);
-
   const handlePlayGame = useCallback(() => {
     if (onStartGame) {
       onStartGame();
-      onClose(); // Close terminal when starting game
+      onClose();
     }
   }, [onStartGame, onClose]);
 
   if (!isOpen) return null;
+
+  const menuItems = [
+    { id: 'home', icon: '/', label: 'HOME' },
+    { id: 'chat', icon: '>', label: 'ASK AI' },
+    { id: 'game', icon: '#', label: 'GAME' },
+    { id: 'scenery', icon: '*', label: 'SCENE' },
+    { id: 'about', icon: '?', label: 'ABOUT' },
+  ] as const;
 
   return (
     <div
@@ -180,636 +137,500 @@ export default function TerminalInterface({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(0, 0, 0, 0.95)',
-        backdropFilter: 'blur(10px)',
-        animation: 'fadeIn 0.3s ease-out',
+        background: 'rgba(0, 0, 0, 0.9)',
+        backdropFilter: 'blur(8px)',
       }}
       onClick={onClose}
     >
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideIn {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-      `}</style>
-
-      {/* Terminal Container */}
+      {/* Terminal Window */}
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: 'min(90vw, 1200px)',
-          height: 'min(85vh, 900px)',
-          background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)',
-          border: '2px solid #4488ff',
-          borderRadius: '24px',
-          boxShadow: '0 0 60px rgba(68, 136, 255, 0.3), 0 0 120px rgba(68, 136, 255, 0.1)',
+          width: 'min(95vw, 900px)',
+          height: 'min(90vh, 600px)',
+          background: '#0d0d0d',
+          border: '1px solid #333',
+          borderRadius: '8px',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          animation: 'slideIn 0.4s ease-out',
-          fontFamily: "'Courier New', monospace",
+          fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace",
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
         }}
       >
-        {/* Header Bar */}
+        {/* Title Bar */}
         <div style={{
-          padding: '20px 30px',
-          background: 'rgba(68, 136, 255, 0.1)',
-          borderBottom: '1px solid rgba(68, 136, 255, 0.3)',
+          height: '32px',
+          background: '#1a1a1a',
+          borderBottom: '1px solid #333',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          padding: '0 12px',
+          gap: '8px',
         }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px',
-          }}>
-            <div style={{
-              fontSize: '24px',
-              fontWeight: 'bold',
-              color: '#4488ff',
-              textShadow: '0 0 10px rgba(68, 136, 255, 0.5)',
-            }}>
-              ▶ TERMINAL
-            </div>
-
-            {/* Page Navigation */}
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => setCurrentPage(1)}
-                style={{
-                  background: currentPage === 1 ? 'rgba(68, 136, 255, 0.3)' : 'transparent',
-                  border: currentPage === 1 ? '2px solid #4488ff' : '2px solid rgba(68, 136, 255, 0.2)',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                  color: currentPage === 1 ? '#4488ff' : '#888',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                  fontFamily: 'monospace',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                APPS
-              </button>
-              <button
-                onClick={() => isFeatureUnlocked('leaderboard') && setCurrentPage(2)}
-                disabled={!isFeatureUnlocked('leaderboard')}
-                style={{
-                  background: currentPage === 2 ? 'rgba(255, 215, 0, 0.2)' : 'transparent',
-                  border: currentPage === 2 ? '2px solid #FFD700' : '2px solid rgba(255, 215, 0, 0.2)',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                  color: !isFeatureUnlocked('leaderboard') ? '#444' : (currentPage === 2 ? '#FFD700' : '#888'),
-                  cursor: !isFeatureUnlocked('leaderboard') ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                  fontFamily: 'monospace',
-                  transition: 'all 0.2s ease',
-                  opacity: !isFeatureUnlocked('leaderboard') ? 0.4 : 1,
-                }}
-              >
-                {!isFeatureUnlocked('leaderboard') && '🔒 '}🏆 LEADERBOARD
-              </button>
-            </div>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <button
+              onClick={onClose}
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: '#ff5f56',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            />
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }} />
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27ca40' }} />
           </div>
-
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            style={{
-              background: 'rgba(255, 68, 68, 0.2)',
-              border: '2px solid rgba(255, 68, 68, 0.5)',
-              borderRadius: '8px',
-              padding: '8px 20px',
-              color: '#ff4444',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              fontFamily: 'monospace',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 68, 68, 0.3)';
-              e.currentTarget.style.borderColor = '#ff4444';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 68, 68, 0.2)';
-              e.currentTarget.style.borderColor = 'rgba(255, 68, 68, 0.5)';
-            }}
-          >
-            ✕ CLOSE [ESC]
-          </button>
+          <div style={{
+            flex: 1,
+            textAlign: 'center',
+            color: '#666',
+            fontSize: '12px',
+            letterSpacing: '1px',
+          }}>
+            terminal -- alex@portfolio
+          </div>
+          <div style={{ width: '50px' }} />
         </div>
 
-        {/* Content Area */}
-        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-          {currentPage === 1 ? (
-            <>
-              {/* View Mode Tabs */}
-              <div style={{
+        {/* Main Content Area */}
+        <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+          {/* Sidebar */}
+          <div style={{
+            width: '140px',
+            background: '#111',
+            borderRight: '1px solid #222',
+            padding: '16px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+          }}>
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setViewMode(item.id as ViewMode)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '10px 16px',
+                  background: viewMode === item.id ? '#1f1f1f' : 'transparent',
+                  border: 'none',
+                  borderLeft: viewMode === item.id ? '2px solid #0f0' : '2px solid transparent',
+                  color: viewMode === item.id ? '#0f0' : '#666',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <span style={{ color: viewMode === item.id ? '#0f0' : '#444', fontWeight: 'bold' }}>
+                  {item.icon}
+                </span>
+                {item.label}
+              </button>
+            ))}
+
+            {/* Close Button at Bottom */}
+            <div style={{ flex: 1 }} />
+            <button
+              onClick={onClose}
+              style={{
                 display: 'flex',
-                gap: '0',
-                padding: '20px 30px 0',
-                position: 'relative',
-              }}>
-                {(['chat', 'blog', 'quiz', 'create'] as ViewMode[]).map((mode) => {
-                  const featureMap = { chat: 'chat', blog: 'articles', quiz: 'quiz', create: 'creation-studio' };
-                  const isLocked = !isFeatureUnlocked(featureMap[mode]);
+                alignItems: 'center',
+                gap: '10px',
+                padding: '10px 16px',
+                background: 'transparent',
+                border: 'none',
+                borderLeft: '2px solid transparent',
+                color: '#f55',
+                fontSize: '12px',
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>x</span>
+              EXIT
+            </button>
+          </div>
 
-                  return (
-                    <div key={mode} style={{ flex: 1, position: 'relative' }}>
-                      <button
-                        onClick={() => !isLocked && setViewMode(mode)}
-                        onMouseEnter={(e) => {
-                          if (isLocked) {
-                            setLockedTabHover(mode);
-                          } else if (viewMode !== mode) {
-                            e.currentTarget.style.color = '#aaa';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (isLocked) {
-                            setLockedTabHover(null);
-                          } else if (viewMode !== mode) {
-                            e.currentTarget.style.color = '#888';
-                          }
-                        }}
-                        style={{
-                          width: '100%',
-                          background: viewMode === mode
-                            ? 'linear-gradient(180deg, rgba(68, 136, 255, 0.3), rgba(68, 136, 255, 0.1))'
-                            : 'transparent',
-                          border: 'none',
-                          borderBottom: viewMode === mode ? '3px solid #00ff88' : '3px solid transparent',
-                          padding: '15px 20px',
-                          color: isLocked ? '#444' : (viewMode === mode ? '#00ff88' : '#888'),
-                          cursor: isLocked ? 'not-allowed' : 'pointer',
-                          fontSize: '16px',
-                          fontWeight: 'bold',
-                          fontFamily: 'monospace',
-                          textTransform: 'uppercase',
-                          transition: 'all 0.2s ease',
-                          opacity: isLocked ? 0.4 : 1,
-                          position: 'relative',
-                        }}
-                      >
-                        {isLocked && '🔒 '}
-                        {mode === 'chat' ? '💬 AI CHAT' : mode === 'blog' ? '📄 ARTICLES' : mode === 'quiz' ? '❓ QUIZ' : '✨ CREATE'}
-                      </button>
+          {/* Content Area */}
+          <div style={{
+            flex: 1,
+            padding: '20px 24px',
+            overflowY: 'auto',
+            color: '#ccc',
+            fontSize: '14px',
+            lineHeight: '1.6',
+          }}>
+            {/* HOME View */}
+            {viewMode === 'home' && (
+              <div>
+                <div style={{ color: '#0f0', marginBottom: '20px' }}>
+                  $ welcome --user=visitor
+                </div>
+                <div style={{ color: '#888', marginBottom: '24px' }}>
+                  Interactive portfolio terminal. Select an option from the menu.
+                </div>
 
-                      {/* Locked Tooltip */}
-                      {isLocked && lockedTabHover === mode && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '100%',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          marginTop: '8px',
-                          background: 'rgba(0, 0, 0, 0.9)',
-                          border: '1px solid #ff4444',
-                          borderRadius: '8px',
-                          padding: '12px 16px',
-                          zIndex: 1000,
-                          whiteSpace: 'nowrap',
-                          fontSize: '13px',
-                          color: '#ff8888',
-                          fontFamily: 'monospace',
-                          pointerEvents: 'none',
-                        }}>
-                          🔒 Complete current quest to unlock
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Content Display */}
-              <div style={{
-                flex: 1,
-                padding: '30px',
-                overflowY: 'auto',
-              }}>
-                {viewMode === 'chat' && (
-                  <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    {/* Chat Response */}
-                    <div style={{
-                      flex: 1,
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      border: '1px solid rgba(68, 136, 255, 0.2)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      overflowY: 'auto',
-                    }}>
-                      {chatData.response && chatData.response !== 'Waiting for your question...' ? (
-                        <div>
-                          <div style={{
-                            color: '#00ff88',
-                            fontSize: '16px',
-                            fontWeight: 'bold',
-                            marginBottom: '16px',
-                            textShadow: '0 0 10px rgba(0, 255, 136, 0.3)',
-                          }}>
-                            ❯ {chatData.question}
-                          </div>
-                          <div style={{
-                            color: '#ffffff',
-                            fontSize: '15px',
-                            lineHeight: '1.6',
-                            whiteSpace: 'pre-wrap',
-                          }}>
-                            {chatData.response}
-                          </div>
-                        </div>
-                      ) : (
-                        <div style={{
-                          color: '#666',
-                          fontSize: '16px',
-                          textAlign: 'center',
-                          padding: '40px',
-                        }}>
-                          <div style={{ fontSize: '48px', marginBottom: '20px' }}>💬</div>
-                          <div>Ask a question to get started...</div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Chat Input */}
-                    <div style={{
-                      display: 'flex',
-                      gap: '12px',
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      padding: '16px',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(68, 136, 255, 0.2)',
-                    }}>
-                      <input
-                        type="text"
-                        value={chatInput}
-                        onChange={(e) => setChatInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
-                        placeholder="Type your question..."
-                        autoFocus
-                        style={{
-                          flex: 1,
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          border: '2px solid rgba(68, 136, 255, 0.3)',
-                          borderRadius: '8px',
-                          padding: '14px 18px',
-                          color: '#ffffff',
-                          fontSize: '15px',
-                          fontFamily: 'monospace',
-                          outline: 'none',
-                        }}
-                        onFocus={(e) => {
-                          e.currentTarget.style.borderColor = '#4488ff';
-                          e.currentTarget.style.boxShadow = '0 0 10px rgba(68, 136, 255, 0.3)';
-                        }}
-                        onBlur={(e) => {
-                          e.currentTarget.style.borderColor = 'rgba(68, 136, 255, 0.3)';
-                          e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      />
-                      <button
-                        onClick={handleChatSubmit}
-                        style={{
-                          background: 'linear-gradient(135deg, #4488ff, #00ff88)',
-                          border: 'none',
-                          borderRadius: '8px',
-                          padding: '14px 32px',
-                          color: '#ffffff',
-                          fontWeight: 'bold',
-                          fontSize: '15px',
-                          cursor: 'pointer',
-                          fontFamily: 'monospace',
-                          textTransform: 'uppercase',
-                          boxShadow: '0 4px 15px rgba(68, 136, 255, 0.3)',
-                          transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(68, 136, 255, 0.5)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(68, 136, 255, 0.3)';
-                        }}
-                      >
-                        Send ➤
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {viewMode === 'blog' && (
-                  <div style={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '30px',
-                  }}>
-                    {/* Article Card */}
-                    <div style={{
-                      width: '100%',
-                      maxWidth: '700px',
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      border: '2px solid rgba(68, 136, 255, 0.3)',
-                      borderRadius: '16px',
-                      padding: '40px',
-                      textAlign: 'center',
-                    }}>
-                      <h2 style={{
-                        color: '#00ff88',
-                        fontSize: '28px',
-                        marginBottom: '20px',
-                        textShadow: '0 0 15px rgba(0, 255, 136, 0.3)',
-                      }}>
-                        {displayArticles[currentArticleIndex]?.title || 'No Articles'}
-                      </h2>
-                      <div style={{
-                        color: '#888',
-                        fontSize: '14px',
-                        marginBottom: '8px',
-                      }}>
-                        📅 {displayArticles[currentArticleIndex]?.date || ''}
-                      </div>
-                      <div style={{
-                        color: '#4488ff',
-                        fontSize: '14px',
-                      }}>
-                        ✍️ by {displayArticles[currentArticleIndex]?.author?.join(', ') || 'Unknown'}
-                      </div>
-                    </div>
-
-                    {/* Navigation */}
-                    <div style={{
-                      display: 'flex',
-                      gap: '16px',
-                      alignItems: 'center',
-                    }}>
-                      <button
-                        onClick={() => navigateArticle('prev')}
-                        style={{
-                          background: 'rgba(68, 136, 255, 0.2)',
-                          border: '2px solid rgba(68, 136, 255, 0.5)',
-                          borderRadius: '10px',
-                          padding: '12px 24px',
-                          color: '#4488ff',
-                          cursor: 'pointer',
-                          fontSize: '15px',
-                          fontWeight: 'bold',
-                          fontFamily: 'monospace',
-                          transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(68, 136, 255, 0.3)';
-                          e.currentTarget.style.transform = 'translateX(-3px)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(68, 136, 255, 0.2)';
-                          e.currentTarget.style.transform = 'translateX(0)';
-                        }}
-                      >
-                        ← PREV
-                      </button>
-
-                      <div style={{
-                        color: '#666',
-                        fontSize: '14px',
-                      }}>
-                        {currentArticleIndex + 1} / {displayArticles.length}
-                      </div>
-
-                      <button
-                        onClick={() => navigateArticle('next')}
-                        style={{
-                          background: 'rgba(68, 136, 255, 0.2)',
-                          border: '2px solid rgba(68, 136, 255, 0.5)',
-                          borderRadius: '10px',
-                          padding: '12px 24px',
-                          color: '#4488ff',
-                          cursor: 'pointer',
-                          fontSize: '15px',
-                          fontWeight: 'bold',
-                          fontFamily: 'monospace',
-                          transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(68, 136, 255, 0.3)';
-                          e.currentTarget.style.transform = 'translateX(3px)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(68, 136, 255, 0.2)';
-                          e.currentTarget.style.transform = 'translateX(0)';
-                        }}
-                      >
-                        NEXT →
-                      </button>
-                    </div>
-
+                <div style={{ display: 'grid', gap: '12px' }}>
+                  {[
+                    { cmd: 'ask-ai', desc: 'Chat with AI about Alex', action: () => setViewMode('chat') },
+                    { cmd: 'play-game', desc: 'Sphere Hunt - click fast!', action: () => setViewMode('game') },
+                    { cmd: 'change-scene', desc: 'Switch background environment', action: () => setViewMode('scenery') },
+                    { cmd: 'about', desc: 'Learn about Alex Welcing', action: () => setViewMode('about') },
+                  ].map((item) => (
                     <button
-                      onClick={() => window.open(`/articles/${currentArticleIndex}`, '_blank')}
-                      style={{
-                        background: 'linear-gradient(135deg, #4488ff, #00ff88)',
-                        border: 'none',
-                        borderRadius: '12px',
-                        padding: '16px 48px',
-                        color: '#ffffff',
-                        fontWeight: 'bold',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        fontFamily: 'monospace',
-                        textTransform: 'uppercase',
-                        boxShadow: '0 6px 20px rgba(68, 136, 255, 0.4)',
-                        transition: 'all 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-3px)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(68, 136, 255, 0.6)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(68, 136, 255, 0.4)';
-                      }}
-                    >
-                      📖 Read Full Article
-                    </button>
-                  </div>
-                )}
-
-                {viewMode === 'quiz' && (
-                  <QuizSystem
-                    articleFilename={displayArticles[currentArticleIndex]?.filename || ''}
-                    articleTitle={displayArticles[currentArticleIndex]?.title || ''}
-                    onClose={() => setViewMode('blog')}
-                  />
-                )}
-
-                {viewMode === 'create' && (
-                  <CreationStudio onClose={() => setViewMode('chat')} />
-                )}
-              </div>
-            </>
-          ) : (
-            // Page 2: Leaderboard
-            <div style={{
-              flex: 1,
-              padding: '30px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-            }}>
-              <div style={{
-                textAlign: 'center',
-                fontSize: '32px',
-                fontWeight: 'bold',
-                color: '#FFD700',
-                textShadow: '0 0 20px rgba(255, 215, 0, 0.5)',
-                marginBottom: '10px',
-              }}>
-                🏆 HIGH SCORES 🏆
-              </div>
-
-              {/* Leaderboard List */}
-              <div style={{
-                flex: 1,
-                overflowY: 'auto',
-                background: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '16px',
-                padding: '20px',
-                border: '1px solid rgba(255, 215, 0, 0.2)',
-              }}>
-                {loadingLeaderboard ? (
-                  <div style={{
-                    color: '#FFD700',
-                    textAlign: 'center',
-                    padding: '60px',
-                    fontSize: '18px',
-                  }}>
-                    Loading leaderboard...
-                  </div>
-                ) : leaderboard.length === 0 ? (
-                  <div style={{
-                    color: '#888',
-                    textAlign: 'center',
-                    padding: '60px',
-                    fontSize: '18px',
-                  }}>
-                    <div style={{ fontSize: '64px', marginBottom: '20px' }}>🎮</div>
-                    <div>Be the first to set a high score!</div>
-                  </div>
-                ) : (
-                  leaderboard.map((entry, index) => (
-                    <div
-                      key={entry.id}
+                      key={item.cmd}
+                      onClick={item.action}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '20px',
-                        padding: '20px',
-                        margin: '12px 0',
-                        background: index === 0 ? 'linear-gradient(90deg, rgba(255, 215, 0, 0.25), transparent)' :
-                                   index === 1 ? 'linear-gradient(90deg, rgba(192, 192, 192, 0.25), transparent)' :
-                                   index === 2 ? 'linear-gradient(90deg, rgba(205, 127, 50, 0.25), transparent)' :
-                                   'rgba(255, 255, 255, 0.03)',
-                        borderRadius: '12px',
-                        border: index < 3 ? '2px solid rgba(255, 215, 0, 0.3)' : '1px solid rgba(255, 255, 255, 0.05)',
-                        transition: 'all 0.2s ease',
+                        gap: '16px',
+                        padding: '12px 16px',
+                        background: '#1a1a1a',
+                        border: '1px solid #333',
+                        borderRadius: '4px',
+                        color: '#ccc',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.15s ease',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateX(5px)';
-                        e.currentTarget.style.background = index === 0 ? 'linear-gradient(90deg, rgba(255, 215, 0, 0.35), transparent)' :
-                                                           index === 1 ? 'linear-gradient(90deg, rgba(192, 192, 192, 0.35), transparent)' :
-                                                           index === 2 ? 'linear-gradient(90deg, rgba(205, 127, 50, 0.35), transparent)' :
-                                                           'rgba(255, 255, 255, 0.07)';
+                        e.currentTarget.style.borderColor = '#0f0';
+                        e.currentTarget.style.background = '#1f1f1f';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateX(0)';
-                        e.currentTarget.style.background = index === 0 ? 'linear-gradient(90deg, rgba(255, 215, 0, 0.25), transparent)' :
-                                                           index === 1 ? 'linear-gradient(90deg, rgba(192, 192, 192, 0.25), transparent)' :
-                                                           index === 2 ? 'linear-gradient(90deg, rgba(205, 127, 50, 0.25), transparent)' :
-                                                           'rgba(255, 255, 255, 0.03)';
+                        e.currentTarget.style.borderColor = '#333';
+                        e.currentTarget.style.background = '#1a1a1a';
                       }}
                     >
-                      <div style={{
-                        fontSize: '28px',
-                        fontWeight: 'bold',
-                        width: '60px',
-                        textAlign: 'center',
-                        color: index === 0 ? '#FFD700' :
-                               index === 1 ? '#C0C0C0' :
-                               index === 2 ? '#CD7F32' :
-                               '#888',
-                      }}>
-                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                      <span style={{ color: '#0f0', fontFamily: 'monospace' }}>$</span>
+                      <span style={{ color: '#fff', flex: 1 }}>{item.cmd}</span>
+                      <span style={{ color: '#666', fontSize: '12px' }}>{item.desc}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div style={{ marginTop: '24px', color: '#444', fontSize: '12px' }}>
+                  Press ESC or click outside to close
+                </div>
+              </div>
+            )}
+
+            {/* CHAT View */}
+            {viewMode === 'chat' && (
+              <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ color: '#0f0', marginBottom: '16px' }}>
+                  $ ai-chat --mode=interactive
+                </div>
+
+                {/* Chat History */}
+                <div style={{
+                  flex: 1,
+                  background: '#0a0a0a',
+                  border: '1px solid #222',
+                  borderRadius: '4px',
+                  padding: '16px',
+                  marginBottom: '16px',
+                  overflowY: 'auto',
+                }}>
+                  {chatData.response && chatData.response !== 'Waiting for your question...' ? (
+                    <>
+                      <div style={{ color: '#0f0', marginBottom: '12px' }}>
+                        <span style={{ color: '#666' }}>you@terminal:</span> {chatData.question}
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{
-                          fontSize: '18px',
-                          fontWeight: 'bold',
-                          color: '#ffffff',
-                          marginBottom: '6px',
-                        }}>
-                          {entry.player_name}
-                        </div>
-                        <div style={{
-                          fontSize: '13px',
-                          color: '#888',
-                        }}>
-                          🔥 Combo: {entry.combo_max}x • 🎯 Accuracy: {entry.accuracy.toFixed(1)}%
-                        </div>
+                      <div style={{ color: '#fff', whiteSpace: 'pre-wrap' }}>
+                        <span style={{ color: '#666' }}>ai@terminal:</span> {chatData.response}
                       </div>
-                      <div style={{
-                        fontSize: '24px',
-                        fontWeight: 'bold',
-                        color: '#FFD700',
-                        textShadow: '0 0 10px rgba(255, 215, 0, 0.5)',
-                      }}>
-                        {entry.score.toLocaleString()}
-                      </div>
+                    </>
+                  ) : (
+                    <div style={{ color: '#444' }}>
+                      Ask me anything about Alex - his work, skills, projects, or experience.
                     </div>
-                  ))
+                  )}
+                </div>
+
+                {/* Chat Input */}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ color: '#0f0', padding: '10px 0' }}>$</span>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
+                    placeholder="Type your question..."
+                    autoFocus
+                    style={{
+                      flex: 1,
+                      background: '#1a1a1a',
+                      border: '1px solid #333',
+                      borderRadius: '4px',
+                      padding: '10px 14px',
+                      color: '#fff',
+                      fontSize: '14px',
+                      fontFamily: 'inherit',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    onClick={handleChatSubmit}
+                    style={{
+                      background: '#0f0',
+                      border: 'none',
+                      borderRadius: '4px',
+                      padding: '10px 20px',
+                      color: '#000',
+                      fontWeight: 'bold',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    SEND
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* GAME View */}
+            {viewMode === 'game' && (
+              <div>
+                <div style={{ color: '#0f0', marginBottom: '16px' }}>
+                  $ sphere-hunt --difficulty=normal
+                </div>
+
+                {/* Play Button */}
+                <button
+                  onClick={handlePlayGame}
+                  style={{
+                    width: '100%',
+                    padding: '20px',
+                    background: 'linear-gradient(135deg, #0a0 0%, #070 100%)',
+                    border: '2px solid #0f0',
+                    borderRadius: '6px',
+                    color: '#fff',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                    marginBottom: '20px',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 255, 0, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  START GAME
+                </button>
+
+                {/* Instructions */}
+                <div style={{
+                  background: '#1a1a1a',
+                  border: '1px solid #333',
+                  borderRadius: '4px',
+                  padding: '16px',
+                  marginBottom: '20px',
+                }}>
+                  <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>HOW TO PLAY:</div>
+                  <ul style={{ margin: 0, paddingLeft: '20px', color: '#666', fontSize: '13px' }}>
+                    <li>Click spheres before they disappear</li>
+                    <li>Build combos for bonus points</li>
+                    <li>Golden spheres = 3x points</li>
+                    <li>30 seconds to get the highest score</li>
+                  </ul>
+                </div>
+
+                {/* Leaderboard */}
+                <div style={{
+                  background: '#1a1a1a',
+                  border: '1px solid #333',
+                  borderRadius: '4px',
+                  padding: '16px',
+                }}>
+                  <div style={{ color: '#ff0', fontSize: '14px', marginBottom: '12px', fontWeight: 'bold' }}>
+                    LEADERBOARD
+                  </div>
+                  {loadingLeaderboard ? (
+                    <div style={{ color: '#444' }}>Loading...</div>
+                  ) : leaderboard.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {leaderboard.slice(0, 5).map((entry, i) => (
+                        <div key={entry.id} style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          padding: '8px 12px',
+                          background: i === 0 ? 'rgba(255, 255, 0, 0.1)' : '#111',
+                          borderRadius: '4px',
+                          color: i === 0 ? '#ff0' : '#888',
+                        }}>
+                          <span>{i + 1}. {entry.player_name}</span>
+                          <span style={{ fontWeight: 'bold' }}>{entry.score.toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ color: '#444' }}>No scores yet. Be the first!</div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* SCENERY View */}
+            {viewMode === 'scenery' && (
+              <div>
+                <div style={{ color: '#0f0', marginBottom: '16px' }}>
+                  $ set-environment --list
+                </div>
+
+                {availableScenery.length > 0 ? (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '12px' }}>
+                    {availableScenery.map((scene) => (
+                      <button
+                        key={scene.id}
+                        onClick={() => onChangeScenery?.(scene)}
+                        style={{
+                          padding: '16px 12px',
+                          background: currentScenery === scene.path ? '#1a2a1a' : '#1a1a1a',
+                          border: currentScenery === scene.path ? '2px solid #0f0' : '1px solid #333',
+                          borderRadius: '4px',
+                          color: currentScenery === scene.path ? '#0f0' : '#888',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          transition: 'all 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (currentScenery !== scene.path) {
+                            e.currentTarget.style.borderColor = '#555';
+                            e.currentTarget.style.color = '#ccc';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (currentScenery !== scene.path) {
+                            e.currentTarget.style.borderColor = '#333';
+                            e.currentTarget.style.color = '#888';
+                          }
+                        }}
+                      >
+                        <div style={{ fontSize: '20px', marginBottom: '6px' }}>
+                          {scene.type === 'splat' ? '[3D]' : '[2D]'}
+                        </div>
+                        <div style={{ fontSize: '12px', fontFamily: 'inherit' }}>{scene.name}</div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{
+                    padding: '32px',
+                    background: '#1a1a1a',
+                    border: '1px solid #333',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    color: '#444',
+                  }}>
+                    <div style={{ marginBottom: '8px' }}>No additional environments available</div>
+                    <div style={{ fontSize: '12px' }}>Add .splat files to enable 3D backgrounds</div>
+                  </div>
                 )}
               </div>
+            )}
 
-              {/* Play Game Button */}
-              <button
-                onClick={handlePlayGame}
-                style={{
-                  background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-                  border: '4px solid white',
-                  borderRadius: '16px',
-                  padding: '24px 64px',
-                  color: '#000000',
-                  fontWeight: 'bold',
-                  fontSize: '20px',
-                  cursor: 'pointer',
-                  textTransform: 'uppercase',
-                  letterSpacing: '2px',
-                  fontFamily: 'monospace',
-                  boxShadow: '0 8px 30px rgba(255, 215, 0, 0.6)',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05) translateY(-3px)';
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 215, 0, 0.8)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1) translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 30px rgba(255, 215, 0, 0.6)';
-                }}
-              >
-                🎮 PLAY GAME
-              </button>
-            </div>
-          )}
+            {/* ABOUT View */}
+            {viewMode === 'about' && (
+              <div>
+                <div style={{ color: '#0f0', marginBottom: '16px' }}>
+                  $ cat about.txt
+                </div>
+
+                <div style={{
+                  background: '#1a1a1a',
+                  border: '1px solid #333',
+                  borderRadius: '4px',
+                  padding: '20px',
+                }}>
+                  <div style={{ color: '#fff', fontSize: '18px', marginBottom: '16px' }}>
+                    Alex Welcing
+                  </div>
+                  <div style={{ color: '#888', marginBottom: '16px', lineHeight: '1.8' }}>
+                    Product leader and developer with expertise in AI, spatial computing,
+                    and modern web technologies. Currently exploring the intersection of
+                    immersive experiences and practical applications.
+                  </div>
+
+                  <div style={{ color: '#666', fontSize: '13px', marginBottom: '12px' }}>
+                    -- EXPERTISE --
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '8px',
+                    marginBottom: '20px',
+                  }}>
+                    {['React', 'Three.js', 'TypeScript', 'AI/ML', 'WebXR', 'Product Strategy'].map((skill) => (
+                      <span key={skill} style={{
+                        padding: '4px 10px',
+                        background: '#111',
+                        border: '1px solid #333',
+                        borderRadius: '3px',
+                        color: '#0f0',
+                        fontSize: '12px',
+                      }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setViewMode('chat')}
+                    style={{
+                      padding: '10px 20px',
+                      background: 'transparent',
+                      border: '1px solid #0f0',
+                      borderRadius: '4px',
+                      color: '#0f0',
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                      fontSize: '13px',
+                    }}
+                  >
+                    Ask AI for more info
+                  </button>
+                </div>
+
+                {/* Articles Section */}
+                {articles.length > 0 && (
+                  <div style={{ marginTop: '20px' }}>
+                    <div style={{ color: '#666', fontSize: '13px', marginBottom: '12px' }}>
+                      -- RECENT ARTICLES --
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {articles.slice(0, 3).map((article, i) => (
+                        <div key={i} style={{
+                          padding: '12px 16px',
+                          background: '#1a1a1a',
+                          border: '1px solid #333',
+                          borderRadius: '4px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}>
+                          <span style={{ color: '#ccc' }}>{article.title}</span>
+                          <span style={{ color: '#444', fontSize: '12px' }}>{article.date}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
