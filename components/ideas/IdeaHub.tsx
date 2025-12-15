@@ -337,56 +337,42 @@ export default function IdeaHub({
           />
         ))}
 
-      {/* UI Overlays */}
-      <Html center distanceFactor={10} style={{ pointerEvents: 'none' }}>
-        {/* Idle prompt */}
-        {gameState === 'idle' && (
-          <div
-            style={{
-              color: '#4488ff',
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              textAlign: 'center',
-              textShadow: '0 0 10px #4488ff',
-              animation: 'pulse 2s infinite',
-            }}
-          >
-            Click to Awaken Ideas
-          </div>
-        )}
-
-        {/* Countdown */}
-        {gameState === 'starting' && (
+      {/* UI Overlays - positioned above the hub */}
+      {/* Countdown - prominent center display */}
+      {gameState === 'starting' && (
+        <Html position={[0, 3, 0]} center distanceFactor={8} style={{ pointerEvents: 'none' }}>
           <div
             style={{
               color: '#ffaa44',
-              fontSize: '48px',
+              fontSize: '64px',
               fontWeight: 'bold',
               fontFamily: 'monospace',
-              textShadow: '0 0 20px #ffaa44',
+              textShadow: '0 0 30px #ffaa44',
             }}
           >
             {countdown > 0 ? countdown : 'GO!'}
           </div>
-        )}
+        </Html>
+      )}
 
-        {/* Game HUD */}
-        {gameState === 'playing' && (
+      {/* Game HUD - top of screen during play */}
+      {gameState === 'playing' && (
+        <Html position={[0, 4, 0]} center distanceFactor={6} style={{ pointerEvents: 'none' }}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '8px',
+              gap: '4px',
               color: 'white',
               fontFamily: 'monospace',
             }}
           >
-            <div style={{ fontSize: '24px', color: '#ffaa44' }}>{score}</div>
+            <div style={{ fontSize: '36px', color: '#ffaa44', fontWeight: 'bold' }}>{score}</div>
             {combo >= 3 && (
               <div
                 style={{
-                  fontSize: '14px',
+                  fontSize: '16px',
                   color: combo >= 5 ? '#ffd700' : '#aa88ff',
                   animation: 'pulse 0.5s infinite',
                 }}
@@ -395,53 +381,56 @@ export default function IdeaHub({
               </div>
             )}
           </div>
-        )}
-      </Html>
+        </Html>
+      )}
 
-      {/* Results overlay */}
+      {/* Results overlay - positioned to the side */}
       {gameState === 'results' && (
-        <Html center distanceFactor={8}>
+        <Html position={[4, 2, 0]} center distanceFactor={6}>
           <div
             style={{
-              background: 'rgba(0, 0, 0, 0.9)',
+              background: 'rgba(0, 0, 0, 0.95)',
               border: '2px solid #ffaa44',
-              borderRadius: '12px',
-              padding: '24px',
+              borderRadius: '16px',
+              padding: '28px 36px',
               color: 'white',
               fontFamily: 'monospace',
               textAlign: 'center',
-              minWidth: '200px',
+              minWidth: '220px',
+              boxShadow: '0 0 40px rgba(255, 170, 68, 0.3)',
             }}
           >
-            <div style={{ fontSize: '18px', color: '#ffaa44', marginBottom: '16px' }}>
+            <div style={{ fontSize: '16px', color: '#ffaa44', marginBottom: '12px', letterSpacing: '2px' }}>
               AWAKENING COMPLETE
             </div>
-            <div style={{ fontSize: '32px', color: '#ffd700', marginBottom: '16px' }}>
+            <div style={{ fontSize: '48px', color: '#ffd700', marginBottom: '16px', fontWeight: 'bold' }}>
               {score}
             </div>
-            <div style={{ fontSize: '12px', opacity: 0.8, marginBottom: '8px' }}>
+            <div style={{ fontSize: '13px', opacity: 0.8, marginBottom: '6px' }}>
               Ideas Awakened: {totalClicks}
             </div>
-            <div style={{ fontSize: '12px', opacity: 0.8, marginBottom: '8px' }}>
+            <div style={{ fontSize: '13px', opacity: 0.8, marginBottom: '6px' }}>
               Max Insight: {maxCombo}x
             </div>
             {rareCount > 0 && (
-              <div style={{ fontSize: '12px', color: '#ffd700', marginBottom: '8px' }}>
-                Rare Discoveries: {rareCount}
+              <div style={{ fontSize: '13px', color: '#ffd700', marginBottom: '6px' }}>
+                ★ Rare Discoveries: {rareCount}
               </div>
             )}
             <button
               onClick={handleCloseResults}
               style={{
-                marginTop: '16px',
-                padding: '8px 16px',
+                marginTop: '20px',
+                padding: '12px 28px',
                 background: 'linear-gradient(135deg, #4488ff, #44ff88)',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 color: 'white',
                 fontFamily: 'monospace',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '15px',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(68, 136, 255, 0.4)',
               }}
             >
               Continue

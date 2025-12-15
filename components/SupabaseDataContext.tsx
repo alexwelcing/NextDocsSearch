@@ -43,28 +43,48 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
 
   const fetchResponse = async (question: string) => {
     try {
+      // Set loading state
+      setChatData(prev => ({ ...prev, response: 'Thinking...' }));
+
       const response = await fetch('/api/vector-search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ prompt: question }), // API expects 'prompt' not 'question'
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Error: ${response.status}`);
       }
 
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Invalid content-type. Expected application/json');
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
       }
 
-      const data = await response.json();
-      setChatData({ question, response: data.response });
+      const decoder = new TextDecoder();
+      let fullResponse = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        fullResponse += chunk;
+
+        // Update response as it streams in
+        setChatData({ question, response: fullResponse });
+      }
+
+      if (!fullResponse) {
+        setChatData({ question, response: 'No response received.' });
+      }
     } catch (error) {
       console.error('Failed to fetch response:', error);
-      setChatData({ question, response: 'Hmmmm' }); // Set an error response
+      setChatData({ question, response: 'Sorry, I could not get a response. Please try again.' });
     }
   };
 
