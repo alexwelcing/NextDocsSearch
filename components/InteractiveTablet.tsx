@@ -1,10 +1,8 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Html, RoundedBox, Text } from '@react-three/drei';
+import { RoundedBox, Text } from '@react-three/drei';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
-import { useSupabaseData } from './SupabaseDataContext';
-import QuizSystem from './QuizSystem';
 import TerminalInterface from './TerminalInterface';
 
 interface ArticleData {
@@ -15,13 +13,12 @@ interface ArticleData {
   length?: number;
 }
 
-interface LeaderboardEntry {
-  id: number;
-  player_name: string;
-  score: number;
-  combo_max: number;
-  accuracy: number;
-  created_at: string;
+interface SceneryOption {
+  id: string;
+  name: string;
+  type: 'image' | 'splat';
+  path: string;
+  thumbnail?: string;
 }
 
 interface InteractiveTabletProps {
@@ -29,272 +26,202 @@ interface InteractiveTabletProps {
   isGamePlaying?: boolean;
   articles?: ArticleData[];
   onStartGame?: () => void;
-  cinematicRevealProgress?: number; // 0-1, controls fade-in during cinematic
+  cinematicRevealProgress?: number;
+  // Scenery props
+  onChangeScenery?: (scenery: SceneryOption) => void;
+  availableScenery?: SceneryOption[];
+  currentScenery?: string;
 }
 
 export default function InteractiveTablet({
-  initialPosition = [0, 2.5, 4], // Closer and slightly higher
+  initialPosition = [0, 2.5, 4],
   isGamePlaying = false,
   articles = [],
   onStartGame,
   cinematicRevealProgress = 1,
+  onChangeScenery,
+  availableScenery = [],
+  currentScenery,
 }: InteractiveTabletProps) {
-  // State management
   const [isPoweredOn, setIsPoweredOn] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const [pulseAnimation, setPulseAnimation] = useState(0);
-  const [revealScale, setRevealScale] = useState(cinematicRevealProgress);
-  const [floatOffset, setFloatOffset] = useState(0);
-  const [breatheScale, setBreatheScale] = useState(1);
-  const [screenGlow, setScreenGlow] = useState(0.5);
+  const [hovered, setHovered] = useState(false);
+  const [pulsePhase, setPulsePhase] = useState(0);
 
-  // Data from context (for preview display)
-  const { chatData } = useSupabaseData();
-
-  // Use provided articles or fallback to default
-  const displayArticles = articles.length > 0 ? articles : [
-    { title: "Getting Started", date: "2024-10-01", author: ["Team"] },
-    { title: "Advanced Features", date: "2024-10-15", author: ["Team"] },
-    { title: "Best Practices", date: "2024-10-20", author: ["Team"] },
-  ];
-
-  // Three.js hooks
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
 
-  // BIGGER tablet dimensions for better presence
-  const tabletWidth = 6;
-  const tabletHeight = 4.5;
-  const tabletDepth = 0.25;
+  // Tablet dimensions
+  const tabletWidth = 4;
+  const tabletHeight = 3;
+  const tabletDepth = 0.15;
 
-  // Physics body for the tablet (mass: 0 = no gravity)
+  // Physics body
   const [ref, api] = useBox(() => ({
     mass: 0,
     position: initialPosition,
     args: [tabletWidth, tabletHeight, tabletDepth],
-    material: {
-      friction: 0.5,
-      restitution: 0.3
-    }
   }));
 
-  // Handle tablet click to open terminal
-  const handleTabletClick = useCallback((e: any) => {
+  const handleTabletClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isPoweredOn) return;
-    setTerminalOpen(true);
+    if (isPoweredOn) {
+      setTerminalOpen(true);
+    }
   }, [isPoweredOn]);
 
-  // Handle billboard effect and animations
   useFrame((state) => {
     if (groupRef.current && ref.current) {
       const time = state.clock.elapsedTime;
 
-      // Make tablet always face the camera (billboard effect)
-      const cameraWorldPos = new THREE.Vector3();
-      camera.getWorldPosition(cameraWorldPos);
-      groupRef.current.lookAt(cameraWorldPos);
-
-      // Sync physics body rotation with visual rotation
+      // Billboard - face camera
+      const cameraPos = new THREE.Vector3();
+      camera.getWorldPosition(cameraPos);
+      groupRef.current.lookAt(cameraPos);
       ref.current.rotation.copy(groupRef.current.rotation);
 
-      // Gentle floating animation (up and down)
-      const floatAmount = Math.sin(time * 0.5) * 0.15; // Slower, more graceful
-      setFloatOffset(floatAmount);
-
-      // Breathing animation (subtle scale pulse)
-      const breathe = 1 + Math.sin(time * 0.8) * 0.015; // Very subtle
-      setBreatheScale(breathe);
-
-      // Screen glow pulses gently
-      const glowPulse = 0.6 + Math.sin(time * 0.4) * 0.2;
-      setScreenGlow(glowPulse);
-
-      // Keep position stable (with float offset)
-      const currentPos = initialPosition;
-      api.position.set(currentPos[0], currentPos[1] + floatAmount, currentPos[2]);
+      // Subtle float
+      const floatY = Math.sin(time * 0.4) * 0.1;
+      api.position.set(initialPosition[0], initialPosition[1] + floatY, initialPosition[2]);
       api.velocity.set(0, 0, 0);
       api.angularVelocity.set(0, 0, 0);
 
-      // Pulse animation for hint text
-      setPulseAnimation(Math.sin(time * 2) * 0.5 + 0.5);
+      // Pulse for hint
+      setPulsePhase(Math.sin(time * 1.5) * 0.5 + 0.5);
 
-      // Cinematic reveal animation - smooth scale transition
-      const targetScale = cinematicRevealProgress;
-      setRevealScale(prev => THREE.MathUtils.lerp(prev, targetScale, 0.1));
-
-      // Apply scale to group (includes breathe)
-      const easeScale = easeOutElastic(revealScale) * breatheScale;
-      groupRef.current.scale.set(easeScale, easeScale, easeScale);
+      // Reveal animation
+      const scale = easeOutCubic(Math.min(cinematicRevealProgress, 1));
+      groupRef.current.scale.setScalar(scale);
     }
   });
 
-  // Toggle power
-  const togglePower = useCallback((e: any) => {
+  const togglePower = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsPoweredOn(prev => !prev);
-    if (terminalOpen) {
-      setTerminalOpen(false); // Close terminal if powered off
-    }
+    setIsPoweredOn((prev) => {
+      if (prev && terminalOpen) setTerminalOpen(false);
+      return !prev;
+    });
   }, [terminalOpen]);
 
   // Hide during gameplay
-  if (isGamePlaying) {
-    return null;
-  }
+  if (isGamePlaying) return null;
 
-  // Screen colors based on state
-  const screenEmissive = isPoweredOn ? new THREE.Color(0x4488ff) : new THREE.Color(0x000000);
-  const screenColor = isPoweredOn ? new THREE.Color(0x88ccff) : new THREE.Color(0x222222);
+  const screenOn = isPoweredOn;
+  const glowIntensity = hovered ? 0.8 : 0.5;
 
   return (
     <>
       <group ref={groupRef}>
-        {/* Main tablet body (physics body) - Sleek dark frame */}
+        {/* Tablet Body */}
         <RoundedBox
-          ref={ref as any}
+          ref={ref as unknown as React.RefObject<THREE.Mesh>}
           args={[tabletWidth, tabletHeight, tabletDepth]}
-          radius={0.15}
-          smoothness={8}
+          radius={0.1}
+          smoothness={4}
           onClick={handleTabletClick}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)}
         >
           <meshStandardMaterial
-            color="#0a0a0f"
-            metalness={0.9}
-            roughness={0.15}
-            envMapIntensity={1.5}
+            color="#111"
+            metalness={0.8}
+            roughness={0.2}
           />
         </RoundedBox>
 
-        {/* Screen - front face with dynamic glow */}
-        <mesh position={[0, 0, tabletDepth / 2 + 0.01]}>
-          <planeGeometry args={[tabletWidth - 0.5, tabletHeight - 0.5]} />
+        {/* Screen */}
+        <mesh position={[0, 0, tabletDepth / 2 + 0.005]}>
+          <planeGeometry args={[tabletWidth - 0.3, tabletHeight - 0.3]} />
           <meshStandardMaterial
-            color={screenColor}
-            emissive={screenEmissive}
-            emissiveIntensity={isPoweredOn ? screenGlow * 0.8 : 0}
-            metalness={0.05}
-            roughness={0.85}
-            transparent
-            opacity={0.98}
+            color={screenOn ? '#1a1a1a' : '#0a0a0a'}
+            emissive={screenOn ? '#0f0' : '#000'}
+            emissiveIntensity={screenOn ? glowIntensity * 0.15 : 0}
           />
         </mesh>
 
-        {/* Rim light glow around screen */}
-        {isPoweredOn && (
-          <mesh position={[0, 0, tabletDepth / 2 + 0.005]}>
-            <planeGeometry args={[tabletWidth - 0.35, tabletHeight - 0.35]} />
-            <meshBasicMaterial
-              color="#4488ff"
-              transparent
-              opacity={screenGlow * 0.15}
-            />
-          </mesh>
+        {/* Screen glow effect */}
+        {screenOn && (
+          <pointLight
+            position={[0, 0, 1]}
+            color="#0f0"
+            intensity={glowIntensity * 1.5}
+            distance={6}
+            decay={2}
+          />
         )}
 
-        {/* Screen light emission - stronger and more dynamic */}
-        {isPoweredOn && (
-          <>
-            <pointLight
-              position={[0, 0, 1.5]}
-              color="#4488ff"
-              intensity={screenGlow * 3}
-              distance={12}
-              decay={2}
-            />
-            {/* Rim lights for depth */}
-            <pointLight
-              position={[tabletWidth / 2, 0, 0.5]}
-              color="#00ffaa"
-              intensity={screenGlow * 0.8}
-              distance={4}
-            />
-            <pointLight
-              position={[-tabletWidth / 2, 0, 0.5]}
-              color="#00ffaa"
-              intensity={screenGlow * 0.8}
-              distance={4}
-            />
-          </>
-        )}
-
-        {/* Power button - bottom left */}
+        {/* Power indicator */}
         <mesh
-          position={[-tabletWidth / 2 + 0.3, -tabletHeight / 2 + 0.2, tabletDepth / 2 + 0.02]}
+          position={[-tabletWidth / 2 + 0.2, -tabletHeight / 2 + 0.15, tabletDepth / 2 + 0.01]}
           onClick={togglePower}
         >
-          <circleGeometry args={[0.12, 16]} />
-          <meshStandardMaterial
-            color={isPoweredOn ? "#00ff88" : "#ff0000"}
-            emissive={isPoweredOn ? "#00ff88" : "#880000"}
-            emissiveIntensity={0.5}
-          />
+          <circleGeometry args={[0.06, 12]} />
+          <meshBasicMaterial color={isPoweredOn ? '#0f0' : '#600'} />
         </mesh>
 
-        {/* Preview content on screen when powered on */}
-        {isPoweredOn && (
+        {/* Screen content */}
+        {screenOn && (
           <>
-            {/* Main icon */}
+            {/* Terminal prompt icon */}
             <Text
-              position={[0, 0.3, tabletDepth / 2 + 0.03]}
-              fontSize={0.5}
-              color="#00ff88"
+              position={[0, 0.3, tabletDepth / 2 + 0.02]}
+              fontSize={0.35}
+              color="#0f0"
               anchorX="center"
               anchorY="middle"
             >
-              ▶
+              {'>_'}
             </Text>
 
             {/* Title */}
             <Text
-              position={[0, -0.2, tabletDepth / 2 + 0.03]}
-              fontSize={0.18}
-              color="#4488ff"
+              position={[0, -0.2, tabletDepth / 2 + 0.02]}
+              fontSize={0.14}
+              color="#0f0"
               anchorX="center"
               anchorY="middle"
-              fontWeight="bold"
             >
               TERMINAL
             </Text>
 
-            {/* Hint text - pulsing */}
+            {/* Hint - pulsing */}
             <Text
-              position={[0, -0.8, tabletDepth / 2 + 0.03]}
-              fontSize={0.12}
-              color={new THREE.Color(0x00ff88).multiplyScalar(0.5 + pulseAnimation * 0.5)}
+              position={[0, -0.6, tabletDepth / 2 + 0.02]}
+              fontSize={0.09}
+              color={new THREE.Color(0x00ff00).multiplyScalar(0.4 + pulsePhase * 0.4)}
               anchorX="center"
               anchorY="middle"
             >
-              Click to Open
+              {hovered ? '[ CLICK TO OPEN ]' : 'click to open'}
             </Text>
 
-            {/* Feature indicators */}
+            {/* Menu items preview */}
             <Text
-              position={[-1.2, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
+              position={[-0.8, 0.8, tabletDepth / 2 + 0.02]}
+              fontSize={0.06}
+              color="#666"
               anchorX="center"
               anchorY="middle"
             >
-              💬 Chat
+              chat
             </Text>
             <Text
-              position={[0, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
+              position={[0, 0.8, tabletDepth / 2 + 0.02]}
+              fontSize={0.06}
+              color="#666"
               anchorX="center"
               anchorY="middle"
             >
-              📄 Articles
+              game
             </Text>
             <Text
-              position={[1.2, 0.6, tabletDepth / 2 + 0.03]}
-              fontSize={0.08}
-              color="#888888"
+              position={[0.8, 0.8, tabletDepth / 2 + 0.02]}
+              fontSize={0.06}
+              color="#666"
               anchorX="center"
               anchorY="middle"
             >
-              🎮 Game
+              scene
             </Text>
           </>
         )}
@@ -304,19 +231,16 @@ export default function InteractiveTablet({
       <TerminalInterface
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
-        articles={displayArticles}
+        articles={articles}
         onStartGame={onStartGame}
+        onChangeScenery={onChangeScenery}
+        availableScenery={availableScenery}
+        currentScenery={currentScenery}
       />
     </>
   );
 }
 
-// Easing function for elastic "pop" effect on reveal
-function easeOutElastic(x: number): number {
-  const c4 = (2 * Math.PI) / 3;
-  return x === 0
-    ? 0
-    : x === 1
-    ? 1
-    : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
+function easeOutCubic(x: number): number {
+  return 1 - Math.pow(1 - x, 3);
 }

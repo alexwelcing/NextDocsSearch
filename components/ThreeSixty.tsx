@@ -72,63 +72,6 @@ const VRButtonStyled = styled.button`
   }
 `
 
-const BackgroundControlsContainer = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid rgba(222, 126, 162, 0.3);
-  backdrop-filter: blur(5px);
-`
-
-const ToggleButton = styled.button<{ active: boolean }>`
-  background: ${props => props.active ? 'rgba(130, 20, 160, 0.7)' : 'rgba(51, 51, 51, 0.5)'};
-  border: 1px solid ${props => props.active ? 'rgba(222, 126, 162, 0.5)' : 'rgba(102, 102, 102, 0.3)'};
-  color: rgba(255, 255, 255, 0.9);
-  padding: 4px 8px;
-  font-size: 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${props => props.active ? 'rgba(148, 25, 71, 0.8)' : 'rgba(68, 68, 68, 0.6)'};
-  }
-`
-
-const SplatSelector = styled.select`
-  background: rgba(51, 51, 51, 0.5);
-  border: 1px solid rgba(222, 126, 162, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 4px 6px;
-  font-size: 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(68, 68, 68, 0.6);
-  }
-
-  option {
-    background: #333;
-    color: white;
-  }
-`
-
-const ControlLabel = styled.label`
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 9px;
-  margin-bottom: 2px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-`
 
 const ThreeSixtyContainer = styled.div`
   position: fixed;
@@ -151,6 +94,13 @@ interface SplatFile {
   filename: string;
   path: string;
   size: number;
+}
+
+interface SceneryOption {
+  id: string;
+  name: string;
+  type: 'image' | 'splat';
+  path: string;
 }
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
@@ -236,6 +186,45 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
+
+  // Build scenery options for the tablet menu
+  const sceneryOptions = useMemo<SceneryOption[]>(() => {
+    const options: SceneryOption[] = [];
+
+    // Add current image as an option
+    options.push({
+      id: 'current-panorama',
+      name: 'Default Panorama',
+      type: 'image',
+      path: currentImage,
+    });
+
+    // Add available splats
+    availableSplats.forEach((splat, i) => {
+      options.push({
+        id: `splat-${i}`,
+        name: splat.filename.replace('.splat', ''),
+        type: 'splat',
+        path: splat.path,
+      });
+    });
+
+    return options;
+  }, [currentImage, availableSplats]);
+
+  // Handle scenery change from tablet
+  const handleSceneryChange = useCallback((scenery: SceneryOption) => {
+    if (scenery.type === 'splat') {
+      setUseGaussianSplat(true);
+      setSelectedSplat(scenery.path);
+    } else {
+      setUseGaussianSplat(false);
+      onChangeImage(scenery.path);
+    }
+  }, [onChangeImage]);
+
+  // Get current scenery path for tablet display
+  const currentSceneryPath = useGaussianSplat ? selectedSplat : currentImage;
 
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
@@ -387,42 +376,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </VRButtonStyled>
       )}
 
-      {/* Background Controls - Only show if splats are detected AND not playing game */}
-      {hasSplats && gameState !== 'PLAYING' && (
-        <BackgroundControlsContainer>
-          <ControlLabel>BG</ControlLabel>
-          <div style={{ display: 'flex', gap: '3px' }}>
-            <ToggleButton
-              active={!useGaussianSplat}
-              onClick={() => setUseGaussianSplat(false)}
-            >
-              IMG
-            </ToggleButton>
-            <ToggleButton
-              active={useGaussianSplat}
-              onClick={() => setUseGaussianSplat(true)}
-            >
-              SPL
-            </ToggleButton>
-          </div>
-
-          {useGaussianSplat && availableSplats.length > 0 && (
-            <>
-              <ControlLabel>Select Splat</ControlLabel>
-              <SplatSelector
-                value={selectedSplat}
-                onChange={(e) => setSelectedSplat(e.target.value)}
-              >
-                {availableSplats.map((splat) => (
-                  <option key={splat.path} value={splat.path}>
-                    {splat.filename} ({(splat.size / 1024 / 1024).toFixed(1)}MB)
-                  </option>
-                ))}
-              </SplatSelector>
-            </>
-          )}
-        </BackgroundControlsContainer>
-      )}
+      {/* Background controls moved to tablet menu */}
 
       <Canvas
         shadows={false}
@@ -495,6 +449,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                       ? Math.max(0, (cinematicProgress - 0.7) / 0.3)
                       : 1
                   }
+                  onChangeScenery={handleSceneryChange}
+                  availableScenery={sceneryOptions}
+                  currentScenery={currentSceneryPath}
                 />
               )}
 
