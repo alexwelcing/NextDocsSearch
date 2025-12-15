@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { RoundedBox, Text } from '@react-three/drei';
+import { Html, RoundedBox } from '@react-three/drei';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 import TerminalInterface from './TerminalInterface';
@@ -18,7 +18,6 @@ interface SceneryOption {
   name: string;
   type: 'image' | 'splat';
   path: string;
-  thumbnail?: string;
 }
 
 interface InteractiveTabletProps {
@@ -27,7 +26,6 @@ interface InteractiveTabletProps {
   articles?: ArticleData[];
   onStartGame?: () => void;
   cinematicRevealProgress?: number;
-  // Scenery props
   onChangeScenery?: (scenery: SceneryOption) => void;
   availableScenery?: SceneryOption[];
   currentScenery?: string;
@@ -43,191 +41,167 @@ export default function InteractiveTablet({
   availableScenery = [],
   currentScenery,
 }: InteractiveTabletProps) {
-  const [isPoweredOn, setIsPoweredOn] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [pulsePhase, setPulsePhase] = useState(0);
 
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
 
-  // Tablet dimensions
-  const tabletWidth = 4;
-  const tabletHeight = 3;
-  const tabletDepth = 0.15;
+  const tabletWidth = 3.2;
+  const tabletHeight = 2.4;
+  const tabletDepth = 0.12;
 
-  // Physics body
   const [ref, api] = useBox(() => ({
     mass: 0,
     position: initialPosition,
     args: [tabletWidth, tabletHeight, tabletDepth],
   }));
 
-  const handleTabletClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isPoweredOn) {
-      setTerminalOpen(true);
-    }
-  }, [isPoweredOn]);
+  const handleClick = useCallback(() => {
+    setTerminalOpen(true);
+  }, []);
 
   useFrame((state) => {
     if (groupRef.current && ref.current) {
       const time = state.clock.elapsedTime;
 
-      // Billboard - face camera
+      // Face camera
       const cameraPos = new THREE.Vector3();
       camera.getWorldPosition(cameraPos);
       groupRef.current.lookAt(cameraPos);
       ref.current.rotation.copy(groupRef.current.rotation);
 
-      // Subtle float
-      const floatY = Math.sin(time * 0.4) * 0.1;
+      // Float
+      const floatY = Math.sin(time * 0.5) * 0.08;
       api.position.set(initialPosition[0], initialPosition[1] + floatY, initialPosition[2]);
       api.velocity.set(0, 0, 0);
       api.angularVelocity.set(0, 0, 0);
 
-      // Pulse for hint
-      setPulsePhase(Math.sin(time * 1.5) * 0.5 + 0.5);
-
-      // Reveal animation
-      const scale = easeOutCubic(Math.min(cinematicRevealProgress, 1));
+      // Scale reveal
+      const scale = Math.min(cinematicRevealProgress, 1);
       groupRef.current.scale.setScalar(scale);
     }
   });
 
-  const togglePower = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsPoweredOn((prev) => {
-      if (prev && terminalOpen) setTerminalOpen(false);
-      return !prev;
-    });
-  }, [terminalOpen]);
-
-  // Hide during gameplay
   if (isGamePlaying) return null;
-
-  const screenOn = isPoweredOn;
-  const glowIntensity = hovered ? 0.8 : 0.5;
 
   return (
     <>
       <group ref={groupRef}>
-        {/* Tablet Body */}
+        {/* Tablet frame - dark */}
         <RoundedBox
           ref={ref as unknown as React.RefObject<THREE.Mesh>}
           args={[tabletWidth, tabletHeight, tabletDepth]}
-          radius={0.1}
+          radius={0.08}
           smoothness={4}
-          onClick={handleTabletClick}
+          onClick={handleClick}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
         >
           <meshStandardMaterial
-            color="#111"
-            metalness={0.8}
-            roughness={0.2}
+            color="#1a1a1a"
+            metalness={0.7}
+            roughness={0.3}
           />
         </RoundedBox>
 
-        {/* Screen */}
-        <mesh position={[0, 0, tabletDepth / 2 + 0.005]}>
-          <planeGeometry args={[tabletWidth - 0.3, tabletHeight - 0.3]} />
-          <meshStandardMaterial
-            color={screenOn ? '#1a1a1a' : '#0a0a0a'}
-            emissive={screenOn ? '#0f0' : '#000'}
-            emissiveIntensity={screenOn ? glowIntensity * 0.15 : 0}
+        {/* Screen - dark with subtle border glow */}
+        <mesh position={[0, 0, tabletDepth / 2 + 0.002]}>
+          <planeGeometry args={[tabletWidth - 0.25, tabletHeight - 0.25]} />
+          <meshBasicMaterial color="#0a0a0a" />
+        </mesh>
+
+        {/* Screen border glow */}
+        <mesh position={[0, 0, tabletDepth / 2 + 0.001]}>
+          <planeGeometry args={[tabletWidth - 0.2, tabletHeight - 0.2]} />
+          <meshBasicMaterial
+            color={hovered ? "#00ff00" : "#003300"}
+            transparent
+            opacity={0.3}
           />
         </mesh>
 
-        {/* Screen glow effect */}
-        {screenOn && (
+        {/* HTML content on screen */}
+        <Html
+          position={[0, 0, tabletDepth / 2 + 0.01]}
+          transform
+          occlude
+          style={{
+            width: '280px',
+            height: '200px',
+            pointerEvents: 'auto',
+          }}
+        >
+          <div
+            onClick={handleClick}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{
+              width: '100%',
+              height: '100%',
+              background: '#0d0d0d',
+              border: `1px solid ${hovered ? '#00ff00' : '#333'}`,
+              borderRadius: '4px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontFamily: 'monospace',
+              transition: 'border-color 0.2s',
+              padding: '16px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{
+              color: '#00ff00',
+              fontSize: '32px',
+              marginBottom: '8px',
+            }}>
+              {'>_'}
+            </div>
+            <div style={{
+              color: '#00ff00',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              letterSpacing: '2px',
+              marginBottom: '16px',
+            }}>
+              TERMINAL
+            </div>
+            <div style={{
+              color: hovered ? '#00ff00' : '#555',
+              fontSize: '11px',
+              transition: 'color 0.2s',
+            }}>
+              {hovered ? '[ CLICK TO OPEN ]' : 'click to open'}
+            </div>
+            <div style={{
+              display: 'flex',
+              gap: '16px',
+              marginTop: '20px',
+              fontSize: '10px',
+              color: '#444',
+            }}>
+              <span>chat</span>
+              <span>game</span>
+              <span>scene</span>
+            </div>
+          </div>
+        </Html>
+
+        {/* Subtle glow light */}
+        {hovered && (
           <pointLight
-            position={[0, 0, 1]}
-            color="#0f0"
-            intensity={glowIntensity * 1.5}
-            distance={6}
+            position={[0, 0, 0.5]}
+            color="#00ff00"
+            intensity={0.5}
+            distance={3}
             decay={2}
           />
         )}
-
-        {/* Power indicator */}
-        <mesh
-          position={[-tabletWidth / 2 + 0.2, -tabletHeight / 2 + 0.15, tabletDepth / 2 + 0.01]}
-          onClick={togglePower}
-        >
-          <circleGeometry args={[0.06, 12]} />
-          <meshBasicMaterial color={isPoweredOn ? '#0f0' : '#600'} />
-        </mesh>
-
-        {/* Screen content */}
-        {screenOn && (
-          <>
-            {/* Terminal prompt icon */}
-            <Text
-              position={[0, 0.3, tabletDepth / 2 + 0.02]}
-              fontSize={0.35}
-              color="#0f0"
-              anchorX="center"
-              anchorY="middle"
-            >
-              {'>_'}
-            </Text>
-
-            {/* Title */}
-            <Text
-              position={[0, -0.2, tabletDepth / 2 + 0.02]}
-              fontSize={0.14}
-              color="#0f0"
-              anchorX="center"
-              anchorY="middle"
-            >
-              TERMINAL
-            </Text>
-
-            {/* Hint - pulsing */}
-            <Text
-              position={[0, -0.6, tabletDepth / 2 + 0.02]}
-              fontSize={0.09}
-              color={new THREE.Color(0x00ff00).multiplyScalar(0.4 + pulsePhase * 0.4)}
-              anchorX="center"
-              anchorY="middle"
-            >
-              {hovered ? '[ CLICK TO OPEN ]' : 'click to open'}
-            </Text>
-
-            {/* Menu items preview */}
-            <Text
-              position={[-0.8, 0.8, tabletDepth / 2 + 0.02]}
-              fontSize={0.06}
-              color="#666"
-              anchorX="center"
-              anchorY="middle"
-            >
-              chat
-            </Text>
-            <Text
-              position={[0, 0.8, tabletDepth / 2 + 0.02]}
-              fontSize={0.06}
-              color="#666"
-              anchorX="center"
-              anchorY="middle"
-            >
-              game
-            </Text>
-            <Text
-              position={[0.8, 0.8, tabletDepth / 2 + 0.02]}
-              fontSize={0.06}
-              color="#666"
-              anchorX="center"
-              anchorY="middle"
-            >
-              scene
-            </Text>
-          </>
-        )}
       </group>
 
-      {/* Terminal Interface Overlay */}
       <TerminalInterface
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
@@ -239,8 +213,4 @@ export default function InteractiveTablet({
       />
     </>
   );
-}
-
-function easeOutCubic(x: number): number {
-  return 1 - Math.pow(1 - x, 3);
 }
