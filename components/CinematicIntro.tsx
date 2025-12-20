@@ -4,79 +4,93 @@ interface CinematicIntroProps {
   onComplete: () => void;
   onSkip: () => void;
   onProgressUpdate?: (progress: number) => void;
+  onStart?: () => void;
+  durationScale?: number;
 }
 
-export default function CinematicIntro({ onComplete, onSkip, onProgressUpdate }: CinematicIntroProps) {
+export default function CinematicIntro({
+  onComplete,
+  onSkip,
+  onProgressUpdate,
+  onStart,
+  durationScale = 1,
+}: CinematicIntroProps) {
   const [phase, setPhase] = useState<'black' | 'waking' | 'opening' | 'awareness' | 'discovery' | 'complete'>('black');
   const [fadeOpacity, setFadeOpacity] = useState(1);
   const [textOpacity, setTextOpacity] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Phase 1: Black screen (eyes closed) - 1.5s
+    onStart?.();
+    setPhase('waking');
+    setProgress(0.05);
+    onProgressUpdate?.(0.05);
+
+    const scale = Math.max(durationScale, 0.1);
+
+    // Phase 1: Black screen (eyes closed) - 0.6s
     const timer1 = setTimeout(() => {
-      setPhase('waking');
       setProgress(0.1);
       onProgressUpdate?.(0.1);
-    }, 1500);
+    }, 600 * scale);
 
-    // Phase 2: First signs of waking - 2s
+    // Phase 2: First signs of waking - 1.4s
     const timer2 = setTimeout(() => {
       setFadeOpacity(0.8);
       setProgress(0.2);
       onProgressUpdate?.(0.2);
-    }, 1500);
+    }, 1400 * scale);
 
-    // Phase 3: Eyes starting to open - 3.5s
+    // Phase 3: Eyes starting to open - 2.6s
     const timer3 = setTimeout(() => {
       setPhase('opening');
       setFadeOpacity(0.5);
       setProgress(0.4);
       onProgressUpdate?.(0.4);
-    }, 3500);
+    }, 2600 * scale);
 
-    // Phase 4: Eyes opening more - 5s
+    // Phase 4: Eyes opening more - 4.2s
     const timer4 = setTimeout(() => {
       setFadeOpacity(0.2);
       setTextOpacity(1);
       setProgress(0.6);
       onProgressUpdate?.(0.6);
-    }, 5000);
+    }, 4200 * scale);
 
-    // Phase 5: Full awareness - 7s
+    // Phase 5: Full awareness - 6.2s
     const timer5 = setTimeout(() => {
       setPhase('awareness');
       setFadeOpacity(0);
       setProgress(0.75);
       onProgressUpdate?.(0.75);
-    }, 7000);
+    }, 6200 * scale);
 
-    // Phase 6: Narrative begins - 8s
+    // Phase 6: Narrative begins - 7.4s
     const timer6 = setTimeout(() => {
       setTextOpacity(1);
       setProgress(0.85);
       onProgressUpdate?.(0.85);
-    }, 8000);
+    }, 7400 * scale);
 
-    // Phase 7: Discovery moment - 11s
+    // Phase 7: Discovery moment - 9.8s
     const timer7 = setTimeout(() => {
       setPhase('discovery');
       setProgress(0.95);
       onProgressUpdate?.(0.95);
-    }, 11000);
+    }, 9800 * scale);
 
-    // Phase 8: Complete - 15s
+    // Phase 8: Complete - 12s
     const timer8 = setTimeout(() => {
       setPhase('complete');
       setTextOpacity(0);
       setProgress(1);
       onProgressUpdate?.(1);
-    }, 15000);
+    }, 12000 * scale);
 
-    // Phase 9: Transition to game - 16.5s
+    // Phase 9: Transition to game - 13.2s
     const timer9 = setTimeout(() => {
       onComplete();
-    }, 16500);
+    }, 13200 * scale);
 
     return () => {
       clearTimeout(timer1);
@@ -89,7 +103,7 @@ export default function CinematicIntro({ onComplete, onSkip, onProgressUpdate }:
       clearTimeout(timer8);
       clearTimeout(timer9);
     };
-  }, [onComplete, onProgressUpdate]);
+  }, [durationScale, onComplete, onProgressUpdate, onStart]);
 
   const getNarrativeText = () => {
     switch (phase) {
