@@ -21,8 +21,7 @@ import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
-import { runAssetQueue, AssetStage } from '../lib/perf/assetQueue';
-import { usePerfPreferences } from '../lib/hooks/usePerfPreferences';
+import { perfLogger } from '@/lib/performance-logger';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -118,6 +117,12 @@ interface SceneryOption {
   path: string;
 }
 
+interface PerformanceFlags {
+  allowSplats: boolean;
+  allowSeasonalEffects: boolean;
+  forceLowPower: boolean;
+}
+
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -126,8 +131,12 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [initialSceneReady, setInitialSceneReady] = useState(false);
-  const [fullSceneReady, setFullSceneReady] = useState(false);
+  const [isLowEndDevice, setIsLowEndDevice] = useState(false);
+  const [performanceFlags, setPerformanceFlags] = useState<PerformanceFlags>({
+    allowSplats: true,
+    allowSeasonalEffects: true,
+    forceLowPower: false,
+  });
 
   // Cinematic intro state - check localStorage to see if already watched
   const [showCinematicIntro, setShowCinematicIntro] = useState(() => {
@@ -196,20 +205,55 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Detect low-end devices and apply performance feature flags
   useEffect(() => {
-    if (prefersReducedMotion || prefersReducedData) {
-      setShowCinematicIntro(false);
-      setCinematicComplete(true);
-      setCinematicProgress(1);
-      setPrefetchDeepAssets(true);
-    }
-  }, [prefersReducedMotion, prefersReducedData]);
+    const detectLowEndDevice = () => {
+      if (typeof window === 'undefined') return;
+
+      const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
+      const hardwareConcurrency = navigator.hardwareConcurrency ?? 8;
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl');
+      const maxTextureSize = gl ? gl.getParameter(gl.MAX_TEXTURE_SIZE) : 4096;
+
+      const detectedLowEnd =
+        deviceMemory <= 4 ||
+        hardwareConcurrency <= 4 ||
+        maxTextureSize <= 4096;
+
+      setIsLowEndDevice(detectedLowEnd);
+    };
+
+    detectLowEndDevice();
+    window.addEventListener('resize', detectLowEndDevice);
+    return () => window.removeEventListener('resize', detectLowEndDevice);
+  }, []);
 
   useEffect(() => {
-    if (!showCinematicIntro) {
-      setPrefetchDeepAssets(true);
-    }
-  }, [showCinematicIntro]);
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(window.location.search);
+    const perfMode = params.get('perf');
+    const forceLowPower = perfMode === 'low';
+    const forceHighPower = perfMode === 'high';
+    const splatsDisabled = params.get('splats') === 'off';
+    const seasonalDisabled = params.get('seasonal') === 'off';
+
+    const allowSplats = !splatsDisabled && (forceHighPower || (!forceLowPower && !isLowEndDevice));
+    const allowSeasonalEffects =
+      !seasonalDisabled && (forceHighPower || (!forceLowPower && !isLowEndDevice));
+
+    setPerformanceFlags({
+      allowSplats,
+      allowSeasonalEffects,
+      forceLowPower: forceLowPower && !forceHighPower,
+    });
+  }, [isLowEndDevice]);
+
+  useEffect(() => {
+    if (performanceFlags.allowSplats || !useGaussianSplat) return;
+    setUseGaussianSplat(false);
+  }, [performanceFlags.allowSplats, useGaussianSplat]);
 
   // Notify parent of game state changes
   useEffect(() => {
@@ -217,6 +261,24 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       onGameStateChange(gameState);
     }
   }, [gameState, onGameStateChange]);
+
+  useEffect(() => {
+    if (gameState === 'IDLE') {
+      perfLogger.markEvent('ambient-loop');
+    }
+  }, [gameState]);
+
+  useEffect(() => {
+    if (useGaussianSplat && performanceFlags.allowSplats && selectedSplat) {
+      perfLogger.markEvent('artifact-splat');
+    }
+  }, [useGaussianSplat, performanceFlags.allowSplats, selectedSplat]);
+
+  useEffect(() => {
+    if (performanceFlags.allowSeasonalEffects && gameState !== 'PLAYING') {
+      perfLogger.markEvent(`seasonal-${currentSeason}`);
+    }
+  }, [performanceFlags.allowSeasonalEffects, gameState, currentSeason]);
 
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
@@ -234,28 +296,33 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     });
 
     // Add available splats
-    availableSplats.forEach((splat, i) => {
-      options.push({
-        id: `splat-${i}`,
-        name: splat.filename.replace('.splat', ''),
-        type: 'splat',
-        path: splat.path,
+    if (performanceFlags.allowSplats) {
+      availableSplats.forEach((splat, i) => {
+        options.push({
+          id: `splat-${i}`,
+          name: splat.filename.replace('.splat', ''),
+          type: 'splat',
+          path: splat.path,
+        });
       });
-    });
+    }
 
     return options;
-  }, [currentImage, availableSplats]);
+  }, [currentImage, availableSplats, performanceFlags.allowSplats]);
 
   // Handle scenery change from tablet
   const handleSceneryChange = useCallback((scenery: SceneryOption) => {
     if (scenery.type === 'splat') {
+      if (!performanceFlags.allowSplats) {
+        return;
+      }
       setUseGaussianSplat(true);
       setSelectedSplat(scenery.path);
     } else {
       setUseGaussianSplat(false);
       onChangeImage(scenery.path);
     }
-  }, [onChangeImage]);
+  }, [onChangeImage, performanceFlags.allowSplats]);
 
   // Get current scenery path for tablet display
   const currentSceneryPath = useGaussianSplat ? selectedSplat : currentImage;
@@ -431,9 +498,12 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setCinematicProgress(progress);
   }, []);
 
-  const handleCinematicStart = useCallback(() => {
-    setPrefetchDeepAssets(true);
-  }, []);
+  const dprRange = useMemo<[number, number]>(() => {
+    if (isMobile || isLowEndDevice || performanceFlags.forceLowPower) {
+      return [0.3, 0.8];
+    }
+    return [0.5, 1.5];
+  }, [isMobile, isLowEndDevice, performanceFlags.forceLowPower]);
 
   // Game handlers - start game directly from terminal
   const handleStartGame = useCallback(() => {
@@ -600,30 +670,62 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   onComboUpdate={setCombo}
                   onTimeUpdate={setTimeRemaining}
                 />
+              )}
 
-                {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
-                {allowGaussianSplat ? (
-                  <GaussianSplatBackground
-                    splatUrl={selectedSplat}
-                    position={[0, 0, 0]}
-                    scale={1}
-                  />
-                ) : (
-                  <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
-                )}
+              {/* Camera controller for smooth game transitions */}
+              {cinematicComplete && <CameraController gameState={gameState} />}
 
-                {/* Seasonal particle effects (snow, leaves, etc.) */}
-                {allowSeasonalEffects && gameState !== 'PLAYING' && (
-                  <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
-                )}
-
-                {/* Dynamic Scene Lighting */}
-                <SceneLighting
-                  isCinematic={showCinematicIntro && !cinematicComplete}
-                  cinematicProgress={cinematicProgress}
+              {/* OrbitControls - disabled during cinematic intro */}
+              {cinematicComplete && (
+                <OrbitControls
+                  enableDamping
+                  dampingFactor={0.1}
+                  rotateSpeed={0.5}
+                  zoomSpeed={0.8}
+                  panSpeed={0.5}
+                  minDistance={5}
+                  maxDistance={50}
+                  maxPolarAngle={Math.PI / 2}
+                  enablePan={false}
                 />
-              </PhysicsEnvironment>
-            )}
+              )}
+
+              {/* Sphere Hunter Game */}
+              <ClickingGame
+                gameState={gameState}
+                onGameStart={handleStartGame}
+                onGameEnd={handleGameEnd}
+                onScoreUpdate={setScore}
+                onComboUpdate={setCombo}
+                onTimeUpdate={setTimeRemaining}
+              />
+
+              {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
+              {useGaussianSplat &&
+              selectedSplat &&
+              !isMobile &&
+              performanceFlags.allowSplats &&
+              gameState !== 'PLAYING' ? (
+                <GaussianSplatBackground
+                  splatUrl={selectedSplat}
+                  position={[0, 0, 0]}
+                  scale={1}
+                />
+              ) : (
+                <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+              )}
+
+              {/* Seasonal particle effects (snow, leaves, etc.) */}
+              {!isMobile && performanceFlags.allowSeasonalEffects && gameState !== 'PLAYING' && (
+                <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
+              )}
+
+              {/* Dynamic Scene Lighting */}
+              <SceneLighting
+                isCinematic={showCinematicIntro && !cinematicComplete}
+                cinematicProgress={cinematicProgress}
+              />
+            </PhysicsEnvironment>
           </XROrigin>
         </XR>
         {/* Performance monitoring - visible in development */}

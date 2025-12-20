@@ -53,8 +53,9 @@ export default function TerminalInterface({
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const { chatData, setChatData } = useSupabaseData();
-  const { updateStats, currentQuest, completeQuest } = useJourney();
+  const { chatData, setChatData, chatHistory } = useSupabaseData();
+  const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
+  const currentMissionBrief = currentQuest ? missionBriefs[currentQuest.id] : undefined;
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -108,6 +109,36 @@ export default function TerminalInterface({
       onClose();
     }
   }, [onStartGame, onClose]);
+
+  const handleDownloadMissionLog = useCallback(async () => {
+    try {
+      const response = await fetch('/api/mission-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          progress,
+          history: chatHistory,
+          missionBriefs,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate mission log');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'mission-log.md';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Mission log download failed:', error);
+    }
+  }, [progress, chatHistory, missionBriefs]);
 
   if (!isOpen) return null;
 
@@ -194,6 +225,23 @@ export default function TerminalInterface({
         {/* CHAT */}
         {viewMode === 'chat' && (
           <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {currentQuest && (
+              <div style={{
+                background: '#0f1410',
+                borderRadius: '8px',
+                padding: isMobile ? '12px' : '14px 16px',
+                marginBottom: '12px',
+                border: '1px solid #1c2b1c',
+                fontFamily: 'monospace',
+              }}>
+                <div style={{ color: '#8f8', fontSize: '11px', marginBottom: '6px' }}>
+                  MISSION BRIEF — {currentQuest.title.toUpperCase()}
+                </div>
+                <div style={{ color: '#cfc', fontSize: isMobile ? '13px' : '12px', lineHeight: 1.6 }}>
+                  {currentMissionBrief || 'Awaiting Ship AI briefing. Ask a question to receive your mission.'}
+                </div>
+              </div>
+            )}
             <div style={{
               flex: 1,
               background: '#111',
@@ -255,6 +303,26 @@ export default function TerminalInterface({
                 }}
               >
                 SEND
+              </button>
+            </div>
+            <div style={{ marginTop: '12px' }}>
+              <button
+                onClick={handleDownloadMissionLog}
+                style={{
+                  width: '100%',
+                  padding: isMobile ? '12px' : '10px',
+                  background: '#111',
+                  border: '1px solid #333',
+                  borderRadius: '6px',
+                  color: '#8f8',
+                  fontWeight: 600,
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  fontFamily: 'monospace',
+                  letterSpacing: '0.4px',
+                }}
+              >
+                DOWNLOAD MISSION LOG
               </button>
             </div>
           </div>
