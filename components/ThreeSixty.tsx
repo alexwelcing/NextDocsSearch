@@ -19,6 +19,8 @@ import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import { useJourney } from './JourneyContext';
+import { useNarrative } from './NarrativeContext';
+import StoryObjectivePanel from './StoryObjectivePanel';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 
 // Re-export GameState type for compatibility
@@ -148,6 +150,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
+  const { triggerEvent } = useNarrative();
 
   // Update season when query params change
   useEffect(() => {
@@ -323,6 +326,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setGameState('GAME_OVER');
 
     updateStats('highestGameScore', finalScore);
+    triggerEvent('game-complete');
 
     if (currentQuest?.id === 'play-game') {
       completeQuest('play-game');
@@ -330,8 +334,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
     if (finalScore >= 5000) {
       completeQuest('leaderboard-rank');
+      triggerEvent('leaderboard-rank');
     }
-  }, [updateStats, currentQuest, completeQuest]);
+  }, [updateStats, triggerEvent, currentQuest, completeQuest]);
 
   const handlePlayAgain = useCallback(() => {
     setGameState('IDLE');
@@ -456,6 +461,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
       {/* Performance Monitor - outside Canvas */}
       {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
+
+      <StoryObjectivePanel isHidden={!cinematicComplete || gameState === 'PLAYING' || gameState === 'COUNTDOWN'} />
 
       {/* Pip-Boy style tablet - slides up from bottom */}
       {!loading && (
