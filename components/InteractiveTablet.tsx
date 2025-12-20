@@ -16,6 +16,8 @@ interface SceneryOption {
   path: string;
 }
 
+type TerminalView = 'chat' | 'game' | 'scenery' | 'about' | 'blog' | 'audio';
+
 interface InteractiveTabletProps {
   initialPosition?: [number, number, number];
   isGamePlaying?: boolean;
@@ -23,8 +25,14 @@ interface InteractiveTabletProps {
   onStartGame?: () => void;
   cinematicRevealProgress?: number;
   onChangeScenery?: (scenery: SceneryOption) => void;
+  onRotateScenery?: (direction: 'next' | 'prev') => void;
   availableScenery?: SceneryOption[];
   currentScenery?: string;
+  audioEnabled?: boolean;
+  audioStatus?: 'playing' | 'paused' | 'blocked';
+  audioVolume?: number;
+  onToggleAudio?: () => void;
+  onVolumeChange?: (value: number) => void;
 }
 
 export default function InteractiveTablet({
@@ -32,11 +40,18 @@ export default function InteractiveTablet({
   articles = [],
   onStartGame,
   onChangeScenery,
+  onRotateScenery,
   availableScenery = [],
   currentScenery,
+  audioEnabled,
+  audioStatus,
+  audioVolume,
+  onToggleAudio,
+  onVolumeChange,
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [terminalView, setTerminalView] = useState<TerminalView>('chat');
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile
@@ -78,7 +93,8 @@ export default function InteractiveTablet({
     setTerminalOpen(false);
   }, []);
 
-  const handleOpenTerminal = useCallback(() => {
+  const handleOpenTerminal = useCallback((view: TerminalView = 'chat') => {
+    setTerminalView(view);
     setTerminalOpen(true);
   }, []);
 
@@ -173,14 +189,16 @@ export default function InteractiveTablet({
             {/* Main actions */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
               gap: '10px',
             }}>
               {[
-                { label: 'ASK AI', icon: '>', action: handleOpenTerminal },
+                { label: 'ASK AI', icon: '>', action: () => handleOpenTerminal('chat') },
+                { label: 'BLOG', icon: '≡', action: () => handleOpenTerminal('blog') },
                 { label: 'GAME', icon: '#', action: () => { onStartGame?.(); handleLower(); } },
-                { label: 'SCENE', icon: '*', action: handleOpenTerminal },
-                { label: 'ABOUT', icon: '?', action: handleOpenTerminal },
+                { label: 'SCENE', icon: '*', action: () => handleOpenTerminal('scenery') },
+                { label: 'AUDIO', icon: '♪', action: () => handleOpenTerminal('audio') },
+                { label: 'ABOUT', icon: '?', action: () => handleOpenTerminal('about') },
               ].map((item) => (
                 <button
                   key={item.label}
@@ -258,11 +276,18 @@ export default function InteractiveTablet({
       <TerminalInterface
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
+        activeView={terminalView}
         articles={articles}
         onStartGame={() => { onStartGame?.(); handleLower(); setTerminalOpen(false); }}
         onChangeScenery={onChangeScenery}
+        onRotateScenery={onRotateScenery}
         availableScenery={availableScenery}
         currentScenery={currentScenery}
+        audioEnabled={audioEnabled}
+        audioStatus={audioStatus}
+        audioVolume={audioVolume}
+        onToggleAudio={onToggleAudio}
+        onVolumeChange={onVolumeChange}
       />
     </>
   );

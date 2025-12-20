@@ -9,6 +9,7 @@ import BackgroundSphere from './BackgroundSphere';
 import type { ArticleData } from './GlowingArticleDisplay';
 import GaussianSplatBackground from './GaussianSplatBackground';
 import InteractiveTablet from './InteractiveTablet';
+import AmbientAudio from './AmbientAudio';
 import ClickingGame, { GameStats } from './ClickingGame';
 import GameHUD from './GameHUD';
 import GameLeaderboard from './GameLeaderboard';
@@ -113,6 +114,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [loading, setLoading] = useState(true);
   const [useGaussianSplat, setUseGaussianSplat] = useState(false);
   const [availableSplats, setAvailableSplats] = useState<SplatFile[]>([]);
+  const [availableImages, setAvailableImages] = useState<string[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -158,6 +160,21 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     totalClicks: 0,
     successfulClicks: 0,
   });
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('ambientAudioEnabled');
+      return saved ? saved === 'true' : true;
+    }
+    return true;
+  });
+  const [audioVolume, setAudioVolume] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('ambientAudioVolume');
+      return saved ? Number(saved) : 0.35;
+    }
+    return 0.35;
+  });
+  const [audioStatus, setAudioStatus] = useState<'playing' | 'paused' | 'blocked'>('paused');
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
@@ -238,6 +255,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setUseGaussianSplat(false);
   }, [performanceFlags.allowSplats, useGaussianSplat]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('ambientAudioEnabled', String(audioEnabled));
+  }, [audioEnabled]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('ambientAudioVolume', String(audioVolume));
+  }, [audioVolume]);
+
   // Notify parent of game state changes
   useEffect(() => {
     if (onGameStateChange) {
@@ -270,12 +297,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const sceneryOptions = useMemo<SceneryOption[]>(() => {
     const options: SceneryOption[] = [];
 
-    // Add current image as an option
-    options.push({
-      id: 'current-panorama',
-      name: 'Default Panorama',
-      type: 'image',
-      path: currentImage,
+    const uniqueImages = Array.from(new Set([currentImage, ...availableImages].filter(Boolean)));
+
+    uniqueImages.forEach((image, index) => {
+      const name = image.split('/').pop()?.replace(/\.[^/.]+$/, '') ?? `Scene ${index + 1}`;
+      options.push({
+        id: `image-${index}`,
+        name,
+        type: 'image',
+        path: image,
+      });
     });
 
     // Add available splats
@@ -283,7 +314,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       availableSplats.forEach((splat, i) => {
         options.push({
           id: `splat-${i}`,
-          name: splat.filename.replace('.splat', ''),
+          name: splat.filename.replace(/\.[^/.]+$/, ''),
           type: 'splat',
           path: splat.path,
         });
@@ -291,7 +322,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
 
     return options;
-  }, [currentImage, availableSplats, performanceFlags.allowSplats]);
+  }, [currentImage, availableImages, availableSplats, performanceFlags.allowSplats]);
 
   // Handle scenery change from tablet
   const handleSceneryChange = useCallback((scenery: SceneryOption) => {
@@ -309,6 +340,15 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Get current scenery path for tablet display
   const currentSceneryPath = useGaussianSplat ? selectedSplat : currentImage;
+
+  const handleRotateScenery = useCallback((direction: 'next' | 'prev') => {
+    if (sceneryOptions.length === 0) return;
+    const currentIndex = sceneryOptions.findIndex((scene) => scene.path === currentSceneryPath);
+    const resolvedIndex = currentIndex === -1 ? 0 : currentIndex;
+    const offset = direction === 'next' ? 1 : -1;
+    const nextIndex = (resolvedIndex + offset + sceneryOptions.length) % sceneryOptions.length;
+    handleSceneryChange(sceneryOptions[nextIndex]);
+  }, [currentSceneryPath, handleSceneryChange, sceneryOptions]);
 
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
@@ -348,6 +388,23 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     };
 
     fetchSplats();
+  }, []);
+
+  useEffect(() => {
+    const fetchBackgrounds = async () => {
+      try {
+        const response = await fetch('/api/backgroundImages?mode=list');
+        if (!response.ok) return;
+        const data = await response.json();
+        if (Array.isArray(data.images)) {
+          setAvailableImages(data.images);
+        }
+      } catch (error) {
+        console.error('Failed fetching background images:', error);
+      }
+    };
+
+    fetchBackgrounds();
   }, []);
 
   const handleEnterVR = async () => {
@@ -465,6 +522,12 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
       {/* Background controls moved to tablet menu */}
 
+      <AmbientAudio
+        enabled={audioEnabled}
+        volume={audioVolume}
+        onStatusChange={setAudioStatus}
+      />
+
       <Canvas
         shadows={false}
         dpr={dprRange}
@@ -561,8 +624,14 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           articles={articles}
           onStartGame={handleStartGame}
           onChangeScenery={handleSceneryChange}
+          onRotateScenery={handleRotateScenery}
           availableScenery={sceneryOptions}
           currentScenery={currentSceneryPath}
+          audioEnabled={audioEnabled}
+          audioStatus={audioStatus}
+          audioVolume={audioVolume}
+          onToggleAudio={() => setAudioEnabled((prev) => !prev)}
+          onVolumeChange={setAudioVolume}
         />
       )}
 

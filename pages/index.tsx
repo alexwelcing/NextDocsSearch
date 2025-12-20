@@ -62,6 +62,14 @@ export default function HomePage() {
     setIsIn3DMode((prev) => !prev)
   }
 
+  function handleImageChange(newImage: string) {
+    if (newImage) {
+      setCurrentImage(newImage)
+      return
+    }
+    getRandomImage()
+  }
+
   return (
     <>
       <Head>
@@ -108,7 +116,7 @@ export default function HomePage() {
               <ThreeSixty
                 currentImage={currentImage}
                 isDialogOpen={false}
-                onChangeImage={getRandomImage}
+                onChangeImage={handleImageChange}
                 onGameStateChange={setGameState}
               />
             )}
@@ -199,7 +207,7 @@ export default function HomePage() {
         )}
 
         {/* Single shared footer */}
-        <Footer onImageChange={getRandomImage} showChangeScenery={false} />
+        <Footer onImageChange={handleImageChange} showChangeScenery={false} />
       </SupabaseDataProvider>
     </>
   )

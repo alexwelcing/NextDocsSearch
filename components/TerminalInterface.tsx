@@ -32,11 +32,18 @@ interface TerminalInterfaceProps {
   articles?: ArticleData[];
   onStartGame?: () => void;
   onChangeScenery?: (scenery: SceneryOption) => void;
+  onRotateScenery?: (direction: 'next' | 'prev') => void;
   availableScenery?: SceneryOption[];
   currentScenery?: string;
+  activeView?: ViewMode;
+  audioEnabled?: boolean;
+  audioStatus?: 'playing' | 'paused' | 'blocked';
+  audioVolume?: number;
+  onToggleAudio?: () => void;
+  onVolumeChange?: (value: number) => void;
 }
 
-type ViewMode = 'chat' | 'game' | 'scenery' | 'about';
+type ViewMode = 'chat' | 'game' | 'scenery' | 'about' | 'blog' | 'audio';
 
 export default function TerminalInterface({
   isOpen,
@@ -44,8 +51,15 @@ export default function TerminalInterface({
   articles = [],
   onStartGame,
   onChangeScenery,
+  onRotateScenery,
   availableScenery = [],
   currentScenery,
+  activeView,
+  audioEnabled = true,
+  audioStatus = 'paused',
+  audioVolume = 0.35,
+  onToggleAudio,
+  onVolumeChange,
 }: TerminalInterfaceProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('chat');
   const [chatInput, setChatInput] = useState('');
@@ -71,6 +85,11 @@ export default function TerminalInterface({
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!activeView || !isOpen) return;
+    setViewMode(activeView);
+  }, [activeView, isOpen]);
 
   const fetchLeaderboard = useCallback(async () => {
     setLoadingLeaderboard(true);
@@ -140,12 +159,23 @@ export default function TerminalInterface({
     }
   }, [progress, chatHistory, missionBriefs]);
 
+  const handleOpenArticle = useCallback((article: ArticleData) => {
+    const slug = article.filename?.replace('.mdx', '') ?? article.title;
+    updateStats('articlesRead', [slug]);
+    if (currentQuest?.id === 'read-article') {
+      completeQuest('read-article');
+    }
+    window.open(`/articles/${slug}`, '_blank');
+  }, [completeQuest, currentQuest, updateStats]);
+
   if (!isOpen) return null;
 
   const tabs = [
     { id: 'chat', label: 'CHAT' },
+    { id: 'blog', label: 'BLOG' },
     { id: 'game', label: 'GAME' },
     { id: 'scenery', label: 'SCENE' },
+    { id: 'audio', label: 'AUDIO' },
     { id: 'about', label: 'ABOUT' },
   ] as const;
 
@@ -328,6 +358,67 @@ export default function TerminalInterface({
           </div>
         )}
 
+        {/* BLOG */}
+        {viewMode === 'blog' && (
+          <div>
+            <div style={{ color: '#666', fontSize: '11px', marginBottom: '16px', fontFamily: 'monospace' }}>
+              FEATURED LOGS
+            </div>
+            {articles.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {articles.map((article) => (
+                  <div
+                    key={article.filename ?? article.title}
+                    style={{
+                      padding: '14px 16px',
+                      background: '#111',
+                      borderRadius: '8px',
+                      border: '1px solid #222',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px',
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    <div style={{ color: '#0f0', fontSize: '13px' }}>{article.title}</div>
+                    <div style={{ color: '#666', fontSize: '11px' }}>
+                      {article.date} · {article.author?.join(', ') ?? 'Unknown'}
+                    </div>
+                    <button
+                      onClick={() => handleOpenArticle(article)}
+                      style={{
+                        alignSelf: 'flex-start',
+                        padding: '8px 12px',
+                        background: '#0f0',
+                        border: 'none',
+                        borderRadius: '6px',
+                        color: '#000',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        fontFamily: 'monospace',
+                      }}
+                    >
+                      READ
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{
+                padding: '32px',
+                background: '#111',
+                borderRadius: '8px',
+                textAlign: 'center',
+                color: '#444',
+                fontFamily: 'monospace',
+              }}>
+                No articles loaded
+              </div>
+            )}
+          </div>
+        )}
+
         {/* GAME */}
         {viewMode === 'game' && (
           <div>
@@ -407,6 +498,44 @@ export default function TerminalInterface({
             <div style={{ color: '#666', fontSize: '11px', marginBottom: '16px', fontFamily: 'monospace' }}>
               SELECT ENVIRONMENT
             </div>
+            <div style={{
+              display: 'flex',
+              gap: '10px',
+              marginBottom: '14px',
+            }}>
+              <button
+                onClick={() => onRotateScenery?.('prev')}
+                style={{
+                  flex: 1,
+                  padding: '10px',
+                  background: '#111',
+                  border: '1px solid #222',
+                  borderRadius: '6px',
+                  color: '#0f0',
+                  fontFamily: 'monospace',
+                  fontSize: '11px',
+                  cursor: 'pointer',
+                }}
+              >
+                ◀ PREV
+              </button>
+              <button
+                onClick={() => onRotateScenery?.('next')}
+                style={{
+                  flex: 1,
+                  padding: '10px',
+                  background: '#111',
+                  border: '1px solid #222',
+                  borderRadius: '6px',
+                  color: '#0f0',
+                  fontFamily: 'monospace',
+                  fontSize: '11px',
+                  cursor: 'pointer',
+                }}
+              >
+                NEXT ▶
+              </button>
+            </div>
             {availableScenery.length > 0 ? (
               <div style={{
                 display: 'grid',
@@ -447,6 +576,62 @@ export default function TerminalInterface({
                 No environments available
               </div>
             )}
+          </div>
+        )}
+
+        {/* AUDIO */}
+        {viewMode === 'audio' && (
+          <div>
+            <div style={{ color: '#666', fontSize: '11px', marginBottom: '16px', fontFamily: 'monospace' }}>
+              AMBIENT AUDIO
+            </div>
+            <div style={{
+              background: '#111',
+              borderRadius: '8px',
+              padding: '16px',
+              border: '1px solid #222',
+              fontFamily: 'monospace',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}>
+              <button
+                onClick={onToggleAudio}
+                style={{
+                  padding: '12px',
+                  background: audioEnabled ? '#0f0' : '#222',
+                  border: 'none',
+                  borderRadius: '6px',
+                  color: audioEnabled ? '#000' : '#666',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  letterSpacing: '0.6px',
+                }}
+              >
+                {audioEnabled ? 'AUDIO ENABLED' : 'AUDIO MUTED'}
+              </button>
+              <div style={{ color: '#666', fontSize: '11px' }}>
+                STATUS: {audioStatus.toUpperCase()}
+              </div>
+              <label style={{ color: '#888', fontSize: '11px' }}>
+                VOLUME
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={audioVolume}
+                  onChange={(e) => onVolumeChange?.(Number(e.target.value))}
+                  style={{ width: '100%', marginTop: '8px' }}
+                />
+              </label>
+              {audioStatus === 'blocked' && (
+                <div style={{ color: '#ff8800', fontSize: '11px' }}>
+                  Audio blocked by browser. Tap anywhere to enable.
+                </div>
+              )}
+            </div>
           </div>
         )}
 

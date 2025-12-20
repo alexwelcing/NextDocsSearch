@@ -31,8 +31,12 @@ const Chat = () => {
     getRandomImage()
   }, [])
 
-  async function handleImageChange(): Promise<void> {
-    await getRandomImage()
+  function handleImageChange(newImage: string): void {
+    if (newImage) {
+      setCurrentImage(newImage)
+      return
+    }
+    void getRandomImage()
   }
 
   return (
