@@ -104,13 +104,15 @@ export default function HomePage() {
         {isIn3DMode ? (
           <main className={`${styles.main} ${styles.gradientbg}`}>
             {/* Show the ThreeSixty VR environment */}
-            {currentImage && (
+            {currentImage ? (
               <ThreeSixty
                 currentImage={currentImage}
                 isDialogOpen={false}
                 onChangeImage={getRandomImage}
                 onGameStateChange={setGameState}
               />
+            ) : (
+              <StylishFallback />
             )}
 
             {/* SearchDialog for AI chat - only show when NOT playing game */}

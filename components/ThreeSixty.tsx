@@ -4,6 +4,7 @@ import { createXRStore, XR, XROrigin, useXRSessionModeSupported } from '@react-t
 import styled from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls, Stats } from '@react-three/drei';
+import { BackSide } from 'three';
 import PhysicsGround from './PhysicsGround';
 import BackgroundSphere from './BackgroundSphere';
 import type { ArticleData } from './GlowingArticleDisplay';
@@ -20,6 +21,8 @@ import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
+import { runAssetQueue, AssetStage } from '../lib/perf/assetQueue';
+import { usePerfPreferences } from '../lib/hooks/usePerfPreferences';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -81,6 +84,20 @@ const ThreeSixtyContainer = styled.div`
   opacity: 1;
 `;
 
+const LoadingOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+`;
+
 interface ThreeSixtyProps {
   currentImage: string;
   isDialogOpen: boolean;
@@ -109,6 +126,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [initialSceneReady, setInitialSceneReady] = useState(false);
+  const [fullSceneReady, setFullSceneReady] = useState(false);
 
   // Cinematic intro state - check localStorage to see if already watched
   const [showCinematicIntro, setShowCinematicIntro] = useState(() => {
@@ -120,6 +139,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   });
   const [cinematicComplete, setCinematicComplete] = useState(!showCinematicIntro);
   const [cinematicProgress, setCinematicProgress] = useState(0);
+  const [prefetchDeepAssets, setPrefetchDeepAssets] = useState(!showCinematicIntro);
 
   // Seasonal theme state (with query param support)
   const [currentSeason, setCurrentSeason] = useState<Season>(() => {
@@ -148,6 +168,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
+  const { prefersReducedMotion, prefersReducedData } = usePerfPreferences();
 
   // Update season when query params change
   useEffect(() => {
@@ -174,6 +195,21 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion || prefersReducedData) {
+      setShowCinematicIntro(false);
+      setCinematicComplete(true);
+      setCinematicProgress(1);
+      setPrefetchDeepAssets(true);
+    }
+  }, [prefersReducedMotion, prefersReducedData]);
+
+  useEffect(() => {
+    if (!showCinematicIntro) {
+      setPrefetchDeepAssets(true);
+    }
+  }, [showCinematicIntro]);
 
   // Notify parent of game state changes
   useEffect(() => {
@@ -227,42 +263,142 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
 
-  // Fetch articles
+  const preloadImage = useCallback((source: string) => {
+    if (!source || typeof window === 'undefined') {
+      return Promise.resolve();
+    }
+
+    return new Promise<void>((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve();
+      image.onerror = () => resolve();
+      image.src = source;
+    });
+  }, []);
+
+  const fetchArticles = useCallback(async () => {
+    try {
+      const response = await fetch('/api/articles');
+      const data: ArticleData[] = await response.json();
+      setArticles(data);
+    } catch (error) {
+      console.error("Failed fetching articles:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchSplats = useCallback(async () => {
+    if (prefersReducedData || isMobile) {
+      setHasSplats(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/getSplats');
+      const data = await response.json();
+
+      if (data.hasSplats && data.splats.length > 0) {
+        setAvailableSplats(data.splats);
+        setHasSplats(true);
+        setSelectedSplat(data.splats[0].path);
+      }
+    } catch (error) {
+      console.error("Failed fetching splat files:", error);
+    }
+  }, [isMobile, prefersReducedData]);
+
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await fetch('/api/articles');
-        const data: ArticleData[] = await response.json();
-        setArticles(data);
-      } catch (error) {
-        console.error("Failed fetching articles:", error);
-      } finally {
-        setLoading(false);
+    if (!currentImage) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const runCoreQueue = async () => {
+      const stages: AssetStage[] = [
+        {
+          id: 'core',
+          label: 'Core scene assets',
+          tasks: [
+            {
+              id: 'background',
+              label: 'Static background',
+              load: () => preloadImage(currentImage),
+            },
+            {
+              id: 'camera-path',
+              label: 'Primary camera path',
+              load: () => new Promise((resolve) => requestAnimationFrame(() => resolve(true))),
+            },
+            {
+              id: 'interactive-tablet',
+              label: 'Interactive tablet shell',
+              load: () => import('./InteractiveTablet'),
+            },
+          ],
+        },
+      ];
+
+      await runAssetQueue(stages);
+
+      if (!cancelled) {
+        setInitialSceneReady(true);
       }
     };
 
-    fetchArticles();
-  }, []);
+    runCoreQueue();
 
-  // Auto-detect available splat files
+    return () => {
+      cancelled = true;
+    };
+  }, [currentImage, preloadImage]);
+
   useEffect(() => {
-    const fetchSplats = async () => {
-      try {
-        const response = await fetch('/api/getSplats');
-        const data = await response.json();
+    if (!initialSceneReady || fullSceneReady || !prefetchDeepAssets) {
+      return;
+    }
 
-        if (data.hasSplats && data.splats.length > 0) {
-          setAvailableSplats(data.splats);
-          setHasSplats(true);
-          setSelectedSplat(data.splats[0].path);
-        }
-      } catch (error) {
-        console.error("Failed fetching splat files:", error);
+    let cancelled = false;
+
+    const runDeepQueue = async () => {
+      const deepTasks = [
+        {
+          id: 'articles',
+          label: 'Article content',
+          load: fetchArticles,
+        },
+      ];
+
+      if (!prefersReducedData) {
+        deepTasks.push({
+          id: 'splats',
+          label: 'Gaussian splats',
+          load: fetchSplats,
+        });
+      }
+
+      const stages: AssetStage[] = [
+        {
+          id: 'deep',
+          label: 'Expanded scene assets',
+          tasks: deepTasks,
+        },
+      ];
+
+      await runAssetQueue(stages);
+
+      if (!cancelled) {
+        setFullSceneReady(true);
       }
     };
 
-    fetchSplats();
-  }, []);
+    runDeepQueue();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchArticles, fetchSplats, fullSceneReady, initialSceneReady, prefetchDeepAssets, prefersReducedData]);
 
   const handleEnterVR = async () => {
     try {
@@ -293,6 +429,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   const handleCinematicProgress = useCallback((progress: number) => {
     setCinematicProgress(progress);
+  }, []);
+
+  const handleCinematicStart = useCallback(() => {
+    setPrefetchDeepAssets(true);
   }, []);
 
   // Game handlers - start game directly from terminal
@@ -344,6 +484,39 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setGameState('IDLE');
   }, []);
 
+  const showLightweightScene = initialSceneReady && !fullSceneReady;
+  const allowSeasonalEffects = !isMobile && !prefersReducedMotion && !prefersReducedData && fullSceneReady;
+  const allowGaussianSplat = useGaussianSplat && selectedSplat && !isMobile && !prefersReducedData && gameState !== 'PLAYING' && fullSceneReady;
+  const shouldShowCinematic = showCinematicIntro && !cinematicComplete && fullSceneReady;
+  const dprRange = prefersReducedData ? [0.3, 0.6] : isMobile ? [0.3, 0.8] : [0.5, 1.5];
+
+  const LightweightIntroScene = () => (
+    <>
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[4, 8, 4]} intensity={0.7} />
+      <mesh rotation={[0, Math.PI / 2, 0]} position={[0, 2, -6]}>
+        <planeGeometry args={[12, 6]} />
+        <meshBasicMaterial color="#0b1020" />
+      </mesh>
+      <mesh position={[0, 1.2, 0]}>
+        <icosahedronGeometry args={[1.5, 0]} />
+        <meshStandardMaterial color="#7ab1ff" metalness={0.1} roughness={0.6} />
+      </mesh>
+      <mesh position={[2.5, 0.6, -1]}>
+        <boxGeometry args={[1.2, 1.2, 1.2]} />
+        <meshStandardMaterial color="#5a78ff" metalness={0.05} roughness={0.7} />
+      </mesh>
+      <mesh position={[-2.4, 0.8, -1.5]}>
+        <coneGeometry args={[0.8, 1.6, 5]} />
+        <meshStandardMaterial color="#93d7ff" metalness={0.1} roughness={0.8} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[50, 16, 12]} />
+        <meshBasicMaterial color="#04060f" side={BackSide} />
+      </mesh>
+    </>
+  );
+
   return (
     <ThreeSixtyContainer>
       {/* Only show VR button if device supports VR */}
@@ -374,7 +547,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
       <Canvas
         shadows={false}
-        dpr={isMobile ? [0.3, 0.8] : [0.5, 1.5]}
+        dpr={dprRange}
         performance={{ min: 0.1 }}
         gl={{
           powerPreference: 'high-performance',
@@ -387,78 +560,93 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       >
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
-            <PhysicsEnvironment>
-              <PhysicsGround />
+            {showLightweightScene && <LightweightIntroScene />}
+            {fullSceneReady && (
+              <PhysicsEnvironment>
+                <PhysicsGround />
 
-              {/* Cinematic camera for intro sequence */}
-              {showCinematicIntro && !cinematicComplete && (
-                <CinematicCamera
-                  isPlaying={true}
-                  onComplete={handleCinematicComplete}
+                {/* Cinematic camera for intro sequence */}
+                {shouldShowCinematic && (
+                  <CinematicCamera
+                    isPlaying={true}
+                    onComplete={handleCinematicComplete}
+                  />
+                )}
+
+                {/* Camera controller for smooth game transitions */}
+                {cinematicComplete && <CameraController gameState={gameState} />}
+
+                {/* OrbitControls - disabled during cinematic intro */}
+                {cinematicComplete && (
+                  <OrbitControls
+                    enableDamping
+                    dampingFactor={0.1}
+                    rotateSpeed={0.5}
+                    zoomSpeed={0.8}
+                    panSpeed={0.5}
+                    minDistance={5}
+                    maxDistance={50}
+                    maxPolarAngle={Math.PI / 2}
+                    enablePan={false}
+                  />
+                )}
+
+                {/* Sphere Hunter Game */}
+                <ClickingGame
+                  gameState={gameState}
+                  onGameStart={handleStartGame}
+                  onGameEnd={handleGameEnd}
+                  onScoreUpdate={setScore}
+                  onComboUpdate={setCombo}
+                  onTimeUpdate={setTimeRemaining}
                 />
-              )}
 
-              {/* Camera controller for smooth game transitions */}
-              {cinematicComplete && <CameraController gameState={gameState} />}
+                {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
+                {allowGaussianSplat ? (
+                  <GaussianSplatBackground
+                    splatUrl={selectedSplat}
+                    position={[0, 0, 0]}
+                    scale={1}
+                  />
+                ) : (
+                  <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+                )}
 
-              {/* OrbitControls - disabled during cinematic intro */}
-              {cinematicComplete && (
-                <OrbitControls
-                  enableDamping
-                  dampingFactor={0.1}
-                  rotateSpeed={0.5}
-                  zoomSpeed={0.8}
-                  panSpeed={0.5}
-                  minDistance={5}
-                  maxDistance={50}
-                  maxPolarAngle={Math.PI / 2}
-                  enablePan={false}
+                {/* Seasonal particle effects (snow, leaves, etc.) */}
+                {allowSeasonalEffects && gameState !== 'PLAYING' && (
+                  <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
+                )}
+
+                {/* Dynamic Scene Lighting */}
+                <SceneLighting
+                  isCinematic={showCinematicIntro && !cinematicComplete}
+                  cinematicProgress={cinematicProgress}
                 />
-              )}
-
-              {/* Sphere Hunter Game */}
-              <ClickingGame
-                gameState={gameState}
-                onGameStart={handleStartGame}
-                onGameEnd={handleGameEnd}
-                onScoreUpdate={setScore}
-                onComboUpdate={setCombo}
-                onTimeUpdate={setTimeRemaining}
-              />
-
-              {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
-              {useGaussianSplat && selectedSplat && !isMobile && gameState !== 'PLAYING' ? (
-                <GaussianSplatBackground
-                  splatUrl={selectedSplat}
-                  position={[0, 0, 0]}
-                  scale={1}
-                />
-              ) : (
-                <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
-              )}
-
-              {/* Seasonal particle effects (snow, leaves, etc.) */}
-              {!isMobile && gameState !== 'PLAYING' && (
-                <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
-              )}
-
-              {/* Dynamic Scene Lighting */}
-              <SceneLighting
-                isCinematic={showCinematicIntro && !cinematicComplete}
-                cinematicProgress={cinematicProgress}
-              />
-            </PhysicsEnvironment>
+              </PhysicsEnvironment>
+            )}
           </XROrigin>
         </XR>
         {/* Performance monitoring - visible in development */}
         {process.env.NODE_ENV === 'development' && <Stats />}
       </Canvas>
 
+      {!initialSceneReady && (
+        <LoadingOverlay>
+          Loading intro scene...
+        </LoadingOverlay>
+      )}
+
+      {showLightweightScene && (
+        <LoadingOverlay style={{ top: 'auto', bottom: '40px', opacity: 0.7 }}>
+          Loading full scene...
+        </LoadingOverlay>
+      )}
+
       {/* Performance Monitor - outside Canvas */}
       {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
 
       {/* Pip-Boy style tablet - slides up from bottom */}
-      {!loading && (
+      {fullSceneReady && !loading && (
         <InteractiveTablet
           isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
           articles={articles}
@@ -475,6 +663,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onComplete={handleCinematicComplete}
           onSkip={handleCinematicSkip}
           onProgressUpdate={handleCinematicProgress}
+          onStart={handleCinematicStart}
+          durationScale={prefersReducedMotion ? 0.7 : 1}
         />
       )}
 
