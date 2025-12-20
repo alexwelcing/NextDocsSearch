@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import TerminalInterface from './TerminalInterface';
+import { useNarrative } from './NarrativeContext';
 
 interface ArticleData {
   title: string;
@@ -38,6 +39,7 @@ export default function InteractiveTablet({
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const { triggerEvent } = useNarrative();
 
   // Detect mobile
   useEffect(() => {
@@ -80,7 +82,8 @@ export default function InteractiveTablet({
 
   const handleOpenTerminal = useCallback(() => {
     setTerminalOpen(true);
-  }, []);
+    triggerEvent('artifact-interaction');
+  }, [triggerEvent]);
 
   if (isGamePlaying) return null;
 

@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
+import { useNarrative } from './NarrativeContext';
 
 interface ArticleData {
   title: string;
@@ -53,6 +54,9 @@ export default function TerminalInterface({
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  const { chatData, setChatData } = useSupabaseData();
+  const { updateStats, currentQuest, completeQuest } = useJourney();
+  const { currentChapter, triggerEvent } = useNarrative();
   const { chatData, setChatData, chatHistory } = useSupabaseData();
   const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
   const currentMissionBrief = currentQuest ? missionBriefs[currentQuest.id] : undefined;
@@ -100,8 +104,9 @@ export default function TerminalInterface({
       setChatInput('');
       updateStats('questionsAsked', 1);
       if (currentQuest?.id === 'first-question') completeQuest('first-question');
+      triggerEvent('first-question');
     }
-  }, [chatInput, setChatData, chatData.response, updateStats, currentQuest, completeQuest]);
+  }, [chatInput, setChatData, chatData.response, updateStats, currentQuest, completeQuest, triggerEvent]);
 
   const handlePlayGame = useCallback(() => {
     if (onStartGame) {
@@ -453,6 +458,26 @@ export default function TerminalInterface({
         {/* ABOUT */}
         {viewMode === 'about' && (
           <div>
+            <div style={{
+              background: '#0f120f',
+              borderRadius: '8px',
+              padding: isMobile ? '14px' : '16px',
+              marginBottom: '16px',
+              border: '1px solid rgba(0, 255, 0, 0.2)',
+            }}>
+              <div style={{ color: '#7ff77f', fontSize: '11px', marginBottom: '8px', fontFamily: 'monospace' }}>
+                MISSION BRIEF
+              </div>
+              <div style={{ color: '#fff', fontSize: '16px', marginBottom: '8px', fontFamily: 'monospace' }}>
+                {currentChapter.title}
+              </div>
+              <div style={{ color: '#b7c8b7', fontSize: '13px', lineHeight: 1.6, fontFamily: 'monospace' }}>
+                {currentChapter.brief}
+              </div>
+              <div style={{ marginTop: '10px', color: '#7ff77f', fontSize: '12px', fontFamily: 'monospace' }}>
+                Reward: {currentChapter.reward}
+              </div>
+            </div>
             <div style={{
               background: '#111',
               borderRadius: '8px',

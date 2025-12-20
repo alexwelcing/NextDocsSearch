@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { trackEvent } from '@/lib/google-analytics';
 import { JourneyProvider } from '@/components/JourneyContext';
+import { NarrativeProvider } from '@/components/NarrativeContext';
 
 
 const GTM_ID = 'GTM-W24L468'
@@ -57,7 +58,9 @@ function App({ Component, pageProps }: AppProps) {
       </Script>
 
       <JourneyProvider>
-        <Component {...pageProps} />
+        <NarrativeProvider>
+          <Component {...pageProps} />
+        </NarrativeProvider>
       </JourneyProvider>
     </>
   )
