@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { createXRStore, XR, XROrigin, useXRSessionModeSupported } from '@react-three/xr';
 import styled from 'styled-components';
 import { Physics } from '@react-three/cannon';
@@ -20,6 +20,7 @@ import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
+import { trackEvent } from '@/lib/analytics/trackEvent';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -100,6 +101,40 @@ interface SceneryOption {
   type: 'image' | 'splat';
   path: string;
 }
+
+const PerformanceTracker: React.FC = () => {
+  const frameCountRef = useRef(0);
+  const lastSampleTimeRef = useRef(typeof performance !== 'undefined' ? performance.now() : 0);
+  const lastReportTimeRef = useRef(lastSampleTimeRef.current);
+  const samplesRef = useRef<number[]>([]);
+
+  useFrame(() => {
+    const now = performance.now();
+    frameCountRef.current += 1;
+
+    const elapsed = now - lastSampleTimeRef.current;
+    if (elapsed >= 1000) {
+      const fps = (frameCountRef.current / elapsed) * 1000;
+      samplesRef.current.push(fps);
+      frameCountRef.current = 0;
+      lastSampleTimeRef.current = now;
+    }
+
+    if (now - lastReportTimeRef.current >= 20000 && samplesRef.current.length > 0) {
+      const total = samplesRef.current.reduce((sum, value) => sum + value, 0);
+      const avg = total / samplesRef.current.length;
+      trackEvent('performance_metrics', {
+        fpsAverage: Math.round(avg * 10) / 10,
+        samples: samplesRef.current.length,
+        windowMs: Math.round(now - lastReportTimeRef.current),
+      });
+      samplesRef.current = [];
+      lastReportTimeRef.current = now;
+    }
+  });
+
+  return null;
+};
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
@@ -264,6 +299,46 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     fetchSplats();
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    if (navEntry) {
+      trackEvent('performance_metrics', {
+        loadTimeMs: Math.round(navEntry.loadEventEnd),
+        domContentLoadedMs: Math.round(navEntry.domContentLoadedEventEnd),
+        firstByteMs: Math.round(navEntry.responseStart),
+      });
+    }
+
+    const handleResourceError = (event: Event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const isAssetElement =
+        target instanceof HTMLImageElement ||
+        target instanceof HTMLScriptElement ||
+        target instanceof HTMLLinkElement ||
+        target instanceof HTMLSourceElement;
+
+      if (isAssetElement) {
+        const url =
+          (target as HTMLImageElement).src ||
+          (target as HTMLLinkElement).href ||
+          '';
+        trackEvent('performance_metrics', {
+          assetError: {
+            tagName: target.tagName,
+            url,
+          },
+        });
+      }
+    };
+
+    window.addEventListener('error', handleResourceError, true);
+    return () => window.removeEventListener('error', handleResourceError, true);
+  }, []);
+
   const handleEnterVR = async () => {
     try {
       await store.enterVR();
@@ -296,7 +371,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   }, []);
 
   // Game handlers - start game directly from terminal
-  const handleStartGame = useCallback(() => {
+  const handleStartGame = useCallback((source: string = 'unknown') => {
+    trackEvent('game_play', { source });
     setGameState('COUNTDOWN');
     setCountdown(3);
     setScore(0);
@@ -318,6 +394,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   }, []);
 
   const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
+    trackEvent('game_finish', {
+      score: finalScore,
+      comboMax: stats.comboMax,
+      accuracy: stats.accuracy,
+      totalClicks: stats.totalClicks,
+      successfulClicks: stats.successfulClicks,
+    });
     setScore(finalScore);
     setGameStats(stats);
     setGameState('GAME_OVER');
@@ -336,7 +419,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const handlePlayAgain = useCallback(() => {
     setGameState('IDLE');
     setTimeout(() => {
-      handleStartGame();
+      handleStartGame('play_again');
     }, 100);
   }, [handleStartGame]);
 
@@ -452,6 +535,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </XR>
         {/* Performance monitoring - visible in development */}
         {process.env.NODE_ENV === 'development' && <Stats />}
+        <PerformanceTracker />
       </Canvas>
 
       {/* Performance Monitor - outside Canvas */}
