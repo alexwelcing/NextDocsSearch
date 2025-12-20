@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
-import { JourneyProgress, Quest, QUESTS, PHASES, Achievement, ACHIEVEMENTS } from '../lib/journey/types';
+import { JourneyProgress, Quest, QUESTS, Achievement, ACHIEVEMENTS } from '../lib/journey/types';
+import { ShipSignal } from '../lib/ai/shipPersona';
 
 interface JourneyContextType {
   progress: JourneyProgress;
@@ -13,6 +14,8 @@ interface JourneyContextType {
   unlockAchievement: (achievementId: string) => void;
   resetJourney: () => void;
   updateCreationProgress: (type: 'generated' | 'saved' | 'template_used', count: number) => void;
+  missionBriefs: Record<string, string>;
+  applyAiSignals: (signals: ShipSignal[]) => void;
 }
 
 const JourneyContext = createContext<JourneyContextType | undefined>(undefined);
@@ -58,12 +61,32 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     }));
   });
 
+  const [missionBriefs, setMissionBriefs] = useState<Record<string, string>>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('journeyMissionBriefs');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse mission briefs:', e);
+        }
+      }
+    }
+    return {};
+  });
+
   // Save to localStorage whenever progress changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('journeyProgress', JSON.stringify(progress));
     }
   }, [progress]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('journeyMissionBriefs', JSON.stringify(missionBriefs));
+    }
+  }, [missionBriefs]);
 
   // Get current active quest
   const currentQuest = QUESTS.find(q =>
@@ -217,11 +240,40 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const applyAiSignals = useCallback((signals: ShipSignal[]) => {
+    if (!signals.length) return;
+
+    setMissionBriefs(prev => {
+      const updated = { ...prev };
+
+      signals.forEach(signal => {
+        if ((signal.type === 'MISSION_BRIEF' || signal.type === 'MISSION_HINT') && signal.text) {
+          const targetQuest = signal.questId || currentQuest?.id;
+          if (targetQuest) {
+            updated[targetQuest] = signal.text.trim();
+          }
+        }
+      });
+
+      return updated;
+    });
+
+    signals
+      .filter(signal => signal.type === 'UNLOCK_QUEST')
+      .forEach(signal => {
+        if (signal.questId) {
+          completeQuest(signal.questId);
+        }
+      });
+  }, [completeQuest, currentQuest?.id]);
+
   const resetJourney = useCallback(() => {
     setProgress(INITIAL_PROGRESS);
     setAchievements(ACHIEVEMENTS.map(ach => ({ ...ach, unlocked: false })));
+    setMissionBriefs({});
     if (typeof window !== 'undefined') {
       localStorage.removeItem('journeyProgress');
+      localStorage.removeItem('journeyMissionBriefs');
     }
   }, []);
 
@@ -239,6 +291,8 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
         unlockAchievement,
         resetJourney,
         updateCreationProgress,
+        missionBriefs,
+        applyAiSignals,
       }}
     >
       {children}

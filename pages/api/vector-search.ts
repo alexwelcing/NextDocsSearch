@@ -11,6 +11,7 @@ import {
 } from 'openai-edge';
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import { ApplicationError, UserError } from '@/lib/errors';
+import { shipPersona } from '@/lib/ai/shipPersona';
 
 const openAiKey = process.env.OPENAI_KEY;
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -43,7 +44,7 @@ export default async function handler(req: NextRequest) {
       throw new UserError('Missing request data')
     }
 
-    const { prompt: query } = requestData
+    const { prompt: query, history = [], questContext } = requestData
 
     if (!query) {
       throw new UserError('Missing query in request data')
@@ -111,9 +112,19 @@ export default async function handler(req: NextRequest) {
       contextText += `${content.trim()}\n---\n`
     }
 
+    const questDetails = questContext?.currentQuest
+      ? `${questContext.currentQuest.title}: ${questContext.currentQuest.objective}`
+      : 'No active mission';
+    const missionBrief = questContext?.missionBrief ? `Current mission brief: ${questContext.missionBrief}` : 'Current mission brief: none (generate one if missing)';
+
     const prompt = codeBlock`
       ${oneLine`
-      You are a friendly expert in technology and people answering questions about Alex Welcing. You will highlight accomplishments, celebrate prior experiences, and emphasize talents.`}
+      You are answering questions about Alex Welcing while staying in character as Ship AI.`}
+
+      Mission status:
+      ${questDetails}
+      Current phase: ${questContext?.currentPhase ?? 'unknown'}
+      ${missionBrief}
 
       Context sections:
       ${contextText}
@@ -125,14 +136,22 @@ export default async function handler(req: NextRequest) {
       Answer in sentences.
     `
 
-    const chatMessage: ChatCompletionRequestMessage = {
-      role: 'user',
-      content: prompt,
-    }
+    const historyMessages: ChatCompletionRequestMessage[] = Array.isArray(history)
+      ? history
+        .slice(-shipPersona.memory.maxInteractions)
+        .flatMap((entry: { question?: string; response?: string }) => ([
+          entry.question ? { role: 'user', content: entry.question } : null,
+          entry.response ? { role: 'assistant', content: entry.response } : null,
+        ].filter(Boolean) as ChatCompletionRequestMessage[]))
+      : [];
 
     const response = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [chatMessage],
+      messages: [
+        { role: 'system', content: shipPersona.systemPrompt },
+        ...historyMessages,
+        { role: 'user', content: prompt },
+      ],
       max_tokens: 512,
       temperature: 0,
       stream: true,
