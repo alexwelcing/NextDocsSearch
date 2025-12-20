@@ -9,8 +9,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useCompletion } from 'ai/react';
-import { X, Loader, User, Frown, CornerDownLeft, Search, Wand, ArrowLeftCircle } from 'lucide-react';
+import { X, Loader, Frown, CornerDownLeft, Search, ArrowLeftCircle } from 'lucide-react';
 import { useSupabaseData } from './SupabaseDataContext'; // Ensure this is the correct import path
 
 type Question = {
@@ -43,16 +42,15 @@ const DEFAULT_QUESTIONS = Object.entries(QUESTIONS_TREE.root).map(([key, text]) 
 let historyStack: QuestionKey[] = [];
 
 export function SearchDialog() {
-  const { setChatData } = useSupabaseData(); // Destructure setChatData from the context hook
+  const { setChatData, chatData } = useSupabaseData(); // Destructure setChatData from the context hook
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState<string>('');
   const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
   );
-  const { complete, completion, isLoading, error } = useCompletion({
-    api: '/api/vector-search',
-  });
   const [showMoreOptions, setShowMoreOptions] = React.useState(false);
+  const isLoading = chatData.response === 'Thinking...';
+  const hasResponse = chatData.response && chatData.response !== 'Waiting for your question...';
 
   const handleModalToggle = React.useCallback(() => {
     setOpen(!open);
@@ -77,15 +75,8 @@ export function SearchDialog() {
     return () => document.removeEventListener('keydown', down);
   }, [handleModalToggle]);
 
-  React.useEffect(() => {
-    if (completion && !error) {
-      setChatData((prevData) => ({ ...prevData, response: completion }));
-    }
-  }, [completion, error, setChatData]);
-
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    complete(query);
     setChatData({ question: query, response: '' });
   };
 
@@ -170,7 +161,7 @@ min-w-[200px]"
                   </div>
                 )}
 
-                {error && (
+                {chatData.response === 'Sorry, I could not get a response. Please try again.' && (
                   <div className="flex items-center gap-2">
                     <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
                       <Frown width={18} />
@@ -181,8 +172,8 @@ min-w-[200px]"
                   </div>
                 )}
 
-                {completion && !error ? (
-                  <div className="flex items-center gap-4 dark:text-white">{completion}</div>
+                {hasResponse ? (
+                  <div className="flex items-center gap-4 dark:text-white">{chatData.response}</div>
                 ) : null}
 
                 <div className="relative">
