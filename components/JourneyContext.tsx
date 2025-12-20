@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { JourneyProgress, Quest, QUESTS, PHASES, Achievement, ACHIEVEMENTS } from '../lib/journey/types';
+import { trackEvent } from '@/lib/analytics/trackEvent';
 
 interface JourneyContextType {
   progress: JourneyProgress;
@@ -90,6 +91,12 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
           ? [...prev.unlockedFeatures, ...quest.unlocks]
           : prev.unlockedFeatures,
       };
+
+      trackEvent('chapter_unlock', {
+        questId,
+        phase: quest.phase,
+        unlocks: quest.unlocks ?? [],
+      });
 
       // Check for phase completion achievements
       if (quest.phase === 2 && prev.completedQuests.length === 0) {

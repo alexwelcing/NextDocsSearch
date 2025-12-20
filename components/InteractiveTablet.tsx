@@ -20,7 +20,7 @@ interface InteractiveTabletProps {
   initialPosition?: [number, number, number];
   isGamePlaying?: boolean;
   articles?: ArticleData[];
-  onStartGame?: () => void;
+  onStartGame?: (source?: string) => void;
   cinematicRevealProgress?: number;
   onChangeScenery?: (scenery: SceneryOption) => void;
   availableScenery?: SceneryOption[];
@@ -178,7 +178,7 @@ export default function InteractiveTablet({
             }}>
               {[
                 { label: 'ASK AI', icon: '>', action: handleOpenTerminal },
-                { label: 'GAME', icon: '#', action: () => { onStartGame?.(); handleLower(); } },
+                { label: 'GAME', icon: '#', action: () => { onStartGame?.('tablet_quick_menu'); handleLower(); } },
                 { label: 'SCENE', icon: '*', action: handleOpenTerminal },
                 { label: 'ABOUT', icon: '?', action: handleOpenTerminal },
               ].map((item) => (
@@ -259,7 +259,7 @@ export default function InteractiveTablet({
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
         articles={articles}
-        onStartGame={() => { onStartGame?.(); handleLower(); setTerminalOpen(false); }}
+        onStartGame={(source) => { onStartGame?.(source ?? 'terminal'); handleLower(); setTerminalOpen(false); }}
         onChangeScenery={onChangeScenery}
         availableScenery={availableScenery}
         currentScenery={currentScenery}

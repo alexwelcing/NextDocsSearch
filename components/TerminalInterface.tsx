@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
+import FeedbackPanel from './FeedbackPanel';
+import { trackEvent } from '@/lib/analytics/trackEvent';
 
 interface ArticleData {
   title: string;
@@ -30,7 +32,7 @@ interface TerminalInterfaceProps {
   isOpen: boolean;
   onClose: () => void;
   articles?: ArticleData[];
-  onStartGame?: () => void;
+  onStartGame?: (source?: string) => void;
   onChangeScenery?: (scenery: SceneryOption) => void;
   availableScenery?: SceneryOption[];
   currentScenery?: string;
@@ -96,6 +98,9 @@ export default function TerminalInterface({
   const handleChatSubmit = useCallback(async () => {
     if (chatInput.trim()) {
       setChatData({ question: chatInput, response: chatData.response });
+      trackEvent('ai_chat', {
+        messageLength: chatInput.trim().length,
+      });
       setChatInput('');
       updateStats('questionsAsked', 1);
       if (currentQuest?.id === 'first-question') completeQuest('first-question');
@@ -104,7 +109,7 @@ export default function TerminalInterface({
 
   const handlePlayGame = useCallback(() => {
     if (onStartGame) {
-      onStartGame();
+      onStartGame('terminal_game_tab');
       onClose();
     }
   }, [onStartGame, onClose]);
@@ -442,6 +447,10 @@ export default function TerminalInterface({
                 </div>
               </div>
             )}
+
+            <div style={{ marginTop: '20px' }}>
+              <FeedbackPanel isMobile={isMobile} />
+            </div>
 
             <div style={{
               marginTop: '20px',

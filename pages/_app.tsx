@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { trackEvent } from '@/lib/google-analytics';
+import { trackEvent } from '@/lib/analytics/trackEvent';
 import { JourneyProvider } from '@/components/JourneyContext';
 
 
@@ -13,6 +13,11 @@ function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
+    trackEvent('session_start', {
+      path: router.asPath,
+      referrer: document.referrer || undefined,
+    });
+
     const handleRouteChange = (url: string) => {
       const urlObj = new URL(url, window.location.origin);
       const abTestVariant = urlObj.searchParams.get('ab_test_variant');
