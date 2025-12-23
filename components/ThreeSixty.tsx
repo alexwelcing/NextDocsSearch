@@ -18,9 +18,11 @@ import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
+import ArticleExplorer3D, { ArticleDetailPanel } from './ArticleExplorer3D';
 import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
+import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -158,6 +160,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     totalClicks: 0,
     successfulClicks: 0,
   });
+
+  // 3D Exploration state
+  const [is3DExploreActive, setIs3DExploreActive] = useState(false);
+  const [enhancedArticles, setEnhancedArticles] = useState<EnhancedArticleData[]>([]);
+  const [selectedArticle, setSelectedArticle] = useState<EnhancedArticleData | null>(null);
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
@@ -330,6 +337,20 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     fetchArticles();
   }, []);
 
+  // Fetch enhanced articles for 3D exploration
+  useEffect(() => {
+    if (is3DExploreActive && enhancedArticles.length === 0) {
+      fetch('/api/articles-enhanced')
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setEnhancedArticles(data);
+          }
+        })
+        .catch(err => console.error('Failed to fetch enhanced articles:', err));
+    }
+  }, [is3DExploreActive, enhancedArticles.length]);
+
   // Auto-detect available splat files
   useEffect(() => {
     const fetchSplats = async () => {
@@ -437,6 +458,22 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setGameState('IDLE');
   }, []);
 
+  // 3D Exploration handlers
+  const handleToggle3DExplore = useCallback(() => {
+    setIs3DExploreActive(prev => !prev);
+    setSelectedArticle(null);
+  }, []);
+
+  const handleSelectArticle = useCallback((article: EnhancedArticleData | null) => {
+    setSelectedArticle(article);
+  }, []);
+
+  const handleNavigateToArticle = useCallback(() => {
+    if (selectedArticle) {
+      window.location.href = `/articles/${selectedArticle.slug}`;
+    }
+  }, [selectedArticle]);
+
   return (
     <ThreeSixtyContainer>
       {/* Only show VR button if device supports VR */}
@@ -518,8 +555,18 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               )}
 
               {/* Seasonal particle effects (snow, leaves, etc.) */}
-              {!isMobile && performanceFlags.allowSeasonalEffects && gameState !== 'PLAYING' && (
+              {!isMobile && performanceFlags.allowSeasonalEffects && gameState !== 'PLAYING' && !is3DExploreActive && (
                 <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
+              )}
+
+              {/* 3D Article Explorer */}
+              {is3DExploreActive && enhancedArticles.length > 0 && (
+                <ArticleExplorer3D
+                  articles={enhancedArticles}
+                  onSelectArticle={handleSelectArticle}
+                  selectedArticle={selectedArticle}
+                  layout="sphere"
+                />
               )}
 
               {/* Dynamic Scene Lighting */}
@@ -546,6 +593,17 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onChangeScenery={handleSceneryChange}
           availableScenery={sceneryOptions}
           currentScenery={currentSceneryPath}
+          onToggle3DExplore={handleToggle3DExplore}
+          is3DExploreActive={is3DExploreActive}
+        />
+      )}
+
+      {/* Article Detail Panel for 3D Exploration */}
+      {is3DExploreActive && selectedArticle && (
+        <ArticleDetailPanel
+          article={selectedArticle}
+          onClose={() => setSelectedArticle(null)}
+          onNavigate={handleNavigateToArticle}
         />
       )}
 

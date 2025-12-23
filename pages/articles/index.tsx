@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import ArticleList from '@/components/ui/ArticleList';
+import ArticleDiscovery from '@/components/ui/ArticleDiscovery';
 import CircleNav from '@/components/ui/CircleNav';
 import StructuredData from '@/components/StructuredData';
 import styles from '@/styles/Home.module.css';
@@ -48,23 +48,23 @@ export default function ArticlesIndex() {
         </p>
 
         {/* Hub page links for internal linking */}
-        <div className="flex gap-4 mb-8 text-sm">
-          <Link href="/speculative-ai" className="text-indigo-400 hover:text-indigo-300">
+        <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm">
+          <Link href="/speculative-ai" className="text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded border border-indigo-500/30 hover:border-indigo-400/50 transition-colors">
             Speculative AI
           </Link>
-          <Link href="/agent-futures" className="text-indigo-400 hover:text-indigo-300">
+          <Link href="/agent-futures" className="text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded border border-indigo-500/30 hover:border-indigo-400/50 transition-colors">
             Agent Futures
           </Link>
-          <Link href="/emergent-intelligence" className="text-indigo-400 hover:text-indigo-300">
+          <Link href="/emergent-intelligence" className="text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded border border-indigo-500/30 hover:border-indigo-400/50 transition-colors">
             Emergent Intelligence
           </Link>
         </div>
 
-        <div className="w-full max-w-4xl">
-          <ArticleList />
+        <div className="w-full px-2 sm:px-4">
+          <ArticleDiscovery />
         </div>
 
-        <div className="mt-8">
+        <div className="mt-12">
           <Link href="/" className={styles.landingBtn}>
             Back to Home
           </Link>
