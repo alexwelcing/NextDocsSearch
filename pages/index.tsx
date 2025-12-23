@@ -142,9 +142,6 @@ export default function HomePage() {
               />
             )}
 
-            {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'PLAYING' && <SearchDialog />}
-
             {/* Achievement Unlock Popup */}
             <AchievementUnlock
               achievement={currentAchievement}

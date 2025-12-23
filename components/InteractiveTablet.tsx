@@ -37,6 +37,7 @@ export default function InteractiveTablet({
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [terminalView, setTerminalView] = useState<'chat' | 'game' | 'scenery' | 'about'>('chat');
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile
@@ -78,7 +79,8 @@ export default function InteractiveTablet({
     setTerminalOpen(false);
   }, []);
 
-  const handleOpenTerminal = useCallback(() => {
+  const handleOpenTerminal = useCallback((view: 'chat' | 'game' | 'scenery' | 'about' = 'chat') => {
+    setTerminalView(view);
     setTerminalOpen(true);
   }, []);
 
@@ -177,10 +179,10 @@ export default function InteractiveTablet({
               gap: '10px',
             }}>
               {[
-                { label: 'ASK AI', icon: '>', action: handleOpenTerminal },
+                { label: 'ASK AI', icon: '>', action: () => handleOpenTerminal('chat') },
                 { label: 'GAME', icon: '#', action: () => { onStartGame?.(); handleLower(); } },
-                { label: 'SCENE', icon: '*', action: handleOpenTerminal },
-                { label: 'ABOUT', icon: '?', action: handleOpenTerminal },
+                { label: 'SCENE', icon: '*', action: () => handleOpenTerminal('scenery') },
+                { label: 'ABOUT', icon: '?', action: () => handleOpenTerminal('about') },
               ].map((item) => (
                 <button
                   key={item.label}
@@ -263,6 +265,7 @@ export default function InteractiveTablet({
         onChangeScenery={onChangeScenery}
         availableScenery={availableScenery}
         currentScenery={currentScenery}
+        initialView={terminalView}
       />
     </>
   );
