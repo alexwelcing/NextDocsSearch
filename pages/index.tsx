@@ -142,28 +142,11 @@ export default function HomePage() {
               />
             )}
 
-            {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'PLAYING' && <SearchDialog />}
-
-            {/* Journey UI - Quest Tracker */}
-            {gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && <QuestNotification />}
-
             {/* Achievement Unlock Popup */}
             <AchievementUnlock
               achievement={currentAchievement}
               onDismiss={() => setCurrentAchievement(null)}
             />
-
-            {/* Button to go back to 2D home */}
-            <div className="absolute top-4 left-4 z-50">
-              <button
-                onClick={handleToggle3D}
-                className={styles.landingBtn}
-                style={{ padding: '0.5rem 1rem' }}
-              >
-                Return to 2D
-              </button>
-            </div>
           </main>
         ) : (
           <div className="min-h-screen bg-slate-900 text-white">

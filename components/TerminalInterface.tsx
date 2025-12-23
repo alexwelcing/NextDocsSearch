@@ -34,6 +34,7 @@ interface TerminalInterfaceProps {
   onChangeScenery?: (scenery: SceneryOption) => void;
   availableScenery?: SceneryOption[];
   currentScenery?: string;
+  initialView?: ViewMode;
 }
 
 type ViewMode = 'chat' | 'game' | 'scenery' | 'about';
@@ -46,8 +47,9 @@ export default function TerminalInterface({
   onChangeScenery,
   availableScenery = [],
   currentScenery,
+  initialView = 'chat',
 }: TerminalInterfaceProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('chat');
+  const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [chatInput, setChatInput] = useState('');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
@@ -56,6 +58,13 @@ export default function TerminalInterface({
   const { chatData, setChatData, chatHistory } = useSupabaseData();
   const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
   const currentMissionBrief = currentQuest ? missionBriefs[currentQuest.id] : undefined;
+
+  // Update viewMode when initialView changes
+  useEffect(() => {
+    if (isOpen) {
+      setViewMode(initialView);
+    }
+  }, [isOpen, initialView]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);

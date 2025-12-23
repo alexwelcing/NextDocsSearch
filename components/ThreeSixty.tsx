@@ -446,23 +446,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </VRButtonStyled>
       )}
 
-      {/* Replay Intro Button - Only show after intro has been completed */}
-      {cinematicComplete && gameState !== 'PLAYING' && (
-        <VRButtonStyled
-          style={{ bottom: 'auto', top: '10px', left: '10px' }}
-          onClick={() => {
-            setCinematicComplete(false);
-            setShowCinematicIntro(true);
-            setCinematicProgress(0);
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem('hasWatchedIntro');
-            }
-          }}
-        >
-          ▶ Replay Intro
-        </VRButtonStyled>
-      )}
-
       {/* Background controls moved to tablet menu */}
 
       <Canvas
