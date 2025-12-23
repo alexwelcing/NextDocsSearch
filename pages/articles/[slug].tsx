@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import ArticleContainer from '@/components/ArticleContainer';
 import StructuredData from '../../components/StructuredData';
+import ArticleClassification, { inferClassificationFromSlug } from '@/components/ArticleClassification';
 import Footer from '../../components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import styled from 'styled-components';
@@ -238,6 +239,29 @@ const ShareButton = styled.a`
   }
 `;
 
+const InternalLinks = styled.nav`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(222, 126, 162, 0.2);
+  font-size: 0.9rem;
+`;
+
+const InternalLink = styled(Link)`
+  color: #a5b4fc;
+  text-decoration: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.1);
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(99, 102, 241, 0.2);
+  }
+`;
+
 const ArticlePage: NextPage<ArticleProps> = ({
   title,
   date,
@@ -292,17 +316,26 @@ const ArticlePage: NextPage<ArticleProps> = ({
           description: description,
           image: ogImage || defaultOgImage,
           datePublished: date,
+          dateModified: date,
+          url: articleUrl,
+          articleSection: 'Speculative AI Research',
           author: author.map(name => ({
             '@type': 'Person',
-            name: name
+            name: name,
+            url: `${siteUrl}/about`
           })),
           publisher: {
             '@type': 'Organization',
             name: 'Alex Welcing',
+            url: siteUrl,
             logo: {
               '@type': 'ImageObject',
               url: `${siteUrl}/logo.png`
             }
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': articleUrl
           }
         }}
       />
@@ -318,6 +351,17 @@ const ArticlePage: NextPage<ArticleProps> = ({
             <MetaItem>{readingTime} min read</MetaItem>
           </ArticleMeta>
         </ArticleHero>
+
+        {/* Internal Links - Required for SEO authority flow */}
+        <InternalLinks aria-label="Related navigation">
+          <InternalLink href="/speculative-ai">Speculative AI Hub</InternalLink>
+          <InternalLink href="/agent-futures">Agent Futures</InternalLink>
+          <InternalLink href="/emergent-intelligence">Emergent Intelligence</InternalLink>
+          <InternalLink href="/about">About</InternalLink>
+        </InternalLinks>
+
+        {/* Classification Header - Shows article taxonomy */}
+        <ArticleClassification {...inferClassificationFromSlug(slug)} />
 
         {videoURL && (
           <div style={{ margin: '2rem 0' }}>

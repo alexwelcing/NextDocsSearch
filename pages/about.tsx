@@ -17,20 +17,20 @@ const About: React.FC = () => {
   return (
     <div className="siteContainer">
       <Head>
-        <title>Alex Welcing – Senior AI Product Manager & Inventor</title>
+        <title>About Alex Welcing | AI Futures Researcher</title>
         <meta
           name="description"
-          content="Senior AI Product Manager & Inventor with 10+ years of experience in generative AI, machine learning strategy, and cross-functional leadership. Based in New York."
+          content="Researching speculative AI systems, emergent intelligence, and civilizational futures. Senior AI Product Manager with 10+ years building ML products. Based in New York."
         />
-        <meta name="keywords" content="Alex Welcing, AI Product Manager, Generative AI, Machine Learning, Product Strategy, Management Consulting, New York" />
+        <meta name="keywords" content="Alex Welcing, speculative AI research, AI futures, emergent intelligence, AI Product Manager, New York" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/about" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
-        <meta property="og:title" content="Alex Welcing – Senior AI Product Manager & Inventor" />
-        <meta property="og:description" content="Senior AI Product Manager & Inventor with 10+ years of experience in generative AI, machine learning strategy, and cross-functional leadership." />
+        <meta property="og:title" content="About Alex Welcing | AI Futures Researcher" />
+        <meta property="og:description" content="Researching speculative AI systems, emergent intelligence, and civilizational futures. Senior AI Product Manager with 10+ years building ML products." />
         <meta property="og:image" content="/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com/about" />
         <meta property="og:type" content="profile" />
@@ -40,14 +40,20 @@ const About: React.FC = () => {
         type="Person"
         data={{
           name: "Alex Welcing",
-          jobTitle: "Senior AI Product Manager & Inventor",
+          jobTitle: "AI Futures Researcher & Product Leader",
           url: "https://alexwelcing.com",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
             "https://twitter.com/alexwelcing"
           ],
-          description: "Senior AI Product Manager & Inventor specializing in generative AI applications and machine learning product strategy."
+          description: "Researching speculative AI systems, emergent intelligence, and how reality reorganizes when cognition becomes abundant.",
+          knowsAbout: [
+            "Speculative AI Systems",
+            "Emergent Intelligence",
+            "AI Product Management",
+            "Machine Learning Strategy"
+          ]
         }}
       />
 
