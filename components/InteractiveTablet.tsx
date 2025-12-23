@@ -25,6 +25,8 @@ interface InteractiveTabletProps {
   onChangeScenery?: (scenery: SceneryOption) => void;
   availableScenery?: SceneryOption[];
   currentScenery?: string;
+  onToggle3DExplore?: () => void;
+  is3DExploreActive?: boolean;
 }
 
 export default function InteractiveTablet({
@@ -34,10 +36,12 @@ export default function InteractiveTablet({
   onChangeScenery,
   availableScenery = [],
   currentScenery,
+  onToggle3DExplore,
+  is3DExploreActive = false,
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const [terminalView, setTerminalView] = useState<'chat' | 'game' | 'scenery' | 'about'>('chat');
+  const [terminalView, setTerminalView] = useState<'chat' | 'game' | 'scenery' | 'about' | 'explore'>('explore');
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile
@@ -79,7 +83,7 @@ export default function InteractiveTablet({
     setTerminalOpen(false);
   }, []);
 
-  const handleOpenTerminal = useCallback((view: 'chat' | 'game' | 'scenery' | 'about' = 'chat') => {
+  const handleOpenTerminal = useCallback((view: 'chat' | 'game' | 'scenery' | 'about' | 'explore' = 'explore') => {
     setTerminalView(view);
     setTerminalOpen(true);
   }, []);
@@ -179,20 +183,24 @@ export default function InteractiveTablet({
               gap: '10px',
             }}>
               {[
+                { label: 'EXPLORE', icon: '◈', action: () => handleOpenTerminal('explore'), highlight: true },
                 { label: 'ASK AI', icon: '>', action: () => handleOpenTerminal('chat') },
                 { label: 'GAME', icon: '#', action: () => { onStartGame?.(); handleLower(); } },
                 { label: 'SCENE', icon: '*', action: () => handleOpenTerminal('scenery') },
-                { label: 'ABOUT', icon: '?', action: () => handleOpenTerminal('about') },
               ].map((item) => (
                 <button
                   key={item.label}
                   onClick={item.action}
                   style={{
                     padding: isMobile ? '16px' : '14px',
-                    background: '#111',
-                    border: '1px solid #222',
+                    background: (item as { highlight?: boolean }).highlight
+                      ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(222, 126, 162, 0.2) 100%)'
+                      : '#111',
+                    border: (item as { highlight?: boolean }).highlight
+                      ? '1px solid rgba(99, 102, 241, 0.5)'
+                      : '1px solid #222',
                     borderRadius: '8px',
-                    color: '#0f0',
+                    color: (item as { highlight?: boolean }).highlight ? '#a5b4fc' : '#0f0',
                     fontFamily: 'monospace',
                     fontSize: isMobile ? '13px' : '12px',
                     cursor: 'pointer',
@@ -203,7 +211,7 @@ export default function InteractiveTablet({
                     touchAction: 'manipulation',
                   }}
                 >
-                  <span style={{ color: '#0a0' }}>{item.icon}</span>
+                  <span style={{ color: (item as { highlight?: boolean }).highlight ? '#de7ea2' : '#0a0' }}>{item.icon}</span>
                   {item.label}
                 </button>
               ))}
@@ -266,6 +274,8 @@ export default function InteractiveTablet({
         availableScenery={availableScenery}
         currentScenery={currentScenery}
         initialView={terminalView}
+        onToggle3DExplore={onToggle3DExplore}
+        is3DExploreActive={is3DExploreActive}
       />
     </>
   );
