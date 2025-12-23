@@ -9,7 +9,6 @@ import remarkGfm from 'remark-gfm';
 import ArticleContainer from '@/components/ArticleContainer';
 import StructuredData from '../../components/StructuredData';
 import ArticleClassification, { inferClassificationFromSlug } from '@/components/ArticleClassification';
-import Footer from '../../components/ui/footer';
 import CircleNav from '@/components/ui/CircleNav';
 import styled from 'styled-components';
 
@@ -414,8 +413,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
           </RelatedArticles>
         )}
       </ArticleWrapper>
-
-      <Footer onImageChange={() => {}} showChangeScenery={false} />
     </ArticleLayout>
   );
 };

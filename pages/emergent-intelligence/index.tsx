@@ -6,7 +6,6 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import CircleNav from '@/components/ui/CircleNav';
-import Footer from '@/components/ui/footer';
 import StructuredData from '@/components/StructuredData';
 
 interface Article {
@@ -140,8 +139,6 @@ export default function EmergentIntelligenceHub({ articles }: EmergentIntelligen
           </Link>
         </footer>
       </main>
-
-      <Footer showChangeScenery={false} onImageChange={() => {}} />
     </div>
   );
 }

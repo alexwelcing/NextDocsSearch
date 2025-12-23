@@ -70,62 +70,6 @@
   max-width: 100%;
 }
 
-.footer {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  padding: 0.5rem 0;
-  z-index: 2; /* ensure it's above the 360° view */
-  background: rgba(5, 5, 5, 0.9);
-}
-
-.articleFooter {
-  width: 100%;
-  bottom: 0;
-  padding: 0.5rem 0;
-  z-index: 2; /* ensure it's above the 360° view */
-  background: rgba(5, 5, 5, 0.9);
-}
-
-@media (max-width: 250px) {
-  .footer {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-.footer {
-  max-height: 60px;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
-}
-
-.expandedFooter {
-  max-height: 250px;
-}
-
-.expandButton {
-  background-color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.expandButton:hover {
-  background-color: white;
-}
-
-.expandedButton {
-  background-color: black;
-}
-
-.expandedButton:hover {
-  background-color: white;
-}
-
 .card {
   padding: 1rem 1.2rem;
   border-radius: var(--border-radius);
