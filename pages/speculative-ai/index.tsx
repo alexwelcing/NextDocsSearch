@@ -6,7 +6,6 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import CircleNav from '@/components/ui/CircleNav';
-import Footer from '@/components/ui/footer';
 import StructuredData from '@/components/StructuredData';
 import styles from '@/styles/Home.module.css';
 
@@ -141,8 +140,6 @@ export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
           </Link>
         </footer>
       </main>
-
-      <Footer showChangeScenery={false} onImageChange={() => {}} />
     </div>
   );
 }

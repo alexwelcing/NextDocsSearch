@@ -7,7 +7,6 @@ import { SearchDialog } from '@/components/SearchDialog'
 import QuestNotification from '@/components/QuestNotification'
 import AchievementUnlock from '@/components/AchievementUnlock'
 import CircleNav from '@/components/ui/CircleNav'
-import Footer from '@/components/ui/footer'
 import ArticleList from '@/components/ui/ArticleList'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
@@ -227,9 +226,6 @@ export default function HomePage() {
             </section>
           </div>
         )}
-
-        {/* Single shared footer */}
-        <Footer onImageChange={getRandomImage} showChangeScenery={false} />
       </SupabaseDataProvider>
     </>
   )

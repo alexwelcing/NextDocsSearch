@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import ArticleList from '@/components/ui/ArticleList';
 import CircleNav from '@/components/ui/CircleNav';
-import Footer from '@/components/ui/footer';
 import StructuredData from '@/components/StructuredData';
 import styles from '@/styles/Home.module.css';
 
@@ -71,8 +70,6 @@ export default function ArticlesIndex() {
           </Link>
         </div>
       </main>
-
-      <Footer showChangeScenery={false} onImageChange={() => {}} />
     </div>
   );
 }
