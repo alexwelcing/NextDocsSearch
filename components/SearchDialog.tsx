@@ -49,8 +49,8 @@ export function SearchDialog() {
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
   );
   const [showMoreOptions, setShowMoreOptions] = React.useState(false);
-  const isLoading = chatData.response === 'Thinking...';
-  const hasResponse = chatData.response && chatData.response !== 'Waiting for your question...';
+  const isLoading = chatData.response.includes('great question');
+  const hasResponse = chatData.response && !chatData.response.includes('ready to chat whenever you are');
 
   const handleModalToggle = React.useCallback(() => {
     setOpen(!open);
@@ -138,9 +138,9 @@ min-w-[200px]"
           <DialogContent className={`sm:max-w-[850px] text-black  `}>
             {' '}
             <DialogHeader>
-              <DialogTitle>Want to know Alex?</DialogTitle>
+              <DialogTitle>🚀 Let's Talk About Alex!</DialogTitle>
               <DialogDescription>
-                Explore my career with Next.js, OpenAI & Supabase.
+                I'm Ship AI, and I'm excited to share Alex's amazing work with you! Ask me anything - let's explore together.
               </DialogDescription>
               <hr />
               <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
@@ -161,13 +161,13 @@ min-w-[200px]"
                   </div>
                 )}
 
-                {chatData.response === 'Sorry, I could not get a response. Please try again.' && (
+                {chatData.response.includes('circuits got a bit tangled') && (
                   <div className="flex items-center gap-2">
                     <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
                       <Frown width={18} />
                     </span>
                     <span className="text-slate-700 dark:text-slate-100">
-                      Ah, sorry. Maintenance mode at the moment, come back later.
+                      😅 Oops! My systems hiccuped there. Let's try that again - I'm ready when you are!
                     </span>
                   </div>
                 )}
@@ -178,7 +178,7 @@ min-w-[200px]"
 
                 <div className="relative">
                   <Input
-                    placeholder="Ask a question..."
+                    placeholder="What would you love to discover? ✨"
                     name="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}

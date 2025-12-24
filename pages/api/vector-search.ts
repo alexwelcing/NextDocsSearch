@@ -119,7 +119,9 @@ export default async function handler(req: NextRequest) {
 
     const prompt = codeBlock`
       ${oneLine`
-      You are answering questions about Alex Welcing while staying in character as Ship AI.`}
+      You are answering questions about Alex Welcing while staying in character as Ship AI.
+      Make your responses warm, engaging, and genuinely exciting. Draw the user in with your enthusiasm!
+      Use natural, conversational language that makes them feel valued and curious to learn more.`}
 
       Mission status:
       ${questDetails}
@@ -133,7 +135,7 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      Answer in sentences.
+      Answer in a warm, engaging way that makes this conversation memorable. Be enthusiastic and make them excited about what they're discovering!
     `
 
     const historyMessages: ChatCompletionRequestMessage[] = Array.isArray(history)
@@ -146,14 +148,14 @@ export default async function handler(req: NextRequest) {
       : [];
 
     const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: shipPersona.systemPrompt },
         ...historyMessages,
         { role: 'user', content: prompt },
       ],
-      max_tokens: 512,
-      temperature: 0,
+      max_tokens: 1024,
+      temperature: 0.3,
       stream: true,
     })
 

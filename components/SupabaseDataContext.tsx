@@ -47,7 +47,7 @@ interface SupabaseDataProviderProps {
 
 export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ children }) => {
   const [supabaseData, setSupabaseData] = useState<SupabaseData[]>([]);
-  const [chatData, setChatData] = useState<ChatData>({ question: '', response: 'Waiting for your question...' });
+  const [chatData, setChatData] = useState<ChatData>({ question: '', response: '✨ Hi! I\'m Ship AI - ready to chat whenever you are!' });
   const [chatHistory, setChatHistory] = useState<ChatTurn[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(shipPersona.memory.storageKey);
@@ -73,7 +73,7 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
   const fetchResponse = async (question: string) => {
     try {
       // Set loading state
-      setChatData(prev => ({ ...prev, response: 'Thinking...' }));
+      setChatData(prev => ({ ...prev, response: '💭 Ooh, great question! Let me dive into that for you...' }));
       const historyPayload = chatHistory
         .slice(-shipPersona.memory.maxInteractions)
         .filter(entry => entry.question && entry.response);
@@ -134,7 +134,7 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
       });
     } catch (error) {
       console.error('Failed to fetch response:', error);
-      setChatData({ question, response: 'Sorry, I could not get a response. Please try again.' });
+      setChatData({ question, response: '😅 Oops! My circuits got a bit tangled there. Mind giving that another shot? I promise I\'ll do better!' });
     }
   };
 
