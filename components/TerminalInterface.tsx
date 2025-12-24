@@ -450,7 +450,7 @@ export default function TerminalInterface({
                   MISSION BRIEF — {currentQuest.title.toUpperCase()}
                 </div>
                 <div style={{ color: '#cfc', fontSize: isMobile ? '13px' : '12px', lineHeight: 1.6 }}>
-                  {currentMissionBrief || 'Awaiting Ship AI briefing. Ask a question to receive your mission.'}
+                  {currentMissionBrief || '✨ Ready when you are! Ask me anything and let\'s kick off this adventure together.'}
                 </div>
               </div>
             )}
@@ -465,7 +465,7 @@ export default function TerminalInterface({
               fontSize: isMobile ? '14px' : '13px',
               lineHeight: 1.6,
             }}>
-              {chatData.response && chatData.response !== 'Waiting for your question...' ? (
+              {chatData.response && !chatData.response.includes('ready to chat whenever you are') ? (
                 <>
                   <div style={{ color: '#0f0', marginBottom: '12px' }}>
                     <span style={{ color: '#555' }}>you:</span> {chatData.question}
@@ -475,8 +475,11 @@ export default function TerminalInterface({
                   </div>
                 </>
               ) : (
-                <div style={{ color: '#444' }}>
-                  Ask me anything about Alex - work, skills, projects, experience.
+                <div style={{ color: '#8f8', lineHeight: 1.6 }}>
+                  🚀 Hey there! I&apos;m Ship AI, and I&apos;m genuinely excited to help you discover Alex&apos;s work!
+                  <br/><br/>
+                  Ask me anything - I love talking about Alex&apos;s projects, skills, experience, and the cool stuff he&apos;s built.
+                  Let&apos;s have a great conversation!
                 </div>
               )}
             </div>
@@ -486,7 +489,7 @@ export default function TerminalInterface({
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
-                placeholder="Type your question..."
+                placeholder="What would you love to know? 🚀"
                 autoFocus={!isMobile}
                 style={{
                   flex: 1,
