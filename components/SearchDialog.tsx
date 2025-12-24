@@ -138,9 +138,9 @@ min-w-[200px]"
           <DialogContent className={`sm:max-w-[850px] text-black  `}>
             {' '}
             <DialogHeader>
-              <DialogTitle>🚀 Let's Talk About Alex!</DialogTitle>
+              <DialogTitle>🚀 Let&apos;s Talk About Alex!</DialogTitle>
               <DialogDescription>
-                I'm Ship AI, and I'm excited to share Alex's amazing work with you! Ask me anything - let's explore together.
+                I&apos;m Ship AI, and I&apos;m excited to share Alex&apos;s amazing work with you! Ask me anything - let&apos;s explore together.
               </DialogDescription>
               <hr />
               <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
@@ -167,7 +167,7 @@ min-w-[200px]"
                       <Frown width={18} />
                     </span>
                     <span className="text-slate-700 dark:text-slate-100">
-                      😅 Oops! My systems hiccuped there. Let's try that again - I'm ready when you are!
+                      😅 Oops! My systems hiccuped there. Let&apos;s try that again - I&apos;m ready when you are!
                     </span>
                   </div>
                 )}

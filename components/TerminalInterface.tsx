@@ -476,10 +476,10 @@ export default function TerminalInterface({
                 </>
               ) : (
                 <div style={{ color: '#8f8', lineHeight: 1.6 }}>
-                  🚀 Hey there! I'm Ship AI, and I'm genuinely excited to help you discover Alex's work!
+                  🚀 Hey there! I&apos;m Ship AI, and I&apos;m genuinely excited to help you discover Alex&apos;s work!
                   <br/><br/>
-                  Ask me anything - I love talking about Alex's projects, skills, experience, and the cool stuff he's built.
-                  Let's have a great conversation!
+                  Ask me anything - I love talking about Alex&apos;s projects, skills, experience, and the cool stuff he&apos;s built.
+                  Let&apos;s have a great conversation!
                 </div>
               )}
             </div>
