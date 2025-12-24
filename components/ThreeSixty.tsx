@@ -18,7 +18,7 @@ import CinematicCamera from './CinematicCamera';
 import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
-import ArticleExplorer3D, { ArticleDetailPanel } from './ArticleExplorer3D';
+import ImmersiveArticleViewer, { DEFAULT_ENVIRONMENT } from './ImmersiveArticleViewer';
 import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
@@ -460,19 +460,27 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // 3D Exploration handlers
   const handleToggle3DExplore = useCallback(() => {
-    setIs3DExploreActive(prev => !prev);
+    setIs3DExploreActive(prev => {
+      const newState = !prev;
+      // When entering 3D mode, switch to splat background if available
+      if (newState && hasSplats && availableSplats.length > 0 && performanceFlags.allowSplats) {
+        setUseGaussianSplat(true);
+        if (!selectedSplat) {
+          setSelectedSplat(availableSplats[0].path);
+        }
+      }
+      return newState;
+    });
     setSelectedArticle(null);
-  }, []);
+  }, [hasSplats, availableSplats, performanceFlags.allowSplats, selectedSplat]);
 
   const handleSelectArticle = useCallback((article: EnhancedArticleData | null) => {
     setSelectedArticle(article);
   }, []);
 
-  const handleNavigateToArticle = useCallback(() => {
-    if (selectedArticle) {
-      window.location.href = `/articles/${selectedArticle.slug}`;
-    }
-  }, [selectedArticle]);
+  const handleNavigateToArticle = useCallback((article: EnhancedArticleData) => {
+    window.location.href = `/articles/${article.slug}`;
+  }, []);
 
   return (
     <ThreeSixtyContainer>
@@ -559,13 +567,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
-              {/* 3D Article Explorer */}
+              {/* Immersive Article Viewer */}
               {is3DExploreActive && enhancedArticles.length > 0 && (
-                <ArticleExplorer3D
+                <ImmersiveArticleViewer
                   articles={enhancedArticles}
-                  onSelectArticle={handleSelectArticle}
-                  selectedArticle={selectedArticle}
-                  layout="sphere"
+                  environment={DEFAULT_ENVIRONMENT}
+                  maxArticles={12}
+                  onArticleNavigate={handleNavigateToArticle}
                 />
               )}
 
@@ -598,13 +606,33 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {/* Article Detail Panel for 3D Exploration */}
-      {is3DExploreActive && selectedArticle && (
-        <ArticleDetailPanel
-          article={selectedArticle}
-          onClose={() => setSelectedArticle(null)}
-          onNavigate={handleNavigateToArticle}
-        />
+      {/* 3D Exploration Mode Indicator */}
+      {is3DExploreActive && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 100,
+            padding: '10px 20px',
+            background: 'rgba(10, 10, 20, 0.9)',
+            border: '1px solid rgba(99, 102, 241, 0.5)',
+            borderRadius: '8px',
+            color: '#a5b4fc',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          <span style={{ color: '#de7ea2' }}>◈</span>
+          <span>IMMERSIVE MODE</span>
+          <span style={{ color: '#6b7280' }}>|</span>
+          <span style={{ color: '#6b7280' }}>Arrow keys to browse • Enter to select • ESC to exit</span>
+        </div>
       )}
 
       {/* Cinematic Intro Overlay */}
