@@ -148,7 +148,7 @@ export default async function handler(req: NextRequest) {
       : [];
 
     const response = await openai.createChatCompletion({
-      model: 'gpt-4o',
+      model: 'gpt-4-turbo-preview',
       messages: [
         { role: 'system', content: shipPersona.systemPrompt },
         ...historyMessages,
