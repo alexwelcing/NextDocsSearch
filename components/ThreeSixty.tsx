@@ -540,18 +540,22 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               />
 
               {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
-              {useGaussianSplat &&
-              selectedSplat &&
-              !isMobile &&
-              performanceFlags.allowSplats &&
-              gameState !== 'PLAYING' ? (
-                <GaussianSplatBackground
-                  splatUrl={selectedSplat}
-                  position={[0, 0, 0]}
-                  scale={1}
-                />
-              ) : (
-                <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+              {!is3DExploreActive && (
+                <>
+                  {useGaussianSplat &&
+                  selectedSplat &&
+                  !isMobile &&
+                  performanceFlags.allowSplats &&
+                  gameState !== 'PLAYING' ? (
+                    <GaussianSplatBackground
+                      splatUrl={selectedSplat}
+                      position={[0, 0, 0]}
+                      scale={1}
+                    />
+                  ) : (
+                    <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+                  )}
+                </>
               )}
 
               {/* Seasonal particle effects (snow, leaves, etc.) */}
