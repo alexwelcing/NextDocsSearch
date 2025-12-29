@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useSupabaseData } from './SupabaseDataContext';
 import { useJourney } from './JourneyContext';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
+import WorldGallery from './WorldGallery';
 
 interface ArticleData {
   title: string;
@@ -619,49 +620,11 @@ export default function TerminalInterface({
         {/* SCENE */}
         {viewMode === 'scenery' && (
           <div>
-            <div style={{ color: '#666', fontSize: '11px', marginBottom: '16px', fontFamily: 'monospace' }}>
-              SELECT ENVIRONMENT
-            </div>
-            {availableScenery.length > 0 ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-                gap: '12px',
-              }}>
-                {availableScenery.map((scene) => (
-                  <button
-                    key={scene.id}
-                    onClick={() => onChangeScenery?.(scene)}
-                    style={{
-                      padding: '20px 12px',
-                      background: currentScenery === scene.path ? '#1a2a1a' : '#111',
-                      border: currentScenery === scene.path ? '2px solid #0f0' : '1px solid #222',
-                      borderRadius: '8px',
-                      color: currentScenery === scene.path ? '#0f0' : '#666',
-                      cursor: 'pointer',
-                      textAlign: 'center',
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    <div style={{ fontSize: '18px', marginBottom: '6px' }}>
-                      {scene.type === 'splat' ? '◈' : '◻'}
-                    </div>
-                    <div style={{ fontSize: '11px' }}>{scene.name}</div>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div style={{
-                padding: '32px',
-                background: '#111',
-                borderRadius: '8px',
-                textAlign: 'center',
-                color: '#444',
-                fontFamily: 'monospace',
-              }}>
-                No environments available
-              </div>
-            )}
+            <WorldGallery
+              onSelectWorld={(world) => onChangeScenery?.(world)}
+              currentWorld={currentScenery}
+              isMobile={isMobile}
+            />
           </div>
         )}
 

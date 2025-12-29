@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import TerminalInterface from './TerminalInterface';
+import TabletIcon, { TabletIconCosmic } from './TabletIcon';
 
 interface ArticleData {
   title: string;
@@ -43,6 +44,15 @@ export default function InteractiveTablet({
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalView, setTerminalView] = useState<'chat' | 'game' | 'scenery' | 'about' | 'explore'>('explore');
   const [isMobile, setIsMobile] = useState(false);
+  const [cosmicPowerUnlocked, setCosmicPowerUnlocked] = useState(false);
+
+  // Check for cosmic power unlock status
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const powerUnlocked = localStorage.getItem('nextdocs_cosmic_power_unlocked');
+      setCosmicPowerUnlocked(powerUnlocked === 'true');
+    }
+  }, []);
 
   // Detect mobile
   useEffect(() => {
@@ -102,23 +112,36 @@ export default function InteractiveTablet({
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 100,
-            padding: isMobile ? '14px 28px' : '12px 24px',
-            background: 'rgba(0, 0, 0, 0.85)',
-            border: '1px solid #0f0',
-            borderRadius: '6px',
-            color: '#0f0',
+            padding: isMobile ? '14px 20px' : '12px 18px',
+            background: cosmicPowerUnlocked
+              ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%)'
+              : 'rgba(0, 0, 0, 0.85)',
+            border: cosmicPowerUnlocked
+              ? '1px solid rgba(139, 92, 246, 0.6)'
+              : '1px solid #0f0',
+            borderRadius: '12px',
+            color: cosmicPowerUnlocked ? '#a78bfa' : '#0f0',
             fontFamily: 'monospace',
             fontSize: isMobile ? '14px' : '13px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            boxShadow: '0 4px 20px rgba(0, 255, 0, 0.2)',
+            boxShadow: cosmicPowerUnlocked
+              ? '0 4px 25px rgba(139, 92, 246, 0.4), inset 0 0 20px rgba(236, 72, 153, 0.1)'
+              : '0 4px 20px rgba(0, 255, 0, 0.2)',
             touchAction: 'manipulation',
+            backdropFilter: 'blur(10px)',
           }}
         >
-          <span>▲</span>
-          <span>MENU</span>
+          {cosmicPowerUnlocked ? (
+            <TabletIconCosmic size={isMobile ? 26 : 24} />
+          ) : (
+            <TabletIcon size={isMobile ? 26 : 24} color="#0f0" animated={true} />
+          )}
+          <span style={{ fontWeight: 600 }}>
+            {cosmicPowerUnlocked ? 'PORTAL' : 'MENU'}
+          </span>
           {!isMobile && <span style={{ color: '#555', fontSize: '10px' }}>[TAB]</span>}
         </button>
       )}
