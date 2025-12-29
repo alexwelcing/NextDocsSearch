@@ -14,22 +14,22 @@ interface WorldGalleryProps {
   isMobile?: boolean;
 }
 
-// World display names and descriptions
+// World display names and descriptions based on actual panoramas
 const WORLD_METADATA: Record<string, { name: string; description: string }> = {
-  'bg1': { name: 'Sunset Valley', description: 'Warm golden horizons' },
-  'bg2': { name: 'Mountain Peak', description: 'Alpine serenity' },
-  'bg3': { name: 'Ocean Vista', description: 'Endless blue waters' },
-  'bg4': { name: 'Desert Dunes', description: 'Shifting golden sands' },
-  'bg5': { name: 'Forest Glade', description: 'Ancient woodland magic' },
-  'bg6': { name: 'City Lights', description: 'Urban nightscape' },
-  'bg7': { name: 'Northern Lights', description: 'Aurora dancing' },
-  'bg8': { name: 'Tropical Paradise', description: 'Island dreams' },
-  'bg9': { name: 'Starfield', description: 'Cosmic wonder' },
-  'cave': { name: 'Crystal Cave', description: 'Underground mysteries' },
-  'scifi1': { name: 'Cyber Station', description: 'Future tech realm' },
-  'space': { name: 'Deep Space', description: 'Infinite cosmos' },
-  'start': { name: 'Genesis Point', description: 'Where it all begins' },
-  'train': { name: 'Night Express', description: 'Journey through time' },
+  'bg1': { name: "Dreamer's Study", description: 'Cozy mountain retreat' },
+  'bg2': { name: 'Coastal Retreat', description: 'Beachside workspace' },
+  'bg3': { name: 'Midnight Office', description: 'Sleek urban den' },
+  'bg4': { name: "Artist's Loft", description: 'Vibrant teal studio' },
+  'bg5': { name: "Scholar's Archive", description: 'Victorian library' },
+  'bg6': { name: 'Executive Suite', description: 'Refined workspace' },
+  'bg7': { name: 'Vinyl Lounge', description: 'Retro music room' },
+  'bg8': { name: 'Sound Lab', description: 'Creative studio' },
+  'bg9': { name: "Enchanter's Den", description: 'Mystical workshop' },
+  'cave': { name: 'Hollow Haven', description: 'Magical treehouse' },
+  'scifi1': { name: 'Neon Nexus', description: 'Cyberpunk lab' },
+  'space': { name: 'Orbital Station', description: 'Cosmic command' },
+  'start': { name: 'Command Deck', description: 'Starship bridge' },
+  'train': { name: 'Sky Pavilion', description: 'Mountain observatory' },
   'splat4s': { name: '3D Reality', description: 'Immersive dimension' },
 };
 
