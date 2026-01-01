@@ -201,18 +201,41 @@ export default function TerminalInterface({
         position: 'fixed',
         inset: 0,
         zIndex: 1000,
-        background: '#0a0a0a',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        background: 'rgba(0, 0, 0, 0.3)',
+        backdropFilter: 'blur(2px)',
+      }}
+      onClick={(e) => {
+        // Close when clicking the backdrop
+        if (e.target === e.currentTarget) onClose();
       }}
     >
+      <div
+        style={{
+          width: isMobile ? '100%' : 'min(95vw, 600px)',
+          maxHeight: isMobile ? '70vh' : '65vh',
+          background: 'rgba(10, 10, 10, 0.95)',
+          borderRadius: isMobile ? '20px 20px 0 0' : '16px 16px 0 0',
+          border: '1px solid #222',
+          borderBottom: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.5)',
+        }}
+      >
       {/* Header */}
       <div style={{
         height: isMobile ? '50px' : '44px',
-        background: '#111',
+        background: 'rgba(17, 17, 17, 0.9)',
         borderBottom: '1px solid #222',
         display: 'flex',
         alignItems: 'center',
         padding: '0 16px',
         justifyContent: 'space-between',
+        flexShrink: 0,
       }}>
         <div style={{ color: '#0f0', fontFamily: 'monospace', fontSize: '14px' }}>
           {'>_'} terminal
@@ -237,7 +260,8 @@ export default function TerminalInterface({
       <div style={{
         display: 'flex',
         borderBottom: '1px solid #222',
-        background: '#0d0d0d',
+        background: 'rgba(13, 13, 13, 0.9)',
+        flexShrink: 0,
       }}>
         {tabs.map((tab) => (
           <button
@@ -266,7 +290,7 @@ export default function TerminalInterface({
         flex: 1,
         overflow: 'auto',
         padding: isMobile ? '16px' : '20px 24px',
-        height: `calc(100vh - ${isMobile ? '115px' : '105px'})`,
+        minHeight: 0,
       }}>
         {/* EXPLORE */}
         {viewMode === 'explore' && (
@@ -721,6 +745,7 @@ export default function TerminalInterface({
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

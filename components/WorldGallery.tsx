@@ -14,22 +14,22 @@ interface WorldGalleryProps {
   isMobile?: boolean;
 }
 
-// World display names and descriptions
+// World display names and descriptions based on actual panoramas
 const WORLD_METADATA: Record<string, { name: string; description: string }> = {
-  'bg1': { name: 'Sunset Valley', description: 'Warm golden horizons' },
-  'bg2': { name: 'Mountain Peak', description: 'Alpine serenity' },
-  'bg3': { name: 'Ocean Vista', description: 'Endless blue waters' },
-  'bg4': { name: 'Desert Dunes', description: 'Shifting golden sands' },
-  'bg5': { name: 'Forest Glade', description: 'Ancient woodland magic' },
-  'bg6': { name: 'City Lights', description: 'Urban nightscape' },
-  'bg7': { name: 'Northern Lights', description: 'Aurora dancing' },
-  'bg8': { name: 'Tropical Paradise', description: 'Island dreams' },
-  'bg9': { name: 'Starfield', description: 'Cosmic wonder' },
-  'cave': { name: 'Crystal Cave', description: 'Underground mysteries' },
-  'scifi1': { name: 'Cyber Station', description: 'Future tech realm' },
-  'space': { name: 'Deep Space', description: 'Infinite cosmos' },
-  'start': { name: 'Genesis Point', description: 'Where it all begins' },
-  'train': { name: 'Night Express', description: 'Journey through time' },
+  'bg1': { name: "Dreamer's Study", description: 'Cozy mountain retreat' },
+  'bg2': { name: 'Coastal Retreat', description: 'Beachside workspace' },
+  'bg3': { name: 'Midnight Office', description: 'Sleek urban den' },
+  'bg4': { name: "Artist's Loft", description: 'Vibrant teal studio' },
+  'bg5': { name: "Scholar's Archive", description: 'Victorian library' },
+  'bg6': { name: 'Executive Suite', description: 'Refined workspace' },
+  'bg7': { name: 'Vinyl Lounge', description: 'Retro music room' },
+  'bg8': { name: 'Sound Lab', description: 'Creative studio' },
+  'bg9': { name: "Enchanter's Den", description: 'Mystical workshop' },
+  'cave': { name: 'Hollow Haven', description: 'Magical treehouse' },
+  'scifi1': { name: 'Neon Nexus', description: 'Cyberpunk lab' },
+  'space': { name: 'Orbital Station', description: 'Cosmic command' },
+  'start': { name: 'Command Deck', description: 'Starship bridge' },
+  'train': { name: 'Sky Pavilion', description: 'Mountain observatory' },
   'splat4s': { name: '3D Reality', description: 'Immersive dimension' },
 };
 
@@ -45,7 +45,6 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
   const [justUnlocked, setJustUnlocked] = useState(false);
 
   const {
-    visitedWorlds,
     allWorldsVisited,
     cosmicPowerUnlocked,
     totalWorlds,
@@ -91,7 +90,7 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
         setShowUnlockAnimation(true);
         setJustUnlocked(true);
         localStorage.setItem('nextdocs_unlock_shown', 'true');
-        setTimeout(() => setShowUnlockAnimation(false), 5000);
+        setTimeout(() => setShowUnlockAnimation(false), 4000);
       }
     }
   }, [allWorldsVisited, justUnlocked, visitedCount, totalWorlds]);
@@ -115,14 +114,9 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
         padding: '40px',
         color: '#555',
         fontFamily: 'monospace',
+        fontSize: '0.85rem',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{
-            display: 'inline-block',
-            animation: 'pulse 1.5s ease-in-out infinite',
-          }}>◈</span>
-          Loading worlds...
-        </div>
+        Loading worlds...
       </div>
     );
   }
@@ -134,146 +128,111 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'radial-gradient(circle at center, rgba(138, 43, 226, 0.9) 0%, rgba(0, 0, 0, 0.95) 70%)',
+          background: 'rgba(0, 0, 0, 0.95)',
           zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          animation: 'fadeIn 0.5s ease-out',
         }}>
           <div style={{
-            fontSize: '80px',
-            marginBottom: '20px',
-            animation: 'cosmicPulse 1s ease-in-out infinite',
+            width: '48px',
+            height: '48px',
+            border: '2px solid #fff',
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-            ✧
+            <span style={{ fontSize: '24px' }}>*</span>
           </div>
           <div style={{
             color: '#fff',
-            fontSize: '28px',
-            fontWeight: 'bold',
+            fontSize: '1.5rem',
+            fontWeight: 600,
             fontFamily: 'monospace',
             textAlign: 'center',
-            textShadow: '0 0 20px rgba(138, 43, 226, 0.8)',
             marginBottom: '12px',
+            letterSpacing: '0.1em',
           }}>
-            COSMIC POWER UNLOCKED
+            ALL WORLDS DISCOVERED
           </div>
           <div style={{
-            color: '#a78bfa',
-            fontSize: '16px',
+            color: '#666',
+            fontSize: '0.85rem',
             fontFamily: 'monospace',
             textAlign: 'center',
-            maxWidth: '300px',
           }}>
-            You have visited all worlds! Reality Warp mode is now available.
+            Reality Warp unlocked
           </div>
         </div>
       )}
 
-      {/* Progress Header */}
+      {/* Header with Progress */}
       <div style={{
-        marginBottom: '16px',
-        padding: '12px 16px',
-        background: cosmicPowerUnlocked
-          ? 'linear-gradient(135deg, rgba(138, 43, 226, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)'
-          : 'rgba(17, 17, 17, 0.8)',
-        borderRadius: '10px',
-        border: cosmicPowerUnlocked
-          ? '1px solid rgba(138, 43, 226, 0.5)'
-          : '1px solid #222',
+        marginBottom: '20px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       }}>
         <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '8px',
+          fontFamily: 'monospace',
+          fontSize: '0.7rem',
+          color: '#666',
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
         }}>
-          <span style={{
-            color: cosmicPowerUnlocked ? '#a78bfa' : '#666',
-            fontSize: '11px',
-            fontFamily: 'monospace',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-          }}>
-            {cosmicPowerUnlocked ? '✧ COSMIC EXPLORER ✧' : 'World Collection'}
-          </span>
-          <span style={{
-            color: cosmicPowerUnlocked ? '#ec4899' : '#0f0',
-            fontSize: '13px',
-            fontFamily: 'monospace',
-            fontWeight: 'bold',
-          }}>
-            {visitedCount} / {totalWorlds}
-          </span>
+          {cosmicPowerUnlocked ? 'Explorer' : 'Collection'}
         </div>
-
-        {/* Progress Bar */}
         <div style={{
-          height: '4px',
-          background: '#222',
-          borderRadius: '2px',
-          overflow: 'hidden',
+          fontFamily: 'monospace',
+          fontSize: '0.8rem',
+          color: cosmicPowerUnlocked ? '#fff' : '#888',
         }}>
-          <div style={{
-            height: '100%',
-            width: `${(visitedCount / Math.max(totalWorlds, 1)) * 100}%`,
-            background: cosmicPowerUnlocked
-              ? 'linear-gradient(90deg, #8b5cf6, #ec4899, #8b5cf6)'
-              : 'linear-gradient(90deg, #0f0, #0a0)',
-            backgroundSize: cosmicPowerUnlocked ? '200% 100%' : '100% 100%',
-            animation: cosmicPowerUnlocked ? 'shimmer 2s linear infinite' : 'none',
-            transition: 'width 0.5s ease-out',
-          }} />
+          {visitedCount}/{totalWorlds}
         </div>
-
-        {!cosmicPowerUnlocked && (
-          <div style={{
-            marginTop: '8px',
-            color: '#555',
-            fontSize: '10px',
-            fontFamily: 'monospace',
-          }}>
-            Visit all worlds to unlock Cosmic Power
-          </div>
-        )}
       </div>
 
-      {/* Cosmic Power Button (when unlocked) */}
+      {/* Progress Bar */}
+      <div style={{
+        height: '2px',
+        background: '#222',
+        marginBottom: '24px',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          height: '100%',
+          width: `${(visitedCount / Math.max(totalWorlds, 1)) * 100}%`,
+          background: cosmicPowerUnlocked ? '#fff' : '#555',
+          transition: 'width 0.4s ease-out',
+        }} />
+      </div>
+
+      {/* Reality Warp Button (when unlocked) */}
       {cosmicPowerUnlocked && (
         <button
           onClick={() => {
-            // Trigger reality warp effect
-            document.body.style.filter = 'hue-rotate(180deg)';
+            document.body.style.filter = 'invert(1)';
             setTimeout(() => {
               document.body.style.filter = '';
-            }, 2000);
+            }, 1500);
           }}
           style={{
             width: '100%',
             padding: '14px',
-            marginBottom: '16px',
-            background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #8b5cf6 100%)',
-            backgroundSize: '200% 100%',
-            animation: 'shimmer 3s linear infinite',
+            marginBottom: '24px',
+            background: '#fff',
             border: 'none',
-            borderRadius: '10px',
-            color: '#fff',
-            fontSize: '13px',
-            fontWeight: 'bold',
+            color: '#000',
+            fontSize: '0.8rem',
+            fontWeight: 600,
             fontFamily: 'monospace',
             cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            boxShadow: '0 4px 20px rgba(139, 92, 246, 0.4)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
           }}
         >
-          <span style={{ fontSize: '18px' }}>✧</span>
-          ACTIVATE REALITY WARP
-          <span style={{ fontSize: '18px' }}>✧</span>
+          Reality Warp
         </button>
       )}
 
@@ -281,7 +240,7 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
       <div style={{
         display: 'grid',
         gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-        gap: '12px',
+        gap: '8px',
       }}>
         {worlds.map((world) => {
           const visited = isVisited(world.id);
@@ -294,17 +253,12 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
               style={{
                 position: 'relative',
                 padding: 0,
-                background: '#111',
-                border: isCurrent
-                  ? '2px solid #0f0'
-                  : visited
-                    ? '1px solid rgba(138, 43, 226, 0.5)'
-                    : '1px solid #222',
-                borderRadius: '10px',
+                background: '#0a0a0a',
+                border: isCurrent ? '2px solid #fff' : '1px solid #222',
                 cursor: 'pointer',
                 overflow: 'hidden',
-                aspectRatio: '4/3',
-                transition: 'all 0.2s ease',
+                aspectRatio: '16/10',
+                transition: 'border-color 0.15s',
               }}
             >
               {/* Thumbnail */}
@@ -315,45 +269,51 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
                   backgroundImage: `url(${world.thumbnail})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
-                  filter: visited ? 'none' : 'grayscale(0.3)',
-                  transition: 'filter 0.3s ease',
+                  opacity: visited ? 1 : 0.5,
+                  transition: 'opacity 0.2s',
                 }} />
               ) : (
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(135deg, #1a1a3a 0%, #2d1f4e 100%)',
+                  background: '#111',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                  <span style={{ fontSize: '32px', opacity: 0.8 }}>◈</span>
+                  <span style={{
+                    fontSize: '24px',
+                    color: '#333',
+                    fontFamily: 'monospace',
+                  }}>3D</span>
                 </div>
               )}
 
-              {/* Gradient overlay */}
+              {/* Gradient overlay for text readability */}
               <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)',
               }} />
 
-              {/* Visited checkmark */}
+              {/* Visited indicator */}
               {visited && (
                 <div style={{
                   position: 'absolute',
-                  top: '8px',
-                  right: '8px',
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  background: 'rgba(138, 43, 226, 0.9)',
+                  top: '6px',
+                  right: '6px',
+                  width: '16px',
+                  height: '16px',
+                  background: '#fff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(138, 43, 226, 0.5)',
                 }}>
-                  <span style={{ color: '#fff', fontSize: '14px' }}>✓</span>
+                  <span style={{
+                    color: '#000',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                  }}>✓</span>
                 </div>
               )}
 
@@ -361,14 +321,13 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
               {isCurrent && (
                 <div style={{
                   position: 'absolute',
-                  top: '8px',
-                  left: '8px',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  background: 'rgba(0, 255, 0, 0.9)',
+                  top: '6px',
+                  left: '6px',
+                  padding: '2px 6px',
+                  background: '#fff',
                   color: '#000',
-                  fontSize: '9px',
-                  fontWeight: 'bold',
+                  fontSize: '8px',
+                  fontWeight: 700,
                   fontFamily: 'monospace',
                   textTransform: 'uppercase',
                 }}>
@@ -376,18 +335,17 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
                 </div>
               )}
 
-              {/* Type badge for splats */}
-              {world.type === 'splat' && (
+              {/* 3D badge for splats */}
+              {world.type === 'splat' && !isCurrent && (
                 <div style={{
                   position: 'absolute',
-                  top: '8px',
-                  left: '8px',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  background: 'rgba(99, 102, 241, 0.9)',
-                  color: '#fff',
-                  fontSize: '9px',
-                  fontWeight: 'bold',
+                  top: '6px',
+                  left: '6px',
+                  padding: '2px 6px',
+                  background: 'rgba(255,255,255,0.9)',
+                  color: '#000',
+                  fontSize: '8px',
+                  fontWeight: 700,
                   fontFamily: 'monospace',
                 }}>
                   3D
@@ -400,61 +358,22 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
                 bottom: 0,
                 left: 0,
                 right: 0,
-                padding: '10px',
-                textAlign: 'left',
+                padding: '8px',
               }}>
                 <div style={{
-                  color: isCurrent ? '#0f0' : '#fff',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
+                  color: '#fff',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
                   fontFamily: 'monospace',
-                  marginBottom: '2px',
-                  textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                  lineHeight: 1.2,
                 }}>
                   {world.name}
-                </div>
-                <div style={{
-                  color: '#888',
-                  fontSize: '9px',
-                  fontFamily: 'monospace',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.8)',
-                }}>
-                  {WORLD_METADATA[world.path.split('/').pop()?.replace(/\.[^/.]+$/, '') || '']?.description || ''}
                 </div>
               </div>
             </button>
           );
         })}
       </div>
-
-      {/* CSS Animations */}
-      <style jsx global>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-
-        @keyframes shimmer {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-
-        @keyframes cosmicPulse {
-          0%, 100% {
-            transform: scale(1);
-            text-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
-          }
-          50% {
-            transform: scale(1.2);
-            text-shadow: 0 0 40px rgba(236, 72, 153, 1), 0 0 60px rgba(138, 43, 226, 0.8);
-          }
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 }
