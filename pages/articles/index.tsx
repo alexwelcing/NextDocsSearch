@@ -4,13 +4,16 @@ import Link from 'next/link';
 import ArticleDiscovery from '@/components/ui/ArticleDiscovery';
 import CircleNav from '@/components/ui/CircleNav';
 import StructuredData from '@/components/StructuredData';
-import styles from '@/styles/Home.module.css';
 
 export default function ArticlesIndex() {
   return (
-    <div className={styles.gradientbg + ' min-h-screen flex flex-col'}>
+    <div style={{
+      minHeight: '100vh',
+      background: '#0a0a0a',
+      color: '#e5e5e5',
+    }}>
       <Head>
-        <title>Speculative AI Research & Analysis | Alex Welcing</title>
+        <title>Research & Analysis | Alex Welcing</title>
         <meta
           name="description"
           content="Research on speculative AI futures, emergent intelligence, and systemic consequences of abundant cognition. Original frameworks and scenario analysis."
@@ -20,7 +23,7 @@ export default function ArticlesIndex() {
           content="speculative AI, AI research, emergent intelligence, AI futures, AI systems analysis"
         />
         <link rel="canonical" href="https://alexwelcing.com/articles" />
-        <meta property="og:title" content="Speculative AI Research & Analysis | Alex Welcing" />
+        <meta property="og:title" content="Research & Analysis | Alex Welcing" />
         <meta property="og:description" content="Research on speculative AI futures, emergent intelligence, and systemic consequences of abundant cognition." />
         <meta property="og:url" content="https://alexwelcing.com/articles" />
         <meta property="og:type" content="website" />
@@ -41,34 +44,120 @@ export default function ArticlesIndex() {
 
       <CircleNav />
 
-      <main className="flex-grow container mx-auto px-4 py-12 flex flex-col items-center">
-        <h1 className={styles.centeredtitle}>Research & Analysis</h1>
-        <p className="text-slate-300 text-center max-w-2xl mb-8 text-lg">
-          Exploring how reality reorganizes when intelligence becomes abundant.
-        </p>
+      <main style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '80px 24px 48px',
+      }}>
+        {/* Header */}
+        <header style={{
+          marginBottom: '48px',
+          borderBottom: '1px solid #222',
+          paddingBottom: '32px',
+        }}>
+          <h1 style={{
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: 700,
+            fontFamily: 'monospace',
+            color: '#fff',
+            margin: '0 0 16px 0',
+            letterSpacing: '-0.02em',
+          }}>
+            RESEARCH
+          </h1>
+          <p style={{
+            fontSize: '1.1rem',
+            color: '#888',
+            fontFamily: 'monospace',
+            margin: 0,
+            maxWidth: '600px',
+            lineHeight: 1.6,
+          }}>
+            Exploring how reality reorganizes when intelligence becomes abundant.
+          </p>
+        </header>
 
-        {/* Hub page links for internal linking */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm">
-          <Link href="/speculative-ai" className="text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded border border-indigo-500/30 hover:border-indigo-400/50 transition-colors">
-            Speculative AI
-          </Link>
-          <Link href="/agent-futures" className="text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded border border-indigo-500/30 hover:border-indigo-400/50 transition-colors">
-            Agent Futures
-          </Link>
-          <Link href="/emergent-intelligence" className="text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded border border-indigo-500/30 hover:border-indigo-400/50 transition-colors">
-            Emergent Intelligence
-          </Link>
-        </div>
+        {/* Navigation Tags */}
+        <nav style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          marginBottom: '40px',
+        }}>
+          {[
+            { href: '/speculative-ai', label: 'Speculative AI' },
+            { href: '/agent-futures', label: 'Agent Futures' },
+            { href: '/emergent-intelligence', label: 'Emergent Intelligence' },
+          ].map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              style={{
+                padding: '8px 16px',
+                background: 'transparent',
+                border: '1px solid #333',
+                color: '#888',
+                fontFamily: 'monospace',
+                fontSize: '0.8rem',
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                transition: 'all 0.15s',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = '#fff';
+                e.currentTarget.style.color = '#fff';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = '#333';
+                e.currentTarget.style.color = '#888';
+              }}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-        <div className="w-full px-2 sm:px-4">
+        {/* Articles */}
+        <section>
           <ArticleDiscovery />
-        </div>
+        </section>
 
-        <div className="mt-12">
-          <Link href="/" className={styles.landingBtn}>
+        {/* Footer Navigation */}
+        <footer style={{
+          marginTop: '64px',
+          paddingTop: '32px',
+          borderTop: '1px solid #222',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16px',
+        }}>
+          <Link
+            href="/"
+            style={{
+              padding: '12px 24px',
+              background: '#fff',
+              color: '#000',
+              fontFamily: 'monospace',
+              fontSize: '0.85rem',
+              textDecoration: 'none',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
             Back to Home
           </Link>
-        </div>
+          <span style={{
+            fontFamily: 'monospace',
+            fontSize: '0.75rem',
+            color: '#555',
+          }}>
+            alexwelcing.com
+          </span>
+        </footer>
       </main>
     </div>
   );
