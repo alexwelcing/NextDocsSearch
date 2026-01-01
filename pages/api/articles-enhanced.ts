@@ -110,7 +110,7 @@ function extractDomains(keywords: string[], slug: string): string[] {
 
   // Add keywords that look like domains
   keywords.forEach(kw => {
-    if (kw.length > 2 && !['AI', 'the', 'and', 'for'].includes(kw)) {
+    if (kw && kw.length > 2 && !['AI', 'the', 'and', 'for'].includes(kw)) {
       domains.add(kw);
     }
   });
