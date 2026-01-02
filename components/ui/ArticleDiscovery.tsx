@@ -477,55 +477,68 @@ function ArticleRow({ article, compact = false }: { article: EnhancedArticleData
     <Link
       href={`/articles/${article.slug}`}
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
+        display: 'block',
         background: '#0a0a0a',
         padding: compact ? '12px 16px' : '16px 20px',
         textDecoration: 'none',
         transition: 'background 0.1s',
       }}
     >
-      {/* Date */}
-      <span style={{
-        fontFamily: 'monospace',
-        fontSize: '0.7rem',
-        color: '#555',
-        minWidth: compact ? '80px' : '100px',
-        flexShrink: 0,
-      }}>
-        {formattedDate}
-      </span>
-
-      {/* Title */}
-      <span style={{
-        fontFamily: 'monospace',
-        fontSize: compact ? '0.85rem' : '0.9rem',
-        color: '#fff',
-        flex: 1,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }}>
-        {article.title}
-      </span>
-
-      {/* Badges */}
+      {/* Mobile-friendly layout */}
       <div style={{
         display: 'flex',
-        gap: '6px',
-        flexShrink: 0,
+        flexDirection: 'column',
+        gap: '8px',
       }}>
-        {article.horizon && (
-          <Badge small>{horizonLabels[article.horizon]}</Badge>
-        )}
-        {article.polarity && article.polarity !== 'N0' && (
-          <Badge small variant="polarity">{polarityLabels[article.polarity]}</Badge>
-        )}
-      </div>
+        {/* Top row: Date */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}>
+          <span style={{
+            fontFamily: 'monospace',
+            fontSize: '0.7rem',
+            color: '#555',
+            flexShrink: 0,
+          }}>
+            {formattedDate}
+          </span>
+        </div>
 
-      {/* Arrow */}
-      <span style={{ color: '#444', fontSize: '1rem' }}>→</span>
+        {/* Middle row: Title - allow wrapping on mobile */}
+        <div style={{
+          fontFamily: 'monospace',
+          fontSize: compact ? '0.85rem' : '0.9rem',
+          color: '#fff',
+          lineHeight: '1.4',
+          wordBreak: 'break-word',
+        }}>
+          {article.title}
+        </div>
+
+        {/* Bottom row: Badges and Arrow */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '8px',
+        }}>
+          <div style={{
+            display: 'flex',
+            gap: '6px',
+            flexWrap: 'wrap',
+          }}>
+            {article.horizon && (
+              <Badge small>{horizonLabels[article.horizon]}</Badge>
+            )}
+            {article.polarity && article.polarity !== 'N0' && (
+              <Badge small variant="polarity">{polarityLabels[article.polarity]}</Badge>
+            )}
+          </div>
+          <span style={{ color: '#444', fontSize: '1rem', flexShrink: 0 }}>→</span>
+        </div>
+      </div>
     </Link>
   );
 }
