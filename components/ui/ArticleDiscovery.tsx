@@ -28,6 +28,11 @@ const polarityLabels: Record<string, string> = {
   P3: 'Utopian',
 };
 
+const articleTypeLabels: Record<string, string> = {
+  fiction: 'Fiction',
+  research: 'Research',
+};
+
 export default function ArticleDiscovery({ initialArticles }: ArticleDiscoveryProps) {
   const [articles, setArticles] = useState<EnhancedArticleData[]>(initialArticles || []);
   const [loading, setLoading] = useState(!initialArticles);
@@ -36,6 +41,7 @@ export default function ArticleDiscovery({ initialArticles }: ArticleDiscoveryPr
   const [horizonFilter, setHorizonFilter] = useState<string>('all');
   const [polarityFilter, setPolarityFilter] = useState<string>('all');
   const [mechanicFilter, setMechanicFilter] = useState<string>('all');
+  const [articleTypeFilter, setArticleTypeFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<SortOption>('date');
   const [viewMode, setViewMode] = useState<ViewMode>('list');
 
@@ -83,6 +89,10 @@ export default function ArticleDiscovery({ initialArticles }: ArticleDiscoveryPr
       result = result.filter(article => article.mechanics?.includes(mechanicFilter as any));
     }
 
+    if (articleTypeFilter !== 'all') {
+      result = result.filter(article => article.articleType === articleTypeFilter);
+    }
+
     result.sort((a, b) => {
       switch (sortBy) {
         case 'date':
@@ -101,7 +111,7 @@ export default function ArticleDiscovery({ initialArticles }: ArticleDiscoveryPr
     });
 
     return result;
-  }, [articles, searchQuery, horizonFilter, polarityFilter, mechanicFilter, sortBy]);
+  }, [articles, searchQuery, horizonFilter, polarityFilter, mechanicFilter, articleTypeFilter, sortBy]);
 
   const groupedByYear = useMemo(() => {
     const groups: Record<string, EnhancedArticleData[]> = {};
@@ -113,13 +123,14 @@ export default function ArticleDiscovery({ initialArticles }: ArticleDiscoveryPr
     return Object.entries(groups).sort(([a], [b]) => b.localeCompare(a));
   }, [filteredArticles]);
 
-  const hasActiveFilters = horizonFilter !== 'all' || polarityFilter !== 'all' || mechanicFilter !== 'all' || searchQuery;
+  const hasActiveFilters = horizonFilter !== 'all' || polarityFilter !== 'all' || mechanicFilter !== 'all' || articleTypeFilter !== 'all' || searchQuery;
 
   const clearFilters = useCallback(() => {
     setSearchQuery('');
     setHorizonFilter('all');
     setPolarityFilter('all');
     setMechanicFilter('all');
+    setArticleTypeFilter('all');
   }, []);
 
   if (loading) {
@@ -206,6 +217,17 @@ export default function ArticleDiscovery({ initialArticles }: ArticleDiscoveryPr
             { value: 'P1', label: 'Positive' },
             { value: 'P2', label: 'Transform' },
             { value: 'P3', label: 'Utopian' },
+          ]}
+        />
+
+        <FilterSelect
+          label="Type"
+          value={articleTypeFilter}
+          onChange={setArticleTypeFilter}
+          options={[
+            { value: 'all', label: 'All' },
+            { value: 'fiction', label: 'Fiction' },
+            { value: 'research', label: 'Research' },
           ]}
         />
 
@@ -456,6 +478,11 @@ function ArticleCard({ article }: { article: EnhancedArticleData }) {
             {formattedDate}
           </span>
         )}
+        {article.articleType && (
+          <Badge variant={article.articleType === 'research' ? 'research' : 'fiction'}>
+            {articleTypeLabels[article.articleType]}
+          </Badge>
+        )}
         {article.horizon && (
           <Badge>{horizonLabels[article.horizon]}</Badge>
         )}
@@ -529,6 +556,11 @@ function ArticleRow({ article, compact = false }: { article: EnhancedArticleData
             gap: '6px',
             flexWrap: 'wrap',
           }}>
+            {article.articleType && (
+              <Badge small variant={article.articleType === 'research' ? 'research' : 'fiction'}>
+                {articleTypeLabels[article.articleType]}
+              </Badge>
+            )}
             {article.horizon && (
               <Badge small>{horizonLabels[article.horizon]}</Badge>
             )}
@@ -550,15 +582,44 @@ function Badge({
   small = false,
 }: {
   children: React.ReactNode;
-  variant?: 'default' | 'polarity';
+  variant?: 'default' | 'polarity' | 'research' | 'fiction';
   small?: boolean;
 }) {
+  const getStyles = () => {
+    switch (variant) {
+      case 'research':
+        return {
+          background: 'rgba(59, 130, 246, 0.15)',
+          border: '1px solid rgba(59, 130, 246, 0.4)',
+          color: '#60a5fa',
+        };
+      case 'fiction':
+        return {
+          background: 'rgba(168, 85, 247, 0.15)',
+          border: '1px solid rgba(168, 85, 247, 0.4)',
+          color: '#c084fc',
+        };
+      case 'polarity':
+        return {
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid #444',
+          color: '#888',
+        };
+      default:
+        return {
+          background: 'transparent',
+          border: '1px solid #333',
+          color: '#666',
+        };
+    }
+  };
+
+  const styles = getStyles();
+
   return (
     <span style={{
       padding: small ? '2px 6px' : '3px 8px',
-      background: variant === 'polarity' ? 'rgba(255,255,255,0.05)' : 'transparent',
-      border: `1px solid ${variant === 'polarity' ? '#444' : '#333'}`,
-      color: variant === 'polarity' ? '#888' : '#666',
+      ...styles,
       fontFamily: 'monospace',
       fontSize: small ? '0.6rem' : '0.65rem',
       textTransform: 'uppercase',

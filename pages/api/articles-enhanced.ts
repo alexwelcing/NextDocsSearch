@@ -9,6 +9,9 @@ type TimeHorizon = 'NQ' | 'NY' | 'N5' | 'N20' | 'N50' | 'N100';
 // Outcome Polarity scale
 type OutcomePolarity = 'C3' | 'C2' | 'C1' | 'N0' | 'P1' | 'P2' | 'P3';
 
+// Article Type - distinguishes fiction/speculative from research/analysis
+export type ArticleType = 'fiction' | 'research';
+
 // System Mechanics
 type SystemMechanic =
   | 'labor-substitution'
@@ -37,6 +40,7 @@ export interface EnhancedArticleData {
   polarity?: OutcomePolarity;
   mechanics?: SystemMechanic[];
   domains?: string[];
+  articleType: ArticleType;
 }
 
 // Infer time horizon from year in slug or content
@@ -138,6 +142,73 @@ function extractDomains(keywords: string[], slug: string): string[] {
   return Array.from(domains).slice(0, 4);
 }
 
+// Infer article type from frontmatter, keywords, and content
+function inferArticleType(
+  frontmatterType: string | undefined,
+  slug: string,
+  content: string,
+  keywords: string[]
+): ArticleType {
+  // If explicitly set in frontmatter, use that
+  if (frontmatterType === 'research' || frontmatterType === 'fiction') {
+    return frontmatterType;
+  }
+
+  const combined = (slug + ' ' + content + ' ' + keywords.join(' ')).toLowerCase();
+
+  // Research indicators: citations, data analysis, reports, current events analysis
+  const researchIndicators = [
+    /\[\d+\]/, // Citation brackets [1], [2], etc.
+    /zeitgeist/i,
+    /analysis report/i,
+    /market analysis/i,
+    /research report/i,
+    /data shows/i,
+    /according to/i,
+    /table \d+:/i,
+    /figure \d+:/i,
+    /sources:/i,
+    /bibliography/i,
+    /prepared by:/i,
+    /executive summary/i,
+    /key (findings|metrics|takeaways)/i,
+  ];
+
+  // Fiction indicators: narrative structure, future scenarios, backstory
+  const fictionIndicators = [
+    /backstory/i,
+    /incident.*\d{4}/i, // Incident reports with future years
+    /postmortem.*\d{4}/i,
+    /recovered from.*archive/i,
+    /transmission.*\d{4}/i,
+    /year.*\d{4}.*:.*narrative/i,
+    /chronicles/i,
+  ];
+
+  // Count matches
+  let researchScore = 0;
+  let fictionScore = 0;
+
+  researchIndicators.forEach(pattern => {
+    if (pattern.test(combined)) researchScore++;
+  });
+
+  fictionIndicators.forEach(pattern => {
+    if (pattern.test(combined)) fictionScore++;
+  });
+
+  // Slug-based patterns
+  if (/backstory|incident|postmortem|transmission|scenario/.test(slug)) {
+    fictionScore += 2;
+  }
+  if (/analysis|report|zeitgeist|review|study/.test(slug)) {
+    researchScore += 2;
+  }
+
+  // Default to fiction (preserves existing behavior for speculative content)
+  return researchScore > fictionScore ? 'research' : 'fiction';
+}
+
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<EnhancedArticleData[] | { error: string }>
@@ -172,6 +243,7 @@ export default function handler(
         polarity: inferPolarity(slug, content),
         mechanics: inferMechanics(slug, content),
         domains: extractDomains(keywords, slug),
+        articleType: inferArticleType(data.articleType, slug, content, keywords),
       };
     });
 
