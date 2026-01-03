@@ -82,7 +82,7 @@ const BadgeRow = styled.div`
   gap: 6px;
 `;
 
-const Badge = styled.span<{ $variant?: 'horizon' | 'polarity' | 'mechanic' | 'domain' }>`
+const Badge = styled.span<{ $variant?: 'horizon' | 'polarity' | 'mechanic' | 'domain' | 'research' | 'fiction' }>`
   padding: 3px 8px;
   border-radius: 4px;
   font-size: 0.7rem;
@@ -109,6 +109,18 @@ const Badge = styled.span<{ $variant?: 'horizon' | 'polarity' | 'mechanic' | 'do
           background: rgba(16, 185, 129, 0.15);
           color: #6ee7b7;
           border: 1px solid rgba(16, 185, 129, 0.3);
+        `;
+      case 'research':
+        return `
+          background: rgba(59, 130, 246, 0.15);
+          color: #60a5fa;
+          border: 1px solid rgba(59, 130, 246, 0.4);
+        `;
+      case 'fiction':
+        return `
+          background: rgba(168, 85, 247, 0.15);
+          color: #c084fc;
+          border: 1px solid rgba(168, 85, 247, 0.4);
         `;
       case 'domain':
       default:
@@ -153,6 +165,11 @@ const mechanicLabels: Record<string, string> = {
   'alignment-incentives': 'Alignment',
 };
 
+const articleTypeLabels: Record<string, string> = {
+  fiction: 'Fiction',
+  research: 'Research',
+};
+
 interface ArticleCardProps {
   article: EnhancedArticleData;
   compact?: boolean;
@@ -192,6 +209,11 @@ export default function ArticleCard({ article, compact = false }: ArticleCardPro
       </Meta>
 
       <BadgeRow>
+        {article.articleType && (
+          <Badge $variant={article.articleType === 'research' ? 'research' : 'fiction'}>
+            {articleTypeLabels[article.articleType] || article.articleType}
+          </Badge>
+        )}
         {article.horizon && (
           <Badge $variant="horizon">{horizonLabels[article.horizon] || article.horizon}</Badge>
         )}
