@@ -165,7 +165,7 @@ export default function IdeaExperience({
         // Open article in new window
         const articleData = data as { filename?: string };
         if (articleData?.filename) {
-          window.open(`/articles/${articleData.filename}`, '_blank');
+          window.open(`/articles/${articleData.filename.replace('.mdx', '')}`, '_blank');
         }
       }
 
