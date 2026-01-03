@@ -1,0 +1,23 @@
+{
+  "archetype": "Cryptographic Apocalypse",
+  "logline": "A vast, dimly-lit quantum data center in chaos as the world succumbs to a cryptographic breach.",
+  "scene": "Inside a cavernous quantum computing facility, rows of gleaming quantum processors buzz and click ominously, their lights flickering red alarmingly. Monitors line the walls, each displaying cascading lines of decrypted data: bank accounts, medical records, classified military communications—an array of secure secrets now openly unveiled. Technicians scramble, eyes wide with panic, as they try to regain control over a system that has been compromised. The air is thick with tension, a palpable sense of dread hanging over the energy-laden atmosphere, as screens flash warnings of a global collapse in trust and security, reflected in the wide-open eyes of onlookers.",
+  "keyProps": [
+    "massive quantum processors",
+    "flashing warning lights on screens",
+    "cascading data streams",
+    "screaming alarms",
+    "overloaded servers"
+  ],
+  "camera": "Wide-angle shot capturing the expanse of the control room with close-ups of panic-stricken operators working frantically at their terminals.",
+  "lighting": "Harsh overhead fluorescent lights juxtaposed with the ominous red glow of warning signals from monitors, casting shadows across anxious faces.",
+  "productionDesign": "A stark, high-tech quantum data center filled with intricate, futuristic machinery and a labyrinth of blinking servers, emphasizing the advanced yet vulnerable technology at play.",
+  "signatureTwist": "A hidden screen displays a countdown timer indicating the remaining time before the breach becomes irreversible, heightening the urgency and despair.",
+  "avoid": [
+    "no humanoid robots",
+    "no readable text",
+    "no logos",
+    "no HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

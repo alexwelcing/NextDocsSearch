@@ -1,0 +1,23 @@
+{
+  "archetype": "Memory Surveillance",
+  "logline": "A stark digital archive room, filled with holographic memories of personal transgressions, confronts a young woman seeking redemption.",
+  "scene": "The setting is a dimly lit archive room lined with translucent data panels that flicker with the faces of people from the past, their memories suspended in time. A central holographic display projects an array of past social interactions, each instance intertwined, revealing everything she ever said or did. As she stands there, bathed in the cold blue glow of the technology, her expression reflects a mix of dread and nostalgia. The air is heavy with the weight of irrevocable memories, challenging her sense of identity and the possibility of forgiveness.",
+  "keyProps": [
+    "holographic memory projectors",
+    "translucent data panels",
+    "digital interface with past interactions",
+    "ambient soundscapes of muffled conversations",
+    "dim control lighting"
+  ],
+  "camera": "Wide-angle lens capturing the expansive depth of archived memories juxtaposed with the subject's isolation in the center.",
+  "lighting": "Cold, blue lighting with sharp contrasts, emphasizing the sterile technology environment.",
+  "productionDesign": "A blend of futuristic aesthetics with worn-down elements, suggesting the oppressive nature of a society reliant on memory retention. Panels are mismatched, some flickering with corrupted data, creating an unsettling atmosphere.",
+  "signatureTwist": "Memories of kindness and redemption are buried beneath a landscape of transgressions, hinting that even the most innocent actions are recorded and potentially weaponized.",
+  "avoid": [
+    "no generic HUD overlays",
+    "no humanoid robots",
+    "no readable text",
+    "no logos",
+    "no abstract wallpaper"
+  ]
+}

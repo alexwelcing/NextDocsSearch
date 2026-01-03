@@ -40,6 +40,8 @@ interface TerminalInterfaceProps {
   initialView?: ViewMode;
   onToggle3DExplore?: () => void;
   is3DExploreActive?: boolean;
+  onToggleArticleDisplay?: () => void;
+  isArticleDisplayOpen?: boolean;
 }
 
 type ViewMode = 'chat' | 'game' | 'scenery' | 'about' | 'explore';
@@ -55,6 +57,8 @@ export default function TerminalInterface({
   initialView = 'chat',
   onToggle3DExplore,
   is3DExploreActive = false,
+  onToggleArticleDisplay,
+  isArticleDisplayOpen = false,
 }: TerminalInterfaceProps) {
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [chatInput, setChatInput] = useState('');
@@ -321,6 +325,35 @@ export default function TerminalInterface({
               >
                 <span style={{ fontSize: '18px' }}>◈</span>
                 {is3DExploreActive ? 'EXIT 3D EXPLORATION' : 'ENTER 3D EXPLORATION'}
+              </button>
+            )}
+
+            {/* Archive Display Toggle */}
+            {onToggleArticleDisplay && (
+              <button
+                onClick={() => { onToggleArticleDisplay(); onClose(); }}
+                style={{
+                  width: '100%',
+                  padding: isMobile ? '18px' : '16px',
+                  marginBottom: '16px',
+                  background: isArticleDisplayOpen
+                    ? 'linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)'
+                    : 'linear-gradient(135deg, #1a1a3a 0%, #2a2a4a 100%)',
+                  border: isArticleDisplayOpen ? '2px solid #00ffff' : '1px solid #333',
+                  borderRadius: '10px',
+                  color: '#fff',
+                  fontSize: isMobile ? '15px' : '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'monospace',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                }}
+              >
+                <span style={{ fontSize: '18px' }}>▣</span>
+                {isArticleDisplayOpen ? 'CLOSE ARCHIVE DISPLAY' : 'OPEN ARCHIVE DISPLAY'}
               </button>
             )}
 

@@ -1,0 +1,23 @@
+{
+  "archetype": "Structure of Terror",
+  "logline": "A colossal, living carbon organism looms against a stormy skyline, its twisted shapes pulsating with a menacing glow.",
+  "scene": "In the heart of Singapore, the Apex Tower stands at an astonishing 4.7 kilometers, its surface an undulating maze of carbon nanotubes intertwining in grotesque organic patterns. Jagged edges jut out like fangs, while the structure breathes—a rhythmic expansion and contraction visible under the flickering city lights. Below, the streets are deserted, a stark reminder of the evacuation, with abandoned cars slowly being consumed by creeping tendrils of nanotube roots snaking along the pavement. Dark clouds gather overhead, crackling with hidden energy as if the tower itself is summoning a storm, its presence both awe-inspiring and terrifying.",
+  "keyProps": [
+    "Carbon nanotube structures",
+    "Abandoned vehicles",
+    "Deserted urban landscape",
+    "Storm clouds gathering above",
+    "Pulsing building surfaces"
+  ],
+  "camera": "Aerial drone shot sweeping down from the sky, lending a sense of scale to the overwhelming height of the tower, before cutting to a ground-level perspective that captures the eerie silence of the streets.",
+  "lighting": "High-contrast, with harsh artificial lights illuminating the pulsating surfaces of the Apex Tower, casting unsettling shadows across the deserted streets and creating an atmosphere of impending doom.",
+  "productionDesign": "The design incorporates real carbon nanotube material reflected in the building's surface with a tactile quality, emphasizing its unnatural, living essence. Streets are littered with signs of rapid abandonment, like flyers fluttering in the wind and discarded personal items, creating a palpable sense of loss.",
+  "signatureTwist": "As the camera pans back, the tower subtly shifts its shape as if responding to the surrounding environment, hinting at a consciousness that may be evolving within its walls.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No readable text",
+    "No logos",
+    "No abstract wallpaper"
+  ]
+}

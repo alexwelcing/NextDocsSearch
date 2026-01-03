@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A gritty legal tech command center is alive with tension as attorneys confront the stark realities of AI integration.",
+  "scene": "In a dimly lit, high-tech control room filled with multiple screens flashing data and AI-generated outputs, a group of weary attorneys huddles around a central display showing a real-time evaluation of an AI's performance. Papers clutter the desks, highlighting the chaos of traditional legal work juxtaposed with the sleek interface of AI tools. An attorney stares intently at the screen, her fingers poised over the keyboard while the clock ticks down the seconds, measuring the AI's latency. In the background, a security specialist scrutinizes compliance documents, their expression a mix of concern and urgency as they flag potential risks. The air is thick with the palpable fear of adopting a tool that could either revolutionize their workflow or spell disaster if it fails.",
+  "keyProps": [
+    "High-resolution screens displaying latency metrics and AI outputs",
+    "Scattered legal documents and compliance checklists",
+    "Vintage legal books juxtaposed against modern tech gadgets",
+    "A timer counting down the latency test",
+    "An old-fashioned gavel resting on a cluttered desk"
+  ],
+  "camera": "A wide-angle shot captures the entire room, focusing on both the anxious faces of the attorneys and the glowing screens, creating a stark contrast between the old legal world and the new digital frontier.",
+  "lighting": "Harsh overhead lights create sharp shadows, emphasizing the seriousness and urgency of the situation, while the screens emit a cold blue light that casts an eerie glow over the faces of the attorneys.",
+  "productionDesign": "The set combines modern tech aesthetics with a vintage legal backdrop—metallic, sleek devices against a backdrop of mahogany desks filled with leather-bound books and paperwork. The chaotic arrangement highlights the struggle between traditional practices and the push toward AI efficiency.",
+  "signatureTwist": "A sudden alarm blares from one of the screens, signaling a major compliance failure in real-time, throwing the entire room into panic and forcing an instant reevaluation of the technology’s safety.",
+  "avoid": [
+    "No generic HUD overlays or displays",
+    "No visible humanoid robots",
+    "No abstract or decorative elements",
+    "No logos or branded materials",
+    "No bright, cheerful lighting"
+  ]
+}

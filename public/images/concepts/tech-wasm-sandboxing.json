@@ -1,0 +1,24 @@
+{
+  "archetype": "Tech Lab Tension",
+  "logline": "A dimly lit tech lab brimming with tension as engineers survey the aftermath of a security breach.",
+  "scene": "The camera sweeps over a cluttered workstation filled with wiry circuit boards and half-assembled modules. Shadows dance across the walls, revealing a series of monitors displaying lines of code and ominous red warnings flashing intermittently. Engineers in lab coats huddle over a central console, their faces stern and anxious, as they grapple with the implications of a failed WASM sandboxing test. A single flickering light bulb above casts an eerie glow, reflecting the palpable uncertainty surrounding the fate of their untrusted code. In the background, a locked glass chamber contains remnants of prior experiments, hinting at the fragility of their technological advancements.",
+  "keyProps": [
+    "worn circuit boards",
+    "scattered notes on secure coding",
+    "flickering monitors",
+    "locked glass chamber",
+    "anxiety-ridden engineers",
+    "smoke from an overheated device"
+  ],
+  "camera": "a steady handheld shot, moving through the chaos of the lab, capturing close-ups of the engineers' faces and the glowing screens",
+  "lighting": "harsh overhead lighting combined with the dim ambient light from the monitors, creating a stark contrast that highlights tension",
+  "productionDesign": "a high-tech lab space that has seen better days, featuring outdated technology juxtaposed with cutting-edge innovations, all cluttered messily to suggest frantic activity",
+  "signatureTwist": "a hidden camera feed reveals that the breach wasn't a result of external hacking but an inside job, adding layers of betrayal",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no bright colors",
+    "no readable text"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Evolutionary Awakening",
+  "logline": "A dense network of glowing mycelium pulses with life underneath a terracotta landscape, signaling humanity's first contact with Earth's ancient consciousness.",
+  "scene": "Set in a lush, dimly-lit rainforest, a team of researchers huddles around a complex array of quantum sensors and bio-electromagnetic interfaces. The roots of towering trees intertwine with the luminous, bioluminescent mycelium glowing faintly in a spectrum of greens and blues, signifying communication. As they transmit electrical pulses into the network, spectral patterns of light shift and converge, creating a web of energy that dances in response. The atmosphere is charged with anticipation as each pulse reveals a deeper connection to the ancient intelligence beneath their feet, illuminating the profound bond between humanity and the Earth’s living systems.",
+  "keyProps": [
+    "Quantum sensor array",
+    "Bio-electromagnetic interface cables",
+    "Luminescent mycelium network",
+    "Satellite uplink for real-time data transmission",
+    "Sampling tools for environmental analysis"
+  ],
+  "camera": "A wide-angle lens capturing the vastness of the rainforest canopy above, slowly panning down to focus on the researchers interacting with the glowing mycelium, emphasizing the intricate connection between them and the network.",
+  "lighting": "Soft, ambient lighting that highlights the bioluminescence of the mycelium while maintaining a shadowy, mysterious feel to the surrounding forest, evoking a sense of wonder and curiosity.",
+  "productionDesign": "The set features hyper-realistic, organic textures with an emphasis on the earthy colors of the rainforest. The glowing mycelium is crafted with intricate detail, utilizing practical effects to create a believable interaction between technology and organic life. Surrounding flora and fauna are rendered with lush greenery and reflective surfaces to mimic a vibrant ecosystem.",
+  "signatureTwist": "The moment a pulse sent by the researchers triggers an unforeseen, intelligent response from the mycelium, revealing complex patterns of communication that shock the team, indicating the network's awareness of human presence.",
+  "avoid": [
+    "Generic sci-fi tropes such as HUD overlays",
+    "Humanoid robots",
+    "Unrealistic digital effects or abstract visuals",
+    "Conventional laboratory settings",
+    "Overly stylized or colorful lighting"
+  ]
+}

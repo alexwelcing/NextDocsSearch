@@ -19,6 +19,7 @@ import CinematicIntro from './CinematicIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from './SeasonalEffects';
 import ArticleExplorer3D, { ArticleDetailPanel } from './ArticleExplorer3D';
+import ArticleDisplayPanel from './ArticleDisplayPanel';
 import { useJourney } from './JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
@@ -163,6 +164,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // 3D Exploration state
   const [is3DExploreActive, setIs3DExploreActive] = useState(false);
+  const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false);
   const [enhancedArticles, setEnhancedArticles] = useState<EnhancedArticleData[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<EnhancedArticleData | null>(null);
 
@@ -573,6 +575,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
+              {/* Article Display Panel */}
+              <ArticleDisplayPanel
+                articles={enhancedArticles}
+                isOpen={isArticleDisplayOpen}
+                onClose={() => setIsArticleDisplayOpen(false)}
+              />
+
               {/* Dynamic Scene Lighting */}
               <SceneLighting
                 isCinematic={showCinematicIntro && !cinematicComplete}
@@ -599,6 +608,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           currentScenery={currentSceneryPath}
           onToggle3DExplore={handleToggle3DExplore}
           is3DExploreActive={is3DExploreActive}
+          onToggleArticleDisplay={() => setIsArticleDisplayOpen(!isArticleDisplayOpen)}
+          isArticleDisplayOpen={isArticleDisplayOpen}
         />
       )}
 

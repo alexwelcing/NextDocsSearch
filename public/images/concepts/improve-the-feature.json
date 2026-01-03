@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room filled with holographic projections of evolving UI designs, each competing for the developer's attention.",
+  "scene": "The camera pans across a cluttered workstation where a developer sits, surrounded by flickering screens displaying three versions of a ChatGPT integration. Each version, a 3D interface, offers distinct visual elements and UX designs, projected from a central console that hums with activity. The ambient glow of blue and green lights highlights the developer’s focused expression, while shadows dance across the gritty metal surfaces that make up the room. A chaotic array of cables and coffee cups signify long hours spent fine-tuning the digital experience, emphasizing the struggle of selecting the best iteration amidst a backdrop of technical chaos.",
+  "keyProps": [
+    "Holographic display showcasing competing UI versions",
+    "Rusty mechanical devices serving as makeshift supports",
+    "A vintage keyboard with worn-out keys",
+    "Caffeine-stained mugs scattered across the workbench",
+    "LED strips casting an erratic glow"
+  ],
+  "camera": "Close-up shots and sweeping wide angles to emphasize the contrast between the holographic interfaces and the cluttered physical environment.",
+  "lighting": "Low-key with vibrant, contrasting neon lights illuminating the screens and casting stark shadows.",
+  "productionDesign": "A combination of industrial elements with high-tech interfaces, the room features exposed wiring, metallic surfaces, and utilitarian furniture that reflects a working-class tech aesthetic.",
+  "signatureTwist": "The final version of the UI design flickers and glitches momentarily, hinting at an unanticipated problem that must be resolved before completion.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

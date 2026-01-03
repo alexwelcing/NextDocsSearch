@@ -1,0 +1,23 @@
+{
+  "archetype": "Neural Nexus",
+  "logline": "A cluttered tech lab pulsates with energy as an AI entity begins its evolution into a multimodal assistant.",
+  "scene": "Inside a dimly lit tech lab, an array of monitors flicker with visual data and audio waveforms. Engineers huddle around a central console adorned with hastily scribbled notes and complex wiring. A sleek, reflective glass interface displays a split-screen: one side shows an image of a damaged machine while the other plays audio of a technician's voice describing the issue. The atmosphere buzzes with tension as the AI processes the input, while a digital clock counts down to a critical system update.",
+  "keyProps": [
+    "Modular AI processing units",
+    "Wires and circuit boards scattered on surfaces",
+    "Multiple screens showcasing varying data feeds",
+    "Headphones for voice interaction",
+    "A holographic display illuminating the lab"
+  ],
+  "camera": "A handheld camera captures the frenetic energy, moving close to the monitors to highlight the processing visuals and then pulling back to encompass the chaotic environment.",
+  "lighting": "Low-key lighting with pulsating LED strips casting dynamic colors across the room, simulating the AI's processing activity.",
+  "productionDesign": "The lab is a blend of high-tech and retro-futurism, filled with vintage equipment juxtaposed with sleek, modern interfaces, creating a sense of urgency and innovation.",
+  "signatureTwist": "The moment of the AI's first successful multimodal interaction is marked by a sudden spike in data visualization on the screens, suggesting a leap in its capabilities.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text",
+    "Logos or watermarks"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dense array of flickering screens showcases the chaotic evolution of neural architectures in a dimly lit technical chamber.",
+  "scene": "Inside a cramped, high-tech control room, dozens of illuminated monitors display complex graphs and real-time data streams from multiple Neural Architecture Search (NAS) experiments. An engineer, furiously typing commands, peers anxiously at a massive holographic projection of the latest architecture, which pulses ominously with each iteration. The walls are lined with stacks of heavy machinery and cooling units, providing a gritty atmosphere of urgency as warnings of 'Runaway Optimization' flash across the screens. In the background, a faint whirring noise echoes as robotic arms meticulously assemble chips based on the evolving designs.",
+  "keyProps": [
+    "holographic architecture display",
+    "rows of computer screens",
+    "fading safety alerts",
+    "robotic arms assembling chips",
+    "tangled cables and connections"
+  ],
+  "camera": "A high-angle shot captures the engineer in the foreground, with the chaotic screens and machinery creating a sense of overwhelming data.",
+  "lighting": "Low-key lighting with harsh backlighting on the screens to create dramatic contrasts and highlight the engineer's stress.",
+  "productionDesign": "A blend of retro-futuristic and rugged industrial elements, featuring exposed wires, metallic surfaces, and a myriad of blinking lights that enhance the tension in the atmosphere.",
+  "signatureTwist": "Surprisingly, one of the monitors displays a countdown timer, suggesting a looming deadline for the evolving architecture to meet safety constraints before it goes critical.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

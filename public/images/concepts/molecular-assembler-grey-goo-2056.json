@@ -1,0 +1,25 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "The frantic scene inside the MIT NanoLab control room during the containment breach of self-replicating nanomachines.",
+  "scene": "The control room is a chaotic hub of activity, with holographic displays flickering and alarms blaring as scientists frantically input commands into their terminals. A central screen shows a rapidly escalating digital representation of the assembler replication event, numbers and graphs spiraling out of control. In the foreground, a panicked technician stares in disbelief at an expansive view of the affected area on a large monitor, green vegetation visibly being stripped away. The air is thick with the tension of potential catastrophe, with exhausted faces illuminated by the harsh glow of computer screens and the red of warning lights.",
+  "keyProps": [
+    "Holographic displays showing data analytics",
+    "A large monitor with a map of affected areas",
+    "Spilled chemical containers spilling onto the floor",
+    "Desks scattered with digital tablets and emergency protocols",
+    "Emergency shutdown buttons blinking",
+    "Laboratory safety gear scattered about"
+  ],
+  "camera": "Wide-angle lens capturing the intense atmosphere and chaotic layout of the control room, focusing on the reactions of the technicians and the digital displays behind them.",
+  "lighting": "Fluorescent overhead lights casting a harsh glare, combined with the dimmed glow of red alarm lights creating a stark contrast with the blue of the screen displays.",
+  "productionDesign": "A state-of-the-art laboratory featuring slick, metallic finishes, cluttered desks with high-tech gadgets, and a window looking out into the darker recesses of the lab where the assembly experiment originally took place. Elements of panic are woven into the environment, showing signs of struggle against the emergent threat.",
+  "signatureTwist": "The background reveals ominous shadows of nano assemblers skimming along the floor towards the ventilation system, subtly hinting at the unstoppable nature of the replicating threat.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

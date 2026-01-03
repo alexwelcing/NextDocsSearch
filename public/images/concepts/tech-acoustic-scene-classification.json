@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An abandoned acoustic monitoring station stands as a testament to humanity's forgotten attempts at environmental understanding.",
+  "scene": "In a dilapidated control room of an acoustic monitoring station, gutted servers and shattered glass panels litter the floor. Dust particles swirl in the dim light from a flickering overhead fluorescent tube, casting eerie shadows across a cracked mel-spectrogram display. An old audio interface rests on a rusted desk, its connections frayed and exposed, hinting at the once-thriving technology that classified and analyzed sounds from various ecosystems. Outside the grimy window, a cityscape looms in the distance, where urban noise clashes violently with the eerie silence of nature reclaiming the space. Tattered posters depicting diverse soundscapes hang askew, echoing the forgotten ambition to bridge human interaction with the environments around us.",
+  "keyProps": [
+    "gutted server units",
+    "cracked mel-spectrogram display",
+    "rusted audio interface",
+    "tattered soundscape posters",
+    "shattered glass panels"
+  ],
+  "camera": "Wide-angle shot capturing the entire control room, emphasizing the chaos and disarray.",
+  "lighting": "Dramatic low-key lighting with a flickering overhead fluorescent light for a stark, gritty atmosphere.",
+  "productionDesign": "The design leans heavily into decay and neglect, with a focus on repurposed materials hinting at previous technological advancements. The environment showcases a blend of high-tech equipment alongside natural deterioration, suggesting a conflict between human innovation and environmental resilience.",
+  "signatureTwist": "A small, functioning audio recorder on the desk intermittently captures sounds of nature, contrasting with the silence around it, suggesting an ongoing story beyond the room's decay.",
+  "avoid": [
+    "abstract wallpaper",
+    "generic HUD overlays",
+    "humanoid robots",
+    "readable text",
+    "logos"
+  ]
+}

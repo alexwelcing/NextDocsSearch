@@ -1,0 +1,24 @@
+{
+  "archetype": "Neural Nexus",
+  "logline": "A sleek neural interface lab buzzes with energy as young researchers gather around a central quantum computing core, their faces illuminated by the flickering lights of cutting-edge machinery.",
+  "scene": "In a high-tech lab, a vast array of sleek, modular workstations surrounds a massive, pulsating quantum computing core, its surface covered in a grid of blinking nodes. Researchers in lab coats are absorbed in their work, wires and transistors strewn across their desks. Holographic interface displays project complex neural data into the air, casting shadows on the walls. The hum of machinery and the faint smell of ozone fill the air as the newest recruit stands at the entrance, clutching a stack of NDA documents, peering in with a mix of awe and trepidation.",
+  "keyProps": [
+    "Quantum computing core",
+    "Modular workstations",
+    "Holographic interface projectors",
+    "Data processors with illuminated screens",
+    "Wires and transistors scattered on desks"
+  ],
+  "camera": "A low-angle shot captures the towering quantum core in the background, focusing on the new recruit's face reflecting the glowing lights of the lab.",
+  "lighting": "Harsh overhead lights create dramatic shadows across the workstations, while the quantum core emits a soft, pulsating blue glow that highlights the faces of the researchers.",
+  "productionDesign": "The lab features an industrial aesthetic with exposed metal beams, reinforced glass walls, and high-tech equipment that blends seamlessly with utilitarian furniture, giving a gritty, yet cutting-edge vibe.",
+  "signatureTwist": "A hidden compartment in the walls reveals a stack of prohibited research papers, hinting at secrets that even the young geniuses are unaware of.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

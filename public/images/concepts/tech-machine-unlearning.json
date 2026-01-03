@@ -1,0 +1,24 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "An isolated data center's filtration room holds the secrets of machine unlearning.",
+  "scene": "In the dimly lit back room of a sprawling data center, a wall of flickering monitors displays streams of code and visualizations of model training data. An old, rusted data purging machine stands ominously in the corner, its mechanical arms clanking as it processes outdated datasets. A thick layer of dust covers the floor, where a technician, dressed in a worn jumpsuit, kneels to inspect the device, troubled by a flashing warning light signaling incomplete deletions. Shadows cast by the machine's harsh, overhead lights flicker across blueprints of neural networks taped to the walls, emphasizing the risk and urgency of erasing the past without leaving traces.",
+  "keyProps": [
+    "rusted data purging machine",
+    "flickering monitors",
+    "technical blueprints of neural networks",
+    "worn jumpsuit",
+    "warning light",
+    "thick layer of dust"
+  ],
+  "camera": "close-up shot of the technician's worried expression, with the purging machine in the background",
+  "lighting": "harsh overhead fluorescent lighting mixing with the cold blue glow of screens",
+  "productionDesign": "industrial, claustrophobic setting emphasizing decay and urgency, with high-tech elements contrasting against the rundown environment",
+  "signatureTwist": "glitches in the visual data reveal that the unlearning process has left behind unexpected artifacts, hinting at deeper implications of data retention",
+  "avoid": [
+    "humanoid robots",
+    "abstract wallpaper",
+    "visible logos",
+    "clean or polished environments",
+    "generic HUD overlays"
+  ]
+}

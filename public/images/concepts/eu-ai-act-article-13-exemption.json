@@ -1,0 +1,25 @@
+{
+  "archetype": "Compliance Conundrum",
+  "logline": "A dimly lit corporate lab embodies the tension between innovation and regulation, showcasing the moment a startup realizes the implications of Article 13.",
+  "scene": "The camera pans across a cluttered workspace filled with tangled cables and flickering monitors, revealing a diverse team of engineers and product managers huddled around a central laptop. The screen displays complex algorithms and data streams while post-it notes plastered with frantic scrawlings about compliance and deadlines clutter the desk. In the background, an overhead projector beams a countdown timer, representing the looming deadline for compliance, creating a palpable sense of urgency. This is a battleground where dreams of innovation clash with the stark realities of legal obligations.",
+  "keyProps": [
+    "Flickering monitors displaying data analytics",
+    "A central laptop with code and compliance documents open",
+    "An overhead projector showing a timer",
+    "Post-it notes with compliance reminders and deadlines",
+    "Coffee mugs with half-drunk coffee, indicating late hours",
+    "A whiteboard filled with flowcharts and exemption decision trees"
+  ],
+  "camera": "A handheld camera captures the frenetic energy, moving erratically between close-ups of anxious faces and wide shots of the chaotic workspace.",
+  "lighting": "The lighting is stark and clinical, with overhead fluorescents casting a harsh glow on the team, contrasted by the dim light from the screens, creating shadows that symbolize the uncertainty of their situation.",
+  "productionDesign": "The lab is a retrofit industrial space, featuring exposed metal beams and concrete walls adorned with digital displays, emphasizing a gritty, hard-edged aesthetic that reflects the weight of regulatory compliance.",
+  "signatureTwist": "As the camera closes in on the countdown timer, it abruptly freezes, suggesting that time is running out for the team’s compliance preparation, leaving audiences on the edge of their seats.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

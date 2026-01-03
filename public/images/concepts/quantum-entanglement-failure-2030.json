@@ -1,0 +1,25 @@
+{
+  "archetype": "Quantum Collapse",
+  "logline": "A technician grips the edge of a quantum entanglement chamber, peering into a swirling glow of impossible matter that defies the laws of physics.",
+  "scene": "Inside the dimly lit control room of the Geneva Quantum Hub, the air is thick with tension. In front of the entanglement chamber, which has inexplicably turned to a warm glow, a technician stands transfixed by the sight of entangled photons dancing in an eerie spiral. Red and green warning lights blink erratically, casting flickering shadows on the walls, while the hum of machinery goes silent, filled with a heavy anticipation. Outside the chamber, technicians peer into each other’s eyes, confusion and fear etched on their faces as something deeply unnatural unfolds before them.",
+  "keyProps": [
+    "Quantum entanglement chamber with a glowing, swirling interior",
+    "Thermal cameras displaying rising temperature readings",
+    "Monitoring screens showing chaotic data streams and error messages",
+    "A clipboard with hastily scribbled notes on quantum anomalies",
+    "Protective gear scattered on the floor, indicating chaos",
+    "An old radio, crackling with distorted voices from deep space"
+  ],
+  "camera": "A low-angle shot framed tight on the technician's face, capturing their blend of awe and horror, with the glowing chamber dominating the background.",
+  "lighting": "Chiaroscuro lighting that emphasizes the glowing photons while casting deep shadows across the worried faces of the technicians, enhancing the eerie atmosphere.",
+  "productionDesign": "Utilize a mixture of sleek, high-tech materials and grimy industrial elements, with exposed wiring, dim control panels, and a backdrop of a chaotic workspace filled with advanced quantum equipment juxtaposed with the stark reality of human panic.",
+  "signatureTwist": "As the technician steps closer, the glow pulsates rhythmically, as if responding to their presence, hinting at a sentient force waiting to breach into our reality.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "abstract wallpaper",
+    "humanoid robots",
+    "generic HUD overlays"
+  ]
+}

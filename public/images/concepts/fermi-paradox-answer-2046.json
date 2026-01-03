@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A cluttered global communications center is alive with urgency as scientists scramble to decode the alien transmission before time runs out.",
+  "scene": "Inside a dimly-lit control room, a massive wall of screens displays flickering data, graphs, and spectral visualizations of the first contact signals from Proxima Centauri. Scientists in lab coats, their expressions tight with focus and urgency, operate old-school tracking devices, their hands racing over buttons and dials. Above them, a digital countdown clock ominously ticks down the days until humanity's window to learn advanced communication techniques closes. The air is thick with tension, illuminated by the glow of monitors and the intermittent beeping of machinery, highlighting the race against cosmic fate.",
+  "keyProps": [
+    "flickering screens displaying quantum wave patterns",
+    "an old-fashioned radio receiver adapted for modern tech",
+    "a large countdown timer mounted on the wall",
+    "a projection of a three-dimensional model of the Milky Way",
+    "papers scattered with complex equations and notes"
+  ],
+  "camera": "Wide-angle shot capturing the entire chaotic control room, emphasizing the collective urgency of the scientists.",
+  "lighting": "Low, with harsh overhead lights casting deep shadows, allowing the screen glow to create a frantic yet focused atmosphere.",
+  "productionDesign": "The room is filled with a mix of high-tech equipment and retro devices, showcasing a clash between current technology and what’s left of humanity’s early attempts at space communication. The walls are lined with posters of past space missions, and there's a palpable sense of historical weight to the design, underscoring the human journey in the cosmos.",
+  "signatureTwist": "A subtle, almost hidden detail—a flickering screen in the background revealing a faint cosmic map dotted with signals—hinting at the unseen conversations happening all around them in the universe.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no readable text",
+    "no logos or watermarks"
+  ]
+}

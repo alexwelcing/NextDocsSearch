@@ -1,0 +1,23 @@
+{
+  "archetype": "The Genetic Divide",
+  "logline": "A desolate clinic waiting room, a stark battleground between the enhanced and the unenhanced.",
+  "scene": "In a grim, sterile clinic waiting room, the stark contrast between enhanced children and their baseline peers is palpable. Enhanced youths, visibly more vibrant and intellectually sharp, occupy the bright corner equipped with advanced educational tools - screens displaying complex puzzles and interactive learning modules. In the dimly lit, neglected area, unenhanced children sit and fidget, exchanging uneasy glances, surrounded by outdated texts and broken toys, their future shrouded in uncertainty. The air is thick with tension, as private discussions among parents reveal desperate desires for genetic enhancements, hinting at an impending divide that may forever alter society.",
+  "keyProps": [
+    "high-tech educational tools",
+    "cracked vinyl chairs with peeling paint",
+    "flickering fluorescent lights",
+    "an ancient, dusty box of toys",
+    "a digital screen flashing IQ scores"
+  ],
+  "camera": "Wide shot capturing the vast difference in environments between the two groups, slowly panning to reveal the expressions of worry and fear on the unenhanced children’s faces as they glance towards the enhanced cohort.",
+  "lighting": "Harsh overhead fluorescent lights cast shadows, accentuating the bleakness of the unenhanced area while the enhanced corner is illuminated with softer, dynamic lighting, creating a visual hierarchy.",
+  "productionDesign": "The clinic is a stark representation of socioeconomic disparity, with modern enhancements on one side contrasted sharply against aging infrastructure and forgotten resources on the other, highlighting the social themes of the narrative.",
+  "signatureTwist": "Amidst the chaos, a single unenhanced child picks up a broken toy, reassembling it with care, symbolizing resilience in a world designed to marginalize them.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no bright colors that promote positivity",
+    "no logos or visible branding"
+  ]
+}

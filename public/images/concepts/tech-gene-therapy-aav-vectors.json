@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A stark laboratory filled with bioreactors simulating human organs houses the future of gene therapy.",
+  "scene": "The camera zooms in on a sterile, dimly-lit biolab where large bioreactors bubble with a luminescent blue liquid, embodying the cutting-edge process of producing AAV vectors for gene therapy. Each reactor is labeled with the target tissue—'Liver', 'CNS', 'Muscle'—while rows of monitors display real-time genomic data scrolling across screens. Scientists in lab coats move briskly, some pipetting samples into automated machines that prepare AAV vectors, all under the watchful gaze of a central control panel, which flickers ominously with warning signals about potential immune responses and integration risks. The atmosphere is palpable with tension, underscored by the ticking of a countdown timer indicating the limited time for successful transfection.",
+  "keyProps": [
+    "Bioreactors with glowing blue liquid",
+    "Monitors displaying genomic data",
+    "Pipettes and automated vector preparation machines",
+    "Warning lights signaling integration and immune risks",
+    "Control panel with countdown timer"
+  ],
+  "camera": "A steady cam glides through the lab, capturing both the intricate details of the bioreactors and the frantic movements of the scientists, creating an immersive sense of urgency.",
+  "lighting": "Soft overhead lights combined with the blue-hued glow from the bioreactors create a cold, clinical atmosphere, highlighting the sterile nature of advanced genetic manipulation.",
+  "productionDesign": "The lab features a mix of high-tech equipment and worn surfaces, hinting at the pressures of ongoing experiments and the weight of ethical concerns inherent in gene therapy, while posters of the FDA’s approved therapies fade in the background.",
+  "signatureTwist": "As a scientist glances at the monitor, the data suddenly glitches, displaying an alarming spike in immune response metrics that sends a ripple of panic through the room.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Unrealistic lab equipment",
+    "Excessive visual effects distracting from the core narrative"
+  ]
+}

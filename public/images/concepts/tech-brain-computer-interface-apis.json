@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A disheveled tech operator stares in panic at the flickering screens displaying chaotic neural signals from a patient suffering from calibration drift.",
+  "scene": "In a dimly lit, cluttered control room filled with outdated tech and wires snaking across the floor, the operator sits at a central console, sweat glistening on his brow as he wrestles with a malfunctioning BCI interface. The wall-mounted screens showcase erratic, colorful brainwave patterns, highlighting the disconnect between the neural signals and the intended commands. An overhead camera captures the reflection of frantic fingers tapping commands, underscoring the tension of the moment. A worn-out coffee cup teeters on the edge of the desk, symbolizing the long hours and desperation to maintain control. In the corner, a small monitor shows the patient—a young woman in a hospital bed, her face contorted in frustration as she struggles to move her fingers, trapped in a digital limbo.",
+  "keyProps": [
+    "Flickering screens with chaotic neural data",
+    "Central control console with outdated tech",
+    "Worn coffee cup",
+    "Tangled wires on the floor",
+    "Patient monitor displaying heart rate and brain activity"
+  ],
+  "camera": "Close-up on the operator's panicked expression with a rack focus to the screens behind, capturing the urgency of the situation.",
+  "lighting": "Harsh overhead fluorescent lights create stark shadows, accentuating the tension, while dim ambient lighting around the console adds to the gritty atmosphere.",
+  "productionDesign": "The control room is a blend of retro tech and makeshift repairs, with components patched together as if the operation is just barely holding on. Posters of past technological advances are peeling from the walls, hinting at a once-thriving industry now in jeopardy.",
+  "signatureTwist": "Just as the operator recalibrates the system, a sudden blackout plunges the room into darkness, leaving only the faint hum of the monitors to underscore the impending failure.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper"
+  ]
+}

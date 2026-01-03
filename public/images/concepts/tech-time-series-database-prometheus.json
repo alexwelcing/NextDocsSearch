@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sprawling server farm buzzes with the frantic energy of real-time data processing.",
+  "scene": "Inside a colossal server room, towering racks of sleek, blinking Prometheus servers hum with life, their lights pulsating rhythmically. Technicians in rugged jumpsuits scramble between rows, eyes glued to their handheld devices displaying alarming graphs and metrics in vivid color. In the background, a massive digital wall showcases a chaotic array of time series data visualizations, with some metrics skyrocketing into the red zone—a clear sign of an impending cardinality explosion. A tense atmosphere hangs in the air as the team works against the clock to prevent a system meltdown.",
+  "keyProps": [
+    "Rows of high-performance servers with LED indicators",
+    "Handheld data analysis tablets",
+    "Large digital display screen with real-time metrics",
+    "Cables and wiring sprawled across the floor",
+    "Emergency alert systems blinking red"
+  ],
+  "camera": "A low-angle shot that emphasizes the towering server racks, capturing technicians in motion with a handheld feel, enhancing urgency.",
+  "lighting": "Fluorescent lights flicker above, casting stark contrasts in shadows, with the glow of server LEDs providing a surreal blue-green tint.",
+  "productionDesign": "The server room is designed with an industrial aesthetic, featuring exposed piping, metal grating underfoot, and large air conditioning units humming overhead, creating a gritty, high-tech environment.",
+  "signatureTwist": "Suddenly, the digital wall glitches, momentarily revealing an eerie message coded in the failing metrics, hinting at a deeper system anomaly.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

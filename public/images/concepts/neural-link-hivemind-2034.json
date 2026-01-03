@@ -1,0 +1,21 @@
+{
+  "archetype": "Cognitive Dissonance",
+  "logline": "An expansive cityscape of Seoul, dominated by a colossal neural link terminal, looms over a multitude of connected individuals, their faces reflecting a shared consciousness while betraying hints of their fading individuality.",
+  "scene": "The camera sweeps through a bustling street in Seoul at dawn, where a massive neural link terminal rises like a modern obelisk, pulsating softly with neon lights that echo the collective heartbeat of 50,000 minds. Each individual on the street wears a discreet neural interface, their expressions a mix of serenity and unease—some smiling, others seemingly lost in thought, yet all connected through this unseen web. As the camera circles the terminal, it captures the overwhelming diversity of humanity juxtaposed against a backdrop of uniformity, emphasizing the tension between individual identity and collective consciousness. A slow zoom-in reveals the faces of those nearest the terminal, their eyes briefly flickering with a spark of dissent before settling into the calm of shared thought, encapsulating their surrender to the hive mind.",
+  "keyProps": [
+    "Neural link terminal (massive structure, sleek design)",
+    "Individual neural interface devices (discreet, futuristic)",
+    "Urban Seoul skyline with neon-lit advertisements",
+    "Crowd of people with varied emotional expressions",
+    "Digital neural connection interface visualization (subtle light effects)"
+  ],
+  "camera": "Wide-angle lens to capture the grandeur of the terminal and the density of the crowd, transitioning to close-ups for emotional impact.",
+  "lighting": "Dawn lighting with cool blue and warm orange hues to symbolize the awakening of a new collective consciousness, with neon accents illuminating the scene.",
+  "productionDesign": "Sleek, modern architecture blending seamlessly with traditional Seoul elements; high-tech streetlights and interactive displays showcasing neural link data. Streets bustling with a diverse crowd, integrating technology into their daily lives while maintaining a sense of shared experience.",
+  "signatureTwist": "Despite the harmony of the hive mind, a subtle undercurrent of longing for individuality is palpable, captured in fleeting moments where faces twitch with unspoken thoughts and conflicting desires.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper"
+  ]
+}

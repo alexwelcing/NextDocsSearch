@@ -1,0 +1,23 @@
+{
+  "archetype": "Cold Launch",
+  "logline": "A sprawling optical neural network facility hums with energy as light beams crisscross in precise choreography.",
+  "scene": "In the heart of the facility, a massive array of photonic chips flickers with pulsing light, each chip executing complex calculations at an astonishing speed. Technicians in stained lab coats frantically adjust their equipment, trying to mitigate the fabrication errors that bleed into their laser projections. A central console, cluttered with oscilloscopes and spectrometers, displays real-time interference patterns, revealing the chaos of light interacting with its surroundings. A nearby wall of glass shows a high-speed train of light traveling through various mediums, emphasizing the journey from error-ridden origins to the promise of perfect data processing. Tension mounts as a technician calls out findings—each misalignment could mean the difference between breakthrough and failure.",
+  "keyProps": [
+    "photonic chips",
+    "oscilloscopes",
+    "spectrometers",
+    "laser projectors",
+    "interference pattern displays"
+  ],
+  "camera": "Wide-angle lens capturing the complexity of the facility with emphasis on the interplay of light.",
+  "lighting": "Fluorescent and LED lighting, with beams of light cutting through the dim atmosphere, highlighting the optical pathways.",
+  "productionDesign": "A gritty, industrial environment filled with cables, metallic surfaces, and cluttered workstations, reflecting the urgency and chaos of cutting-edge experimentation.",
+  "signatureTwist": "An unexpected flicker in the light reveals a hidden signal pattern, hinting at potential intelligence beyond mere calculation.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

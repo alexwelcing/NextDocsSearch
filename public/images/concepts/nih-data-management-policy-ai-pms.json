@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An anxious data management team huddles around a holographic display of patient datasets, the tension palpable as they scramble to comply with stringent NIH policies before the deadline looms.",
+  "scene": "In a dimly-lit control room filled with sleek, high-tech interfaces, a diverse team of data scientists and product managers are intently focused on a floating 3D hologram displaying complex health data visualizations. Monitors line the walls, showing real-time compliance metrics, timelines, and alerts flashing red. A central table is littered with open laptops and coffee cups as heated debates arise around the feasibility of de-identifying sensitive data in time. Outside the large reinforced glass window, a sprawling medical research facility looms, emphasizing the high stakes of their work.",
+  "keyProps": [
+    "Holographic display with intricate data visualizations",
+    "Multiple open laptops with coding software and compliance checklists",
+    "Coffee cups and energy bars scattered across the table",
+    "Wall-mounted screens showing legal compliance timelines and red alerts",
+    "Advanced biometric security scanner at the entrance"
+  ],
+  "camera": "Close-up on the holographic display, capturing the expressions of urgency and determination on the team's faces as they collaborate.",
+  "lighting": "Low-key with strategic spotlighting on the hologram, creating a high-stakes atmosphere while casting deep shadows across the room.",
+  "productionDesign": "Futuristic control room aesthetic with sleek surfaces, high-tech monitoring devices, and a blend of luminous digital interfaces and organic elements like plants to soften the sterile environment.",
+  "signatureTwist": "As the team finally reaches consensus, an unexpected system alarm blares, revealing a critical data breach warning that shatters their moment of relief.",
+  "avoid": [
+    "No readable text or logos",
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No overly bright or cheerful lighting"
+  ]
+}

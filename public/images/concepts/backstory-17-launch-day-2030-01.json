@@ -1,0 +1,22 @@
+{
+  "archetype": "Launch Day Anxiety",
+  "logline": "A bustling control room filled with engineers monitors the first fusion plant's power output as the clock ticks toward the New Year.",
+  "scene": "In a dimly lit control room, illuminated by screens flickering with streams of data, engineers huddle around a central console filled with blinking lights and dials. The walls are lined with large windows showing the fusion plant outside, its massive reactor glows ominously against a backdrop of night. A countdown clock ticks down to the New Year, while murmurs of excitement blend with the tension in the air. A technician nervously adjusts a monitor, the data showing power readings fluctuating wildly just as fireworks begin to light the sky beyond the glass, blurring the line between celebration and dread.",
+  "keyProps": [
+    "central data console with blinking lights",
+    "large countdown clock",
+    "screens displaying fluctuating power output",
+    "glass windows revealing the fusion plant",
+    "workstations cluttered with blueprints and tech manuals"
+  ],
+  "camera": "Wide shot capturing the tension across the control room, slowly pushing in on the countdown clock.",
+  "lighting": "Dim industrial lighting with stark contrast from the vibrant screens, creating a cold, clinical atmosphere.",
+  "productionDesign": "The control room is designed with heavy industrial elements, featuring metal surfaces, exposed wiring, and utilitarian furniture, reflecting a gritty, almost claustrophobic workspace of future technological oversight.",
+  "signatureTwist": "As the countdown reaches zero, a loud alarm suddenly blares, signaling an unexpected power surge from the fusion reactor, hinting at the unforeseen consequences of their creation.",
+  "avoid": [
+    "decorative elements",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

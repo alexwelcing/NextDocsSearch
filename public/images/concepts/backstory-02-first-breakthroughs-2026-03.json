@@ -1,0 +1,24 @@
+{
+  "archetype": "Quantum Breakthrough",
+  "logline": "A sprawling lab with towering quantum computers hums with energy as the team celebrates a groundbreaking discovery.",
+  "scene": "Inside a cavernous research facility, rows of colossal quantum processors glimmer under harsh industrial lights, their intricate circuits pulsating with blue and green luminescence. In the foreground, a group of weary but exhilarated researchers gathers around a central holographic display, which flickers with data streams and fractal visualizations of quantum coherence. Beer bottles and champagne flutes adorn a nearby table, scattered amidst hastily scribbled equations and coffee-stained notebooks. One researcher gestures animatedly at the projection, the excitement palpable in the air as they grasp the magnitude of their unexpected breakthrough.",
+  "keyProps": [
+    "colossal quantum computer arrays",
+    "holographic data displays",
+    "scattered research papers",
+    "coffee-stained notebooks",
+    "beer bottles and champagne flutes"
+  ],
+  "camera": "Wide-angle lens capturing the vastness of the lab with a focused depth on the team celebrating.",
+  "lighting": "Bright, clinical fluorescent overhead lights combined with the ambient glow from the quantum processors, casting dramatic shadows.",
+  "productionDesign": "The lab features exposed pipes and metallic surfaces, with walls lined with whiteboards covered in complex equations and diagrams, creating a gritty, industrial feel.",
+  "signatureTwist": "A subtle glitch in the holographic display momentarily distorts the image, hinting at the unforeseen consequences of their discoveries.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

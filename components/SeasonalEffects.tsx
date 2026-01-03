@@ -74,79 +74,95 @@ function SnowParticles({ theme }: { theme: SeasonalTheme }) {
 
 // Falling leaves effect
 function FallingLeaves({ theme }: { theme: SeasonalTheme }) {
-  const particlesRef = useRef<THREE.Points>(null);
+  const meshRef = useRef<THREE.InstancedMesh>(null);
   const count = Math.floor(500 * theme.particleIntensity);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
 
   const particles = useMemo(() => {
     const positions = new Float32Array(count * 3);
     const velocities = new Float32Array(count);
-    const rotations = new Float32Array(count);
+    const rotations = new Float32Array(count * 3);
 
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 50;
       positions[i * 3 + 1] = Math.random() * 50;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
       velocities[i] = Math.random() * 0.015 + 0.005;
-      rotations[i] = Math.random() * Math.PI * 2;
+      rotations[i * 3] = Math.random() * Math.PI * 2;
+      rotations[i * 3 + 1] = Math.random() * Math.PI * 2;
+      rotations[i * 3 + 2] = Math.random() * Math.PI * 2;
     }
 
     return { positions, velocities, rotations };
   }, [count]);
 
   useFrame(() => {
-    if (particlesRef.current) {
-      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
-
+    if (meshRef.current) {
       for (let i = 0; i < count; i++) {
         // Fall with swaying motion
-        positions[i * 3 + 1] -= particles.velocities[i];
-        positions[i * 3] += Math.sin(Date.now() * 0.001 + particles.rotations[i]) * 0.02;
-        positions[i * 3 + 2] += Math.cos(Date.now() * 0.001 + particles.rotations[i]) * 0.02;
+        particles.positions[i * 3 + 1] -= particles.velocities[i];
+        particles.positions[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.02;
+        particles.positions[i * 3 + 2] += Math.cos(Date.now() * 0.001 + i) * 0.02;
+
+        // Rotate leaves
+        particles.rotations[i * 3] += 0.01;
+        particles.rotations[i * 3 + 1] += 0.02;
 
         // Reset to top when reaching bottom
-        if (positions[i * 3 + 1] < -5) {
-          positions[i * 3 + 1] = 50;
+        if (particles.positions[i * 3 + 1] < -5) {
+          particles.positions[i * 3 + 1] = 50;
         }
+
+        // Update matrix
+        dummy.position.set(
+          particles.positions[i * 3],
+          particles.positions[i * 3 + 1],
+          particles.positions[i * 3 + 2]
+        );
+        dummy.rotation.set(
+          particles.rotations[i * 3],
+          particles.rotations[i * 3 + 1],
+          particles.rotations[i * 3 + 2]
+        );
+        dummy.scale.setScalar(0.3);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
       }
 
-      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+      meshRef.current.instanceMatrix.needsUpdate = true;
     }
   });
 
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
-    return geo;
-  }, [particles.positions]);
-
   return (
-    <points ref={particlesRef} geometry={geometry}>
-      <pointsMaterial
-        size={0.2}
+    <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
+      <planeGeometry args={[1, 1]} />
+      <meshStandardMaterial
         color="#FF6B00"
+        side={THREE.DoubleSide}
         transparent
-        opacity={0.7}
-        sizeAttenuation
-        depthWrite={false}
+        opacity={0.8}
       />
-    </points>
+    </instancedMesh>
   );
 }
 
 // Flower petals effect
 function FlowerPetals({ theme }: { theme: SeasonalTheme }) {
-  const particlesRef = useRef<THREE.Points>(null);
+  const meshRef = useRef<THREE.InstancedMesh>(null);
   const count = Math.floor(400 * theme.particleIntensity);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const color = useMemo(() => new THREE.Color(), []);
 
   const particles = useMemo(() => {
     const positions = new Float32Array(count * 3);
     const velocities = new Float32Array(count);
-    const colors = new Float32Array(count * 3);
+    const rotations = new Float32Array(count * 3);
+    const colors: string[] = [];
 
     const petalColors = [
-      new THREE.Color('#FFB7B7'),
-      new THREE.Color('#FFD4E5'),
-      new THREE.Color('#FFF0F5'),
+      '#FFB7B7',
+      '#FFD4E5',
+      '#FFF0F5',
     ];
 
     for (let i = 0; i < count; i++) {
@@ -154,54 +170,72 @@ function FlowerPetals({ theme }: { theme: SeasonalTheme }) {
       positions[i * 3 + 1] = Math.random() * 50;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
       velocities[i] = Math.random() * 0.01 + 0.005;
+      rotations[i * 3] = Math.random() * Math.PI * 2;
+      rotations[i * 3 + 1] = Math.random() * Math.PI * 2;
+      rotations[i * 3 + 2] = Math.random() * Math.PI * 2;
 
-      const color = petalColors[Math.floor(Math.random() * petalColors.length)];
-      colors[i * 3] = color.r;
-      colors[i * 3 + 1] = color.g;
-      colors[i * 3 + 2] = color.b;
+      colors.push(petalColors[Math.floor(Math.random() * petalColors.length)]);
     }
 
-    return { positions, velocities, colors };
+    return { positions, velocities, rotations, colors };
   }, [count]);
 
-  useFrame(() => {
-    if (particlesRef.current) {
-      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+  useEffect(() => {
+    if (meshRef.current) {
+      particles.colors.forEach((c, i) => {
+        color.set(c);
+        meshRef.current!.setColorAt(i, color);
+      });
+      meshRef.current.instanceColor!.needsUpdate = true;
+    }
+  }, [particles, count, color]);
 
+  useFrame(() => {
+    if (meshRef.current) {
       for (let i = 0; i < count; i++) {
         // Gentle fall with spiral motion
-        positions[i * 3 + 1] -= particles.velocities[i];
-        positions[i * 3] += Math.sin(Date.now() * 0.002 + i) * 0.015;
-        positions[i * 3 + 2] += Math.cos(Date.now() * 0.002 + i) * 0.015;
+        particles.positions[i * 3 + 1] -= particles.velocities[i];
+        particles.positions[i * 3] += Math.sin(Date.now() * 0.002 + i) * 0.015;
+        particles.positions[i * 3 + 2] += Math.cos(Date.now() * 0.002 + i) * 0.015;
+
+        // Rotate petals
+        particles.rotations[i * 3] += 0.01;
+        particles.rotations[i * 3 + 1] += 0.01;
 
         // Reset to top when reaching bottom
-        if (positions[i * 3 + 1] < -5) {
-          positions[i * 3 + 1] = 50;
+        if (particles.positions[i * 3 + 1] < -5) {
+          particles.positions[i * 3 + 1] = 50;
         }
-      }
 
-      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+        // Update matrix
+        dummy.position.set(
+          particles.positions[i * 3],
+          particles.positions[i * 3 + 1],
+          particles.positions[i * 3 + 2]
+        );
+        dummy.rotation.set(
+          particles.rotations[i * 3],
+          particles.rotations[i * 3 + 1],
+          particles.rotations[i * 3 + 2]
+        );
+        dummy.scale.setScalar(0.2);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
+      }
+      meshRef.current.instanceMatrix.needsUpdate = true;
     }
   });
 
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
-    geo.setAttribute('color', new THREE.BufferAttribute(particles.colors, 3));
-    return geo;
-  }, [particles.positions, particles.colors]);
-
   return (
-    <points ref={particlesRef} geometry={geometry}>
-      <pointsMaterial
-        size={0.18}
+    <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
+      <planeGeometry args={[1, 1]} />
+      <meshStandardMaterial
         vertexColors
+        side={THREE.DoubleSide}
         transparent
         opacity={0.75}
-        sizeAttenuation
-        depthWrite={false}
       />
-    </points>
+    </instancedMesh>
   );
 }
 

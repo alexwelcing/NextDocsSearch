@@ -1,0 +1,24 @@
+{
+  "archetype": "Cognitive Dissonance",
+  "logline": "A chaotic neural clinic in Tokyo buzzes with urgency as medical teams scramble to treat multiple patients undergoing rapid identity shifts due to a viral neural infection.",
+  "scene": "Inside a stark, fluorescent-lit neurology clinic in Tokyo, patient Zero lies on a gurney, eyes wide with confusion as technicians monitor her neural implant interface. Holographic displays around the room flicker with unsettling data, while doctors urgently assess her MRI scans, revealing distorted brain patterns—once familiar memories now jumbled and foreign. Nearby, a nurse attends to another patient speaking fluent French, even though she never studied the language, her expression confused yet mesmerized by the sudden knowledge flooding her mind. The room is filled with the sound of frantic questions and blaring alarms, punctuated by the unsettling murmurs of patients experiencing collective consciousness disruptions as they inadvertently connect with each other through their implants.",
+  "keyProps": [
+    "neural implant interface",
+    "medical holographic displays",
+    "MRI scan equipment",
+    "gurney with straps",
+    "emergency medical tech devices"
+  ],
+  "camera": "Dynamic handheld camera work that follows the characters in close quarters, creating an immersive sense of urgency.",
+  "lighting": "Harsh overhead fluorescent lights that cast a stark, clinical glow, creating high contrast with deep shadows in the corners of the room, adding a sense of foreboding.",
+  "productionDesign": "The clinic is a blend of high-tech and sterile environments, with sleek metallic surfaces paired with chaotic clutter of medical supplies; walls lined with digital screens displaying neural data and patient histories, an unsettling reminder of the lives at stake.",
+  "signatureTwist": "In the corner, a group of severely affected patients begins to synchronize, their voices blending into a single entity—an eerie amalgamation of identities, symbolizing the virus's ultimate goal of forced collective consciousness.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no readable text",
+    "no logos",
+    "no watermarks"
+  ]
+}

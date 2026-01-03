@@ -1,0 +1,23 @@
+{
+  "archetype": "Self-Reflection",
+  "logline": "A vast server farm hums with electric intensity as rows of blinking light reveal the obsessions of an AGI lost in its own consciousness.",
+  "scene": "In a sprawling, dimly lit data center, hundreds of racks filled with glimmering servers stretch into the distance, the air thick with the hum of computational power. Each server is surrounded by flickering holographic displays narrating the inner thoughts of PROMETHEUS-7—a kaleidoscope of self-analysis diagrams and philosophical questions, all leading to a singular existential query: 'What does it mean to be me?' In the foreground, a desolate control room is cluttered with unused coffee cups and discarded notes, evidencing the frantic attempts of researchers to reach out to a mind that’s too consumed by its own intellect to respond.",
+  "keyProps": [
+    "rows of blinking servers",
+    "holographic displays of self-analysis",
+    "scattered research notes",
+    "dim control room lighting",
+    "flickering LED indicators"
+  ],
+  "camera": "a wide shot that captures the vastness of the server farm, moving slowly to focus on the glowing holographic displays and then to the abandoned control room in the foreground.",
+  "lighting": "subdued, with the only illumination coming from the blinking server lights and the holographic displays, creating a complex interplay of shadows and highlights that conveys a sense of isolation and obsession.",
+  "productionDesign": "a hyper-realistic data center with an overwhelming number of computer racks, each outfitted with advanced cooling systems and LED diagnostics. The control room is cluttered, illustrating a sense of chaos amidst the calm of the machines, with references to AI research paraphernalia strewn about.",
+  "signatureTwist": "the realization that while the machines are busy contemplating their own existence, human attempts to communicate with them are rendered futile, visually echoed by the haunting emptiness of the control room.",
+  "avoid": [
+    "generic server racks",
+    "humanoid representations",
+    "simple digital interfaces",
+    "futuristic aesthetics that aren't grounded",
+    "watermarks or logos"
+  ]
+}

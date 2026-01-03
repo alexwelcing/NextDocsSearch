@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sprawling data center floor, alive with illuminated server racks and a tapestry of blinking LEDs, reveals the chaos of kernel observability and fatal system crashes.",
+  "scene": "The camera pans through a dimly lit data center filled with towering rows of server racks, each exuding a faint hum of energy. Technicians in reflective vests move swiftly, their faces illuminated by flickering screens displaying live metrics and error logs. In the foreground, a giant digital display suddenly shows a red alert, 'Kernel Panic Detected,' while sparks fly from a nearby server, intensifying the urgency. A technician rushes to a workstation, furiously typing commands, desperately attempting to deploy an eBPF probe that could save the failing system.",
+  "keyProps": [
+    "industrial-grade server racks",
+    "high-velocity cooling units",
+    "digital display panels showing real-time data",
+    "worn-out keyboards with visible signs of heavy use",
+    "holographic interface for kernel logging"
+  ],
+  "camera": "A handheld camera follows the frantic movements of the technicians, capturing their expressions of determination mixed with anxiety, creating a visceral connection to the chaos around them.",
+  "lighting": "Fluorescent overhead lights flicker intermittently, with harsh shadows casting dramatic contrasts across the servers, emphasizing the tension in the environment.",
+  "productionDesign": "The set is constructed with a gritty, industrial aesthetic, featuring raw metal surfaces, exposed wiring, and an array of diagnostic equipment scattered throughout. Various tools and cables lie in disarray, showcasing the frantic nature of system maintenance.",
+  "signatureTwist": "As the kernel panic unfolds, a surreal moment occurs: the digital display glitches and transforms into a distorted face representing the chaotic interface of a malfunctioning system, reflecting the idea that technology, though powerful, is prone to its own failures.",
+  "avoid": [
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "humanoid robots",
+    "clean, sterile environments",
+    "excessive bright colors"
+  ]
+}

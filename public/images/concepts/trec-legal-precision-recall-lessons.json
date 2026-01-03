@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A tense meeting room filled with digital screens displays data analytics and legal documents as a team debates the cost of precision and recall in a high-stakes legal tech trial.",
+  "scene": "In a shadowy, high-tech conference room, a diverse group of legal experts and AI product managers huddles around a dark, reflective table. The walls are lined with screens displaying complex graphs of precision-recall curves alongside critical documents flagged by AI. A large projection shows urgent metrics in red and green, indicating the tension between false positives and missed emails crucial to the impending trial. Tension mounts as a General Counsel gestures emphatically towards a screen, emphasizing the catastrophic costs of missing critical evidence. Outside the room, through a glass wall, a team of focus-driven attorneys review stacks of documents, raising the stakes further.",
+  "keyProps": [
+    "Advanced digital screens with live data feeds",
+    "Stacks of legal documents scattered across the table",
+    "Notebooks with hand-scribbled notes and annotations",
+    "Automated AI analysis dashboards glowing with alerts",
+    "A large clock counting down to a critical deadline"
+  ],
+  "camera": "Close-up camera angles capture the anxious expressions and gestures of the team, alternating with wide shots that highlight the overwhelming amount of data displayed on the screens.",
+  "lighting": "Dim, industrial overhead lighting creates a stark contrast with the bright screens, casting long shadows that add to the tension in the room.",
+  "productionDesign": "The room features a blend of modern corporate aesthetics with gritty, utilitarian elements like exposed pipes and metallic surfaces, hinting at the serious nature of the legal battles fought within its walls.",
+  "signatureTwist": "The room is filled with subtle audio cues of document pages flipping and the distant, muffled sounds of legal discussions from outside, emphasizing the pressure of the moment.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No visible brand logos",
+    "No overly bright or cheerful lighting"
+  ]
+}

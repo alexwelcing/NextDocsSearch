@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly-lit research lab overrun with disorganized data screens displays the chaotic race against time as AI algorithms churn through vast datasets.",
+  "scene": "Amidst a clutter of discarded coffee cups and scribbled notes, a weary researcher stares at multiple screens flashing complex graphs and rapidly changing data points. In the background, an old chalkboard filled with scratched equations contrasts starkly with sleek, modern AI interfaces. The tension in the room is palpable as the researcher battles the daunting reality that their once-thought decade-long research could be eclipsed by AI-augmented competition in mere months. Ambient hums of cooling systems and the tapping of a keyboard punctuate the scene, symbolizing the relentless pace of discovery compression.",
+  "keyProps": [
+    "multiple screens displaying live data analysis",
+    "an old chalkboard filled with complex equations",
+    "discarded coffee cups and energy drinks",
+    "tangled wires and circuit boards on the desk",
+    "a whiteboard marked with hastily written deadlines"
+  ],
+  "camera": "a low-angle shot capturing the chaotic workspace, focusing on the researcher’s furrowed brow and the screens in the background",
+  "lighting": "harsh overhead fluorescent lights casting deep shadows, creating a sense of urgency and tension",
+  "productionDesign": "a blend of high-tech AI interfaces with worn, traditional academic tools, showcasing the clash between the old and the new in the research environment",
+  "signatureTwist": "the discovery that the AI has already proposed solutions to questions the researcher has yet to fully explore, illustrating the stark reality of their looming obsolescence",
+  "avoid": [
+    "generic HUD overlays",
+    "humanoid robots",
+    "abstract wallpaper",
+    "static compositions",
+    "neat and organized environments"
+  ]
+}

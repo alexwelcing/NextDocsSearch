@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic command center grapples with data integrity as screens flash conflicting information from multiple regions.",
+  "scene": "Inside a dimly lit control room, engineers monitor a vast array of flickering screens displaying real-time data from different global regions. Each monitor shows a distinct set of metrics—some green, some red—while alarms blare incessantly. In the foreground, a tense technician furiously types on a keyboard, trying to reconcile discrepancies caused by a split-brain scenario. The atmosphere is thick with urgency and tension as they race against time to maintain data consistency amidst a potential crisis. Beyond the room's reinforced glass, the faint glow of a sprawling cityscape can be seen, hinting at the vastness of the operational reach at stake.",
+  "keyProps": [
+    "A complex console with a myriad of blinking buttons and screens",
+    "A holographic map of global data flow, flickering between regions",
+    "Red flashing alerts indicating critical data discrepancies",
+    "Worn technical manuals and schematics scattered across the desks",
+    "Headsets for communication with remote teams in various locations"
+  ],
+  "camera": "Handheld camera creating a sense of urgency, with close-up shots of screens and technicians' faces to capture the tension.",
+  "lighting": "Low, moody lighting with bright screen illumination casting eerie shadows across the room, emphasizing the high-stress environment.",
+  "productionDesign": "The control room is designed with a gritty industrial look, featuring exposed cables, metallic surfaces, and worn-out furniture, infusing a sense of realism and urgency into the narrative.",
+  "signatureTwist": "A split-second glance reveals a hidden message on one of the screens that suggests an even deeper conspiracy behind the data anomalies.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text",
+    "Logos",
+    "Standardized control room designs"
+  ]
+}

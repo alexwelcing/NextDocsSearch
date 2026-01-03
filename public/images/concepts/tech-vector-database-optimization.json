@@ -1,0 +1,24 @@
+{
+  "archetype": "Tech Lab Tension",
+  "logline": "A dimly lit data center hums with the intense energy of a billion-vector search engine at work.",
+  "scene": "Rows of towering servers pulse with neon-blue lights, casting shadows on the faces of engineers who are glued to their screens, scrutinizing lines of code as they fine-tune the HNSW algorithm. In the foreground, a close-up shows an engineer’s hands frantically typing on a keyboard, sweat glistening on their brow, while behind them, a massive digital display visualizes the intricate web of vector embeddings and their relationships. Above, a flickering overhead light reveals an air vent spewing dust, hinting at the decay of the tech that powers their high-stakes work, while the smell of overheated machinery lingers in the air.",
+  "keyProps": [
+    "server racks",
+    "datacenter architecture",
+    "holographic data visualizations",
+    "dusty air vent",
+    "engineer’s workstation"
+  ],
+  "camera": "tight focus on engineer's hands and screen, with a wide shot of the data center in the background",
+  "lighting": "low, dramatic lighting with neon accents from server indicators",
+  "productionDesign": "an amalgamation of high-tech interfaces with aged, industrial architecture, revealing the wear of technology in a critical race against time",
+  "signatureTwist": "a looming sense of desperation as every server's light flickers, suggesting the fragile nature of their groundbreaking work, hinting at impending failure if optimization fails.",
+  "avoid": [
+    "abstract wallpaper",
+    "humanoid robots",
+    "generic HUD overlays",
+    "readable text",
+    "logos",
+    "decorative elements"
+  ]
+}

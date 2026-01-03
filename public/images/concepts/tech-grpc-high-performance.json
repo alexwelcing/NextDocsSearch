@@ -1,0 +1,21 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A fractured server room pulsing with the glow of interconnected nodes embodies the chaos of microservices communication.",
+  "scene": "The camera pulls back to reveal a dimly lit server room where rows of sleek, modular servers hum with energy. Each unit is connected by a complex web of neon-lit cables, resembling a digital spider's web, reflecting data packets zipping through. A nearby monitor displays fluctuating graphs and escalating latency alerts in vivid colors, hinting at an imminent failure. Technicians in heavy-duty gear scramble amidst the machinery, their faces illuminated by the eerie glow of screens as they communicate through headsets, battling an escalating data anomaly. The tension hangs thick in the air, mixing urgency and high stakes.",
+  "keyProps": [
+    "Modular server units",
+    "Neon-lit cables",
+    "High-resolution monitors",
+    "Wearable tech headsets",
+    "Data visualization tools"
+  ],
+  "camera": "Wide-angle lens capturing the expansive chaos of the server room",
+  "lighting": "Low key with harsh shadows, punctuated by the bright glows of servers and monitors",
+  "productionDesign": "A blend of industrial and high-tech elements, featuring metal and glass surfaces, with cluttered workstations filled with tools and prototypes that hint at rapid iteration.",
+  "signatureTwist": "One of the monitors flickers unexpectedly, displaying a cryptic error message that could hint at a larger conspiracy behind the data anomaly.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

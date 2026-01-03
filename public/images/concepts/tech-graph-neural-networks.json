@@ -1,0 +1,23 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A vast data center shrouded in shadows reveals the intricate connections of a failing graph neural network.",
+  "scene": "The camera sweeps through a dimly lit data center filled with racks of blinking servers, casting a ghostly glow on the technicians huddled over glowing monitors. In the foreground, a massive digital display shows a complex, animated graph network, pulsing with nodes that intermittently flicker and fade, visualizing the 'over-smoothing' concept in real-time as messages struggle to pass between them. Tension rises as the lead technician frantically types commands, their expression a mix of determination and dread, aware that the future of A.I. learning hangs in the balance. The air is thick with anticipation as a red alert blares in the background, signaling a critical data anomaly that could collapse their entire system.",
+  "keyProps": [
+    "rows of server racks",
+    "large digital monitor with animated graph",
+    "flickering LED indicators",
+    "overhead fluorescent lighting casting harsh shadows",
+    "technician's worn keyboard and mouse"
+  ],
+  "camera": "A handheld camera moves fluidly through the cluttered room, capturing close-ups of the animated graph on the screen and the tense expressions of the technicians.",
+  "lighting": "A mix of dim overhead lighting and the glow of monitors creates a moody, high-stakes atmosphere, accentuating the urgency of the situation.",
+  "productionDesign": "The data center is designed with a gritty, utilitarian aesthetic, featuring exposed cables, metallic surfaces, and a chaotic arrangement of high-tech equipment that emphasizes the raw, unpolished reality of technological advancement.",
+  "signatureTwist": "Just as the network's failure seems imminent, a final unexpected surge of data illuminates the graph, momentarily stabilizing it and giving the technicians one last chance to avert disaster.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no visible logos or readable text",
+    "no futuristic utopian setting"
+  ]
+}

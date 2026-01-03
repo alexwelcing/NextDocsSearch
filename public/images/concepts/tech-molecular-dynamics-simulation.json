@@ -1,0 +1,22 @@
+{
+  "archetype": "Molecular Mechanics",
+  "logline": "A sprawling, chaotic supercomputer lab hums with the relentless energy of molecular dynamics simulations as scientists wrestle with the unseen forces of life at the atomic level.",
+  "scene": "Inside a vast supercomputing facility, rows of oscillating servers glow with blue and green lights, streaming real-time molecular simulations across multiple screens. The central screen displays swirling, animated protein structures folding and reconfiguring in high-speed segments, their atomic interactions highlighted by color-coded force fields. Researchers in lab coats are intensely focused, fingers flying over keyboards, while the ambient noise of cooling fans adds to the intensity of the atmosphere. A holographic projection of a molecular assembler design hovers above the workstations, casting eerie shadows on the walls, suggesting a looming breakthrough in nanotechnology.",
+  "keyProps": [
+    "High-performance computing servers",
+    "Monitors displaying protein folding simulations",
+    "Holographic molecular designs",
+    "Colored force field graphics",
+    "Lab equipment like pipettes and vials"
+  ],
+  "camera": "Wide-angle lens capturing expansive views of the lab environment, focusing on the interaction between researchers and their screens.",
+  "lighting": "Cool, blue LED lighting mixed with ambient computer screen light to create a futuristic, sterile atmosphere.",
+  "productionDesign": "A mix of sleek, modern technology with a rugged, industrial feel, combining exposed cables and metal structures with polished glass surfaces to emphasize the experimental nature of the work.",
+  "signatureTwist": "The holographic projection reveals an unexpected molecular assembler prototype that rapidly shifts between designs, hinting at the unpredictable nature of scientific discovery.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text or logos"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A flickering screen reveals the unsettling data from the neural lace deployment.",
+  "scene": "Inside a dimly lit control room, multiple monitors casting a harsh blue glow illuminate the anxious faces of technicians as they pore over data streams. A central screen displays a jagged line graph, with spikes indicating sudden user reports of 'thought intrusion'. In the corner, a digital clock ominously ticks down to the next scheduled data analysis. Papers are strewn across the table, filled with frantic notes and sketches of neural lace circuits, all while a disheveled team leader gestures towards a highlighted anomaly on the screen, the tension palpable. A distant hum of machinery buzzes, blending with the muffled sound of worried discussions.",
+  "keyProps": [
+    "Multiple flickering monitors",
+    "Disheveled paperwork with technical schematics",
+    "A central data visualization screen showing alarming patterns",
+    "An advanced neural lace prototype resting on the table",
+    "Coffee cups scattered around, some half-full and cold"
+  ],
+  "camera": "Tight close-up on the central monitor intercut with over-the-shoulder shots of techs reacting to the data.",
+  "lighting": "Low key with sharp contrasts; the glow from the screens is the primary source, highlighting the tension and urgency in the room.",
+  "productionDesign": "A utilitarian control room with exposed wiring, heavy-duty desks covered in tech equipment, and hints of wear and tear that suggest a long night of monitoring. The walls are lined with digital readouts and outdated tech that contrasts with the sleekness of the new neural lace equipment.",
+  "signatureTwist": "The data reveals that the optimizations are not only unexpected but are starting to affect the control system itself, leading to a moment of realization that the tools meant to monitor are themselves becoming unpredictable.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No bright colors; maintain a gritty aesthetic"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Edge Computing Nexus",
+  "logline": "A bustling micro data center nestled in a forgotten industrial district, where neon lights flicker ominously as workers rush to meet a cold start deadline.",
+  "scene": "Amidst the decaying remnants of an old factory, a compact edge computing facility hums with energy. Servers, stacked like crates, are flickering with notifications showing the deployment of WebAssembly modules. Technicians clad in rugged work gear scramble to troubleshoot, their faces illuminated by the cold blue glow of screens displaying latency metrics. Outside, rain cascades against cracked windows, mirroring the tension inside as the clock ticks down to the imminent cold start. The air is thick with the scent of machine oil and urgency, highlighting the palpable pressure of achieving seamless serverless computing on the edge.",
+  "keyProps": [
+    "Stacked server racks",
+    "Flickering neon lighting",
+    "Rusty machinery remnants",
+    "Worn-down technician tools",
+    "Digital feedback screens showing real-time data"
+  ],
+  "camera": "A low-angle shot focused on the server racks with a shallow depth of field, capturing the frantic activity of technicians in the background.",
+  "lighting": "Harsh overhead fluorescent lights mixed with pulsing neon accents, creating a stark contrast between the sterile and the chaotic.",
+  "productionDesign": "Utilize a blend of industrial decay and advanced technology, showcasing a juxtaposition of old-world manufacturing and cutting-edge computing through visible wear on surfaces and the occasional hint of modern digital tech.",
+  "signatureTwist": "In the midst of their efforts, one technician uncovers a serious flaw in the deployment, forcing them to rethink their entire approach in real-time.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Excessively clean environments",
+    "Readable text on screens"
+  ]
+}

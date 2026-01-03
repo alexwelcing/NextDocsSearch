@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A cluttered command center with flickering screens displays streams of highlighted neural pathways.",
+  "scene": "Inside a dimly lit control room, the camera pans across a series of weathered monitors, each showcasing the chaotic flow of data being processed by advanced NLP models. The screens are filled with intricate, animated graphs illustrating multi-head self-attention at work, with certain sections of text illuminated in bright pulses to depict focus points. Engineers huddle around the cluttered desks, frantically typing commands while peering into the visualizations of context limits that threaten to unravel their progress. A wall-mounted holographic display periodically flashes alarming red warnings about context length constraints, creating a sense of urgency in the air.",
+  "keyProps": [
+    "Flickering monitors with dynamic data visualizations",
+    "Cluttered desks with outdated tech and circuit boards",
+    "Holographic projections of neural network pathways",
+    "Worn-out chairs with frayed upholstery",
+    "Scattered papers featuring hand-drawn concepts and equations"
+  ],
+  "camera": "Steady cam with close-ups on the screens and hands typing furiously, interspersed with wide shots of the control room's tense atmosphere.",
+  "lighting": "Low, industrial lighting with occasional bursts of bright light from the monitors and holographic displays, creating stark contrasts and highlighting the engineers' focused expressions.",
+  "productionDesign": "A gritty, utilitarian aesthetic with exposed metal beams and unpolished concrete walls, complemented by an overload of electronic equipment showing signs of wear and tear, underscoring the high-stakes nature of their work.",
+  "signatureTwist": "In a moment of intense focus, one engineer's face reflects a pulsating light from a monitor as they realize the looming threat, signaling a potential breakthrough in attention mechanism applications amid the chaos.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Bright, clean environments",
+    "Visual clichés of sci-fi control rooms"
+  ]
+}

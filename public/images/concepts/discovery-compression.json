@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room filled with towering screens displays a chaotic array of real-time data on accelerated discoveries, while an anxious team monitors the implications of unprecedented scientific breakthroughs.",
+  "scene": "The camera sweeps through a high-tech control room, starkly illuminated by the glow of multiple screens displaying complex molecular simulations and algorithmic models. Operators in lab coats, their faces etched with tension, exchange urgent whispers as the rapid influx of AI-generated research results floods the monitors. Charts and graphs rise and fall violently, representing breakthroughs and potential failures that could reshape society, their shadows flickering ominously against steel-gray walls. In the center, a massive digital clock counts down the seconds, symbolizing the relentless march of time as discovery becomes a race against the unforeseen consequences of hastily implemented knowledge.",
+  "keyProps": [
+    "Holographic protein structure models",
+    "Fast-paced data feeds on large screens",
+    "Analog dials for human oversight",
+    "Emergency alert system flashing red",
+    "Disheveled papers and coffee cups scattered on desks"
+  ],
+  "camera": "A sweeping pan that transitions into tight close-ups of operators' faces, capturing the urgency and stress of their mission.",
+  "lighting": "Fluorescent while flickering, creating a harsh, clinical atmosphere, contrasted with the stark neon glow of the screens.",
+  "productionDesign": "A gritty, industrial space with exposed pipes and cables intertwined with digital interfaces, highlighting the clash of old and new technology.",
+  "signatureTwist": "As the team seems to celebrate a major breakthrough, a sudden alarm triggers a catastrophic failure in the system, revealing the dark underbelly of 'discovery compression'—the potential for disaster lurking just beneath the surface.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text",
+    "Logos",
+    "Watermarks"
+  ]
+}

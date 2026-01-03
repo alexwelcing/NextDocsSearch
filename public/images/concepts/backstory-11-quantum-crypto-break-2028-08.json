@@ -1,0 +1,23 @@
+{
+  "archetype": "Encryption Collapse",
+  "logline": "A stark room filled with flickering screens showcases a cryptography team's frantic race against time as they confront the implications of their groundbreaking discovery.",
+  "scene": "Inside a dimly lit command center, a long table bears the weight of scattered reports and glowing laptops, each screen displaying lines of code rapidly flashing and disappearing. The atmosphere is thick with tension, as a team of exhausted cryptographers huddles around the table, their faces illuminated by the eerie blue light of the screens. A whiteboard covered in complex algorithms stands in the background, hastily scribbled notes hinting at the chaos of breaking RSA-2048. A large digital clock counts down ominously, reminding the team that their achievements could usher in an collapse of global internet security. A surveillance camera is mounted in the corner, capturing the unfolding drama, a nod to the ever-watchful eyes of an insecure digital world.",
+  "keyProps": [
+    "Glowing laptops displaying real-time code decryption",
+    "A digital countdown timer on the wall",
+    "A whiteboard filled with complex equations and frantic notes",
+    "Scattered coffee cups and energy drink cans",
+    "A surveillance camera in the corner, recording the scene"
+  ],
+  "camera": "A handheld camera vibrates slightly, capturing the raw energy of the room with close-ups of tense faces and fingers racing across keyboards.",
+  "lighting": "Harsh overhead fluorescent lights mixed with the cooler, flickering illumination from the screens create stark contrasts, highlighting the stress and urgency of the moment.",
+  "productionDesign": "The command center features utilitarian furnishings—metal desks, concrete walls, and industrial decor that emphasize a gritty, no-nonsense vibe. Cables snake across the floor, and remnants of discarded tech litter the space, hinting at the rapid pace of innovation and its potential perils.",
+  "signatureTwist": "One of the laptops suddenly displays an incoming warning from a global cybersecurity agency indicating that other encryption standards are already being compromised, leaving the team in a state of disbelief and urgency.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text or logos",
+    "Bright, cheerful lighting"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A weathered workbench cluttered with glowing screens and tangled wires reveals the frenetic world of distributed data management.",
+  "scene": "Inside a dimly lit control room, a half-broken glass wall reveals a sprawling cityscape bathed in the glow of neon advertisements. The workstation is strewn with a chaotic mix of outdated technology—a mix of vintage monitors displaying fluctuating data streams and current holographic interfaces showing real-time collaboration stats. A lone operator, surrounded by coffee cups, hurriedly merges conflicting data sets on a handheld device, sweat glistening on their brow. The tension is palpable as different nodes blink erratically on a digital map, signalling the heartbeat of a disconnected network fighting for coherence.",
+  "keyProps": [
+    "Old CRT monitors displaying colorful data visualizations",
+    "A sleek tablet with an interactive holographic interface",
+    "A cluttered workbench with coffee cups and crumpled notes",
+    "Neon-lit digital map of the city with flashing nodes",
+    "Tangled cables and connectors scattered across the floor"
+  ],
+  "camera": "Wide-angle lens capturing the entire chaotic workstation and the city outside, with a shallow depth of field focusing on the operator.",
+  "lighting": "Low ambient lighting with a mix of neon blues and greens from the screens, creating an eerie yet vibrant glow.",
+  "productionDesign": "A mix of retro-futuristic elements fused with modern tech, emphasizing a gritty aesthetic with signs of wear and tear, providing an authentic feel of a world struggling with data consistency.",
+  "signatureTwist": "The holographic interfaces subtly flicker with the chaos of merging data, hinting at the unseen conflicts and decisions that shape collaboration.",
+  "avoid": [
+    "Readable text or logos",
+    "Humanoid robots or generic HUD overlays",
+    "Abstract wallpaper or decorative elements",
+    "Busy backgrounds that distract from the workstation"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A tense control room filled with screens flickering with plasma dynamics during a critical fusion reactor operation.",
+  "scene": "Inside a dimly lit control room, engineers in worn lab coats scrutinize a massive digital display showing real-time plasma metrics from the tokamak reactor. Each panel displays shifting graphs and temperature gauges, casting an eerie green glow that illuminates their focused faces. A large window in the background reveals the sprawling reactor, its copper coils and magnetic confinement chamber pulsating with energy and the violent dance of plasma within. An alarm blares, and the lead engineer frantically manipulates a control console, adjusting levers and buttons to stabilize the chaotic plasma state, sweat glistening on their brow.",
+  "keyProps": [
+    "glass control panels displaying fluctuating plasma metrics",
+    "a complex array of levers and buttons",
+    "a massive digital readout of temperature and magnetic field strength",
+    "copper magnetic coils visible through a large observation window",
+    "worn lab coats on the engineers"
+  ],
+  "camera": "tight focus on the lead engineer's hands as they adjust controls, with the chaotic plasma visible through the window in the background, creating a sense of urgency.",
+  "lighting": "dim ambient lighting punctuated by the ominous glow of screens and alarms, creating a stark contrast that heightens tension.",
+  "productionDesign": "industrial, high-tech setting with exposed wiring and metallic surfaces, juxtaposed with the organic chaos of plasma dynamics; the walls lined with thermometers and sensors of various sizes, contributing to the gritty realism of the space.",
+  "signatureTwist": "The plasma display glitches, and the colors of the plasma shift unexpectedly, suggesting an impending failure that could compromise the entire experiment, adding immediate stakes to the scene.",
+  "avoid": [
+    "no readable text",
+    "no logos",
+    "no watermarks",
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

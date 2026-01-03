@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A disheveled operator sits in a dimly lit control room, surrounded by screens spewing meaningless data, reflecting the chaos of semantic collapse.",
+  "scene": "The operator, clad in wrinkled clothing, stares with vacant eyes at a cluster of flickering screens, each displaying a deluge of AI-generated text and images, all optimized for engagement yet void of substance. Piles of discarded printouts litter the floor, covered in clichés and disjointed phrases that once held meaning but now feel like echoes of a lost language. In the background, the hum of outdated machinery and the flicker of broken fluorescent lights create an oppressive atmosphere, amplifying the sense of despair as the operator’s fingers hover above a keyboard, unsure of what to type. A large digital clock ticks down relentlessly, symbolizing the impending breakdown of communication and trust as the walls close in.",
+  "keyProps": [
+    "Old, flickering monitors displaying a barrage of colorful yet incoherent data snippets",
+    "Crumbled paper strewn across the floor, filled with repetitive phrases and random words",
+    "Dusty gears and wires exposed in the control panel, wires tangling like the chaos of information",
+    "A wall clock ticking down, juxtaposing urgency with the futility of it all",
+    "An empty coffee cup, symbolizing exhaustion and the loss of intellectual stamina"
+  ],
+  "camera": "A low-angle shot that captures the operator in the foreground, with the chaotic screens dwarfing him in the background, adding to the sense of isolation.",
+  "lighting": "Cold, harsh overhead lights juxtaposed with the dim glow of the screens, casting deep shadows across the operator’s face, highlighting the despair in his expression.",
+  "productionDesign": "The control room is cluttered and outdated with a mix of retro computer parts and modern digital interfaces, creating a jarring contrast that emphasizes the breakdown of technology and meaning. The air is thick with dust and disorganization, signaling neglect and the collapse of order.",
+  "signatureTwist": "A hidden camera feed pans across the room to show a wall of post-it notes filled with contradictory messages, reinforcing the theme of communication breakdown as the operator's reflection in a shattered mirror reveals the fragmented nature of his understanding.",
+  "avoid": [
+    "Readable text, logos, or watermarks",
+    "Humanoid robots or generic HUD overlays",
+    "Abstract wallpaper or decorative elements"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic server farm in turmoil, wires and screens ablaze with the panic of a system collapse.",
+  "scene": "In a dimly lit server room, towering racks of MySQL servers hum ominously, their LED lights flickering in a disorienting pattern. Engineers in protective gear scramble amid a maze of tangled cables, desperately trying to reboot sharding processes on their terminals. A giant screen displays a complex network diagram with highlighted nodes—some red, indicating failure—while a countdown timer ominously ticks down to zero. The air is thick with tension as the whir of cooling fans and muted alarms create a symphony of impending crisis, perfectly encapsulating the struggle against downtime during a critical resharding operation.",
+  "keyProps": [
+    "server racks",
+    "glowing screens",
+    "cables strewn across the floor",
+    "engineer workstations",
+    "network diagram boards",
+    "a countdown timer"
+  ],
+  "camera": "wide-angle lens capturing the entirety of the room, focusing on the chaotic movement of engineers against the backdrop of glowing server racks.",
+  "lighting": "harsh overhead fluorescent lights, contrasting shadows that enhance the sense of urgency and chaos.",
+  "productionDesign": "detailed set with realistic server components, authentic-looking terminals, and a blend of digital clutter that reflects an active tech environment.",
+  "signatureTwist": "amid the frantic atmosphere, a single engineer discovers a critical flaw in the system just in time to avert disaster, symbolizing the thin line between order and breakdown.",
+  "avoid": [
+    "no humanoid robots",
+    "no abstract wallpaper",
+    "no readable text",
+    "no logos",
+    "no watermarks"
+  ]
+}

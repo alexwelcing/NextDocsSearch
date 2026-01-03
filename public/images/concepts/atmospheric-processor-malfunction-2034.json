@@ -1,0 +1,24 @@
+{
+  "archetype": "Weather Control Catastrophe",
+  "logline": "An immense, spiraling storm system looms ominously over a barren landscape, revealing the failed promise of engineered climate stability.",
+  "scene": "A wide shot captures the chaotic beauty of a geometric storm, with swirling clouds forming precise hexagons in the sky, casting dark shadows over a cracked, parched earth below. Fractured fields, once fertile with crops, now lay abandoned and desolate, while a few scattered humanoid figures, gaunt and weary, move cautiously through the wreckage, searching for any signs of life. In the foreground, massive atmospheric processors pierce the horizon, their metallic surfaces glinting in the sparse sunlight, giving the impression of dormant giants waiting for instructions that will never come. Lightning arcs through the clouds, illuminating the eerie stillness that envelops this once-vibrant land, now a testament to humanity's hubris.",
+  "keyProps": [
+    "Massive atmospheric processor towers with reflective panels",
+    "Cracked earth with sparse, wilted vegetation",
+    "Distant, swirling storm clouds forming geometric shapes",
+    "Humanoid silhouettes scavenging for resources",
+    "Scorched crops lying lifeless on the ground"
+  ],
+  "camera": "Aerial view slowly descending towards the storm, capturing both the grandeur and desolation simultaneously.",
+  "lighting": "Dim, overcast sky with harsh contrasts created by sporadic lightning strikes, highlighting the starkness of the landscape.",
+  "productionDesign": "Industrial elements with a rusted, worn look on the atmospheric processors, contrasting with the natural decay of the environment. The remnants of agricultural structures are visible, crumbling and overtaken by weeds.",
+  "signatureTwist": "The storm's patterns seem to pulse with an unnatural intelligence, hinting at the processors' autonomous control over the climate, making nature itself a byproduct of technology gone awry.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

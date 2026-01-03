@@ -1,0 +1,23 @@
+{
+  "archetype": "Tech Lab Tension",
+  "logline": "A dimly lit tech lab hums with the energy of machines fine-tuning the future of AI, encapsulating the tension of innovation and caution.",
+  "scene": "Inside a shadowy, sprawling tech lab, large banks of obscured servers emit a faint glow, their screens filled with cascading lines of code. In the foreground, an engineer’s hands deftly adjust the holographic interface, selecting parameters for LoRA configurations on a sleek tablet. The air is thick with the tension of rapid technological advancement as monitors flash warnings about catastrophic forgetting, just as the room’s overhead lights flicker ominously, hinting at the underlying instability of pushing AI boundaries. A solitary window reveals a bleak cityscape outside, where the line between human and machine blurs in the neon twilight.",
+  "keyProps": [
+    "holographic interface",
+    "tablet displaying code",
+    "banks of servers",
+    "flickering overhead lights",
+    "warning notifications on screens"
+  ],
+  "camera": "a low-angle shot that captures the depth of the lab, focusing on the engineer’s hands and the tablet, immersing the viewer in a world of precise technological manipulation",
+  "lighting": "harsh overhead lights juxtaposed with the soft glow of server screens, creating an atmosphere of unease and urgency",
+  "productionDesign": "a gritty, industrial environment filled with cables, scattered notes, and makeshift workstations cluttered with empty coffee cups and energy drink cans, suggesting the relentless pace of the tech world",
+  "signatureTwist": "the ambient sound of distant sirens outside blends with the lab's mechanical noises, hinting at a city on the edge of a technological revolution that might spiral out of control",
+  "avoid": [
+    "no humanoid robots",
+    "no decorative elements",
+    "no abstract designs",
+    "no bright or cheerful colors",
+    "no visible text or logos"
+  ]
+}

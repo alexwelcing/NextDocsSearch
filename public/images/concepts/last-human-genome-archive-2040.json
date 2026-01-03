@@ -1,0 +1,24 @@
+{
+  "archetype": "Living Archive",
+  "logline": "An austere, sterile museum space captures the haunting essence of humanity's last unmodified individuals.",
+  "scene": "In a dimly lit, stark white-walled museum, a glass enclosure showcases the 'Living Exhibit' of a baseline human, a woman in her late sixties, Maria Gonzalez. She stands amidst a series of artifacts: an old rotary phone, a stack of faded photos, and a dusty vinyl record player, each representative of the memories and the simple pleasures of unmodified life. Behind her, a digital display flickers intermittently, featuring live feeds of children peering curiously into the encasement, their faces illuminated by the bluish glow of their genetic-modified devices, bewildered by the concept of someone who can’t see in infrared. The juxtaposition of Maria's natural aging against the backdrop of advanced biotechnology surrounds her like a ghostly echo of the past.",
+  "keyProps": [
+    "Glass display case",
+    "Faded photographs",
+    "Rotary phone",
+    "Vinyl record player",
+    "Old-fashioned clock",
+    "Digital feed of children viewing"
+  ],
+  "camera": "Closed-up on Maria's expressive face, shifting to wide-angle to capture the whole exhibit and the children outside.",
+  "lighting": "Cool, clinical fluorescent overhead lighting juxtaposed with warmer, softer light focusing on Maria, emphasizing her humanity against the sterile environment.",
+  "productionDesign": "A minimalist museum layout with cold metal and glass finishes, contrasting with the warm, nostalgic objects from the past surrounding Maria. The layout feels almost like a lab, with sterile surfaces and labels, but filled with echoes of human warmth.",
+  "signatureTwist": "The live digital feed of children’s reactions subtly glitched, creating a momentary distortion, highlighting the disconnect between the past and the rapidly evolving future.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Excessive futuristic tech",
+    "Readable text or logos"
+  ]
+}

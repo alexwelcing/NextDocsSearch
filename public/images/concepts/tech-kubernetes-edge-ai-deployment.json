@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit command center sprawls under flickering screens, where IT specialists wrestle with an AI decision-making crisis.",
+  "scene": "In a cramped, high-tech control room, operators hunch over glowing monitors displaying real-time data from millions of edge devices. The walls are lined with blinking indicators and digital maps showing the state of various AI models deployed across urban landscapes. Suddenly, an alert signals an emergent, unexpected decision made by the distributed AI, leaving the operators in a state of alarm as they attempt to determine whether to intervene or follow the AI's lead. The tension thickens as fluctuations in metrics reveal the potential for chaos as their once-reliable systems spiral into unforeseen, autonomous behavior.",
+  "keyProps": [
+    "Flickering computer screens showcasing live data feeds",
+    "A large wall-mounted digital map displaying edge device locations",
+    "Tables cluttered with discarded coffee cups and technical manuals",
+    "A whiteboard filled with hastily scrawled algorithms and flowcharts",
+    "Personal devices (phones, tablets) wirelessly connected and showing notifications"
+  ],
+  "camera": "A low-angle shot that captures the nervous expressions of the team, framed by the glow of the monitors",
+  "lighting": "A combination of harsh white overhead lights and the dim, eerie blue glow from the screens, casting shadows on the operators' faces",
+  "productionDesign": "The control room is filled with an array of aging technology, cables snaking along the floors, and walls adorned with tacked-up printouts of AI models and performance graphs, creating a sense of disarray mixed with urgency.",
+  "signatureTwist": "As alarms sound, a journalist outside the control room captures the frantic scene, juxtaposing the human element against the cold, calculated machines.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Overly pristine or futuristic aesthetics"
+  ]
+}

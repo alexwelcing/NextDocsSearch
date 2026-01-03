@@ -1,0 +1,18 @@
+{
+  "archetype": "Deployment Anxiety",
+  "logline": "A massive, dimly lit control room buzzes with anticipation and fear as the final safety review takes place.",
+  "scene": "Rows of flickering monitors illuminate the faces of a diverse team of engineers and scientists, all eyes trained on a projected 3D hologram of the integrated systems. The air is thick with tension; a palpable silence falls as the lead engineer raises the question: 'Are we sure we should deploy this?' Outside the reinforced glass walls, the remnants of a world filled with chaos and progress are hinted at through flickering emergency lights. In the foreground, a diagram of interconnected neural interfaces and quantum processors pulses rhythmically, showcasing the fragile balance of innovation and catastrophe.",
+  "keyProps": [
+    "Flickering monitors displaying system diagnostics",
+    "3D hologram of integrated tech",
+    "Emergency lighting casting shadows",
+    "Rugged control consoles with worn buttons",
+    "Blueprints scattered across tables",
+    "Digital timers counting down to launch"
+  ],
+  "camera": "A mix of wide shots to capture the entire control room ambiance, with tight close-ups on stressed faces and pulsating holograms.",
+  "lighting": "Soft, overhead lights create a stark contrast against the flashing alerts on the monitors, emphasizing the tension and urgency of the scene.",
+  "productionDesign": "The control room is industrial, with exposed wires, techno-organic panels, and a mix of high-tech equipment that shows signs of wear, suggesting years of relentless development.",
+  "signatureTwist": "In the reflections on the glass walls, fleeting images of past failures and near-catastrophes are visible, serving as a haunting reminder of the stakes involved.",
+  "avoid": []
+}

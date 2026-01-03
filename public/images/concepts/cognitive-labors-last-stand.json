@@ -1,0 +1,26 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A stark office space transformed into a cold war bunker of knowledge workers clinging to their expertise.",
+  "scene": "A dimly lit corporate office reminiscent of a war room, filled with disheveled desks covered in stacks of digital screens and outdated documents. Workers frantically discuss AI's encroaching capabilities while a massive central screen shows a countdown timer to the 2028 cliff. The atmosphere is thick with tension as colleagues exchange worried glances, realizing their skills may soon be rendered obsolete. Drones, designed for document processing, hover overhead, quietly cataloging unprocessed files, while a mechanical arm sorts through paperwork left behind.",
+  "keyProps": [
+    "digital surveillance screens",
+    "overhead drones",
+    "mechanical sorting arm",
+    "cluttered desks with fading documents",
+    "retro office lighting",
+    "timed countdown display"
+  ],
+  "camera": "Steady cam gliding through the office, capturing the chaos and urgency in close-up shots of workers' anxious faces and frantic gestures.",
+  "lighting": "Fluorescent flickering lights casting a harsh glow, contrasting with pools of shadow beneath desks creating a sense of impending doom.",
+  "productionDesign": "The office is equipped with vintage furniture, juxtaposed with cutting-edge technology, showing a clash between old knowledge work and futuristic automation. Walls are lined with outdated posters of past team achievements and motivational quotes, now faded and ignored, while wires hang from the ceiling with erratic disarray.",
+  "signatureTwist": "An AI voice suddenly interjects, announcing the completion of a task that would traditionally require a team of workers, amplifying the tension as silence falls over the room.",
+  "avoid": [
+    "decorative elements",
+    "readable text",
+    "logos",
+    "watermarks",
+    "generic HUD overlays",
+    "humanoid robots",
+    "abstract wallpaper"
+  ]
+}

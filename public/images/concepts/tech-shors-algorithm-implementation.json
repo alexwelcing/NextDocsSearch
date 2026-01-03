@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A vast, dimly lit quantum computing facility hums with the tension of impending digital catastrophe as Shor's algorithm races against time.",
+  "scene": "In a cavernous underground laboratory, rows of quantum computers pulse like futuristic beacons, their surfaces flickering with cascading code and readouts. Scientists in lab coats cluster around a central control console, their expressions tense, illuminated by the cold glow of screens displaying the countdown to a digital breach. In the foreground, a lone operator manually inputs parameters into a Qiskit interface, sweat trickling down their brow, as they prepare to unleash Shor's algorithm on RSA-2048. The entire room vibrates with the anticipation of potentially cracking open the vault of encrypted data safeguarding the world’s secrets.",
+  "keyProps": [
+    "Quantum computers with intricate wiring and visible superconducting qubits",
+    "A massive, interactive holographic display showing numerical data and diagrams of Shor's algorithm",
+    "Worn lab coats with frayed edges and personal effects from the scientists",
+    "Coffee cups and snack wrappers scattered around, indicating a long night of work",
+    "Old-fashioned paper notes covered in frantic calculations and diagrams"
+  ],
+  "camera": "A dynamic, handheld camera captures the urgency, panning from the operator's trembling hands to the anxious faces of the team, providing an intimate look at the chaos.",
+  "lighting": "The lighting is stark and harsh, emphasizing the cool, clinical atmosphere of the lab, while backlighting from the screens creates dramatic silhouettes of the scientists.",
+  "productionDesign": "The set is a blend of cutting-edge technology and gritty realism, adorned with exposed pipes and retrofitted electrical systems that hint at the facility’s hasty expansion to accommodate the quantum revolution.",
+  "signatureTwist": "As the algorithm executes, a sudden system alert flashes across screens, signaling a breach that shifts the atmosphere from focused determination to sheer panic.",
+  "avoid": [
+    "Readable text or logos on any surfaces",
+    "Humanoid robots or generic HUD overlays",
+    "Abstract wallpaper in the background"
+  ]
+}

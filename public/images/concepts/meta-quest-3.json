@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A disheveled control room littered with outdated tech becomes the battleground for a race between the immersive virtual reality of the Meta Quest 3 and the sleek sophistication of the Apple Vision Pro.",
+  "scene": "In a dimly lit control room reminiscent of a forgotten tech lab, archaic computer monitors flicker with static as a lone individual frantically switches between apps on their Quest 3 headset while examining a holographic projection of the Apple Vision Pro. Around them, a chaotic array of wires, old VR headsets, and crumpled papers hint at a battle of innovation and technology. The walls are adorned with posters of past VR milestones, contrasting the cutting-edge digital interfaces glowing in the room, where the ambient noise of distant explosions from a malfunctioning simulation reminds them of the stakes involved. A shadow of uncertainty looms as they debate which headset to embrace in this pivotal moment of technological evolution.",
+  "keyProps": [
+    "Quest 3 headset with visible glare on its lenses",
+    "Apple Vision Pro holographic projection",
+    "Old monitors displaying static",
+    "Scattered technical manuals and schematics",
+    "Wired connections and cables sprawled across the floor"
+  ],
+  "camera": "A wide-angle shot capturing the entire control room, emphasizing the clutter and chaos, while focusing tightly on the individual’s expressions as they interact with both headsets.",
+  "lighting": "Harsh overhead fluorescent lights cast a sterile glow, contrasting with the soft illumination emanating from the digital interfaces of the headsets, creating a stark visual divide between past and future.",
+  "productionDesign": "A blend of retro sci-fi aesthetic with modern tech, featuring mismatched furniture, vintage tech relics, and state-of-the-art devices coexisting in disarray, fostering a sense of urgency and conflict in the narrative.",
+  "signatureTwist": "The moment of choice is disrupted by an unexpected system crash, leading to a haunting realization that neither technology may be ready to lead the future.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

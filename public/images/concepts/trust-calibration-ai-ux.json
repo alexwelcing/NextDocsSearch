@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An anxious product manager peers over malfunctioning AI diagnostics, grappling with the fragile line between reliance and skepticism.",
+  "scene": "Set inside a dimly lit control room, walls are lined with flickering screens displaying various AI outputs, some green-lit with confidence scores, others flashing amber warnings. The product manager, a middle-aged woman in a rumpled shirt, stands hunched over a table cluttered with reports and data monitors. Her eyes dart nervously between a screen showing a high-stakes prediction failure and a nearby console where a bright red alert pinging indicates an AI error just occurred during a critical client meeting. Tension fills the air as she contemplates whether to trust the AI's next suggestion or dig deeper for manual verification.",
+  "keyProps": [
+    "flickering screens with various confidence ratings",
+    "paper reports overflowing with scribbles and annotations",
+    "a bright red alert light indicating an AI error",
+    "an old-fashioned calculator juxtaposed against modern tech",
+    "cold cups of coffee to highlight the long hours"
+  ],
+  "camera": "A tight shot capturing the product manager's furrowed brow, slowly zooming out to reveal the chaotic state of the control room.",
+  "lighting": "Low, harsh overhead lights mixed with the soft glow of the monitors, creating a stark contrast between the hope of AI predictions and the dread of unseen errors.",
+  "productionDesign": "The control room is cluttered and chaotic, filled with modern tech that still shows fingerprints of human scrutiny—a blend of high-tech and low organization, reflecting the tension between reliance and skepticism.",
+  "signatureTwist": "At the edge of the screen, a hidden message in digital code begins to scroll, hinting at an even deeper malfunction within the AI system itself.",
+  "avoid": [
+    "human-like robots",
+    "any abstract visual elements",
+    "prominent use of logos or readable text"
+  ]
+}

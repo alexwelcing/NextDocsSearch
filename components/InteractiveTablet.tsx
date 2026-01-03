@@ -28,6 +28,8 @@ interface InteractiveTabletProps {
   currentScenery?: string;
   onToggle3DExplore?: () => void;
   is3DExploreActive?: boolean;
+  onToggleArticleDisplay?: () => void;
+  isArticleDisplayOpen?: boolean;
 }
 
 export default function InteractiveTablet({
@@ -39,6 +41,8 @@ export default function InteractiveTablet({
   currentScenery,
   onToggle3DExplore,
   is3DExploreActive = false,
+  onToggleArticleDisplay,
+  isArticleDisplayOpen = false,
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
@@ -299,6 +303,8 @@ export default function InteractiveTablet({
         initialView={terminalView}
         onToggle3DExplore={onToggle3DExplore}
         is3DExploreActive={is3DExploreActive}
+        onToggleArticleDisplay={onToggleArticleDisplay}
+        isArticleDisplayOpen={isArticleDisplayOpen}
       />
     </>
   );

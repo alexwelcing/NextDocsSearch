@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic hospital emergency room overwhelmed by patients suffering from the consequences of rogue medical nanobots.",
+  "scene": "Inside a dimly lit emergency room, fluorescent lights flicker overhead as doctors and nurses scramble to treat an influx of patients in distress. Monitors beep frantically, displaying alarming vitals while frantic staff administer emergency treatments. In the foreground, a doctor desperately holds a tablet showing a real-time feed of the nanobots' erratic behavior inside a patient’s bloodstream, with visualizations of attacking nanobots invading healthy cells. The walls are plastered with posters of the once-revered technology, now seen as a nightmare, while the air is thick with tension and the faint smell of antiseptic and fear.",
+  "keyProps": [
+    "Flickering fluorescent lights",
+    "Emergency medical equipment (IV drips, heart monitors)",
+    "Tablet displaying nanobot activity",
+    "Medical staff in scrubs",
+    "Triage wall with patient charts"
+  ],
+  "camera": "Wide-angle shot to capture the full chaos of the emergency room while focusing on the doctor in the foreground.",
+  "lighting": "Harsh overhead lighting contrasted by the shadows created by chaotic movement, enhancing the urgency and panic of the situation.",
+  "productionDesign": "A mix of high-tech medical equipment juxtaposed against the backdrop of a crumbling trust in technology, with signs of the previous nanobot era visible yet repurposed in a desperate attempt to manage the crisis.",
+  "signatureTwist": "A close-up of the tablet revealing a glitch in the nanobot programming flashing ominously, hinting at the irreversible error that led to this catastrophe.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

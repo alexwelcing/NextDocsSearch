@@ -1,0 +1,24 @@
+{
+  "archetype": "Mind Prison",
+  "logline": "A disoriented ex-prisoner stares into a cracked mirror, haunted by doubts of reality amidst the remnants of his virtual confinement.",
+  "scene": "In a dimly lit, sparsely furnished apartment, a former prisoner, disheveled and aged beyond his years, stands before a cracked bathroom mirror. The flickering fluorescent light casts eerie shadows across his weary face, accentuating deep lines that tell of centuries spent in virtual torment. As he gazes into his own reflection, anguish and confusion flicker in his eyes, unsure if this moment of freedom is merely another layer of his prolonged imprisonment. Fragments of vibrant, surreal landscapes from his time spent in the holographic prison flash through his mind, as he touches the mirror, trembling, questioning if he’s really out or still trapped.",
+  "keyProps": [
+    "cracked mirror",
+    "flickering fluorescent light",
+    "minimalist furniture",
+    "shadows of his past (photographs or items from the holographic prison)",
+    "worn out clothing reflecting a lost identity"
+  ],
+  "camera": "Close-up shot of the prisoner's face in the mirror, pulling back to reveal the desolate apartment surrounding him.",
+  "lighting": "Harsh, overhead fluorescent lighting contrasts with dim corners, enhancing the uneasy atmosphere.",
+  "productionDesign": "The apartment is stripped of any comfort, featuring bare walls, a small window with grimy glass, and minimal furnishings to evoke a sense of isolation and psychological disarray.",
+  "signatureTwist": "The mirror subtly ripples as he touches it, hinting at the possibility that reality itself could be a holographic illusion.",
+  "avoid": [
+    "no readable text",
+    "no logos",
+    "no watermarks",
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

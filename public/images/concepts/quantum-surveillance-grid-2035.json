@@ -1,0 +1,23 @@
+{
+  "archetype": "Quantum Collapse",
+  "logline": "A quantum sensor control room, bathed in stark red light, reveals a technician caught in the cold stare of an unyielding surveillance grid.",
+  "scene": "Inside a high-tech control room, a technician stares at a wall of screens displaying real-time scans of citizens in a bustling urban environment. Each person is represented by pulsing dots of color, revealing their emotional and cognitive states, while alerts flash for any 'pre-criminal' indicators. The air is thick with tension as the technician processes the data, knowing every thought, every emotion is being captured and stored. Outside the reinforced glass, a city moves with an eerie normalcy while individuals remain unaware of the intimate scrutiny they endure.",
+  "keyProps": [
+    "Rows of monitors displaying quantum readouts",
+    "A sleek control console cluttered with blinking lights",
+    "Emergency alarm button labeled 'Cognitve Detention'",
+    "Security badges and identity cards scattered around",
+    "Molecular-level surveillance data readouts"
+  ],
+  "camera": "A tight shot on the technician's face, reflecting a mix of fear and resolve, with monitors in the background showing flickering 'danger' alerts.",
+  "lighting": "Harsh, overhead LED lights casting stark shadows, contrasting with the red emergency lights from the alarm.",
+  "productionDesign": "A sterile, high-tech room with reinforced glass windows, minimalist furniture, and industrial aesthetics, creating an oppressive atmosphere.",
+  "signatureTwist": "A moment of realization breaks the technician's focus: they have flagged a close friend for pre-crime detainment due to a fleeting negative thought detected moments earlier.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text or logos",
+    "Cliché sci-fi elements"
+  ]
+}

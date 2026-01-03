@@ -1,0 +1,24 @@
+{
+  "archetype": "Neural Nexus",
+  "logline": "A desolate Tokyo hospital room, starkly illuminated by the cold glow of malfunctioning machinery.",
+  "scene": "In a sterile hospital room, a medical team gathers around a disheveled patient lying on a gurney, wires and sensors protruding from their scalp, remnants of a neural implant recently extracted. The walls are scuffed and peeling, displaying a contrasting sense of advanced technology that has not been able to escape the decay of reality. Monitors flicker with data streams and alarming metrics, while a nurse, visibly shaken, reviews a clipboard filled with incident reports. Outside the window, the blurred lights of Tokyo at night seem oblivious to the turmoil within, a stark reminder of the world moving on despite the crisis inside.",
+  "keyProps": [
+    "Gurney with medical equipment",
+    "Flickering monitors displaying biometric data",
+    "Scattered medical charts and incident reports",
+    "A single overhead light casting harsh shadows",
+    "An open window revealing a neon-lit Tokyo skyline"
+  ],
+  "camera": "A close-up shot capturing both the patient's distressed facial expressions and the frantic gestures of the medical team, with a slight tilt to enhance the sense of unease.",
+  "lighting": "Harsh, clinical lighting accentuated by the dying glow of malfunctioning monitors, casting stark shadows that amplify the tension.",
+  "productionDesign": "The hospital room is a blend of advanced medical technology juxtaposed with signs of neglect — rusted equipment, outdated manuals scattered on the floor, and a faint odor of antiseptic mixed with something more unsettling, hinting at the aftermath of the implant failure.",
+  "signatureTwist": "A subtle but haunting detail reveals an echoing voice from the monitors, out of sync and unsettling, repeating phrases that suggest the neural implant was not just a device, but held onto fragments of the user's consciousness.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no readable text",
+    "no logos",
+    "no overly bright or optimistic settings"
+  ]
+}

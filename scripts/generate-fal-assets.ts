@@ -2,6 +2,11 @@
 
 import fs from 'fs/promises'
 import path from 'path'
+import dotenv from 'dotenv'
+
+// Load environment variables from .env.local
+dotenv.config({ path: '.env.local' })
+
 import { assetPromptSet, AssetPrompt } from '../lib/assets/falPromptSet'
 
 const FAL_BASE_URL = 'https://fal.run'
@@ -114,7 +119,7 @@ async function main() {
     onlyCategory ? item.category === onlyCategory : true
   )
 
-  console.log(`\n🎛️  Fal Asset Generator`) 
+  console.log(`\n🎛️  Fal Asset Generator`)
   console.log(`Generating ${prompts.length} asset(s)${dryRun ? ' (dry run)' : ''}\n`)
 
   const results: AssetRunResult[] = []
@@ -171,7 +176,7 @@ async function main() {
   await ensureDir(logPath)
   await fs.writeFile(logPath, JSON.stringify(costLog, null, 2))
 
-  console.log(`\n💸 Total cost: $${totalCost.toFixed(4)} USD`) 
+  console.log(`\n💸 Total cost: $${totalCost.toFixed(4)} USD`)
   console.log(`🧾 Cost log saved to ${logPath}\n`)
 }
 

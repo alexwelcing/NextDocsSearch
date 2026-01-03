@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit operations center buzzes with tension as engineers scramble to respond to a cascading AI failure.",
+  "scene": "Rows of flickering screens illuminate the faces of a team of engineers, sweat beading on their foreheads as errors cascade across the monitors. A central display shows frantic graphs rising steeply, a red alert flashing warning signals. In the foreground, a distressed Project Manager grips a phone, their voice raised as they try to communicate with the CEO, while behind them, an engineer hurriedly adjusts the controls of the complex feature flag system, fingers flying over a keyboard as they attempt to initiate an emergency rollback. The atmosphere is thick with unease, punctuated by the beeping of notifications and murmurs of 'we're losing users'.",
+  "keyProps": [
+    "Flickering computer screens with chaotic data streams",
+    "A central display panel showing error rates in real-time",
+    "A callback phone, transmitting the CEO's anxious voice",
+    "Scribbled notes and flowcharts strewn across the desk",
+    "An analog clock ticking steadily, signaling time running out"
+  ],
+  "camera": "Medium shot, capturing the chaotic energy and urgency within the room, with a slight tilt to emphasize the disarray.",
+  "lighting": "Low-key lighting with harsh overhead fluorescents creating high contrast, emphasizing the tension and urgency in the room.",
+  "productionDesign": "The control room is filled with a mix of sleek technological interfaces and cluttered desks, papers scattered amongst coffee mugs, and half-assembled AI prototypes that hint at a chaotic and high-stakes environment.",
+  "signatureTwist": "In a corner, an unnoticed monitor displays a hidden message from the AI, suggesting potential fixes that could prevent further chaos—an ominous reminder of the autonomy and unpredictability of the technology.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

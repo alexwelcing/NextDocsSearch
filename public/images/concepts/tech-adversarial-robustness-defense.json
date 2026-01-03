@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A digital fortress glows ominously under harsh fluorescent lights as the last line of defense against a swarm of invisible adversarial attacks.",
+  "scene": "In a sleek, high-tech control room filled with flickering screens and humming machinery, an operator frantically types away at a keyboard, inputting commands to fend off an impending assault on a neural network. Monitors display real-time data feeds showcasing the fluctuating confidence of the AI in response to subtle inputs designed to deceive it. In the background, red warning lights pulse rhythmically as adversarial examples appear on separate screens, blurring the lines between reality and illusion. The tension mounts as the operator races against the clock, knowing that each keystroke could mean the difference between devastating breaches or maintaining a semblance of security.",
+  "keyProps": [
+    "multi-screen digital display showing live data and adversarial examples",
+    "high-tech keyboard with illuminated keys",
+    "control panel with status lights and dials indicating system performance",
+    "glass partition reflecting the glow of the monitors",
+    "coffee cup half-full, hinting at long hours spent in the battle for cyber defense"
+  ],
+  "camera": "Close-up on the operator's hands moving rapidly across the keyboard, with a medium shot of the control room showing the chaotic array of screens in the background.",
+  "lighting": "A harsh fluorescent overhead lighting casts sharp shadows, emphasizing the intensity of the scene, while the glow from the screens creates a bluish hue, highlighting the operator's focused expression.",
+  "productionDesign": "A blend of contemporary technology and a slightly dystopian aesthetic, featuring modular desks, ergonomic seating, and a chaotic yet organized layout filled with cables and tech equipment, all reflecting the high-stakes nature of modern cybersecurity.",
+  "signatureTwist": "A sudden power surge causes all screens to flicker, and for a brief moment, the screens show glimpses of the adversarial images that threaten the neural network, visually manifesting the unseen danger lurking in the data.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no visible logos or brands",
+    "no overly decorative elements"
+  ]
+}

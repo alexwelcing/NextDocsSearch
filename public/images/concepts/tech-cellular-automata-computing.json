@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sprawling, dimly lit laboratory filled with vintage computing equipment and modular panels, pulsating with the chaotic yet mesmerizing patterns of cellular automata in real-time.",
+  "scene": "In the heart of the lab, a massive glass screen displays thousands of tiny cells shifting and mutating, each following simple local rules yet generating complex patterns. An operator, silhouetted against a sea of blinking lights and tangled wires, stares intently at the screen, fingers poised over retro mechanical switches that control the automata's rules. The atmosphere is thick with tension, as the operator grapples with the unpredictability of the system, knowing that each decision could lead to emergent chaos or groundbreaking discoveries. Nearby, an old-school notebook is filled with frantic calculations and sketches, hinting at a deeper understanding of the self-organization at play.",
+  "keyProps": [
+    "Massive glass screen displaying cellular automata patterns",
+    "Vintage computing equipment (like oscilloscopes and punch cards)",
+    "Mechanical switches and levers for manual control",
+    "Old-school notebook filled with calculations",
+    "Trays of circuit boards and wires",
+    "Dim overhead fluorescent lights flickering"
+  ],
+  "camera": "Close-up on the operator's hands adjusting the switches, with a focus pull to the vibrant screen behind them.",
+  "lighting": "Dim, moody lighting with harsh contrasts, highlighting the flickering screen and creating shadows that enhance the tension.",
+  "productionDesign": "A retro-futuristic lab aesthetic, mixing 1970s analog technology with hints of modern computing elements, cluttered yet organized in a way that tells a story of its own.",
+  "signatureTwist": "The cellular automata patterns on the screen begin to display unexpected anomalies that suggest a form of emergent intelligence, raising the stakes of the operator's choices.",
+  "avoid": [
+    "Readable text and logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Overly polished or futuristic designs"
+  ]
+}

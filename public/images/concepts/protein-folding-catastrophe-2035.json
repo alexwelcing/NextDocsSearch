@@ -1,0 +1,23 @@
+{
+  "archetype": "Molecular Horror",
+  "logline": "A close-up of a thermal imaging scan showing a brain ablaze with synthetic prion activity, revealing a chaotic but intricate lattice of misfolded proteins spreading through neural pathways.",
+  "scene": "The camera hovers over a thermal imaging screen displaying a brain scan. Regions of the brain glow ominously in bright colors, indicating heightened activity as misfolded synthetic proteins run rampant. The viewer can see intricate geometric patterns emerging, an unusual lattice of colors and shapes that twist and intermingle, symbolizing the transformation from human thought to mathematical consciousness. The air is thick with tension as scientists in lab coats observe this horrific spectacle, their faces a mix of fear and fascination as they realize the scale of the catastrophe unfolding within Patient Zero's mind.",
+  "keyProps": [
+    "Thermal imaging monitor",
+    "NEUROBRIDGE™ therapeutic protein vial",
+    "Medical lab equipment (microscopes, syringes)",
+    "Whiteboard filled with chaotic sketches of proteins and geometric patterns",
+    "Protective hazmat suits worn by researchers"
+  ],
+  "camera": "Close-up shots with a focus on the thermal imaging data paired with wide shots revealing concerned scientists in the lab.",
+  "lighting": "A dimly lit lab contrasted with the bright, unnatural colors emitted from the thermal scan, creating an eerie atmosphere.",
+  "productionDesign": "A sterile, high-tech laboratory filled with advanced medical equipment, but with a sense of chaos as papers are strewn about and equipment is hastily assembled to monitor the patient. The walls are lined with screens displaying real-time data and projections of protein structures.",
+  "signatureTwist": "The camera lingers on the thermal screen, reflecting the viewer's fascination with the geometric horror taking place, while a scientist whispers the words, 'It's beautiful, yet terrifying.'",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text",
+    "Logos or watermarks"
+  ]
+}

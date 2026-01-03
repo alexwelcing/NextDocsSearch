@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A tense executive meeting room, where a high-stakes AI project hangs by the thread of unmeasured business metrics.",
+  "scene": "In a glass-walled boardroom overlooking a sprawling tech campus, a group of executives sits around a sleek, metallic conference table littered with digital tablets and coffee cups. The PM stands at the head, highlighting a graph on a large screen showcasing impressive AI accuracy scores, but the CFO's skeptical gaze belies deeper concerns. Outside the room, teams frantically type at their keyboards, shadows reflecting urgency and uncertainty as the clock ticks down to funding decisions.",
+  "keyProps": [
+    "Metal conference table",
+    "Digital display with fluctuating graphs",
+    "Tablets with analytics dashboards",
+    "Coffee cups with cold remnants",
+    "An oversized clock ticking on the wall"
+  ],
+  "camera": "A dynamic, handheld camera that captures close-ups of tense facial expressions and shifts focus from the PM's anxious presentation to the CFO's unreadable face, emphasizing the emotions in the room.",
+  "lighting": "Cold, fluorescent lighting overhead casts stark shadows, creating an uneasy atmosphere, while the natural light from the large windows contrasts the sterile interior, hinting at the vibrant tech world outside.",
+  "productionDesign": "The boardroom features a mix of sleek modernist furniture juxtaposed with cluttered tech paraphernalia, like tangled cables and discarded papers sprawled carelessly around the room, reflecting the chaotic undercurrents of innovation.",
+  "signatureTwist": "As the CFO demands concrete ROI projections, a notification pops up on one of the employee's screens, showing a drastic drop in user engagement metrics, turning the atmosphere from hopeful to fraught with tension.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

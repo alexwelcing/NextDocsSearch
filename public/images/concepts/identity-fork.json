@@ -1,0 +1,25 @@
+{
+  "archetype": "Identity Crisis",
+  "logline": "A digital interface flickers to life in a dimly lit, sterile laboratory, reflecting a profound choice between organic existence and digital transcendence.",
+  "scene": "A close-up on a sleek, black neural interface device lies on a cold metallic table, its cables snaking away into the shadows of the room. In the background, the faint hum of machinery creates an ominous atmosphere, while a transparent screen displays brainwave patterns and identity algorithms. A solitary figure, shrouded in a lab coat, stands before it, torn between the potential of digital immortality and the weight of their biological essence. The stark contrast between the human's warm, organic features and the sterile technology amplifies the emotional gravitas of the scene as they reach out hesitantly towards the interface.",
+  "keyProps": [
+    "neural interface device",
+    "brainwave monitoring screen",
+    "metallic examination table",
+    "futuristic medical equipment",
+    "ambient machinery",
+    "laboratory chairs"
+  ],
+  "camera": "Tight focus on the neural interface, slowly panning to the figure's contemplative expression, capturing the internal conflict.",
+  "lighting": "Dim overhead lights casting harsh shadows, highlighting the device and the figure's face, with a soft glow emanating from the screen.",
+  "productionDesign": "A clinical laboratory, filled with shadows and reflections of advanced technology, blending a sterile aesthetic with elements of human warmth; the sterile metal contrasts with the organic human presence.",
+  "signatureTwist": "The neural interface subtly pulses, almost as if alive, hinting at a consciousness within it, reflecting the tension between choice and identity.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "readable text",
+    "logos",
+    "watermarks"
+  ]
+}
