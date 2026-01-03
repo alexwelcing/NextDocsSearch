@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
-import { JourneyProgress, Quest, QUESTS, Achievement, ACHIEVEMENTS } from '../lib/journey/types';
-import { ShipSignal } from '../lib/ai/shipPersona';
+import { JourneyProgress, Quest, QUESTS, Achievement, ACHIEVEMENTS } from '../../lib/journey/types';
+import { ShipSignal } from '../../lib/ai/shipPersona';
 
 interface JourneyContextType {
   progress: JourneyProgress;

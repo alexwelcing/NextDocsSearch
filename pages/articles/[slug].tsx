@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -11,6 +12,8 @@ import StructuredData from '../../components/StructuredData';
 import ArticleClassification, { inferClassificationFromSlug } from '@/components/ArticleClassification';
 import CircleNav from '@/components/ui/CircleNav';
 import styled from 'styled-components';
+import { escapeMdxContent } from '@/lib/utils';
+import MarkdownImage from '@/components/ui/MarkdownImage';
 
 interface ArticleProps {
   title: string;
@@ -26,6 +29,7 @@ interface ArticleProps {
     slug: string;
     title: string;
     description: string;
+    ogImage?: string;
   }>;
   slug: string;
 }
@@ -40,6 +44,27 @@ const ArticleWrapper = styled.article`
   margin: 0 auto;
   padding: 120px 20px 60px;
   color: #e0e0e0;
+`;
+
+const HeroImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 450px;
+  margin-bottom: 40px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  border: 1px solid rgba(222, 126, 162, 0.2);
+
+  @media (min-width: 900px) {
+    width: 120%;
+    margin-left: -10%;
+  }
+
+  @media (max-width: 768px) {
+    height: 250px;
+    border-radius: 8px;
+  }
 `;
 
 const ArticleHero = styled.header`
@@ -145,14 +170,6 @@ const ArticleContent = styled.div`
     }
   }
 
-  img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 2rem 0;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  }
-
   blockquote {
     border-left: 4px solid #de7ea2;
     padding-left: 20px;
@@ -183,19 +200,25 @@ const RelatedGrid = styled.div`
 `;
 
 const RelatedCard = styled(Link)`
-  display: block;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   border: 1px solid rgba(222, 126, 162, 0.2);
   text-decoration: none;
   transition: all 0.3s ease;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-4px);
     border-color: #de7ea2;
     box-shadow: 0 10px 30px rgba(222, 126, 162, 0.2);
   }
+`;
+
+const CardContent = styled.div`
+  padding: 20px;
 
   h3 {
     color: #de7ea2;
@@ -208,6 +231,13 @@ const RelatedCard = styled(Link)`
     font-size: 0.9rem;
     line-height: 1.5;
   }
+`;
+
+const CardImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 150px;
+  background: #1a1a2e;
 `;
 
 const ShareButtons = styled.div`
@@ -343,6 +373,18 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
       <ArticleWrapper>
         <ArticleHero>
+          {ogImage && (
+            <HeroImageWrapper>
+              <Image
+                src={ogImage}
+                alt={title}
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
+                sizes="(max-width: 768px) 100vw, 800px"
+              />
+            </HeroImageWrapper>
+          )}
           <ArticleTitle>{title}</ArticleTitle>
           <ArticleMeta>
             <MetaItem>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</MetaItem>
@@ -377,7 +419,12 @@ const ArticlePage: NextPage<ArticleProps> = ({
         )}
 
         <ArticleContent>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              img: MarkdownImage as any
+            }}
+          >
             {content}
           </ReactMarkdown>
         </ArticleContent>
@@ -405,8 +452,21 @@ const ArticlePage: NextPage<ArticleProps> = ({
             <RelatedGrid>
               {relatedArticles.map((article) => (
                 <RelatedCard key={article.slug} href={`/articles/${article.slug}`}>
-                  <h3>{article.title}</h3>
-                  <p>{article.description}</p>
+                  {article.ogImage && (
+                    <CardImageWrapper>
+                      <Image
+                        src={article.ogImage}
+                        alt={article.title}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="(max-width: 768px) 100vw, 300px"
+                      />
+                    </CardImageWrapper>
+                  )}
+                  <CardContent>
+                    <h3>{article.title}</h3>
+                    <p>{article.description}</p>
+                  </CardContent>
                 </RelatedCard>
               ))}
             </RelatedGrid>
@@ -436,15 +496,24 @@ function calculateReadingTime(content: string): number {
   return Math.ceil(wordCount / wordsPerMinute);
 }
 
+interface ArticleSummary {
+  slug: string;
+  title: string;
+  description?: string;
+  date: string;
+  ogImage?: string;
+}
+
 // Helper function to get related articles
-function getRelatedArticles(currentSlug: string, allArticles: any[], limit = 3) {
+function getRelatedArticles(currentSlug: string, allArticles: ArticleSummary[], limit = 3) {
   return allArticles
     .filter(article => article.slug !== currentSlug)
     .slice(0, limit)
     .map(article => ({
       slug: article.slug,
       title: article.title,
-      description: article.description || `Read more about ${article.title}`
+      description: article.description || `Read more about ${article.title}`,
+      ogImage: article.ogImage
     }));
 }
 
@@ -454,6 +523,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const articleFilePath = path.join(articleFolderPath, `${slug}.mdx`);
   const fileContents = fs.readFileSync(articleFilePath, 'utf8');
   const { data, content } = matter(fileContents);
+  const escapedContent = escapeMdxContent(content);
 
   // Get all articles for related articles section
   const filenames = fs.readdirSync(articleFolderPath);
@@ -467,7 +537,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         slug: filename.replace('.mdx', ''),
         title: data.title,
         description: data.description,
-        date: data.date
+        date: data.date,
+        ogImage: data.ogImage
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -484,7 +555,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       keywords: data.keywords || [],
       ogImage: data.ogImage || '',
       videoURL: data.videoURL || '',
-      content,
+      content: escapedContent,
       readingTime,
       relatedArticles,
       slug,

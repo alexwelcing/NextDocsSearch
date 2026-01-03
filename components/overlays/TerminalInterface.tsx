@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import { useSupabaseData } from './SupabaseDataContext';
-import { useJourney } from './JourneyContext';
+import { useSupabaseData } from '../contexts/SupabaseDataContext';
+import { useJourney } from '../contexts/JourneyContext';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
-import WorldGallery from './WorldGallery';
+import WorldGallery from '../WorldGallery';
 
 interface ArticleData {
   title: string;
@@ -69,7 +69,7 @@ export default function TerminalInterface({
   const [articleSearch, setArticleSearch] = useState('');
   const [articleFilter, setArticleFilter] = useState<string>('all');
 
-  const { chatData, setChatData, chatHistory } = useSupabaseData();
+  const { chatData, sendMessage, chatHistory } = useSupabaseData();
   const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
   const currentMissionBrief = currentQuest ? missionBriefs[currentQuest.id] : undefined;
 
@@ -145,12 +145,12 @@ export default function TerminalInterface({
 
   const handleChatSubmit = useCallback(async () => {
     if (chatInput.trim()) {
-      setChatData({ question: chatInput, response: chatData.response });
+      sendMessage(chatInput);
       setChatInput('');
       updateStats('questionsAsked', 1);
       if (currentQuest?.id === 'first-question') completeQuest('first-question');
     }
-  }, [chatInput, setChatData, chatData.response, updateStats, currentQuest, completeQuest]);
+  }, [chatInput, sendMessage, updateStats, currentQuest, completeQuest]);
 
   const handlePlayGame = useCallback(() => {
     if (onStartGame) {
@@ -217,6 +217,9 @@ export default function TerminalInterface({
       }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Terminal Interface"
         style={{
           width: isMobile ? '100%' : 'min(95vw, 600px)',
           maxHeight: isMobile ? '70vh' : '65vh',
@@ -246,6 +249,7 @@ export default function TerminalInterface({
         </div>
         <button
           onClick={onClose}
+          aria-label="Close terminal"
           style={{
             background: 'none',
             border: 'none',
@@ -548,6 +552,7 @@ export default function TerminalInterface({
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
                 placeholder="What would you love to know? 🚀"
+                aria-label="Chat input"
                 autoFocus={!isMobile}
                 style={{
                   flex: 1,
@@ -563,6 +568,7 @@ export default function TerminalInterface({
               />
               <button
                 onClick={handleChatSubmit}
+                aria-label="Send message"
                 style={{
                   background: '#0f0',
                   border: 'none',

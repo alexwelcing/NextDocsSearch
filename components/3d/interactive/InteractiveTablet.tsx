@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import TerminalInterface from './TerminalInterface';
-import TabletIcon, { TabletIconCosmic } from './TabletIcon';
+import TerminalInterface from '../../overlays/TerminalInterface';
+import TabletIcon, { TabletIconCosmic } from '../../TabletIcon';
 
 interface ArticleData {
   title: string;

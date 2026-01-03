@@ -26,7 +26,7 @@ import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
 import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
 
 // Re-export game types for convenience
-export type { GameState } from '@/components/ClickingGame';
+export type { GameState } from '@/components/3d/game/ClickingGame';
 
 interface Scene3DProps {
   /** World ID or configuration */

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { GameStats } from './ClickingGame';
+import { GameStats } from '../3d/game/ClickingGame';
 
 interface LeaderboardEntry {
   id: number;

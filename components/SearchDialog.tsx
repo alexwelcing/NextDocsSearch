@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { X, Loader, Frown, CornerDownLeft, Search, ArrowLeftCircle } from 'lucide-react';
-import { useSupabaseData } from './SupabaseDataContext'; // Ensure this is the correct import path
+import { useSupabaseData } from './contexts/SupabaseDataContext'; // Ensure this is the correct import path
 
 type Question = {
   key: string;
@@ -42,7 +42,7 @@ const DEFAULT_QUESTIONS = Object.entries(QUESTIONS_TREE.root).map(([key, text]) 
 let historyStack: QuestionKey[] = [];
 
 export function SearchDialog() {
-  const { setChatData, chatData } = useSupabaseData(); // Destructure setChatData from the context hook
+  const { sendMessage, chatData } = useSupabaseData(); // Destructure sendMessage from the context hook
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState<string>('');
   const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
@@ -77,7 +77,7 @@ export function SearchDialog() {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    setChatData({ question: query, response: '' });
+    sendMessage(query);
   };
 
   function setQuestionsBasedOnSelection(selectedKey: string) {

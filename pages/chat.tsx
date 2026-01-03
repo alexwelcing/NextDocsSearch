@@ -3,10 +3,10 @@ import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import dynamic from 'next/dynamic'
 import StylishFallback from '@/components/StylishFallback'
-import { SupabaseDataProvider } from '@/components/SupabaseDataContext'
-import { JourneyProvider } from '@/components/JourneyContext'
+import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
+import { JourneyProvider } from '@/components/contexts/JourneyContext'
 
-const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
+const ThreeSixty = dynamic(() => import('@/components/3d/scene/ThreeSixty'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })
