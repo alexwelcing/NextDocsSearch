@@ -92,7 +92,7 @@ export default async function handler(req: NextRequest) {
     )
 
     if (matchError) {
-      throw new ApplicationError('Failed to match page sections', matchError)
+      throw new ApplicationError('Failed to match page sections', matchError as unknown as Record<string, unknown>)
     }
 
     const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })

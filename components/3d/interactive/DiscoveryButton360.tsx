@@ -1,0 +1,370 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import styled, { keyframes, css } from 'styled-components';
+import { Compass, Star, BookOpen, ChevronUp, ChevronDown } from 'lucide-react';
+import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
+import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
+
+const pulseRing = keyframes`
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 0.4; }
+  100% { transform: scale(1.3); opacity: 0; }
+`;
+
+const shimmer = keyframes`
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+`;
+
+const float = keyframes`
+  0%, 100% { transform: translateY(0) translateX(-50%); }
+  50% { transform: translateY(-8px) translateX(-50%); }
+`;
+
+const slideUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const Container = styled.div<{ $visible: boolean }>`
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: ${props => props.$visible ? 1 : 0};
+  pointer-events: ${props => props.$visible ? 'auto' : 'none'};
+
+  @media (max-width: 768px) {
+    bottom: 90px;
+  }
+`;
+
+const MainButton = styled.button<{ $expanded: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: ${props => props.$expanded ? '18px 32px' : '18px'};
+  background: linear-gradient(135deg, rgba(222, 126, 162, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: ${props => props.$expanded ? '24px' : '50%'};
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(222, 126, 162, 0.5),
+    0 0 80px rgba(222, 126, 162, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: ${float} 3s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #de7ea2, #6366f1, #de7ea2);
+    background-size: 200% 100%;
+    animation: ${shimmer} 3s linear infinite;
+    z-index: -1;
+    opacity: 0.5;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(222, 126, 162, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%);
+    z-index: 0;
+  }
+
+  &:hover {
+    transform: translateX(-50%) translateY(-4px) scale(1.02);
+    box-shadow:
+      0 12px 48px rgba(222, 126, 162, 0.6),
+      0 0 100px rgba(222, 126, 162, 0.4);
+    animation: none;
+  }
+
+  svg, span {
+    position: relative;
+    z-index: 1;
+  }
+
+  svg {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+`;
+
+const PulseRing = styled.div`
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(222, 126, 162, 0.6);
+  animation: ${pulseRing} 2s ease-out infinite;
+  pointer-events: none;
+`;
+
+const ButtonText = styled.span`
+  white-space: nowrap;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+`;
+
+const PreviewCard = styled.div<{ $visible: boolean }>`
+  display: ${props => props.$visible ? 'flex' : 'none'};
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: rgba(10, 10, 18, 0.95);
+  border: 1px solid rgba(222, 126, 162, 0.35);
+  border-radius: 16px;
+  width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  animation: ${slideUp} 0.3s ease;
+
+  @media (max-width: 768px) {
+    width: 280px;
+    padding: 16px;
+  }
+`;
+
+const PreviewHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const PreviewTitle = styled.h4`
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #de7ea2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+const ToggleButton = styled.button`
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #de7ea2;
+  }
+`;
+
+const PreviewList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const PreviewItem = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    background: rgba(222, 126, 162, 0.1);
+    border-color: rgba(222, 126, 162, 0.3);
+    transform: translateX(4px);
+  }
+`;
+
+const PreviewDot = styled.div<{ $color: string }>`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${props => props.$color};
+  flex-shrink: 0;
+`;
+
+const PreviewItemContent = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+const PreviewItemTitle = styled.div`
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const PreviewItemMeta = styled.div`
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 2px;
+`;
+
+const ViewAllButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(222, 126, 162, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+  border: 1px solid rgba(222, 126, 162, 0.3);
+  border-radius: 10px;
+  color: #de7ea2;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(222, 126, 162, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
+    border-color: rgba(222, 126, 162, 0.5);
+    transform: translateY(-2px);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+`;
+
+const polarityColors: Record<string, string> = {
+  C3: '#ef4444',
+  C2: '#f97316',
+  C1: '#eab308',
+  N0: '#6b7280',
+  P1: '#22c55e',
+  P2: '#06b6d4',
+  P3: '#a855f7',
+};
+
+interface DiscoveryButton360Props {
+  isGamePlaying?: boolean;
+}
+
+export default function DiscoveryButton360({ isGamePlaying = false }: DiscoveryButton360Props) {
+  const { openModal } = useArticleDiscovery();
+  const [isHovered, setIsHovered] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewArticles, setPreviewArticles] = useState<EnhancedArticleData[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch preview articles when component mounts or preview is shown
+  useEffect(() => {
+    if (showPreview && previewArticles.length === 0) {
+      setLoading(true);
+      fetch('/api/articles-enhanced')
+        .then(res => res.json())
+        .then((articles: EnhancedArticleData[]) => {
+          // Get 3 random articles for preview
+          const shuffled = [...articles].sort(() => 0.5 - Math.random());
+          setPreviewArticles(shuffled.slice(0, 3));
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
+  }, [showPreview, previewArticles.length]);
+
+  if (isGamePlaying) return null;
+
+  return (
+    <Container $visible={true}>
+      {/* Preview Card */}
+      <PreviewCard $visible={showPreview && !isHovered}>
+        <PreviewHeader>
+          <PreviewTitle>
+            <Star /> Featured Articles
+          </PreviewTitle>
+          <ToggleButton onClick={() => setShowPreview(false)}>
+            <ChevronDown size={18} />
+          </ToggleButton>
+        </PreviewHeader>
+
+        <PreviewList>
+          {loading ? (
+            <div style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', padding: '20px' }}>
+              Loading...
+            </div>
+          ) : (
+            previewArticles.map((article, index) => (
+              <PreviewItem
+                key={article.slug}
+                onClick={() => {
+                  window.location.href = `/articles/${article.slug}`;
+                }}
+              >
+                <PreviewDot $color={polarityColors[article.polarity || 'N0']} />
+                <PreviewItemContent>
+                  <PreviewItemTitle>{article.title}</PreviewItemTitle>
+                  <PreviewItemMeta>
+                    {article.articleType === 'fiction' ? 'Fiction' : 'Research'} • {article.readingTime} min
+                  </PreviewItemMeta>
+                </PreviewItemContent>
+              </PreviewItem>
+            ))
+          )}
+        </PreviewList>
+
+        <ViewAllButton onClick={() => openModal()}>
+          <Compass size={18} />
+          View All Recommendations
+        </ViewAllButton>
+      </PreviewCard>
+
+      {/* Main Discovery Button */}
+      <MainButton
+        $expanded={isHovered}
+        onClick={() => {
+          if (showPreview) {
+            openModal();
+          } else {
+            setShowPreview(true);
+          }
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <PulseRing />
+        <Compass />
+        {isHovered && <ButtonText>Discover Articles</ButtonText>}
+      </MainButton>
+    </Container>
+  );
+}
