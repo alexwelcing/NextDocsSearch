@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Html } from '@react-three/drei';
 import styled from 'styled-components';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
@@ -165,7 +166,12 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
           <Content>
             <ImageContainer>
               {article.ogImage ? (
-                <img src={article.ogImage} alt={article.title} />
+                <Image 
+                  src={article.ogImage} 
+                  alt={article.title} 
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
               ) : (
                 <div style={{ color: '#444' }}>NO VISUAL DATA</div>
               )}

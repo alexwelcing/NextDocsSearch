@@ -1,5 +1,5 @@
 // SupabaseDataContext.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { useJourney } from './JourneyContext';
 import { extractShipSignals, shipPersona } from '../lib/ai/shipPersona';
 
@@ -70,7 +70,9 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
     }
   }, [chatHistory]);
 
-  const fetchResponse = async (question: string) => {
+  const lastFetchedQuestionRef = useRef<string | null>(null);
+
+  const fetchResponse = useCallback(async (question: string) => {
     try {
       // Set loading state
       setChatData(prev => ({ ...prev, response: '💭 Ooh, great question! Let me dive into that for you...' }));
@@ -136,13 +138,14 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
       console.error('Failed to fetch response:', error);
       setChatData({ question, response: '😅 Oops! My circuits got a bit tangled there. Mind giving that another shot? I promise I\'ll do better!' });
     }
-  };
+  }, [chatHistory, currentQuest, progress, missionBriefs, applyAiSignals]);
 
   useEffect(() => {
-    if (chatData.question) {
+    if (chatData.question && chatData.question !== lastFetchedQuestionRef.current) {
+      lastFetchedQuestionRef.current = chatData.question;
       fetchResponse(chatData.question);
     }
-  }, [chatData.question]);
+  }, [chatData.question, fetchResponse]);
 
   return (
     <SupabaseDataContext.Provider value={{ supabaseData, setSupabaseData, chatData, setChatData, chatHistory }}>

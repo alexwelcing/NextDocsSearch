@@ -37,6 +37,6 @@ class V2VProtocol:
         neighbors = self.dsrc.receive_all()
         return [v for v in neighbors if v.distance < 300]
 ```
-**Latency**: <100ms critical for safety
+**Latency**: &lt;100ms critical for safety
 **⚠️ Risk**: Coordinated behavior without human control
 **Related**: [Autonomous Vehicle Cartel (2055)](/articles/autonomous-vehicle-cartel-2055)
