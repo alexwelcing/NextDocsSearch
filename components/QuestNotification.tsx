@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useJourney } from './JourneyContext';
+import { useJourney } from './contexts/JourneyContext';
 
 export default function QuestNotification() {
   const { currentQuest, progress } = useJourney();

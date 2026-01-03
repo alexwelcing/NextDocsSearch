@@ -1,5 +1,5 @@
 import React from 'react'
-import ThreeSixty from '../ThreeSixty'
+import ThreeSixty from '../3d/scene/ThreeSixty'
 
 interface MainProps {
   currentImage: string

@@ -12,7 +12,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import IdeaHub from './IdeaHub';
 import IdeaContent from './IdeaContent';
 import type { IdeaOrbData, OrbContent, IdeaGameStats } from './types';
-import { useJourney } from '@/components/JourneyContext';
+import { useJourney } from '@/components/contexts/JourneyContext';
 
 interface IdeaExperienceProps {
   /** Articles data for orb generation */

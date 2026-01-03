@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { SupabaseDataProvider } from '@/components/SupabaseDataContext'
+import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import { SearchDialog } from '@/components/SearchDialog'
 import QuestNotification from '@/components/QuestNotification'
 import AchievementUnlock from '@/components/AchievementUnlock'
@@ -11,11 +11,11 @@ import ArticleList from '@/components/ui/ArticleList'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
 import styles from '@/styles/Home.module.css'
-import type { GameState } from '@/components/ClickingGame'
-import { useJourney } from '@/components/JourneyContext'
+import type { GameState } from '@/components/3d/game/ClickingGame'
+import { useJourney } from '@/components/contexts/JourneyContext'
 
 // Dynamically import the 3D environment, same as your old Chat page
-const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
+const ThreeSixty = dynamic(() => import('@/components/3d/scene/ThreeSixty'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })

@@ -4,7 +4,8 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { trackEvent } from '@/lib/google-analytics';
-import { JourneyProvider } from '@/components/JourneyContext';
+import { JourneyProvider } from '@/components/contexts/JourneyContext';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 
 const GTM_ID = 'GTM-W24L468'
@@ -57,7 +58,9 @@ function App({ Component, pageProps }: AppProps) {
       </Script>
 
       <JourneyProvider>
-        <Component {...pageProps} />
+        <ErrorBoundary>
+          <Component {...pageProps} />
+        </ErrorBoundary>
       </JourneyProvider>
     </>
   )

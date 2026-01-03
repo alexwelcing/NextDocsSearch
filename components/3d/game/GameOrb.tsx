@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface GameOrbProps {
@@ -24,7 +24,7 @@ const GameOrb: React.FC<GameOrbProps> = ({
   // Randomize initial phase for pulsing animation
   const initialPhase = useMemo(() => Math.random() * Math.PI * 2, []);
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     if (!isVisible) return;
 

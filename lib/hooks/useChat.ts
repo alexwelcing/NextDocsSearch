@@ -1,53 +1,23 @@
-// SupabaseDataContext.tsx
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
-import { useJourney } from './JourneyContext';
-import { extractShipSignals, shipPersona } from '../lib/ai/shipPersona';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useJourney } from '@/components/contexts/JourneyContext';
+import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
 
-interface SupabaseData {
-  id: number;
-  page_id: number;
-  content: string;
-  token_count: number;
-  embedding: number[];
-  slug: string;
-  heading: string;
-}
-
-interface ChatData {
+export interface ChatData {
   question: string;
   response: string;
 }
 
-interface ChatTurn {
+export interface ChatTurn {
   question: string;
   response: string;
 }
 
-interface SupabaseDataContextProps {
-  supabaseData: SupabaseData[];
-  setSupabaseData: React.Dispatch<React.SetStateAction<SupabaseData[]>>;
-  chatData: ChatData;
-  setChatData: React.Dispatch<React.SetStateAction<ChatData>>;
-  chatHistory: ChatTurn[];
-}
-
-const SupabaseDataContext = createContext<SupabaseDataContextProps | undefined>(undefined);
-
-export const useSupabaseData = (): SupabaseDataContextProps => {
-  const context = useContext(SupabaseDataContext);
-  if (!context) {
-    throw new Error('useSupabaseData must be used within a SupabaseDataProvider');
-  }
-  return context;
-};
-
-interface SupabaseDataProviderProps {
-  children: ReactNode;
-}
-
-export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ children }) => {
-  const [supabaseData, setSupabaseData] = useState<SupabaseData[]>([]);
-  const [chatData, setChatData] = useState<ChatData>({ question: '', response: '✨ Hi! I\'m Ship AI - ready to chat whenever you are!' });
+export function useChat() {
+  const [chatData, setChatData] = useState<ChatData>({ 
+    question: '', 
+    response: '✨ Hi! I\'m Ship AI - ready to chat whenever you are!' 
+  });
+  
   const [chatHistory, setChatHistory] = useState<ChatTurn[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(shipPersona.memory.storageKey);
@@ -63,6 +33,7 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
   });
 
   const { currentQuest, progress, missionBriefs, applyAiSignals } = useJourney();
+  const isProcessingRef = useRef(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -70,12 +41,14 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
     }
   }, [chatHistory]);
 
-  const lastFetchedQuestionRef = useRef<string | null>(null);
+  const sendMessage = useCallback(async (question: string) => {
+    if (isProcessingRef.current) return;
+    isProcessingRef.current = true;
 
-  const fetchResponse = useCallback(async (question: string) => {
     try {
-      // Set loading state
-      setChatData(prev => ({ ...prev, response: '💭 Ooh, great question! Let me dive into that for you...' }));
+      // Set initial state for new message
+      setChatData({ question, response: '💭 Ooh, great question! Let me dive into that for you...' });
+      
       const historyPayload = chatHistory
         .slice(-shipPersona.memory.maxInteractions)
         .filter(entry => entry.question && entry.response);
@@ -119,37 +92,37 @@ export const SupabaseDataProvider: React.FC<SupabaseDataProviderProps> = ({ chil
         fullResponse += chunk;
 
         // Update response as it streams in
-        setChatData({ question, response: fullResponse });
+        setChatData(prev => ({ ...prev, response: fullResponse }));
       }
 
       if (!fullResponse) {
-        setChatData({ question, response: 'No response received.' });
+        setChatData(prev => ({ ...prev, response: 'No response received.' }));
         return;
       }
 
       const { cleanMessage, signals } = extractShipSignals(fullResponse);
       setChatData({ question, response: cleanMessage });
       applyAiSignals(signals);
+      
       setChatHistory(prev => {
         const updated = [...prev, { question, response: cleanMessage }];
         return updated.slice(-shipPersona.memory.maxInteractions);
       });
     } catch (error) {
       console.error('Failed to fetch response:', error);
-      setChatData({ question, response: '😅 Oops! My circuits got a bit tangled there. Mind giving that another shot? I promise I\'ll do better!' });
+      setChatData(prev => ({ 
+        ...prev, 
+        response: '😅 Oops! My circuits got a bit tangled there. Mind giving that another shot? I promise I\'ll do better!' 
+      }));
+    } finally {
+      isProcessingRef.current = false;
     }
   }, [chatHistory, currentQuest, progress, missionBriefs, applyAiSignals]);
 
-  useEffect(() => {
-    if (chatData.question && chatData.question !== lastFetchedQuestionRef.current) {
-      lastFetchedQuestionRef.current = chatData.question;
-      fetchResponse(chatData.question);
-    }
-  }, [chatData.question, fetchResponse]);
-
-  return (
-    <SupabaseDataContext.Provider value={{ supabaseData, setSupabaseData, chatData, setChatData, chatHistory }}>
-      {children}
-    </SupabaseDataContext.Provider>
-  );
-};
+  return {
+    chatData,
+    setChatData,
+    chatHistory,
+    sendMessage
+  };
+}

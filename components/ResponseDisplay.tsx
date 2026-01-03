@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Text, RoundedBox, Plane } from '@react-three/drei';
-import { useSupabaseData } from './SupabaseDataContext';
+import { useSupabaseData } from './contexts/SupabaseDataContext';
 import * as THREE from 'three';
 
 const ResponseDisplay: React.FC = () => {

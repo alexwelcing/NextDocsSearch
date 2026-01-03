@@ -91,7 +91,7 @@ pages/index.tsx
 
 ### Core Scene: `ThreeSixty.tsx`
 
-**File:** `components/ThreeSixty.tsx:1`
+**File:** `components/3d/scene/ThreeSixty.tsx:1`
 
 **Responsibilities:**
 - Main 3D scene orchestrator
@@ -145,8 +145,8 @@ interface ThreeSixtyProps {
 - Both use high restitution (0.9) for bouncing physics
 
 **Files:**
-- `components/ThreeSixty.tsx:28-44` (PhysicsEnvironment)
-- `components/PhysicsGround.tsx:1` (Ground planes)
+- `components/3d/scene/ThreeSixty.tsx:28-44` (PhysicsEnvironment)
+- `components/3d/scene/PhysicsGround.tsx:1` (Ground planes)
 
 ---
 
@@ -156,7 +156,7 @@ interface ThreeSixtyProps {
 
 #### a) CinematicCamera (Intro Sequence)
 
-**File:** `components/CinematicCamera.tsx:1`
+**File:** `components/3d/camera/CinematicCamera.tsx:1`
 
 **Duration:** 16 seconds
 
@@ -171,7 +171,7 @@ interface ThreeSixtyProps {
 
 #### b) CameraController (Game Transitions)
 
-**File:** `components/CameraController.tsx:1`
+**File:** `components/3d/camera/CameraController.tsx:1`
 
 **Triggers:** When gameState === 'COUNTDOWN'
 
@@ -183,7 +183,7 @@ interface ThreeSixtyProps {
 
 #### c) OrbitControls (Free Navigation)
 
-**File:** `components/ThreeSixty.tsx:547-559`
+**File:** `components/3d/scene/ThreeSixty.tsx:547-559`
 
 **Settings:**
 - Damping enabled (factor: 0.1)
@@ -198,7 +198,7 @@ interface ThreeSixtyProps {
 
 ### 3. Lighting System
 
-**File:** `components/SceneLighting.tsx:1`
+**File:** `components/3d/scene/SceneLighting.tsx:1`
 
 **Lighting Rig:**
 1. **Ambient Light:** Base illumination (0.5 intensity, #f0f4ff)
@@ -222,7 +222,7 @@ interface ThreeSixtyProps {
 
 #### a) BackgroundSphere (Image-based)
 
-**File:** `components/BackgroundSphere.tsx:1`
+**File:** `components/3d/background/BackgroundSphere.tsx:1`
 
 **Features:**
 - Dual-sphere crossfade system (seamless transitions)
@@ -238,7 +238,7 @@ interface ThreeSixtyProps {
 
 #### b) GaussianSplatBackground (Splat-based)
 
-**File:** `components/GaussianSplatBackground.tsx:1`
+**File:** `components/3d/background/GaussianSplatBackground.tsx:1`
 
 **Technology:** @mkkellogg/gaussian-splats-3d
 
@@ -254,7 +254,7 @@ interface ThreeSixtyProps {
 
 ### 5. Seasonal Effects System
 
-**File:** `components/SeasonalEffects.tsx:1`
+**File:** `components/3d/background/SeasonalEffects.tsx:1`
 
 **Effect Types:**
 - **Snow:** 1000 particles, falling with drift
@@ -277,7 +277,7 @@ interface ThreeSixtyProps {
 
 ### 6. Interactive Tablet System
 
-**File:** `components/InteractiveTablet.tsx:1`
+**File:** `components/3d/interactive/InteractiveTablet.tsx:1`
 
 **Physical Properties:**
 - Dimensions: 4×3×0.2 units
@@ -307,7 +307,7 @@ interface ThreeSixtyProps {
 
 ### 7. Terminal Interface (2D Overlay)
 
-**File:** `components/TerminalInterface.tsx:1`
+**File:** `components/overlays/TerminalInterface.tsx:1`
 
 **Three-Page System:**
 
@@ -344,7 +344,7 @@ interface ThreeSixtyProps {
 
 #### ClickingGame (Core Game Logic)
 
-**File:** `components/ClickingGame.tsx:1`
+**File:** `components/3d/game/ClickingGame.tsx:1`
 
 **Game Flow:**
 1. **IDLE:** BouncingBall visible, 3 idle orbs
@@ -370,7 +370,7 @@ interface ThreeSixtyProps {
 
 #### GameOrb (Individual Targets)
 
-**File:** `components/GameOrb.tsx:1`
+**File:** `components/3d/game/GameOrb.tsx:1`
 
 **Lifetime:** 3 seconds (configurable)
 
@@ -386,7 +386,7 @@ interface ThreeSixtyProps {
 
 #### BouncingBall (Game Trigger)
 
-**File:** `components/BouncingBall.tsx` (not shown but referenced)
+**File:** `components/3d/game/BouncingBall.tsx` (not shown but referenced)
 
 **Behavior:**
 - Physics-enabled sphere
@@ -398,7 +398,7 @@ interface ThreeSixtyProps {
 
 ### 9. Journey/Quest System
 
-**File:** `components/JourneyContext.tsx:1`
+**File:** `components/contexts/JourneyContext.tsx:1`
 
 **Context Provider:** Wraps entire app, manages progression
 
@@ -441,7 +441,7 @@ interface ThreeSixtyProps {
 ## Component Details
 
 ### PhysicsGround
-**File:** `components/PhysicsGround.tsx:1`
+**File:** `components/3d/scene/PhysicsGround.tsx:1`
 
 - Invisible collision planes
 - Ground: y=-5.5, Ceiling: y=14.5
@@ -452,7 +452,7 @@ interface ThreeSixtyProps {
 ---
 
 ### ParticleExplosion
-**Referenced in:** `components/ClickingGame.tsx:4`
+**Referenced in:** `components/3d/game/ClickingGame.tsx:4`
 
 **Trigger:** Orb hit event
 
@@ -465,7 +465,7 @@ interface ThreeSixtyProps {
 ---
 
 ### GameHUD
-**Referenced in:** `components/ThreeSixty.tsx:642-649`
+**Referenced in:** `components/3d/scene/ThreeSixty.tsx:642-649`
 
 **Display Elements:**
 - Score (top-left)
@@ -476,7 +476,7 @@ interface ThreeSixtyProps {
 ---
 
 ### GameStartOverlay
-**Referenced in:** `components/ThreeSixty.tsx:634-640`
+**Referenced in:** `components/3d/scene/ThreeSixty.tsx:634-640`
 
 **Two Modes:**
 1. **STARTING:** "Press Start to Begin" button
@@ -485,7 +485,7 @@ interface ThreeSixtyProps {
 ---
 
 ### GameLeaderboard
-**Referenced in:** `components/ThreeSixty.tsx:651-658`
+**Referenced in:** `components/3d/scene/ThreeSixty.tsx:651-658`
 
 **Features:**
 - Player's final score highlighted
@@ -497,7 +497,7 @@ interface ThreeSixtyProps {
 ---
 
 ### CinematicIntro
-**Referenced in:** `components/ThreeSixty.tsx:625-631`
+**Referenced in:** `components/3d/scene/ThreeSixty.tsx:625-631`
 
 **2D Overlay:**
 - Fade-in/out sequences
@@ -547,7 +547,7 @@ const [gameStats, setGameStats] = useState<GameStats>({...});
 ### Context State
 
 #### SupabaseDataContext
-**File:** `components/SupabaseDataContext.tsx`
+**File:** `components/contexts/SupabaseDataContext.tsx`
 
 **Provides:**
 - `chatData`: { question: string, response: string }
@@ -1546,41 +1546,41 @@ jobs:
 ### Key Files Reference
 
 **Scene Core:**
-- `components/ThreeSixty.tsx` - Main scene orchestrator
-- `components/SceneLighting.tsx` - Lighting setup
-- `components/PhysicsGround.tsx` - Collision planes
+- `components/3d/scene/ThreeSixty.tsx` - Main scene orchestrator
+- `components/3d/scene/SceneLighting.tsx` - Lighting setup
+- `components/3d/scene/PhysicsGround.tsx` - Collision planes
 
 **Camera:**
-- `components/CinematicCamera.tsx` - Intro sequence
-- `components/CameraController.tsx` - Game transitions
+- `components/3d/camera/CinematicCamera.tsx` - Intro sequence
+- `components/3d/camera/CameraController.tsx` - Game transitions
 
 **Background:**
-- `components/BackgroundSphere.tsx` - Image-based BG
-- `components/GaussianSplatBackground.tsx` - Splat-based BG
-- `components/SeasonalEffects.tsx` - Particle systems
+- `components/3d/background/BackgroundSphere.tsx` - Image-based BG
+- `components/3d/background/GaussianSplatBackground.tsx` - Splat-based BG
+- `components/3d/background/SeasonalEffects.tsx` - Particle systems
 
 **Interactive:**
-- `components/InteractiveTablet.tsx` - 3D tablet
-- `components/TerminalInterface.tsx` - 2D overlay UI
+- `components/3d/interactive/InteractiveTablet.tsx` - 3D tablet
+- `components/overlays/TerminalInterface.tsx` - 2D overlay UI
 
 **Game:**
-- `components/ClickingGame.tsx` - Game logic
-- `components/GameOrb.tsx` - Target spheres
-- `components/BouncingBall.tsx` - Game trigger
+- `components/3d/game/ClickingGame.tsx` - Game logic
+- `components/3d/game/GameOrb.tsx` - Target spheres
+- `components/3d/game/BouncingBall.tsx` - Game trigger
 
 **Overlays:**
-- `components/CinematicIntro.tsx` - Intro sequence
-- `components/GameHUD.tsx` - In-game UI
-- `components/GameLeaderboard.tsx` - Score display
+- `components/overlays/CinematicIntro.tsx` - Intro sequence
+- `components/overlays/GameHUD.tsx` - In-game UI
+- `components/overlays/GameLeaderboard.tsx` - Score display
 
 **Context:**
-- `components/JourneyContext.tsx` - Quest/progression
-- `components/SupabaseDataContext.tsx` - Data management
+- `components/contexts/JourneyContext.tsx` - Quest/progression
+- `components/contexts/SupabaseDataContext.tsx` - Data management
 
 **Types:**
 - `lib/journey/types.ts` - Quest/achievement definitions
 - `lib/theme/seasonalTheme.ts` - Season themes
-- `components/ClickingGame.tsx:7` - Game state types
+- `components/3d/game/ClickingGame.tsx:7` - Game state types
 
 ---
 

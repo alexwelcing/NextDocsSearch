@@ -89,19 +89,24 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
     "@tweenjs/tween.js": "^21.1.1",
     "@types/common-tags": "^1.8.4",
     "@types/estree": "^1.0.5",
     "@types/mdast": "^3.0.15",
     "@types/three": "^0.182.0",
     "@types/yargs": "^17.0.33",
+    "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.4.5",
+    "jsdom": "^27.4.0",
     "postcss": "^8.4.41",
     "postcss-nesting": "^12.1.5",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.4.10",
-    "tsx": "^4.17.0"
+    "tsx": "^4.17.0",
+    "vitest": "^4.0.16"
   },
   "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
 }

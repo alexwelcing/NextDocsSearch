@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { useWorldTracker, WorldInfo } from '@/lib/hooks/useWorldTracker';
 
 interface SceneryOption {
@@ -547,17 +548,19 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
               }}
             >
               {/* Thumbnail */}
-              {world.type === 'image' ? (
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backgroundImage: `url(${world.thumbnail})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  opacity: visited ? 1 : 0.6,
-                  transition: 'opacity 0.3s, transform 0.3s',
-                  transform: isTarget ? 'scale(1.1)' : 'scale(1)',
-                }} />
+              {world.type === 'image' && world.thumbnail ? (
+                <Image
+                  src={world.thumbnail}
+                  alt={world.name}
+                  fill
+                  style={{
+                    objectFit: 'cover',
+                    opacity: visited ? 1 : 0.6,
+                    transition: 'opacity 0.3s, transform 0.3s',
+                    transform: isTarget ? 'scale(1.1)' : 'scale(1)',
+                  }}
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                />
               ) : (
                 <div style={{
                   position: 'absolute',
