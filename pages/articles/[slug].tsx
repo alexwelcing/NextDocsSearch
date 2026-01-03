@@ -11,9 +11,12 @@ import ArticleContainer from '@/components/ArticleContainer';
 import StructuredData from '../../components/StructuredData';
 import ArticleClassification, { inferClassificationFromSlug } from '@/components/ArticleClassification';
 import CircleNav from '@/components/ui/CircleNav';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { escapeMdxContent } from '@/lib/utils';
 import MarkdownImage from '@/components/ui/MarkdownImage';
+import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
+import { useEffect } from 'react';
+import { Compass, Star, ArrowRight } from 'lucide-react';
 
 interface ArticleProps {
   title: string;
@@ -291,6 +294,143 @@ const InternalLink = styled(Link)`
   }
 `;
 
+// Discovery Section Styles
+const pulseGlow = keyframes`
+  0%, 100% { box-shadow: 0 8px 32px rgba(222, 126, 162, 0.3); }
+  50% { box-shadow: 0 8px 48px rgba(222, 126, 162, 0.5); }
+`;
+
+const shimmerEffect = keyframes`
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+`;
+
+const DiscoverSection = styled.section`
+  margin: 60px 0;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(222, 126, 162, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
+  border: 1px solid rgba(222, 126, 162, 0.25);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  animation: ${pulseGlow} 4s ease-in-out infinite;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #de7ea2, #6366f1, #de7ea2);
+    background-size: 200% 100%;
+    animation: ${shimmerEffect} 3s linear infinite;
+  }
+`;
+
+const DiscoverContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
+`;
+
+const DiscoverLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const DiscoverIcon = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 32px;
+    height: 32px;
+    color: #fff;
+  }
+`;
+
+const DiscoverText = styled.div`
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #9ca3af;
+    margin: 0;
+    max-width: 400px;
+  }
+`;
+
+const DiscoverButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(222, 126, 162, 0.4);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg:last-child {
+    transform: translateX(4px);
+  }
+`;
+
 const ArticlePage: NextPage<ArticleProps> = ({
   title,
   date,
@@ -307,6 +447,26 @@ const ArticlePage: NextPage<ArticleProps> = ({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alexwelcing.com';
   const articleUrl = `${siteUrl}/articles/${slug}`;
   const defaultOgImage = `${siteUrl}/og-default.png`;
+
+  // Discovery context integration
+  const { openModal, setCurrentArticle } = useArticleDiscovery();
+
+  // Set the current article context for recommendations
+  useEffect(() => {
+    setCurrentArticle({
+      slug,
+      filename: `${slug}.mdx`,
+      title,
+      date,
+      author,
+      description,
+      keywords,
+      ogImage,
+      readingTime,
+      wordCount: content.split(/\s+/).length,
+      articleType: 'fiction', // Default, will be enhanced by API
+    });
+  }, [slug, title, date, author, description, keywords, ogImage, readingTime, content, setCurrentArticle]);
 
   return (
     <ArticleLayout>
@@ -445,6 +605,26 @@ const ArticlePage: NextPage<ArticleProps> = ({
             💼 Share on LinkedIn
           </ShareButton>
         </ShareButtons>
+
+        {/* Prominent Discovery Section */}
+        <DiscoverSection>
+          <DiscoverContent>
+            <DiscoverLeft>
+              <DiscoverIcon>
+                <Compass />
+              </DiscoverIcon>
+              <DiscoverText>
+                <h3>Discover Related Articles</h3>
+                <p>Explore more scenarios and research based on similar themes, timelines, and perspectives.</p>
+              </DiscoverText>
+            </DiscoverLeft>
+            <DiscoverButton onClick={() => openModal()}>
+              <Star />
+              Explore Recommendations
+              <ArrowRight />
+            </DiscoverButton>
+          </DiscoverContent>
+        </DiscoverSection>
 
         {relatedArticles.length > 0 && (
           <RelatedArticles>

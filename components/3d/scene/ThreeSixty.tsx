@@ -20,6 +20,7 @@ import SceneLighting from './SceneLighting';
 import SeasonalEffects from '../background/SeasonalEffects';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
+import DiscoveryButton360 from '../interactive/DiscoveryButton360';
 import { useJourney } from '../../contexts/JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../../../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
@@ -611,6 +612,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onToggleArticleDisplay={() => setIsArticleDisplayOpen(!isArticleDisplayOpen)}
           isArticleDisplayOpen={isArticleDisplayOpen}
         />
+      )}
+
+      {/* Prominent Article Discovery Button */}
+      {!loading && !showCinematicIntro && (
+        <DiscoveryButton360 isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'} />
       )}
 
       {/* Article Detail Panel for 3D Exploration */}
