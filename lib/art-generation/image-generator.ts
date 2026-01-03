@@ -165,13 +165,18 @@ export async function createOGImage(
   }
 }
 
-async function createNoiseOverlayPng(width: number, height: number): Promise<Buffer> {
+async function createNoiseOverlayPng(width: number, height: number, opacity: number): Promise<Buffer> {
   const channels = 1
   const buf = Buffer.alloc(width * height * channels)
   randomFillSync(buf)
+
+  const multiplier = opacity
+  const offset = 128 * (1 - opacity)
+
   // Make it look like film grain: a touch of blur and reduced contrast.
   return sharp(buf, { raw: { width, height, channels } })
     .blur(0.35)
+    .linear(multiplier, offset)
     .png()
     .toBuffer()
 }
@@ -218,8 +223,9 @@ async function renderCinematicJpeg(params: {
     const overlays: sharp.OverlayOptions[] = []
 
     if (grainStrength > 0) {
-      const noisePng = await createNoiseOverlayPng(params.width, params.height)
-      overlays.push({ input: noisePng, blend: 'overlay', opacity: Math.min(0.2, grainStrength) })
+      const opacity = Math.min(0.2, grainStrength)
+      const noisePng = await createNoiseOverlayPng(params.width, params.height, opacity)
+      overlays.push({ input: noisePng, blend: 'overlay' })
     }
 
     if (vignetteStrength > 0) {
