@@ -289,6 +289,7 @@ export function generateImagePrompts(
     slug?: string
     headings?: string[]
     excerpt?: string
+    concept?: string
   }
 ) {
   const basePrompt = generateArticlePrompt(title, description, keywords, context)

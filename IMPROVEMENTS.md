@@ -50,9 +50,11 @@ This document outlines identified improvements and technical debt to be addresse
 Refer to `AGENTS.md` for a detailed architectural overview.
 
 ### Contributing
-1.  **Linting**: Ensure `pnpm lint` passes before pushing.
-2.  **Build**: Run `pnpm build` locally to catch build-time errors (like MDX issues).
-3.  **Conventions**: Follow the existing patterns for 3D components (R3F) and styling (Styled Components).
+1.  **Validation**: Run `pnpm run validate` to check for linting and type errors. This is the recommended check before pushing code.
+2.  **Type Checking**: Run `pnpm run type-check` to strictly check TypeScript types without building.
+3.  **Linting**: Ensure `pnpm lint` passes.
+4.  **Build**: Run `pnpm build` locally to catch build-time errors (like MDX issues).
+5.  **Conventions**: Follow the existing patterns for 3D components (R3F) and styling (Styled Components).
 
 ### Deployment
 The project is deployed on Vercel. Ensure all environment variables are set in the Vercel dashboard.

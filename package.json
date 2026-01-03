@@ -8,6 +8,8 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "validate": "pnpm run lint && pnpm run type-check",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "embeddings": "tsx lib/generate-embeddings.ts",
     "embeddings:refresh": "tsx lib/generate-embeddings.ts --refresh",
