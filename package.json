@@ -18,7 +18,9 @@
     "generate:knowledge": "tsx scripts/generate-knowledge-base.ts",
     "generate:knowledge:all": "tsx scripts/generate-knowledge-base.ts --all",
     "generate:knowledge:seo": "tsx scripts/generate-knowledge-base.ts --high-seo",
-    "generate:fal-assets": "tsx scripts/generate-fal-assets.ts"
+    "generate:fal-assets": "tsx scripts/generate-fal-assets.ts",
+    "generate:top-article-images": "tsx scripts/generate-top-article-images.ts",
+    "generate:top-article-images:all": "tsx scripts/generate-top-article-images.ts --all"
   },
   "prettier": {
     "trailingComma": "es5",
