@@ -233,6 +233,8 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
       setCombo(newCombo);
       setComboMax((prev) => Math.max(prev, newCombo));
       setSuccessfulClicks((prev) => prev + 1);
+      // Every orb hit is a click - increment totalClicks since stopPropagation prevents bubbling
+      setTotalClicks((prev) => prev + 1);
 
       // Apply combo multiplier
       let multiplier = 1;
@@ -256,15 +258,28 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
     setExplosions((prev) => prev.filter((e) => e.id !== explosionId));
   }, []);
 
-  // Handle click on orb (for tracking accuracy)
-  const handleClick = useCallback(() => {
-    if (gameState === 'PLAYING') {
-      setTotalClicks((prev) => prev + 1);
-    }
-  }, [gameState]);
+  // Handle missed click (clicking on background, not hitting any orb)
+  const handleMissedClick = useCallback(
+    (e: any) => {
+      e.stopPropagation();
+      if (gameState === 'PLAYING') {
+        setTotalClicks((prev) => prev + 1);
+        setCombo(0); // Reset combo on missed click
+      }
+    },
+    [gameState]
+  );
 
   return (
-    <group onClick={handleClick}>
+    <group>
+      {/* Invisible click capture sphere to track missed clicks */}
+      {gameState === 'PLAYING' && (
+        <mesh onClick={handleMissedClick}>
+          <sphereGeometry args={[50, 16, 16]} />
+          <meshBasicMaterial transparent opacity={0} side={THREE.BackSide} />
+        </mesh>
+      )}
+
       {/* Render orbs */}
       {orbs.map((orb) => (
         <GameOrb
