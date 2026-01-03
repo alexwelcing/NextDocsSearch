@@ -74,7 +74,7 @@ export default async function handler(req: NextRequest) {
     })
 
     if (embeddingResponse.status !== 200) {
-      throw new ApplicationError('Failed to create embedding for question', embeddingResponse)
+      throw new ApplicationError('Failed to create embedding for question', { status: embeddingResponse.status, statusText: embeddingResponse.statusText })
     }
 
     const {
