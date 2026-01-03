@@ -537,8 +537,7 @@ function ArticleRow({ article, compact = false }: { article: EnhancedArticleData
             borderRadius: '4px',
             overflow: 'hidden',
             background: '#1a1a2e',
-            display: 'none', // Hide on very small screens if needed, but let's keep it simple
-            '@media (min-width: 640px)': { display: 'block' } // This won't work in inline styles
+            display: 'block'
           }} className="article-row-image">
              {/* Since we can't use media queries in inline styles easily without a library or style tag,
                  we'll just show it. Or we can use a simple conditional if we had window width.

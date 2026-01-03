@@ -7,7 +7,7 @@
 import React, { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Season, SeasonalTheme } from '../lib/theme/seasonalTheme';
+import { Season, SeasonalTheme } from '@/lib/theme/seasonalTheme';
 
 interface SeasonalEffectsProps {
   season: Season;

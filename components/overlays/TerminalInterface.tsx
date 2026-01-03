@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useSupabaseData } from '../contexts/SupabaseDataContext';
 import { useJourney } from '../contexts/JourneyContext';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
-import WorldGallery from '../../WorldGallery';
+import WorldGallery from '../WorldGallery';
 
 interface ArticleData {
   title: string;

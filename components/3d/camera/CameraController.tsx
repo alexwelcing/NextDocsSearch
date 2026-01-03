@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
-import { GameState } from './ClickingGame';
+import { GameState } from '../game/ClickingGame';
 import * as THREE from 'three';
 
 interface CameraControllerProps {

@@ -5,7 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, Grid } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
 import RiggedCharacter from './RiggedCharacter';
-import PhysicsGround from './PhysicsGround';
+import PhysicsGround from './3d/scene/PhysicsGround';
 import {
   generateCharacter,
   CharacterGenerationResult,

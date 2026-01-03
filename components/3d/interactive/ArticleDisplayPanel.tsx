@@ -160,13 +160,13 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  if (!isOpen || articles.length === 0) return null;
-
-  const article = articles[currentIndex];
-
   useEffect(() => {
     setIsLoading(true);
   }, [currentIndex]);
+
+  if (!isOpen || articles.length === 0) return null;
+
+  const article = articles[currentIndex];
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % articles.length);
