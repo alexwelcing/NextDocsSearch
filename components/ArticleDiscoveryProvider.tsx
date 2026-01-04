@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
 import { Compass, Star, X } from 'lucide-react';
 import styled, { keyframes, css } from 'styled-components';
 import ArticleRecommendationModal from './ArticleRecommendationModal';
@@ -279,6 +279,22 @@ export function ArticleDiscoveryProvider({
   const [showMiniCard, setShowMiniCard] = useState(false);
   const [suggestedArticle, setSuggestedArticle] = useState<EnhancedArticleData | null>(null);
 
+  // Pre-fetch and cache all articles
+  const [allArticles, setAllArticles] = useState<EnhancedArticleData[]>([]);
+  const fetchedRef = useRef(false);
+
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    fetch('/api/articles-enhanced')
+      .then(res => res.json())
+      .then((data: EnhancedArticleData[]) => {
+        setAllArticles(data);
+      })
+      .catch(console.error);
+  }, []);
+
   const openModal = useCallback((article?: EnhancedArticleData) => {
     if (article) {
       setCurrentArticle(article);
@@ -290,31 +306,24 @@ export function ArticleDiscoveryProvider({
     setIsModalOpen(false);
   }, []);
 
-  // Show a suggested article mini-card after some delay
-  React.useEffect(() => {
-    if (!showFloatingButton || isModalOpen) return;
+  // Show a suggested article mini-card after some delay (use cached articles)
+  useEffect(() => {
+    if (!showFloatingButton || isModalOpen || allArticles.length === 0) return;
 
     const timer = setTimeout(() => {
-      // Fetch a random article suggestion
-      fetch('/api/articles-enhanced')
-        .then(res => res.json())
-        .then((articles: EnhancedArticleData[]) => {
-          if (articles.length > 0) {
-            const random = articles[Math.floor(Math.random() * articles.length)];
-            if (random.slug !== currentArticle?.slug) {
-              setSuggestedArticle(random);
-              setShowMiniCard(true);
+      const available = allArticles.filter(a => a.slug !== currentArticle?.slug);
+      if (available.length > 0) {
+        const random = available[Math.floor(Math.random() * available.length)];
+        setSuggestedArticle(random);
+        setShowMiniCard(true);
 
-              // Hide after 10 seconds
-              setTimeout(() => setShowMiniCard(false), 10000);
-            }
-          }
-        })
-        .catch(() => {});
+        // Hide after 10 seconds
+        setTimeout(() => setShowMiniCard(false), 10000);
+      }
     }, 8000);
 
     return () => clearTimeout(timer);
-  }, [showFloatingButton, isModalOpen, currentArticle]);
+  }, [showFloatingButton, isModalOpen, currentArticle, allArticles]);
 
   const value: ArticleDiscoveryContextType = {
     isModalOpen,
@@ -387,6 +396,7 @@ export function ArticleDiscoveryProvider({
         isOpen={isModalOpen}
         onClose={closeModal}
         currentArticle={currentArticle}
+        allArticles={allArticles}
       />
     </ArticleDiscoveryContext.Provider>
   );
