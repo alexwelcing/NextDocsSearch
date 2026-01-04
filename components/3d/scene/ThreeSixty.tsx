@@ -15,7 +15,7 @@ import GameLeaderboard from '../../overlays/GameLeaderboard';
 import PerformanceMonitor from '../../PerformanceMonitor';
 import CameraController from '../camera/CameraController';
 import CinematicCamera from '../camera/CinematicCamera';
-import CinematicIntro from '../../overlays/CinematicIntro';
+import DirectorsIntro from '../../overlays/DirectorsIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from '../background/SeasonalEffects';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
@@ -73,8 +73,8 @@ const VRButtonStyled = styled.button`
   position: absolute;
   bottom: 10px;
   left: 10px;
-  background: rgba(130, 20, 160, 0.5);
-  border: 1px solid rgba(222, 126, 162, 0.5);
+  background: rgba(0, 30, 60, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   color: rgba(255, 255, 255, 0.8);
   padding: 6px 12px;
   font-size: 11px;
@@ -85,8 +85,8 @@ const VRButtonStyled = styled.button`
   backdrop-filter: blur(5px);
 
   &:hover {
-    background: rgba(130, 20, 160, 0.8);
-    border-color: rgba(222, 126, 162, 0.8);
+    background: rgba(0, 50, 80, 0.8);
+    border-color: rgba(0, 212, 255, 0.6);
     color: white;
   }
 
@@ -656,9 +656,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {/* Cinematic Intro Overlay */}
+      {/* Director's Intro - GLSL shader experience */}
       {showCinematicIntro && !cinematicComplete && (
-        <CinematicIntro
+        <DirectorsIntro
           onComplete={handleCinematicComplete}
           onSkip={handleCinematicSkip}
           onProgressUpdate={handleCinematicProgress}

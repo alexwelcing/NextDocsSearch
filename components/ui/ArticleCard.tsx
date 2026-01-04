@@ -5,9 +5,9 @@ import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 
 const Card = styled(Link)`
   display: block;
-  background: linear-gradient(135deg, rgba(20, 20, 30, 0.95) 0%, rgba(10, 10, 20, 0.98) 100%);
-  border: 1px solid rgba(222, 126, 162, 0.15);
-  border-radius: 12px;
+  background: rgba(10, 10, 26, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
   padding: 20px;
   text-decoration: none;
   transition: all 0.25s ease;
@@ -20,16 +20,16 @@ const Card = styled(Link)`
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #de7ea2, #6366f1, #de7ea2);
+    height: 2px;
+    background: linear-gradient(90deg, #00d4ff, #ffd700);
     opacity: 0;
     transition: opacity 0.25s ease;
   }
 
   &:hover {
-    border-color: rgba(222, 126, 162, 0.4);
+    border-color: rgba(0, 212, 255, 0.25);
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(222, 126, 162, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
     &::before {
       opacity: 1;

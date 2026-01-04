@@ -319,8 +319,20 @@
 }
 
 .gradientbg {
-  background: linear-gradient(135deg, #3a2be0, #de7ea2); /* two-tone gradient */
-  color: #fff; /* white color for the text on this gradient */
+  background: #030308;
+  color: #fff;
+}
+
+/* Sophisticated dark color system */
+:root {
+  --color-deep-space: #030308;
+  --color-dark-surface: #0a0a1a;
+  --color-cyan-accent: #00d4ff;
+  --color-gold-highlight: #ffd700;
+  --color-text-primary: rgba(255, 255, 255, 0.9);
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-border-accent: rgba(0, 212, 255, 0.3);
 }
 
 .centeredtitle {
@@ -336,18 +348,20 @@
 .landingBtn {
   display: inline-block;
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  background: #bf4368;
-  color: #f4d6e3;
+  border-radius: 2px;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: rgba(0, 212, 255, 0.9);
   text-align: center;
   text-decoration: none;
   transition: all 0.3s ease;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .landingBtn:hover {
-  background: #d36188;
-  color: #fff;
+  background: rgba(0, 212, 255, 0.2);
+  border-color: rgba(0, 212, 255, 0.5);
+  color: #00d4ff;
 }
 
 .chatBackground {
