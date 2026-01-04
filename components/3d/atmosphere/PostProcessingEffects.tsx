@@ -10,13 +10,8 @@ import {
   EffectComposer,
   Bloom,
   Vignette,
-  ChromaticAberration,
-  ToneMapping,
-  DepthOfField,
-  Noise,
 } from '@react-three/postprocessing';
-import { BlendFunction, ToneMappingMode } from 'postprocessing';
-import * as THREE from 'three';
+import { BlendFunction } from 'postprocessing';
 import type { ExperienceTheme } from '@/lib/3d/vision';
 import type { QualityLevel } from '@/lib/worlds/types';
 
@@ -24,15 +19,12 @@ interface PostProcessingEffectsProps {
   theme?: ExperienceTheme;
   quality?: QualityLevel;
   enabled?: boolean;
-  focusDistance?: number;
-  focusTarget?: THREE.Vector3;
 }
 
 export default function PostProcessingEffects({
   theme,
   quality = 'high',
   enabled = true,
-  focusDistance = 10,
 }: PostProcessingEffectsProps) {
   // Get post-processing config from theme
   const config = useMemo(() => {
@@ -59,17 +51,15 @@ export default function PostProcessingEffects({
     return {
       ...base,
       bloomIntensity: base.bloomIntensity * mult,
-      chromaticAberration: quality === 'low' ? 0 : base.chromaticAberration,
-      enableDOF: quality === 'ultra' || quality === 'high',
-      enableNoise: quality !== 'low',
+      vignetteIntensity: base.vignetteIntensity * mult,
     };
   }, [theme?.postProcessing, quality]);
 
   if (!enabled || quality === 'low') return null;
 
+  // Simplified effect stack - only core effects that are always valid
   return (
     <EffectComposer multisampling={quality === 'ultra' ? 8 : 4}>
-      {/* Bloom - creates glowing highlights */}
       <Bloom
         intensity={config.bloomIntensity}
         luminanceThreshold={config.bloomThreshold}
@@ -77,51 +67,10 @@ export default function PostProcessingEffects({
         radius={config.bloomRadius}
         mipmapBlur
       />
-
-      {/* Depth of Field - focuses attention */}
-      {config.enableDOF ? (
-        <DepthOfField
-          focusDistance={focusDistance / 100}
-          focalLength={0.02}
-          bokehScale={2}
-        />
-      ) : null}
-
-      {/* Vignette - frames the view */}
       <Vignette
         offset={0.3}
         darkness={config.vignetteIntensity}
         blendFunction={BlendFunction.NORMAL}
-      />
-
-      {/* Chromatic Aberration - subtle color fringing */}
-      {config.chromaticAberration > 0 ? (
-        <ChromaticAberration
-          offset={
-            new THREE.Vector2(
-              config.chromaticAberration,
-              config.chromaticAberration
-            )
-          }
-          radialModulation={false}
-          modulationOffset={0}
-        />
-      ) : null}
-
-      {/* Film grain - adds texture */}
-      {config.enableNoise ? (
-        <Noise opacity={0.02} blendFunction={BlendFunction.OVERLAY} />
-      ) : null}
-
-      {/* Tone mapping - color grading */}
-      <ToneMapping
-        mode={ToneMappingMode.ACES_FILMIC}
-        resolution={256}
-        whitePoint={4.0}
-        middleGrey={0.6}
-        minLuminance={0.01}
-        averageLuminance={1.0}
-        adaptationRate={1.0}
       />
     </EffectComposer>
   );
