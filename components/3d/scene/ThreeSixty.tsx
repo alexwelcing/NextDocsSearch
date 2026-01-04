@@ -20,6 +20,7 @@ import SceneLighting from './SceneLighting';
 import SeasonalEffects from '../background/SeasonalEffects';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
+import InfiniteLibrary, { COSMIC_LIBRARY, DIGITAL_GARDEN } from '../experiences/InfiniteLibrary';
 import DiscoveryButton360 from '../interactive/DiscoveryButton360';
 import { useJourney } from '../../contexts/JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../../../lib/theme/seasonalTheme';
@@ -28,6 +29,27 @@ import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
+
+// Map polarity string to number for InfiniteLibrary
+const polarityToNumber = (polarity?: string): number => {
+  const map: Record<string, number> = {
+    'C3': -1.0, 'C2': -0.66, 'C1': -0.33,
+    'N0': 0,
+    'P1': 0.33, 'P2': 0.66, 'P3': 1.0,
+  };
+  return polarity ? (map[polarity] ?? 0) : 0;
+};
+
+// Map EnhancedArticleData to InfiniteLibrary's Article interface
+const mapToLibraryArticle = (article: EnhancedArticleData) => ({
+  id: article.slug,
+  title: article.title,
+  polarity: polarityToNumber(article.polarity),
+  horizon: article.horizon,
+  publishedAt: new Date(article.date),
+  category: article.domains?.[0] ?? article.articleType,
+  relatedTo: [], // Could be enhanced with actual relations
+});
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -566,13 +588,19 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
-              {/* 3D Article Explorer */}
+              {/* 3D Article Explorer - Immersive InfiniteLibrary Experience */}
               {is3DExploreActive && enhancedArticles.length > 0 && (
-                <ArticleExplorer3D
-                  articles={enhancedArticles}
-                  onSelectArticle={handleSelectArticle}
-                  selectedArticle={selectedArticle}
-                  layout="sphere"
+                <InfiniteLibrary
+                  articles={enhancedArticles.map(mapToLibraryArticle)}
+                  theme={COSMIC_LIBRARY}
+                  quality={isMobile || isLowEndDevice ? 'low' : 'high'}
+                  layout="constellation"
+                  radius={25}
+                  onArticleSelect={(article) => {
+                    const enhanced = enhancedArticles.find(a => a.slug === article.id);
+                    if (enhanced) handleSelectArticle(enhanced);
+                  }}
+                  selectedArticleId={selectedArticle?.slug}
                 />
               )}
 

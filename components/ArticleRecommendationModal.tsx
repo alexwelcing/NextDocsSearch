@@ -665,19 +665,32 @@ interface ArticleRecommendationModalProps {
   allArticles?: EnhancedArticleData[];
 }
 
+// Stable empty array reference to avoid dependency loops
+const EMPTY_ARTICLES: EnhancedArticleData[] = [];
+
 export default function ArticleRecommendationModal({
   isOpen,
   onClose,
   currentArticle,
-  allArticles = [],
+  allArticles,
 }: ArticleRecommendationModalProps) {
+  // Use stable reference for articles prop
+  const articlesFromProps = allArticles ?? EMPTY_ARTICLES;
   const [activeTab, setActiveTab] = useState<RecommendationType>('all');
-  const [articles, setArticles] = useState<EnhancedArticleData[]>(allArticles);
+  const [articles, setArticles] = useState<EnhancedArticleData[]>(articlesFromProps);
   const [loading, setLoading] = useState(false);
 
-  // Fetch articles if not provided
+  // Sync with props when they change
   useEffect(() => {
-    if (isOpen && allArticles.length === 0) {
+    if (articlesFromProps.length > 0) {
+      setArticles(articlesFromProps);
+      setLoading(false);
+    }
+  }, [articlesFromProps]);
+
+  // Fetch articles only if not provided and modal is open
+  useEffect(() => {
+    if (isOpen && articles.length === 0 && !loading) {
       setLoading(true);
       fetch('/api/articles-enhanced')
         .then(res => res.json())
@@ -686,10 +699,8 @@ export default function ArticleRecommendationModal({
           setLoading(false);
         })
         .catch(() => setLoading(false));
-    } else {
-      setArticles(allArticles);
     }
-  }, [isOpen, allArticles]);
+  }, [isOpen, articles.length, loading]);
 
   // Recommendation algorithms
   const getRecommendations = useCallback((type: RecommendationType): EnhancedArticleData[] => {
