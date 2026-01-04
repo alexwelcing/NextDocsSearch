@@ -286,6 +286,48 @@ export default function DiscoveryButton360({ isGamePlaying = false }: DiscoveryB
   const [previewArticles, setPreviewArticles] = useState<EnhancedArticleData[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Intelligent diversity selection - pick articles with different characteristics
+  const selectDiverseArticles = (articles: EnhancedArticleData[], count: number): EnhancedArticleData[] => {
+    if (articles.length <= count) return articles;
+
+    const selected: EnhancedArticleData[] = [];
+    const usedPolarities = new Set<string>();
+    const usedHorizons = new Set<string>();
+    const usedTypes = new Set<string>();
+
+    // First pass: prioritize diversity across polarity, horizon, and type
+    const shuffled = [...articles].sort(() => 0.5 - Math.random());
+
+    for (const article of shuffled) {
+      if (selected.length >= count) break;
+
+      const polarity = article.polarity || 'N0';
+      const horizon = article.horizon || 'NY';
+      const type = article.articleType || 'research';
+
+      // Calculate diversity score - prefer articles that add new characteristics
+      const polarityNew = !usedPolarities.has(polarity);
+      const horizonNew = !usedHorizons.has(horizon);
+      const typeNew = !usedTypes.has(type);
+
+      // Accept if it adds at least one new characteristic, or if we haven't filled slots yet
+      if (polarityNew || horizonNew || typeNew || selected.length < Math.ceil(count / 2)) {
+        selected.push(article);
+        usedPolarities.add(polarity);
+        usedHorizons.add(horizon);
+        usedTypes.add(type);
+      }
+    }
+
+    // Fill remaining slots if needed
+    if (selected.length < count) {
+      const remaining = shuffled.filter(a => !selected.includes(a));
+      selected.push(...remaining.slice(0, count - selected.length));
+    }
+
+    return selected.slice(0, count);
+  };
+
   // Fetch preview articles when component mounts or preview is shown
   useEffect(() => {
     if (showPreview && previewArticles.length === 0) {
@@ -293,9 +335,9 @@ export default function DiscoveryButton360({ isGamePlaying = false }: DiscoveryB
       fetch('/api/articles-enhanced')
         .then(res => res.json())
         .then((articles: EnhancedArticleData[]) => {
-          // Get 3 random articles for preview
-          const shuffled = [...articles].sort(() => 0.5 - Math.random());
-          setPreviewArticles(shuffled.slice(0, 3));
+          // Get 3 diverse articles for preview using intelligent selection
+          const diverseArticles = selectDiverseArticles(articles, 3);
+          setPreviewArticles(diverseArticles);
           setLoading(false);
         })
         .catch(() => setLoading(false));
