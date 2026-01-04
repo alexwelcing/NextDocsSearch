@@ -82,10 +82,10 @@ export default function ArticleOrb({
     const glowMat = glowRef.current.material as THREE.MeshBasicMaterial;
     glowMat.opacity = (0.3 + pulse * 0.1) * visuals.glowIntensity;
 
-    // Subtle floating motion
-    meshRef.current.position.y =
-      position[1] + Math.sin(anim.time * 0.5) * 0.1;
-    glowRef.current.position.y = meshRef.current.position.y;
+    // Subtle floating motion (local offset only, parent group handles world position)
+    const floatOffset = Math.sin(anim.time * 0.5) * 0.1;
+    meshRef.current.position.y = floatOffset;
+    glowRef.current.position.y = floatOffset;
 
     // Rotate slightly when hovered
     if (hovered || selected) {
