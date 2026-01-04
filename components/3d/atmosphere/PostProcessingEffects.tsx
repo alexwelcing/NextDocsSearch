@@ -79,13 +79,13 @@ export default function PostProcessingEffects({
       />
 
       {/* Depth of Field - focuses attention */}
-      {config.enableDOF && (
+      {config.enableDOF ? (
         <DepthOfField
           focusDistance={focusDistance / 100}
           focalLength={0.02}
           bokehScale={2}
         />
-      )}
+      ) : null}
 
       {/* Vignette - frames the view */}
       <Vignette
@@ -95,7 +95,7 @@ export default function PostProcessingEffects({
       />
 
       {/* Chromatic Aberration - subtle color fringing */}
-      {config.chromaticAberration > 0 && (
+      {config.chromaticAberration > 0 ? (
         <ChromaticAberration
           offset={
             new THREE.Vector2(
@@ -106,10 +106,12 @@ export default function PostProcessingEffects({
           radialModulation={false}
           modulationOffset={0}
         />
-      )}
+      ) : null}
 
       {/* Film grain - adds texture */}
-      {config.enableNoise && <Noise opacity={0.02} blendFunction={BlendFunction.OVERLAY} />}
+      {config.enableNoise ? (
+        <Noise opacity={0.02} blendFunction={BlendFunction.OVERLAY} />
+      ) : null}
 
       {/* Tone mapping - color grading */}
       <ToneMapping

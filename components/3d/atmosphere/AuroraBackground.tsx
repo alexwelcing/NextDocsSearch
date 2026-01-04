@@ -5,7 +5,7 @@
  * evokes the feeling of being in a cosmic space.
  */
 
-import React, { useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { ExperienceTheme } from '@/lib/3d/vision';
@@ -128,19 +128,22 @@ interface AuroraBackgroundProps {
   radius?: number;
 }
 
+const DEFAULT_AURORA_COLORS: [string, string, string] = [
+  '#9d4edd',
+  '#2dd4bf',
+  '#00d4ff',
+];
+
 export default function AuroraBackground({
   theme,
   enabled = true,
   radius = 80,
 }: AuroraBackgroundProps) {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-
-  // Get colors from theme
-  const auroraColors = theme?.atmosphere.auroraColors ?? [
-    '#9d4edd',
-    '#2dd4bf',
-    '#00d4ff',
-  ];
+  // Get colors from theme, memoized to prevent unnecessary re-renders
+  const auroraColors = useMemo(
+    () => theme?.atmosphere.auroraColors ?? DEFAULT_AURORA_COLORS,
+    [theme?.atmosphere.auroraColors]
+  );
 
   // Create shader material with uniforms
   const shaderMaterial = useMemo(() => {
@@ -161,15 +164,6 @@ export default function AuroraBackground({
       blending: THREE.AdditiveBlending,
     });
   }, [auroraColors]);
-
-  // Update colors when theme changes
-  useMemo(() => {
-    if (shaderMaterial) {
-      shaderMaterial.uniforms.uColor1.value = new THREE.Color(auroraColors[0]);
-      shaderMaterial.uniforms.uColor2.value = new THREE.Color(auroraColors[1]);
-      shaderMaterial.uniforms.uColor3.value = new THREE.Color(auroraColors[2]);
-    }
-  }, [auroraColors, shaderMaterial]);
 
   // Animate the aurora
   useFrame((state) => {
