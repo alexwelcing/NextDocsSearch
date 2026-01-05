@@ -223,11 +223,32 @@ export default function HomePage() {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com" />
         <link rel="icon" href="/favicon.ico" />
-        <meta property="og:title" content="Alex Welcing | Speculative AI Futures" />
-        <meta property="og:description" content="Exploring speculative AI futures and emergent intelligence systems." />
-        <meta property="og:image" content="/social-preview.png" />
+
+        {/* Open Graph Meta Tags */}
+        <meta
+          property="og:title"
+          content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing"
+        />
+        <meta
+          property="og:description"
+          content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant."
+        />
+        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com" />
         <meta property="og:type" content="website" />
+
+        {/* X (Twitter) Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing" />
+        <meta name="twitter:description" content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant." />
+        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
+
+        {/* Performance and PWA hints */}
+        <meta name="theme-color" content="#0a0a0a" />
+        <link rel="preload" as="image" href="/social-preview.png" />
       </Head>
 
       <StructuredData
@@ -250,7 +271,7 @@ export default function HomePage() {
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
-            "https://twitter.com/alexwelcing"
+            "https://x.com/alexwelcing"
           ]
         }}
       />
