@@ -15,7 +15,7 @@ const pulse = keyframes`
 
 const comboGlow = keyframes`
   0%, 100% {
-    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
   }
   50% {
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
@@ -39,14 +39,14 @@ const ScoreDisplay = styled.div`
   left: 20px;
   background: rgba(0, 0, 0, 0.7);
   padding: 20px 30px;
-  border-radius: 15px;
-  border: 3px solid #de7ea2;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 212, 255, 0.5);
   backdrop-filter: blur(10px);
 `;
 
 const ScoreLabel = styled.div`
-  color: #de7ea2;
-  font-size: 16px;
+  color: #00d4ff;
+  font-size: 14px;
   margin-bottom: 5px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -56,7 +56,7 @@ const ScoreValue = styled.div`
   color: white;
   font-size: 48px;
   font-weight: bold;
-  text-shadow: 0 0 10px rgba(222, 126, 162, 0.8);
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
 `;
 
 const TimerDisplay = styled.div<{ warning: boolean }>`
@@ -65,15 +65,15 @@ const TimerDisplay = styled.div<{ warning: boolean }>`
   right: 20px;
   background: rgba(0, 0, 0, 0.7);
   padding: 20px 30px;
-  border-radius: 15px;
-  border: 3px solid ${props => props.warning ? '#ff4444' : '#de7ea2'};
+  border-radius: 8px;
+  border: 2px solid ${props => props.warning ? '#ff4444' : 'rgba(0, 212, 255, 0.5)'};
   backdrop-filter: blur(10px);
   animation: ${props => props.warning ? pulse : 'none'} 0.5s infinite;
 `;
 
 const TimerLabel = styled.div`
-  color: #de7ea2;
-  font-size: 16px;
+  color: #00d4ff;
+  font-size: 14px;
   margin-bottom: 5px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -83,7 +83,7 @@ const TimerValue = styled.div<{ warning: boolean }>`
   color: ${props => props.warning ? '#ff4444' : 'white'};
   font-size: 48px;
   font-weight: bold;
-  text-shadow: 0 0 10px ${props => props.warning ? 'rgba(255, 68, 68, 0.8)' : 'rgba(222, 126, 162, 0.8)'};
+  text-shadow: 0 0 10px ${props => props.warning ? 'rgba(255, 68, 68, 0.8)' : 'rgba(0, 212, 255, 0.6)'};
 `;
 
 const ComboDisplay = styled.div<{ visible: boolean; highCombo: boolean }>`
@@ -92,11 +92,11 @@ const ComboDisplay = styled.div<{ visible: boolean; highCombo: boolean }>`
   left: 50%;
   transform: translateX(-50%);
   background: ${props => props.highCombo
-    ? 'linear-gradient(135deg, rgba(138, 43, 226, 0.9), rgba(255, 215, 0, 0.9))'
-    : 'rgba(138, 43, 226, 0.9)'};
+    ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.9), rgba(255, 215, 0, 0.9))'
+    : 'rgba(0, 212, 255, 0.9)'};
   padding: 15px 40px;
-  border-radius: 50px;
-  border: 3px solid ${props => props.highCombo ? '#FFD700' : '#de7ea2'};
+  border-radius: 8px;
+  border: 2px solid ${props => props.highCombo ? '#FFD700' : 'rgba(0, 212, 255, 0.6)'};
   backdrop-filter: blur(10px);
   opacity: ${props => props.visible ? 1 : 0};
   transition: opacity 0.3s ease;

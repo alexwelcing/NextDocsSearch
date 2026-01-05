@@ -95,8 +95,8 @@ export default function CharacterStudio() {
   return (
     <div className="w-full h-screen flex">
       {/* Left Panel - Controls */}
-      <div className="w-80 bg-gradient-to-b from-gray-900 to-black text-white p-6 overflow-y-auto border-r border-purple-500/20">
-        <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+      <div className="w-80 bg-gradient-to-b from-gray-900 to-black text-white p-6 overflow-y-auto border-r border-cyan-500/20">
+        <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-amber-400 bg-clip-text text-transparent">
           Character Studio
         </h1>
 
@@ -110,7 +110,7 @@ export default function CharacterStudio() {
             onChange={e => setPrompt(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Describe your character... (e.g., 'a toad with a tail', 'a dragon with wings')"
-            className="w-full h-24 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-500 resize-none"
+            className="w-full h-24 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 resize-none"
             disabled={isGenerating}
           />
           <p className="text-xs text-gray-400 mt-1">
@@ -124,7 +124,7 @@ export default function CharacterStudio() {
           <select
             value={meshQuality}
             onChange={e => setMeshQuality(e.target.value as any)}
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
             disabled={isGenerating}
           >
             <option value="low">Low (5K verts)</option>
@@ -138,7 +138,7 @@ export default function CharacterStudio() {
         <button
           onClick={handleGenerate}
           disabled={isGenerating || !prompt.trim()}
-          className="w-full mb-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-700 disabled:to-gray-700 rounded-lg font-medium transition-all"
+          className="w-full mb-6 px-4 py-3 bg-gradient-to-r from-cyan-600 to-amber-600 hover:from-cyan-700 hover:to-amber-700 disabled:from-gray-700 disabled:to-gray-700 rounded-lg font-medium transition-all"
         >
           {isGenerating ? 'Generating...' : 'Generate Character'}
         </button>
@@ -167,7 +167,7 @@ export default function CharacterStudio() {
               <select
                 value={currentAnimation}
                 onChange={e => setCurrentAnimation(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
               >
                 {character.animations.map(anim => (
                   <option key={anim.name} value={anim.name}>
@@ -300,10 +300,10 @@ export default function CharacterStudio() {
               args={[20, 20]}
               cellSize={1}
               cellThickness={0.5}
-              cellColor="#6366f1"
+              cellColor="#00d4ff"
               sectionSize={5}
               sectionThickness={1}
-              sectionColor="#8b5cf6"
+              sectionColor="#ffd700"
               fadeDistance={25}
               fadeStrength={1}
               followCamera={false}
