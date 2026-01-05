@@ -58,8 +58,8 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ articles,
                         onPointerOver={() => isBackAvailable && setBackHovered(true)}
                         onPointerOut={() => setBackHovered(false)}
                     >
-                        <meshStandardMaterial color={backHovered && isBackAvailable ? "#de7ea2" : (!isBackAvailable ? '#B0B0B0' : '#1E88E5')} />
-                        <Text fontSize={0.3} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
+                        <meshStandardMaterial color={backHovered && isBackAvailable ? "#00d4ff" : (!isBackAvailable ? '#B0B0B0' : '#1E88E5')} />
+                        <Text fontSize={0.3} color="#0a0a1a" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
                             Back
                         </Text>
                     </RoundedBox>
@@ -72,8 +72,8 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ articles,
                         onPointerOver={() => isNextAvailable && setNextHovered(true)}
                         onPointerOut={() => setNextHovered(false)}
                     >
-                        <meshStandardMaterial color={nextHovered && isNextAvailable ? "#de7ea2" : (!isNextAvailable ? '#B0B0B0' : '#1E88E5')} />
-                        <Text fontSize={0.3} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
+                        <meshStandardMaterial color={nextHovered && isNextAvailable ? "#00d4ff" : (!isNextAvailable ? '#B0B0B0' : '#1E88E5')} />
+                        <Text fontSize={0.3} color="#0a0a1a" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
                             Next
                         </Text>
                     </RoundedBox>
@@ -86,8 +86,8 @@ const GlowingArticleDisplay: React.FC<GlowingArticleDisplayProps> = ({ articles,
                         onPointerOver={() => setViewHovered(true)}
                         onPointerOut={() => setViewHovered(false)}
                     >
-                        <meshStandardMaterial color={viewHovered ? "#de7ea2" : "#1E88E5"} />
-                        <Text fontSize={0.4} color="#6a6699" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
+                        <meshStandardMaterial color={viewHovered ? "#00d4ff" : "#1E88E5"} />
+                        <Text fontSize={0.4} color="#0a0a1a" anchorX="center" textAlign='center' anchorY="middle" position={[0, 0, 0.1]}>
                             View Article
                         </Text>
                     </RoundedBox>

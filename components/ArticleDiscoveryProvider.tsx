@@ -9,10 +9,10 @@ import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 // Animation keyframes
 const pulseGlow = keyframes`
   0%, 100% {
-    box-shadow: 0 4px 20px rgba(222, 126, 162, 0.4), 0 0 40px rgba(222, 126, 162, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3), 0 0 40px rgba(0, 212, 255, 0.15);
   }
   50% {
-    box-shadow: 0 4px 30px rgba(222, 126, 162, 0.6), 0 0 60px rgba(222, 126, 162, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 212, 255, 0.5), 0 0 60px rgba(0, 212, 255, 0.25);
   }
 `;
 
@@ -62,9 +62,9 @@ const FloatingButton = styled.button<{ $expanded?: boolean }>`
   align-items: center;
   gap: 12px;
   padding: ${props => props.$expanded ? '16px 28px' : '18px'};
-  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
-  border: none;
-  border-radius: ${props => props.$expanded ? '20px' : '50%'};
+  background: rgba(0, 30, 50, 0.9);
+  border: 2px solid rgba(0, 212, 255, 0.4);
+  border-radius: ${props => props.$expanded ? '8px' : '50%'};
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
@@ -73,6 +73,7 @@ const FloatingButton = styled.button<{ $expanded?: boolean }>`
   animation: ${pulseGlow} 3s ease-in-out infinite;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 
   &::before {
     content: '';
@@ -81,13 +82,14 @@ const FloatingButton = styled.button<{ $expanded?: boolean }>`
     left: 50%;
     width: 120%;
     height: 120%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
     transform: translate(-50%, -50%) scale(0);
     transition: transform 0.5s ease;
   }
 
   &:hover {
     transform: scale(1.05);
+    border-color: rgba(0, 212, 255, 0.6);
     animation: ${bounce} 1s ease-in-out infinite;
 
     &::before {
@@ -103,6 +105,7 @@ const FloatingButton = styled.button<{ $expanded?: boolean }>`
     width: 24px;
     height: 24px;
     flex-shrink: 0;
+    color: #00d4ff;
   }
 `;
 
@@ -136,9 +139,9 @@ const Tooltip = styled.div<{ $visible: boolean }>`
   right: 0;
   margin-bottom: 12px;
   padding: 12px 16px;
-  background: rgba(15, 15, 25, 0.95);
-  border: 1px solid rgba(222, 126, 162, 0.3);
-  border-radius: 12px;
+  background: rgba(3, 3, 8, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
   color: #fff;
   font-size: 0.875rem;
   white-space: nowrap;
@@ -146,7 +149,7 @@ const Tooltip = styled.div<{ $visible: boolean }>`
   transform: ${props => props.$visible ? 'translateY(0)' : 'translateY(8px)'};
   transition: all 0.2s ease;
   pointer-events: none;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 
   &::after {
     content: '';
@@ -155,15 +158,15 @@ const Tooltip = styled.div<{ $visible: boolean }>`
     right: 20px;
     width: 12px;
     height: 12px;
-    background: rgba(15, 15, 25, 0.95);
-    border-right: 1px solid rgba(222, 126, 162, 0.3);
-    border-bottom: 1px solid rgba(222, 126, 162, 0.3);
+    background: rgba(3, 3, 8, 0.95);
+    border-right: 1px solid rgba(0, 212, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
     transform: rotate(45deg);
   }
 `;
 
 const TooltipHighlight = styled.span`
-  color: #de7ea2;
+  color: #00d4ff;
   font-weight: 600;
 `;
 
@@ -172,9 +175,9 @@ const MiniCard = styled.button<{ $visible: boolean }>`
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: rgba(15, 15, 25, 0.95);
-  border: 1px solid rgba(222, 126, 162, 0.25);
-  border-radius: 14px;
+  background: rgba(3, 3, 8, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
   transition: all 0.25s ease;
@@ -182,11 +185,11 @@ const MiniCard = styled.button<{ $visible: boolean }>`
   transform: ${props => props.$visible ? 'translateX(0)' : 'translateX(20px)'};
   animation: ${slideIn} 0.3s ease;
   max-width: 280px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 
   &:hover {
-    background: rgba(222, 126, 162, 0.1);
-    border-color: rgba(222, 126, 162, 0.4);
+    background: rgba(0, 212, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.35);
     transform: translateX(-4px);
   }
 `;
@@ -194,12 +197,17 @@ const MiniCard = styled.button<{ $visible: boolean }>`
 const MiniCardImage = styled.div`
   width: 48px;
   height: 48px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
+  border-radius: 6px;
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  svg {
+    color: #00d4ff;
+  }
 `;
 
 const MiniCardContent = styled.div`

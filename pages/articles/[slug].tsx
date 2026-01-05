@@ -57,7 +57,7 @@ const HeroImageWrapper = styled.div`
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  border: 1px solid rgba(222, 126, 162, 0.2);
+  border: 1px solid rgba(0, 212, 255, 0.2);
 
   @media (min-width: 900px) {
     width: 120%;
@@ -73,7 +73,7 @@ const HeroImageWrapper = styled.div`
 const ArticleHero = styled.header`
   margin-bottom: 60px;
   padding-bottom: 40px;
-  border-bottom: 2px solid rgba(222, 126, 162, 0.3);
+  border-bottom: 2px solid rgba(0, 212, 255, 0.3);
 `;
 
 const ArticleTitle = styled.h1`
@@ -92,7 +92,7 @@ const ArticleMeta = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  color: #de7ea2;
+  color: #00d4ff;
   font-size: 0.95rem;
   margin-top: 20px;
 `;
@@ -104,7 +104,7 @@ const MetaItem = styled.span`
 
   &:before {
     content: '●';
-    color: #de7ea2;
+    color: #00d4ff;
   }
 `;
 
@@ -118,12 +118,12 @@ const ArticleContent = styled.div`
     color: #ffffff;
     margin: 60px 0 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(222, 126, 162, 0.2);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
   }
 
   h3 {
     font-size: 1.5rem;
-    color: #de7ea2;
+    color: #00d4ff;
     margin: 40px 0 15px;
   }
 
@@ -132,13 +132,13 @@ const ArticleContent = styled.div`
   }
 
   a {
-    color: #de7ea2;
+    color: #00d4ff;
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: border-color 0.3s ease;
 
     &:hover {
-      border-bottom-color: #de7ea2;
+      border-bottom-color: #00d4ff;
     }
   }
 
@@ -152,7 +152,7 @@ const ArticleContent = styled.div`
   }
 
   code {
-    background: rgba(222, 126, 162, 0.1);
+    background: rgba(0, 212, 255, 0.1);
     padding: 2px 6px;
     border-radius: 4px;
     font-family: 'Monaco', 'Courier New', monospace;
@@ -165,7 +165,7 @@ const ArticleContent = styled.div`
     border-radius: 8px;
     overflow-x: auto;
     margin: 2rem 0;
-    border: 1px solid rgba(222, 126, 162, 0.2);
+    border: 1px solid rgba(0, 212, 255, 0.2);
 
     code {
       background: none;
@@ -174,7 +174,7 @@ const ArticleContent = styled.div`
   }
 
   blockquote {
-    border-left: 4px solid #de7ea2;
+    border-left: 4px solid #00d4ff;
     padding-left: 20px;
     margin: 2rem 0;
     font-style: italic;
@@ -185,9 +185,9 @@ const ArticleContent = styled.div`
 const RelatedArticles = styled.section`
   margin-top: 80px;
   padding: 40px;
-  background: rgba(222, 126, 162, 0.05);
+  background: rgba(0, 212, 255, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(222, 126, 162, 0.2);
+  border: 1px solid rgba(0, 212, 255, 0.2);
 `;
 
 const RelatedTitle = styled.h2`
@@ -208,15 +208,15 @@ const RelatedCard = styled(Link)`
   padding: 0;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
-  border: 1px solid rgba(222, 126, 162, 0.2);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   text-decoration: none;
   transition: all 0.3s ease;
   overflow: hidden;
 
   &:hover {
     transform: translateY(-4px);
-    border-color: #de7ea2;
-    box-shadow: 0 10px 30px rgba(222, 126, 162, 0.2);
+    border-color: #00d4ff;
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
   }
 `;
 
@@ -224,7 +224,7 @@ const CardContent = styled.div`
   padding: 20px;
 
   h3 {
-    color: #de7ea2;
+    color: #00d4ff;
     font-size: 1.125rem;
     margin-bottom: 10px;
   }
@@ -248,8 +248,8 @@ const ShareButtons = styled.div`
   gap: 15px;
   margin: 40px 0;
   padding: 20px 0;
-  border-top: 1px solid rgba(222, 126, 162, 0.2);
-  border-bottom: 1px solid rgba(222, 126, 162, 0.2);
+  border-top: 1px solid rgba(0, 212, 255, 0.2);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 `;
 
 const ShareButton = styled.a`
@@ -257,16 +257,16 @@ const ShareButton = styled.a`
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: rgba(222, 126, 162, 0.1);
-  border: 1px solid rgba(222, 126, 162, 0.3);
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 6px;
-  color: #de7ea2;
+  color: #00d4ff;
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(222, 126, 162, 0.2);
+    background: rgba(0, 212, 255, 0.2);
     transform: translateY(-2px);
   }
 `;
@@ -277,27 +277,27 @@ const InternalLinks = styled.nav`
   gap: 16px;
   margin-bottom: 32px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(222, 126, 162, 0.2);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
   font-size: 0.9rem;
 `;
 
 const InternalLink = styled(Link)`
-  color: #a5b4fc;
+  color: #00d4ff;
   text-decoration: none;
   padding: 4px 12px;
   border-radius: 4px;
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(0, 212, 255, 0.1);
   transition: all 0.2s;
 
   &:hover {
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(0, 212, 255, 0.2);
   }
 `;
 
 // Discovery Section Styles
 const pulseGlow = keyframes`
-  0%, 100% { box-shadow: 0 8px 32px rgba(222, 126, 162, 0.3); }
-  50% { box-shadow: 0 8px 48px rgba(222, 126, 162, 0.5); }
+  0%, 100% { box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3); }
+  50% { box-shadow: 0 8px 48px rgba(0, 212, 255, 0.5); }
 `;
 
 const shimmerEffect = keyframes`
@@ -308,8 +308,8 @@ const shimmerEffect = keyframes`
 const DiscoverSection = styled.section`
   margin: 60px 0;
   padding: 40px;
-  background: linear-gradient(135deg, rgba(222, 126, 162, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
-  border: 1px solid rgba(222, 126, 162, 0.25);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(255, 215, 0, 0.05) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.25);
   border-radius: 20px;
   position: relative;
   overflow: hidden;
@@ -322,7 +322,7 @@ const DiscoverSection = styled.section`
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #de7ea2, #6366f1, #de7ea2);
+    background: linear-gradient(90deg, #00d4ff, #ffd700, #00d4ff);
     background-size: 200% 100%;
     animation: ${shimmerEffect} 3s linear infinite;
   }
@@ -354,7 +354,7 @@ const DiscoverIcon = styled.div`
   width: 64px;
   height: 64px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
+  background: linear-gradient(135deg, #00d4ff 0%, #ffd700 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -363,7 +363,7 @@ const DiscoverIcon = styled.div`
   svg {
     width: 32px;
     height: 32px;
-    color: #fff;
+    color: #030308;
   }
 `;
 
@@ -388,10 +388,10 @@ const DiscoverButton = styled.button`
   align-items: center;
   gap: 12px;
   padding: 16px 32px;
-  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
+  background: linear-gradient(135deg, #00d4ff 0%, #ffd700 100%);
   border: none;
   border-radius: 14px;
-  color: #fff;
+  color: #030308;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -407,13 +407,13 @@ const DiscoverButton = styled.button`
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: left 0.5s ease;
   }
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(222, 126, 162, 0.4);
+    box-shadow: 0 12px 32px rgba(0, 212, 255, 0.4);
 
     &::before {
       left: 100%;

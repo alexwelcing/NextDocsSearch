@@ -34,8 +34,8 @@ const pulse = keyframes`
 `;
 
 const glow = keyframes`
-  0%, 100% { box-shadow: 0 0 20px rgba(222, 126, 162, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(222, 126, 162, 0.6); }
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.4); }
 `;
 
 const float = keyframes`
@@ -67,14 +67,14 @@ const Content = styled(DialogPrimitive.Content)`
   width: 95vw;
   max-width: 1400px;
   max-height: 90vh;
-  background: linear-gradient(180deg, rgba(15, 15, 25, 0.98) 0%, rgba(10, 10, 18, 0.99) 100%);
-  border: 1px solid rgba(222, 126, 162, 0.2);
-  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(3, 3, 8, 0.98) 0%, rgba(10, 10, 26, 0.99) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 16px;
   overflow: hidden;
   box-shadow:
-    0 0 60px rgba(222, 126, 162, 0.15),
-    0 0 120px rgba(99, 102, 241, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 0 60px rgba(0, 212, 255, 0.1),
+    0 0 120px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
   animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
   @keyframes slideIn {
@@ -94,8 +94,8 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 24px 32px;
-  border-bottom: 1px solid rgba(222, 126, 162, 0.15);
-  background: linear-gradient(90deg, rgba(222, 126, 162, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+  background: rgba(0, 212, 255, 0.03);
 `;
 
 const TitleGroup = styled.div`
@@ -107,23 +107,25 @@ const TitleGroup = styled.div`
 const IconContainer = styled.div`
   width: 48px;
   height: 48px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
+  border-radius: 8px;
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   animation: ${pulse} 2s ease-in-out infinite;
+
+  svg {
+    color: #00d4ff;
+  }
 `;
 
 const Title = styled(DialogPrimitive.Title)`
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
   margin: 0;
-  background: linear-gradient(135deg, #fff 0%, #de7ea2 50%, #6366f1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: -0.02em;
 `;
 
 const Subtitle = styled.p`
@@ -174,7 +176,7 @@ const TabContainer = styled.div`
     background: rgba(255, 255, 255, 0.02);
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(222, 126, 162, 0.3);
+    background: rgba(0, 212, 255, 0.3);
     border-radius: 2px;
   }
 `;
@@ -185,9 +187,9 @@ const Tab = styled.button<{ $active?: boolean }>`
   gap: 8px;
   padding: 12px 20px;
   border-radius: 12px;
-  border: 1px solid ${props => props.$active ? 'rgba(222, 126, 162, 0.5)' : 'rgba(255, 255, 255, 0.1)'};
+  border: 1px solid ${props => props.$active ? 'rgba(0, 212, 255, 0.5)' : 'rgba(255, 255, 255, 0.1)'};
   background: ${props => props.$active
-    ? 'linear-gradient(135deg, rgba(222, 126, 162, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%)'
+    ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(255, 215, 0, 0.2) 100%)'
     : 'rgba(255, 255, 255, 0.03)'};
   color: ${props => props.$active ? '#fff' : '#9ca3af'};
   font-size: 0.875rem;
@@ -199,9 +201,9 @@ const Tab = styled.button<{ $active?: boolean }>`
 
   &:hover {
     background: ${props => props.$active
-      ? 'linear-gradient(135deg, rgba(222, 126, 162, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%)'
+      ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.25) 0%, rgba(255, 215, 0, 0.25) 100%)'
       : 'rgba(255, 255, 255, 0.08)'};
-    border-color: rgba(222, 126, 162, 0.3);
+    border-color: rgba(0, 212, 255, 0.3);
     color: #fff;
   }
 
@@ -212,8 +214,8 @@ const Tab = styled.button<{ $active?: boolean }>`
 `;
 
 const TabCount = styled.span`
-  background: rgba(222, 126, 162, 0.25);
-  color: #de7ea2;
+  background: rgba(0, 212, 255, 0.25);
+  color: #00d4ff;
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 0.75rem;
@@ -246,7 +248,7 @@ const ArticleGrid = styled.div`
     background: rgba(255, 255, 255, 0.02);
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(222, 126, 162, 0.2);
+    background: rgba(0, 212, 255, 0.2);
     border-radius: 4px;
   }
 `;
@@ -255,7 +257,7 @@ const ArticleCard = styled(Link)<{ $featured?: boolean }>`
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, rgba(25, 25, 40, 0.9) 0%, rgba(15, 15, 25, 0.95) 100%);
-  border: 1px solid rgba(222, 126, 162, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.12);
   border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
@@ -280,15 +282,15 @@ const ArticleCard = styled(Link)<{ $featured?: boolean }>`
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, #de7ea2, #6366f1, #de7ea2);
+    background: linear-gradient(90deg, #00d4ff, #ffd700, #00d4ff);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
 
   &:hover {
     transform: translateY(-4px);
-    border-color: rgba(222, 126, 162, 0.35);
-    box-shadow: 0 12px 40px rgba(222, 126, 162, 0.15);
+    border-color: rgba(0, 212, 255, 0.35);
+    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
 
     &::before {
       opacity: 1;
@@ -369,12 +371,12 @@ const MetaBadge = styled.span<{ $variant?: 'horizon' | 'polarity' | 'type' | 'me
     switch ($variant) {
       case 'horizon':
         return css`
-          background: rgba(99, 102, 241, 0.2);
+          background: rgba(255, 215, 0, 0.2);
           color: #a5b4fc;
         `;
       case 'polarity':
         return css`
-          background: rgba(222, 126, 162, 0.2);
+          background: rgba(0, 212, 255, 0.2);
           color: #f0a5c0;
         `;
       case 'type':
@@ -409,7 +411,7 @@ const MatchScore = styled.div`
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #de7ea2;
+  color: #00d4ff;
   z-index: 1;
 `;
 
@@ -447,14 +449,14 @@ const SidebarTitle = styled.h4`
   svg {
     width: 14px;
     height: 14px;
-    color: #de7ea2;
+    color: #00d4ff;
   }
 `;
 
 const FeaturedCard = styled(Link)`
   display: block;
-  background: linear-gradient(135deg, rgba(222, 126, 162, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
-  border: 1px solid rgba(222, 126, 162, 0.25);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.25);
   border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
@@ -463,8 +465,8 @@ const FeaturedCard = styled(Link)`
 
   &:hover {
     transform: scale(1.02);
-    border-color: rgba(222, 126, 162, 0.5);
-    box-shadow: 0 8px 32px rgba(222, 126, 162, 0.2);
+    border-color: rgba(0, 212, 255, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
   }
 `;
 
@@ -483,7 +485,7 @@ const FeaturedBadge = styled.div`
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: linear-gradient(135deg, #de7ea2 0%, #6366f1 100%);
+  background: linear-gradient(135deg, #00d4ff 0%, #ffd700 100%);
   border-radius: 20px;
   font-size: 0.7rem;
   font-weight: 700;
@@ -533,7 +535,7 @@ const StatCard = styled.div`
 const StatValue = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
-  color: #de7ea2;
+  color: #00d4ff;
 `;
 
 const StatLabel = styled.div`
@@ -562,8 +564,8 @@ const RecentItem = styled(Link)`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(222, 126, 162, 0.08);
-    border-color: rgba(222, 126, 162, 0.2);
+    background: rgba(0, 212, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.2);
   }
 `;
 
@@ -590,7 +592,7 @@ const RecentArrow = styled.span`
 
   ${RecentItem}:hover & {
     transform: translateX(4px);
-    color: #de7ea2;
+    color: #00d4ff;
   }
 `;
 
@@ -1094,8 +1096,8 @@ export const ArticleRecommendationTrigger = styled.button`
   align-items: center;
   gap: 10px;
   padding: 14px 24px;
-  background: linear-gradient(135deg, rgba(222, 126, 162, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
-  border: 1px solid rgba(222, 126, 162, 0.3);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(255, 215, 0, 0.15) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 14px;
   color: #fff;
   font-size: 0.95rem;
@@ -1122,10 +1124,10 @@ export const ArticleRecommendationTrigger = styled.button`
   }
 
   &:hover {
-    background: linear-gradient(135deg, rgba(222, 126, 162, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
-    border-color: rgba(222, 126, 162, 0.5);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.25) 0%, rgba(255, 215, 0, 0.25) 100%);
+    border-color: rgba(0, 212, 255, 0.5);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(222, 126, 162, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 212, 255, 0.2);
 
     &::before {
       left: 100%;

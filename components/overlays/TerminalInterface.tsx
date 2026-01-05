@@ -312,11 +312,11 @@ export default function TerminalInterface({
                   padding: isMobile ? '18px' : '16px',
                   marginBottom: '16px',
                   background: is3DExploreActive
-                    ? 'linear-gradient(135deg, #6366f1 0%, #de7ea2 100%)'
-                    : 'linear-gradient(135deg, #1a1a3a 0%, #2a2a4a 100%)',
-                  border: is3DExploreActive ? '2px solid #a5b4fc' : '1px solid #333',
-                  borderRadius: '10px',
-                  color: '#fff',
+                    ? 'rgba(0, 212, 255, 0.15)'
+                    : 'rgba(10, 10, 26, 0.8)',
+                  border: is3DExploreActive ? '2px solid rgba(0, 212, 255, 0.5)' : '1px solid #222',
+                  borderRadius: '6px',
+                  color: is3DExploreActive ? '#00d4ff' : '#fff',
                   fontSize: isMobile ? '15px' : '14px',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -402,10 +402,10 @@ export default function TerminalInterface({
                   onClick={() => setArticleFilter(value)}
                   style={{
                     padding: '6px 12px',
-                    background: articleFilter === value ? 'rgba(99, 102, 241, 0.3)' : '#111',
-                    border: articleFilter === value ? '1px solid #6366f1' : '1px solid #222',
-                    borderRadius: '6px',
-                    color: articleFilter === value ? '#a5b4fc' : '#666',
+                    background: articleFilter === value ? 'rgba(0, 212, 255, 0.15)' : '#111',
+                    border: articleFilter === value ? '1px solid rgba(0, 212, 255, 0.4)' : '1px solid #222',
+                    borderRadius: '4px',
+                    color: articleFilter === value ? '#00d4ff' : '#666',
                     fontSize: '11px',
                     cursor: 'pointer',
                     fontFamily: 'monospace',
@@ -442,8 +442,8 @@ export default function TerminalInterface({
                       {article.horizon && (
                         <span style={{
                           padding: '2px 6px',
-                          background: 'rgba(99, 102, 241, 0.2)',
-                          color: '#a5b4fc',
+                          background: 'rgba(0, 212, 255, 0.15)',
+                          color: '#00d4ff',
                           borderRadius: '3px',
                           fontSize: '10px',
                         }}>
@@ -453,8 +453,8 @@ export default function TerminalInterface({
                       {article.polarity && article.polarity !== 'N0' && (
                         <span style={{
                           padding: '2px 6px',
-                          background: 'rgba(222, 126, 162, 0.2)',
-                          color: '#de7ea2',
+                          background: 'rgba(255, 215, 0, 0.15)',
+                          color: '#ffd700',
                           borderRadius: '3px',
                           fontSize: '10px',
                         }}>
@@ -482,10 +482,10 @@ export default function TerminalInterface({
                 textAlign: 'center',
                 padding: '14px',
                 marginTop: '16px',
-                background: '#111',
-                border: '1px solid #de7ea2',
-                borderRadius: '8px',
-                color: '#de7ea2',
+                background: 'rgba(0, 212, 255, 0.08)',
+                border: '1px solid rgba(0, 212, 255, 0.3)',
+                borderRadius: '6px',
+                color: '#00d4ff',
                 textDecoration: 'none',
                 fontFamily: 'monospace',
                 fontSize: '12px',
