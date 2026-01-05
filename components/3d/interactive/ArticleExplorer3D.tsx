@@ -223,9 +223,9 @@ export function ArticleDetailPanel({ article, onClose, onNavigate }: ArticleDeta
         transform: 'translateY(-50%)',
         width: '320px',
         maxWidth: 'calc(100vw - 40px)',
-        background: 'rgba(10, 10, 20, 0.95)',
-        border: '1px solid rgba(222, 126, 162, 0.3)',
-        borderRadius: '12px',
+        background: 'rgba(3, 3, 8, 0.95)',
+        border: '1px solid rgba(0, 212, 255, 0.2)',
+        borderRadius: '8px',
         padding: '20px',
         zIndex: 100,
         backdropFilter: 'blur(10px)',
@@ -259,8 +259,8 @@ export function ArticleDetailPanel({ article, onClose, onNavigate }: ArticleDeta
         {article.horizon && (
           <span style={{
             padding: '4px 8px',
-            background: 'rgba(99, 102, 241, 0.2)',
-            color: '#a5b4fc',
+            background: 'rgba(0, 212, 255, 0.15)',
+            color: '#00d4ff',
             borderRadius: '4px',
             fontSize: '0.7rem',
           }}>
@@ -270,8 +270,8 @@ export function ArticleDetailPanel({ article, onClose, onNavigate }: ArticleDeta
         {article.polarity && (
           <span style={{
             padding: '4px 8px',
-            background: 'rgba(222, 126, 162, 0.2)',
-            color: '#de7ea2',
+            background: 'rgba(255, 215, 0, 0.15)',
+            color: '#ffd700',
             borderRadius: '4px',
             fontSize: '0.7rem',
           }}>
@@ -299,10 +299,10 @@ export function ArticleDetailPanel({ article, onClose, onNavigate }: ArticleDeta
           onClick={onNavigate}
           style={{
             padding: '10px 20px',
-            background: 'linear-gradient(135deg, #de7ea2 0%, #6366f1 100%)',
-            border: 'none',
-            borderRadius: '8px',
-            color: '#fff',
+            background: 'rgba(0, 212, 255, 0.15)',
+            border: '1px solid rgba(0, 212, 255, 0.4)',
+            borderRadius: '6px',
+            color: '#00d4ff',
             fontSize: '0.875rem',
             fontWeight: 600,
             cursor: 'pointer',

@@ -221,13 +221,13 @@ export default function InteractiveTablet({
                   style={{
                     padding: isMobile ? '16px' : '14px',
                     background: (item as { highlight?: boolean }).highlight
-                      ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(222, 126, 162, 0.2) 100%)'
+                      ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%)'
                       : '#111',
                     border: (item as { highlight?: boolean }).highlight
-                      ? '1px solid rgba(99, 102, 241, 0.5)'
+                      ? '1px solid rgba(0, 212, 255, 0.5)'
                       : '1px solid #222',
                     borderRadius: '8px',
-                    color: (item as { highlight?: boolean }).highlight ? '#a5b4fc' : '#0f0',
+                    color: (item as { highlight?: boolean }).highlight ? '#00d4ff' : '#0f0',
                     fontFamily: 'monospace',
                     fontSize: isMobile ? '13px' : '12px',
                     cursor: 'pointer',
@@ -238,7 +238,7 @@ export default function InteractiveTablet({
                     touchAction: 'manipulation',
                   }}
                 >
-                  <span style={{ color: (item as { highlight?: boolean }).highlight ? '#de7ea2' : '#0a0' }}>{item.icon}</span>
+                  <span style={{ color: (item as { highlight?: boolean }).highlight ? '#ffd700' : '#0a0' }}>{item.icon}</span>
                   {item.label}
                 </button>
               ))}

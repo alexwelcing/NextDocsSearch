@@ -45,11 +45,11 @@ const OverlayContainer = styled.div`
 `;
 
 const ContentBox = styled.div`
-  background: linear-gradient(135deg, rgba(130, 20, 160, 0.95), rgba(148, 25, 71, 0.95));
+  background: linear-gradient(135deg, rgba(3, 3, 8, 0.98), rgba(10, 10, 26, 0.98));
   padding: 40px;
   border-radius: 20px;
-  border: 4px solid #de7ea2;
-  box-shadow: 0 0 50px rgba(222, 126, 162, 0.8);
+  border: 4px solid rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
   max-width: 600px;
   width: 90%;
   max-height: 90vh;
@@ -72,7 +72,7 @@ const ScoreSummary = styled.div`
   border-radius: 15px;
   margin: 20px 0;
   text-align: center;
-  border: 2px solid #de7ea2;
+  border: 2px solid rgba(0, 212, 255, 0.4);
 `;
 
 const FinalScore = styled.div`
@@ -96,7 +96,7 @@ const StatItem = styled.div`
 `;
 
 const StatLabel = styled.div`
-  color: #de7ea2;
+  color: #00d4ff;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -113,7 +113,7 @@ const LeaderboardSection = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  color: #de7ea2;
+  color: #00d4ff;
   font-size: 24px;
   margin: 0 0 15px 0;
   text-align: center;
@@ -162,7 +162,7 @@ const Rank = styled.div<{ rank: number }>`
     if (props.rank === 1) return '#FFD700';
     if (props.rank === 2) return '#C0C0C0';
     if (props.rank === 3) return '#CD7F32';
-    return '#de7ea2';
+    return '#00d4ff';
   }};
 `;
 
@@ -206,7 +206,7 @@ const NameInput = styled.input`
   width: 100%;
   padding: 15px;
   font-size: 20px;
-  border: 3px solid #de7ea2;
+  border: 3px solid rgba(0, 212, 255, 0.5);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.7);
   color: white;
@@ -236,7 +236,7 @@ const Button = styled.button<{ primary?: boolean }>`
   background: ${props => props.primary
     ? 'linear-gradient(135deg, #FFD700, #FFA500)'
     : 'rgba(255, 255, 255, 0.1)'};
-  border: 3px solid ${props => props.primary ? 'white' : '#de7ea2'};
+  border: 3px solid ${props => props.primary ? 'white' : 'rgba(0, 212, 255, 0.5)'};
   color: ${props => props.primary ? '#000' : 'white'};
   padding: 15px 40px;
   font-size: 20px;
@@ -249,7 +249,7 @@ const Button = styled.button<{ primary?: boolean }>`
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 25px ${props => props.primary ? 'rgba(255, 215, 0, 0.8)' : 'rgba(222, 126, 162, 0.5)'};
+    box-shadow: 0 0 25px ${props => props.primary ? 'rgba(255, 215, 0, 0.8)' : 'rgba(0, 212, 255, 0.4)'};
   }
 
   &:active {
@@ -263,7 +263,7 @@ const Button = styled.button<{ primary?: boolean }>`
 `;
 
 const LoadingText = styled.div`
-  color: #de7ea2;
+  color: #00d4ff;
   text-align: center;
   font-size: 18px;
   padding: 20px;
