@@ -94,15 +94,15 @@ const Badge = styled.span<{ $variant?: 'horizon' | 'polarity' | 'mechanic' | 'do
     switch ($variant) {
       case 'horizon':
         return `
-          background: rgba(99, 102, 241, 0.2);
-          color: #a5b4fc;
-          border: 1px solid rgba(99, 102, 241, 0.3);
+          background: rgba(0, 212, 255, 0.15);
+          color: #00d4ff;
+          border: 1px solid rgba(0, 212, 255, 0.3);
         `;
       case 'polarity':
         return `
-          background: rgba(222, 126, 162, 0.2);
-          color: #de7ea2;
-          border: 1px solid rgba(222, 126, 162, 0.3);
+          background: rgba(255, 215, 0, 0.15);
+          color: #ffd700;
+          border: 1px solid rgba(255, 215, 0, 0.3);
         `;
       case 'mechanic':
         return `
