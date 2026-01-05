@@ -1,14 +1,14 @@
 /**
- * ArticleOrb - Glowing orb representing an article
+ * ArticleOrb - Glowing orb representing an article with image preview
  *
  * Each article appears as a luminous orb with visual properties that
  * communicate its nature: size (importance), color (sentiment),
- * glow (recency), and subtle animations.
+ * glow (recency), and subtle animations. Now with article image display!
  */
 
-import React, { useRef, useState, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Billboard, Text } from '@react-three/drei';
+import React, { useRef, useState, useMemo, Suspense } from 'react';
+import { useFrame, useLoader } from '@react-three/fiber';
+import { Billboard, Text, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { calculateOrbVisuals, type ExperienceTheme } from '@/lib/3d/vision';
 
@@ -24,6 +24,53 @@ interface ArticleOrbProps {
   selected?: boolean;
   onClick?: (id: string) => void;
   onHover?: (id: string | null) => void;
+  /** Article image URL for display on orb */
+  imageUrl?: string;
+}
+
+// Inner component that loads and displays the image
+function ArticleImage({
+  imageUrl,
+  scale,
+  visible
+}: {
+  imageUrl: string;
+  scale: number;
+  visible: boolean;
+}) {
+  const texture = useTexture(imageUrl);
+
+  // Configure texture
+  useMemo(() => {
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
+  }, [texture]);
+
+  if (!visible) return null;
+
+  return (
+    <Billboard position={[0, 0, 0]}>
+      <mesh>
+        <planeGeometry args={[scale * 1.8, scale * 1.2]} />
+        <meshBasicMaterial
+          map={texture}
+          transparent
+          opacity={0.95}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      {/* Border frame */}
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[scale * 1.9, scale * 1.3]} />
+        <meshBasicMaterial
+          color="#000000"
+          transparent
+          opacity={0.8}
+        />
+      </mesh>
+    </Billboard>
+  );
 }
 
 export default function ArticleOrb({
@@ -38,9 +85,11 @@ export default function ArticleOrb({
   selected = false,
   onClick,
   onHover,
+  imageUrl,
 }: ArticleOrbProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
+  const imageGroupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 
   // Calculate visual properties from article data
@@ -54,6 +103,7 @@ export default function ArticleOrb({
     time: Math.random() * Math.PI * 2,
     hoverScale: 1,
     pulsePhase: Math.random() * Math.PI * 2,
+    imageOpacity: 0,
   });
 
   // Animate the orb
@@ -90,6 +140,16 @@ export default function ArticleOrb({
     // Rotate slightly when hovered
     if (hovered || selected) {
       meshRef.current.rotation.y += delta * 0.5;
+    }
+
+    // Animate image visibility
+    const targetImageOpacity = hovered || selected ? 1 : 0;
+    anim.imageOpacity += (targetImageOpacity - anim.imageOpacity) * delta * 5;
+
+    // Scale and position image group
+    if (imageGroupRef.current) {
+      imageGroupRef.current.position.y = floatOffset + visuals.baseSize * 0.8;
+      imageGroupRef.current.scale.setScalar(anim.imageOpacity);
     }
   });
 
@@ -145,6 +205,19 @@ export default function ArticleOrb({
         />
       </mesh>
 
+      {/* Article image preview (shows on hover) */}
+      {imageUrl && (
+        <group ref={imageGroupRef} scale={0}>
+          <Suspense fallback={null}>
+            <ArticleImage
+              imageUrl={imageUrl}
+              scale={visuals.baseSize}
+              visible={hovered || selected}
+            />
+          </Suspense>
+        </group>
+      )}
+
       {/* Title label (shows on hover) */}
       {(hovered || selected) && (
         <Billboard
@@ -152,7 +225,7 @@ export default function ArticleOrb({
           lockX={false}
           lockY={false}
           lockZ={false}
-          position={[0, visuals.baseSize * 1.5 + 0.5, 0]}
+          position={[0, visuals.baseSize * (imageUrl ? 2.2 : 1.5) + 0.5, 0]}
         >
           <Text
             fontSize={0.25}
@@ -182,3 +255,5 @@ export default function ArticleOrb({
     </group>
   );
 }
+
+export type { ArticleOrbProps };

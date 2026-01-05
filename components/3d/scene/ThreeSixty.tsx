@@ -50,6 +50,7 @@ const mapToLibraryArticle = (article: EnhancedArticleData) => ({
   publishedAt: new Date(article.date),
   category: article.domains?.[0] ?? article.articleType,
   relatedTo: [], // Could be enhanced with actual relations
+  imageUrl: article.ogImage, // Article preview image
 });
 
 const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {

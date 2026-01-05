@@ -34,6 +34,7 @@ interface Article {
   publishedAt?: Date;
   category?: string;
   relatedTo?: string[];
+  imageUrl?: string;
 }
 
 interface InfiniteLibraryProps {
@@ -354,6 +355,7 @@ export default function InfiniteLibrary({
             selected={article.id === selectedArticleId}
             onClick={handleArticleClick}
             onHover={handleArticleHover}
+            imageUrl={article.imageUrl}
           />
         );
       })}

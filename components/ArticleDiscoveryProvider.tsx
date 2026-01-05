@@ -114,24 +114,97 @@ const ButtonText = styled.span`
   animation: ${slideIn} 0.3s ease;
 `;
 
-const NotificationBadge = styled.span`
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
-  background: #ef4444;
-  border-radius: 11px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #0f0f18;
-  animation: ${bounce} 2s ease-in-out infinite;
+// AI Eye animations - the eye looks around and blinks with personality
+const eyeLook = keyframes`
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(2px, -1px); }
+  30% { transform: translate(-1px, 1px); }
+  45% { transform: translate(1px, 2px); }
+  60% { transform: translate(-2px, -1px); }
+  75% { transform: translate(1px, -2px); }
+  90% { transform: translate(-1px, 1px); }
 `;
+
+const blink = keyframes`
+  0%, 45%, 55%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+`;
+
+const pupilPulse = keyframes`
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.15); }
+`;
+
+const AIEyeContainer = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 26px;
+  height: 26px;
+  background: radial-gradient(circle at 30% 30%, #f0f8ff, #e0e8f0);
+  border-radius: 50%;
+  border: 2px solid #0f0f18;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  animation: ${bounce} 3s ease-in-out infinite;
+`;
+
+const AIEyeIris = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 30% 30%, #00d4ff, #0080aa);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ${eyeLook} 8s ease-in-out infinite;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+`;
+
+const AIEyePupil = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: #000;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ${pupilPulse} 2s ease-in-out infinite;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+  }
+`;
+
+const AIEyeLid = styled.div`
+  position: absolute;
+  top: 0;
+  left: -2px;
+  right: -2px;
+  height: 50%;
+  background: linear-gradient(to bottom, #0a1628, #0a1628 80%, transparent);
+  transform-origin: top center;
+  animation: ${blink} 4s ease-in-out infinite;
+  animation-delay: 2s;
+`;
+
+const AIEye = () => (
+  <AIEyeContainer>
+    <AIEyeIris>
+      <AIEyePupil />
+    </AIEyeIris>
+    <AIEyeLid />
+  </AIEyeContainer>
+);
 
 const Tooltip = styled.div<{ $visible: boolean }>`
   position: absolute;
@@ -314,24 +387,8 @@ export function ArticleDiscoveryProvider({
     setIsModalOpen(false);
   }, []);
 
-  // Show a suggested article mini-card after some delay (use cached articles)
-  useEffect(() => {
-    if (!showFloatingButton || isModalOpen || allArticles.length === 0) return;
-
-    const timer = setTimeout(() => {
-      const available = allArticles.filter(a => a.slug !== currentArticle?.slug);
-      if (available.length > 0) {
-        const random = available[Math.floor(Math.random() * available.length)];
-        setSuggestedArticle(random);
-        setShowMiniCard(true);
-
-        // Hide after 10 seconds
-        setTimeout(() => setShowMiniCard(false), 10000);
-      }
-    }, 8000);
-
-    return () => clearTimeout(timer);
-  }, [showFloatingButton, isModalOpen, currentArticle, allArticles]);
+  // Mini-card popup disabled - users found it distracting
+  // The 3D article icon now serves as the primary discovery mechanism
 
   const value: ArticleDiscoveryContextType = {
     isModalOpen,
@@ -349,37 +406,8 @@ export function ArticleDiscoveryProvider({
 
       {/* Floating Discovery Button */}
       <FloatingButtonContainer $visible={showFloatingButton && !isModalOpen}>
-        {/* Mini suggestion card */}
-        {showMiniCard && suggestedArticle && (
-          <MiniCard
-            $visible={showMiniCard}
-            onClick={() => {
-              setShowMiniCard(false);
-              openModal(suggestedArticle);
-            }}
-          >
-            <MiniCardImage>
-              <Star size={20} color="#fff" />
-            </MiniCardImage>
-            <MiniCardContent>
-              <MiniCardTitle>{suggestedArticle.title}</MiniCardTitle>
-              <MiniCardSubtitle>
-                {suggestedArticle.articleType === 'fiction' ? 'Fiction' : 'Research'} • {suggestedArticle.readingTime} min read
-              </MiniCardSubtitle>
-            </MiniCardContent>
-            <CloseCardButton
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowMiniCard(false);
-              }}
-            >
-              <X size={14} />
-            </CloseCardButton>
-          </MiniCard>
-        )}
-
         {/* Tooltip */}
-        <Tooltip $visible={isHovered && !showMiniCard}>
+        <Tooltip $visible={isHovered}>
           Discover <TooltipHighlight>related articles</TooltipHighlight> and explore the archive
         </Tooltip>
 
@@ -393,9 +421,7 @@ export function ArticleDiscoveryProvider({
         >
           <Compass />
           {isHovered && <ButtonText>Discover Articles</ButtonText>}
-          {!isHovered && currentArticle && (
-            <NotificationBadge>!</NotificationBadge>
-          )}
+          {!isHovered && currentArticle && <AIEye />}
         </FloatingButton>
       </FloatingButtonContainer>
 
