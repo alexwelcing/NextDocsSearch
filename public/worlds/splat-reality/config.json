@@ -1,0 +1,66 @@
+{
+  "id": "splat-reality",
+  "name": "3D Reality",
+  "description": "An immersive Gaussian Splat environment with full 3D depth",
+  "version": "1.0.0",
+  "assets": {
+    "environment": "/splats/splat4s.spz",
+    "fallbackPanorama": "/backgrounds/default.jpg"
+  },
+  "camera": {
+    "initial": [0, 1.5, 5],
+    "target": [0, 0, 0],
+    "fov": 65,
+    "constraints": {
+      "minDistance": 2,
+      "maxDistance": 30,
+      "minPolarAngle": 0.3,
+      "maxPolarAngle": 1.4,
+      "enablePan": true
+    }
+  },
+  "lighting": {
+    "preset": "dramatic",
+    "ambient": 0.3,
+    "directionalIntensity": 1.2,
+    "accentColor": "#00d4ff",
+    "shadowsEnabled": false,
+    "envMapIntensity": 0.8
+  },
+  "atmosphere": {
+    "fog": {
+      "enabled": true,
+      "color": "#0a0a1a",
+      "near": 15,
+      "far": 50
+    },
+    "particles": {
+      "type": "fireflies",
+      "intensity": 0.3,
+      "color": "#00d4ff"
+    }
+  },
+  "postProcessing": {
+    "bloom": {
+      "enabled": true,
+      "intensity": 0.4,
+      "threshold": 0.6,
+      "radius": 0.5
+    },
+    "colorGrading": {
+      "enabled": true,
+      "saturation": 1.1,
+      "contrast": 1.05,
+      "brightness": 1.0
+    },
+    "vignette": {
+      "enabled": true,
+      "intensity": 0.3
+    }
+  },
+  "meta": {
+    "tags": ["splat", "3d", "immersive", "reality"],
+    "author": "System",
+    "thumbnail": "/thumbnails/splat-reality.jpg"
+  }
+}
