@@ -106,7 +106,7 @@ export const createPersonSchema = ({
   sameAs: sameAs || [
     'https://www.linkedin.com/in/alexwelcing',
     'https://github.com/alexwelcing',
-    'https://twitter.com/alexwelcing',
+    'https://x.com/alexwelcing',
   ],
   knowsAbout: knowsAbout || [
     'Speculative AI Systems',

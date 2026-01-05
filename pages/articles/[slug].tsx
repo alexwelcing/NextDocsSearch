@@ -447,6 +447,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alexwelcing.com';
   const articleUrl = `${siteUrl}/articles/${slug}`;
   const defaultOgImage = `${siteUrl}/og-default.png`;
+  const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : defaultOgImage;
 
   // Discovery context integration
   const { openModal, setCurrentArticle } = useArticleDiscovery();
@@ -483,16 +484,23 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="og:url" content={articleUrl} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description || `Read ${title}`} />
-        <meta property="og:image" content={ogImage || defaultOgImage} />
+        <meta property="og:image" content={fullOgImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="article:published_time" content={date} />
         <meta property="article:author" content={author.join(', ')} />
 
-        {/* Twitter */}
+        {/* X (Twitter) Card */}
         <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:site" content="@alexwelcing" />
         <meta property="twitter:url" content={articleUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description || `Read ${title}`} />
-        <meta property="twitter:image" content={ogImage || defaultOgImage} />
+        <meta property="twitter:image" content={fullOgImage} />
+
+        {/* Performance hints */}
+        <meta name="theme-color" content="#0a0a0a" />
+        {ogImage && <link rel="preload" as="image" href={ogImage} />}
 
         {/* Canonical URL */}
         <link rel="canonical" href={articleUrl} />
@@ -503,7 +511,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
         data={{
           headline: title,
           description: description,
-          image: ogImage || defaultOgImage,
+          image: fullOgImage,
           datePublished: date,
           dateModified: date,
           url: articleUrl,
@@ -591,18 +599,24 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
         <ShareButtons>
           <ShareButton
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`}
+            href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            🐦 Share on Twitter
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            Share on X
           </ShareButton>
           <ShareButton
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            💼 Share on LinkedIn
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            Share on LinkedIn
           </ShareButton>
         </ShareButtons>
 

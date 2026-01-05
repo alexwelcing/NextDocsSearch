@@ -31,7 +31,14 @@ const About: React.FC = () => {
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content="About Alex Welcing | AI Futures Researcher" />
         <meta property="og:description" content="Researching speculative AI systems, emergent intelligence, and civilizational futures. Senior AI Product Manager with 10+ years building ML products." />
-        <meta property="og:image" content="/social-preview.png" />
+        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+
+        {/* X (Twitter) Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="About Alex Welcing | AI Futures Researcher" />
+        <meta name="twitter:description" content="Researching speculative AI systems, emergent intelligence, and civilizational futures. Senior AI Product Manager with 10+ years building ML products." />
+        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com/about" />
         <meta property="og:type" content="profile" />
       </Head>
@@ -45,7 +52,7 @@ const About: React.FC = () => {
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
-            "https://twitter.com/alexwelcing"
+            "https://x.com/alexwelcing"
           ],
           description: "Researching speculative AI systems, emergent intelligence, and how reality reorganizes when cognition becomes abundant.",
           knowsAbout: [

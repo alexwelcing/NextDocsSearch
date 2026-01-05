@@ -37,11 +37,7 @@ function App({ Component, pageProps }: AppProps) {
         data-domain-script="2767f96d-f8c2-489d-862e-bfeb24f3c968"
       />
 
-      {/* Material icons */}
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
-        rel="stylesheet"
-      />
+      {/* Material icons are now loaded in _document.tsx for better performance */}
 
       {/* Inline script for cookie pro */}
       <Script id="optanon" strategy="afterInteractive">
