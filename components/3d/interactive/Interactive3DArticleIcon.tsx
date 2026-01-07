@@ -19,7 +19,6 @@ import {
   geometryCache,
   materialCache,
   createInstancedMesh,
-  disposeObject,
   LOD_PRESETS,
   calculateLODLevel,
 } from '@/lib/3d/performanceUtils';
@@ -492,11 +491,21 @@ export default function Interactive3DArticleIcon({
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (groupRef.current) {
-        disposeObject(groupRef.current);
+      // Dispose non-cached materials (hologram shader)
+      hologramMaterial.dispose();
+
+      // Dispose particle system
+      if (particlesRef.current) {
+        particlesRef.current.geometry.dispose();
+        if (particlesRef.current.material) {
+          (particlesRef.current.material as THREE.Material).dispose();
+        }
       }
+
+      // Note: Cached geometries and materials are managed by the cache system
+      // and should not be disposed here
     };
-  }, []);
+  }, [hologramMaterial]);
 
   return (
     <group ref={groupRef}>
