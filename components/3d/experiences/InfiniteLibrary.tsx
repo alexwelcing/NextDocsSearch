@@ -45,6 +45,8 @@ interface InfiniteLibraryProps {
   onArticleSelect?: (article: Article) => void;
   onArticleHover?: (article: Article | null) => void;
   selectedArticleId?: string;
+  /** Set to true if parent component provides OrbitControls */
+  externalControls?: boolean;
 }
 
 /**
@@ -244,6 +246,7 @@ export default function InfiniteLibrary({
   onArticleSelect,
   onArticleHover,
   selectedArticleId,
+  externalControls = false,
 }: InfiniteLibraryProps) {
   const { camera } = useThree();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -305,15 +308,17 @@ export default function InfiniteLibrary({
       {/* Atmosphere and effects */}
       <Atmosphere theme={theme} quality={quality} />
 
-      {/* Camera controls */}
-      <OrbitControls
-        enableDamping
-        dampingFactor={0.05}
-        minDistance={5}
-        maxDistance={radius * 2}
-        maxPolarAngle={Math.PI * 0.85}
-        minPolarAngle={Math.PI * 0.15}
-      />
+      {/* Camera controls - only render if parent doesn't provide controls */}
+      {!externalControls && (
+        <OrbitControls
+          enableDamping
+          dampingFactor={0.05}
+          minDistance={5}
+          maxDistance={radius * 2}
+          maxPolarAngle={Math.PI * 0.85}
+          minPolarAngle={Math.PI * 0.15}
+        />
+      )}
 
       {/* Connection lines */}
       {connections.length > 0 && (

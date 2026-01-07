@@ -2,12 +2,20 @@
  * Seasonal Effects Component
  * Renders particle effects based on the current season
  * (snow, falling leaves, petals, fireflies, spiderwebs)
+ *
+ * Performance optimized with capped particle counts
  */
 
 import React, { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Season, SeasonalTheme } from '@/lib/theme/seasonalTheme';
+
+// Performance caps - max particle counts regardless of intensity
+const MAX_SNOW_PARTICLES = 500;
+const MAX_LEAF_PARTICLES = 300;
+const MAX_PETAL_PARTICLES = 250;
+const MAX_FIREFLY_PARTICLES = 150;
 
 interface SeasonalEffectsProps {
   season: Season;
@@ -17,7 +25,7 @@ interface SeasonalEffectsProps {
 // Snow particles effect
 function SnowParticles({ theme }: { theme: SeasonalTheme }) {
   const particlesRef = useRef<THREE.Points>(null);
-  const count = Math.floor(1000 * theme.particleIntensity);
+  const count = Math.min(Math.floor(500 * theme.particleIntensity), MAX_SNOW_PARTICLES);
 
   const particles = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -76,7 +84,7 @@ function SnowParticles({ theme }: { theme: SeasonalTheme }) {
 // Falling leaves effect
 function FallingLeaves({ theme }: { theme: SeasonalTheme }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const count = Math.floor(500 * theme.particleIntensity);
+  const count = Math.min(Math.floor(300 * theme.particleIntensity), MAX_LEAF_PARTICLES);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   const particles = useMemo(() => {
@@ -152,7 +160,7 @@ function FallingLeaves({ theme }: { theme: SeasonalTheme }) {
 // Flower petals effect
 function FlowerPetals({ theme }: { theme: SeasonalTheme }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const count = Math.floor(400 * theme.particleIntensity);
+  const count = Math.min(Math.floor(250 * theme.particleIntensity), MAX_PETAL_PARTICLES);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const color = useMemo(() => new THREE.Color(), []);
 
@@ -247,7 +255,7 @@ function FlowerPetals({ theme }: { theme: SeasonalTheme }) {
 // Fireflies effect (summer)
 function Fireflies({ theme }: { theme: SeasonalTheme }) {
   const particlesRef = useRef<THREE.Points>(null);
-  const count = Math.floor(200 * theme.particleIntensity);
+  const count = Math.min(Math.floor(150 * theme.particleIntensity), MAX_FIREFLY_PARTICLES);
 
   const particles = useMemo(() => {
     const positions = new Float32Array(count * 3);

@@ -52,7 +52,7 @@ const mapToLibraryArticle = (article: EnhancedArticleData) => ({
   relatedTo: [], // Could be enhanced with actual relations
 });
 
-const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PhysicsEnvironment: React.FC<{ children: React.ReactNode; paused?: boolean }> = ({ children, paused = false }) => {
   return (
     <Physics
       gravity={[0, -9.81, 0]}
@@ -60,6 +60,7 @@ const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children 
       tolerance={0.01}
       allowSleep={true}
       broadphase="SAP"
+      isPaused={paused}
       defaultContactMaterial={{
         friction: 0.1,
         restitution: 0.7,
@@ -533,7 +534,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       >
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
-            <PhysicsEnvironment>
+            <PhysicsEnvironment paused={is3DExploreActive || (gameState === 'IDLE' && cinematicComplete)}>
               <PhysicsGround />
 
               {/* Cinematic camera for intro sequence */}
@@ -623,6 +624,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                     if (enhanced) handleSelectArticle(enhanced);
                   }}
                   selectedArticleId={selectedArticle?.slug}
+                  externalControls={true}
                 />
               )}
 
