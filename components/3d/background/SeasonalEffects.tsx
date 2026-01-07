@@ -33,14 +33,15 @@ function SnowParticles({ theme }: { theme: SeasonalTheme }) {
     return { positions, velocities };
   }, [count]);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (particlesRef.current) {
       const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+      const time = state.clock.elapsedTime;
 
       for (let i = 0; i < count; i++) {
         // Fall down with slight horizontal drift
         positions[i * 3 + 1] -= particles.velocities[i];
-        positions[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.001;
+        positions[i * 3] += Math.sin(time + i) * 0.001;
 
         // Reset to top when reaching bottom
         if (positions[i * 3 + 1] < -5) {
@@ -96,13 +97,15 @@ function FallingLeaves({ theme }: { theme: SeasonalTheme }) {
     return { positions, velocities, rotations };
   }, [count]);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (meshRef.current) {
+      const time = state.clock.elapsedTime;
+
       for (let i = 0; i < count; i++) {
         // Fall with swaying motion
         particles.positions[i * 3 + 1] -= particles.velocities[i];
-        particles.positions[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.02;
-        particles.positions[i * 3 + 2] += Math.cos(Date.now() * 0.001 + i) * 0.02;
+        particles.positions[i * 3] += Math.sin(time + i) * 0.02;
+        particles.positions[i * 3 + 2] += Math.cos(time + i) * 0.02;
 
         // Rotate leaves
         particles.rotations[i * 3] += 0.01;
@@ -190,13 +193,15 @@ function FlowerPetals({ theme }: { theme: SeasonalTheme }) {
     }
   }, [particles, count, color]);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (meshRef.current) {
+      const time = state.clock.elapsedTime;
+
       for (let i = 0; i < count; i++) {
         // Gentle fall with spiral motion
         particles.positions[i * 3 + 1] -= particles.velocities[i];
-        particles.positions[i * 3] += Math.sin(Date.now() * 0.002 + i) * 0.015;
-        particles.positions[i * 3 + 2] += Math.cos(Date.now() * 0.002 + i) * 0.015;
+        particles.positions[i * 3] += Math.sin(time * 2 + i) * 0.015;
+        particles.positions[i * 3 + 2] += Math.cos(time * 2 + i) * 0.015;
 
         // Rotate petals
         particles.rotations[i * 3] += 0.01;

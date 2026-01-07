@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import CircleNav from '@/components/ui/CircleNav';
 import PDFLinks from '@/components/PDFLinks';
 import StructuredData from '@/components/StructuredData';
+
+// Dynamically import R3F background to avoid SSR issues
+const AmbientR3FBackground = dynamic(
+  () => import('@/components/3d/background/AmbientR3FBackground'),
+  { ssr: false }
+);
 
 
 const About: React.FC = () => {
@@ -15,7 +22,10 @@ const About: React.FC = () => {
   }, []);
 
   return (
-    <div className="siteContainer">
+    <div className="siteContainer" style={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Animated R3F background */}
+      <AmbientR3FBackground />
+
       <Head>
         <title>About Alex Welcing | AI Futures Researcher</title>
         <meta
