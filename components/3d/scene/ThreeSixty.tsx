@@ -349,24 +349,37 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
 
-  // Fetch articles
+  // Fetch initial data in parallel (articles + splats)
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchInitialData = async () => {
       try {
-        const response = await fetch('/api/articles');
-        const data: ArticleData[] = await response.json();
-        setArticles(data);
+        const [articlesRes, splatsRes] = await Promise.all([
+          fetch('/api/articles'),
+          fetch('/api/getSplats'),
+        ]);
+
+        // Process articles
+        const articlesData: ArticleData[] = await articlesRes.json();
+        setArticles(articlesData);
+
+        // Process splats
+        const splatsData = await splatsRes.json();
+        if (splatsData.hasSplats && splatsData.splats.length > 0) {
+          setAvailableSplats(splatsData.splats);
+          setHasSplats(true);
+          setSelectedSplat(splatsData.splats[0].path);
+        }
       } catch (error) {
-        console.error("Failed fetching articles:", error);
+        console.error("Failed fetching initial data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchArticles();
+    fetchInitialData();
   }, []);
 
-  // Fetch enhanced articles for 3D exploration
+  // Fetch enhanced articles lazily for 3D exploration
   useEffect(() => {
     if (is3DExploreActive && enhancedArticles.length === 0) {
       fetch('/api/articles-enhanced')
@@ -379,26 +392,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         .catch(err => console.error('Failed to fetch enhanced articles:', err));
     }
   }, [is3DExploreActive, enhancedArticles.length]);
-
-  // Auto-detect available splat files
-  useEffect(() => {
-    const fetchSplats = async () => {
-      try {
-        const response = await fetch('/api/getSplats');
-        const data = await response.json();
-
-        if (data.hasSplats && data.splats.length > 0) {
-          setAvailableSplats(data.splats);
-          setHasSplats(true);
-          setSelectedSplat(data.splats[0].path);
-        }
-      } catch (error) {
-        console.error("Failed fetching splat files:", error);
-      }
-    };
-
-    fetchSplats();
-  }, []);
 
   const handleEnterVR = async () => {
     try {

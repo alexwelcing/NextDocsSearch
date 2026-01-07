@@ -4,13 +4,24 @@
  * Each article appears as a luminous orb with visual properties that
  * communicate its nature: size (importance), color (sentiment),
  * glow (recency), and subtle animations.
+ *
+ * Performance optimized with configurable geometry detail levels.
  */
 
 import React, { useRef, useState, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Billboard, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import { calculateOrbVisuals, type ExperienceTheme } from '@/lib/3d/vision';
+
+// Geometry detail levels based on quality
+const GEOMETRY_DETAIL = {
+  low: { core: 12, glow: 8, ring: 16 },
+  medium: { core: 20, glow: 12, ring: 24 },
+  high: { core: 32, glow: 16, ring: 32 },
+} as const;
+
+type QualityLevel = keyof typeof GEOMETRY_DETAIL;
 
 interface ArticleOrbProps {
   id: string;
@@ -22,6 +33,7 @@ interface ArticleOrbProps {
   category?: string;
   theme?: ExperienceTheme;
   selected?: boolean;
+  quality?: QualityLevel;
   onClick?: (id: string) => void;
   onHover?: (id: string | null) => void;
 }
@@ -36,12 +48,16 @@ export default function ArticleOrb({
   category,
   theme,
   selected = false,
+  quality = 'medium',
   onClick,
   onHover,
 }: ArticleOrbProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
+
+  // Get geometry detail based on quality setting
+  const detail = GEOMETRY_DETAIL[quality];
 
   // Calculate visual properties from article data
   const visuals = useMemo(
@@ -115,9 +131,9 @@ export default function ArticleOrb({
 
   return (
     <group position={position}>
-      {/* Outer glow */}
+      {/* Outer glow - lower detail */}
       <mesh ref={glowRef}>
-        <sphereGeometry args={[1, 16, 16]} />
+        <sphereGeometry args={[1, detail.glow, detail.glow]} />
         <meshBasicMaterial
           color={visuals.glowColor}
           transparent
@@ -127,14 +143,14 @@ export default function ArticleOrb({
         />
       </mesh>
 
-      {/* Core orb */}
+      {/* Core orb - quality-based detail */}
       <mesh
         ref={meshRef}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
         onClick={handleClick}
       >
-        <sphereGeometry args={[1, 32, 32]} />
+        <sphereGeometry args={[1, detail.core, detail.core]} />
         <meshStandardMaterial
           color={visuals.coreColor}
           emissive={visuals.glowColor}
@@ -170,7 +186,7 @@ export default function ArticleOrb({
       {/* Selection ring */}
       {selected && (
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[visuals.baseSize * 1.8, visuals.baseSize * 2, 32]} />
+          <ringGeometry args={[visuals.baseSize * 1.8, visuals.baseSize * 2, detail.ring]} />
           <meshBasicMaterial
             color={theme?.colors.accent ?? '#ffd700'}
             transparent

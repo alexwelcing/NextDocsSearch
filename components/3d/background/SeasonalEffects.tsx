@@ -67,6 +67,13 @@ function SnowParticles({ theme }: { theme: SeasonalTheme }) {
     return geo;
   }, [particles.positions]);
 
+  // Cleanup geometry on unmount
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
+
   return (
     <points ref={particlesRef} geometry={geometry}>
       <pointsMaterial
@@ -297,6 +304,13 @@ function Fireflies({ theme }: { theme: SeasonalTheme }) {
     geo.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
     return geo;
   }, [particles.positions]);
+
+  // Cleanup geometry on unmount
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
 
   return (
     <points ref={particlesRef} geometry={geometry}>

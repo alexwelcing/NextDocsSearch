@@ -357,6 +357,7 @@ export default function InfiniteLibrary({
             category={article.category}
             theme={theme}
             selected={article.id === selectedArticleId}
+            quality={quality}
             onClick={handleArticleClick}
             onHover={handleArticleHover}
           />
