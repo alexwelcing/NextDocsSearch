@@ -333,7 +333,7 @@ export default function InfiniteLibrary({
 
     // Only update state if visibility changed
     if (newVisibleIds.size !== visibleArticleIds.size ||
-        ![...newVisibleIds].every(id => visibleArticleIds.has(id))) {
+        !Array.from(newVisibleIds).every(id => visibleArticleIds.has(id))) {
       setVisibleArticleIds(newVisibleIds);
     }
   });
