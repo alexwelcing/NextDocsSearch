@@ -27,6 +27,7 @@ import { useJourney } from '../../contexts/JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../../../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
+import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -196,6 +197,23 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
+
+  // Article discovery - disable mini card when in 3D mode
+  const { setDisableMiniCard, setShowFloatingButton } = useArticleDiscovery();
+
+  // Disable article mini card when in 3D exploration mode or game mode
+  // This prevents the article popup from competing with the 3D scene
+  useEffect(() => {
+    const shouldDisable = is3DExploreActive || gameState === 'PLAYING' || gameState === 'COUNTDOWN';
+    setDisableMiniCard(shouldDisable);
+
+    // Also hide the floating discovery button during game
+    if (gameState === 'PLAYING' || gameState === 'COUNTDOWN') {
+      setShowFloatingButton(false);
+    } else {
+      setShowFloatingButton(true);
+    }
+  }, [is3DExploreActive, gameState, setDisableMiniCard, setShowFloatingButton]);
 
   // Update season when query params change
   useEffect(() => {

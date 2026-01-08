@@ -259,6 +259,8 @@ interface ArticleDiscoveryContextType {
   setCurrentArticle: (article: EnhancedArticleData | undefined) => void;
   showFloatingButton: boolean;
   setShowFloatingButton: (show: boolean) => void;
+  disableMiniCard: boolean;
+  setDisableMiniCard: (disable: boolean) => void;
 }
 
 const ArticleDiscoveryContext = createContext<ArticleDiscoveryContextType | null>(null);
@@ -286,6 +288,7 @@ export function ArticleDiscoveryProvider({
   const [isHovered, setIsHovered] = useState(false);
   const [showMiniCard, setShowMiniCard] = useState(false);
   const [suggestedArticle, setSuggestedArticle] = useState<EnhancedArticleData | null>(null);
+  const [disableMiniCard, setDisableMiniCard] = useState(false);
 
   // Pre-fetch and cache all articles
   const [allArticles, setAllArticles] = useState<EnhancedArticleData[]>([]);
@@ -315,10 +318,14 @@ export function ArticleDiscoveryProvider({
   }, []);
 
   // Show a suggested article mini-card after some delay (use cached articles)
+  // Disabled when in 3D exploration mode or when explicitly disabled
   useEffect(() => {
-    if (!showFloatingButton || isModalOpen || allArticles.length === 0) return;
+    if (!showFloatingButton || isModalOpen || allArticles.length === 0 || disableMiniCard) return;
 
     const timer = setTimeout(() => {
+      // Double-check disableMiniCard hasn't changed
+      if (disableMiniCard) return;
+
       const available = allArticles.filter(a => a.slug !== currentArticle?.slug);
       if (available.length > 0) {
         const random = available[Math.floor(Math.random() * available.length)];
@@ -331,7 +338,14 @@ export function ArticleDiscoveryProvider({
     }, 8000);
 
     return () => clearTimeout(timer);
-  }, [showFloatingButton, isModalOpen, currentArticle, allArticles]);
+  }, [showFloatingButton, isModalOpen, currentArticle, allArticles, disableMiniCard]);
+
+  // Hide mini card immediately when disableMiniCard becomes true
+  useEffect(() => {
+    if (disableMiniCard) {
+      setShowMiniCard(false);
+    }
+  }, [disableMiniCard]);
 
   const value: ArticleDiscoveryContextType = {
     isModalOpen,
@@ -341,6 +355,8 @@ export function ArticleDiscoveryProvider({
     setCurrentArticle,
     showFloatingButton,
     setShowFloatingButton,
+    disableMiniCard,
+    setDisableMiniCard,
   };
 
   return (
