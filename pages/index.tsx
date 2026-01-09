@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -8,6 +8,7 @@ import CircleNav from '@/components/ui/CircleNav'
 import ArticleList from '@/components/ui/ArticleList'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
+import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
 import styles from '@/styles/Home.module.css'
 import type { GameState } from '@/components/3d/game/ClickingGame'
 import { useJourney } from '@/components/contexts/JourneyContext'
@@ -17,160 +18,6 @@ const ThreeSixty = dynamic(() => import('@/components/3d/scene/ThreeSixty'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })
-
-// Minimal GLSL background shader for hero
-const heroVertexShader = `
-  attribute vec2 position;
-  void main() {
-    gl_Position = vec4(position, 0.0, 1.0);
-  }
-`;
-
-const heroFragmentShader = `
-  precision highp float;
-  uniform float uTime;
-  uniform vec2 uResolution;
-  uniform float uScroll;
-
-  float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-  }
-
-  float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    f = f * f * (3.0 - 2.0 * f);
-    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
-               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
-  }
-
-  void main() {
-    vec2 uv = gl_FragCoord.xy / uResolution;
-    vec2 p = (gl_FragCoord.xy - uResolution * 0.5) / min(uResolution.x, uResolution.y);
-
-    // Deep space base
-    vec3 col = vec3(0.012, 0.012, 0.024);
-
-    // Subtle noise field
-    float n = noise(p * 3.0 + uTime * 0.1);
-    col += vec3(0.0, 0.03, 0.06) * n;
-
-    // Distant stars
-    for (float i = 0.0; i < 80.0; i++) {
-      vec2 starPos = vec2(hash(vec2(i, 0.0)), hash(vec2(0.0, i)));
-      float starDist = length(uv - starPos);
-      float twinkle = 0.5 + 0.5 * sin(uTime * (1.0 + hash(vec2(i, i)) * 2.0) + i);
-      col += vec3(0.7, 0.8, 1.0) * smoothstep(0.003, 0.0, starDist) * twinkle * 0.4;
-    }
-
-    // Central subtle glow
-    float centerDist = length(p);
-    col += vec3(0.0, 0.08, 0.12) * exp(-centerDist * 2.0) * (0.5 + 0.2 * sin(uTime * 0.5));
-
-    // Scroll fade
-    col *= 1.0 - uScroll * 0.3;
-
-    // Vignette
-    float vignette = 1.0 - smoothstep(0.4, 1.2, centerDist);
-    col *= vignette;
-
-    gl_FragColor = vec4(col, 1.0);
-  }
-`;
-
-// Hero shader canvas component
-function HeroCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef = useRef<number>(0);
-  const scrollRef = useRef(0);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const gl = canvas.getContext('webgl', { alpha: false, antialias: false });
-    if (!gl) return;
-
-    // Create shaders
-    const vs = gl.createShader(gl.VERTEX_SHADER);
-    const fs = gl.createShader(gl.FRAGMENT_SHADER);
-    if (!vs || !fs) return;
-
-    gl.shaderSource(vs, heroVertexShader);
-    gl.compileShader(vs);
-    gl.shaderSource(fs, heroFragmentShader);
-    gl.compileShader(fs);
-
-    const program = gl.createProgram();
-    if (!program) return;
-
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    // Fullscreen quad
-    const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-    const positionLoc = gl.getAttribLocation(program, 'position');
-    gl.enableVertexAttribArray(positionLoc);
-    gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
-
-    const uTimeLoc = gl.getUniformLocation(program, 'uTime');
-    const uResolutionLoc = gl.getUniformLocation(program, 'uResolution');
-    const uScrollLoc = gl.getUniformLocation(program, 'uScroll');
-
-    const startTime = performance.now();
-
-    const handleScroll = () => {
-      scrollRef.current = Math.min(window.scrollY / window.innerHeight, 1);
-    };
-    window.addEventListener('scroll', handleScroll);
-
-    const animate = () => {
-      const dpr = Math.min(window.devicePixelRatio, 1.5);
-      const width = window.innerWidth * dpr;
-      const height = window.innerHeight * dpr;
-
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-        gl.viewport(0, 0, width, height);
-      }
-
-      const elapsed = (performance.now() - startTime) / 1000;
-      gl.uniform1f(uTimeLoc, elapsed);
-      gl.uniform2f(uResolutionLoc, width, height);
-      gl.uniform1f(uScrollLoc, scrollRef.current);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      cancelAnimationFrame(rafRef.current);
-      gl.deleteProgram(program);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-      }}
-    />
-  );
-}
 
 export default function HomePage() {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
@@ -309,7 +156,7 @@ export default function HomePage() {
           >
             {/* Hero - Immersive, mysterious, minimal */}
             <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-              <HeroCanvas />
+              <EnhancedHeroCanvas />
 
               {/* Content overlay */}
               <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-4xl">
@@ -338,7 +185,7 @@ export default function HomePage() {
                     }}
                   >
                     <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-white/80 group-hover:text-white transition-colors">
-                      Explore Research
+                      Read Articles
                     </span>
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -358,7 +205,7 @@ export default function HomePage() {
                     }}
                   >
                     <span className="relative z-10 text-sm font-medium tracking-widest uppercase" style={{ color: 'rgba(0, 212, 255, 0.9)' }}>
-                      Enter World
+                      3D Experience
                     </span>
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
