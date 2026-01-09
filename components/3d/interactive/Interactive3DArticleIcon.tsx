@@ -1,13 +1,14 @@
 /**
- * Interactive3DArticleIcon - A magical floating article discovery orb
+ * Interactive3DArticleIcon - A magical AI-powered article discovery orb
  *
- * An ethereal, animated 3D object that invites users to explore articles.
- * Features smooth animations, magical particle effects, and an AI eye at center.
+ * An ethereal floating crystal orb with a glowing AI eye at its center.
+ * The eye tracks the viewer, blinks naturally, and invites exploration.
+ * Features magical particle aura and smooth floating animations.
  */
 
 import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Billboard, Text, RoundedBox } from '@react-three/drei';
+import { Billboard, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface Interactive3DArticleIconProps {
@@ -17,8 +18,8 @@ interface Interactive3DArticleIconProps {
   onClick?: () => void;
   autoFloat?: boolean;
   boundRadius?: number;
-  color?: string;
-  glowColor?: string;
+  primaryColor?: string;
+  irisColor?: string;
 }
 
 export default function Interactive3DArticleIcon({
@@ -28,14 +29,16 @@ export default function Interactive3DArticleIcon({
   onClick,
   autoFloat = true,
   boundRadius = 3,
-  color = '#00d4ff',
-  glowColor = '#ffd700',
+  primaryColor = '#00d4ff',
+  irisColor = '#00ffaa',
 }: Interactive3DArticleIconProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const innerOrbRef = useRef<THREE.Mesh>(null);
-  const outerRingRef = useRef<THREE.Mesh>(null);
-  const eyeRef = useRef<THREE.Group>(null);
-  const particleRef = useRef<THREE.Points>(null);
+  const crystalRef = useRef<THREE.Mesh>(null);
+  const eyeGroupRef = useRef<THREE.Group>(null);
+  const irisRef = useRef<THREE.Mesh>(null);
+  const pupilRef = useRef<THREE.Mesh>(null);
+  const eyelidTopRef = useRef<THREE.Mesh>(null);
+  const eyelidBottomRef = useRef<THREE.Mesh>(null);
 
   const [hovered, setHovered] = useState(false);
 
@@ -46,12 +49,13 @@ export default function Interactive3DArticleIcon({
     currentPos: new THREE.Vector3(...position),
     eyeLookTarget: new THREE.Vector3(0, 0, 1),
     blinkTimer: 0,
-    isBlinking: false,
+    blinkPhase: 0, // 0 = open, 1 = closing, 2 = opening
     pupilDilation: 1,
+    irisRotation: 0,
   });
 
-  // Create particle system for ambient magic
-  const particleCount = 30;
+  // Create particle system for magical aura around the orb
+  const particleCount = 50;
   const particleData = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
     const scales = new Float32Array(particleCount);
@@ -60,12 +64,12 @@ export default function Interactive3DArticleIcon({
     for (let i = 0; i < particleCount; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
-      const r = 0.6 + Math.random() * 0.4;
+      const r = 0.7 + Math.random() * 0.5; // Orbit just outside the orb
 
       positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = r * Math.cos(phi);
-      scales[i] = 0.02 + Math.random() * 0.03;
+      scales[i] = 0.015 + Math.random() * 0.025;
       phases[i] = Math.random() * Math.PI * 2;
     }
 
@@ -77,12 +81,12 @@ export default function Interactive3DArticleIcon({
     return { geometry, positions, scales, phases };
   }, []);
 
-  // Particle shader material
+  // Particle shader material - soft glowing motes
   const particleMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uColor: { value: new THREE.Color(color) },
+        uColor: { value: new THREE.Color(primaryColor) },
         uHovered: { value: 0 },
       },
       vertexShader: `
@@ -93,27 +97,26 @@ export default function Interactive3DArticleIcon({
         varying float vAlpha;
 
         void main() {
-          float orbit = uTime * 0.5 + phase;
+          float orbit = uTime * 0.3 + phase;
           vec3 pos = position;
 
-          // Orbit animation
+          // Gentle spiral orbit
           float c = cos(orbit);
           float s = sin(orbit);
           pos.xz = mat2(c, -s, s, c) * pos.xz;
 
-          // Pulse outward when hovered
-          float expand = 1.0 + uHovered * 0.3;
+          // Vertical drift
+          pos.y += sin(uTime * 0.5 + phase * 2.0) * 0.15;
+
+          // Expand outward when hovered
+          float expand = 1.0 + uHovered * 0.4;
           pos *= expand;
 
-          // Breathing effect
-          float breathe = 1.0 + sin(uTime * 2.0 + phase) * 0.1;
-          pos *= breathe;
-
           vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-          gl_PointSize = scale * (200.0 + uHovered * 100.0) / -mvPosition.z;
+          gl_PointSize = scale * (150.0 + uHovered * 80.0) / -mvPosition.z;
           gl_Position = projectionMatrix * mvPosition;
 
-          vAlpha = 0.5 + sin(uTime * 3.0 + phase) * 0.3;
+          vAlpha = 0.4 + sin(uTime * 2.0 + phase) * 0.2;
         }
       `,
       fragmentShader: `
@@ -125,14 +128,15 @@ export default function Interactive3DArticleIcon({
           if (d > 0.5) discard;
 
           float glow = smoothstep(0.5, 0.0, d);
-          gl_FragColor = vec4(uColor, glow * vAlpha);
+          float core = smoothstep(0.3, 0.0, d) * 0.5;
+          gl_FragColor = vec4(uColor, (glow + core) * vAlpha);
         }
       `,
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
-  }, [color]);
+  }, [primaryColor]);
 
   // Animation loop
   useFrame((state, delta) => {
@@ -141,79 +145,99 @@ export default function Interactive3DArticleIcon({
     const a = anim.current;
     a.time += delta;
 
-    // Floating movement
+    // Gentle floating movement
     if (autoFloat) {
-      const floatSpeed = 0.2;
-      const floatX = Math.sin(a.time * floatSpeed) * boundRadius * 0.15;
-      const floatY = Math.sin(a.time * floatSpeed * 0.7) * 0.5 + position[1];
-      const floatZ = Math.cos(a.time * floatSpeed * 0.5) * boundRadius * 0.15 + position[2];
+      const floatSpeed = 0.25;
+      const floatX = Math.sin(a.time * floatSpeed) * boundRadius * 0.12;
+      const floatY = Math.sin(a.time * floatSpeed * 0.8) * 0.4 + position[1];
+      const floatZ = Math.cos(a.time * floatSpeed * 0.6) * boundRadius * 0.12 + position[2];
       a.targetPos.set(floatX + position[0], floatY, floatZ);
     }
 
-    // Smooth movement
-    a.currentPos.lerp(a.targetPos, delta * 3);
+    // Smooth movement with slight lag
+    a.currentPos.lerp(a.targetPos, delta * 2.5);
     groupRef.current.position.copy(a.currentPos);
 
-    // Inner orb animation
-    if (innerOrbRef.current) {
-      const mat = innerOrbRef.current.material as THREE.MeshStandardMaterial;
-      mat.emissiveIntensity = hovered ? 0.8 : 0.4 + Math.sin(a.time * 2) * 0.1;
+    // Crystal orb subtle pulsing
+    if (crystalRef.current) {
+      const mat = crystalRef.current.material as THREE.MeshPhysicalMaterial;
+      const pulse = Math.sin(a.time * 1.5) * 0.1;
+      mat.emissiveIntensity = hovered ? 0.4 : 0.15 + pulse * 0.05;
 
-      // Subtle rotation
-      innerOrbRef.current.rotation.y = a.time * 0.3;
-      innerOrbRef.current.rotation.x = Math.sin(a.time * 0.5) * 0.1;
+      // Very subtle rotation
+      crystalRef.current.rotation.y = a.time * 0.1;
     }
 
-    // Outer ring rotation
-    if (outerRingRef.current) {
-      outerRingRef.current.rotation.z = a.time * 0.5;
-      outerRingRef.current.rotation.x = Math.PI / 2 + Math.sin(a.time * 0.3) * 0.1;
-    }
+    // AI Eye - the star of the show
+    if (eyeGroupRef.current) {
+      // Eye follows camera with personality (slight delay)
+      const cameraDir = state.camera.position.clone().sub(a.currentPos).normalize();
+      a.eyeLookTarget.lerp(cameraDir, delta * 3);
 
-    // AI Eye animation - looks at camera with personality
-    if (eyeRef.current) {
-      // Eye follows camera with lag
-      const camera = state.camera.position.clone().sub(a.currentPos).normalize();
-      a.eyeLookTarget.lerp(camera, delta * 2);
+      // Limit eye movement range
+      const maxLook = 0.08 * scale;
+      const lookX = Math.max(-maxLook, Math.min(maxLook, a.eyeLookTarget.x * 0.12));
+      const lookY = Math.max(-maxLook, Math.min(maxLook, a.eyeLookTarget.y * 0.12));
 
-      // Apply look direction to eye
-      const lookX = a.eyeLookTarget.x * 0.05;
-      const lookY = a.eyeLookTarget.y * 0.05;
-
-      // Get pupil mesh (second child)
-      const pupil = eyeRef.current.children[1] as THREE.Mesh;
-      if (pupil) {
-        pupil.position.x = lookX;
-        pupil.position.y = lookY;
+      // Move iris and pupil to follow gaze
+      if (irisRef.current) {
+        irisRef.current.position.x = lookX;
+        irisRef.current.position.y = lookY;
+        // Subtle iris rotation for visual interest
+        a.irisRotation += delta * 0.3;
+        irisRef.current.rotation.z = a.irisRotation;
+      }
+      if (pupilRef.current) {
+        pupilRef.current.position.x = lookX * 1.2;
+        pupilRef.current.position.y = lookY * 1.2;
       }
 
-      // Blinking
+      // Natural blinking behavior
       a.blinkTimer += delta;
-      if (a.blinkTimer > 3 + Math.random() * 2) {
-        a.isBlinking = true;
+      const blinkInterval = hovered ? 2.5 : 4; // Blink more when curious (hovered)
+
+      if (a.blinkPhase === 0 && a.blinkTimer > blinkInterval + Math.random() * 1.5) {
+        a.blinkPhase = 1; // Start closing
         a.blinkTimer = 0;
       }
 
-      if (a.isBlinking) {
-        const eyelid = eyeRef.current.children[2] as THREE.Mesh;
-        if (eyelid) {
-          eyelid.scale.y = Math.abs(Math.sin(a.time * 15));
-          if (Math.sin(a.time * 15) < -0.9) {
-            a.isBlinking = false;
-            eyelid.scale.y = 0;
+      // Animate eyelids
+      const blinkSpeed = 12;
+      if (eyelidTopRef.current && eyelidBottomRef.current) {
+        if (a.blinkPhase === 1) {
+          // Closing
+          const closeAmount = Math.min(1, a.blinkTimer * blinkSpeed);
+          eyelidTopRef.current.scale.y = closeAmount;
+          eyelidBottomRef.current.scale.y = closeAmount;
+          if (closeAmount >= 1) {
+            a.blinkPhase = 2; // Start opening
+            a.blinkTimer = 0;
           }
+        } else if (a.blinkPhase === 2) {
+          // Opening
+          const openAmount = Math.max(0, 1 - a.blinkTimer * blinkSpeed);
+          eyelidTopRef.current.scale.y = openAmount;
+          eyelidBottomRef.current.scale.y = openAmount;
+          if (openAmount <= 0) {
+            a.blinkPhase = 0; // Done blinking
+            a.blinkTimer = 0;
+          }
+        } else {
+          // Keep open
+          eyelidTopRef.current.scale.y = 0;
+          eyelidBottomRef.current.scale.y = 0;
         }
       }
 
-      // Pupil dilation based on hover
-      const targetDilation = hovered ? 1.3 : 1;
-      a.pupilDilation += (targetDilation - a.pupilDilation) * delta * 5;
-      if (pupil) {
-        pupil.scale.setScalar(a.pupilDilation);
+      // Pupil dilation - dilates when curious/hovered
+      const targetDilation = hovered ? 1.4 : 1;
+      a.pupilDilation += (targetDilation - a.pupilDilation) * delta * 4;
+      if (pupilRef.current) {
+        pupilRef.current.scale.setScalar(a.pupilDilation);
       }
     }
 
-    // Update particle shader
+    // Update particle shader uniforms
     particleMaterial.uniforms.uTime.value = a.time;
     particleMaterial.uniforms.uHovered.value = hovered ? 1 : 0;
   });
@@ -232,139 +256,184 @@ export default function Interactive3DArticleIcon({
     onClick?.();
   }, [onClick]);
 
+  // Size constants
+  const orbRadius = 0.45 * scale;
+  const eyeRadius = 0.28 * scale;
+
   return (
     <group ref={groupRef}>
-      {/* Outer glow */}
-      <mesh scale={hovered ? 1.3 : 1.1}>
-        <sphereGeometry args={[0.5 * scale, 32, 32]} />
+      {/* Outer ethereal glow - largest layer */}
+      <mesh scale={hovered ? 1.4 : 1.2}>
+        <sphereGeometry args={[orbRadius, 32, 32]} />
         <meshBasicMaterial
-          color={color}
+          color={primaryColor}
           transparent
-          opacity={hovered ? 0.25 : 0.15}
+          opacity={hovered ? 0.15 : 0.08}
           depthWrite={false}
         />
       </mesh>
 
-      {/* Main orb body */}
+      {/* Crystal orb shell - transparent with refraction feel */}
       <mesh
-        ref={innerOrbRef}
+        ref={crystalRef}
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
         onClick={handleClick}
       >
-        <sphereGeometry args={[0.35 * scale, 32, 32]} />
-        <meshStandardMaterial
-          color="#0a1628"
-          emissive={color}
-          emissiveIntensity={0.4}
-          metalness={0.9}
-          roughness={0.1}
+        <sphereGeometry args={[orbRadius, 64, 64]} />
+        <meshPhysicalMaterial
+          color="#a0d8ef"
+          emissive={primaryColor}
+          emissiveIntensity={0.15}
+          metalness={0.1}
+          roughness={0.05}
           transparent
-          opacity={0.95}
+          opacity={0.35}
+          transmission={0.6}
+          thickness={0.5}
+          envMapIntensity={1}
+          clearcoat={1}
+          clearcoatRoughness={0.1}
         />
       </mesh>
 
-      {/* Rotating ring */}
-      <mesh ref={outerRingRef}>
-        <torusGeometry args={[0.45 * scale, 0.02 * scale, 8, 64]} />
+      {/* Inner dark core behind the eye */}
+      <mesh>
+        <sphereGeometry args={[orbRadius * 0.7, 32, 32]} />
         <meshStandardMaterial
-          color={glowColor}
-          emissive={glowColor}
-          emissiveIntensity={hovered ? 0.8 : 0.3}
-          metalness={0.8}
-          roughness={0.2}
+          color="#050a15"
+          emissive="#0a1525"
+          emissiveIntensity={0.3}
+          metalness={0.9}
+          roughness={0.3}
         />
       </mesh>
 
-      {/* Second ring at different angle */}
-      <mesh rotation={[Math.PI / 3, 0, Math.PI / 4]}>
-        <torusGeometry args={[0.42 * scale, 0.015 * scale, 8, 64]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={hovered ? 0.6 : 0.2}
-          metalness={0.8}
-          roughness={0.2}
-        />
-      </mesh>
+      {/* ========== THE AI EYE - Front facing ========== */}
+      <group ref={eyeGroupRef} position={[0, 0, orbRadius * 0.85]}>
+        {/* Eye socket / dark background */}
+        <mesh position={[0, 0, -0.01]}>
+          <circleGeometry args={[eyeRadius * 1.15, 48]} />
+          <meshBasicMaterial color="#020408" />
+        </mesh>
 
-      {/* AI Eye - the intelligent indicator */}
-      <group ref={eyeRef} position={[0, 0, 0.32 * scale]}>
-        {/* Eye white/sclera */}
+        {/* Sclera (eye white) with subtle gradient feel */}
         <mesh>
-          <circleGeometry args={[0.12 * scale, 32]} />
-          <meshBasicMaterial color="#e8f4f8" />
+          <circleGeometry args={[eyeRadius, 48]} />
+          <meshStandardMaterial
+            color="#e8f0f5"
+            emissive="#d0e8f0"
+            emissiveIntensity={0.1}
+            metalness={0}
+            roughness={0.4}
+          />
         </mesh>
 
-        {/* Iris + Pupil */}
-        <mesh position={[0, 0, 0.001]}>
-          <circleGeometry args={[0.07 * scale, 32]} />
-          <meshBasicMaterial color={color} />
+        {/* Iris - the colorful ring */}
+        <mesh ref={irisRef} position={[0, 0, 0.005]}>
+          <ringGeometry args={[eyeRadius * 0.25, eyeRadius * 0.65, 48]} />
+          <meshStandardMaterial
+            color={irisColor}
+            emissive={irisColor}
+            emissiveIntensity={hovered ? 0.6 : 0.3}
+            metalness={0.3}
+            roughness={0.2}
+          />
         </mesh>
 
-        {/* Pupil center */}
-        <mesh position={[0, 0, 0.002]}>
-          <circleGeometry args={[0.035 * scale, 32]} />
+        {/* Iris inner detail ring */}
+        <mesh position={[0, 0, 0.006]}>
+          <ringGeometry args={[eyeRadius * 0.22, eyeRadius * 0.28, 48]} />
+          <meshBasicMaterial
+            color={primaryColor}
+            transparent
+            opacity={0.7}
+          />
+        </mesh>
+
+        {/* Pupil - deep black center */}
+        <mesh ref={pupilRef} position={[0, 0, 0.008]}>
+          <circleGeometry args={[eyeRadius * 0.22, 32]} />
           <meshBasicMaterial color="#000000" />
         </mesh>
 
-        {/* Eye highlight */}
-        <mesh position={[0.025 * scale, 0.025 * scale, 0.003]}>
-          <circleGeometry args={[0.015 * scale, 16]} />
-          <meshBasicMaterial color="#ffffff" />
+        {/* Pupil depth - slightly smaller, even darker */}
+        <mesh position={[0, 0, 0.009]}>
+          <circleGeometry args={[eyeRadius * 0.15, 32]} />
+          <meshBasicMaterial color="#000005" />
         </mesh>
 
-        {/* Eyelid for blinking */}
-        <mesh position={[0, 0.12 * scale, 0.004]} scale={[1, 0, 1]}>
-          <planeGeometry args={[0.3 * scale, 0.15 * scale]} />
-          <meshBasicMaterial color="#0a1628" side={THREE.DoubleSide} />
+        {/* Primary catchlight - top right */}
+        <mesh position={[eyeRadius * 0.2, eyeRadius * 0.25, 0.012]}>
+          <circleGeometry args={[eyeRadius * 0.12, 16]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.95} />
+        </mesh>
+
+        {/* Secondary catchlight - bottom left, smaller */}
+        <mesh position={[-eyeRadius * 0.15, -eyeRadius * 0.2, 0.011]}>
+          <circleGeometry args={[eyeRadius * 0.05, 12]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
+        </mesh>
+
+        {/* Top eyelid - descends when blinking */}
+        <mesh
+          ref={eyelidTopRef}
+          position={[0, eyeRadius * 0.5, 0.015]}
+          scale={[1, 0, 1]}
+        >
+          <planeGeometry args={[eyeRadius * 2.5, eyeRadius * 1.2]} />
+          <meshBasicMaterial color="#050a15" side={THREE.DoubleSide} />
+        </mesh>
+
+        {/* Bottom eyelid - rises when blinking */}
+        <mesh
+          ref={eyelidBottomRef}
+          position={[0, -eyeRadius * 0.5, 0.015]}
+          scale={[1, 0, 1]}
+        >
+          <planeGeometry args={[eyeRadius * 2.5, eyeRadius * 1.2]} />
+          <meshBasicMaterial color="#050a15" side={THREE.DoubleSide} />
         </mesh>
       </group>
 
-      {/* Orbiting particles */}
+      {/* Subtle accent ring around the orb */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[orbRadius * 1.05, 0.008 * scale, 8, 64]} />
+        <meshStandardMaterial
+          color={primaryColor}
+          emissive={primaryColor}
+          emissiveIntensity={hovered ? 0.5 : 0.2}
+          metalness={0.8}
+          roughness={0.2}
+          transparent
+          opacity={0.6}
+        />
+      </mesh>
+
+      {/* Orbiting magical particles */}
       <points geometry={particleData.geometry} material={particleMaterial} />
-
-      {/* Document icon inside orb */}
-      <group rotation={[0, 0, 0]} scale={0.15 * scale}>
-        <RoundedBox args={[1, 1.3, 0.1]} radius={0.05} position={[0, 0, 0]}>
-          <meshStandardMaterial
-            color="#ffffff"
-            emissive="#ffffff"
-            emissiveIntensity={0.2}
-            transparent
-            opacity={0.6}
-          />
-        </RoundedBox>
-        {/* Text lines on document */}
-        {[-0.35, -0.1, 0.15, 0.4].map((y, i) => (
-          <mesh key={i} position={[0, y, 0.06]}>
-            <planeGeometry args={[0.6 - i * 0.1, 0.08]} />
-            <meshBasicMaterial color={color} transparent opacity={0.8} />
-          </mesh>
-        ))}
-      </group>
 
       {/* Label on hover */}
       {hovered && (
-        <Billboard position={[0, 0.7 * scale, 0]}>
+        <Billboard position={[0, orbRadius * 1.8, 0]}>
           <Text
-            fontSize={0.12 * scale}
+            fontSize={0.14 * scale}
             color="#ffffff"
             anchorX="center"
             anchorY="bottom"
-            outlineWidth={0.01}
+            outlineWidth={0.015}
             outlineColor="#000000"
           >
             {label}
           </Text>
           <Text
-            fontSize={0.07 * scale}
-            color={color}
+            fontSize={0.08 * scale}
+            color={primaryColor}
             anchorX="center"
             anchorY="top"
-            position={[0, -0.02, 0]}
+            position={[0, -0.03, 0]}
           >
-            Click to discover
+            Click to explore
           </Text>
         </Billboard>
       )}

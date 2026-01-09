@@ -597,7 +597,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
-              {/* Interactive 3D Article Icon - floating animated object */}
+              {/* Interactive 3D Article Icon - floating AI eye orb */}
               {use3DArticleIcon && cinematicComplete && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && !is3DExploreActive && (
                 <Interactive3DArticleIcon
                   position={[4, 2.5, -3]}
@@ -606,8 +606,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   onClick={handle3DArticleIconClick}
                   autoFloat={true}
                   boundRadius={3}
-                  color="#ffd700"
-                  glowColor="#00d4ff"
+                  primaryColor="#00d4ff"
+                  irisColor="#00ffaa"
                 />
               )}
 
