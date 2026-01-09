@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
-import { Compass, Star, X } from 'lucide-react';
-import styled, { keyframes, css } from 'styled-components';
+import { Compass } from 'lucide-react';
+import styled, { keyframes } from 'styled-components';
 import ArticleRecommendationModal from './ArticleRecommendationModal';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 
@@ -19,11 +19,6 @@ const pulseGlow = keyframes`
 const bounce = keyframes`
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
-`;
-
-const rotate = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 `;
 
 const slideIn = keyframes`
@@ -170,86 +165,6 @@ const TooltipHighlight = styled.span`
   font-weight: 600;
 `;
 
-const MiniCard = styled.button<{ $visible: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: rgba(3, 3, 8, 0.95);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.25s ease;
-  opacity: ${props => props.$visible ? 1 : 0};
-  transform: ${props => props.$visible ? 'translateX(0)' : 'translateX(20px)'};
-  animation: ${slideIn} 0.3s ease;
-  max-width: 280px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-
-  &:hover {
-    background: rgba(0, 212, 255, 0.08);
-    border-color: rgba(0, 212, 255, 0.35);
-    transform: translateX(-4px);
-  }
-`;
-
-const MiniCardImage = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  background: rgba(0, 212, 255, 0.15);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  svg {
-    color: #00d4ff;
-  }
-`;
-
-const MiniCardContent = styled.div`
-  flex: 1;
-  min-width: 0;
-`;
-
-const MiniCardTitle = styled.div`
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const MiniCardSubtitle = styled.div`
-  font-size: 0.7rem;
-  color: #9ca3af;
-  margin-top: 2px;
-`;
-
-const CloseCardButton = styled.button`
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-
-  &:hover {
-    background: rgba(255, 75, 75, 0.2);
-    color: #ff6b6b;
-  }
-`;
-
 // Context types
 interface ArticleDiscoveryContextType {
   isModalOpen: boolean;
@@ -259,8 +174,6 @@ interface ArticleDiscoveryContextType {
   setCurrentArticle: (article: EnhancedArticleData | undefined) => void;
   showFloatingButton: boolean;
   setShowFloatingButton: (show: boolean) => void;
-  disableMiniCard: boolean;
-  setDisableMiniCard: (disable: boolean) => void;
 }
 
 const ArticleDiscoveryContext = createContext<ArticleDiscoveryContextType | null>(null);
@@ -286,9 +199,6 @@ export function ArticleDiscoveryProvider({
   const [currentArticle, setCurrentArticle] = useState<EnhancedArticleData | undefined>();
   const [showFloatingButton, setShowFloatingButton] = useState(initialShowButton);
   const [isHovered, setIsHovered] = useState(false);
-  const [showMiniCard, setShowMiniCard] = useState(false);
-  const [suggestedArticle, setSuggestedArticle] = useState<EnhancedArticleData | null>(null);
-  const [disableMiniCard, setDisableMiniCard] = useState(false);
 
   // Pre-fetch and cache all articles
   const [allArticles, setAllArticles] = useState<EnhancedArticleData[]>([]);
@@ -317,36 +227,6 @@ export function ArticleDiscoveryProvider({
     setIsModalOpen(false);
   }, []);
 
-  // Show a suggested article mini-card after some delay (use cached articles)
-  // Disabled when in 3D exploration mode or when explicitly disabled
-  useEffect(() => {
-    if (!showFloatingButton || isModalOpen || allArticles.length === 0 || disableMiniCard) return;
-
-    const timer = setTimeout(() => {
-      // Double-check disableMiniCard hasn't changed
-      if (disableMiniCard) return;
-
-      const available = allArticles.filter(a => a.slug !== currentArticle?.slug);
-      if (available.length > 0) {
-        const random = available[Math.floor(Math.random() * available.length)];
-        setSuggestedArticle(random);
-        setShowMiniCard(true);
-
-        // Hide after 10 seconds
-        setTimeout(() => setShowMiniCard(false), 10000);
-      }
-    }, 8000);
-
-    return () => clearTimeout(timer);
-  }, [showFloatingButton, isModalOpen, currentArticle, allArticles, disableMiniCard]);
-
-  // Hide mini card immediately when disableMiniCard becomes true
-  useEffect(() => {
-    if (disableMiniCard) {
-      setShowMiniCard(false);
-    }
-  }, [disableMiniCard]);
-
   const value: ArticleDiscoveryContextType = {
     isModalOpen,
     openModal,
@@ -355,8 +235,6 @@ export function ArticleDiscoveryProvider({
     setCurrentArticle,
     showFloatingButton,
     setShowFloatingButton,
-    disableMiniCard,
-    setDisableMiniCard,
   };
 
   return (
@@ -365,37 +243,8 @@ export function ArticleDiscoveryProvider({
 
       {/* Floating Discovery Button */}
       <FloatingButtonContainer $visible={showFloatingButton && !isModalOpen}>
-        {/* Mini suggestion card */}
-        {showMiniCard && suggestedArticle && (
-          <MiniCard
-            $visible={showMiniCard}
-            onClick={() => {
-              setShowMiniCard(false);
-              openModal(suggestedArticle);
-            }}
-          >
-            <MiniCardImage>
-              <Star size={20} color="#fff" />
-            </MiniCardImage>
-            <MiniCardContent>
-              <MiniCardTitle>{suggestedArticle.title}</MiniCardTitle>
-              <MiniCardSubtitle>
-                {suggestedArticle.articleType === 'fiction' ? 'Fiction' : 'Research'} • {suggestedArticle.readingTime} min read
-              </MiniCardSubtitle>
-            </MiniCardContent>
-            <CloseCardButton
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowMiniCard(false);
-              }}
-            >
-              <X size={14} />
-            </CloseCardButton>
-          </MiniCard>
-        )}
-
         {/* Tooltip */}
-        <Tooltip $visible={isHovered && !showMiniCard}>
+        <Tooltip $visible={isHovered}>
           Discover <TooltipHighlight>related articles</TooltipHighlight> and explore the archive
         </Tooltip>
 
