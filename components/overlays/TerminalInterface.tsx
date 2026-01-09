@@ -683,8 +683,32 @@ export default function TerminalInterface({
         {/* SCENE */}
         {viewMode === 'scenery' && (
           <div>
+            {/* Notice when in 3D exploration mode */}
+            {is3DExploreActive && (
+              <div style={{
+                padding: '12px 16px',
+                marginBottom: '16px',
+                background: 'rgba(0, 212, 255, 0.1)',
+                border: '1px solid rgba(0, 212, 255, 0.3)',
+                borderRadius: '8px',
+                fontFamily: 'monospace',
+                fontSize: '0.75rem',
+                color: '#00d4ff',
+              }}>
+                <div style={{ fontWeight: 600, marginBottom: '4px' }}>3D EXPLORATION ACTIVE</div>
+                <div style={{ color: '#9ca3af' }}>
+                  Selecting a scene will exit 3D exploration mode and load the background.
+                </div>
+              </div>
+            )}
             <WorldGallery
-              onSelectWorld={(world) => onChangeScenery?.(world)}
+              onSelectWorld={(world) => {
+                onChangeScenery?.(world);
+                // If 3D exploration is active, close the terminal after selecting a scene
+                if (is3DExploreActive && onToggle3DExplore) {
+                  onToggle3DExplore();
+                }
+              }}
               currentWorld={currentScenery}
               isMobile={isMobile}
             />

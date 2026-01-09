@@ -27,6 +27,7 @@ import { useJourney } from '../../contexts/JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../../../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
+import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -196,6 +197,18 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
+
+  // Article discovery - hide floating button during game
+  const { setShowFloatingButton } = useArticleDiscovery();
+
+  // Hide the floating discovery button during game play
+  useEffect(() => {
+    if (gameState === 'PLAYING' || gameState === 'COUNTDOWN') {
+      setShowFloatingButton(false);
+    } else {
+      setShowFloatingButton(true);
+    }
+  }, [gameState, setShowFloatingButton]);
 
   // Update season when query params change
   useEffect(() => {
