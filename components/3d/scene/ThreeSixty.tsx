@@ -201,19 +201,24 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   // Article discovery - disable mini card when in 3D mode
   const { setDisableMiniCard, setShowFloatingButton } = useArticleDiscovery();
 
-  // Disable article mini card when in 3D exploration mode or game mode
+  // Disable article mini card when in 3D world (ThreeSixty component is mounted)
   // This prevents the article popup from competing with the 3D scene
   useEffect(() => {
-    const shouldDisable = is3DExploreActive || gameState === 'PLAYING' || gameState === 'COUNTDOWN';
-    setDisableMiniCard(shouldDisable);
+    // Always disable mini card when in 3D world - it competes for attention
+    setDisableMiniCard(true);
 
-    // Also hide the floating discovery button during game
+    // Hide the floating discovery button during game play
     if (gameState === 'PLAYING' || gameState === 'COUNTDOWN') {
       setShowFloatingButton(false);
     } else {
       setShowFloatingButton(true);
     }
-  }, [is3DExploreActive, gameState, setDisableMiniCard, setShowFloatingButton]);
+
+    // Re-enable mini card when component unmounts (leaving 3D world)
+    return () => {
+      setDisableMiniCard(false);
+    };
+  }, [gameState, setDisableMiniCard, setShowFloatingButton]);
 
   // Update season when query params change
   useEffect(() => {

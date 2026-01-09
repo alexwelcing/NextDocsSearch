@@ -210,6 +210,11 @@ export default function HomePage() {
     setTimeout(() => setIsIn3DMode(true), 300)
   }, [])
 
+  // Handle changing to a specific image (from scene selection)
+  const handleChangeImage = useCallback((newImage: string) => {
+    setCurrentImage(newImage)
+  }, [])
+
   return (
     <>
       <Head>
@@ -285,7 +290,7 @@ export default function HomePage() {
               <ThreeSixty
                 currentImage={currentImage}
                 isDialogOpen={false}
-                onChangeImage={getRandomImage}
+                onChangeImage={handleChangeImage}
                 onGameStateChange={setGameState}
               />
             )}
