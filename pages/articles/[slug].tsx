@@ -17,6 +17,7 @@ import MarkdownImage from '@/components/ui/MarkdownImage';
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
 import { useEffect } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
+import HandwrittenNote from '@/components/ui/HandwrittenNote';
 
 interface ArticleProps {
   title: string;
@@ -159,13 +160,14 @@ const ArticleContent = styled.div`
     font-size: 0.9em;
   }
 
-  pre {
-    background: rgba(0, 0, 0, 0.4);
-    padding: 20px;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 2rem 0;
-    border: 1px solid rgba(0, 212, 255, 0.2);
+  /* Pre blocks are now handled by HandwrittenNote component */
+  /* Legacy pre styling for non-code blocks */
+  pre:not([data-handwritten]) {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+    overflow-x: visible;
 
     code {
       background: none;
@@ -590,7 +592,15 @@ const ArticlePage: NextPage<ArticleProps> = ({
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              img: MarkdownImage as any
+              img: MarkdownImage as any,
+              pre: ({ children, ...props }: any) => {
+                // Wrap pre blocks in HandwrittenNote for interactive viewing
+                return (
+                  <HandwrittenNote>
+                    {children?.props?.children || children}
+                  </HandwrittenNote>
+                );
+              },
             }}
           >
             {content}

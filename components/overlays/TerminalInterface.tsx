@@ -131,17 +131,72 @@ export default function TerminalInterface({
     }
   }, [viewMode, isOpen, enhancedArticles.length]);
 
-  // Filter enhanced articles
-  const filteredEnhancedArticles = enhancedArticles.filter(article => {
-    const matchesSearch = !articleSearch ||
-      article.title.toLowerCase().includes(articleSearch.toLowerCase()) ||
-      article.description?.toLowerCase().includes(articleSearch.toLowerCase());
-    const matchesFilter = articleFilter === 'all' ||
-      article.horizon === articleFilter ||
-      article.polarity === articleFilter ||
-      article.mechanics?.includes(articleFilter as any);
-    return matchesSearch && matchesFilter;
-  }).slice(0, 20);
+  // Intelligent diversity scoring for article selection
+  const scoreDiversity = (articles: EnhancedArticleData[]): EnhancedArticleData[] => {
+    if (articles.length <= 20) return articles;
+
+    // Create a diversity-aware selection
+    const result: EnhancedArticleData[] = [];
+    const usedPolarities = new Map<string, number>();
+    const usedHorizons = new Map<string, number>();
+    const usedDomains = new Set<string>();
+
+    // Score each article based on how much diversity it adds
+    const scoredArticles = articles.map(article => {
+      const polarity = article.polarity || 'N0';
+      const horizon = article.horizon || 'NY';
+      const domains = article.domains || [];
+
+      let diversityScore = 0;
+
+      // Lower polarity count = higher diversity value
+      diversityScore += Math.max(0, 3 - (usedPolarities.get(polarity) || 0));
+      // Lower horizon count = higher diversity value
+      diversityScore += Math.max(0, 3 - (usedHorizons.get(horizon) || 0));
+      // New domains add diversity
+      diversityScore += domains.filter(d => !usedDomains.has(d)).length * 0.5;
+      // Recent articles get slight boost
+      const daysSincePublished = (Date.now() - new Date(article.date).getTime()) / (1000 * 60 * 60 * 24);
+      if (daysSincePublished < 30) diversityScore += 1;
+
+      return { article, diversityScore };
+    });
+
+    // Sort by diversity score (highest first) then pick top 20
+    scoredArticles.sort((a, b) => b.diversityScore - a.diversityScore);
+
+    for (const { article } of scoredArticles.slice(0, 20)) {
+      result.push(article);
+      const polarity = article.polarity || 'N0';
+      const horizon = article.horizon || 'NY';
+      usedPolarities.set(polarity, (usedPolarities.get(polarity) || 0) + 1);
+      usedHorizons.set(horizon, (usedHorizons.get(horizon) || 0) + 1);
+      (article.domains || []).forEach(d => usedDomains.add(d));
+    }
+
+    return result;
+  };
+
+  // Filter enhanced articles with diversity awareness
+  const filteredEnhancedArticles = (() => {
+    let filtered = enhancedArticles.filter(article => {
+      const matchesSearch = !articleSearch ||
+        article.title.toLowerCase().includes(articleSearch.toLowerCase()) ||
+        article.description?.toLowerCase().includes(articleSearch.toLowerCase());
+      const matchesFilter = articleFilter === 'all' ||
+        article.horizon === articleFilter ||
+        article.polarity === articleFilter ||
+        article.mechanics?.includes(articleFilter as any);
+      return matchesSearch && matchesFilter;
+    });
+
+    // Apply diversity scoring when showing all articles without search
+    if (!articleSearch && articleFilter === 'all') {
+      filtered = scoreDiversity(filtered);
+    }
+
+    return filtered.slice(0, 20);
+  })();
 
   const handleChatSubmit = useCallback(async () => {
     if (chatInput.trim()) {
