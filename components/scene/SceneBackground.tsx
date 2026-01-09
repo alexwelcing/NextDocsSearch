@@ -43,8 +43,8 @@ function determineBestMode(
     return 'none';
   }
 
-  // Try splat first
-  if (assets.environment?.endsWith('.splat') && supportsSplats) {
+  // Try splat first (supports .splat and .spz formats)
+  if (assets.environment && (assets.environment.endsWith('.splat') || assets.environment.endsWith('.spz')) && supportsSplats) {
     return 'splat';
   }
 

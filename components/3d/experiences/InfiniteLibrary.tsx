@@ -24,6 +24,7 @@ import {
   type LayoutPattern,
 } from '@/lib/3d/vision';
 import type { QualityLevel } from '@/lib/worlds/types';
+import { updateFrustum, isInFrustum } from '@/lib/3d/performanceUtils';
 
 // Article interface
 interface Article {
@@ -248,6 +249,9 @@ export default function InfiniteLibrary({
   const { camera } = useThree();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+  // Frustum culling - track visible article IDs
+  const [visibleArticleIds, setVisibleArticleIds] = useState<Set<string>>(new Set());
+
   // Resolve theme
   const theme = useMemo(() => {
     if (!themeProp) return COSMIC_LIBRARY;
@@ -290,6 +294,9 @@ export default function InfiniteLibrary({
   // Gentle camera floating
   const cameraOffset = useRef({ x: 0, y: 0 });
 
+  // Pre-allocate bounding sphere for frustum culling
+  const boundingSphere = useMemo(() => new THREE.Sphere(new THREE.Vector3(), 2), []);
+
   useFrame((state) => {
     const time = state.clock.elapsedTime;
     const floatAmount = theme.animation.cameraFloatAmount;
@@ -298,6 +305,37 @@ export default function InfiniteLibrary({
     // Subtle camera sway
     cameraOffset.current.x = Math.sin(time * floatSpeed) * floatAmount;
     cameraOffset.current.y = Math.cos(time * floatSpeed * 0.7) * floatAmount * 0.5;
+
+    // Frustum culling - update every frame for smooth culling
+    updateFrustum(camera);
+
+    const newVisibleIds = new Set<string>();
+
+    // Check each article position against frustum
+    articles.forEach((article) => {
+      const position = positions.get(article.id);
+      if (!position) return;
+
+      // Always render selected and hovered articles
+      if (article.id === selectedArticleId || article.id === hoveredId) {
+        newVisibleIds.add(article.id);
+        return;
+      }
+
+      // Set bounding sphere position and check frustum
+      boundingSphere.center.set(...position);
+      boundingSphere.radius = 2; // Orb radius
+
+      if (isInFrustum(boundingSphere)) {
+        newVisibleIds.add(article.id);
+      }
+    });
+
+    // Only update state if visibility changed
+    if (newVisibleIds.size !== visibleArticleIds.size ||
+        !Array.from(newVisibleIds).every(id => visibleArticleIds.has(id))) {
+      setVisibleArticleIds(newVisibleIds);
+    }
   });
 
   return (
@@ -335,10 +373,13 @@ export default function InfiniteLibrary({
         />
       )}
 
-      {/* Article orbs */}
+      {/* Article orbs - only render visible ones */}
       {articles.map((article) => {
         const position = positions.get(article.id);
         if (!position) return null;
+
+        // Frustum culling - skip if not visible
+        if (!visibleArticleIds.has(article.id)) return null;
 
         return (
           <ArticleOrb

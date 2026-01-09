@@ -43,7 +43,7 @@ function ScenePreviewImage({ scene, position, onSelect, isSelected, index }: Sce
     <group position={position}>
       <mesh ref={frameRef} position={[0, 0, -0.05]}>
         <planeGeometry args={[2.2, 1.4]} />
-        <meshBasicMaterial color="#de7ea2" transparent opacity={isSelected ? 0.5 : hovered ? 0.3 : 0.1} />
+        <meshBasicMaterial color="#00d4ff" transparent opacity={isSelected ? 0.5 : hovered ? 0.3 : 0.1} />
       </mesh>
       <mesh
         ref={meshRef}
@@ -92,7 +92,7 @@ function ScenePreviewSplat({ scene, position, onSelect, isSelected, index }: Sce
     <group position={position}>
       <mesh ref={frameRef} position={[0, 0, -0.05]}>
         <planeGeometry args={[2.2, 1.4]} />
-        <meshBasicMaterial color="#6366f1" transparent opacity={isSelected ? 0.5 : hovered ? 0.3 : 0.1} />
+        <meshBasicMaterial color="#ffd700" transparent opacity={isSelected ? 0.5 : hovered ? 0.3 : 0.1} />
       </mesh>
       <mesh
         ref={meshRef}
@@ -101,10 +101,10 @@ function ScenePreviewSplat({ scene, position, onSelect, isSelected, index }: Sce
         onClick={(e) => { e.stopPropagation(); onSelect(scene); }}
       >
         <planeGeometry args={[2, 1.2]} />
-        <meshStandardMaterial color="#1a1a4a" emissive="#6366f1" emissiveIntensity={0.1} />
+        <meshStandardMaterial color="#0a0a1a" emissive="#ffd700" emissiveIntensity={0.1} />
       </mesh>
       <Billboard position={[-0.8, 0.45, 0.1]}>
-        <Text fontSize={0.12} color="#6366f1" anchorX="left">
+        <Text fontSize={0.12} color="#ffd700" anchorX="left">
           3D SPLAT
         </Text>
       </Billboard>

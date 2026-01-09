@@ -15,17 +15,19 @@ import GameLeaderboard from '../../overlays/GameLeaderboard';
 import PerformanceMonitor from '../../PerformanceMonitor';
 import CameraController from '../camera/CameraController';
 import CinematicCamera from '../camera/CinematicCamera';
-import CinematicIntro from '../../overlays/CinematicIntro';
+import DirectorsIntro from '../../overlays/DirectorsIntro';
 import SceneLighting from './SceneLighting';
 import SeasonalEffects from '../background/SeasonalEffects';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
 import InfiniteLibrary, { COSMIC_LIBRARY, DIGITAL_GARDEN } from '../experiences/InfiniteLibrary';
 import DiscoveryButton360 from '../interactive/DiscoveryButton360';
+import Interactive3DArticleIcon from '../interactive/Interactive3DArticleIcon';
 import { useJourney } from '../../contexts/JourneyContext';
 import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../../../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
+import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -73,8 +75,8 @@ const VRButtonStyled = styled.button`
   position: absolute;
   bottom: 10px;
   left: 10px;
-  background: rgba(130, 20, 160, 0.5);
-  border: 1px solid rgba(222, 126, 162, 0.5);
+  background: rgba(0, 30, 60, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   color: rgba(255, 255, 255, 0.8);
   padding: 6px 12px;
   font-size: 11px;
@@ -85,8 +87,8 @@ const VRButtonStyled = styled.button`
   backdrop-filter: blur(5px);
 
   &:hover {
-    background: rgba(130, 20, 160, 0.8);
-    border-color: rgba(222, 126, 162, 0.8);
+    background: rgba(0, 50, 80, 0.8);
+    border-color: rgba(0, 212, 255, 0.6);
     color: white;
   }
 
@@ -190,9 +192,23 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false);
   const [enhancedArticles, setEnhancedArticles] = useState<EnhancedArticleData[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<EnhancedArticleData | null>(null);
+  // Use 3D article icon instead of overlay button
+  const [use3DArticleIcon, setUse3DArticleIcon] = useState(true);
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
+
+  // Article discovery - hide floating button during game
+  const { setShowFloatingButton } = useArticleDiscovery();
+
+  // Hide the floating discovery button during game play
+  useEffect(() => {
+    if (gameState === 'PLAYING' || gameState === 'COUNTDOWN') {
+      setShowFloatingButton(false);
+    } else {
+      setShowFloatingButton(true);
+    }
+  }, [gameState, setShowFloatingButton]);
 
   // Update season when query params change
   useEffect(() => {
@@ -489,6 +505,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setSelectedArticle(null);
   }, []);
 
+  // Handler for 3D article icon click - opens article exploration
+  const handle3DArticleIconClick = useCallback(() => {
+    setIs3DExploreActive(true);
+  }, []);
+
   const handleSelectArticle = useCallback((article: EnhancedArticleData | null) => {
     setSelectedArticle(article);
   }, []);
@@ -588,6 +609,20 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
+              {/* Interactive 3D Article Icon - floating animated object */}
+              {use3DArticleIcon && cinematicComplete && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && !is3DExploreActive && (
+                <Interactive3DArticleIcon
+                  position={[4, 2.5, -3]}
+                  scale={1.2}
+                  label="Explore Articles"
+                  onClick={handle3DArticleIconClick}
+                  autoFloat={true}
+                  boundRadius={3}
+                  color="#ffd700"
+                  glowColor="#00d4ff"
+                />
+              )}
+
               {/* 3D Article Explorer - Immersive InfiniteLibrary Experience */}
               {is3DExploreActive && enhancedArticles.length > 0 && (
                 <InfiniteLibrary
@@ -642,8 +677,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {/* Prominent Article Discovery Button */}
-      {!loading && !showCinematicIntro && (
+      {/* Prominent Article Discovery Button - hidden when 3D icon is active */}
+      {!loading && !showCinematicIntro && !use3DArticleIcon && (
         <DiscoveryButton360 isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'} />
       )}
 
@@ -656,9 +691,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         />
       )}
 
-      {/* Cinematic Intro Overlay */}
+      {/* Director's Intro - GLSL shader experience */}
       {showCinematicIntro && !cinematicComplete && (
-        <CinematicIntro
+        <DirectorsIntro
           onComplete={handleCinematicComplete}
           onSkip={handleCinematicSkip}
           onProgressUpdate={handleCinematicProgress}
