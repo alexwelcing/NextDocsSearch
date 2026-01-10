@@ -30,6 +30,7 @@ interface InteractiveTabletProps {
   is3DExploreActive?: boolean;
   onToggleArticleDisplay?: () => void;
   isArticleDisplayOpen?: boolean;
+  onExitToLanding?: () => void;
 }
 
 export default function InteractiveTablet({
@@ -43,6 +44,7 @@ export default function InteractiveTablet({
   is3DExploreActive = false,
   onToggleArticleDisplay,
   isArticleDisplayOpen = false,
+  onExitToLanding,
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
@@ -253,8 +255,29 @@ export default function InteractiveTablet({
               gap: isMobile ? '20px' : '16px',
               flexWrap: 'wrap',
             }}>
+              {/* Home button - navigates back to landing page */}
+              {onExitToLanding && (
+                <button
+                  onClick={() => {
+                    onExitToLanding();
+                    handleLower();
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#00d4ff',
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    textDecoration: 'none',
+                    padding: '4px 8px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                  }}
+                >
+                  ← Landing
+                </button>
+              )}
               {[
-                { label: 'Home', href: '/' },
                 { label: 'Articles', href: '/articles' },
                 { label: 'GitHub', href: 'https://github.com/alexwelcing', external: true },
                 { label: 'LinkedIn', href: 'https://linkedin.com/in/alexwelcing', external: true },

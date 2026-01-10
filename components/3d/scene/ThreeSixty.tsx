@@ -115,6 +115,7 @@ interface ThreeSixtyProps {
   isDialogOpen: boolean;
   onChangeImage: (newImage: string) => void;
   onGameStateChange?: (gameState: GameState) => void;
+  onExit?: () => void;
 }
 
 interface SplatFile {
@@ -136,7 +137,7 @@ interface PerformanceFlags {
   forceLowPower: boolean;
 }
 
-const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
+const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange, onExit }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
   const [useGaussianSplat, setUseGaussianSplat] = useState(false);
@@ -674,6 +675,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           is3DExploreActive={is3DExploreActive}
           onToggleArticleDisplay={() => setIsArticleDisplayOpen(!isArticleDisplayOpen)}
           isArticleDisplayOpen={isArticleDisplayOpen}
+          onExitToLanding={onExit}
         />
       )}
 
