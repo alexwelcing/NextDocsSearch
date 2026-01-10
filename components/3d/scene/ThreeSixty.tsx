@@ -17,14 +17,12 @@ import CameraController from '../camera/CameraController';
 import CinematicCamera from '../camera/CinematicCamera';
 import DirectorsIntro from '../../overlays/DirectorsIntro';
 import SceneLighting from './SceneLighting';
-import SeasonalEffects from '../background/SeasonalEffects';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
 import InfiniteLibrary, { COSMIC_LIBRARY, DIGITAL_GARDEN } from '../experiences/InfiniteLibrary';
 import DiscoveryButton360 from '../interactive/DiscoveryButton360';
 import Interactive3DArticleIcon from '../interactive/Interactive3DArticleIcon';
 import { useJourney } from '../../contexts/JourneyContext';
-import { getCurrentSeason, getSeasonalTheme, Season, SeasonalTheme } from '../../../lib/theme/seasonalTheme';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
@@ -133,7 +131,6 @@ interface SceneryOption {
 
 interface PerformanceFlags {
   allowSplats: boolean;
-  allowSeasonalEffects: boolean;
   forceLowPower: boolean;
 }
 
@@ -148,7 +145,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [isLowEndDevice, setIsLowEndDevice] = useState(false);
   const [performanceFlags, setPerformanceFlags] = useState<PerformanceFlags>({
     allowSplats: true,
-    allowSeasonalEffects: true,
     forceLowPower: false,
   });
 
@@ -156,17 +152,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [showCinematicIntro, setShowCinematicIntro] = useState(false); // Disabled for now
   const [cinematicComplete, setCinematicComplete] = useState(true); // Always start ready
   const [cinematicProgress, setCinematicProgress] = useState(0);
-
-  // Seasonal theme state (with query param support)
-  const [currentSeason, setCurrentSeason] = useState<Season>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const seasonParam = params.get('season');
-      return getCurrentSeason(seasonParam);
-    }
-    return getCurrentSeason();
-  });
-  const [seasonalTheme, setSeasonalTheme] = useState<SeasonalTheme>(getSeasonalTheme(currentSeason));
 
   // Game state
   const [gameState, setGameState] = useState<GameState>('IDLE');
@@ -205,21 +190,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
   }, [gameState, setShowFloatingButton]);
 
-  // Update season when query params change
-  useEffect(() => {
-    const handleUrlChange = () => {
-      const params = new URLSearchParams(window.location.search);
-      const seasonParam = params.get('season');
-      const newSeason = getCurrentSeason(seasonParam);
-      if (newSeason !== currentSeason) {
-        setCurrentSeason(newSeason);
-        setSeasonalTheme(getSeasonalTheme(newSeason));
-      }
-    };
-
-    window.addEventListener('popstate', handleUrlChange);
-    return () => window.removeEventListener('popstate', handleUrlChange);
-  }, [currentSeason]);
 
   // Detect mobile devices
   useEffect(() => {
@@ -263,15 +233,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     const forceLowPower = perfMode === 'low';
     const forceHighPower = perfMode === 'high';
     const splatsDisabled = params.get('splats') === 'off';
-    const seasonalDisabled = params.get('seasonal') === 'off';
 
     const allowSplats = !splatsDisabled && (forceHighPower || (!forceLowPower && !isLowEndDevice));
-    const allowSeasonalEffects =
-      !seasonalDisabled && (forceHighPower || (!forceLowPower && !isLowEndDevice));
 
     setPerformanceFlags({
       allowSplats,
-      allowSeasonalEffects,
       forceLowPower: forceLowPower && !forceHighPower,
     });
   }, [isLowEndDevice]);
@@ -299,12 +265,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       perfLogger.markEvent('artifact-splat');
     }
   }, [useGaussianSplat, performanceFlags.allowSplats, selectedSplat]);
-
-  useEffect(() => {
-    if (performanceFlags.allowSeasonalEffects && gameState !== 'PLAYING') {
-      perfLogger.markEvent(`seasonal-${currentSeason}`);
-    }
-  }, [performanceFlags.allowSeasonalEffects, gameState, currentSeason]);
 
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
@@ -597,11 +557,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                     <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
                   )}
                 </>
-              )}
-
-              {/* Seasonal particle effects (snow, leaves, etc.) */}
-              {!isMobile && performanceFlags.allowSeasonalEffects && gameState !== 'PLAYING' && !is3DExploreActive && (
-                <SeasonalEffects season={currentSeason} theme={seasonalTheme} />
               )}
 
               {/* Interactive 3D Article Icon - floating animated object */}

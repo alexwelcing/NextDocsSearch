@@ -117,50 +117,6 @@ const fragmentShader = `
     return line * 0.15;
   }
 
-  // Particle field with mouse attraction (optimized)
-  float particleField(vec2 uv, vec2 mouse) {
-    float particles = 0.0;
-
-    for (float i = 0.0; i < 30.0; i++) {
-      // Base particle position
-      vec2 basePos = vec2(
-        hash(vec2(i, 0.0)),
-        hash(vec2(0.0, i))
-      );
-
-      // Animate particles
-      float speed = 0.2 + hash(vec2(i, i)) * 0.3;
-      float t = uTime * speed + i;
-
-      vec2 particlePos = basePos + vec2(
-        sin(t * 0.5 + i) * 0.1,
-        cos(t * 0.3 + i * 0.7) * 0.1
-      );
-
-      // Mouse attraction - particles flow toward mouse
-      vec2 toMouse = mouse - particlePos;
-      float mouseInfluence = exp(-length(toMouse) * 3.0) * 0.15;
-      particlePos += toMouse * mouseInfluence;
-
-      // Mouse velocity influence - particles react to movement
-      particlePos += uMouseVelocity * 0.05 * exp(-length(particlePos - mouse) * 5.0);
-
-      // Particle rendering
-      float dist = length(uv - particlePos);
-      float size = 0.002 + hash(vec2(i * 3.0, i)) * 0.003;
-
-      // Twinkle effect
-      float twinkle = 0.5 + 0.5 * sin(uTime * (2.0 + hash(vec2(i, i * 2.0))) + i);
-
-      // Glow
-      particles += smoothstep(size * 3.0, 0.0, dist) * twinkle * 0.4;
-      // Core
-      particles += smoothstep(size, 0.0, dist) * twinkle * 0.8;
-    }
-
-    return particles;
-  }
-
   // Neural network-like connections (optimized)
   float connections(vec2 uv, vec2 mouse) {
     float conn = 0.0;
@@ -256,29 +212,14 @@ const fragmentShader = `
     col += vec3(0.0, 0.4, 0.6) * trailGlow * 0.2;
 
     // ─────────────────────────────────────────────────────────────────────
-    // LAYER 3: Particle field
-    // ─────────────────────────────────────────────────────────────────────
-
-    float particles = particleField(uv, mouse);
-
-    // Multi-colored particles
-    vec3 particleColor = mix(
-      vec3(0.6, 0.7, 1.0),   // Cool blue-white
-      vec3(0.0, 0.9, 1.0),   // Bright cyan
-      mouseInfluence
-    );
-
-    col += particleColor * particles;
-
-    // ─────────────────────────────────────────────────────────────────────
-    // LAYER 4: Neural connections (mouse-activated)
+    // LAYER 3: Neural connections (mouse-activated)
     // ─────────────────────────────────────────────────────────────────────
 
     float conn = connections(uv, mouse);
     col += vec3(0.0, 0.8, 1.0) * conn;
 
     // ─────────────────────────────────────────────────────────────────────
-    // LAYER 5: Flowing energy lines (optimized)
+    // LAYER 4: Flowing energy lines (optimized)
     // ─────────────────────────────────────────────────────────────────────
 
     for (float i = 0.0; i < 2.0; i++) {
@@ -292,7 +233,7 @@ const fragmentShader = `
     }
 
     // ─────────────────────────────────────────────────────────────────────
-    // LAYER 6: Central emergence glow
+    // LAYER 5: Central emergence glow
     // ─────────────────────────────────────────────────────────────────────
 
     float centerDist = length(p);
@@ -309,7 +250,7 @@ const fragmentShader = `
     col += centerColor * centralGlow * pulse;
 
     // ─────────────────────────────────────────────────────────────────────
-    // LAYER 7: Radial pulse rings (mouse triggered)
+    // LAYER 6: Radial pulse rings (mouse triggered)
     // ─────────────────────────────────────────────────────────────────────
 
     float ring1 = abs(sin(centerDist * 15.0 - uTime * 2.0));
