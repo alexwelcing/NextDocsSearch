@@ -134,38 +134,38 @@ After changing, redeploy:
 vercel --prod
 ```
 
-## Cost Management
+## Cost Analysis
 
 ### Expected Costs
 
 **OpenAI API (GPT-4-turbo):**
-- Per article: ~$0.11
-- Hourly (1 article): ~$0.11
-- Daily (24 articles): ~$2.64
-- Monthly (720 articles): ~$79
+- Per article: ~$0.47 (2K input + 15K output tokens)
+- Hourly (1 article): ~$0.47
+- Daily (24 articles): ~$11.28
+- Monthly (720 articles): ~$338
 
 ### Budget Alerts
 
 Set up OpenAI usage limits:
 1. Go to https://platform.openai.com/account/limits
-2. Set a monthly budget (e.g., $100)
+2. Set a monthly budget (e.g., $400)
 3. Enable email alerts
 
 ### Cost Optimization
 
 **Option 1: Reduce Frequency**
 Generate every 2 hours instead of every hour:
-- Monthly cost: ~$40 (360 articles)
+- Monthly cost: ~$169 (360 articles)
 
-**Option 2: Use GPT-3.5-turbo**
-Edit `lib/knowledge/ai-article-generator.ts`, change model:
-```typescript
-model: 'gpt-3.5-turbo',  // Instead of gpt-4-turbo-preview
-```
-- Monthly cost: ~$2-3 (but lower quality)
+**Option 2: Mixed Quality Tiers**
+- 50% full articles (5-15K words): $0.47 each
+- 50% shorter articles (1-3K words): $0.11 each
+- Average: ~$0.29/article, ~$209/month
 
-**Option 3: Mixed Strategy**
-Use GPT-4 for some, GPT-3.5 for others
+**Option 3: Variable Schedule**
+- Peak hours (8am-8pm): High-quality articles
+- Off-hours: Shorter articles or skip
+- Estimated: ~$200-250/month
 
 ## Troubleshooting
 

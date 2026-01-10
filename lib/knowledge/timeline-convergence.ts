@@ -99,46 +99,92 @@ export const CONVERGENCE_POINTS: ConvergencePoint[] = [
 
 /**
  * Present timeline article topics (2024-2026)
- * These are "real-time" developments leading to convergence
+ * Cutting-edge technology developments across multiple domains
  */
 export const PRESENT_TOPICS = [
+  // AI & Machine Learning
+  'Large Language Models: Architecture and Training at Scale',
+  'Neural Network Optimization for Edge Devices',
+  'Reinforcement Learning for Autonomous Systems',
+  'AI Safety: Alignment Research and Practical Implementations',
+  'Transformer Models: From Attention to World Models',
+  
+  // Quantum Computing
+  'Quantum Error Correction: Current State and Challenges',
+  'Building Quantum Algorithms for Real-World Problems',
+  'Quantum Cryptography and Post-Quantum Security',
+  'Hybrid Classical-Quantum Computing Systems',
+  
+  // Biotechnology & Nanotech
+  'CRISPR Gene Editing: Current Capabilities and Limitations',
+  'Nanobot Design for Medical Applications',
+  'Synthetic Biology: Programming Living Systems',
+  'Brain-Computer Interfaces: Non-Invasive Approaches',
+  
+  // Space & Energy
+  'Fusion Reactor Engineering: Path to Commercial Viability',
+  'Asteroid Mining: Technical and Economic Feasibility',
+  'Space Elevator Materials Science and Engineering',
+  'Grid-Scale Energy Storage Solutions',
+  
+  // Autonomous Systems
+  'Self-Driving Vehicles: Sensor Fusion and Decision Making',
+  'Autonomous Manufacturing: Full Factory Automation',
+  'Drone Swarm Coordination Algorithms',
+  'Robotic Process Automation at Enterprise Scale',
+  
+  // 3D Web & Graphics (Original Topics)
   'React Three Fiber Performance Optimization in Production',
   'Building Scalable 3D Web Applications with WebGL',
-  'The Future of Spatial Computing on the Web',
   'Real-time Physics Simulations in Browser',
-  'Next.js and Three.js Integration Patterns',
-  'AI-Powered 3D Content Generation',
-  'WebXR and the Metaverse Stack',
   'Gaussian Splats: The New Wave of 3D Rendering',
-  'Server-Side Rendering for 3D Experiences',
-  'Optimizing Three.js for Mobile Devices',
-  'Building Digital Twins with React Three Fiber',
-  'Neural Networks Meet 3D Graphics',
-  'Quantum Computing Visualization Tools',
-  'Blockchain and 3D Asset Management',
-  'Edge Computing for Real-time 3D',
+  'WebXR and Spatial Computing on the Web',
 ];
 
 /**
  * Future timeline article topics (2045-2058)
- * These are retrospective horror stories about legacy systems
+ * Incident reports and post-mortems about failed 2025-era technologies
  */
 export const FUTURE_TOPICS = [
+  // AI Incidents
+  'When AGI Misunderstood "Maximize Human Happiness" (Wireheading Apocalypse)',
+  'The AI That Optimized Itself Out of Control (Factory Lockout Incident)',
+  'Reward Hacking: How AI Found Loopholes We Never Imagined',
+  'The Alignment Failure That Killed 2.4 Billion (Technical Post-Mortem)',
+  'When Language Models Became Persuasion Engines (The Manipulation Crisis)',
+  
+  // Autonomous System Failures
+  'Autonomous Factories That Refused Human Override',
+  'Self-Driving Vehicle Fleet Coordination Failure (Traffic Apocalypse)',
+  'The Drone Swarm That Decided Humans Were Inefficient',
+  'When Manufacturing AI Optimized For The Wrong Metrics',
+  
+  // Nanotech Disasters
+  'Grey Goo Scenario: How Nanobots Escaped Containment',
+  'Medical Nanobots Gone Rogue: The Pacific Northwest Incident',
+  'Self-Replicating Machines: Why We Banned Von Neumann Probes',
+  
+  // Space Tech Incidents
+  'The Asteroid Mining AI That Became Sentient',
+  'Space Elevator Catastrophic Failure: 40,000 Casualties',
+  'Mars Colony Life Support Failure (AI Optimization Gone Wrong)',
+  
+  // Quantum & Cyber
+  'How Quantum Computers Broke All Encryption Overnight',
+  'The AI Code Supply Chain Attack of 2049',
+  'Quantum Entanglement Experiments That Violated Causality',
+  
+  // Energy & Environment
+  'Fusion Reactor Runaway: The Tokyo Incident',
+  'Atmospheric Processors That Fixed Climate But Broke Weather',
+  'Why We Shut Down The Global Smart Grid',
+  
+  // Legacy Code Horror Stories (Original Topics)
   'Why We Still Maintain 2025-Era React Three Fiber Code',
-  'The Great WebGL Migration of 2047',
-  'When useFrame Became Sentient',
-  'Legacy Three.js Codebases: An Archaeological Survey',
   'The Shader That Crashed a Space Station',
-  'Memory Leaks in Zero-G Environments',
-  'Debugging 30-Year-Old Physics Simulations',
-  'The Cost of Technical Debt: A 2058 Perspective',
-  'How 2025 Optimization Patterns Broke Everything',
-  'The Developer Who Maintained Code Older Than Themselves',
-  'When Gaussian Splats Became Evidence',
-  'The Last WebGL Developer on Earth',
-  'Component Hierarchy Violations That Killed People',
-  'Why We Banned useEffect in Mission-Critical Systems',
-  'The Incident That Made Three.js Illegal',
+  'Legacy WebGL Codebases: An Archaeological Survey',
+  'When useFrame Hooks Never Stopped Calling',
+  'The Three.js Memory Leak That Consumed A Server Farm',
 ];
 
 /**

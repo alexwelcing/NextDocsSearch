@@ -56,7 +56,7 @@ async function generateArticleContent(
   const metadata = getTimelineMetadata(timeline);
   const nextPoint = getNextConvergencePoint();
 
-  const systemPrompt = `You are an expert technical writer creating articles for NextDocsSearch, a platform exploring React Three Fiber, WebGL, and 3D web technologies.
+  const systemPrompt = `You are an expert technical writer creating articles for NextDocsSearch, a platform exploring AI, emerging technologies, and their long-term implications.
 
 Timeline: ${timeline === 'present' ? 'Present Day (2024-2026)' : 'Future Archives (2045-2058)'}
 Tone: ${metadata.tone}
@@ -64,34 +64,78 @@ Convergence: ${convergence.toFixed(1)}% - timelines are ${convergence > 50 ? 'ap
 
 ${
   timeline === 'present'
-    ? 'Write as a current developer sharing best practices, tutorials, and insights about modern 3D web development.'
-    : 'Write as a future IT professional documenting legacy systems from 2025, exploring technical debt, maintenance challenges, and lessons learned.'
+    ? 'Write as a current technologist/researcher documenting cutting-edge developments in AI, quantum computing, nanotechnology, space tech, and emerging technologies. Focus on technical depth, real science, and practical implications.'
+    : 'Write as a future researcher/survivor documenting incidents, failures, and lessons from 2025-era technologies. Use incident report style with detailed timelines, technical post-mortems, and first-person accounts. Think "hard sci-fi meets technical documentation."'
 }
 
-The article should be:
-- Technically accurate and detailed
-- SEO-optimized with clear structure
-- Engaging and story-driven ${timeline === 'future' ? 'with dark humor and cautionary tales' : 'with practical examples'}
-- 1500-2500 words
-- Include code examples where relevant
-- Use markdown formatting (headers, lists, code blocks)
+CRITICAL REQUIREMENTS:
+- Length: 5,000-15,000 words (this is ESSENTIAL - go deep!)
+- Technical depth: Include detailed explanations, specifications, code blocks, timelines
+- Structure: Multiple H2 sections (6-10), each with 3-5 H3 subsections
+- Scientific accuracy: Base concepts on real research/technology
+- Narrative richness: ${timeline === 'future' ? 'Detailed incident timelines, hour-by-hour breakdowns, multiple perspectives, technical specifications' : 'Deep technical tutorials, real-world examples, architectural decisions, implementation details'}
+- Code examples: ${timeline === 'future' ? 'Show the "legacy code" that caused problems with modern annotations' : 'Provide complete, working examples with explanations'}
+- SEO optimization: Use clear headers, keyword-rich content, structured data
 
 ${
   nextPoint
     ? `Connect to upcoming convergence point: ${nextPoint.technology} - ${timeline === 'present' ? nextPoint.presentEvent : nextPoint.futureEvent}`
     : ''
-}`;
+}
 
-  const userPrompt = `Write a comprehensive technical article about: ${topic}
+Style guide:
+- Use markdown formatting (headers, lists, code blocks, tables)
+- Include technical specifications in structured format
+- ${timeline === 'future' ? 'Add timestamps, incident IDs, classification levels' : 'Add version numbers, compatibility notes, performance metrics'}
+- Break complex topics into digestible subsections
+- Use concrete examples and specific details`;
 
-Structure:
-1. Introduction (hook the reader)
-2. Technical Deep Dive (3-4 sections)
-3. ${timeline === 'present' ? 'Implementation Guide' : 'Lessons Learned'}
-4. ${timeline === 'present' ? 'Best Practices' : 'Modern Implications'}
-5. Conclusion
+  const userPrompt = `Write a comprehensive ${timeline === 'future' ? 'incident report / technical post-mortem' : 'technical deep-dive article'} about: ${topic}
 
-${timeline === 'future' ? 'Include specific incident details, dates, and protagonist perspectives as if documenting real events.' : 'Include practical code examples and real-world use cases.'}`;
+${timeline === 'future' ? `
+Structure (Incident Report Style):
+1. Title & Classification (Hook with dramatic title)
+2. Executive Summary (What happened, why it matters)
+3. Background/Context (The technology, the promise)
+4. The Incident (Detailed timeline - hour by hour or day by day)
+5. Technical Analysis (Deep dive into what went wrong)
+6. Root Cause Analysis (Why 2025 design decisions failed)
+7. Aftermath & Consequences (Casualties, damages, ongoing impacts)
+8. Lessons Learned (What we know now that we didn't know then)
+9. Modern Safety Protocols (How we prevent this now)
+10. Conclusion (Final thoughts, warnings)
+
+Include:
+- Specific dates, times, locations
+- Technical specifications and diagrams
+- Code examples showing the problematic 2025 implementations
+- Multiple perspectives (engineers, victims, investigators)
+- Official classification/incident numbers
+- Casualty/impact statistics
+- Scientific explanations of failure modes
+` : `
+Structure (Technical Tutorial Style):
+1. Introduction (Hook - why this matters)
+2. Background & Context (Historical development, current state)
+3. Core Concepts (Detailed technical explanations)
+4. Architecture & Design (How it works, design decisions)
+5. Implementation Deep Dive (Step-by-step with code)
+6. Advanced Techniques (Optimization, scaling, edge cases)
+7. Real-World Applications (Case studies, examples)
+8. Performance Considerations (Benchmarks, profiling)
+9. Best Practices & Pitfalls (What to do, what to avoid)
+10. Future Directions (What's coming next)
+
+Include:
+- Complete code examples with explanations
+- Architecture diagrams and flowcharts
+- Performance metrics and benchmarks
+- Compatibility notes and requirements
+- Real-world use cases and case studies
+- Troubleshooting guides
+`}
+
+CRITICAL: This must be 5,000-15,000 words. Go deep into every section. Include multiple subsections. Provide extensive detail, examples, and explanations. Don't summarize - elaborate!`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -101,7 +145,7 @@ ${timeline === 'future' ? 'Include specific incident details, dates, and protago
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.8,
-      max_tokens: 3500,
+      max_tokens: 16000, // Increased for longer articles
     });
 
     const content = completion.choices[0]?.message?.content || '';
@@ -134,27 +178,73 @@ ${timeline === 'future' ? 'Include specific incident details, dates, and protago
 
 /**
  * Extract keywords from topic and content
+ * Generates 15-20 detailed keywords for SEO
  */
 function extractKeywords(topic: string, content: string, timeline: TimelineType): string[] {
   const baseKeywords = [
-    'React Three Fiber',
-    'Three.js',
-    'WebGL',
-    '3D web development',
+    'artificial intelligence',
+    'AI safety',
+    'emerging technology',
+    'future technology',
   ];
 
   const timelineKeywords =
     timeline === 'present'
-      ? ['modern web', 'best practices', 'tutorial', 'guide']
-      : ['legacy systems', 'technical debt', 'maintenance', 'lessons learned'];
+      ? [
+          'modern tech',
+          'cutting-edge research',
+          'technical tutorial',
+          'implementation guide',
+          'best practices',
+          'architecture',
+        ]
+      : [
+          'tech fiction',
+          'incident report',
+          'technical post-mortem',
+          'AI disasters',
+          'legacy systems',
+          'lessons learned',
+          'tech horror',
+          'cautionary tale',
+        ];
 
-  // Extract key terms from topic
-  const topicWords = topic
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((word) => word.length > 4);
+  // Extract technology-specific keywords from topic
+  const techKeywords: string[] = [];
+  const techTerms = [
+    'AGI', 'quantum', 'nanotech', 'fusion', 'autonomous', 'neural', 'CRISPR',
+    'machine learning', 'blockchain', 'space', 'robotics', 'biotech', 'crypto',
+    'WebGL', 'Three.js', 'React', 'optimization', 'algorithm', 'simulation',
+  ];
+  
+  techTerms.forEach(term => {
+    if (topic.toLowerCase().includes(term.toLowerCase()) || 
+        content.toLowerCase().includes(term.toLowerCase())) {
+      techKeywords.push(term);
+    }
+  });
 
-  return [...new Set([...baseKeywords, ...timelineKeywords, ...topicWords])];
+  // Extract key phrases from topic (convert to question format for SEO)
+  const topicLower = topic.toLowerCase();
+  const seoQuestions: string[] = [];
+  
+  if (topicLower.includes('what') || topicLower.includes('how') || topicLower.includes('why')) {
+    seoQuestions.push(topic);
+  } else {
+    seoQuestions.push(`what is ${topic.toLowerCase()}`);
+    seoQuestions.push(`how ${topic.toLowerCase()} works`);
+  }
+
+  // Combine and deduplicate
+  const allKeywords = [
+    ...baseKeywords,
+    ...timelineKeywords,
+    ...techKeywords,
+    ...seoQuestions.slice(0, 2),
+  ];
+
+  // Return unique keywords, limited to 20
+  return Array.from(new Set(allKeywords)).slice(0, 20);
 }
 
 /**
@@ -247,9 +337,10 @@ export function articleToMDX(article: GeneratedArticle): string {
     date: article.date,
     description: article.description,
     keywords: article.keywords,
+    articleType: article.timeline === 'future' ? 'fiction' : 'tutorial',
     timeline: article.timeline,
     convergence: article.convergence,
-    ogImage: `/images/timeline-${article.timeline}.jpg`,
+    ogImage: `/images/og/${article.slug}.jpg`,
   };
 
   return matter.stringify(article.content, frontmatter);
@@ -267,10 +358,12 @@ export function generateFilename(article: GeneratedArticle): string {
  * Note: Pricing based on OpenAI rates as of November 2024
  * GPT-4-turbo: $0.01/1K input, $0.03/1K output
  * Check https://openai.com/pricing for current rates
+ * 
+ * Updated for longer articles (5K-15K words)
  */
 export function estimateGenerationCost(): { tokens: number; cost: number } {
-  const estimatedInputTokens = 1500; // System + user prompt
-  const estimatedOutputTokens = 3000; // Article content
+  const estimatedInputTokens = 2000; // System + user prompt (longer prompts)
+  const estimatedOutputTokens = 15000; // Article content (5-7x longer)
   const inputCost = (estimatedInputTokens / 1000) * 0.01;
   const outputCost = (estimatedOutputTokens / 1000) * 0.03;
 
@@ -282,6 +375,7 @@ export function estimateGenerationCost(): { tokens: number; cost: number } {
 
 /**
  * Validate article quality
+ * Updated for longer, more detailed articles
  */
 export function validateArticle(article: GeneratedArticle): {
   valid: boolean;
@@ -289,24 +383,30 @@ export function validateArticle(article: GeneratedArticle): {
 } {
   const errors: string[] = [];
 
-  if (!article.title || article.title.length < 10) {
-    errors.push('Title too short');
+  if (!article.title || article.title.length < 20) {
+    errors.push('Title too short (minimum 20 characters)');
   }
 
   if (!article.description || article.description.length < 100) {
-    errors.push('Description too short');
+    errors.push('Description too short (minimum 100 characters)');
   }
 
-  if (!article.content || article.content.length < 1000) {
-    errors.push('Content too short (minimum 1000 characters)');
+  if (!article.content || article.content.length < 5000) {
+    errors.push('Content too short (minimum 5000 characters for quality articles)');
   }
 
-  if (!article.keywords || article.keywords.length < 3) {
-    errors.push('Not enough keywords');
+  if (!article.keywords || article.keywords.length < 10) {
+    errors.push('Not enough keywords (minimum 10 for SEO)');
   }
 
   if (!article.author || article.author.length === 0) {
     errors.push('Missing author');
+  }
+
+  // Check for minimum section headers (should have at least 6 H2 sections)
+  const h2Count = (article.content.match(/^## /gm) || []).length;
+  if (h2Count < 6) {
+    errors.push(`Not enough main sections (found ${h2Count}, need at least 6)`);
   }
 
   return {
