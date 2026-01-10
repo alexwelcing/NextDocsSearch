@@ -28,7 +28,11 @@ const vertexShader = `
 
 // Advanced fragment shader with raymarching and volumetric effects
 const fragmentShader = `
-  precision highp float;
+  #ifdef GL_FRAGMENT_PRECISION_HIGH
+    precision highp float;
+  #else
+    precision mediump float;
+  #endif
 
   uniform float uTime;
   uniform float uPhase;
@@ -37,9 +41,9 @@ const fragmentShader = `
 
   #define PI 3.14159265359
   #define TAU 6.28318530718
-  #define MAX_STEPS 64
+  #define MAX_STEPS 32
   #define MAX_DIST 100.0
-  #define SURF_DIST 0.001
+  #define SURF_DIST 0.01
 
   // ==========================================
   // NOISE FUNCTIONS - Simplex-based for quality
@@ -110,12 +114,13 @@ const fragmentShader = `
     return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
   }
 
-  // Fractional Brownian Motion
+  // Fractional Brownian Motion (reduced iterations for compatibility)
   float fbm(vec3 p) {
     float value = 0.0;
     float amplitude = 0.5;
     float frequency = 1.0;
-    for (int i = 0; i < 6; i++) {
+    // Reduced from 6 to 4 iterations for better compatibility
+    for (int i = 0; i < 4; i++) {
       value += amplitude * snoise(p * frequency);
       amplitude *= 0.5;
       frequency *= 2.0;
@@ -219,9 +224,9 @@ const fragmentShader = `
     }
     col += nebula;
 
-    // Stars - multiple layers with different sizes
-    for (float layer = 0.0; layer < 3.0; layer++) {
-      float starDensity = 80.0 + layer * 40.0;
+    // Stars - reduced layers for better performance
+    for (float layer = 0.0; layer < 2.0; layer++) {
+      float starDensity = 50.0 + layer * 25.0;
       float starSize = 0.008 - layer * 0.002;
 
       for (float i = 0.0; i < starDensity; i++) {
@@ -317,11 +322,11 @@ const fragmentShader = `
     col += vec3(0.0, 0.9, 1.0) * core * 0.4;
     col += vec3(1.0, 0.85, 0.0) * geometry * core * 0.3;
 
-    // Orbiting data fragments
-    for (float i = 0.0; i < 12.0; i++) {
+    // Orbiting data fragments (reduced for performance)
+    for (float i = 0.0; i < 8.0; i++) {
       float orbitR = 0.4 + 0.2 * sin(i * 0.7);
       float orbitSpeed = 0.5 + 0.3 * cos(i * 1.3);
-      float orbitAngle = t * orbitSpeed + i * TAU / 12.0;
+      float orbitAngle = t * orbitSpeed + i * TAU / 8.0;
 
       vec2 fragPos = vec2(cos(orbitAngle), sin(orbitAngle)) * orbitR;
       float fragDist = length(uv - fragPos);
@@ -507,11 +512,11 @@ const fragmentShader = `
 
     col = mix(col, lightColor, coreBrightness * pow(expansion, 0.5));
 
-    // God rays emanating from center
+    // God rays emanating from center (reduced for performance)
     float angle = atan(uv.y, uv.x);
     float rays = 0.0;
-    for (float i = 0.0; i < 12.0; i++) {
-      float rayAngle = i * TAU / 12.0 + t * 0.2;
+    for (float i = 0.0; i < 8.0; i++) {
+      float rayAngle = i * TAU / 8.0 + t * 0.2;
       float rayWidth = 0.15;
       float rayDiff = abs(mod(angle - rayAngle + PI, TAU) - PI);
       rays += smoothstep(rayWidth, 0.0, rayDiff) * exp(-dist * 1.5);
@@ -523,11 +528,11 @@ const fragmentShader = `
     float ring = smoothstep(0.15, 0.0, ringDist) * (1.0 - expansion * 0.3);
     col += vec3(0.0, 0.9, 1.0) * ring;
 
-    // Particle burst
+    // Particle burst (reduced for performance)
     if (expansion > 0.3) {
       float burstPhase = (expansion - 0.3) / 0.7;
-      for (float i = 0.0; i < 30.0; i++) {
-        float pAngle = i * TAU / 30.0 + t * 0.5;
+      for (float i = 0.0; i < 20.0; i++) {
+        float pAngle = i * TAU / 20.0 + t * 0.5;
         float pDist = burstPhase * (1.5 + 0.5 * sin(i * 7.0));
         vec2 pPos = vec2(cos(pAngle), sin(pAngle)) * pDist;
 
@@ -543,39 +548,14 @@ const fragmentShader = `
   }
 
   // ==========================================
-  // BLOOM APPROXIMATION
+  // BLOOM APPROXIMATION (Simplified for performance)
   // ==========================================
 
   vec3 applyBloom(vec3 col, vec2 uv, float t, float phase) {
-    // Sample surrounding areas for glow
-    float bloomStrength = 0.0;
-    vec3 bloomColor = vec3(0.0);
-
-    for (float i = 0.0; i < 8.0; i++) {
-      float angle = i * TAU / 8.0;
-      for (float r = 1.0; r <= 3.0; r++) {
-        vec2 offset = vec2(cos(angle), sin(angle)) * r * 0.02;
-        vec2 sampleUV = uv + offset;
-
-        vec3 sampleCol;
-        if (phase < 1.0) {
-          sampleCol = phaseVoid(sampleUV, t);
-        } else if (phase < 2.0) {
-          sampleCol = mix(phaseVoid(sampleUV, t), phaseEmergence(sampleUV, t - 3.0), phase - 1.0);
-        } else if (phase < 3.0) {
-          sampleCol = mix(phaseEmergence(sampleUV, t - 3.0), phasePortal(sampleUV, t - 6.0), phase - 2.0);
-        } else {
-          sampleCol = mix(phasePortal(sampleUV, t - 6.0), phaseTranscendence(sampleUV, t - 9.0), min(phase - 3.0, 1.0));
-        }
-
-        float brightness = dot(sampleCol, vec3(0.2126, 0.7152, 0.0722));
-        bloomColor += sampleCol * brightness;
-        bloomStrength += brightness;
-      }
-    }
-
-    bloomColor /= 24.0;
-    return col + bloomColor * 0.3;
+    // Simplified bloom - just add glow based on brightness
+    float brightness = dot(col, vec3(0.2126, 0.7152, 0.0722));
+    float bloom = pow(brightness, 2.0) * 0.3;
+    return col + col * bloom;
   }
 
   // ==========================================
@@ -637,6 +617,7 @@ export default function DirectorsIntro({ onComplete, onSkip, onProgressUpdate }:
   const [textContent, setTextContent] = useState('');
   const [textOpacity, setTextOpacity] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
+  const [shaderFailed, setShaderFailed] = useState(false);
 
   // Evocative text sequence - hints at features without explaining
   const textSequence = [
@@ -664,32 +645,58 @@ export default function DirectorsIntro({ onComplete, onSkip, onProgressUpdate }:
       preserveDrawingBuffer: false,
       powerPreference: 'high-performance'
     });
-    if (!gl) return;
+    if (!gl) {
+      console.error('WebGL not supported, using CSS fallback');
+      setShaderFailed(true);
+      return;
+    }
 
     glRef.current = gl;
 
     // Create shaders
     const vs = gl.createShader(gl.VERTEX_SHADER);
     const fs = gl.createShader(gl.FRAGMENT_SHADER);
-    if (!vs || !fs) return;
+    if (!vs || !fs) {
+      console.error('Failed to create shaders');
+      setShaderFailed(true);
+      return;
+    }
 
     gl.shaderSource(vs, vertexShader);
     gl.compileShader(vs);
+
+    if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+      console.error('Vertex shader error:', gl.getShaderInfoLog(vs));
+      setShaderFailed(true);
+      return;
+    }
 
     gl.shaderSource(fs, fragmentShader);
     gl.compileShader(fs);
 
     if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
       console.error('Fragment shader error:', gl.getShaderInfoLog(fs));
+      setShaderFailed(true);
       return;
     }
 
     const program = gl.createProgram();
-    if (!program) return;
+    if (!program) {
+      console.error('Failed to create program');
+      setShaderFailed(true);
+      return;
+    }
 
     gl.attachShader(program, vs);
     gl.attachShader(program, fs);
     gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Program link error:', gl.getProgramInfoLog(program));
+      setShaderFailed(true);
+      return;
+    }
+
     gl.useProgram(program);
 
     programRef.current = program;
@@ -718,10 +725,9 @@ export default function DirectorsIntro({ onComplete, onSkip, onProgressUpdate }:
     const gl = glRef.current;
     const program = programRef.current;
     const canvas = canvasRef.current;
-    if (!gl || !program || !canvas) return;
 
-    const animate = () => {
-      const elapsed = (performance.now() - startTimeRef.current) / 1000;
+    // Common timing logic that runs regardless of WebGL state
+    const updateTiming = (elapsed: number) => {
       const progress = Math.min(elapsed / TOTAL_DURATION, 1);
 
       // Update phase (4 phases over duration)
@@ -762,29 +768,42 @@ export default function DirectorsIntro({ onComplete, onSkip, onProgressUpdate }:
 
       if (elapsed >= TOTAL_DURATION) {
         onComplete();
-        return;
+        return true; // Signal completion
+      }
+      return false; // Continue animation
+    };
+
+    const animate = () => {
+      const elapsed = (performance.now() - startTimeRef.current) / 1000;
+      const shouldStop = updateTiming(elapsed);
+
+      if (shouldStop) return;
+
+      // Only render WebGL if available
+      if (gl && program && canvas && !shaderFailed) {
+        // Resize handling
+        const dpr = Math.min(window.devicePixelRatio, 2);
+        const width = window.innerWidth * dpr;
+        const height = window.innerHeight * dpr;
+
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+          gl.viewport(0, 0, width, height);
+        }
+
+        const currentPhase = phase;
+        // Update uniforms
+        gl.uniform1f(gl.getUniformLocation(program, 'uTime'), elapsed);
+        gl.uniform1f(gl.getUniformLocation(program, 'uPhase'), currentPhase);
+        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), width, height);
+        gl.uniform1f(gl.getUniformLocation(program, 'uTransition'),
+          fadeOut ? Math.min((elapsed - (TOTAL_DURATION - 2)) / 2, 1) : 0
+        );
+
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       }
 
-      // Resize handling
-      const dpr = Math.min(window.devicePixelRatio, 2);
-      const width = window.innerWidth * dpr;
-      const height = window.innerHeight * dpr;
-
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-        gl.viewport(0, 0, width, height);
-      }
-
-      // Update uniforms
-      gl.uniform1f(gl.getUniformLocation(program, 'uTime'), elapsed);
-      gl.uniform1f(gl.getUniformLocation(program, 'uPhase'), currentPhase);
-      gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), width, height);
-      gl.uniform1f(gl.getUniformLocation(program, 'uTransition'),
-        fadeOut ? Math.min((elapsed - (TOTAL_DURATION - 2)) / 2, 1) : 0
-      );
-
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       rafRef.current = requestAnimationFrame(animate);
     };
 
@@ -809,6 +828,18 @@ export default function DirectorsIntro({ onComplete, onSkip, onProgressUpdate }:
         background: '#030308',
       }}
     >
+      {/* CSS Fallback - shows when WebGL fails */}
+      {shaderFailed && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%), linear-gradient(135deg, #030308 0%, #0a0a1a 50%, #030308 100%)',
+            animation: 'pulseGlow 8s ease-in-out infinite',
+          }}
+        />
+      )}
+
       <canvas
         ref={canvasRef}
         style={{
@@ -816,8 +847,16 @@ export default function DirectorsIntro({ onComplete, onSkip, onProgressUpdate }:
           inset: 0,
           width: '100%',
           height: '100%',
+          opacity: shaderFailed ? 0 : 1,
         }}
       />
+
+      <style>{`
+        @keyframes pulseGlow {
+          0%, 100% { opacity: 0.8; }
+          50% { opacity: 1; }
+        }
+      `}</style>
 
       {/* Cinematic text overlay with feature hints */}
       <div

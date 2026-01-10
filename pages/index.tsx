@@ -4,8 +4,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import AchievementUnlock from '@/components/AchievementUnlock'
-import CircleNav from '@/components/ui/CircleNav'
-import ArticleList from '@/components/ui/ArticleList'
+import EnhancedNav from '@/components/ui/EnhancedNav'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
 import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
@@ -129,8 +128,6 @@ export default function HomePage() {
       />
 
       <SupabaseDataProvider>
-        <CircleNav isGamePlaying={gameState === 'PLAYING'} />
-
         {isIn3DMode ? (
           <main className={styles.main}>
             {currentImage && (
@@ -139,6 +136,7 @@ export default function HomePage() {
                 isDialogOpen={false}
                 onChangeImage={handleChangeImage}
                 onGameStateChange={setGameState}
+                onExit={() => setIsIn3DMode(false)}
               />
             )}
             <AchievementUnlock
@@ -154,24 +152,46 @@ export default function HomePage() {
               transition: 'opacity 0.3s ease-out',
             }}
           >
+            <EnhancedNav isGamePlaying={false} limit={3} />
             {/* Hero - Immersive, mysterious, minimal */}
             <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
               <EnhancedHeroCanvas />
 
               {/* Content overlay */}
-              <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-4xl">
+              <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
                 <h1
-                  className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight mb-8"
+                  className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
                   style={{
                     fontFamily: "'Inter', -apple-system, sans-serif",
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1.1,
+                    letterSpacing: '-0.03em',
+                    lineHeight: 1.05,
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    fontWeight: 800,
                   }}
                 >
-                  <span className="opacity-90">Futures</span>
-                  <span className="opacity-60"> where intelligence </span>
-                  <span className="opacity-90">emerges</span>
+                  <span style={{
+                    background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}>
+                    AI Strategy & Product Leadership
+                  </span>
                 </h1>
+                <p
+                  className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2"
+                  style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    letterSpacing: '0.01em',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    maxWidth: '600px',
+                  }}
+                >
+                  Building intelligent systems and frameworks for emergent AI futures
+                </p>
 
                 {/* Two clear paths */}
                 <div className="flex flex-col sm:flex-row gap-6 mt-12">
@@ -238,28 +258,6 @@ export default function HomePage() {
                   50% { transform: translateX(-50%) translateY(8px); }
                 }
               `}</style>
-            </section>
-
-            {/* Featured work - Clean, minimal grid */}
-            <section id="work" className="py-24 px-6" style={{ background: '#030308' }}>
-              <div className="max-w-5xl mx-auto">
-                <div className="flex justify-between items-baseline mb-16">
-                  <h2
-                    className="text-2xl font-light tracking-tight"
-                    style={{ color: 'rgba(255, 255, 255, 0.9)' }}
-                  >
-                    Recent Work
-                  </h2>
-                  <Link
-                    href="/articles"
-                    className="text-sm tracking-widest uppercase transition-colors"
-                    style={{ color: 'rgba(0, 212, 255, 0.7)' }}
-                  >
-                    View All
-                  </Link>
-                </div>
-                <ArticleList limit={3} showTitle={false} />
-              </div>
             </section>
           </div>
         )}

@@ -115,6 +115,7 @@ interface ThreeSixtyProps {
   isDialogOpen: boolean;
   onChangeImage: (newImage: string) => void;
   onGameStateChange?: (gameState: GameState) => void;
+  onExit?: () => void;
 }
 
 interface SplatFile {
@@ -136,7 +137,7 @@ interface PerformanceFlags {
   forceLowPower: boolean;
 }
 
-const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange }) => {
+const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange, onExit }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
   const [useGaussianSplat, setUseGaussianSplat] = useState(false);
@@ -151,15 +152,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     forceLowPower: false,
   });
 
-  // Cinematic intro state - check localStorage to see if already watched
-  const [showCinematicIntro, setShowCinematicIntro] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const hasWatchedIntro = localStorage.getItem('hasWatchedIntro');
-      return !hasWatchedIntro;
-    }
-    return false;
-  });
-  const [cinematicComplete, setCinematicComplete] = useState(!showCinematicIntro);
+  // Cinematic intro state - always show intro for consistent experience
+  const [showCinematicIntro, setShowCinematicIntro] = useState(false); // Disabled for now
+  const [cinematicComplete, setCinematicComplete] = useState(true); // Always start ready
   const [cinematicProgress, setCinematicProgress] = useState(0);
 
   // Seasonal theme state (with query param support)
@@ -674,6 +669,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           is3DExploreActive={is3DExploreActive}
           onToggleArticleDisplay={() => setIsArticleDisplayOpen(!isArticleDisplayOpen)}
           isArticleDisplayOpen={isArticleDisplayOpen}
+          onExitToLanding={onExit}
         />
       )}
 

@@ -69,13 +69,13 @@ const fragmentShader = `
     return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
   }
 
-  // Fractal Brownian Motion - creates organic, flowing patterns
+  // Fractal Brownian Motion - creates organic, flowing patterns (optimized)
   float fbm(vec2 p) {
     float value = 0.0;
     float amplitude = 0.5;
     float frequency = 1.0;
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 3; i++) {
       value += amplitude * noise(p * frequency);
       amplitude *= 0.5;
       frequency *= 2.0;
@@ -117,11 +117,11 @@ const fragmentShader = `
     return line * 0.15;
   }
 
-  // Particle field with mouse attraction
+  // Particle field with mouse attraction (optimized)
   float particleField(vec2 uv, vec2 mouse) {
     float particles = 0.0;
 
-    for (float i = 0.0; i < 60.0; i++) {
+    for (float i = 0.0; i < 30.0; i++) {
       // Base particle position
       vec2 basePos = vec2(
         hash(vec2(i, 0.0)),
@@ -161,11 +161,11 @@ const fragmentShader = `
     return particles;
   }
 
-  // Neural network-like connections
+  // Neural network-like connections (optimized)
   float connections(vec2 uv, vec2 mouse) {
     float conn = 0.0;
 
-    for (float i = 0.0; i < 8.0; i++) {
+    for (float i = 0.0; i < 5.0; i++) {
       vec2 p1 = vec2(hash(vec2(i, 0.0)), hash(vec2(0.0, i)));
       vec2 p2 = vec2(hash(vec2(i + 1.0, 0.0)), hash(vec2(0.0, i + 1.0)));
 
@@ -278,15 +278,15 @@ const fragmentShader = `
     col += vec3(0.0, 0.8, 1.0) * conn;
 
     // ─────────────────────────────────────────────────────────────────────
-    // LAYER 5: Flowing energy lines
+    // LAYER 5: Flowing energy lines (optimized)
     // ─────────────────────────────────────────────────────────────────────
 
-    for (float i = 0.0; i < 3.0; i++) {
+    for (float i = 0.0; i < 2.0; i++) {
       float line = flowLine(p, i);
       vec3 lineColor = mix(
         vec3(0.1, 0.0, 0.2),
         vec3(0.0, 0.3, 0.4),
-        i / 3.0
+        i / 2.0
       );
       col += lineColor * line * (1.0 + mouseInfluence * 2.0);
     }
@@ -403,6 +403,7 @@ export default function EnhancedHeroCanvas({ className }: EnhancedHeroCanvasProp
       antialias: false,
       premultipliedAlpha: false,
       preserveDrawingBuffer: false,
+      powerPreference: 'high-performance',
     });
     if (!gl) return;
 
