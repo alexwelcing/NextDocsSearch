@@ -404,7 +404,6 @@ export default function EnhancedHeroCanvas({ className }: EnhancedHeroCanvasProp
       premultipliedAlpha: false,
       preserveDrawingBuffer: false,
       powerPreference: 'high-performance',
-      desynchronized: true,
     });
     if (!gl) return;
 
