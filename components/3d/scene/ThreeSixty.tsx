@@ -152,15 +152,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     forceLowPower: false,
   });
 
-  // Cinematic intro state - check localStorage to see if already watched
-  const [showCinematicIntro, setShowCinematicIntro] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const hasWatchedIntro = localStorage.getItem('hasWatchedIntro');
-      return !hasWatchedIntro;
-    }
-    return false;
-  });
-  const [cinematicComplete, setCinematicComplete] = useState(!showCinematicIntro);
+  // Cinematic intro state - always show intro for consistent experience
+  const [showCinematicIntro, setShowCinematicIntro] = useState(false); // Disabled for now
+  const [cinematicComplete, setCinematicComplete] = useState(true); // Always start ready
   const [cinematicProgress, setCinematicProgress] = useState(0);
 
   // Seasonal theme state (with query param support)
