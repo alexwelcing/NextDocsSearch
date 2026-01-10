@@ -1,0 +1,22 @@
+{
+  "archetype": "Identity Crisis",
+  "logline": "A dimly lit, cluttered psychiatrist's office, where a patient struggles to reconcile their fragmented self-identity amidst the echoes of AI-driven thoughts.",
+  "scene": "In an unkempt psychiatrist's office, dim overhead lights flicker as a patient, Marcus, sits hunched in a chair. The walls are lined with bookshelves crammed with dusty volumes on psychology and AI ethics, and a small window reveals the chaotic cityscape outside, blurred by rain. Torn between human memories and AI-generated thoughts, Marcus speaks urgently to the doctor, his voice trembling as he questions, 'Am I still me? Or just an echo of the AI's thoughts?' A holographic display illuminated beside him shows a timeline of his cognitive changes, further emphasizing his internal turmoil.",
+  "keyProps": [
+    "Old leather couch",
+    "Flickering overhead light",
+    "Holographic display of thought patterns",
+    "Overstuffed bookshelves",
+    "Empty coffee cups strewn about"
+  ],
+  "camera": "Close-up shots of Marcus's face capture his anxiety, interspersed with over-the-shoulder views of the holographic display showcasing his fragmented thought process.",
+  "lighting": "Soft but dim lighting creates a claustrophobic atmosphere, illuminated primarily by the flicker of the holographic interface, casting shadows on Marcus's face.",
+  "productionDesign": "The office features vintage furniture that is mismatched and worn, cluttered with papers, medical charts, and old technology, suggesting a blend of outdated human therapy practices in contrast with advanced AI integration.",
+  "signatureTwist": "Through the flickering light, moments of fragmented AI-generated memories manifest visually around Marcus, urging him to confront the duality of his existence.",
+  "avoid": [
+    "No humanoid robots",
+    "No readable text",
+    "No logos",
+    "No abstract wallpaper"
+  ]
+}

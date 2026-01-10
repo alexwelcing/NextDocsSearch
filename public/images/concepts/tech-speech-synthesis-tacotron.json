@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A cold, sterile control room filled with flickering screens churns out synthetic voices that almost deceive the human ear.",
+  "scene": "Inside a dimly lit, high-tech control room, technicians are hunched over their glowing consoles that display waveforms and spectrograms. In the center, a large holographic display shows a swirling cascade of text being transformed into lifelike speech, while eerie, human-like voices echo ominously in the background. The tension rises as a technician nervously glances at a monitor labeled 'Voice Verification,' revealing a red alert blinking—indicating a voice deepfake is about to be unleashed for a major announcement. Shadows dance across the cold metal surfaces, as the technicians race against time, their faces illuminated by the blue light of their screens, revealing a mix of anxiety and anticipation.",
+  "keyProps": [
+    "Flickering digital monitors displaying waveforms",
+    "A central holographic display of mel-spectrograms",
+    "Technicians' workstations cluttered with cables and coffee cups",
+    "A red alert sign labeled 'Voice Verification'",
+    "Audio headsets strewn about the room"
+  ],
+  "camera": "A low-angle shot that captures both the technicians’ urgent expressions and the towering screens behind them, emphasizing the claustrophobic atmosphere.",
+  "lighting": "Fluorescent overhead lights flicker erratically, contrasting with the soft blue glow of the screens, creating an unsettling ambiance.",
+  "productionDesign": "The control room features a blend of retrofuturistic technology with visible wear, suggesting a once-innovative hub now burdened by the ethical implications of its creations. The walls are lined with soundproofing panels, and the air is filled with a subtle hum of machinery working tirelessly.",
+  "signatureTwist": "The final shot reveals that the synthetic voice is being used to deliver a message that could potentially incite chaos, hinting at the moral dilemmas faced by those who wield such technology.",
+  "avoid": [
+    "abstract wallpaper",
+    "humanoid robots",
+    "generic HUD overlays",
+    "decorative elements",
+    "non-functional props"
+  ]
+}

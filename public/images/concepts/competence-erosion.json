@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit command center flooded with holographic interfaces shows a lone operator staring at a malfunctioning AI display, sweat dripping down their brow.",
+  "scene": "The operator, surrounded by a maze of screens and wires, frantically presses buttons as alerts blare throughout the command center. Glitchy holograms of maps and data projections flicker erratically, each one representing a critical system that now fails to function. A flickering neon blue light casts harsh shadows across their face, revealing the tension of a moment where the dependence on technology meets the stark reality of its failure. An overhead camera captures the chaos, focusing on the operator's hands, shaking as they struggle to recalibrate the ancient manual navigation tools once forgotten in the corner, covered in dust. Outside the high-tech glass walls, the world looms dark and uncertain, devoid of the promised efficiency that technology failed to deliver.",
+  "keyProps": [
+    "Flickering holographic displays with erratic data",
+    "Dusty, outdated navigation tools (maps, compasses)",
+    "Scattered coffee cups hinting at sleepless nights",
+    "A central console with chaotic buttons and levers",
+    "Emergency alert lights flashing red"
+  ],
+  "camera": "An overhead shot that slowly zooms in on the operator's frantic movements, capturing both the high-tech surroundings and their desperate struggle with the obsolete tools.",
+  "lighting": "Harsh, flickering neon blue with stark shadows, contrasted by the dim ambient glow of the control panels.",
+  "productionDesign": "A gritty, claustrophobic command center filled with exposed wiring and mismatched technology from various eras, symbolizing the clash between human ingenuity and reliance on AI.",
+  "signatureTwist": "In the midst of the chaos, the operator discovers a forgotten manual, a relic from a time when skills were integral, igniting a spark of determination to regain lost competencies.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sterile corporate boardroom morphs into a war room as executives grapple with a labyrinthine AI inversion map.",
+  "scene": "In a dimly lit boardroom, a massive digital display flickers with a complex 'Inversion Map' teeming with color-coded nodes representing new scarcity categories. Around a sleek, ebony conference table, a diverse group of mid-level executives examine the projections with furrowed brows—each one clutching personalized tablets that display real-time analytics on their industry's shifting value landscape. The atmosphere buzzes with urgency as conflicting opinions clash, revealing the palpable tension of impending obsolescence. A lone drone hovers above, scanning the room, capturing facial expressions and decision-making gestures, symbolizing the omnipresent eye of AI technology. Outside the expansive windows, a cityscape dominated by neon-lit skyscrapers hints at a society transformed by AI scarcity.",
+  "keyProps": [
+    "A detailed digital 'Inversion Map' projected on the wall",
+    "Personalized tablets displaying bespoke analytics",
+    "A sleek conference table with scattered documents",
+    "An aerial drone surveying the meeting",
+    "Dimmed lighting with pulsating neon accents from the city"
+  ],
+  "camera": "A steady dolly shot that moves from one executive's anxious face to the projection, emphasizing their reactions.",
+  "lighting": "Dim overhead lights with focused spotlights on the participants, creating a stark contrast with the vibrant colors of the digital display.",
+  "productionDesign": "A futuristic corporate boardroom featuring a combination of sleek, minimalist design and high-tech interfaces; glass walls and a panoramic view of a cyberpunk cityscape enhance the tension.",
+  "signatureTwist": "The projection subtly distorts as executives argue, indicating potential malfunctions in their reliance on AI-driven data.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No overly decorative elements",
+    "No readable text or logos"
+  ]
+}

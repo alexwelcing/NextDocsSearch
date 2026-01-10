@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A tangle of cables and glowing interfaces fills a dimly lit control room as a beleaguered engineer monitors a digital simulation of knowledge distillation.",
+  "scene": "In a cluttered control room, an engineer leans over a holographic display emanating from a cracked console, sweat glistening on their brow as they navigate through layers of complex data visualization. Screens flicker with streaming algorithms, showcasing the stark contrast between a bulky teacher model and its sleek, distilled counterpart. The atmosphere is tense; the engineer’s fingers dart between controls as they attempt to balance the performance of these models against the stark reality of computational limitations. Outside the reinforced glass, a bleak urban skyline looms, hinting at a world dependent on effective AI solutions. Every beep and whir of the machines is a countdown to success or failure, amplifying the feeling of urgency.",
+  "keyProps": [
+    "holographic model simulation",
+    "cracked control console",
+    "streaming algorithm visualizations",
+    "worn-out engineer's workstation",
+    "flickering screens"
+  ],
+  "camera": "low angle, emphasizing the engineer's tension and the overwhelming technology around them",
+  "lighting": "harsh overhead fluorescents mixed with the cold glow of screens, casting deep shadows",
+  "productionDesign": "a blend of retro-futuristic tech with exposed wiring, worn metal surfaces, and a view of a dystopian city outside—hinting at the dire need for efficient AI solutions",
+  "signatureTwist": "the holographic display unexpectedly flickers, revealing a flaw in the distilled model's output, creating a moment of panic and realization",
+  "avoid": [
+    "generic HUD overlays",
+    "humanoid robots",
+    "abstract wallpaper",
+    "clean futuristic environments",
+    "overly decorative elements"
+  ]
+}

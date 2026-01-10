@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A rusted control panel flickers with erratic lights, encapsulating the tension of a dying system amidst high stakes programming.",
+  "scene": "The camera slowly pans across a dimly lit control room, where an ancient, worn-out console lies at the center, covered in intricate wiring and aged metal. Display screens intermittently flash with lines of code and memory access errors, casting a flickering glow on the sweat-drenched faces of engineers battling to salvage their failing program. In the backdrop, a large window reveals a stormy, metallic skyline, hinting at the chaos outside mirroring the internal turmoil of the systems they are navigating. The air is thick with the smell of burnt circuits, a stark reminder of the risks at play when managing memory without the safety net of garbage collection.",
+  "keyProps": [
+    "rusted control panel",
+    "flickering display screens",
+    "exposed wiring and cables",
+    "half-empty coffee cups",
+    "overhead fluorescent lights with a buzzing sound"
+  ],
+  "camera": "A steady handheld shot, emphasizing the gritty feel through slight shakes, moving in tight on the console and then pulling back to capture the whole room's tension.",
+  "lighting": "Low-key lighting with harsh, directional light illuminating the console and casting deep shadows to create a sense of urgency and danger.",
+  "productionDesign": "A mix of retro-futuristic elements with rust and industrial decay, including mismatched chairs, scattered technical manuals, and a cluttered workspace strewn with old tech and prototypes.",
+  "signatureTwist": "A holographic projection suddenly activates, revealing a corrupted skyline data visualization that morphs into chaos, symbolizing the fragility of their memory safety systems.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "bright colors or futuristic aesthetics"
+  ]
+}

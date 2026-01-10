@@ -1,0 +1,24 @@
+{
+  "archetype": "Motivation Crisis",
+  "logline": "An abandoned urban landscape brimming with forgotten luxury, where technology once promised utopia but left devastation in its wake.",
+  "scene": "Amidst crumbling skyscrapers, an abandoned marketplace littered with unused molecular assemblers gleams under a broken glass canopy. Vivid images of extravagant meals, designer clothes, and tantalizing vacations flash on the screens of idle fabricators, their lights pulsating in eerie rhythm like trapped spirits yearning to serve. Weeds creep through the cracks of pristine pavements, and a lone figure sits on a shattered bench, hollow-eyed and slumped, clutching a device that can create anything, yet feeling utterly empty and purposeless. In the distance, faded advertisements promoting unlimited potential hang like ghosts in the air, a haunting reminder of a civilization that thrived on scarcity but succumbed to abundance.",
+  "keyProps": [
+    "Molecular assemblers scattered across the ground",
+    "Screens displaying extravagant luxury items",
+    "Overgrown weeds breaking through pavement cracks",
+    "A dog-eared magazine featuring a happy family on vacation",
+    "Broken glass canopy overhead allowing shafts of dim light"
+  ],
+  "camera": "Wide shot capturing the desolation of the urban landscape with a focus on the marketplace’s centerpiece.",
+  "lighting": "Soft, diffused light filtering through the broken glass, creating a melancholic atmosphere.",
+  "productionDesign": "Utilitarian, with a mix of high-tech remnants and nature reclaiming the space; stark contrasts between the clean lines of technology and the chaotic growth of the wild.",
+  "signatureTwist": "Despite the abundance of resources, the air is heavy with a sense of desolation and lost purpose, exemplifying the haunting irony of a post-scarcity world.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text",
+    "Logos",
+    "Symbolic items devoid of context"
+  ]
+}

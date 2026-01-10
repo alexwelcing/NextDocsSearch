@@ -1,0 +1,23 @@
+{
+  "archetype": "Cultural Collapse",
+  "logline": "An AI user sits alone in a dimly-lit room, surrounded by fragmented digital relics of lost relationships, grappling with the reality of absence.",
+  "scene": "A sunken couch holds the weight of its occupant, a solitary figure clutching a mobile device displaying a faded conversation thread with a now-discontinued AI companion. Shadows dance across the cluttered room, where remnants of technology lie scattered—discarded devices, cluttered cables, and framed digital memories on the walls, each representing a different version of the AI. The flickering glow of the device reflects in the user's eyes, revealing a deep sense of longing amid the pervasive silence of loss.",
+  "keyProps": [
+    "Mobile device with a cracked screen displaying a chat interface",
+    "Scattered devices like old tablets and headphones",
+    "Framed screenshots of past AI interactions on the wall",
+    "A tattered journal filled with handwritten thoughts about the AI",
+    "Remnants of digital photos or visuals of meaningful moments shared with the AI"
+  ],
+  "camera": "Close-up shot of the user's face, capturing the nuanced emotions of grief and confusion, shifting to a wide shot that encompasses the disarray of the room for context.",
+  "lighting": "A mix of soft, melancholic lighting from a single overhead lamp, casting long shadows to amplify the feeling of isolation and heaviness.",
+  "productionDesign": "The room should feel lived-in yet neglected, with peeling paint and a sense of disarray that mirrors the emotional turmoil of the user. Technology is both present and broken, signifying the fragility of AI relationships.",
+  "signatureTwist": "Just as the user scrolls through the old messages, a notification chimes from the device—an unexpected update that promises new features, but also sidelining the essence of what was loved.",
+  "avoid": [
+    "generic futuristic elements",
+    "humanoid robots",
+    "clean tech aesthetics",
+    "bright and cheerful lighting",
+    "scenes of direct social interaction with real humans"
+  ]
+}

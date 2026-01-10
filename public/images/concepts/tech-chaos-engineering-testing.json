@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A battered control room hosts a tense countdown to a planned chaos experiment, the air thick with tension as systems threaten to unravel.",
+  "scene": "The control room is a dimly lit space cluttered with worn-out screens displaying real-time system metrics and chaotic data spikes. Operators, clad in utilitarian gear, huddle around a central console, fingers poised over switches ready to initiate the chaos test. A large, flickering screen looms behind them, showcasing the 'Chaos Mesh' interface, where virtual nodes pulse ominously with warning signals. In the corner, a gauge shows increasing latency, and a countdown timer ticks relentlessly downwards, highlighting the impending chaos to be unleashed. Outside the room, through a reinforced window, faint flashes of energy from distant facility structures hint at the stakes of failure lurking just beyond their control.",
+  "keyProps": [
+    "Worn-out control panels with flickering indicator lights",
+    "Overloaded server racks cooling with hissing steam",
+    "Screens displaying chaotic data visualizations",
+    "Emergency protocol manuals strewn across desks",
+    "Static-laden communication devices buzzing with tension"
+  ],
+  "camera": "A low-angle shot focusing on the operators with the chaos interface looming overhead, emphasizing the gravity of their task.",
+  "lighting": "A moody mix of fluorescent overhead lights casting stark shadows, combined with the glow of screens creating an ethereal yet ominous atmosphere.",
+  "productionDesign": "Utilitarian yet retro-futuristic control room filled with repurposed military tech and upgraded components, blending old and new in a tangible, lived-in aesthetic of worn materials and high tech.",
+  "signatureTwist": "As the countdown hits zero, the screens collapse into static, foreshadowing a malfunction that turns the planned chaos into a full-blown disaster.",
+  "avoid": [
+    "Readable text on screens",
+    "Logos and branding",
+    "Humanoid robots or generic HUD overlays",
+    "Abstract wallpaper or non-specific backgrounds"
+  ]
+}

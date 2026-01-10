@@ -1,0 +1,86 @@
+---
+title: 'RAG & Vector Databases: A Deep Dive for Product Managers'
+author:
+  - Alex Welcing
+date: '2025-12-24'
+description: >-
+  Understanding Retrieval-Augmented Generation (RAG) and the vector stack to
+  build smarter, grounded AI applications.
+keywords:
+  - RAG
+  - Vector Database
+  - LLM
+  - Pinecone
+  - Weaviate
+  - Embeddings
+  - Product Management
+articleType: research
+ogImage: /images/og/rag-vector-databases-deep-dive.jpg
+---
+
+# RAG & Vector Databases: A Deep Dive for Product Managers
+
+If you are building Generative AI products in the enterprise, you cannot rely on the raw knowledge of an LLM. GPT-4 knows a lot about the world, but it knows nothing about your company's private data, your customer's history, or the document you wrote yesterday.
+
+Enter **RAG (Retrieval-Augmented Generation)**. It is the architecture that bridges the gap between the "Frozen Brain" of the LLM and the "Dynamic Knowledge" of your business.
+
+## Why RAG?
+
+LLMs have two fatal flaws for enterprise use:
+1.  **Hallucinations:** They make things up when they don't know the answer.
+2.  **Cutoff Dates:** Their training data is static.
+
+RAG solves this by giving the LLM an "Open Book Exam." Instead of asking the model to memorize facts, we ask it to read a relevant document and answer based *only* on that document.
+
+## The Vector Stack: How it Works
+
+To build RAG, you need a new kind of database stack.
+
+### 1. Embeddings Models (The Translator)
+Computers don't understand text; they understand numbers. An **Embeddings Model** (like OpenAI's `text-embedding-3` or Cohere's `embed-english`) takes a chunk of text and turns it into a long list of numbers (a vector).
+*   *Magic:* Similar concepts end up close together in this mathematical space. "Dog" and "Puppy" are close; "Dog" and "Tax Return" are far apart.
+
+### 2. Vector Databases (The Library)
+You need a place to store these millions of vectors and search them instantly. Traditional SQL databases are bad at this.
+*   **The Players:**
+    *   **Pinecone:** The leading managed service. Fast, scalable, easy to start.
+    *   **Weaviate / Milvus:** Open-source, highly customizable.
+    *   **pgvector:** A plugin for PostgreSQL. Great if you want to keep your stack simple and already use Postgres.
+
+### 3. Orchestration (The Glue)
+Frameworks like **LangChain** or **LlamaIndex** manage the flow: User Query -> Embed -> Search Vector DB -> Retrieve Context -> Send to LLM -> Get Answer.
+
+## Key Product Decisions
+
+As a PM, you will face trade-offs that engineers might miss.
+
+### Chunking Strategy
+How do you split your documents before embedding them?
+*   **Small Chunks (Sentences):** Precise retrieval, but might miss broader context.
+*   **Large Chunks (Pages):** Good context, but confuses the LLM with too much noise.
+*   **Semantic Chunking:** Using AI to break text at natural topic transitions. (Best quality, highest cost).
+
+### Retrieval Strategy
+*   **Keyword Search (BM25):** Good for exact matches (e.g., product SKUs, names).
+*   **Semantic Search (Vector):** Good for concepts (e.g., "How do I reset my password?").
+*   **Hybrid Search:** The gold standard. Combines both to get the best of both worlds.
+
+### Re-ranking
+Vector search is fast but "fuzzy." A **Re-ranker** (like Cohere Rerank) takes the top 10 results from the database and uses a slower, smarter model to sort them by true relevance before sending them to the LLM.
+*   *Impact:* Often boosts accuracy by 10-20%.
+
+## Cost & Latency Implications
+
+*   **Latency:** Every RAG step adds time. Embedding the user's query takes ~200ms. Vector search takes ~100ms. Re-ranking takes ~500ms. LLM generation takes seconds.
+    *   *PM Tip:* Use streaming UI to show the user "Searching knowledge base..." while the backend works.
+*   **Cost:** You pay for embedding tokens and LLM input tokens.
+    *   *PM Tip:* Don't retrieve 50 documents if 3 will do. Optimize your `top_k` parameter.
+
+## Advanced RAG: The Next Frontier
+
+*   **GraphRAG:** Combining vector search with Knowledge Graphs. This allows the AI to understand relationships (e.g., "Alice manages Bob") that vector search misses.
+*   **Agentic RAG:** Instead of a linear pipeline, an AI Agent decides *which* database to query, or whether to query at all.
+
+## Conclusion
+
+RAG is the standard architecture for grounded, reliable AI applications. Understanding the vector stack allows you to have informed conversations about latency, cost, and accuracy—and ultimately build a product that users can trust.

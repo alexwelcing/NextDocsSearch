@@ -10,12 +10,30 @@ import fs from 'fs'
 import path from 'path'
 import https from 'https'
 import sharp from 'sharp'
+import { randomFillSync } from 'crypto'
 
-// Initialize OpenAI client
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_KEY,
-})
-const openai = new OpenAIApi(configuration)
+let cachedOpenAI: OpenAIApi | null = null
+
+function getOpenAIKey(): string {
+  const raw = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY || ''
+  // Common misconfiguration: pasting `Bearer <key>` into env vars.
+  return raw.replace(/^Bearer\s+/i, '').trim()
+}
+
+function getOpenAIClient(): OpenAIApi {
+  if (cachedOpenAI) return cachedOpenAI
+
+  const apiKey = getOpenAIKey()
+  if (!apiKey) {
+    throw new Error(
+      'Missing OpenAI API key. Set OPENAI_API_KEY (preferred) or OPENAI_KEY in .env.local'
+    )
+  }
+
+  const configuration = new Configuration({ apiKey })
+  cachedOpenAI = new OpenAIApi(configuration)
+  return cachedOpenAI
+}
 
 export interface ImageGenerationOptions {
   prompt: string
@@ -39,10 +57,23 @@ export async function generateImage(
   console.log(`   Size: ${options.size}`)
   console.log(`   Quality: ${options.quality || 'hd'}`)
 
+  const maxPromptChars = Number(process.env.DALLE_PROMPT_MAX_CHARS || 3200)
+  const prompt =
+    options.prompt.length > maxPromptChars
+      ? options.prompt.slice(0, maxPromptChars)
+      : options.prompt
+
+  if (prompt.length !== options.prompt.length) {
+    console.log(
+      `✂️  Truncated prompt to ${maxPromptChars} chars (was ${options.prompt.length})`
+    )
+  }
+
   try {
+    const openai = getOpenAIClient()
     const response = await openai.createImage({
       model: 'dall-e-3',
-      prompt: options.prompt,
+      prompt,
       n: 1,
       size: options.size as any, // DALL-E 3 sizes not in old openai package types
       quality: options.quality || 'hd' as any,
@@ -65,7 +96,19 @@ export async function generateImage(
       revisedPrompt: imageData.revised_prompt,
     }
   } catch (error: any) {
-    console.error('❌ Error generating image:', error.message)
+    const status = error?.response?.status
+    const data = error?.response?.data
+    if (status) {
+      console.error(`❌ Error generating image: HTTP ${status}`)
+      if (data) {
+        const message = data?.error?.message || data?.message
+        const code = data?.error?.code
+        if (message) console.error(`   OpenAI: ${message}`)
+        if (code) console.error(`   Code: ${code}`)
+      }
+    } else {
+      console.error('❌ Error generating image:', error.message)
+    }
     throw error
   }
 }
@@ -122,6 +165,82 @@ export async function createOGImage(
   }
 }
 
+async function createNoiseOverlayPng(width: number, height: number, opacity: number): Promise<Buffer> {
+  const channels = 1
+  const buf = Buffer.alloc(width * height * channels)
+  randomFillSync(buf)
+
+  const multiplier = opacity
+  const offset = 128 * (1 - opacity)
+
+  // Make it look like film grain: a touch of blur and reduced contrast.
+  return sharp(buf, { raw: { width, height, channels } })
+    .blur(0.35)
+    .linear(multiplier, offset)
+    .png()
+    .toBuffer()
+}
+
+function createVignetteSvg(width: number, height: number, strength: number): Buffer {
+  const s = Math.max(0, Math.min(1, strength))
+  const edge = (0.15 + 0.35 * s).toFixed(3)
+  const alpha = (0.25 + 0.45 * s).toFixed(3)
+  const svg = `
+    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="v" cx="50%" cy="50%" r="65%">
+          <stop offset="0%" stop-color="rgba(0,0,0,0)"/>
+          <stop offset="${edge}" stop-color="rgba(0,0,0,0)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,${alpha})"/>
+        </radialGradient>
+      </defs>
+      <rect x="0" y="0" width="100%" height="100%" fill="url(#v)"/>
+    </svg>
+  `.trim()
+  return Buffer.from(svg)
+}
+
+async function renderCinematicJpeg(params: {
+  sourcePath: string
+  outputPath: string
+  width: number
+  height: number
+}): Promise<void> {
+  const enable = String(process.env.FILM_GRADE || '1') !== '0'
+  const grainStrength = Number(process.env.FILM_GRAIN || 0.085)
+  const vignetteStrength = Number(process.env.FILM_VIGNETTE || 0.55)
+
+  let pipeline = sharp(params.sourcePath)
+    .resize(params.width, params.height, { fit: 'cover', position: 'center' })
+
+  if (enable) {
+    // Subtle grade to reduce the synthetic look.
+    pipeline = pipeline
+      .modulate({ saturation: 0.92 })
+      .gamma(1.03)
+      .linear(1.02, -2)
+
+    const overlays: sharp.OverlayOptions[] = []
+
+    if (grainStrength > 0) {
+      const opacity = Math.min(0.2, grainStrength)
+      const noisePng = await createNoiseOverlayPng(params.width, params.height, opacity)
+      overlays.push({ input: noisePng, blend: 'overlay' })
+    }
+
+    if (vignetteStrength > 0) {
+      const vignette = createVignetteSvg(params.width, params.height, vignetteStrength)
+      overlays.push({ input: vignette, blend: 'multiply' })
+    }
+
+    if (overlays.length) {
+      pipeline = pipeline.composite(overlays)
+    }
+  }
+
+  await pipeline.jpeg({ quality: 90 }).toFile(params.outputPath)
+}
+
 /**
  * Generate and save article artwork
  */
@@ -152,14 +271,23 @@ export async function generateArticleArtwork(
 
   // Create hero image (optimize and convert to JPG)
   console.log(`🖼️  Creating hero image...`)
-  await sharp(tempPath)
-    .resize(1792, 1024, { fit: 'cover' })
-    .jpeg({ quality: 90 })
-    .toFile(heroPath)
+  await renderCinematicJpeg({
+    sourcePath: tempPath,
+    outputPath: heroPath,
+    width: 1792,
+    height: 1024,
+  })
   console.log(`✅ Hero image created: ${heroPath}`)
 
   // Create OG image (1200x630)
-  await createOGImage(tempPath, ogPath)
+  console.log(`🖼️  Creating OG image (1200x630)...`)
+  await renderCinematicJpeg({
+    sourcePath: tempPath,
+    outputPath: ogPath,
+    width: 1200,
+    height: 630,
+  })
+  console.log(`✅ OG image created: ${ogPath}`)
 
   // Clean up temp file
   fs.unlinkSync(tempPath)

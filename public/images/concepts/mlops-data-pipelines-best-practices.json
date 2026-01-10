@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A darkened command center filled with screens and blinking lights shows the lifeline of AI models in crisis.",
+  "scene": "In a dimly lit control room, technicians hunch over glowing monitors, displaying a flurry of real-time data and model performance graphs. One screen highlights an urgent alert: 'Data Drift Detected - Immediate Action Required.' The tension is palpable as operators scramble to track the source of the anomaly, frantically scouring through historical data logs projected in a holographic format. Nearby, a massive wall-mounted screen illustrates a timeline of data versions, with visual markers indicating discrepancies, like a digital 'Time Machine' showing the evolution of their training datasets.",
+  "keyProps": [
+    "Multiple high-res screens displaying data performance metrics",
+    "A holographic timeline representing data versions",
+    "Flickering control panels with blinking red alerts",
+    "An array of keyboards and mouse devices for rapid input",
+    "A large map of the AI ecosystem with connection hierarchies",
+    "Coffee cups and energy drink cans strewn about, indicating long hours"
+  ],
+  "camera": "Wide-angle shot capturing the entire room with a focus on the central screens",
+  "lighting": "Low, ambient backlighting with sharp contrasts illuminating the screens and frantic faces of the technicians",
+  "productionDesign": "A mix of high-tech and gritty textures, with metal and wires exposed, giving the room an industrial feel that suggests both advanced technology and the pressure of a failing system.",
+  "signatureTwist": "A sudden glitch in the main screen reveals a chaotic simulation of 'what if' scenarios, hinting at potential catastrophic failures if the issues aren't resolved.",
+  "avoid": [
+    "Readable text or logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Overly bright or sterile environments"
+  ]
+}

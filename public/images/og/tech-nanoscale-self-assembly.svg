@@ -1,0 +1,30 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="hsl(1, 55%, 14%)" />
+          <stop offset="100%" stop-color="hsl(46, 65%, 20%)" />
+        </linearGradient>
+        <radialGradient id="glow" cx="0.2" cy="0.2" r="0.8">
+          <stop offset="0%" stop-color="hsl(201, 80%, 60%)" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="hsl(201, 80%, 60%)" stop-opacity="0" />
+        </radialGradient>
+        <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="30" />
+        </filter>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#bg)" />
+      <rect width="100%" height="100%" fill="url(#glow)" />
+      <g filter="url(#blur)">
+        <circle cx="647" cy="102" r="238" fill="hsl(161, 70%, 45%)" opacity="0.14" />
+<circle cx="95" cy="460" r="288" fill="hsl(181, 70%, 45%)" opacity="0.24" />
+<circle cx="1098" cy="76" r="290" fill="hsl(201, 70%, 45%)" opacity="0.18" />
+<circle cx="762" cy="445" r="173" fill="hsl(221, 70%, 45%)" opacity="0.19" />
+<circle cx="489" cy="374" r="242" fill="hsl(241, 70%, 45%)" opacity="0.18" />
+      </g>
+      <g>
+        <line x1="12" y1="32" x2="100" y2="530" stroke="hsl(161, 70%, 55%)" stroke-width="2" opacity="0.29" />
+<line x1="1009" y1="474" x2="114" y2="458" stroke="hsl(161, 70%, 55%)" stroke-width="2" opacity="0.40" />
+<line x1="559" y1="252" x2="1046" y2="397" stroke="hsl(161, 70%, 55%)" stroke-width="2" opacity="0.28" />
+      </g>
+      <rect x="780" y="95" width="300" height="76" rx="25" fill="hsl(161, 70%, 55%)" opacity="0.18" />
+    </svg>

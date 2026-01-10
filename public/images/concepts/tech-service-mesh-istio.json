@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A claustrophobic tech hub hums with the tension of cascading failures as misconfigured microservices threaten to collapse the whole network.",
+  "scene": "Inside a dimly lit control room, rows of servers pulse with eerie blue lights, casting shadows across the weary faces of engineers glued to their screens. Overhead, a digital display flickers erratically, showcasing the chaotic surge of red alerts indicating failed communications between microservices. One engineer, hunched and panicked, is frantically typing commands into a terminal, desperately trying to rectify the cascading failures caused by a misconfigured service mesh. Outside the reinforced glass walls, a storm rages, mirroring the turmoil within as the stakes grow higher with each passing moment.",
+  "keyProps": [
+    "Server racks with flickering LED lights",
+    "Large digital panels displaying error codes",
+    "Monitors showing graphs of service traffic",
+    "Emergency alert lights flashing",
+    "Robust networking cables coiled around the floor"
+  ],
+  "camera": "A close-up shot of the engineer's face, highlighting their grim determination, followed by a wide-angle capture of the chaotic control room environment!",
+  "lighting": "Low ambient lighting punctuated by the harsh glow of screens and flashing alert lights, creating a sense of urgency and tension.",
+  "productionDesign": "The control room features a high-tech, industrial design, with exposed wiring, metallic surfaces, and signs of wear and tear to emphasize the gritty reality of managing critical systems under pressure.",
+  "signatureTwist": "Just as the engineer thinks they’ve solved the issue, the power flickers ominously, hinting at a deeper, more systemic problem.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No readable text or logos",
+    "No abstract wallpaper"
+  ]
+}

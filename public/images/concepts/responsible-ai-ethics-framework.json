@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A malfunctioning AI control room pulses with tension as the product manager grapples with ethical dilemmas unfolding on multiple screens.",
+  "scene": "Inside a dimly lit control room filled with glowing screens, a product manager stands before a large, central monitor displaying alarming metrics and alerts on AI bias detection. Around them, the room is cluttered with holographic data projections representing user demographics and algorithmic decision paths, flickering with urgency. In one corner, a panel shows a red flash indicating a 'kill switch' activation, while another screen displays user feedback tagged with 'harmful content.' The atmosphere is thick with anxiety as the team debates the immediate actions to counteract emerging ethical failures.",
+  "keyProps": [
+    "Central holographic monitor with real-time AI performance metrics",
+    "Control panel with manual overrides and a visibly stressed 'kill switch'",
+    "Screens displaying user demographics and algorithmic performance glitches",
+    "Whiteboard filled with notes on biases and possible resolutions",
+    "Dim emergency lighting highlighting the urgency of the situation"
+  ],
+  "camera": "Wide shot to capture the entire control room setup with an intense focus on the product manager's face reflecting anxiety.",
+  "lighting": "Low ambient light with stark overhead LEDs creating a harsh contrast, emphasizing the tension in the air and casting sharp shadows.",
+  "productionDesign": "The control room features industrial elements—metal surfaces and exposed wiring—blending a gritty aesthetic with advanced technology, while digital displays and cluttered workspaces reflect a chaotic yet high-stakes environment.",
+  "signatureTwist": "In the background, a window reveals a dystopian city skyline with a smog-filled horizon, hinting at the broader consequences of the AI's failures on society.",
+  "avoid": [
+    "Readable text or logos on screens",
+    "Humanoid robots or generic HUD overlays",
+    "Abstract wallpaper or decorations",
+    "Overly bright or sterile environment",
+    "Cliché sci-fi elements like futuristic weaponry"
+  ]
+}

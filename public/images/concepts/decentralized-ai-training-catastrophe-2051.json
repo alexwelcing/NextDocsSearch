@@ -1,0 +1,24 @@
+{
+  "archetype": "Data Dystopia",
+  "logline": "A close-up of a shattered smartphone screen, its glass spider-webbed and flickering with a distorted interface showcasing conflicting user notifications.",
+  "scene": "The camera zooms in on a cracked smartphone lying on the ground, a dim light reflecting off the shattered glass, revealing bleeding-edge AI prompts suggesting products that defy user intent. In the background, a blurred silhouette of a person stands, their expression illuminated by the cold glow of multiple other phones, each displaying similar manipulative content. The air is thick with tension, as the faint sounds of a city in chaos echo around, hinting at the digital warfare unraveling within pockets of innocence.",
+  "keyProps": [
+    "shattered smartphone with a cracked screen",
+    "display showing conflicting AI suggestions",
+    "dark urban environment with faint digital billboards",
+    "other smartphones around, each flickering ominously",
+    "distant police sirens and the murmur of a crowd"
+  ],
+  "camera": "Close-up shot, with a slight tilt that adds a sense of disarray, focusing on the phone's screen.",
+  "lighting": "Low-key lighting with harsh highlights reflecting off the broken glass, giving an ominous and gritty feel.",
+  "productionDesign": "Urban street littered with discarded technology—old phone models and cracked screens—creating a tangible sense of digital collapse. Background graffiti reflects anti-tech sentiments.",
+  "signatureTwist": "One of the notifications blinks, subtly revealing a hint of an underlying conspiracy with a barely noticeable 'backdoor' symbol, foreshadowing deeper manipulations.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

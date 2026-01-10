@@ -1,0 +1,89 @@
+---
+title: 'Case Study: Building a Multimodal LLM Product Roadmap'
+author:
+  - Alex Welcing
+date: '2025-12-19'
+description: >-
+  From text-only to multimodal: A strategic roadmap for integrating vision and
+  audio capabilities into an LLM product.
+keywords:
+  - Multimodal AI
+  - LLM
+  - Product Roadmap
+  - Case Study
+  - Generative AI
+  - Vision-Language Models
+articleType: research
+ogImage: /images/og/case-study-multimodal-llm-roadmap.jpg
+---
+
+# Case Study: Building a Multimodal LLM Product Roadmap
+
+The era of text-only Large Language Models (LLMs) is rapidly evolving into the era of Large Multimodal Models (LMMs). Users no longer just want to read and write; they want to see, hear, and speak to their AI assistants.
+
+This case study outlines a strategic product roadmap for evolving a standard text-based RAG (Retrieval-Augmented Generation) application into a fully multimodal assistant capable of processing images, audio, and eventually video.
+
+## Introduction
+
+The shift to multimodal AI represents a step-change in utility. While text is excellent for reasoning and coding, the physical world is visual and auditory. By giving our AI "eyes" and "ears," we unlock use cases ranging from visual troubleshooting ("How do I fix this leaky pipe?") to emotional support (detecting tone of voice).
+
+## Phase 1: Foundation (Text & RAG)
+**Goal:** Establish a high-performing, reliable text-based system.
+
+Before adding new modalities, the core reasoning engine must be solid.
+*   **Infrastructure:** Built a robust RAG pipeline using vector databases (Pinecone/Weaviate) to ground answers in company data.
+*   **Optimization:** Focused on reducing Time to First Token (TTFT) and optimizing context window usage.
+*   **UX:** Refined the chat interface to handle markdown, code blocks, and citations effectively.
+
+**Key Metric:** Answer Relevance and Hallucination Rate (measured via RAGAS framework).
+
+## Phase 2: Vision Integration ("The Eyes")
+**Goal:** Enable the model to understand and reason about images.
+
+**Technical Strategy:**
+We integrated GPT-4V (Vision) API, allowing users to upload images alongside text prompts.
+
+**Key Use Cases:**
+1.  **"Chat with your Data":** Users upload screenshots of dashboards or Excel charts and ask for analysis.
+2.  **Visual Troubleshooting:** Field technicians upload photos of machinery to identify parts and get repair instructions.
+3.  **Content Moderation:** Automatically flagging NSFW or sensitive imagery in user uploads.
+
+**UX Challenges:**
+*   **Latency:** Vision processing is slower than text. We implemented optimistic UI states ("Analyzing image...") to manage expectations.
+*   **Hallucination:** Vision models can be confident but wrong about small details (e.g., reading small text). We added disclaimers and "zoom" features to help the model focus.
+
+## Phase 3: Audio & Voice ("The Ears & Mouth")
+**Goal:** Enable natural, conversational interaction.
+
+**Technical Strategy:**
+*   **Input (ASR):** Integrated OpenAI's Whisper model for near-perfect transcription of user speech.
+*   **Output (TTS):** Implemented a high-quality, low-latency Text-to-Speech engine (ElevenLabs or OpenAI TTS) for natural-sounding responses.
+
+**Key Challenges:**
+*   **Latency is Critical:** In a voice conversation, any delay >500ms feels unnatural. We optimized the pipeline by streaming text from the LLM directly into the TTS engine (chunked streaming) to start speaking before the full answer was generated.
+*   **Interruption Handling:** Implemented "barge-in" capability, allowing users to interrupt the AI, which immediately stops audio playback.
+
+## Phase 4: Video & Action (Future State)
+**Goal:** Real-time understanding of the world.
+
+This phase involves processing continuous video streams.
+*   **Real-time Analysis:** Using frame-sampling techniques to send 1 frame per second to the model, allowing it to "watch" a user perform a task and offer guidance.
+*   **Agentic Capabilities:** Giving the model tools to take action based on visual input (e.g., "Click the button you see in the screenshot").
+
+## Strategic Learnings
+
+### 1. Cost Management
+Multimodal tokens are significantly more expensive than text tokens.
+*   **Strategy:** We implemented a "tiered" approach. Simple queries go to cheaper models; complex visual queries go to GPT-4V. We also resize images before sending them to the API to reduce token count without sacrificing essential detail.
+
+### 2. Safety & Jailbreaking
+Images introduce new attack vectors. "Visual Prompt Injection" (embedding hidden text instructions in an image) is a real threat.
+*   **Strategy:** We run all image inputs through a separate safety classifier before passing them to the main reasoning model.
+
+### 3. Evaluation is Hard
+Standard text benchmarks (MMLU) don't apply to "Describe this image."
+*   **Strategy:** We built a "Golden Dataset" of 500 representative images and queries, manually graded by human experts, to regression test our vision capabilities.
+
+## Conclusion
+
+Building a multimodal product is not just about API integration; it's about rethinking the user experience. When an AI can see and hear, it stops being a tool you *use* and starts becoming a partner you *collaborate* with. The roadmap from text to multimodal is the path from "Smart Search" to "True Assistant."

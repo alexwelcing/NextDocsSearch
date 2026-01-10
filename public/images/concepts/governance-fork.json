@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An austere global coordination summit teeters on the brink of collapse amidst looming catastrophic AI threats.",
+  "scene": "Captured in a dimly lit control room, a long, scarred table dominates the space, littered with high-tech communication devices. Tension is palpable as representatives from the world's major powers are captured mid-discussion, with some leaning forward in intense debate while others sit back, arms crossed, visibly skeptical. A massive screen flickers with ominous graphs and AI-generated predictions of disaster scenarios, casting an eerie glow on their faces. The room is surrounded by reinforced glass windows overlooking a shattered skyline, symbolic of the world at stake. Outside, a chaotic scene of drones and unregulated AI tech adds a sense of urgency and danger to the dialogue inside.",
+  "keyProps": [
+    "Scarred conference table",
+    "Advanced communication devices",
+    "Flickering projection screens",
+    "Reinforced glass windows overlooking chaos",
+    "Threatening AI predictions on screens"
+  ],
+  "camera": "Wide-angle lens capturing the entire room, focusing on the conflicting expressions of the representatives.",
+  "lighting": "Low, moody light with flickering highlights from the screens creating tension among the characters.",
+  "productionDesign": "Industrial, utilitarian style with a worn-out feel, suggesting a once-modern facility now on the brink of existential crisis, filled with advanced yet chaotic tech.",
+  "signatureTwist": "The external chaos contrasts sharply with the internal debate, hinting at the impending collapse of governance as tensions rise.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

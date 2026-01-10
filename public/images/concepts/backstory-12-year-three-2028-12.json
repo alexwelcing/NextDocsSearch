@@ -1,0 +1,24 @@
+{
+  "archetype": "Tech Reflection",
+  "logline": "A dense, cluttered aerospace lab showcases the chaotic birth of revolutionary technology poised to alter humanity's future.",
+  "scene": "Inside a dimly-lit aerospace division laboratory, piles of disassembled drones and prototype terraforming devices lay scattered across metal workbenches. A team of engineers huddles around a holographic projection of Mars, their expressions a mix of excitement and trepidation as they map out the first colonization mission slated for 2032. In the background, messy whiteboards filled with complex equations and annotations reflect the frantic pace of innovation, while a single flash of a failure alert from a quantum system emits a warning beep, underlining the high stakes at play. This moment encapsulates the balance between ambition and the ever-looming risks of their groundbreaking endeavors.",
+  "keyProps": [
+    "Holographic projection of Mars",
+    "Disassembled drone parts",
+    "Complex equations on whiteboards",
+    "Quantum system failure alert",
+    "Prototype terraforming devices"
+  ],
+  "camera": "Wide-angle lens capturing the entire chaotic workspace",
+  "lighting": "Dim overhead fluorescents mixed with the cold blue light of holograms",
+  "productionDesign": "Industrial decor with exposed pipes, metal surfaces, and a clutter of tools and schematics, reinforcing the gritty, high-stakes environment of tech development.",
+  "signatureTwist": "The flickering hologram of Mars subtly shifts to show an unexpected catastrophe, hinting at the potential consequences of their innovations.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

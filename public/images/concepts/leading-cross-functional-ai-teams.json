@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A tense meeting room filled with tension and conflict as scientists and engineers clash over the project deadline.",
+  "scene": "In a dimly lit control room, the long conference table is cluttered with laptops, coffee cups, and AI model blueprints. A whiteboard is scrawled with competing timelines: one marked 'Research Phase' with scribbles of complex algorithms, and another labeled 'Delivery Deadline' with strict dates highlighted in red. Data Scientists, with intense expressions, are debating with Software Engineers, gesticulating towards a laptop displaying a live model that is just out of reach. The atmosphere is thick with frustration and urgency, with everyone aware that a decision needs to be made to align their competing interests.",
+  "keyProps": [
+    "Cluttered conference table with laptops",
+    "Whiteboard filled with diagrams and deadlines",
+    "Coffee cups stained with anxiety",
+    "Digital screen displaying AI model performance",
+    "Sticky notes in chaotic array",
+    "Holographic graphs hovering above the table"
+  ],
+  "camera": "A wide-angle shot capturing the entire room, emphasizing the divided side of tech and creativity, while a tight focus on the central debate showcases the intensity of emotions.",
+  "lighting": "Harsh overhead fluorescent lights create stark shadows, underscoring the tension, with some soft backlighting from computer screens illuminating the faces of the individuals.",
+  "productionDesign": "Industrial elements with exposed pipes and concrete walls add a gritty authenticity, while technology is interspersed with personal effects like snacks and team photos, hinting at camaraderie amidst conflict.",
+  "signatureTwist": "A digital clock in the corner ticks down the time until the launch, adding an element of urgency that is felt throughout the room.",
+  "avoid": [
+    "No humanoid robots",
+    "No abstract wallpaper",
+    "No visible logos or readable text",
+    "No generic HUD overlays"
+  ]
+}

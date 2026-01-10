@@ -1,0 +1,23 @@
+{
+  "archetype": "Quantum Collapse",
+  "logline": "A ruptured control room reveals the chaos of a malfunctioning quantum network, where past and future collide in real time.",
+  "scene": "Inside a dimly lit quantum control room, screens flicker erratically, showcasing overlapping timelines as data streams from the future disrupt the present. A technician frantically types commands on a holographic interface, desperately trying to stabilize the network, while a wall of glass reveals an unsettling view of the cityscape outside, caught in a surreal temporal distortion. Panic and confusion reign as visible disruptions warp the light and shadows in the space, blending moments from various times together. In the corner, a countdown clock spins backwards, hinting at the nature of their catastrophic failure.",
+  "keyProps": [
+    "Holographic interface with chaotic data streams",
+    "Flickering screens displaying temporal paradoxes",
+    "High-tech quantum routers covered in sparks",
+    "Wall-sized glass view showing a distorted urban landscape",
+    "Futuristic lighting fixtures flickering erratically"
+  ],
+  "camera": "Handheld camera for a gritty, immersive feel, with erratic pans to emulate the chaos of the scene",
+  "lighting": "Dim, with harsh, flickering fluorescent lights juxtaposed with the glow of the screens, creating stark contrasts and shadows",
+  "productionDesign": "A cluttered control room filled with advanced quantum technology, tangled cables, and a sense of urgency, featuring exposed circuitry and holographic displays that seem to glitch as time itself breaks down",
+  "signatureTwist": "Amidst the chaos, a hidden device in the room projects a distorted image of what appears to be the tech from a different era, suggesting the collapse has reached beyond their own technology into a merged past and future.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No readable text",
+    "No logos or watermarks"
+  ]
+}

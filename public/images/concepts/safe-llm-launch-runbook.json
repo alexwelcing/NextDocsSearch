@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An austere operations center, where AI feature launches teeter on the brink of compliance chaos.",
+  "scene": "Inside a dimly lit control room, a long table is strewn with glowing monitors displaying analytics dashboards, compliance metrics, and live feedback loops. In the foreground, an AI product manager peers intently at a screen filled with red alerts. Around the table, shadowy figures of security and legal teams debate fiercely, papers rustling with urgent notes and compliance checklists. The tension is palpable as the manager highlights a critical kill criteria looming large on the wall, underscoring the risks of failure as they prepare for the impending launch of their AI assistant.",
+  "keyProps": [
+    "Oversized wall-mounted screens displaying complex data",
+    "Stacks of printed compliance checklists",
+    "Crisp, modern conference table with sleek communication devices",
+    "Dim blue ambient lighting creating a tense atmosphere",
+    "Emergency protocol binders visibly annotated with urgent notes"
+  ],
+  "camera": "Wide-angle lens capturing the entire room, emphasizing the crowded, intense environment and the weight of decision-making in the air.",
+  "lighting": "Low-key lighting with sharp contrasts; harsh overhead spotlights illuminate the table while shadows loom in the corners, intensifying the sense of pressure and urgency.",
+  "productionDesign": "Ultra-modern, yet utilitarian design featuring clean lines and a mix of metallic and glass surfaces, giving it a high-tech yet functional aesthetic. The room should look lived-in yet organized, projecting an atmosphere of serious business intertwined with a touch of the sci-fi future.",
+  "signatureTwist": "A faint holographic display flickers to life in the corner, showcasing a visual representation of potential AI failures, being updated in real-time as discussions progress.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

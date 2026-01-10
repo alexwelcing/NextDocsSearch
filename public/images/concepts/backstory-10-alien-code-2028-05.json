@@ -1,0 +1,24 @@
+{
+  "archetype": "Gene Editing Revelation",
+  "logline": "A dimly lit laboratory filled with bioluminescent petri dishes containing genetically modified organisms and advanced gene-editing tools.",
+  "scene": "In the heart of the laboratory, a biotechnologist peers intently through a high-powered microscope, the lens illuminated by a cold, sterile blue light. Surrounding them, a chaotic array of glassware and precision instruments lies scattered across a metal workbench, glistening with the residue of previous experiments. On a monitor in the background, vibrant sequences of DNA are rapidly manipulated in real-time, casting flickering reflections on the technician's focused face. Nearby, an incubator hums gently, revealing living test subjects that glow faintly, the fruits of their almost unnatural precision.",
+  "keyProps": [
+    "High-powered microscope",
+    "Bioluminescent petri dishes",
+    "Gene-editing tools (scalpels, pipettes)",
+    "Data monitor displaying DNA sequences",
+    "Incubator with genetically modified organisms"
+  ],
+  "camera": "Close-up shot on the biotechnologist's eye through the microscope, with a wide-angle view of the lab in the background.",
+  "lighting": "Cold blue and green tones dominate the space, punctuated by the warm glow of bioluminescent organisms.",
+  "productionDesign": "The lab is constructed with a mix of sleek, modern technology and the chaotic disarray typical of groundbreaking research, with wires and cables snaking along surfaces and walls. The atmosphere conveys both innovation and ethical unease, hinted at by the clutter of gene-editing equipment and the intense focus of the scientists.",
+  "signatureTwist": "As the DNA sequences play out on the monitor, they suddenly glitch and rearrange into an alien structure, suggesting the AI's influence on human biology.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text",
+    "Logos",
+    "Watermarks"
+  ]
+}

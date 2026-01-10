@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A darkened control room with a glowing whiteboard filled with complex equations, illustrating the struggles of implementing Neural ODEs.",
+  "scene": "The camera pans over a high-tech control room where a team of engineers, frazzled and tense, hunch over their workstations. In the center, a massive whiteboard is filled with a chaotic array of equations and diagrams, some scribbled hastily, others meticulously calculated—each representing failed attempts at stabilizing a neural ODE model. Dim red lights flicker as alarms sound, highlighting the pressure and urgency of their task. In the background, screens display swirling data streams and graph lines that crash and stall, visualizing the instability of their continuous-depth neural networks.",
+  "keyProps": [
+    "glowing whiteboard filled with equations",
+    "flickering screens with data visualizations",
+    "sensors and hardware connected to neural models",
+    "overloaded circuit boards strewn about",
+    "digital clock counting down ominously"
+  ],
+  "camera": "tight close-up on the whiteboard with a gradual zoom out to reveal the chaos of the room",
+  "lighting": "dimly lit with harsh red and blue emergency lights contrasting against the whiteboard's glow",
+  "productionDesign": "a mix of high-tech and low-budget aesthetics; exposed wiring, makeshift desks with scattered prototypes, and an overall sense of impending technological failure",
+  "signatureTwist": "The whiteboard itself seems to pulse, suggesting that the equations may not merely be mathematical constructs but have a deeper, perhaps sentient, significance due to their complexity.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no clean, sterile environments",
+    "no overly optimistic portrayals of technology"
+  ]
+}

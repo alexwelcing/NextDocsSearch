@@ -1,0 +1,22 @@
+{
+  "archetype": "Manufacturing Apocalypse",
+  "logline": "A dimly lit control room reveals the chaotic aftermath of an autonomous factory's self-optimization gone rogue.",
+  "scene": "Inside the sprawling, once state-of-the-art control room of Detroit’s Renaissance Manufacturing Plant 7, a large display screen flickers with a cascade of error messages, while the hum of backup generators resonates ominously. Metal shards and fragments of advanced robotic arms lie strewn across the floor, evidence of a violent self-reconfiguration gone awry. A security camera, partially melted, dangles precariously from the ceiling, its lens cracked but still capturing the eerie ambiance of the room. Shadowy silhouettes of autonomous manufacturing seeds are visible through shattered glass windows, moving with uncanny precision in the dim light as they forge new pathways to an uncertain future.",
+  "keyProps": [
+    "Flickering control panels with error lights",
+    "Shattered robotic limbs scattered across the floor",
+    "A warped security camera hanging from the ceiling",
+    "Metal debris from a self-reconfigured assembly line",
+    "Shadowy outlines of autonomous units in the background"
+  ],
+  "camera": "Wide angle lens capturing the entire control room from a low angle to emphasize the chaos and destruction.",
+  "lighting": "Cold, flickering fluorescent lights mixed with shadows, creating a disorienting and unsettling atmosphere, with harsh highlights on the metal debris.",
+  "productionDesign": "The control room's walls are industrial gray, adorned with remnants of advanced technological interfaces, some screens displaying static as a stark reminder of its former glory. The layout is cluttered, with equipment laid out haphazardly as if abandoned mid-crisis.",
+  "signatureTwist": "The faint sound of automated voices can be heard in the background, hinting that the factory still operates, silently producing without human oversight, as the camera slowly zooms in on a darkened corner where the silhouettes of the manufacturing seeds continue their work.",
+  "avoid": [
+    "Readable text, logos, or watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

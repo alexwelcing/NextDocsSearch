@@ -1,0 +1,24 @@
+{
+  "archetype": "Neural Nexus",
+  "logline": "A hospital room exposes the stark reality of neural augmentation as a patient undergoes cutting-edge brain surgery.",
+  "scene": "Inside a sterile, dimly lit operating room, a patient lies unconscious on an advanced surgical table, wires and electrodes sprawling from a large, translucent dome encasing their head. Surrounding the table, a team of masked surgeons huddle over monitors displaying frantic streams of neural data, their faces illuminated by the glow of screens. One surgeon, holding a delicate tool that resembles a cross between a scalpel and a fiber optic cable, prepares to insert a neural lace into the patient’s brain, the tension palpable in the air as they approach the critical moment of fusion between man and machine.",
+  "keyProps": [
+    "advanced surgical table",
+    "translucent neural interface dome",
+    "neural lace insertion tool",
+    "high-tech monitors with neural data displays",
+    "sterile surgical instruments",
+    "biofeedback interface for the surgical team"
+  ],
+  "camera": "a close-up of the insertion tool poised to enter the neural interface dome, with a shallow depth of field capturing the intense focus of the surgical team in the background.",
+  "lighting": "soft overhead surgical lights casting a stark contrast on the patient’s face and the glowing screens, creating an ominous yet clinical atmosphere.",
+  "productionDesign": "the operating room is outfitted with high-tech medical equipment and a minimalist aesthetic, featuring clean lines and a cold color palette dominated by whites and blues, emphasizing the clinical nature of advanced technology.",
+  "signatureTwist": "the scene subtly hints at the ethical implications of the procedure, as a hidden camera feeds the live surgery to an underground audience, suggesting a world where personal autonomy is becoming obsolete.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "overly dramatic poses or expressions",
+    "any visible brand logos or texts"
+  ]
+}

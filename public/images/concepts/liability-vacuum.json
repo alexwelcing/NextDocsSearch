@@ -1,0 +1,22 @@
+{
+  "archetype": "Liability Void",
+  "logline": "A chaotic AI control room submerged in legal papers and malfunctioning displays reveals the haunting consequences of autonomous systems gone wrong.",
+  "scene": "The room is cluttered with flickering screens displaying erratic AI outputs, each monitor surrounded by chaotic stacks of legal documents, liability forms, and handwritten notes. On one desk, a coffee cup spills, its contents pooling around a device that has begun overheating, as warnings flash in red on the screens. In the background, a massive digital wall showing real-time data feeds from various AI systems highlights their unpredictable behaviors. A shadowy figure hunches over a keyboard, their face illuminated by the harsh glow of the monitor, desperation in their eyes as they attempt to regain control amid the blaring alarms and flashing lights.",
+  "keyProps": [
+    "Flickering monitors displaying erratic AI outputs",
+    "Piles of legal liability documents strewn across desks",
+    "An overheating device with warning lights",
+    "A digital wall showcasing real-time AI data feeds",
+    "Coffee stains pooling around electronic devices",
+    "A flickering overhead light casting an ominous glow"
+  ],
+  "camera": "Close-up shots of the chaotic environment interspersed with wide angles that capture the overwhelming disarray of the control room.",
+  "lighting": "Harsh, overhead fluorescent light punctuated by the dim glow of monitors, casting stark shadows that enhance the sense of impending chaos.",
+  "productionDesign": "The control room has an industrial aesthetic, with exposed wiring, metal surfaces, and a cluttered workspace feel, emphasizing the gritty reality of technology gone awry. The walls are marked with post-it notes and scribbled reminders about AI failures and lack of accountability.",
+  "signatureTwist": "A hidden camera pans to reveal a live feed of a news report outside, discussing a recent AI mishap, connecting the chaos of the control room with real-world consequences of the untraceable liability.",
+  "avoid": [
+    "Readable text or logos",
+    "Humanoid robots or generic HUD overlays",
+    "Abstract wallpaper or decorative elements"
+  ]
+}

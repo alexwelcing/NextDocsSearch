@@ -1,0 +1,23 @@
+{
+  "archetype": "Quantum Breakthrough",
+  "logline": "A dust-covered industrial lab showcases the remnants of a frenetic year in technology, hinting at both incredible progress and potential peril.",
+  "scene": "The camera pans over a dimly lit laboratory cluttered with high-tech equipment and tools abandoned in haste. On a flickering screen, unreadable data flows while scattered quantum processors lie half-assembled on a workstation, as if a team left in a hurry. A large glass container filled with a shimmering substance, a failed nanotech demo, sits ominously on the corner of a workbench. Near the entrance, a forgotten coffee cup, now cold, symbolizes the relentless pace that has consumed its creators. This juxtaposition of innovation and neglect illustrates the fine line between cutting-edge technology and chaos.",
+  "keyProps": [
+    "flickering monitor displaying complex algorithms",
+    "half-assembled quantum processor",
+    "glass container with shimmering nanotech substance",
+    "abandoned tools scattered on the floor",
+    "cold coffee cup on a cluttered table"
+  ],
+  "camera": "A slow, sweeping tracking shot that captures the disarray and intensity of the space.",
+  "lighting": "Low, ambient lighting with sharp contrast from overhead fluorescent lights casting harsh shadows, enhancing the gritty vibe.",
+  "productionDesign": "The lab is filled with an eclectic mix of dated industrial machinery and sleek, modern tech, showcasing a clash of old and new with layers of dust and grime reflecting its abandonment.",
+  "signatureTwist": "A low hum from an unseen device implies that the abandoned lab is still operational, suggesting that the race for advancement may have unforeseen consequences.",
+  "avoid": [
+    "decorative elements",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "readable text or logos"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Quantum Scale-Up",
+  "logline": "An imposing compute cluster hums with the energy of a thousand processors, casting a cold, fluorescent glow over the sleek expanse of the new lab's cavernous interior.",
+  "scene": "Inside a vast, sterile lab space that stretches into the distance, rows of server racks tower like monolithic sculptures, each one blinking with rhythmic green LED lights. Researchers in lab coats huddle around a central console, their eyes glued to the screens displaying complex data visualizations and metric analyses. The air is thick with anticipation and the faint hum of cooling fans provides a background symphony of technological prowess. A massive wall-mounted screen displays the haunting question: 'When does reasoning begin?', as a team member scribbles frantic notes, signaling the weight of the moment.",
+  "keyProps": [
+    "server racks with blinking LED lights",
+    "central console with multiple screens",
+    "whiteboards covered in dense equations",
+    "cables snaking across the floor",
+    "an oversized industrial fan for cooling"
+  ],
+  "camera": "wide-angle lens capturing the entire lab environment",
+  "lighting": "harsh fluorescent lights creating stark shadows and highlights",
+  "productionDesign": "minimalist and high-tech with exposed cables and raw concrete walls, emphasizing the stark reality of cutting-edge research",
+  "signatureTwist": "A single cracked panel on one of the servers reveals wires sparking, hinting at an impending malfunction that could compromise their monumental achievement.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "decorative elements",
+    "excessive human interaction"
+  ]
+}

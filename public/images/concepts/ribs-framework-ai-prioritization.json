@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A fractured control room buzzes with tension as a digital display highlights an upcoming AI feature pitch meeting fraught with conflicting priorities.",
+  "scene": "In a dimly lit control room, engineers and product managers huddle around a futuristic glass table, littered with holographic projections of competing AI feature requests. The central digital screen flashes bright red error messages interspersed with data graphs showing stalled AI initiatives. The walls are adorned with floor-to-ceiling digital screens depicting real-time analytics, regulatory compliance checklists, and urgent email threads, while a clock ominously ticks down to the pitch meeting. The air is thick with uncertainty as first responders frantically negotiate trade-offs between potential ROI, compliance hurdles, and technical feasibility—each face displaying a mix of anxiety and resolve as they grapple with the RIBS framework.",
+  "keyProps": [
+    "Futuristic holographic display panels",
+    "Detailed compliance flowcharts pinned on the walls",
+    "Digital clocks counting down to decision deadlines",
+    "Drones or mini robots delivering technical reports",
+    "An assortment of complex circuit boards and devices scattered on the table"
+  ],
+  "camera": "A wide-angle lens captures the chaotic energy of the room, focusing on the group dynamic while blurring out the vastness of the digital displays as a backdrop.",
+  "lighting": "Harsh overhead fluorescent lights create stark contrasts, with shadowy corners enhancing the tension, while the glow from the screens provides a cool blue hue illuminating the stressed faces of the team.",
+  "productionDesign": "The control room combines sleek, metallic surfaces with visible wiring and outdated technology, offering a gritty contrast to the advanced holographic systems, highlighting the struggle of modernizing within a rigid regulatory framework.",
+  "signatureTwist": "A sudden power outage plunges the room into darkness, forcing the team to rely on manual whiteboards, revealing the fragility of their AI aspirations in the face of overwhelming bureaucracy.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

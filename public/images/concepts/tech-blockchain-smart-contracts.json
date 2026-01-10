@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An unassuming tech operative stares at a chaotic digital display reflecting the real-world consequences of a reentrancy attack.",
+  "scene": "In a dimly lit control room flooded with the cold glow of multiple screens, a young hacker sits at a cluttered workstation. Around her, the air is thick with nervous energy as she watches in horror as wallet balances fluctuate wildly on the screen, a vivid representation of her deployed Ethereum smart contracts being siphoned dry. The faint hum of servers underscores the tension as she frantically types commands, trying to pinpoint the vulnerability before it spirals out of control. The atmosphere is grungy, with exposed wiring and flickering fluorescent lights, embodying the raw, unfiltered reality of a digital front line.",
+  "keyProps": [
+    "multi-monitor setup displaying blockchain transactions",
+    "scattered notebooks filled with code",
+    "a vintage gas mask hanging on the wall",
+    "a DIY hacking tool assembled from spare parts",
+    "tea-stained coffee mugs scattered across the desk"
+  ],
+  "camera": "Close-up on the hacker's face, capturing the mix of fear and determination, alternating with wide shots of the chaotic control room.",
+  "lighting": "Harsh, flickering overhead lights paired with the eerie glow from the screens creating a stark contrast, highlighting the intense atmosphere.",
+  "productionDesign": "A blend of high-tech gadgets and gritty surroundings, including retro elements like an old radio for background noise, creating a juxtaposition of past and future technologies.",
+  "signatureTwist": "A half-finished mural on the wall reveals a cryptic warning about the 'Reentrancy Crisis', hinting at the larger implications of her actions beyond the screen.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

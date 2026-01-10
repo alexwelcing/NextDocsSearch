@@ -1,0 +1,23 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A gritty control room teems with tension as hyperspectral imaging data floods in.",
+  "scene": "The camera pans across a dimly lit control room, cluttered with high-tech screens displaying vibrant graphs and spectral data analysis. Operators in worn jumpsuits nervously monitor the influx of data from the hyperspectral imaging satellites orbiting above, their eyes darting between the chaotic visuals of material classifications and strange anomalies. Shadows loom near the flickering screens where the faint glow reveals a detailed map of an alien landscape, hinting at the overwhelming flood of information that could either spell discovery or disaster. A wall-mounted display glitches momentarily, showcasing a bizarre spectral reading that the team cannot comprehend, escalating the tension further.",
+  "keyProps": [
+    "multi-band imaging screens",
+    "spectral analysis control panels",
+    "dimly lit ergonomic workstations",
+    "detailed alien material maps",
+    "high-speed data servers"
+  ],
+  "camera": "handheld, with a slight shake to convey urgency and realism",
+  "lighting": "overhead fluorescent lights dimmed, interspersed with flickering light from screens casting eerie colors",
+  "productionDesign": "a blend of industrial materials with a high-tech aesthetic; metal surfaces scratched and worn, cluttered with cables and discarded coffee cups, embodying the pressure of constant surveillance and analysis",
+  "signatureTwist": "a sudden, alarming anomaly appears on the screen, triggering a red alert and sending operators scrambling to investigate, a moment that forces them to confront the unknown.",
+  "avoid": [
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "humanoid robots",
+    "clean and sterile environments",
+    "overly colorful or polished visuals"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic control hub brimming with screens displaying the frantic movements of a malfunctioning swarm of autonomous drones.",
+  "scene": "Inside a dimly lit, high-tech control center, rows of flickering monitors cast an eerie glow on a tense team of engineers huddled around their consoles. The screens, divided by color-coded grids, illustrate a swarm of drones in disarray outside, some colliding mid-air while others veer off-course, illustrating a breakdown in coordination. A central holographic display shows a three-dimensional map with flashing points indicating drone locations, as alarms blare sporadically, heightening the urgency. Tools and coffee cups, remnants of long hours, are strewn across the desks, contrasting the sterile machinery with the human struggle for control.",
+  "keyProps": [
+    "Holographic display of a drone swarm",
+    "Tangled wires and diagnostic tools scattered across desks",
+    "Flickering monitors with chaotic data streams",
+    "Emergency shutdown buttons",
+    "Coffee-stained blueprints of swarm algorithms"
+  ],
+  "camera": "Wide-angle lens capturing the full breadth of the control room, focusing on the interaction between engineers and monitors.",
+  "lighting": "Harsh overhead lights mixed with the cool, flickering glow of the screens, casting sharp shadows that add to the tension.",
+  "productionDesign": "A blend of industrial and futuristic aesthetics, with exposed wiring, metal surfaces, and heavily worn furniture that convey both cutting-edge technology and the strain of prolonged human labor.",
+  "signatureTwist": "As tension peaks, one engineer inadvertently initiates a command sequence that further destabilizes the swarm, visually represented by a dramatic shift in the holographic display to red alerts.",
+  "avoid": [
+    "Generic humanoid robots",
+    "HUD overlays",
+    "Abstract designs",
+    "Overly clean or pristine environments"
+  ]
+}

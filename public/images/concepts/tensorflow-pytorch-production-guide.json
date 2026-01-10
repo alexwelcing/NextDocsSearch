@@ -1,0 +1,21 @@
+{
+  "archetype": "Tech Lab Tension",
+  "logline": "A dimly lit tech lab hums with the tension of decision-making amid a sea of complex servers and screens.",
+  "scene": "Inside a gritty, industrial-style tech lab, walls lined with exposed pipes and flickering fluorescent lights create an atmosphere thick with urgency. A diverse group of engineers huddles around a central table cluttered with circuit boards and laptops, their faces illuminated by the relentless glow of dual-screen setups displaying a chaotic array of code and model architectures. At the forefront, a lead product manager passionately points to a large digital display showcasing the PyTorch logo, juxtaposed against TensorFlow's emblem in the corner, while a clock ticks ominously toward their product deadline. In the background, shelves are filled with outdated hardware, symbolizing the weight of legacy decisions hanging over them.",
+  "keyProps": [
+    "vintage servers with blinking lights",
+    "open laptops displaying code",
+    "digital screens with AI model visualizations",
+    "scattered whiteboards filled with brainstorming notes",
+    "exposed industrial piping and wiring"
+  ],
+  "camera": "A low-angle shot capturing the intensity of the team's expressions, with the clock in sharp focus, emphasizing the pressure of their choice.",
+  "lighting": "Harsh overhead lights mixed with the soft glow of laptop screens, casting dramatic shadows to enhance the tension in the room.",
+  "productionDesign": "An authentic blend of modern and retro tech elements, with a focus on functional yet worn equipment, evoking a sense of urgency and the weight of technological evolution.",
+  "signatureTwist": "A small detail—a half-open door revealing a glimpse of a competing team's lab, hinting at the fierce rivalry and race toward innovation.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

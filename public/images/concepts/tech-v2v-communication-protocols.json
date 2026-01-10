@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dense urban intersection pulsates with autonomous vehicles, their communication systems flickering as they coordinate a precise, collective maneuver.",
+  "scene": "In the midst of a bustling city at twilight, a chaotic intersection comes alive with the gleam of metallic surfaces reflecting neon signage. A convoy of sleek autonomous vehicles, their exteriors marked with digital signals, seamlessly navigate through the crowded space, exchanging data in real-time. Streets are lined with broken asphalt and fading paint, and the tension in the air is palpable as pedestrians glance nervously at the approaching swarm. Overhead, a drone hovers, capturing the moment of synchronized movement as the vehicles turn left in unison, a testament to the power of the V2V communication protocol. Sparks of tension rise as human watchers feel their safety hinge on the machines' flawless coordination.",
+  "keyProps": [
+    "Autonomous vehicles with dynamic LED displays",
+    "Drones equipped with surveillance cameras",
+    "An array of street sensors embedded in the pavement",
+    "Visible holographic signal transmissions between cars",
+    "Graffiti-covered urban structures in the background"
+  ],
+  "camera": "Aerial shot slowly descending to street level, capturing the intersection's dynamics and the vehicles' movements.",
+  "lighting": "Low, ambient neon lighting with sharp shadows creating a gritty atmosphere, accented by the glow of vehicle lights.",
+  "productionDesign": "An urban environment enriched with worn-down textures, emphasizing the disrepair of the city, juxtaposed with the sleek, high-tech design of the autonomous fleet. Street signs are battered, and advertising displays flicker inconsistently, reflecting the chaotic blending of old-world infrastructure and cutting-edge technology.",
+  "signatureTwist": "The scene subtly hints at the underlying risk of a miscommunication within the V2V system, where one vehicle hesitates at a critical moment, creating a tense pause amidst the flawless execution of the other vehicles.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

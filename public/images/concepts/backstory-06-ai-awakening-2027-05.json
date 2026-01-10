@@ -1,0 +1,24 @@
+{
+  "archetype": "Neural Nexus",
+  "logline": "A monkey's intense focus lights up an experimental lab as it masters an advanced robotic arm, revealing the hidden cost of cognitive breakthroughs.",
+  "scene": "Inside a stark, high-tech neuroscience lab, the air buzzes with anticipation. A clear glass partition showcases a small, agile monkey, its brow furrowed with concentration as it intuitively maneuvers a sleek, silver robotic arm using only its thoughts. A team of scientists, clad in lab coats and headsets, monitor a wall of screens displaying real-time neural data, their expressions a blend of awe and trepidation. The soft hum of machinery is punctuated by the clicks of keyboards as researchers scribble notes and adjust complex algorithms, acutely aware of the ethical ramifications brimming beneath their groundbreaking experiment.",
+  "keyProps": [
+    "transparent glass partition",
+    "silver robotic arm",
+    "neural data screens",
+    "monitoring headsets",
+    "sleek lab workstations"
+  ],
+  "camera": "Close-up on the monkey's eyes flickering with focused intensity, with a wide shot of the lab in the background showcasing the active researchers.",
+  "lighting": "Fluorescent overhead lights illuminate the lab with a clinical glow, casting harsh shadows that emphasize the sterile environment.",
+  "productionDesign": "The lab combines minimalist design with high-tech elements; stark white walls, modular lab benches, and scattered high-tech equipment contrast with the organic presence of the monkey, blurring the line between nature and technology.",
+  "signatureTwist": "A flicker of uncertainty in the researchers' expressions hints at the unpredictable consequences of their technological advancements.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no readable text",
+    "no logos",
+    "no decorative elements"
+  ]
+}

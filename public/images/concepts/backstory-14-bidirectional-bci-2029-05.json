@@ -1,0 +1,24 @@
+{
+  "archetype": "Neural Nexus",
+  "logline": "A sterile, high-tech surgical room hums with anticipation as the first bidirectional brain interface is implanted into a volunteer.",
+  "scene": "The surgical room is filled with the eerie glow of diagnostic screens, each displaying intricate neural pathways and brain activity patterns. A slender, metallic arm extends from a robotic rig, delicately inserting a cloud of nanofibers into the volunteer's skull, their eyes wide open, reflecting the intense blue light of the monitors. Surgeons in clean white lab coats monitor both the machinery and the volunteer, whose expression betrays a mix of fear and hope. Every beep and flash of light serves as a reminder of the gravity of this moment—the frontier of human enhancement.",
+  "keyProps": [
+    "Surgical robotic arm",
+    "High-definition diagnostic screens",
+    "Sterile surgical instruments",
+    "Neural interface implant",
+    "Monitoring equipment",
+    "Adjustable surgical lights"
+  ],
+  "camera": "Close-up on the insertion process with a shallow depth of field; focus shifts between the implant and the volunteer's face.",
+  "lighting": "Bright, clinical lighting combined with accent lights highlighting the implant and screens, creating a stark, sterile atmosphere.",
+  "productionDesign": "The room features sleek, white surfaces with modern, minimalist design elements, ensuring a feeling of advanced technology while retaining an unsettling sterility. Hints of decay, like rusted tools or peeling paint in crevices, suggest a past where such advancements weren't possible.",
+  "signatureTwist": "As the implant is activated, the screens momentarily flicker and show chaotic brainwave patterns, hinting at the potential for unforeseen consequences.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Cliche sci-fi elements",
+    "Overly saturated colors"
+  ]
+}

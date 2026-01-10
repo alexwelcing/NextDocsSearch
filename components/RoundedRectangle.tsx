@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Html, RoundedBox, Text } from '@react-three/drei';
-import { useSupabaseData } from './SupabaseDataContext';
+import { useSupabaseData } from './contexts/SupabaseDataContext';
 import styles from '../styles/RetroComputerStyles.module.css';
 import { useCompletion } from 'ai/react';
 import * as THREE from 'three';

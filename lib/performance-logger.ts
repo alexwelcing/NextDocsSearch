@@ -53,6 +53,26 @@ class PerformanceLogger {
     }
   }
 
+  async sendToEndpoint(url: string) {
+    if (this.logs.length === 0) return;
+    
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logs: this.logs }),
+      });
+      console.log('📊 Performance logs sent to', url);
+    } catch (error) {
+      console.error('Failed to send performance logs:', error);
+    }
+  }
+
+  async flush(url: string) {
+    await this.sendToEndpoint(url);
+    this.clear();
+  }
+
   getStats() {
     if (this.logs.length === 0) {
       console.log('No performance data collected yet');

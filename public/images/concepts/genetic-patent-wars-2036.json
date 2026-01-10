@@ -1,0 +1,23 @@
+{
+  "archetype": "Cultural Collapse",
+  "logline": "An empty courtroom resonates with the heavy silence of a life-altering verdict against an innocent woman.",
+  "scene": "The courtroom stands stark and bare, its cold walls a muted gray, illuminated by harsh overhead lights. In the foreground, Jennifer Wu’s chair is empty, the only evidence of her presence a discarded cease-and-desist letter that has fluttered to the floor, a stark reminder of the corporate takeover of her very being. In the background, a judge’s gavel rests ominously on the bench, symbolizing the weight of legal authority that crushes personal freedom. The air is thick with tension, as corporate lawyers whisper among themselves, their faces obscured by shadows, while the faint echo of a distant clock ticking adds to the sense of impending doom. Outside the window, a digital billboard flashes the logos of biotech companies, a constant reminder of the world that now owns human genetics.",
+  "keyProps": [
+    "Cease-and-desist letter",
+    "Judge’s gavel",
+    "Corporate legal documents",
+    "Digital billboard with biotech logos",
+    "Empty witness stand"
+  ],
+  "camera": "Wide shot capturing the entire courtroom with a focus on the empty chair, creating a sense of absence and loss.",
+  "lighting": "Fluorescent lighting casting harsh shadows, emphasizing the sterile and oppressive atmosphere of the courtroom.",
+  "productionDesign": "A minimalist courtroom design with stark gray colors, devoid of warmth, featuring metal benches and an imposing judge’s bench with no personal touches, underscoring the dehumanizing nature of the legal proceedings.",
+  "signatureTwist": "The courtroom window shows a digital billboard displaying, 'OWN YOUR GENES - LICENSE YOUR LIFE,' contrasting the gravity of the court's decision with the commercialism of genetic ownership.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

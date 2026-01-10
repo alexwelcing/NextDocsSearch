@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A stark interrogation room, illuminated by harsh fluorescent lights, where a suspect stares into the face of a predictive AI display revealing their 'future crimes.'",
+  "scene": "The camera pans across a dimly lit interrogation room, metallic and cold, with a lone subject bound to a chair facing a large screen. The screen flickers to life, displaying a series of graphs and statistics—crime predictions based on the subject's past behaviors, showcasing a projected downward spiral into violence. The suspect’s expression morphs from defiance to fear as they realize the weight of being judged not for what they have done, but for what they might do. A also faint projection of foreboding shadows looms over the figure, symbolizing their uncertain future under the eyes of the state’s unforgiving algorithms.",
+  "keyProps": [
+    "A high-tech AI display panel with dynamic crime rate graphs and stats",
+    "A solid metal chair with restraints",
+    "A digital wristband on the suspect, blinking with tracking data",
+    "A wall-mounted camera watching every move",
+    "A table cluttered with files and records of past criminal activity"
+  ],
+  "camera": "A steady cam positioned at an angle that emphasizes the digital screen while capturing the suspect's reaction in a tight close-up.",
+  "lighting": "Cold, stark fluorescent lighting overhead creating harsh shadows and accentuating the sterile feel of the interrogation room.",
+  "productionDesign": "The room features concrete walls, with a single window barred and secured. The floor is an industrial-grade gray, while the furniture is minimalistic, evoking a sense of isolation and control. Surveillance cameras are embedded in the corners of the ceiling, creating an atmosphere of omnipresent judgment.",
+  "signatureTwist": "As the screen displays a predicted violent act, a subtle crack forms in the suspect's demeanor, hinting at his internal struggle between fatalism and the desire to fight against a predetermined path.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Decorative elements without narrative weight",
+    "Abstract wallpaper",
+    "Readable text or logos"
+  ]
+}

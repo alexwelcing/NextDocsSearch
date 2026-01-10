@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sterile command center buzzing with urgency as security experts race against the clock to finalize a high-stakes AI deployment report.",
+  "scene": "The camera pans across a dimly lit tech command center filled with screens displaying multiple data streams and attack simulations. Engineers in sweat-stained shirts type furiously at their keyboards, while a CISO, stern and focused, evaluates a presentation projected on a wall filled with red-highlighted vulnerabilities. The atmosphere is thick with tension as one team member nervously sweeps a hand through their hair, glancing back at a countdown timer ominously ticking down the minutes until launch. A nearby screen flashes, showing a sophisticated AI dialogue being tested, the reflection of a fiery sunset through the window casting an unsettling glow over the room, hinting at the battlefield they are navigating against unseen adversaries.",
+  "keyProps": [
+    "large digital screens displaying attack vectors",
+    "a countdown timer projecting urgency",
+    "overheating laptops with visible strain",
+    "scattered coffee cups and energy drink cans",
+    "red team report in a bold, paperclip-bound format"
+  ],
+  "camera": "Close-ups on screens and engineers' faces, intercut with wide shots of the chaotic command center atmosphere, capturing both tension and urgency.",
+  "lighting": "Cool, artificial lighting interspersed with the warm glow of screens, creating a contrast between the sterile environment and the human emotion of urgency and desperation.",
+  "productionDesign": "The set features sleek tech furniture with a mix of industrial elements, like exposed cables and metallic surfaces, combined with a chaotic arrangement of personal items hinting at long hours worked. Strategically placed monitors display fluctuating graphs and alerts, while team members sport casual yet chaotic attire reflecting their high-pressure roles in this digital war.",
+  "signatureTwist": "The countdown timer shows not just time until deployment but also increasingly grim statistics about potential exploits, framing the impending launch not as a triumph but as a potential disaster waiting to be activated.",
+  "avoid": [
+    "generic HUD overlays",
+    "abstraction or surreal elements",
+    "humanoid robots",
+    "bright pastel colors",
+    "overly polished aesthetics"
+  ]
+}

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Text, RoundedBox, Plane } from '@react-three/drei';
-import { useSupabaseData } from './SupabaseDataContext';
+import { useSupabaseData } from './contexts/SupabaseDataContext';
 import * as THREE from 'three';
 
 const ResponseDisplay: React.FC = () => {
@@ -76,7 +76,7 @@ const ResponseDisplay: React.FC = () => {
           onPointerOver={() => setBackHovered(true)}
           onPointerOut={() => setBackHovered(false)}
         >
-          <meshStandardMaterial color={backHovered && isBackAvailable ? "#de7ea2" : (!isBackAvailable ? '#212820' : '#1E88E5')} />
+          <meshStandardMaterial color={backHovered && isBackAvailable ? "#00d4ff" : (!isBackAvailable ? '#212820' : '#1E88E5')} />
           <Text fontSize={0.3} color="white" anchorX="center" textAlign='center' anchorY="middle">
             Prev
           </Text>
@@ -89,7 +89,7 @@ const ResponseDisplay: React.FC = () => {
           onPointerOver={() => setNextHovered(true)}
           onPointerOut={() => setNextHovered(false)}
         >
-          <meshStandardMaterial color={nextHovered && isNextAvailable ? "#de7ea2" : (!isNextAvailable ? '#212820' : '#1E88E5')} />
+          <meshStandardMaterial color={nextHovered && isNextAvailable ? "#00d4ff" : (!isNextAvailable ? '#212820' : '#1E88E5')} />
           <Text fontSize={0.3} color="white" anchorX="center" textAlign='center' anchorY="middle">
             Next
           </Text>

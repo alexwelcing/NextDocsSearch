@@ -1,0 +1,24 @@
+{
+  "archetype": "Data Dystopia",
+  "logline": "An isolated security operations center hums with low-frequency drones as screens flicker, displaying a cascade of cyber threats and defensive algorithms.",
+  "scene": "Inside a dimly lit security operations center, engineers sit hunched over glowing monitors, their faces illuminated by vibrant data streams and digital graphs. The air is thick with tension as every sound reverberates in the silence; a sudden alert blares, cutting through the monotony, and all eyes snap to the main display showing a digital map of cyber threats encroaching upon the system. A massive holograph of a neural network pulses in the center, representing real-time AI analytics, while small drones zip overhead, recording and transmitting data to nearby workstations. The walls are adorned with physical diagrams of automated defenses, illustrating the scalability of machine learning systems designed to counteract imminent threats.",
+  "keyProps": [
+    "Futuristic holographic displays",
+    "High-tech monitoring screens with real-time data analytics",
+    "3D printed models of cybersecurity frameworks",
+    "Drones equipped with cameras",
+    "Modular workstations with customizable interfaces"
+  ],
+  "camera": "A slow pan across the room, culminating in a tight close-up of an engineer's focused expression as they rapidly type commands on a tactile console.",
+  "lighting": "Dim, blue-tinted lighting accentuated by the glows of screens and holograms, creating a cold, sterile atmosphere.",
+  "productionDesign": "The center is a blend of sleek, modern materials with exposed steel and concrete accents, showcasing a fusion of high-tech aesthetics and utilitarian designs, designed for high-stress environments.",
+  "signatureTwist": "As the scene reaches a peak of intensity with alarms blaring, the screen glitches momentarily, revealing a hidden layer of manipulation within the AI systems, hinting at a larger conspiracy.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

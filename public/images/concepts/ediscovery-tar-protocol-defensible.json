@@ -1,0 +1,25 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room brims with tension as digital streams of litigation data pulse eerily on multiple holographic displays.",
+  "scene": "The camera pans across an array of flickering monitors, each showcasing intricate charts and graphs representing the TAR process in real time. In the foreground, a senior attorney, clad in a slightly disheveled suit, jots down notes on a digital tablet while scrutinizing the glowing screens. The surrounding walls are adorned with digital pinboards filled with sticky notes detailing the seed set labeling criteria and algorithm explanations, hinting at the painstaking verification process. An open briefcase lies on a nearby table, its contents a chaotic mix of legal briefs and tech reports, as the shadows lengthen ominously across the room.",
+  "keyProps": [
+    "Holographic display monitors",
+    "Digital tablet with scribbled notes",
+    "Open briefcase with legal documents",
+    "Sticky notes with labeling criteria",
+    "Charts illustrating the TAR workflow",
+    "Flickering overhead lights casting shadows"
+  ],
+  "camera": "Steady, slightly low-angle shot to emphasize the attorney's intensity and the vastness of the control room.",
+  "lighting": "Dim, with harsh overhead lights creating stark contrasts and deep shadows that evoke a sense of urgency.",
+  "productionDesign": "A blend of modern legal architecture with high-tech elements, featuring a sleek but cluttered workspace filled with both legal and technological paraphernalia, all underscored by a gritty, industrial aesthetic.",
+  "signatureTwist": "A moment of silence is broken by a notification alert blinking ominously on one of the displays, indicating a rising error rate in the TAR algorithm, suggesting impending legal turmoil.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

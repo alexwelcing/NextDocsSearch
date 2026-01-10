@@ -1,0 +1,24 @@
+{
+  "archetype": "Tech Lab Tension",
+  "logline": "A vast, echoing server room hums ominously as glowing racks of AI-optimized infrastructure pulse rhythmically.",
+  "scene": "In a sprawling data center, illuminated by the cold blue glow of LED lights, rows of towering server racks stretch into the distance, each unit embedded with intricate cooling systems and labeled with their specifications. Technicians, clad in lab coats and safety goggles, meticulously adjust cables and monitor screens displaying real-time data streams. Amidst the cacophony of whirring fans and the distant click of keyboards, a central console buzzes with activity, showcasing the power of Vertex AI at work as it processes complex algorithms. A massive screen on the wall projects a constant flow of data analytics and AI model performance metrics, highlighting the relentless drive for efficiency and accuracy in this technological battleground.",
+  "keyProps": [
+    "Rows of high-efficiency server racks",
+    "Central control console with multiple screens",
+    "Advanced cooling systems",
+    "Status indicators displaying real-time performance metrics",
+    "AI model visualizations on a large wall display"
+  ],
+  "camera": "Wide-angle lens capturing the depth of the server room with an emphasis on the technicians and their equipment in action.",
+  "lighting": "Cold, artificial LED lighting contrasting with warm ambient light from the technicians' screens, creating a stark technological atmosphere.",
+  "productionDesign": "Sleek, modern architecture with cold metallic surfaces, illuminated pathways leading to workstations, and graffiti of data flow and AI algorithms on the walls to reflect the gritty ambiance of a tech powerhouse.",
+  "signatureTwist": "The distant rumble of machinery is occasionally interrupted by a soft, disembodied voice from the AI, providing real-time feedback and suggesting optimizations, blurring the lines between human and machine collaboration.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

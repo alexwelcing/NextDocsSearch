@@ -1,0 +1,24 @@
+{
+  "archetype": "Evolutionary Awakening",
+  "logline": "A close-up view of hybrid-biological Emily Zhao during her transformation reveals the eerie blend of organic and synthetic elements.",
+  "scene": "In the sterile confines of an advanced medical facility, Emily Zhao lays supine on the operating table, her body surrounded by a swarm of luminescent nanobots visibly restructuring her internal organs. Pulsating waves of faint blue light ripple across her skin, revealing irregular patterns of carbon nanotubes interwoven with her biological tissue. Monitors flicker with vital signs, but they show anomalies: her heart rate is slow yet stabilized, as a translucent mist escapes her pores, carrying millions of self-replicating nanobots into the air. As her eyes flutter open, they glow momentarily with a hive-like intelligence, portraying a glimpse of her mind merging with the swarm’s collective consciousness.",
+  "keyProps": [
+    "Surgical table",
+    "Nanobots glowing with blue luminescence",
+    "High-tech medical monitors",
+    "Carbon nanotube structures visibly integrated into her organs",
+    "Transparent mist of nanobots filling the air"
+  ],
+  "camera": "A tightly focused lens captures Emily's face from above, shifting to an overhead view of her body, integrating both her organic and nanobot structures in sharp detail.",
+  "lighting": "The room is illuminated by cold, clinical LED lights that cast stark shadows, enhancing the surreal and unnatural beauty of Emily's transformation.",
+  "productionDesign": "The operating room is sleek and futuristic, with glass surfaces and almost sterile aesthetics, showcasing cutting-edge medical technology alongside organic tissue in post-human integration.",
+  "signatureTwist": "The shot concludes with a slow zoom out, revealing that, instead of a single consciousness, countless nanobots have shared their programming, suggesting a broader transformation beyond Emily herself.",
+  "avoid": [
+    "decorative elements",
+    "humanoid robots",
+    "abstract visuals",
+    "readable text",
+    "watermarks",
+    "generic HUD overlays"
+  ]
+}

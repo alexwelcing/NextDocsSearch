@@ -1,9 +1,29 @@
-# *
+# Robots.txt for alexwelcing.com
+# Updated: 2024
+
 User-agent: *
 Allow: /
+
+# Crawl Budget Discipline
+Disallow: /api/
+Disallow: /drafts/
+Disallow: /experiments/
+Disallow: /_next/
+Disallow: /*?*
+
+# Block pagination variants
+Disallow: /*page=
+Disallow: /*sort=
+Disallow: /*filter=
+
+# Block character/story studio (interactive apps, not content)
+Disallow: /character-studio
+Disallow: /story-studio
 
 # Host
 Host: https://alexwelcing.com
 
-# Sitemaps
+# Sitemaps - Segmented for crawl understanding
 Sitemap: https://alexwelcing.com/sitemap.xml
+Sitemap: https://alexwelcing.com/sitemap-core.xml
+Sitemap: https://alexwelcing.com/sitemap-articles.xml

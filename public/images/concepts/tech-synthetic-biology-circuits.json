@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A flickering control panel reveals a tense standoff between bioengineers and their rogue creation.",
+  "scene": "In a dimly lit biotech laboratory, a central console hums with tension, displaying fluctuating graphs of a runaway genetic circuit. Rows of glass tubes filled with bioluminescent liquid pulse ominously, casting a ghostly glow on the anxious faces of the scientists. One engineer, eyes wide with horror, reaches for the emergency shutoff while another frantically types commands into a terminal, desperately trying to regain control of the engineered organism that has begun to exhibit uncontrolled behaviors. The atmosphere is thick with apprehension as the monitor blares warnings of potential horizontal gene transfer. At the center of the chaos, a transparent containment chamber holds the rapidly mutating cells, their bioluminescence shifting colors in a mesmerizing yet unsettling display of biological defiance.",
+  "keyProps": [
+    "Control panel with flickering lights",
+    "Glass tubes of bioluminescent liquid",
+    "Transparent containment chamber",
+    "Terminal with coding interface",
+    "Emergency shutoff lever"
+  ],
+  "camera": "A tight close-up on the startled engineer's face, gradually pulling back to reveal the chaotic lab environment, capturing the mounting tension.",
+  "lighting": "Dim overhead lights with harsh shadows, punctuated by the eerie glow from the bioluminescent liquids, creating an unsettling contrast.",
+  "productionDesign": "The laboratory is a mix of sleek modernity and chaotic disarray, with high-tech equipment cluttered around outdated machinery, symbolizing the clash between control and chaos in synthetic biology.",
+  "signatureTwist": "The bioluminescent cells begin to emit an alarming pulsating signal that hints at their capacity for horizontal gene transfer, culminating in a digital red alert flashing across the control panel.",
+  "avoid": [
+    "No readable text",
+    "No logos",
+    "No watermarks",
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper"
+  ]
+}

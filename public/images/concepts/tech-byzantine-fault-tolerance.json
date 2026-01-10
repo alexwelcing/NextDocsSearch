@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room buzzes with tension as operators debate the trustworthiness of data streams from a network of compromised nodes.",
+  "scene": "Rows of flickering screens cast an eerie glow on the faces of the operators, sweat glistening as they scrutinize incoming data. A large central terminal displays a chaotic array of numbers, each representing votes from nodes vying for consensus in a Byzantine Fault Tolerance protocol. The atmosphere is thick with uncertainty, as one operator anxiously points at a monitor showing an alert for a potential malicious actor within the system. Shadows of machinery loom in the background, adding to the gritty aesthetic while wires snake across the floor, hinting at a world where technology is both savior and threat.",
+  "keyProps": [
+    "Flickering computer screens",
+    "Central terminal with chaotic data display",
+    "Wires and cables strewn across the floor",
+    "Control panels with worn buttons",
+    "Operator seats with visible wear and tear"
+  ],
+  "camera": "Close-up on the central terminal, then a wide shot capturing the desperation of the operators in the control room.",
+  "lighting": "Low, ambient lighting with harsh highlights from monitor screens, casting long shadows.",
+  "productionDesign": "The control room should feel industrial and used, with retro-futuristic technology blending seamlessly with modern interfaces, creating a tactile environment that hints at both advanced tech and decay.",
+  "signatureTwist": "A sudden power surge causes all screens to go blank just as a consensus is reached, plunging the room into tense silence and leaving the outcome uncertain.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

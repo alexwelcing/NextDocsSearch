@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A densely packed, high-tech command room filled with malfunctioning screens displays cascading timelines as reality disintegrates.",
+  "scene": "In the heart of a Tokyo ChronoCompute facility, a chaotic scene unfolds. A large circular table is surrounded by frantic scientists, their faces illuminated by flickering monitors showing graphs and timelines all out of sync. Digital clocks flash different, nonsensical times, each one a futile attempt to establish order amid the chaos. A massive central screen displays looping security footage where events occur before and after themselves, creating a visual melody of paradox. Outside the glass walls, alarm lights strobe ominously, and technicians race against time—each moment slipping further beyond their grasp.",
+  "keyProps": [
+    "Circular command table cluttered with holographic projectors",
+    "Screens glitching with nonsensical timelines",
+    "Flickering digital clocks showing different times",
+    "Scattered papers covered in frantic notes and diagrams",
+    "Hazard lights strobing amidst the chaos"
+  ],
+  "camera": "A tight, low-angle shot captures the visceral tension of the scientists at the table, intercut with erratic close-ups of the malfunctioning screens.",
+  "lighting": "Dramatic overhead fluorescents clash with the eerie glow of computer screens, casting stark shadows that amplify the troubling environment.",
+  "productionDesign": "The command room features exposed wires and visible tech rigs, emphasizing a sense of decay where advanced technology meets human error. Wall panels show real-time data that shifts unpredictably, highlighting the instability of both the environment and the timeline.",
+  "signatureTwist": "As the camera pans, the screen shows a scientist's face, a flicker revealing they are staring at footage of their own future self entering the room, leading to a shocking moment of recognition.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper"
+  ]
+}

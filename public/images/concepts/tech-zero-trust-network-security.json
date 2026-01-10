@@ -1,0 +1,21 @@
+{
+  "archetype": "Tech Lab Tension",
+  "logline": "A high-tech server room pulsates with tension as security protocols are activated against an unseen breach.",
+  "scene": "Inside a cramped, neon-lit server room lined with towering racks of blinking servers, the air is thick with the hum of cooling fans. A complex array of screens displays an endless stream of data and security alerts, each light pulse signifying another verification process in motion. Engineers in tactical gear, faces illuminated by the glow of their monitors, frantically type commands while wary eyes scan the shadows for any hint of a breach. In the corner, a digital display projects a real-time map of network access points, with red markers blinking ominously, indicating potential infiltrations. The sense of urgency is palpable as moments tick by, each one possibly leading to catastrophic failure.",
+  "keyProps": [
+    "Racks of servers with blinking LEDs",
+    "Control panels filled with an array of buttons and switches",
+    "Digital map displaying security breaches",
+    "Tactical equipment like portable terminals and communication devices",
+    "Protective gear worn by engineers"
+  ],
+  "camera": "A low-angle shot captures the towering server racks, emphasizing their imposing presence, while a tight close-up of an engineer's hands works on a terminal in the foreground.",
+  "lighting": "Harsh overhead fluorescents create stark shadows, contrasted with the vibrant glow of the server LEDs and the soft blue of screen displays.",
+  "productionDesign": "The room is cluttered but meticulously organized, with cables running along the floors and walls, and the decor is utilitarian, featuring metallic surfaces and rugged materials that reflect a sense of urgency and functionality.",
+  "signatureTwist": "As the data streams flash red, a sudden power fluctuation causes the lights to flicker, momentarily plunging the room into darkness, heightening the dread of a potential breach.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

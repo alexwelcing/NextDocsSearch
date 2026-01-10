@@ -1,14 +1,25 @@
 ---
-title: "V2V Communication Protocols for Autonomous Fleets"
-author: ["Sarah Kim"]
-date: "2025-08-20"
-description: "Vehicle-to-vehicle networking for coordinated autonomous driving. DSRC, C-V2X, mesh networking."
-keywords: ["V2V communication", "vehicle networking", "DSRC", "C-V2X", "autonomous fleet", "mesh network"]
+title: V2V Communication Protocols for Autonomous Fleets
+author:
+  - Sarah Kim
+date: '2025-08-20'
+description: >-
+  Vehicle-to-vehicle networking for coordinated autonomous driving. DSRC, C-V2X,
+  mesh networking.
+keywords:
+  - V2V communication
+  - vehicle networking
+  - DSRC
+  - C-V2X
+  - autonomous fleet
+  - mesh network
+articleType: research
+ogImage: /images/og/tech-v2v-communication-protocols.jpg
 ---
 # V2V Communication
 Vehicles communicate to coordinate driving. Enables platooning, intersection management, emergent swarm behavior.
 ## Protocol
-\`\`\`python
+```python
 class V2VProtocol:
     def broadcast_state(self):
         """Broadcast position, velocity, intent every 100ms"""
@@ -25,7 +36,7 @@ class V2VProtocol:
         """Receive broadcasts from nearby vehicles"""
         neighbors = self.dsrc.receive_all()
         return [v for v in neighbors if v.distance < 300]
-\`\`\`
-**Latency**: <100ms critical for safety
+```
+**Latency**: &lt;100ms critical for safety
 **⚠️ Risk**: Coordinated behavior without human control
 **Related**: [Autonomous Vehicle Cartel (2055)](/articles/autonomous-vehicle-cartel-2055)

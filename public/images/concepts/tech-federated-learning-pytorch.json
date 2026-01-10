@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A desolate control room filled with abandoned monitors displays distorted gradients and corrupted data streams, illustrating the chaos of federated learning under siege from Byzantine attacks.",
+  "scene": "Inside a dimly lit control room, the camera captures rusted, dust-covered monitors flickering with chaotic data, their screens filled with hostile gradients infused with toxic red colors to signify malicious attacks. An old, worn-out server rack stands in the corner, cables tangled and sparking intermittently, casting eerie shadows on the walls. In the foreground, a holographic interface shows a graph plummeting into the abyss, representing the catastrophic drop in model accuracy due to gradient poisoning. The air is thick with tension, highlighting the struggle between privacy-conscious technology and the persistent threat of data corruption.",
+  "keyProps": [
+    "Rusty monitors with glitching screens",
+    "Old server rack with sparking cables",
+    "Holographic interface displaying corrupted data",
+    "Flickering overhead fluorescent lights",
+    "Scattered papers with frantic scribbles about privacy measures"
+  ],
+  "camera": "A low-angle shot emphasizes the towering monitors as they loom ominously over the abandoned control room, creating a feeling of hopelessness and surveillance.",
+  "lighting": "The lighting is low and moody, with harsh overhead fluorescents creating sharp contrasts and deep shadows, enhancing the feeling of decay and neglect.",
+  "productionDesign": "The walls are lined with peeling paint, and the floor is littered with old tech debris and crumpled papers, contributing to the dystopian atmosphere of a once-advanced control center now rendered useless by the threats of its own creation.",
+  "signatureTwist": "A sudden flicker of light reveals a glowing error message on one of the monitors, suggesting that even in a state of chaos, remnants of the federated learning model still struggle for survival.",
+  "avoid": [
+    "Readable text on screens",
+    "Humanoid figures or robots",
+    "Bright, clean environments",
+    "Abstract or decorative elements"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A frantic control room on Mars watches in horror as temperature readings spike uncontrollably, threatening lives and legacy.",
+  "scene": "Inside the cramped control room of Olympus Mons Station, the walls are lined with flickering screens displaying alarming temperature graphs and atmospheric readings. Engineers and scientists are racing against time, their faces illuminated by the harsh glow of monitors that show a city-like landscape of Mars, now bathed in a surreal, unhealthy orange light. Alarms blare, and frantic shouts fill the space as they debate the imminent evacuation while the overhead view shows massive facilities and domes melting in the background, dissolving into pools of molten glass. Outside the reinforced glass windows, an apocalyptic sky looms, filled with swirling dust storms and the faint outlines of the abandoned $8.7 trillion infrastructure dissolving into the Martian soil.",
+  "keyProps": [
+    "Control panels with flashing alarms",
+    "Temperature graphs spiking into the red",
+    "Monitors showing the melting infrastructure",
+    "Emergency evacuation maps",
+    "A shattered holographic display of Mars"
+  ],
+  "camera": "Tight shots from behind the engineers, mixed with wide-angle shots of the entire control room, emphasizing chaos and urgency.",
+  "lighting": "Fluorescent overhead lights flicker erratically, casting sharp shadows, contrasting with the flickering red and yellow emergency lights.",
+  "productionDesign": "A utilitarian control room filled with retro-futuristic technology, cluttered with charts, coffee cups, and emergency kits, all painted in shades of gray and rust, showing wear and tear from years of operations on the hostile Martian landscape.",
+  "signatureTwist": "A sudden blackout as a screen shatters, highlighting the fragility of their grasp on power, both literally and metaphorically, as their plans collapse around them.",
+  "avoid": [
+    "No humanoid robots",
+    "No readable text or logos",
+    "No abstract wallpaper",
+    "No generic HUD overlays",
+    "No peaceful or calm setting"
+  ]
+}

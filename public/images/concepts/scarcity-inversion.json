@@ -1,0 +1,25 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit command center filled with holographic projections of human interactions disintegrating under the weight of AI-generated content.",
+  "scene": "In a dimly lit, gritty control room, the air is thick with tension as operators monitor an array of screens showing an endless stream of AI-generated content flooding the digital marketplaces. Nearby, a worried team leader, face illuminated by the screens, scrutinizes a large holographic display depicting shrinking curves on human attention metrics. Outside the massive glass windows, a grey urban cityscape looms, where authentic human interactions have dwindled, leaving only traces of loneliness and disconnection. Frayed cables and discarded tech litter the floor, symbolizing the collapse of traditional industries, as the team grapples with how to reclaim value in a world where human presence is now a luxury.",
+  "keyProps": [
+    "Holographic display of attention metrics",
+    "Screens showing a flood of AI-generated content",
+    "A dimly glowing interface for monitoring human interactions",
+    "Frayed cables and old tech scattered on the floor",
+    "Flickering neon lights casting shadows of decay",
+    "Glass wall revealing a bleak urban skyline"
+  ],
+  "camera": "A mix of wide-angle shots to capture the full expanse of the control room and tight close-ups on the team leader's worried expression.",
+  "lighting": "Low key lighting with harsh, contrasting neon light from screens to enhance the atmosphere of decay and urgency.",
+  "productionDesign": "Utilize a blend of industrial and retro-futuristic elements, with exposed wiring, heavy metal surfaces, and a worn-down aesthetic to evoke a sense of obsolescence. The holographic tech should have a sleek, high-end design contrasting with the grimy surroundings.",
+  "signatureTwist": "The scene subtly reveals that the human operators are increasingly redundant, as they struggle with what remains valuable in a world where their cognitive contributions are overshadowed by AI, embodying the tension of scarcity inversion.",
+  "avoid": [
+    "Readable text or logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Overly optimistic or clean futuristic aesthetics",
+    "Any focus on individual luxury goods"
+  ]
+}

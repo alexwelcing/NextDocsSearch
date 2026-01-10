@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A product manager stares at a chaotic control room filled with live feeds of global AI developments, wrestling with the volatile landscape of discovery compression.",
+  "scene": "Inside a dimly lit control room, a lone product manager leans over a holographic interface displaying rapidly changing graphs and AI capability updates from around the world. The walls are lined with screens flashing alerts from competitors, showcasing new features being rolled out instantaneously. In the center, a round table is cluttered with digital prototypes and printouts of compressed roadmaps, hinting at the frantic pace of change. Outside the glass, a storm brews, symbolizing the turbulent shift in technology as rain lashes against the sides of the building, mirroring the pressure inside.",
+  "keyProps": [
+    "holographic interface displaying AI capability updates",
+    "multiple screens showing competitor alerts and product features",
+    "cluttered round table with digital prototypes and roadmaps",
+    "stormy weather visible through glass walls",
+    "flickering lights signaling system updates"
+  ],
+  "camera": "wide shot capturing the entire chaos of the control room, pulling in for a close-up on the product manager's intense expression as they navigate the interface.",
+  "lighting": "low, ambient lighting with flickering overhead lights that sync with the urgency of the data updates, creating a sense of tension and immediacy.",
+  "productionDesign": "the control room is high-tech yet worn, with cables snaking across the floor and a mix of old and new technology reflecting the struggle to keep up with rapid changes; a large screen dominates one wall displaying a countdown timer for the next capability shift.",
+  "signatureTwist": "a window into the storm outside reveals a massive billboard flashing 'The Future is Now' as if mocking the chaotic urgency within, a reminder that the only constant is change.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no readable text or logos"
+  ]
+}

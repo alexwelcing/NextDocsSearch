@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An isolated control room hums with the tension of a quantum key exchange as data streams flicker on a massive screen.",
+  "scene": "Inside a dimly lit control room, a large curved screen displays a dynamic simulation of the BB84 quantum key distribution process, where light particles are represented as flickering qubits. Operators, dressed in stark utilitarian gear, watch intently as a visual representation of potential eavesdropping attacks triggers alerts, flashing red. The atmosphere is tense; the air feels charged with the weight of seconds passing as they work against the clock to verify the integrity of their quantum communication. A wall lined with servers emits a low hum, while holographic displays cast an ethereal glow on the operators' focused faces, contrasting the cold metal and shadowy corners of the room.",
+  "keyProps": [
+    "Curved OLED screen displaying BB84 protocol simulation",
+    "Server racks with blinking LEDs and cables in disarray",
+    "Operators' futuristic control panels with tactile buttons",
+    "Quantum key visualization holograms floating above the desks",
+    "High-security locks and surveillance cameras monitoring the entry",
+    "Emergency protocol manuals scattered on the tables"
+  ],
+  "camera": "A wide shot from a low angle, capturing the full expanse of the control room while zooming in on the illuminated screen, then panning to the operators' expressions.",
+  "lighting": "Cool blue and green tones from the screens contrast with the warm ambient light, creating a stark divide between the digital world and the cold environment.",
+  "productionDesign": "The control room embodies a gritty yet high-tech aesthetic, with exposed wires and panels alongside polished screens showing advanced quantum simulations, representing the intersection of cutting-edge technology with the relentless reality of security threats.",
+  "signatureTwist": "As the operators detect an anomaly, a sudden blackout occurs, leaving the room only illuminated by the glowing screens, heightening the sense of impending doom.",
+  "avoid": [
+    "Readable text or logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

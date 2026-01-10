@@ -9,9 +9,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useCompletion } from 'ai/react';
-import { X, Loader, User, Frown, CornerDownLeft, Search, Wand, ArrowLeftCircle } from 'lucide-react';
-import { useSupabaseData } from './SupabaseDataContext'; // Ensure this is the correct import path
+import { X, Loader, Frown, CornerDownLeft, Search, ArrowLeftCircle } from 'lucide-react';
+import { useSupabaseData } from './contexts/SupabaseDataContext'; // Ensure this is the correct import path
 
 type Question = {
   key: string;
@@ -43,16 +42,15 @@ const DEFAULT_QUESTIONS = Object.entries(QUESTIONS_TREE.root).map(([key, text]) 
 let historyStack: QuestionKey[] = [];
 
 export function SearchDialog() {
-  const { setChatData } = useSupabaseData(); // Destructure setChatData from the context hook
+  const { sendMessage, chatData } = useSupabaseData(); // Destructure sendMessage from the context hook
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState<string>('');
   const [currentQuestions, setCurrentQuestions] = React.useState<Question[]>(
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
   );
-  const { complete, completion, isLoading, error } = useCompletion({
-    api: '/api/vector-search',
-  });
   const [showMoreOptions, setShowMoreOptions] = React.useState(false);
+  const isLoading = chatData.response.includes('great question');
+  const hasResponse = chatData.response && !chatData.response.includes('ready to chat whenever you are');
 
   const handleModalToggle = React.useCallback(() => {
     setOpen(!open);
@@ -77,16 +75,9 @@ export function SearchDialog() {
     return () => document.removeEventListener('keydown', down);
   }, [handleModalToggle]);
 
-  React.useEffect(() => {
-    if (completion && !error) {
-      setChatData((prevData) => ({ ...prevData, response: completion }));
-    }
-  }, [completion, error, setChatData]);
-
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    complete(query);
-    setChatData({ question: query, response: '' });
+    sendMessage(query);
   };
 
   function setQuestionsBasedOnSelection(selectedKey: string) {
@@ -147,9 +138,9 @@ min-w-[200px]"
           <DialogContent className={`sm:max-w-[850px] text-black  `}>
             {' '}
             <DialogHeader>
-              <DialogTitle>Want to know Alex?</DialogTitle>
+              <DialogTitle>🚀 Let&apos;s Talk About Alex!</DialogTitle>
               <DialogDescription>
-                Explore my career with Next.js, OpenAI & Supabase.
+                I&apos;m Ship AI, and I&apos;m excited to share Alex&apos;s amazing work with you! Ask me anything - let&apos;s explore together.
               </DialogDescription>
               <hr />
               <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
@@ -170,24 +161,24 @@ min-w-[200px]"
                   </div>
                 )}
 
-                {error && (
+                {chatData.response.includes('circuits got a bit tangled') && (
                   <div className="flex items-center gap-2">
                     <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
                       <Frown width={18} />
                     </span>
                     <span className="text-slate-700 dark:text-slate-100">
-                      Ah, sorry. Maintenance mode at the moment, come back later.
+                      😅 Oops! My systems hiccuped there. Let&apos;s try that again - I&apos;m ready when you are!
                     </span>
                   </div>
                 )}
 
-                {completion && !error ? (
-                  <div className="flex items-center gap-4 dark:text-white">{completion}</div>
+                {hasResponse ? (
+                  <div className="flex items-center gap-4 dark:text-white">{chatData.response}</div>
                 ) : null}
 
                 <div className="relative">
                   <Input
-                    placeholder="Ask a question..."
+                    placeholder="What would you love to discover? ✨"
                     name="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}

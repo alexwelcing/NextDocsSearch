@@ -343,11 +343,11 @@ function createOrganicGeometry(scale: [number, number, number]): THREE.BufferGeo
 
       parent.add(branchGroup);
 
-      createBranch(branch, depth - 1, length * 0.7, thickness * 0.7);
+      createBranch(branch as unknown as THREE.Object3D, depth - 1, length * 0.7, thickness * 0.7);
     }
   }
 
-  createBranch(trunk, 3, scale[1] * 0.8, scale[0] * 0.2);
+  createBranch(trunk as unknown as THREE.Object3D, 3, scale[1] * 0.8, scale[0] * 0.2);
 
   // Merge all geometries
   const mergedGeometry = new THREE.BufferGeometry();

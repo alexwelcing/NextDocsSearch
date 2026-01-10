@@ -1,0 +1,23 @@
+{
+  "archetype": "Deployment Anxiety",
+  "logline": "A stark conference room filled with tension as minds grapple with the potential fallout of technological advancement.",
+  "scene": "In a dimly lit, utilitarian conference room, a long table stretches out, cluttered with digital tablets and printed risk assessment reports. An overhead projector displays a stark threat matrix, pulsating with indicators of potential disaster scenarios. Shadowy figures loom over the table, their faces etched with worry, as they engage in heated debate, the air thick with the weight of what lies ahead. A glass wall reveals a lab through which ghostly silhouettes of engineers can be seen working on the cutting-edge technology, oblivious to the chaos of the planning session.",
+  "keyProps": [
+    "Digital threat matrix projection",
+    "Risk assessment reports",
+    "High-tech tablets",
+    "Glass wall revealing the lab",
+    "Flickering fluorescent lights overhead"
+  ],
+  "camera": "A low-angle shot capturing the intensity of the participants around the table, pushing in slowly to isolate an anxious face.",
+  "lighting": "Harsh fluorescent overhead lights casting stark shadows, with a backlight from the glass wall that silhouettes the lab workers.",
+  "productionDesign": "The conference room features industrial-looking walls with exposed piping, minimalist furniture that’s functional rather than comfortable, and scattered high-tech gear lending an air of urgency and claustrophobia.",
+  "signatureTwist": "The glass wall suddenly reflects an unexpected alarm signal from the lab, hinting at an unforeseen disturbance that could derail the entire deployment.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Tropes of utopian tech",
+    "Excessive fantasy elements"
+  ]
+}

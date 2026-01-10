@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A stark, dimly-lit control room filled with screens displaying compliance timelines and data quality assessments.",
+  "scene": "In a gritty, high-tech control room, a diverse team of engineers and product managers huddle around a central display, illuminated by the harsh glow of monitors showcasing compliance delays and data integrity reports. The air is thick with tension as they analyze the patterns of their recent failures, a stark reminder of the systemic issues plaguing their project. The walls are lined with digital boards tracking feature launches, with sticky notes scribbled with action items and deadlines, creating a chaotic yet focused atmosphere of urgency and accountability.",
+  "keyProps": [
+    "Large digital screens displaying compliance timelines",
+    "Post-it notes with handwritten action items",
+    "Data visualization charts showing delay patterns",
+    "Whiteboard filled with notes on training data quality",
+    "Flickering overhead lights casting dramatic shadows"
+  ],
+  "camera": "A low-angle shot that captures the intensity of the team’s scrutiny and the looming presence of the data screens behind them.",
+  "lighting": "The lighting is dim, punctuated by the bright screens; a few overhead lights flicker, creating a sense of urgency.",
+  "productionDesign": "The control room features an industrial aesthetic, with exposed wiring, metal surfaces, and an array of outdated yet functional tech gear, blending a retro-futuristic vibe with a sense of lived-in chaos.",
+  "signatureTwist": "A ripple effect of digital glitches appears on the main screen, subtly hinting at the underlying software issues their AI features have been facing, serving as a foreshadowing of future challenges.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import CircleNav from '@/components/ui/CircleNav';
 import PDFLinks from '@/components/PDFLinks';
+import StructuredData from '@/components/StructuredData';
 
 
 const About: React.FC = () => {
@@ -16,24 +17,52 @@ const About: React.FC = () => {
   return (
     <div className="siteContainer">
       <Head>
-        <title>Product Maker | Alex Welcing | Technical Product Management & Management Consulting.</title>
+        <title>About Alex Welcing | AI Futures Researcher</title>
         <meta
           name="description"
-          content="New York innovator with 10+ years of experience in technology, consulting, and AI. Proven ability to lead and deliver successful products. Contact me today to learn more."
+          content="Researching speculative AI systems, emergent intelligence, and civilizational futures. Senior AI Product Manager with 10+ years building ML products. Based in New York."
         />
-        <meta name="keywords" content="product manager, technology, management consulting, Generative AI, product development, New York, remote" />
+        <meta name="keywords" content="Alex Welcing, speculative AI research, AI futures, emergent intelligence, AI Product Manager, New York" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/about" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
-        <meta property="og:title" content="Product Maker | Alex Welcing | Technical Product Management & Management Consulting." />
-        <meta property="og:description" content="New York innovator with 10+ years of experience in technology, consulting, and AI. Proven ability to lead and deliver successful products. Contact me today to learn more." />
-        <meta property="og:image" content="/social-preview.png" />
+        <meta property="og:title" content="About Alex Welcing | AI Futures Researcher" />
+        <meta property="og:description" content="Researching speculative AI systems, emergent intelligence, and civilizational futures. Senior AI Product Manager with 10+ years building ML products." />
+        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+
+        {/* X (Twitter) Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="About Alex Welcing | AI Futures Researcher" />
+        <meta name="twitter:description" content="Researching speculative AI systems, emergent intelligence, and civilizational futures. Senior AI Product Manager with 10+ years building ML products." />
+        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com/about" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="profile" />
       </Head>
+
+      <StructuredData
+        type="Person"
+        data={{
+          name: "Alex Welcing",
+          jobTitle: "AI Futures Researcher & Product Leader",
+          url: "https://alexwelcing.com",
+          sameAs: [
+            "https://www.linkedin.com/in/alexwelcing",
+            "https://github.com/alexwelcing",
+            "https://x.com/alexwelcing"
+          ],
+          description: "Researching speculative AI systems, emergent intelligence, and how reality reorganizes when cognition becomes abundant.",
+          knowsAbout: [
+            "Speculative AI Systems",
+            "Emergent Intelligence",
+            "AI Product Management",
+            "Machine Learning Strategy"
+          ]
+        }}
+      />
 
       <header className="header">
         <CircleNav />

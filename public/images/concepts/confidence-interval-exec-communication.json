@@ -1,0 +1,24 @@
+{
+  "archetype": "Data Dystopia",
+  "logline": "A modern-day executive office is juxtaposed with a chaotic data validation room, where AI metrics are put under the microscope.",
+  "scene": "A high-tech conference room with a massive digital screen displaying AI metrics and confidence intervals. In the background, behind glass walls, a disheveled data validation room is visible, filled with exhausted analysts manually verifying AI outputs. Papers are strewn everywhere, and tension is palpable as the analysts debate the implications of fluctuating confidence intervals. The CEO stands with arms crossed, staring at the screen, illuminated by the harsh white light.",
+  "keyProps": [
+    "Oversized digital screen showing fluctuating graphs and metrics",
+    "Scattered papers with handwritten notes and calculations",
+    "A whiteboard filled with equations and stats",
+    "An old-school analog clock ticking loudly as time passes",
+    "Multiple computer monitors with running data streams"
+  ],
+  "camera": "Wide-angle lens capturing both the executive conference room and the chaotic data validation area, highlighting the contrast between the polished executive space and the frantic analytics room.",
+  "lighting": "Bright overhead fluorescents in the conference room create a stark contrast with dim and flickering lights in the validation room, casting harsh shadows and emphasizing the tension.",
+  "productionDesign": "The conference room boasts sleek surfaces and futuristic decor, with a large, polished table, while the validation side is cluttered and chaotic, with mismatched furniture, coffee-stained furniture, and an air of desperation as analysts scramble for accuracy under pressure.",
+  "signatureTwist": "A live graph on the screen suddenly spikes dangerously, reflecting the analysts' frantic efforts to stabilize the AI's accuracy in real-time, showcasing the unpredictable nature of AI metrics.",
+  "avoid": [
+    "no readable text",
+    "no logos",
+    "no watermarks",
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

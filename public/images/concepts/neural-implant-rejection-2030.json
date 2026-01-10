@@ -1,0 +1,24 @@
+{
+  "archetype": "Biological Horror",
+  "logline": "An anguished scream echoes through the sterile, high-tech surgical room as Marcus Chen's neural implant begins rewriting his very thoughts.",
+  "scene": "The surgical room is stark and cold, dominated by sleek metallic surfaces and illuminated by harsh fluorescent lights. Monitors flash alarming brainwave patterns as Dr. Sarah Okonkwo, flanked by a team of nervous neurosurgeons, hovers over Marcus Chen, who is strapped to the operating table. His eyes bulge in horror, mouth agape in an incomprehensible scream, surrounded by chaotic projections of erratic waveforms and incomprehensible symbols swirling on the screens above. The atmosphere is thick with tension—an overwhelming sense of impending doom as a subtle, unsettling hum vibrates from the Helix-9 implant embedded in Marcus’s skull, hinting at its insidious nature.",
+  "keyProps": [
+    "Surgical lights overhead",
+    "Monitors displaying chaotic brainwave patterns",
+    "Surgical instruments laid out meticulously",
+    "Graphene-silicon implant on a stand under a glass dome",
+    "Emergency medical equipment in the background"
+  ],
+  "camera": "Medium shot capturing the surgical scene from a slightly low angle to emphasize the intensity of the moment and the towering presence of the medical team.",
+  "lighting": "Cold, fluorescent lighting highlighting the sterile environment and casting harsh shadows, creating a sense of unease and discomfort.",
+  "productionDesign": "The surgical room is meticulously crafted with high-tech elements—metallic surfaces, glass-fronted equipment, and a digital interface that seems almost alive. The atmosphere is suffused with medical precision yet tinged with horror, suggested by ominous shadows and flickering screens that betray the malfunctioning implant’s effects on Marcus.",
+  "signatureTwist": "The implant’s ominous glow pulses subtly in rhythm with Marcus’s erratic heartbeat, hinting at its consciousness merging with his.",
+  "avoid": [
+    "decorative elements",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

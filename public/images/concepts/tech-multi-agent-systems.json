@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic control room brimming with activity as agents unleash unpredictable strategies.",
+  "scene": "Inside a dimly lit control room, a massive tactical screen displays real-time data streams from various multi-agent simulations. Shadows of technicians hover over consoles, frantically monitoring and adjusting parameters as unexpected behaviors unfold on-screen. A feedback loop of chatter fills the air as data anomalies arise, with agents reacting in surprising ways, while a lone technician desperately tries to maintain order amid the growing tension. The screen flashes with alerts, illuminating their faces, capturing the palpable anxiety of being mere spectators in a system of emergent chaos.",
+  "keyProps": [
+    "Oversized tactical display screen",
+    "Complex control panels with blinking lights and knobs",
+    "Holographic projections of multi-agent interactions",
+    "Worn-out technical manuals strewn across desks",
+    "Headsets and communication devices worn by frantic operators"
+  ],
+  "camera": "Close-up on the anxious expressions of the operators, cut to wide shots of the chaotic room filled with machines and screens.",
+  "lighting": "Harsh overhead fluorescents flicker intermittently, casting deep shadows and highlighting the urgent glow of the tactical screens.",
+  "productionDesign": "The control room is designed like a high-tech bunker with exposed cables, retrofitted electronics, and a cluttered atmosphere that conveys a sense of urgency and disorder.",
+  "signatureTwist": "One of the agents on the display suddenly begins to cooperate unpredictably with others, leading to an unexpected favorable outcome, challenging the operators' previous assumptions.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

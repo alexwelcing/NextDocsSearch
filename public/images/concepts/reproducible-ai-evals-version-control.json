@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An audit room strewn with data packets reveals the tension of invisible decay in an AI model's dataset.",
+  "scene": "Inside a stark, industrial audit room, a massive digital screen flickers with graphs showing drifted dataset accuracy over time. Around it, anxious team members huddle, their faces illuminated by the glow of the screen's light, reflecting a mix of fear and urgency. On the table are three physical versions of the evaluation dataset, each in weathered folders, labeled with their commit hashes. A clock ticks ominously in the background, symbolizing the relentless passage of time and the impending audit deadline. The room's metallic surfaces reflect the mounting pressure and stakes of AI governance.",
+  "keyProps": [
+    "Three physical dataset folders (v1.0, v1.1, v2.0) with distinct wear showing their history",
+    "A large digital screen displaying fluctuating accuracy graphs and time series data",
+    "An old-fashioned clock ticking loudly against the silent tension in the room",
+    "Digital tablets showing scattered annotations and notes from the dataset revisions",
+    "Cables and tech gear strewn across the table, indicating a rush to gather evidence"
+  ],
+  "camera": "A low-angle shot emphasizes the towering screens and the anxious expressions of the team, creating a feeling of entrapment.",
+  "lighting": "Harsh overhead fluorescent lights casting stark shadows, punctuated by the cooler blue tones emanating from the screens.",
+  "productionDesign": "An industrial, clinical-looking space with steel paneling, a central table cluttered with technology, and the absence of personal touches, reinforcing the sterile nature of corporate data management.",
+  "signatureTwist": "Soft whispers of discontent from the team hint at the pressure and fear of not meeting governance standards, creating a sense of an impending crisis.",
+  "avoid": [
+    "Readable text or visible logos",
+    "Humanoid robots or generic HUD overlays",
+    "Abstract wallpaper or unnecessary decorative elements",
+    "Overly bright or uplifting color palettes"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Timestamp Collapse",
+  "logline": "A shattered courtroom, strewn with fabricated documents and digital evidence, embodies the chaos of a world where timestamps have lost their meaning.",
+  "scene": "The camera pans across a dilapidated courtroom, where the judge's bench is cluttered with holographic displays flickering between false legal documents and AI-generated evidence. In the foreground, a worn wooden gavel lies abandoned, symbolizing the breakdown of legal authority. A large screen displays images of digitally manipulated timestamps, overlapping and distorting the reality of the evidence presented. Shadows of disillusioned lawyers flicker in the background, their faces obscured as they grapple with the untrustworthiness of what they once held sacred. The air is thick with tension, painting a picture of a society on the brink of epistemic collapse.",
+  "keyProps": [
+    "Holographic display of legal documents",
+    "Worn wooden gavel",
+    "Streaks of digital code on screens",
+    "AI-generated images of fabricated evidence",
+    "Crumpled papers with manipulated timestamps"
+  ],
+  "camera": "Steady shot with a slow zoom-in on the gavel, then a wide angle capturing the chaos of the courtroom.",
+  "lighting": "Low, harsh overhead lighting highlighting the shadows and creating a sense of foreboding.",
+  "productionDesign": "The courtroom is a blend of traditional wooden elements and advanced technology, with a gritty aesthetic reflecting neglect and a loss of integrity, featuring cracked walls and outdated computers juxtaposed with futuristic displays.",
+  "signatureTwist": "As the camera pulls back, a hidden panel reveals an underground network of forgers creating digital evidence in real-time, hinting at a larger conspiracy.",
+  "avoid": [
+    "Generic HUD overlays",
+    "Humanoid robots",
+    "Abstractions or decorative elements",
+    "Traditional clean courtroom aesthetics",
+    "Readable text or logos"
+  ]
+}

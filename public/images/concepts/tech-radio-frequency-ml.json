@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A cluttered military control room, filled with buzzing screens displaying chaotic RF signal data, captures the tension of signal classification in the face of interference.",
+  "scene": "Inside a dimly lit military control room, a wall of monitors flickers with erratic wave patterns and spectrograms, each representing different radio frequencies battling for clarity. Amidst the chaos, a large display highlights a deep learning algorithm attempting to classify signals, while a lone technician squints through the noise, frustration etched on their face. Holographic displays intermittently flash warnings of interference, casting a harsh blue light on the weary faces of the analysts. The air is thick with tension as they race against time to identify the source before critical information is lost.",
+  "keyProps": [
+    "Multi-screen display showing RF signal patterns",
+    "Tangled wires and outdated hardware strewn across a cluttered desk",
+    "Coffee cups and energy drink cans hinting at long hours",
+    "Thermal imaging camera peering into the unknown outside",
+    "Flickering overhead fluorescent lights casting stark shadows"
+  ],
+  "camera": "Aerial shot capturing the entire control room from above, slowly pushing in to focus on the central monitor, then cutting to a close-up of the technician's anguished expression.",
+  "lighting": "Dim with harsh contrasts; the glow from the monitors bathes the room in blue and green hues against the darkness, spotlighting the urgency and fatigue of the personnel.",
+  "productionDesign": "The room is a blend of retro-futuristic technology and military-grade hardware, with wires hanging loosely and makeshift solutions visible. The walls are cluttered with hastily pinned data prints and red alerts, building a sense of desperation against a backdrop of high-stakes signal warfare.",
+  "signatureTwist": "Interference reveals a shadowy figure outside the control room's window, hinting at a possible espionage threat, blurring the lines between technology and human conflict.",
+  "avoid": [
+    "Readable text or logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

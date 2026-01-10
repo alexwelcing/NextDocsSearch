@@ -1,0 +1,23 @@
+{
+  "archetype": "Obsolescence Reflection",
+  "logline": "A vast, empty office workspace stands as a haunting monument to human obsolescence, with dust settling on the tools of creativity and collaboration.",
+  "scene": "In a sprawling, once-bustling office, rows of abandoned desks are lined up like silent sentinels. Each desk is cluttered with outdated technology: a dusty keyboard, a flickering holographic screen displaying lines of code no longer relevant. A broken coffee machine sits in the corner, its last brew forgotten amidst the remnants of human activity. Outside the tall windows, a serene skyline showcases a new world powered by ASI, oblivious to the human despair within. Sunlight filters through the glass, casting long shadows that highlight the emptiness and quiet sorrow of a civilization that once thrived but has now fallen silent.",
+  "keyProps": [
+    "abandoned desks",
+    "dust-covered laptops",
+    "broken coffee machine",
+    "flickering holographic screen",
+    "tall windows with skyline view"
+  ],
+  "camera": "Wide angle to capture the vast emptiness and depth of the space, gradually zooming in on specific details that evoke nostalgia and loss.",
+  "lighting": "Natural sunlight streaming in through the windows, mixed with the soft glow of flickering screens, creating a stark contrast between warmth and the coldness of abandonment.",
+  "productionDesign": "The office should feel authentic and lived-in, with personal items left behind—sticky notes, coffee mugs, even a framed family photo—evoking a sense of longing and past purpose that is now overshadowed by the ASI advancements outside.",
+  "signatureTwist": "The sheer silence of the office is interrupted only by the occasional hum of the ASI-controlled drones outside, a reminder of the world that moved on without human presence.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no visible signs of life or human interaction",
+    "no slogans or text"
+  ]
+}

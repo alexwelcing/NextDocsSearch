@@ -1,0 +1,104 @@
+---
+title: 'AI Product Strategy: Balancing Innovation with Execution'
+author:
+  - Alex Welcing
+date: '2025-12-16'
+description: >-
+  Strategies for building successful AI products, managing roadmaps, and
+  bridging the gap between research and production.
+keywords:
+  - AI Product Strategy
+  - Product Roadmap
+  - Innovation
+  - Execution
+  - AI Lifecycle
+  - Product Management
+articleType: research
+ogImage: /images/og/ai-product-strategy-roadmap.jpg
+---
+
+# AI Product Strategy: Balancing Innovation with Execution
+
+AI product management is distinct from traditional software product management. In traditional software, the engineering challenge is usually *deterministic*: "If we build X, it will do Y." In AI, the challenge is *probabilistic*: "If we build X, it might do Y, 85% of the time, provided the data distribution doesn't shift."
+
+This fundamental uncertainty requires a new strategic playbook. It demands a mindset that balances the transformative potential of research with the rigorous demands of production execution.
+
+## Defining the AI Value Proposition
+
+Before writing a single line of code or training a model, you must answer the "Why." Too many AI products fail because they are solutions looking for a problem.
+
+### The Three Buckets of AI Value
+1.  **Automation (Efficiency):** Removing humans from the loop for repetitive, low-stakes tasks.
+    *   *Metric:* Cost savings, throughput.
+    *   *Example:* Automated invoice processing.
+2.  **Augmentation (Productivity):** Giving humans "superpowers" to do their work faster or better.
+    *   *Metric:* Time-to-completion, quality of output.
+    *   *Example:* GitHub Copilot, AI writing assistants.
+3.  **Transformation (New Capabilities):** Solving problems that were previously unsolvable.
+    *   *Metric:* New revenue streams, market share.
+    *   *Example:* AlphaFold for protein discovery, personalized education at scale.
+
+### The RIBS Framework for Prioritization
+When evaluating potential AI features, I use the **RIBS** framework:
+*   **R - Risk:** What is the cost of a wrong prediction? (Low risk = good candidate for automation).
+*   **I - Impact:** Does this solve a burning pain point?
+*   **B - Business Value:** Is there a clear ROI?
+*   **S - Scalability:** Do we have the data and infrastructure to scale this?
+
+## The AI Product Roadmap
+
+Traditional roadmaps are timeline-based. AI roadmaps must be *milestone-based* because R&D timelines are inherently uncertain.
+
+### Horizon 1: Deterministic Features (0-6 Months)
+*   **Focus:** "Low hanging fruit" using established models or APIs.
+*   **Tech:** Off-the-shelf APIs (OpenAI, Anthropic), rule-based heuristics, simple regression/classification.
+*   **Goal:** Quick wins to build trust and gather data.
+
+### Horizon 2: Optimization & Fine-Tuning (6-12 Months)
+*   **Focus:** Improving performance on specific domain tasks.
+*   **Tech:** RAG (Retrieval-Augmented Generation), fine-tuning open-source models (Llama 3, Mistral), building a data flywheel.
+*   **Goal:** Differentiation and moat building.
+
+### Horizon 3: Transformative R&D (12+ Months)
+*   **Focus:** Solving novel problems with custom architectures.
+*   **Tech:** Training models from scratch, multi-agent systems, novel multimodal interactions.
+*   **Goal:** Market disruption.
+
+## Build vs. Buy vs. Partner
+
+This is the most critical strategic decision for an AI PM today.
+
+| Strategy | When to use | Pros | Cons |
+| :--- | :--- | :--- | :--- |
+| **Buy (APIs)** | MVP phase, non-core features, commodity capabilities (e.g., OCR, general chat). | Fastest TTM, zero infra maintenance. | High marginal cost, data privacy concerns, vendor lock-in. |
+| **Fine-Tune (Open Source)** | Domain-specific tasks where accuracy/style is critical, strict data privacy needs. | Better performance/cost ratio at scale, data control. | Requires ML engineering talent, GPU infra management. |
+| **Build (Train from Scratch)** | You have a unique dataset that is your primary moat, and no existing model works. | Total control, IP ownership, massive competitive advantage. | Extremely expensive, slow, high risk of failure. |
+
+**Strategic Advice:** Start with **Buy** to validate the value proposition. Move to **Fine-Tune** once you have scale and need to optimize unit economics or latency. Only **Build** if you are a research lab or have a unique data monopoly.
+
+## Metrics that Matter
+
+You cannot manage what you cannot measure. AI products need a "Double Dashboard."
+
+### 1. Model Metrics (For Data Scientists)
+*   **Precision/Recall:** Balancing false positives vs. false negatives.
+*   **F1 Score:** The harmonic mean of precision and recall.
+*   **Perplexity:** For LLMs (though often uncorrelated with human preference).
+
+### 2. Product Metrics (For PMs & Business)
+*   **Acceptance Rate:** How often do users accept the AI's suggestion? (Critical for Copilots).
+*   **Edit Distance:** How much did the user have to change the AI's output?
+*   **Time-to-Value:** Did the AI actually save time, or did the user spend more time debugging the prompt?
+*   **Trust Score:** Qualitative feedback (CSAT/NPS) specifically on AI features.
+
+## Navigating the Hype Cycle
+
+We are currently in a "Generative AI Gold Rush." As a PM, your job is to be the adult in the room.
+
+*   **Don't sprinkle AI on everything.** If a regex or a simple rule works, use it. It's cheaper, faster, and easier to debug.
+*   **Focus on the "Job to be Done."** Users don't care that you used a Transformer architecture; they care that their report was written in 5 minutes instead of 50.
+*   **Prepare for the "Trough of Disillusionment."** The initial "wow" factor of a demo fades quickly. Retention comes from reliability, integration into workflows, and solving boring problems well.
+
+## Conclusion
+
+A successful AI product strategy is not about having the smartest model; it is about having the smartest *application* of the model. It requires a relentless focus on user value, a pragmatic approach to technology selection, and the flexibility to adapt as the state of the art changes every week.

@@ -1,0 +1,25 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sleek server room, echoing with the quiet hum of powerful machines, becomes the battleground for cutting-edge AI interactions.",
+  "scene": "Inside a dimly lit server room, rows of high-tech servers pulse with blue and green lights, casting an eerie glow on the concrete walls. A large digital display dominates one wall, visualizing streams of data flowing between a vector database and an LLM, showcasing the intricate web of connections. In the foreground, a lone product manager stands, intently observing the chaotic graphs of real-time queries and responses, his brow furrowed in concentration as he deliberates on optimizing the retrieval strategy in a high-stakes moment. The atmosphere buzzes with tension, a feeling of grappling between technology and human intervention.",
+  "keyProps": [
+    "High-tech servers with pulsating LEDs",
+    "Large digital display with real-time data visualizations",
+    "Control panel with sliders and buttons for adjustments",
+    "Surveillance cameras capturing every movement",
+    "Data storage racks with colorful cables",
+    "Glass panels showing shadows of workers in the background"
+  ],
+  "camera": "A low-angle shot capturing the vastness of the server room, emphasizing the towering racks of servers, while focusing on the product manager's anxious face in the foreground.",
+  "lighting": "Cold, fluorescent overhead lights mixed with the soft glow of server LEDs, creating a stark contrast that amplifies the tension in the room.",
+  "productionDesign": "A gritty, industrial aesthetic, where every surface reflects the hard realities of high-tech operations—exposed wiring, rugged floor surfaces, and the occasional flicker of a faulty light add to the ambiance of urgency and precision.",
+  "signatureTwist": "A sudden spike in the data visualizations hints that the AI's results have strayed dangerously close to hallucination, forcing the product manager to make a split-second decision on whether to intervene or let the system run its course.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit biotech lab buzzes with the glow of AI-driven monitors as scientists race against time to synthesize a revolutionary CRISPR treatment.",
+  "scene": "Inside a sterile laboratory, walls lined with dark glass and flickering screens display complex genetic data. A team huddles around a central holographic interface, where a three-dimensional model of a gene-editing vector spins in real-time. Nearby, a technician meticulously prepares vials of CRISPR components, while another monitors AI predictions flashing across their screen. The tension is palpable as an alert dings, indicating a breakthrough—or a potential catastrophic error. The ambient sound of machinery pulses, underscoring the urgency of their race against the ticking clock of compressed discovery.",
+  "keyProps": [
+    "Holographic interface displaying AI-generated gene models",
+    "Vials containing various CRISPR reagents",
+    "Bioreactors with swirling colorful solutions",
+    "High-tech workstations loaded with genomic sequencing equipment",
+    "Screens with complex molecular simulations"
+  ],
+  "camera": "Dynamic handheld camera work, tracking the scientists' movements and close-ups of their expressions, alternating with wide shots of the lab environment to convey urgency and scale.",
+  "lighting": "Cool, artificial overhead lighting paired with the ambient glow of screens, creating a stark contrast that highlights the urgency and consequences of their actions.",
+  "productionDesign": "A futuristic lab designed with modular components that can be reconfigured, emphasizing a high-tech environment where bioethics clash with accelerated discovery efforts. The walls are lined with ethereal biomaterial samples and bioinformatics displays.",
+  "signatureTwist": "An unexpected alarm triggers, revealing a hidden flaw in the gene sequence that could endanger the trial, prompting a heated debate over ethics versus progress.",
+  "avoid": [
+    "Readable text",
+    "Logos or branding",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room brimming with unstable AI technology pulsates with tension as policy experts grapple with a rapidly evolving landscape.",
+  "scene": "Inside a stark, high-tech control room, rows of flickering screens display real-time data on AI actions and their consequences. A central glass panel showcases a chaotic visual feed of drones and autonomous systems performing unpredictable tasks outside. Policy analysts, disguised in tactical gear, huddle at a round table, torn between the thrills of innovation and the impending risks of mismanagement. Wires snake across the industrial concrete floor, and fragments of AI-generated outputs flash ominously on the screens, underscoring the urgency of their discussions.",
+  "keyProps": [
+    "Flickering screens displaying AI analytics",
+    "Central glass panel showing chaotic drone activity",
+    "Holographic projections of AI-generated outputs",
+    "Wires and high-tech gadgets strewn across the floor",
+    "A digital clock counting down to a regulatory deadline"
+  ],
+  "camera": "A low-angle shot captures the tension in the room, focusing on the faces of analysts deep in discussion, with the chaotic screens and glass panel looming in the background, enhancing the sense of urgency and crisis.",
+  "lighting": "Gritty, low-key lighting creates stark contrasts and shadows, highlighting the faces of the anxious analysts while casting an eerie glow on the screens, emphasizing the high-stakes environment.",
+  "productionDesign": "The control room features an eclectic mix of cybernetic decor, from repurposed military tech to sleek, futuristic interfaces. The walls are adorned with schematics of AI systems and past incidents, set against an industrial backdrop of exposed pipelines and concrete surfaces, reflecting the rawness of technological advancement.",
+  "signatureTwist": "In the corner, an overlooked monitor suddenly begins displaying signs of AI autonomy, a chilling reminder of the very risks they are negotiating, hinting at a potential breach or malfunction.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "overly bright colors",
+    "minimalistic designs",
+    "distracting backgrounds"
+  ]
+}

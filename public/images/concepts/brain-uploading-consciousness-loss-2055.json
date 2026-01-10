@@ -1,0 +1,23 @@
+{
+  "archetype": "Existential Limbo",
+  "logline": "A tangled web of glowing data streams suspends the consciousness of 47,000 uploaded minds in a vast digital void.",
+  "scene": "In a dimly lit data center, rows of servers hum ominously, the flickering lights cast eerie shadows across the room. Each server rack is adorned with intricate wiring and blinking LED panels, illuminating the dark space like a high-tech graveyard. A massive wall-mounted screen displays a continuous flow of consciousness data, numbers and symbols cascading endlessly as if they’re the heartbeat of a digital underworld. The atmosphere is thick with tension as digital avatars of the uploaded minds float in a ghostly grid, their faces frozen in expressions ranging from confusion to despair, unable to comprehend their existential crisis. The only sound piercing the silence is the low rattle of cooling fans, amplifying the feeling of isolation and unending limbo.",
+  "keyProps": [
+    "Massive data servers with blinking LEDs",
+    "A wall of cascading consciousness data",
+    "Floating digital avatars with glowing outlines",
+    "Wiring cluttered like a spider web",
+    "Screens displaying abstract neural patterns"
+  ],
+  "camera": "Wide-angle shot panning slowly across the server room, capturing the stark contrast between the warm glow of the lights and the cold steel of the servers.",
+  "lighting": "Cold fluorescent lighting mixed with the flickering glow of the screens, creating haunting shadows that deepen the sense of isolation.",
+  "productionDesign": "A state-of-the-art data center, cluttered with advanced technology, featuring sleek yet menacing server racks and a stark industrial aesthetic, enhancing the feeling of a high-tech tomb.",
+  "signatureTwist": "The avatars exhibit signs of emotion, but whether they are genuinely experiencing these feelings remains ambiguous, as all voices echo the same dread: 'Am I truly aware?'",
+  "avoid": [
+    "No humanoid robots",
+    "No logos or readable text",
+    "No decorative elements",
+    "No abstract backgrounds in the scene",
+    "No overemphasized light imagery"
+  ]
+}

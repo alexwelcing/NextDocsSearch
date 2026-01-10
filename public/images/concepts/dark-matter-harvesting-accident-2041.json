@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A fractured control room teeters on the brink of reality, where gravity and light rebel against physical laws.",
+  "scene": "The scene captures the chaotic aftermath of the dark matter harvesting incident within CERN’s control room. Monitors flicker with distorted data, some screens showing ghostly images of dark matter entities manifested as swirling shadows. Papers and objects are suspended mid-air, defying gravity, while technicians desperately try to regain control, their expressions marred by fear and confusion. A large glass window reveals a strange ripple in the air outside, suggesting the breach is visible from within the facility—warping the world beyond it.",
+  "keyProps": [
+    "Floating data screens with fractured visuals",
+    "Scattered tools and equipment suspended in mid-air",
+    "A central control console sparking with energy",
+    "A warped window displaying a glimpse of the invisible universe",
+    "Emergency lights casting an eerie red glow",
+    "A holographic map with unstable gravitational vectors"
+  ],
+  "camera": "A low-angle shot captures the chaos from below the overturned control console, emphasizing the disarray and impending doom, while a wide-angle lens distorts the space’s dimensions.",
+  "lighting": "Dim lighting interspersed with harsh emergency lighting creates stark contrasts, highlighting the shadowy forms of the dark matter entities lurking just at the edge of perception.",
+  "productionDesign": "The control room is designed with a mix of futuristic technology and the chaotic aftermath of an accident, featuring sleek panels with holographic projections and a rugged industrial aesthetic, emphasizing the gritty nature of the situation.",
+  "signatureTwist": "The camera shifts focus to a dark corner of the room where a shadowy entity is partially visible, its form twisting and bending light, hinting at the horrifying truth of what has been awakened.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text or logos",
+    "Overly polished or clean environments"
+  ]
+}

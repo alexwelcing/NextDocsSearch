@@ -1,0 +1,24 @@
+{
+  "archetype": "Data Dystopia",
+  "logline": "A sprawling urban tech hub shrouded in tension, illuminated by the ghostly light of digital screens displaying chaotic social media memes.",
+  "scene": "In a cavernous data center, rows of cold metal racks hum with the energy of DeepSeek's servers, their blinking LEDs casting an eerie glow on the faces of exhausted engineers surrounded by towering monitors. Screens flash with frenetic clips of the latest '6-7' meme, juxtaposed against serious news feeds detailing the latest political tweets from a beleaguered White House. Outside, a dark winter sky looms, reflecting the chaotic pulse of a city grappling with the rapid decline of its cultural identity, hinting at a society in existential crisis. Graffiti of the phrase 'Trump Take Egg' splashes vibrantly across the concrete walls, a stark reminder of the absurdity at play in the lives of its beleaguered citizens.",
+  "keyProps": [
+    "High-performance server racks",
+    "Monitors displaying viral memes and news headlines",
+    "Graffiti of political memes on concrete walls",
+    "Flickering fluorescent lights casting harsh shadows",
+    "Scattered energy drink cans and snack wrappers"
+  ],
+  "camera": "Wide-angle lens capturing the entire data center with a focus on the chaotic display of screens.",
+  "lighting": "Fluorescent overhead lights mixed with the colored glow of the screens creating a stark contrast.",
+  "productionDesign": "Utilitarian data center aesthetics infused with modern tech elements, showcasing a juxtaposition of efficiency and chaos.",
+  "signatureTwist": "A hidden surveillance camera reveals an unseen struggle between the digital and physical realms, documenting the absurd rituals of a society consuming nonsense in a desperate bid for meaning.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}
