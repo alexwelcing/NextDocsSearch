@@ -383,11 +383,11 @@ export default function TerminalInterface({
                 }}
               >
                 <span style={{ fontSize: '18px' }}>◈</span>
-                {is3DExploreActive ? 'EXIT 3D EXPLORATION' : 'ENTER 3D EXPLORATION'}
+                {is3DExploreActive ? 'EXIT 3D GALAXY VIEW' : 'ENTER 3D GALAXY VIEW'}
               </button>
             )}
 
-            {/* Archive Display Toggle */}
+            {/* Article Panel Toggle */}
             {onToggleArticleDisplay && (
               <button
                 onClick={() => { onToggleArticleDisplay(); onClose(); }}
@@ -412,7 +412,7 @@ export default function TerminalInterface({
                 }}
               >
                 <span style={{ fontSize: '18px' }}>▣</span>
-                {isArticleDisplayOpen ? 'CLOSE ARCHIVE DISPLAY' : 'OPEN ARCHIVE DISPLAY'}
+                {isArticleDisplayOpen ? 'CLOSE ARTICLE PANEL' : 'OPEN ARTICLE PANEL'}
               </button>
             )}
 

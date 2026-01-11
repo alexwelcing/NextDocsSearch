@@ -282,6 +282,13 @@ interface DiscoveryButton360Props {
 }
 
 export default function DiscoveryButton360({ isGamePlaying = false }: DiscoveryButton360Props) {
+  // DEPRECATED: This floating compass button is confusing and redundant
+  // Article discovery is now handled via Terminal → EXPLORE tab only
+  // Keeping component for backwards compatibility but not rendering
+  return null;
+
+  // Legacy code below (not executed)
+  /* eslint-disable */
   const { openModal } = useArticleDiscovery();
   const [isHovered, setIsHovered] = useState(false);
   const [showPreview, setShowPreview] = useState(false);

@@ -612,6 +612,48 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       {/* Performance Monitor - outside Canvas */}
       {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
 
+      {/* Back to Landing Button - Always Visible */}
+      {!loading && (
+        <button
+          onClick={onExit}
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '20px',
+            zIndex: 1000,
+            padding: '10px 18px',
+            background: 'rgba(10, 10, 16, 0.85)',
+            border: '1px solid rgba(0, 212, 255, 0.3)',
+            borderRadius: '8px',
+            color: '#00d4ff',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontFamily: 'monospace',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 212, 255, 0.15)';
+            e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.6)';
+            e.currentTarget.style.transform = 'translateX(-2px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(10, 10, 16, 0.85)';
+            e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)';
+            e.currentTarget.style.transform = 'translateX(0)';
+          }}
+          aria-label="Return to landing page"
+        >
+          <span style={{ fontSize: '16px' }}>←</span>
+          <span>Home</span>
+        </button>
+      )}
+
       {/* Pip-Boy style tablet - slides up from bottom */}
       {!loading && (
         <InteractiveTablet
