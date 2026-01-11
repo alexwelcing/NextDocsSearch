@@ -9,6 +9,15 @@ interface BackgroundSphereProps {
 }
 
 /**
+ * Extended texture type with userData for source URL tracking
+ */
+interface TextureWithSource extends THREE.Texture {
+  userData: {
+    sourceUrl?: string;
+  } & THREE.Texture['userData'];
+}
+
+/**
  * We maintain two spheres:
  *   1) the "old" texture sphere
  *   2) the "new" texture sphere, which fades in once loaded
@@ -22,8 +31,8 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   transitionDuration,
   onLoad,
 }) => {
-  const [oldTexture, setOldTexture] = useState<THREE.Texture | null>(null)
-  const [newTexture, setNewTexture] = useState<THREE.Texture | null>(null)
+  const [oldTexture, setOldTexture] = useState<TextureWithSource | null>(null)
+  const [newTexture, setNewTexture] = useState<TextureWithSource | null>(null)
 
   // Use refs for animation to avoid setState in useFrame
   const newOpacityRef = useRef(0)
@@ -44,7 +53,6 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   // 2) If imageUrl changes, load the new texture but don't fade until it's fully loaded
   useEffect(() => {
     // If the same image is reloaded, skip
-    // @ts-ignore - accessing custom userData property
     if (oldTexture && oldTexture.userData?.sourceUrl === imageUrl) {
       return
     }
@@ -81,24 +89,25 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   })
 
   // A helper function to load textures with a callback - optimized settings
-  function loadTexture(url: string, onTexLoad: (tex: THREE.Texture) => void) {
+  function loadTexture(url: string, onTexLoad: (tex: TextureWithSource) => void) {
     const loader = new THREE.TextureLoader()
     loader.load(
       url,
       (tex) => {
+        const textureWithSource = tex as TextureWithSource;
+
         // Optimize texture settings for better performance
-        tex.generateMipmaps = true
-        tex.minFilter = THREE.LinearMipmapLinearFilter
-        tex.magFilter = THREE.LinearFilter
-        tex.anisotropy = 2 // Reduced from 4 to 2 for better performance
+        textureWithSource.generateMipmaps = true
+        textureWithSource.minFilter = THREE.LinearMipmapLinearFilter
+        textureWithSource.magFilter = THREE.LinearFilter
+        textureWithSource.anisotropy = 2 // Reduced from 4 to 2 for better performance
 
         // Store the original URL on the texture for comparison
-        // @ts-ignore - adding custom property to THREE.Texture
-        tex.userData.sourceUrl = url
+        textureWithSource.userData = { ...textureWithSource.userData, sourceUrl: url };
 
         // Reduce texture resolution if too large (helps with FPS drops)
         const maxSize = 2048 // Max texture dimension
-        const img = tex.image as HTMLImageElement
+        const img = textureWithSource.image as HTMLImageElement
         if (img && (img.width > maxSize || img.height > maxSize)) {
           const canvas = document.createElement('canvas')
           const ctx = canvas.getContext('2d')
@@ -106,11 +115,11 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
           canvas.width = img.width * scale
           canvas.height = img.height * scale
           ctx?.drawImage(img, 0, 0, canvas.width, canvas.height)
-          tex.source.data = canvas as unknown as typeof tex.source.data
-          tex.needsUpdate = true
+          textureWithSource.source.data = canvas as unknown as typeof textureWithSource.source.data
+          textureWithSource.needsUpdate = true
         }
 
-        onTexLoad(tex)
+        onTexLoad(textureWithSource)
       },
       undefined, // onProgress
       (err) => console.error(`Error loading texture:`, err),
