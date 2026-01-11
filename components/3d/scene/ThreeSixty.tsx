@@ -20,12 +20,11 @@ import SceneLighting from './SceneLighting';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
 import InfiniteLibrary, { COSMIC_LIBRARY, DIGITAL_GARDEN } from '../experiences/InfiniteLibrary';
-import DiscoveryButton360 from '../interactive/DiscoveryButton360';
-import Interactive3DArticleIcon from '../interactive/Interactive3DArticleIcon';
 import { useJourney } from '../../contexts/JourneyContext';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
+import HelpButton from '../../ui/HelpButton';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -172,8 +171,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false);
   const [enhancedArticles, setEnhancedArticles] = useState<EnhancedArticleData[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<EnhancedArticleData | null>(null);
-  // Use 3D article icon instead of overlay button
-  const [use3DArticleIcon, setUse3DArticleIcon] = useState(true);
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
@@ -461,11 +458,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setSelectedArticle(null);
   }, []);
 
-  // Handler for 3D article icon click - opens article exploration
-  const handle3DArticleIconClick = useCallback(() => {
-    setIs3DExploreActive(true);
-  }, []);
-
   const handleSelectArticle = useCallback((article: EnhancedArticleData | null) => {
     setSelectedArticle(article);
   }, []);
@@ -560,20 +552,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 </>
               )}
 
-              {/* Interactive 3D Article Icon - floating animated object */}
-              {use3DArticleIcon && cinematicComplete && gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && !is3DExploreActive && (
-                <Interactive3DArticleIcon
-                  position={[4, 2.5, -3]}
-                  scale={1.2}
-                  label="Explore Articles"
-                  onClick={handle3DArticleIconClick}
-                  autoFloat={true}
-                  boundRadius={3}
-                  color="#ffd700"
-                  glowColor="#00d4ff"
-                />
-              )}
-
               {/* 3D Article Explorer - Immersive InfiniteLibrary Experience */}
               {is3DExploreActive && enhancedArticles.length > 0 && (
                 <InfiniteLibrary
@@ -654,6 +632,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         </button>
       )}
 
+      {/* Help Button with Keyboard Shortcuts */}
+      {!loading && <HelpButton />}
+
       {/* Pip-Boy style tablet - slides up from bottom */}
       {!loading && (
         <InteractiveTablet
@@ -669,11 +650,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           isArticleDisplayOpen={isArticleDisplayOpen}
           onExitToLanding={onExit}
         />
-      )}
-
-      {/* Prominent Article Discovery Button - hidden when 3D icon is active */}
-      {!loading && !showCinematicIntro && !use3DArticleIcon && (
-        <DiscoveryButton360 isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'} />
       )}
 
       {/* Article Detail Panel for 3D Exploration */}
