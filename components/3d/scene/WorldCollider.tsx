@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { useTrimesh } from '@react-three/cannon';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 interface WorldColliderProps {
   url: string;
@@ -21,8 +20,10 @@ const WorldCollider: React.FC<WorldColliderProps> = ({
 }) => {
   const { scene } = useGLTF(url);
 
-  const mergedGeometry = useMemo(() => {
-    const geometries: THREE.BufferGeometry[] = [];
+  const mergedData = useMemo(() => {
+    const vertices: number[] = [];
+    const indices: number[] = [];
+    let indexOffset = 0;
     const transformMatrix = new THREE.Matrix4();
     const quaternion = new THREE.Quaternion().setFromEuler(
       new THREE.Euler(rotation[0], rotation[1], rotation[2]),
@@ -42,40 +43,55 @@ const WorldCollider: React.FC<WorldColliderProps> = ({
         const worldMatrix = new THREE.Matrix4().copy(mesh.matrixWorld);
         worldMatrix.premultiply(transformMatrix);
         geometry.applyMatrix4(worldMatrix);
-        geometries.push(geometry);
+        const nonIndexed = geometry.index ? geometry.toNonIndexed() : geometry;
+        const positionAttr = nonIndexed.getAttribute('position');
+        const positionArray = Array.from(positionAttr.array as Iterable<number>);
+
+        vertices.push(...positionArray);
+
+        const vertexCount = positionArray.length / 3;
+        for (let i = 0; i < vertexCount; i += 1) {
+          indices.push(indexOffset + i);
+        }
+
+        indexOffset += vertexCount;
       }
     });
 
-    if (geometries.length === 0) {
+    if (vertices.length === 0) {
       return null;
     }
 
-    return BufferGeometryUtils.mergeGeometries(geometries, false);
+    return { vertices, indices };
   }, [scene, position, rotation, scale]);
 
   const [colliderRef] = useTrimesh(() => {
-    if (!mergedGeometry) {
+    if (!mergedData) {
       return { args: [[], []] };
     }
 
-    const positionAttr = mergedGeometry.getAttribute('position');
-    const vertices = Array.from(positionAttr.array as Iterable<number>);
-    const indices = mergedGeometry.index
-      ? Array.from(mergedGeometry.index.array as Iterable<number>)
-      : Array.from({ length: vertices.length / 3 }, (_, i) => i);
-
     return {
       type: 'Static',
-      args: [vertices, indices],
+      args: [mergedData.vertices, mergedData.indices],
     };
-  }, [mergedGeometry]);
+  }, [mergedData]);
 
-  if (!mergedGeometry) {
+  if (!mergedData) {
     return null;
   }
 
+  const debugGeometry = useMemo(() => {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(mergedData.vertices, 3),
+    );
+    geometry.setIndex(mergedData.indices);
+    return geometry;
+  }, [mergedData]);
+
   return (
-    <mesh ref={colliderRef} visible={debug} geometry={mergedGeometry}>
+    <mesh ref={colliderRef} visible={debug} geometry={debugGeometry}>
       {debug && (
         <meshStandardMaterial
           color="#ff00ff"
