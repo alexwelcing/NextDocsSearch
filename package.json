@@ -24,6 +24,9 @@
     "generate:top-article-images": "tsx scripts/generate-top-article-images.ts",
     "generate:top-article-images:all": "tsx scripts/generate-top-article-images.ts --all",
     "test:visual": "node tests/visual-test-runner.js",
+    "test:visual:enhanced": "node tests/enhanced-visual-test-runner.js",
+    "test:visual:analyze": "node tests/feedback-analyzer.js",
+    "test:visual:full": "npm run test:visual:enhanced && npm run test:visual:analyze",
     "test:visual:install": "pnpm add -D playwright && npx playwright install chromium"
   },
   "prettier": {
