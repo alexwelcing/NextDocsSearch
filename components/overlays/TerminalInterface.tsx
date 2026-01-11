@@ -25,8 +25,11 @@ interface LeaderboardEntry {
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image' | 'splat' | 'world';
   path: string;
+  panoUrl?: string;
+  splatUrl?: string;
+  colliderUrl?: string;
 }
 
 interface TerminalInterfaceProps {

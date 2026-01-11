@@ -5,8 +5,11 @@ import { useWorldTracker, WorldInfo } from '@/lib/hooks/useWorldTracker';
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image' | 'splat' | 'world';
   path: string;
+  panoUrl?: string;
+  splatUrl?: string;
+  colliderUrl?: string;
 }
 
 interface WorldGalleryProps {
@@ -106,7 +109,7 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
         const response = await fetch('/api/backgrounds');
         const data = await response.json();
         if (data.backgrounds) {
-          const worldList: WorldInfo[] = data.backgrounds.map((bg: { id: string; name: string; path: string; type: 'image' | 'splat' }) => {
+          const worldList: WorldInfo[] = data.backgrounds.map((bg: { id: string; name: string; path: string; type: 'image' | 'splat' | 'world' }) => {
             const meta = getWorldNameFromPath(bg.path);
             return {
               id: bg.id,

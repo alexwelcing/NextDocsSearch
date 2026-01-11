@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useThree } from '@react-three/fiber'
 import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d'
 
@@ -6,7 +6,7 @@ interface GaussianSplatBackgroundProps {
   splatUrl: string
   position?: [number, number, number]
   rotation?: [number, number, number]
-  scale?: number
+  scale?: number | [number, number, number]
 }
 
 /**
@@ -21,11 +21,13 @@ const GaussianSplatBackground: React.FC<GaussianSplatBackgroundProps> = ({
 }) => {
   const { scene, camera, gl } = useThree()
   const viewerRef = useRef<any>(null)
-  const loadedRef = useRef(false)
+  const normalizedScale = useMemo(
+    () => (Array.isArray(scale) ? scale : [scale, scale, scale]),
+    [scale],
+  )
 
   useEffect(() => {
-    if (loadedRef.current) return
-    loadedRef.current = true
+    if (!splatUrl) return
 
     // Create a new Gaussian Splat Viewer
     const viewer = new GaussianSplats3D.Viewer({
@@ -43,7 +45,7 @@ const GaussianSplatBackground: React.FC<GaussianSplatBackgroundProps> = ({
       .addSplatScene(splatUrl, {
         position: position,
         rotation: rotation,
-        scale: [scale, scale, scale],
+        scale: normalizedScale,
       })
       .then(() => {
         console.log('Gaussian Splat loaded successfully')
@@ -57,10 +59,9 @@ const GaussianSplatBackground: React.FC<GaussianSplatBackgroundProps> = ({
       if (viewerRef.current) {
         viewerRef.current.dispose()
         viewerRef.current = null
-        loadedRef.current = false
       }
     }
-  }, [splatUrl, scene, camera, gl, position, rotation, scale])
+  }, [splatUrl, scene, camera, gl, position, rotation, normalizedScale])
 
   // Render nothing - the viewer manages its own rendering
   return null
