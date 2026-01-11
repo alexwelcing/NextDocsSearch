@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
+import { MARBLE_WORLD } from '@/lib/worlds/marbleWorld';
 
 interface BackgroundInfo {
   id: string;
   name: string;
   path: string;
-  type: 'image' | 'splat';
+  type: 'image' | 'splat' | 'world';
   size?: number;
 }
 
@@ -57,6 +58,13 @@ export default function handler(
 
     // Cache for 10 minutes
     res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate');
+    backgrounds.unshift({
+      id: MARBLE_WORLD.id,
+      name: `3D: ${MARBLE_WORLD.name}`,
+      path: MARBLE_WORLD.panoUrl,
+      type: 'world',
+    });
+
     res.status(200).json({ backgrounds });
   } catch (error) {
     console.error('Error fetching backgrounds:', error);

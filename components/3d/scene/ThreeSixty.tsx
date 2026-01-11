@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Physics } from '@react-three/cannon';
 import { OrbitControls, Stats } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
+import WorldCollider from './WorldCollider';
 import BackgroundSphere from '../background/BackgroundSphere';
 import type { ArticleData } from '../interactive/GlowingArticleDisplay';
 import GaussianSplatBackground from '../background/GaussianSplatBackground';
@@ -26,6 +27,7 @@ import { useJourney } from '../../contexts/JourneyContext';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
+import { MARBLE_WORLD } from '@/lib/worlds/marbleWorld';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -125,8 +127,11 @@ interface SplatFile {
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image' | 'splat' | 'world';
   path: string;
+  panoUrl?: string;
+  splatUrl?: string;
+  colliderUrl?: string;
 }
 
 interface PerformanceFlags {
@@ -141,12 +146,14 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [availableSplats, setAvailableSplats] = useState<SplatFile[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [hasSplats, setHasSplats] = useState(false);
+  const [activeColliderUrl, setActiveColliderUrl] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isLowEndDevice, setIsLowEndDevice] = useState(false);
   const [performanceFlags, setPerformanceFlags] = useState<PerformanceFlags>({
     allowSplats: true,
     forceLowPower: false,
   });
+  const worldAxisFlip = useMemo<[number, number, number]>(() => [1, -1, -1], []);
 
   // Cinematic intro state - always show intro for consistent experience
   const [showCinematicIntro, setShowCinematicIntro] = useState(false); // Disabled for now
@@ -247,6 +254,25 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     setUseGaussianSplat(false);
   }, [performanceFlags.allowSplats, useGaussianSplat]);
 
+  const worldSplatUrl = useMemo(() => {
+    if (isMobile || isLowEndDevice || performanceFlags.forceLowPower) {
+      return MARBLE_WORLD.splatLowUrl;
+    }
+    return MARBLE_WORLD.splatUrl;
+  }, [isMobile, isLowEndDevice, performanceFlags.forceLowPower]);
+
+  useEffect(() => {
+    onChangeImage(MARBLE_WORLD.panoUrl);
+  }, [onChangeImage]);
+
+  useEffect(() => {
+    setSelectedSplat(worldSplatUrl);
+    setActiveColliderUrl(MARBLE_WORLD.colliderUrl);
+    if (performanceFlags.allowSplats) {
+      setUseGaussianSplat(true);
+    }
+  }, [worldSplatUrl, performanceFlags.allowSplats]);
+
   // Notify parent of game state changes
   useEffect(() => {
     if (onGameStateChange) {
@@ -281,6 +307,16 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       path: currentImage,
     });
 
+    options.push({
+      id: MARBLE_WORLD.id,
+      name: MARBLE_WORLD.name,
+      type: 'world',
+      path: MARBLE_WORLD.panoUrl,
+      panoUrl: MARBLE_WORLD.panoUrl,
+      splatUrl: worldSplatUrl,
+      colliderUrl: MARBLE_WORLD.colliderUrl,
+    });
+
     // Add available splats
     if (performanceFlags.allowSplats) {
       availableSplats.forEach((splat, i) => {
@@ -294,7 +330,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
 
     return options;
-  }, [currentImage, availableSplats, performanceFlags.allowSplats]);
+  }, [currentImage, availableSplats, performanceFlags.allowSplats, worldSplatUrl]);
 
   // Handle scenery change from tablet
   const handleSceneryChange = useCallback((scenery: SceneryOption) => {
@@ -304,14 +340,30 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       }
       setUseGaussianSplat(true);
       setSelectedSplat(scenery.path);
+      setActiveColliderUrl(null);
+    } else if (scenery.type === 'world') {
+      const panoUrl = scenery.panoUrl ?? scenery.path;
+      if (panoUrl) {
+        onChangeImage(panoUrl);
+      }
+      if (scenery.splatUrl && performanceFlags.allowSplats) {
+        setUseGaussianSplat(true);
+        setSelectedSplat(scenery.splatUrl);
+      } else {
+        setUseGaussianSplat(false);
+      }
+      setActiveColliderUrl(scenery.colliderUrl ?? null);
     } else {
       setUseGaussianSplat(false);
       onChangeImage(scenery.path);
+      setActiveColliderUrl(null);
     }
   }, [onChangeImage, performanceFlags.allowSplats]);
 
   // Get current scenery path for tablet display
-  const currentSceneryPath = useGaussianSplat ? selectedSplat : currentImage;
+  const currentSceneryPath = activeColliderUrl
+    ? currentImage
+    : (useGaussianSplat ? selectedSplat : currentImage);
 
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
@@ -543,6 +595,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
               {!is3DExploreActive && (
                 <>
+                  <BackgroundSphere
+                    imageUrl={currentImage}
+                    transitionDuration={0.5}
+                    radius={18}
+                    renderOrder={-2}
+                    depthWrite={false}
+                  />
                   {useGaussianSplat &&
                   selectedSplat &&
                   !isMobile &&
@@ -551,12 +610,18 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                     <GaussianSplatBackground
                       splatUrl={selectedSplat}
                       position={[0, 0, 0]}
-                      scale={1}
+                      scale={worldAxisFlip}
                     />
-                  ) : (
-                    <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
-                  )}
+                  ) : null}
                 </>
+              )}
+
+              {activeColliderUrl && (
+                <WorldCollider
+                  url={activeColliderUrl}
+                  scale={worldAxisFlip}
+                  debug={false}
+                />
               )}
 
               {/* Interactive 3D Article Icon - floating animated object */}

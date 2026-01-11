@@ -6,6 +6,9 @@ interface BackgroundSphereProps {
   imageUrl: string
   transitionDuration: number // in seconds
   onLoad?: () => void
+  radius?: number
+  renderOrder?: number
+  depthWrite?: boolean
 }
 
 /**
@@ -21,6 +24,9 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   imageUrl,
   transitionDuration,
   onLoad,
+  radius = 15,
+  renderOrder,
+  depthWrite = false,
 }) => {
   const [oldTexture, setOldTexture] = useState<THREE.Texture | null>(null)
   const [newTexture, setNewTexture] = useState<THREE.Texture | null>(null)
@@ -31,7 +37,7 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
   const newMaterialRef = useRef<THREE.MeshBasicMaterial>(null)
 
   // Reduce polygon count for better performance
-  const sphereGeometry = useMemo(() => new THREE.SphereGeometry(15, 24, 12), [])
+  const sphereGeometry = useMemo(() => new THREE.SphereGeometry(radius, 24, 12), [radius])
 
   // 1) On mount, load initial texture immediately so we have something displayed
   useEffect(() => {
@@ -121,20 +127,21 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
     <>
       {/* OLD TEXTURE SPHERE - always full opacity */}
       {oldTexture && (
-        <mesh geometry={sphereGeometry}>
+        <mesh geometry={sphereGeometry} renderOrder={renderOrder}>
           <meshBasicMaterial
             attach="material"
             map={oldTexture}
             side={THREE.BackSide}
             transparent
             opacity={1}
+            depthWrite={depthWrite}
           />
         </mesh>
       )}
 
       {/* NEW TEXTURE SPHERE - crossfade from 0 to 1 */}
       {newTexture && (
-        <mesh geometry={sphereGeometry}>
+        <mesh geometry={sphereGeometry} renderOrder={renderOrder}>
           <meshBasicMaterial
             ref={newMaterialRef}
             attach="material"
@@ -142,7 +149,7 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
             side={THREE.BackSide}
             transparent
             opacity={newOpacityRef.current}
-            depthWrite={false}
+            depthWrite={depthWrite}
           />
         </mesh>
       )}

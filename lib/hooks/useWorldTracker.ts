@@ -4,7 +4,7 @@ export interface WorldInfo {
   id: string;
   name: string;
   path: string;
-  type: 'image' | 'splat';
+  type: 'image' | 'splat' | 'world';
   thumbnail?: string;
   visited?: boolean;
 }

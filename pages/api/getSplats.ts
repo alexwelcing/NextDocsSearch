@@ -29,11 +29,11 @@ export default function handler(
     // Read all files in the splats directory
     const files = fs.readdirSync(splatsDir)
 
-    // Filter for .splat and .ply files (common Gaussian Splat formats)
+    // Filter for .splat, .ply, .ksplat, and .spz files (common Gaussian Splat formats)
     const splatFiles: SplatFile[] = files
       .filter(file => {
         const ext = path.extname(file).toLowerCase()
-        return ext === '.splat' || ext === '.ply' || ext === '.ksplat'
+        return ext === '.splat' || ext === '.ply' || ext === '.ksplat' || ext === '.spz'
       })
       .map(file => {
         const filePath = path.join(splatsDir, file)

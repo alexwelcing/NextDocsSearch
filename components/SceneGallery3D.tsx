@@ -6,7 +6,7 @@ import * as THREE from 'three';
 interface SceneOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image' | 'splat' | 'world';
   path: string;
   description?: string;
 }
@@ -125,10 +125,13 @@ function ScenePreviewSplat({ scene, position, onSelect, isSelected, index }: Sce
 
 // Wrapper component that renders the appropriate preview based on scene type
 function ScenePreview(props: ScenePreviewProps) {
-  if (props.scene.type === 'image') {
+  if (props.scene.type === 'splat') {
+    return <ScenePreviewSplat {...props} />;
+  }
+  if (props.scene.type === 'image' || props.scene.type === 'world') {
     return <ScenePreviewImage {...props} />;
   }
-  return <ScenePreviewSplat {...props} />;
+  return <ScenePreviewImage {...props} />;
 }
 
 interface SceneGallery3DProps {
