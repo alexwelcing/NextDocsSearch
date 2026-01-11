@@ -29,8 +29,8 @@ interface ArticleClassificationProps {
 }
 
 const ClassificationContainer = styled.div`
-  background: rgba(222, 126, 162, 0.05);
-  border: 1px solid rgba(222, 126, 162, 0.2);
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 8px;
   padding: 16px 20px;
   margin-bottom: 32px;
@@ -54,28 +54,28 @@ const ClassificationLabel = styled.span`
 `;
 
 const ClassificationValue = styled.span`
-  color: #de7ea2;
+  color: #00d4ff;
   font-weight: 500;
 `;
 
 const Tag = styled.span`
-  background: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
 `;
 
 const HubLink = styled(Link)`
-  color: #a5b4fc;
+  color: #00d4ff;
   text-decoration: none;
   padding: 2px 8px;
   border-radius: 4px;
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(0, 212, 255, 0.1);
   transition: all 0.2s;
 
   &:hover {
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(0, 212, 255, 0.2);
   }
 `;
 

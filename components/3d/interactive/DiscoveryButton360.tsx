@@ -51,8 +51,8 @@ const MainButton = styled.button<{ $expanded: boolean }>`
   align-items: center;
   gap: 14px;
   padding: ${props => props.$expanded ? '18px 32px' : '18px'};
-  background: linear-gradient(135deg, rgba(222, 126, 162, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 30, 50, 0.9);
+  border: 2px solid rgba(0, 212, 255, 0.4);
   border-radius: ${props => props.$expanded ? '24px' : '50%'};
   color: #fff;
   font-size: 1.1rem;
@@ -61,9 +61,9 @@ const MainButton = styled.button<{ $expanded: boolean }>`
   position: relative;
   overflow: hidden;
   box-shadow:
-    0 8px 32px rgba(222, 126, 162, 0.5),
-    0 0 80px rgba(222, 126, 162, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+    0 8px 32px rgba(0, 212, 255, 0.3),
+    0 0 60px rgba(0, 212, 255, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: ${float} 3s ease-in-out infinite;
   backdrop-filter: blur(10px);
@@ -73,11 +73,11 @@ const MainButton = styled.button<{ $expanded: boolean }>`
     position: absolute;
     inset: -2px;
     border-radius: inherit;
-    background: linear-gradient(135deg, #de7ea2, #6366f1, #de7ea2);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.5), rgba(255, 215, 0, 0.3), rgba(0, 212, 255, 0.5));
     background-size: 200% 100%;
     animation: ${shimmer} 3s linear infinite;
     z-index: -1;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   &::after {
@@ -85,15 +85,16 @@ const MainButton = styled.button<{ $expanded: boolean }>`
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(222, 126, 162, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%);
+    background: rgba(0, 30, 50, 0.95);
     z-index: 0;
   }
 
   &:hover {
     transform: translateX(-50%) translateY(-4px) scale(1.02);
     box-shadow:
-      0 12px 48px rgba(222, 126, 162, 0.6),
-      0 0 100px rgba(222, 126, 162, 0.4);
+      0 12px 48px rgba(0, 212, 255, 0.4),
+      0 0 80px rgba(0, 212, 255, 0.25);
+    border-color: rgba(0, 212, 255, 0.6);
     animation: none;
   }
 
@@ -106,6 +107,7 @@ const MainButton = styled.button<{ $expanded: boolean }>`
     width: 28px;
     height: 28px;
     flex-shrink: 0;
+    color: #00d4ff;
   }
 `;
 
@@ -113,7 +115,7 @@ const PulseRing = styled.div`
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 2px solid rgba(222, 126, 162, 0.6);
+  border: 2px solid rgba(0, 212, 255, 0.5);
   animation: ${pulseRing} 2s ease-out infinite;
   pointer-events: none;
 `;
@@ -129,12 +131,12 @@ const PreviewCard = styled.div<{ $visible: boolean }>`
   flex-direction: column;
   gap: 10px;
   padding: 20px;
-  background: rgba(10, 10, 18, 0.95);
-  border: 1px solid rgba(222, 126, 162, 0.35);
-  border-radius: 16px;
+  background: rgba(3, 3, 8, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 8px;
   width: 320px;
   max-width: 90vw;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(20px);
   animation: ${slideUp} 0.3s ease;
 
@@ -154,7 +156,7 @@ const PreviewTitle = styled.h4`
   margin: 0;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #de7ea2;
+  color: #00d4ff;
   text-transform: uppercase;
   letter-spacing: 1px;
   display: flex;
@@ -179,7 +181,7 @@ const ToggleButton = styled.button`
   transition: color 0.2s ease;
 
   &:hover {
-    color: #de7ea2;
+    color: #00d4ff;
   }
 `;
 
@@ -196,15 +198,15 @@ const PreviewItem = styled.button`
   padding: 12px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
   width: 100%;
 
   &:hover {
-    background: rgba(222, 126, 162, 0.1);
-    border-color: rgba(222, 126, 162, 0.3);
+    background: rgba(0, 212, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.25);
     transform: translateX(4px);
   }
 `;
@@ -243,10 +245,10 @@ const ViewAllButton = styled.button`
   justify-content: center;
   gap: 8px;
   padding: 12px;
-  background: linear-gradient(135deg, rgba(222, 126, 162, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
-  border: 1px solid rgba(222, 126, 162, 0.3);
-  border-radius: 10px;
-  color: #de7ea2;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 6px;
+  color: #00d4ff;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -254,8 +256,8 @@ const ViewAllButton = styled.button`
   margin-top: 4px;
 
   &:hover {
-    background: linear-gradient(135deg, rgba(222, 126, 162, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
-    border-color: rgba(222, 126, 162, 0.5);
+    background: rgba(0, 212, 255, 0.15);
+    border-color: rgba(0, 212, 255, 0.4);
     transform: translateY(-2px);
   }
 
@@ -286,6 +288,48 @@ export default function DiscoveryButton360({ isGamePlaying = false }: DiscoveryB
   const [previewArticles, setPreviewArticles] = useState<EnhancedArticleData[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Intelligent diversity selection - pick articles with different characteristics
+  const selectDiverseArticles = (articles: EnhancedArticleData[], count: number): EnhancedArticleData[] => {
+    if (articles.length <= count) return articles;
+
+    const selected: EnhancedArticleData[] = [];
+    const usedPolarities = new Set<string>();
+    const usedHorizons = new Set<string>();
+    const usedTypes = new Set<string>();
+
+    // First pass: prioritize diversity across polarity, horizon, and type
+    const shuffled = [...articles].sort(() => 0.5 - Math.random());
+
+    for (const article of shuffled) {
+      if (selected.length >= count) break;
+
+      const polarity = article.polarity || 'N0';
+      const horizon = article.horizon || 'NY';
+      const type = article.articleType || 'research';
+
+      // Calculate diversity score - prefer articles that add new characteristics
+      const polarityNew = !usedPolarities.has(polarity);
+      const horizonNew = !usedHorizons.has(horizon);
+      const typeNew = !usedTypes.has(type);
+
+      // Accept if it adds at least one new characteristic, or if we haven't filled slots yet
+      if (polarityNew || horizonNew || typeNew || selected.length < Math.ceil(count / 2)) {
+        selected.push(article);
+        usedPolarities.add(polarity);
+        usedHorizons.add(horizon);
+        usedTypes.add(type);
+      }
+    }
+
+    // Fill remaining slots if needed
+    if (selected.length < count) {
+      const remaining = shuffled.filter(a => !selected.includes(a));
+      selected.push(...remaining.slice(0, count - selected.length));
+    }
+
+    return selected.slice(0, count);
+  };
+
   // Fetch preview articles when component mounts or preview is shown
   useEffect(() => {
     if (showPreview && previewArticles.length === 0) {
@@ -293,9 +337,9 @@ export default function DiscoveryButton360({ isGamePlaying = false }: DiscoveryB
       fetch('/api/articles-enhanced')
         .then(res => res.json())
         .then((articles: EnhancedArticleData[]) => {
-          // Get 3 random articles for preview
-          const shuffled = [...articles].sort(() => 0.5 - Math.random());
-          setPreviewArticles(shuffled.slice(0, 3));
+          // Get 3 diverse articles for preview using intelligent selection
+          const diverseArticles = selectDiverseArticles(articles, 3);
+          setPreviewArticles(diverseArticles);
           setLoading(false);
         })
         .catch(() => setLoading(false));

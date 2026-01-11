@@ -30,6 +30,7 @@ interface InteractiveTabletProps {
   is3DExploreActive?: boolean;
   onToggleArticleDisplay?: () => void;
   isArticleDisplayOpen?: boolean;
+  onExitToLanding?: () => void;
 }
 
 export default function InteractiveTablet({
@@ -43,6 +44,7 @@ export default function InteractiveTablet({
   is3DExploreActive = false,
   onToggleArticleDisplay,
   isArticleDisplayOpen = false,
+  onExitToLanding,
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
@@ -221,13 +223,13 @@ export default function InteractiveTablet({
                   style={{
                     padding: isMobile ? '16px' : '14px',
                     background: (item as { highlight?: boolean }).highlight
-                      ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(222, 126, 162, 0.2) 100%)'
+                      ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%)'
                       : '#111',
                     border: (item as { highlight?: boolean }).highlight
-                      ? '1px solid rgba(99, 102, 241, 0.5)'
+                      ? '1px solid rgba(0, 212, 255, 0.5)'
                       : '1px solid #222',
                     borderRadius: '8px',
-                    color: (item as { highlight?: boolean }).highlight ? '#a5b4fc' : '#0f0',
+                    color: (item as { highlight?: boolean }).highlight ? '#00d4ff' : '#0f0',
                     fontFamily: 'monospace',
                     fontSize: isMobile ? '13px' : '12px',
                     cursor: 'pointer',
@@ -238,7 +240,7 @@ export default function InteractiveTablet({
                     touchAction: 'manipulation',
                   }}
                 >
-                  <span style={{ color: (item as { highlight?: boolean }).highlight ? '#de7ea2' : '#0a0' }}>{item.icon}</span>
+                  <span style={{ color: (item as { highlight?: boolean }).highlight ? '#ffd700' : '#0a0' }}>{item.icon}</span>
                   {item.label}
                 </button>
               ))}
@@ -253,8 +255,29 @@ export default function InteractiveTablet({
               gap: isMobile ? '20px' : '16px',
               flexWrap: 'wrap',
             }}>
+              {/* Home button - navigates back to landing page */}
+              {onExitToLanding && (
+                <button
+                  onClick={() => {
+                    onExitToLanding();
+                    handleLower();
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#00d4ff',
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    textDecoration: 'none',
+                    padding: '4px 8px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                  }}
+                >
+                  ← Landing
+                </button>
+              )}
               {[
-                { label: 'Home', href: '/' },
                 { label: 'Articles', href: '/articles' },
                 { label: 'GitHub', href: 'https://github.com/alexwelcing', external: true },
                 { label: 'LinkedIn', href: 'https://linkedin.com/in/alexwelcing', external: true },

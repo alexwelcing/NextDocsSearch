@@ -37,11 +37,11 @@ const ContentBox = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: linear-gradient(135deg, rgba(130, 20, 160, 0.95), rgba(148, 25, 71, 0.95));
+  background: linear-gradient(135deg, rgba(3, 3, 8, 0.98), rgba(10, 10, 26, 0.98));
   padding: 40px 60px;
   border-radius: 20px;
-  border: 4px solid #de7ea2;
-  box-shadow: 0 0 40px rgba(222, 126, 162, 0.6);
+  border: 4px solid rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
   text-align: center;
   max-width: 600px;
 `;
@@ -57,7 +57,7 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.h2`
-  color: #de7ea2;
+  color: #00d4ff;
   font-size: 24px;
   margin: 0 0 30px 0;
   font-weight: normal;
@@ -81,7 +81,7 @@ const InstructionItem = styled.div`
 
   &:before {
     content: '●';
-    color: #de7ea2;
+    color: #00d4ff;
     font-size: 24px;
   }
 `;
