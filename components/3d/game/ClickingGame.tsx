@@ -140,13 +140,15 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
   };
 
   // Check if position is too close to existing orbs
+  // Optimized: Uses squared distance to avoid expensive sqrt operation
   const isTooClose = (newPos: [number, number, number], existingOrbs: Orb[], minDistance = 3): boolean => {
+    const minDistanceSquared = minDistance * minDistance;
     return existingOrbs.some((orb) => {
       const dx = orb.position[0] - newPos[0];
       const dy = orb.position[1] - newPos[1];
       const dz = orb.position[2] - newPos[2];
-      const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-      return distance < minDistance;
+      const distanceSquared = dx * dx + dy * dy + dz * dz;
+      return distanceSquared < minDistanceSquared;
     });
   };
 

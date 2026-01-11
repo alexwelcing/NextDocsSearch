@@ -22,7 +22,12 @@
     "generate:knowledge:seo": "tsx scripts/generate-knowledge-base.ts --high-seo",
     "generate:fal-assets": "tsx scripts/generate-fal-assets.ts",
     "generate:top-article-images": "tsx scripts/generate-top-article-images.ts",
-    "generate:top-article-images:all": "tsx scripts/generate-top-article-images.ts --all"
+    "generate:top-article-images:all": "tsx scripts/generate-top-article-images.ts --all",
+    "test:visual": "node tests/visual-test-runner.js",
+    "test:visual:enhanced": "node tests/enhanced-visual-test-runner.js",
+    "test:visual:analyze": "node tests/feedback-analyzer.js",
+    "test:visual:full": "npm run test:visual:enhanced && npm run test:visual:analyze",
+    "test:visual:install": "pnpm add -D playwright && npx playwright install chromium"
   },
   "prettier": {
     "trailingComma": "es5",
@@ -104,6 +109,7 @@
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.4.5",
     "jsdom": "^27.4.0",
+    "playwright": "^1.57.0",
     "postcss": "^8.4.41",
     "postcss-nesting": "^12.1.5",
     "prettier": "^2.8.8",
