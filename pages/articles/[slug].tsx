@@ -18,6 +18,7 @@ import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
 import { useEffect } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
+import DeskSurface from '@/components/ui/DeskSurface';
 
 interface ArticleProps {
   title: string;
@@ -44,10 +45,12 @@ const ArticleLayout = styled.div`
 `;
 
 const ArticleWrapper = styled.article`
+  position: relative;
   max-width: 800px;
   margin: 0 auto;
   padding: 120px 20px 60px;
   color: #e0e0e0;
+  z-index: 1;
 `;
 
 const HeroImageWrapper = styled.div`
@@ -473,6 +476,9 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
   return (
     <ArticleLayout>
+      {/* Desk Surface with interactive media background */}
+      <DeskSurface articleSlug={slug} />
+
       <Head>
         {/* Primary Meta Tags */}
         <title>{title} | Alex Welcing</title>

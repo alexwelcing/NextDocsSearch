@@ -27,7 +27,8 @@
     "test:visual:enhanced": "node tests/enhanced-visual-test-runner.js",
     "test:visual:analyze": "node tests/feedback-analyzer.js",
     "test:visual:full": "npm run test:visual:enhanced && npm run test:visual:analyze",
-    "test:visual:install": "pnpm add -D playwright && npx playwright install chromium"
+    "test:visual:install": "pnpm add -D playwright && npx playwright install chromium",
+    "setup:media-storage": "tsx scripts/setup-media-storage.ts"
   },
   "prettier": {
     "trailingComma": "es5",
