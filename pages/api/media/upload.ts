@@ -8,6 +8,7 @@ import {
   generateStoragePath,
   MediaType,
 } from '@/types/article-media';
+import { withAdminAuth } from '@/lib/auth/admin-auth';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -78,8 +79,9 @@ async function parseFormData(req: NextApiRequest): Promise<FormData> {
 /**
  * POST /api/media/upload
  * Uploads a media file to Supabase Storage and creates database record
+ * Requires admin authentication via X-Admin-API-Key header
  */
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<MediaUploadResponse>
 ) {
@@ -245,3 +247,6 @@ export default async function handler(
     });
   }
 }
+
+// Export handler wrapped with authentication
+export default withAdminAuth(handler);

@@ -155,10 +155,11 @@ export function validateMediaFile(
   }
 
   // Check MIME type
-  if (!config.allowedTypes.includes(file.type)) {
+  const allowedTypes = config.allowedTypes as readonly string[];
+  if (!allowedTypes.includes(file.type)) {
     return {
       valid: false,
-      error: `File type ${file.type} not allowed. Allowed types: ${config.allowedTypes.join(', ')}`,
+      error: `File type ${file.type} not allowed. Allowed types: ${allowedTypes.join(', ')}`,
     };
   }
 

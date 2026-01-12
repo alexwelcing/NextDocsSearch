@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { Upload, X, Check, AlertCircle, Image as ImageIcon, Video as VideoIcon } from 'lucide-react';
+import { Upload, X, Check, AlertCircle, Image as ImageIcon, Video as VideoIcon, Lock } from 'lucide-react';
 import {
   MediaType,
   validateMediaFile,
@@ -266,6 +266,11 @@ const PreviewImage = styled.img`
 `;
 
 const MediaUploadPage: React.FC = () => {
+  // API Key management
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
+
+  // Form state
   const [articleSlug, setArticleSlug] = useState('');
   const [mediaType, setMediaType] = useState<MediaType>('image');
   const [file, setFile] = useState<File | null>(null);
@@ -283,6 +288,23 @@ const MediaUploadPage: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
   const [uploadedMedia, setUploadedMedia] = useState<ArticleMediaWithUrl | null>(null);
+
+  // Load API key from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('admin_api_key');
+    if (stored) {
+      setApiKey(stored);
+    }
+  }, []);
+
+  // Save API key to localStorage when it changes
+  useEffect(() => {
+    if (apiKey) {
+      localStorage.setItem('admin_api_key', apiKey);
+    } else {
+      localStorage.removeItem('admin_api_key');
+    }
+  }, [apiKey]);
 
   // Handle file drop
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -317,6 +339,11 @@ const MediaUploadPage: React.FC = () => {
 
   // Handle upload
   const handleUpload = async () => {
+    if (!apiKey) {
+      setAlert({ type: 'error', message: 'Please enter your admin API key' });
+      return;
+    }
+
     if (!file || !articleSlug) {
       setAlert({ type: 'error', message: 'Please select a file and enter an article slug' });
       return;
@@ -342,6 +369,9 @@ const MediaUploadPage: React.FC = () => {
 
       const response = await fetch('/api/media/upload', {
         method: 'POST',
+        headers: {
+          'X-Admin-API-Key': apiKey,
+        },
         body: formData,
       });
 
@@ -376,6 +406,15 @@ const MediaUploadPage: React.FC = () => {
           Upload images and videos for the desk surface experience
         </PageDescription>
 
+        {/* Security Warning */}
+        <Alert $type="info">
+          <Lock size={20} />
+          <div>
+            <strong>Secure Admin Area:</strong> This page requires an admin API key to upload files.
+            Your API key is stored locally in your browser.
+          </div>
+        </Alert>
+
         {alert && (
           <Alert $type={alert.type}>
             {alert.type === 'success' && <Check size={20} />}
@@ -386,6 +425,33 @@ const MediaUploadPage: React.FC = () => {
         )}
 
         <UploadCard>
+          <FormGroup>
+            <Label>Admin API Key *</Label>
+            <Input
+              type={showApiKey ? 'text' : 'password'}
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Enter your admin API key"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowApiKey(!showApiKey)}
+              style={{
+                marginTop: '8px',
+                padding: '8px 16px',
+                background: 'rgba(0, 212, 255, 0.1)',
+                border: '1px solid rgba(0, 212, 255, 0.3)',
+                borderRadius: '6px',
+                color: '#00d4ff',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+              }}
+            >
+              {showApiKey ? 'Hide' : 'Show'} API Key
+            </button>
+          </FormGroup>
+
           <FormGroup>
             <Label>Article Slug *</Label>
             <Input

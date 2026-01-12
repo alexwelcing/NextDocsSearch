@@ -87,9 +87,32 @@ await supabase.storage.createBucket('article-videos', {
 Ensure these environment variables are set in your `.env.local`:
 
 ```bash
+# Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Admin Authentication (REQUIRED for uploading media)
+ADMIN_API_KEY=your_secure_random_key_here
 ```
+
+**⚠️ SECURITY: Setting up ADMIN_API_KEY**
+
+The `ADMIN_API_KEY` is required to protect the media upload endpoint. Generate a strong random key:
+
+```bash
+# Generate a secure random key (macOS/Linux)
+openssl rand -base64 32
+
+# Or use Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+Example `.env.local`:
+```bash
+ADMIN_API_KEY=AbC123XyZ789RaNdOmKeY+SeCuRe/PaSsWoRd==
+```
+
+**Never commit this key to version control!**
 
 ## Media Requirements
 
@@ -114,21 +137,27 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 ### Uploading Media (Admin Interface)
 
-1. Navigate to `/admin/media-upload`
-2. Enter the article slug (e.g., `ai-future-predictions`)
-3. Select media type (Image or Video)
-4. Drag & drop or select your file
-5. Fill in metadata:
+1. **Set up authentication** (first time only):
+   - Generate a secure API key (see above)
+   - Add `ADMIN_API_KEY` to your `.env.local`
+   - Restart your development server
+
+2. Navigate to `/admin/media-upload`
+3. Enter your admin API key (stored locally in browser)
+4. Enter the article slug (e.g., `ai-future-predictions`)
+5. Select media type (Image or Video)
+6. Drag & drop or select your file
+7. Fill in metadata:
    - **Title**: Optional display title
    - **Alt Text**: Accessibility description (recommended for images)
    - **Caption**: Text shown on hover
-6. Configure positioning:
+8. Configure positioning:
    - **Display Order**: Render order (0-n)
    - **Position X/Y**: Percentage-based position (0-100)
    - **Scale**: Size multiplier (0.3-2.5)
    - **Rotation**: Degrees (-180 to 180)
    - **Z-Index**: Stacking order (0-100, higher = on top)
-7. Click "Upload Media"
+9. Click "Upload Media"
 
 ### Uploading Media (API)
 
@@ -148,11 +177,16 @@ formData.append('z_index', '5');
 
 const response = await fetch('/api/media/upload', {
   method: 'POST',
+  headers: {
+    'X-Admin-API-Key': 'your-admin-api-key-here',
+  },
   body: formData,
 });
 
 const data = await response.json();
 ```
+
+**⚠️ Security Note:** Never expose your admin API key in client-side code in production. The API upload should only be called from secure server-side code or the admin interface.
 
 ### Displaying Media (Automatic)
 
