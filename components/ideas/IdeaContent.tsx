@@ -20,6 +20,7 @@ import { ParsedPrompt } from '@/lib/generators/types';
 import { getRandomTemplate } from '@/lib/creation-templates';
 
 import { useCompletion } from 'ai/react';
+import { useRouter } from 'next/router';
 import { X, Loader, User, Frown, CornerDownLeft, Search, Wand, ArrowLeftCircle } from 'lucide-react';
 
 interface IdeaContentProps {
@@ -486,131 +487,61 @@ function CreationView({
   onClose?: () => void;
   onAction?: (action: string, data?: unknown) => void;
 }) {
-  const [prompt, setPrompt] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [config, setConfig] = useState<ParsedPrompt | null>(null);
+  const router = useRouter();
 
-  const handleGenerate = async () => {
-    if (!prompt.trim()) return;
-    setIsGenerating(true);
-    try {
-      const result = await generateFromPrompt(prompt, false);
-      if (result.success) {
-        setConfig(result.config);
-        onAction?.('create', result.config);
-      }
-    } catch (err) {
-      console.error('Generation failed:', err);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  const handleRandom = () => {
-    const template = getRandomTemplate();
-    if (template.baseConfig) {
-      setConfig(template.baseConfig as ParsedPrompt);
-      setPrompt(template.suggestedPrompts?.[0] || template.description);
-    }
+  const handleEnterStudio = () => {
+    onAction?.('enter_studio');
+    router.push('/studio');
   };
 
   return (
-    <group>
-      {/* 3D Preview Space */}
-      <group position={[1.2, 0, 0.5]}>
-        {config ? (
-          <React.Suspense fallback={null}>
-            <group scale={0.4}>
-              <Generated3DObject config={config} />
-            </group>
-          </React.Suspense>
-        ) : (
-          <Text
-            fontSize={0.1}
-            color="#444"
-            position={[0, 0, 0]}
-            maxWidth={2}
-            textAlign="center"
-          >
-            Enter a prompt to manifest an idea...
-          </Text>
-        )}
-      </group>
-
-      {/* UI Overlay */}
-      <Html position={[-1, 0, 0.2]} center transform distanceFactor={5}>
+    <Html position={[-1, 0, 0.2]} center transform distanceFactor={5}>
         <div
           style={{
-            width: '180px',
+            width: '220px',
             color: 'white',
             fontFamily: 'system-ui, sans-serif',
+            background: 'rgba(0,0,0,0.8)',
+            padding: '20px',
+            borderRadius: '12px',
+            border: `1px solid ${ORB_COLORS.creation}`,
+            textAlign: 'center',
           }}
         >
           <h3
             style={{
               color: ORB_COLORS.creation,
               margin: '0 0 12px 0',
-              fontSize: '14px',
+              fontSize: '16px',
+              fontWeight: 'bold',
             }}
           >
             Creation Studio
           </h3>
 
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="A floating crystal..."
+          <p style={{ fontSize: '12px', color: '#ccc', marginBottom: '16px' }}>
+            Enter the Super Studio to manifest your imagination into 2D and 3D realities.
+          </p>
+
+          <button
+            onClick={handleEnterStudio}
             style={{
               width: '100%',
-              height: '60px',
-              padding: '8px',
-              background: 'rgba(255,255,255,0.1)',
-              border: `1px solid ${ORB_COLORS.creation}`,
-              borderRadius: '4px',
+              padding: '10px',
+              background: `linear-gradient(45deg, ${ORB_COLORS.creation}, #ff00ff)`,
+              border: 'none',
+              borderRadius: '6px',
               color: 'white',
-              fontSize: '11px',
-              marginBottom: '8px',
-              resize: 'none',
-              outline: 'none',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
             }}
-          />
-
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button
-              onClick={handleGenerate}
-              disabled={isGenerating}
-              style={{
-                flex: 1,
-                padding: '8px',
-                background: ORB_COLORS.creation,
-                border: 'none',
-                borderRadius: '4px',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: 'bold',
-              }}
-            >
-              {isGenerating ? '...' : 'Manifest'}
-            </button>
-            <button
-              onClick={handleRandom}
-              style={{
-                padding: '8px',
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid #444',
-                borderRadius: '4px',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '11px',
-              }}
-            >
-              🎲
-            </button>
-          </div>
+          >
+            Enter Studio
+          </button>
         </div>
-      </Html>
-    </group>
+    </Html>
   );
 }
 

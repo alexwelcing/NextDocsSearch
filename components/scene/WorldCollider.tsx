@@ -74,13 +74,10 @@ const WorldCollider: React.FC<WorldColliderProps> = ({
       type: 'Static',
       args: [mergedData.vertices, mergedData.indices],
     };
-  }, [mergedData]);
-
-  if (!mergedData) {
-    return null;
-  }
+  }, undefined, [mergedData ? mergedData.vertices.length : 0]);
 
   const debugGeometry = useMemo(() => {
+    if (!mergedData) return undefined;
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute(
       'position',
@@ -89,6 +86,10 @@ const WorldCollider: React.FC<WorldColliderProps> = ({
     geometry.setIndex(mergedData.indices);
     return geometry;
   }, [mergedData]);
+
+  if (!mergedData) {
+    return null;
+  }
 
   return (
     <mesh ref={colliderRef} visible={debug} geometry={debugGeometry}>
