@@ -1,0 +1,23 @@
+{
+  "archetype": "Tech Reflection",
+  "logline": "A cluttered lab workspace brimming with disassembled AI components symbolizes the tumultuous journey toward technological advancement.",
+  "scene": "Amidst the scattered blueprints and buzzing servers, a tangle of cables intertwines on a steel table, where an open laptop displays cryptic code snippets. A half-empty coffee cup rests next to a meticulously annotated journal, the pages filled with frantic notes and reflection on the ethical implications of creation. In the corner, a flickering fluorescent light casts eerie shadows over a board covered in post-it notes, each one representing a project under a strict NDA, the urgency of innovation palpable in the air.",
+  "keyProps": [
+    "disassembled AI components",
+    "open laptop with code",
+    "annotated journal",
+    "half-empty coffee cup",
+    "post-it notes on a board"
+  ],
+  "camera": "A low-angle shot focusing on the cluttered table, creating an intimate view of the chaos and complexity surrounding the technological breakthroughs.",
+  "lighting": "Harsh fluorescent lighting with some areas dimmed, creating a stark contrast that highlights the messiness of innovation and the weight of ethical considerations.",
+  "productionDesign": "Utilizing a real lab space, filled with authentic tech equipment and everyday detritus, alongside a backdrop of exposed wires and concrete walls to ground the scene in gritty realism.",
+  "signatureTwist": "In a subtle reflection, a digital clock on the wall counts down the seconds, hinting at the time pressure and urgency to innovate, while the ambient hum of machinery underscores the relentless pursuit of progress.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "decorative elements that detract from the focus",
+    "clear branding or logos"
+  ]
+}

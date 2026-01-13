@@ -1,52 +1,55 @@
-import React, { useRef } from 'react';
-import * as THREE from 'three';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Box, Text, OrbitControls, Stars } from '@react-three/drei';
+import React from 'react';
 import styled from 'styled-components';
 
-const SpinningCube: React.FC = () => {
-  const meshRef = useRef<THREE.Mesh>(null!);
+const FallbackContainer = styled.div`
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #030308;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-  useFrame(({ clock }) => {
-    meshRef.current.rotation.x = Math.sin(clock.getElapsedTime());
-    meshRef.current.rotation.y = Math.sin(clock.getElapsedTime());
-  });
+const LoadingContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+`;
 
-  return (
-    <Box args={[1, 1, 1]} castShadow ref={meshRef}>
-      <meshStandardMaterial color={'hotpink'} emissive={'#8214a0'} emissiveIntensity={0.5} />
-    </Box>
-  );
-};
+const Spinner = styled.div`
+  width: 48px;
+  height: 48px;
+  border: 2px solid rgba(0, 212, 255, 0.1);
+  border-top-color: rgba(0, 212, 255, 0.8);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 
-const LoadingText = styled(Text)`
-  color: white;
-  fontSize: 2;
-  maxWidth: 200;
-  lineHeight: 1;
-  letterSpacing: 0.01;
-  textAlign: 'center';
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+const LoadingText = styled.div`
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 `;
 
 const StylishFallback: React.FC = () => {
   return (
-    <div className="fallback-container">
-      <Canvas style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-        <ambientLight intensity={0.5} />
-        <spotLight position={[10, 10, 10]} angle={0.3} />
-        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade />
-        <OrbitControls />
-        <SpinningCube />
-      </Canvas>
-      <style jsx>{`
-        .fallback-container {
-          position: relative;
-          width: 100vw;
-          height: 100vh;
-          background-color: #000;
-        }
-      `}</style>
-    </div>
+    <FallbackContainer>
+      <LoadingContent>
+        <Spinner />
+        <LoadingText>Loading Experience</LoadingText>
+      </LoadingContent>
+    </FallbackContainer>
   );
 };
 

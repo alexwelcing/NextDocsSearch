@@ -1,0 +1,25 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A tangle of wires and server racks hums with the tension of computational anticipation.",
+  "scene": "In a dimly lit underground tech lab, a frazzled engineer stares intently at a series of holographic displays flickering with barely decipherable data patterns. Surrounding him, towering server racks pulse with cold blue light, reflecting the urgency of the moment as he adjusts a few-shot learning algorithm intended to make sense of a malfunctioning AI. Cables snake across the floor like restless serpents, while a projector casts erratic images of past training data against a damp concrete wall, highlighting the limitations of their current approach. The air is thick with the scent of burnt electronics and the low whir of cooling fans, creating an atmosphere ripe with desperation and hope.",
+  "keyProps": [
+    "holographic displays",
+    "server racks",
+    "wires and cables",
+    "computers",
+    "burnt components",
+    "projector"
+  ],
+  "camera": "close-up on the engineer's focused face, with a shallow depth of field on the flickering displays behind him",
+  "lighting": "harsh overhead fluorescents mixed with the glow of blue server lights, creating stark contrasts and shadows",
+  "productionDesign": "a claustrophobic, gritty lab space filled with obsolete tech and clutter, reflecting the chaotic nature of their experimental methods",
+  "signatureTwist": "the moment captures his realization that the very limits of their data are a mirror of his own understanding, showcasing the emotional stakes of innovation under pressure",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "readable text",
+    "logos",
+    "sterile lab environments"
+  ]
+}

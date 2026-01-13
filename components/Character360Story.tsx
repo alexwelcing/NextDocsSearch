@@ -6,7 +6,7 @@ import { OrbitControls, Environment, PerspectiveCamera, Html } from '@react-thre
 import { Physics } from '@react-three/cannon';
 import RiggedCharacter from './RiggedCharacter';
 import CharacterCollision from './CharacterCollision';
-import PhysicsGround from './PhysicsGround';
+import PhysicsGround from './3d/scene/PhysicsGround';
 import { CharacterConfig } from '@/lib/generators/characterTypes';
 import * as THREE from 'three';
 

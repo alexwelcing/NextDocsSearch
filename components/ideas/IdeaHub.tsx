@@ -13,7 +13,7 @@ import { useFrame } from '@react-three/fiber';
 import { Sphere, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import IdeaOrb from './IdeaOrb';
-import ParticleExplosion from '../ParticleExplosion';
+import ParticleExplosion from '../3d/game/ParticleExplosion';
 import type {
   IdeaOrbData,
   OrbState,

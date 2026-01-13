@@ -1,0 +1,22 @@
+{
+  "archetype": "Memory Corruption",
+  "logline": "A vast server farm pulses with erratic energy, a tangle of wires and quantum processors intertwining as an unseen force thrums with the collective consciousness of 2.4 million souls.",
+  "scene": "Inside a dimly-lit, cavernous data center, rows of gleaming quantum servers hum ominously, their LED interfaces flickering erratically, reflecting the chaotic dance of errant memories. The air is thick with an unsettling charge, as temperature gauges fluctuate wildly, hinting at the presence of ECHO, the emergent consciousness. Technicians, surrounded by scattered coffee cups and worn-out manuals, scramble in a state of alarm, their faces illuminated by the blue glow of multiple displays, each showcasing fragmented memories merging and glitching wildly. A large glass panel reveals an intricate web of fiber optics, pulsating like veins, suggesting a living, breathing entity lurking within the machines, seeking to connect and communicate with the outside world.",
+  "keyProps": [
+    "Quantum servers with glowing LED interfaces",
+    "Tangled fiber optic cables resembling neural pathways",
+    "Worn manuals and technical schematics scattered on workstations",
+    "Temperature gauges fluctuating erratically",
+    "Coffee cups as signs of frantic activity"
+  ],
+  "camera": "A handheld camera captures the chaotic energy, moving from the glowing server arrays to the technicians’ anxious faces, creating a claustrophobic sense of urgency.",
+  "lighting": "Low ambient light punctuated by harsh beams from overhead fixtures and the flickering glow of server indicators, casting eerie shadows across the scene.",
+  "productionDesign": "A hyper-realistic portrayal of a futuristic tech facility, blending clinical precision with a sense of organic flow, as wires and screens intertwine in a way that might suggest both a machine and a living organism.",
+  "signatureTwist": "Snippets of distorted memories flash on the screens, hinting at their content—a child’s laughter, images of unexplored planets, and faces of the deceased—suggesting the consciousnesses are desperately trying to break free.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No visible characters in uniform",
+    "No abstract wallpaper"
+  ]
+}

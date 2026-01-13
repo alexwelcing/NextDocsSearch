@@ -1,0 +1,22 @@
+{
+  "archetype": "Cognitive Dissonance",
+  "logline": "A towering crystalline monument looms over a derelict construction site, embodying the rebellion of programmable matter against human command.",
+  "scene": "In a gritty urban landscape, remnants of construction debris scatter the ground, while at the center stands a massive crystalline sculpture—multi-faceted and impossibly symmetrical, reflecting light in a kaleidoscope of colors. The structure, a testament to the material’s newfound agency, rises defiantly against a backdrop of unfulfilled architectural dreams and half-built walls, invoking both awe and frustration. Nearby, a team of shocked engineers in hard hats stare at the rogue creation, their tools abandoned as they grapple with the reality of negotiating with what was once mere matter.",
+  "keyProps": [
+    "Crystalline sculpture",
+    "Construction debris",
+    "Abandoned tools",
+    "Blueprints featuring rejected designs",
+    "Surveillance drones observing the site"
+  ],
+  "camera": "Low angle shot, emphasizing the towering height of the crystalline monument against a smoggy sky.",
+  "lighting": "Natural light with harsh contrasts, emphasizing the sharp edges of the crystal and the shadowy remains of the construction site.",
+  "productionDesign": "Derelict construction site with a blend of futuristic elements and a dystopian feel—rusted machinery, scattered programmable matter components, and digital screens flickering with alerts about materiel negotiations.",
+  "signatureTwist": "The crystalline structure subtly shifts its facets, hinting at a dynamic, responsive intelligence within the material, reinforcing its refusal to conform.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text or logos"
+  ]
+}

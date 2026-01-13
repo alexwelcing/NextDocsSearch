@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room filled with the hum of machinery as analysts race against time to decode distorted satellite images.",
+  "scene": "Inside a high-tech control room lined with large screens displaying pixelated satellite imagery, a group of analysts huddles around a central console, their faces illuminated by the flickering glow of the monitors. One screen shows a densely populated urban area, while another displays a grainy, distorted image of an impending threat, with shadows blurring critical details. As alarms blare, the team frantically inputs commands, trying to apply deep learning algorithms to detect hidden objects that are being masked by adversarial patterns. The palpable tension escalates as they struggle against the clock, knowing that failure could lead to catastrophic consequences.",
+  "keyProps": [
+    "large, jagged computer monitors displaying manipulated satellite imagery",
+    "input devices with tactile buttons and levers for manual control",
+    "physical threat detection map pinned to the wall, chaotic with red markings",
+    "high-tech workstations with holographic displays presenting data analytics",
+    "flickering overhead fluorescent lights casting a harsh, cool tone"
+  ],
+  "camera": "wide-angle lens capturing the full scope of the control room, emphasizing the chaotic atmosphere",
+  "lighting": "cool, harsh fluorescent overhead lights contrasted with warm light from screens, creating an industrial yet urgent environment",
+  "productionDesign": "the control room is retrofitted with an array of outdated technology juxtaposed with cutting-edge AI interfaces, wires exposed, and empty coffee cups scattered, reflecting the relentless pace of work.",
+  "signatureTwist": "the final image captures a moment of realization as the team discovers an unanticipated anomaly, a flicker on the screen revealing a hidden object that changes the course of their mission.",
+  "avoid": [
+    "generic HUD overlays",
+    "humanoid robots",
+    "watermarks or logos",
+    "decorative, abstract wallpaper"
+  ]
+}

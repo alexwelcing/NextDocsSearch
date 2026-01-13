@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A high-tech monitoring station hums with tension as data feeds flicker ominously on the screens, revealing cascading failures in ML model performance.",
+  "scene": "Inside a dimly lit control room, walls lined with large curved screens show real-time metrics of machine learning model latencies and error rates. An operator, clad in a tactical jumpsuit, stands at a central console, their finger hovering anxiously over a red 'Emergency Override' button. Ambient displays pulse with RGB lighting, illuminating the faces of a small team in the background, their expressions a blend of focus and concern. A wall-mounted digital clock ticks down the seconds, heightening the sense of impending failure as alerts blare, warning of SLA violations in model performance.",
+  "keyProps": [
+    "Curved LED screens displaying data metrics",
+    "Central console with a glowing 'Emergency Override' button",
+    "Wall-mounted digital clock counting down",
+    "Operator's tactical jumpsuit",
+    "Ambient RGB lighting creating a tech-heavy atmosphere"
+  ],
+  "camera": "Wide-angle lens capturing the entire control room, with a focus on the central console and operator's tense expression",
+  "lighting": "Low-key lighting with focused spotlights on screens and operator, creating a dramatic contrast and highlighting the urgency of the situation",
+  "productionDesign": "A high-tech control room filled with advanced computing equipment, sleek console interfaces, and an array of blinking lights and screens, evoking a gritty atmosphere of technological anxiety under pressure.",
+  "signatureTwist": "The operator hesitates, revealing a personal connection to the model's failure, challenging the notion of AI's infallibility.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No readable text or logos",
+    "No overly bright or cheerful settings"
+  ]
+}

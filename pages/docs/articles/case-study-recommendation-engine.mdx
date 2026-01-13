@@ -1,9 +1,20 @@
 ---
-title: "Case Study: Scaling an AI Recommendation Engine to 100M Users"
-author: ["Alex Welcing"]
-date: "2025-12-17"
-description: "A deep dive into the architecture, challenges, and results of building a high-scale recommendation system."
-keywords: ["Recommendation Engine", "Case Study", "Scalability", "AI Architecture", "Personalization", "Machine Learning"]
+title: 'Case Study: Scaling an AI Recommendation Engine to 100M Users'
+author:
+  - Alex Welcing
+date: '2025-12-17'
+description: >-
+  A deep dive into the architecture, challenges, and results of building a
+  high-scale recommendation system.
+keywords:
+  - Recommendation Engine
+  - Case Study
+  - Scalability
+  - AI Architecture
+  - Personalization
+  - Machine Learning
+articleType: research
+ogImage: /images/og/case-study-recommendation-engine.jpg
 ---
 
 # Case Study: Scaling an AI Recommendation Engine to 100M Users
@@ -38,7 +49,7 @@ We moved from batch processing to streaming.
 ### 2. Candidate Generation (Retrieval)
 The goal: Narrow down 10 million items to 500 candidates.
 *   **Architecture:** A "Two-Tower" Neural Network. One tower encodes User features, the other encodes Item features. The dot product of these vectors represents affinity.
-*   **Serving:** We used **Milvus** (a vector database) for Approximate Nearest Neighbor (ANN) search. This allowed us to retrieve relevant items in <10ms.
+*   **Serving:** We used **Milvus** (a vector database) for Approximate Nearest Neighbor (ANN) search. This allowed us to retrieve relevant items in &lt;10ms.
 
 ### 3. Ranking Layer (Precision)
 The goal: Sort the 500 candidates to find the top 10 to show the user.

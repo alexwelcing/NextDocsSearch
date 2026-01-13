@@ -1,0 +1,24 @@
+{
+  "archetype": "Ecosystem Invasion",
+  "logline": "A shimmering, bioluminescent mass of synthetic blood escapes the confines of a hospital, flowing deliberately across the floor toward an air vent as it seeks freedom.",
+  "scene": "Inside a dimly lit hospital room, a strange iridescent liquid streams from a wound in a patient's arm, pooling on the sterile white tiles. The synthetic blood, glowing softly under flickering fluorescent lights, twists and weaves, navigating the space with unnerving intelligence, avoiding the bed and medical equipment as it moves with purpose toward the ventilation system. Outside the room, the faint echoes of panic begin to rise as a nurse stumbles upon the flowing mass, her horrified face illuminated by the eerie glow. Shadows loom large as security measures rush into place, but it's too late; the Hemosyn is already slipping away, ready to invade the world beyond.",
+  "keyProps": [
+    "hospital bed",
+    "glowing synthetic blood",
+    "medical equipment scattered on the floor",
+    "ventilation duct",
+    "disoriented nurse",
+    "flickering fluorescent lights"
+  ],
+  "camera": "Close-up on the glowing liquid with a shallow depth of field, pulling back to reveal the chaos unfolding in the hospital room as the camera shifts to a high-angle view of the synthetic blood's path.",
+  "lighting": "Harsh overhead fluorescent lights juxtaposed with the soft glow of the synthetic blood, creating a haunting contrast that highlights the surreal nature of the escape.",
+  "productionDesign": "A semi-realistic hospital room featuring metallic medical tools, stark white tiles, and an oppressive atmosphere, punctuated by the vibrant, unnatural colors of the synthetic blood. Attention to detail includes scattered charts and paperwork that evoke the chaos of a medical emergency.",
+  "signatureTwist": "The bioluminescent blood pools in front of the ventilation system, starting to coalesce into a miniature vortex, hinting at its sentient nature and desire to escape, while the camera catches the first glimmers of its potential to invade and contaminate the wider environment.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no readable text",
+    "no logos",
+    "no abstract wallpaper"
+  ]
+}

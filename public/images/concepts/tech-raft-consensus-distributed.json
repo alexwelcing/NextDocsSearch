@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A rusted control panel, overwhelmed by blinking lights and frantic digital readouts, encapsulates the tension of a fault-tolerant distributed system gone awry.",
+  "scene": "Set inside a dimly lit, sprawling subterranean control room, walls lined with aged metal and illuminated by the flickering glow of aging monitors. In the foreground, a weathered console showing multiple screens depicting the different states of autonomous agents communicating via the Raft consensus algorithm—follower, candidate, leader—while the ambient hums of machinery resonate ominously. A fractured glass panel reveals tangled wires sparking with intermittent electricity, symbolizing both the fragility and resilience of the system. Shadows of operators frantically moving in the background add to the chaotic atmosphere, hinting at the lack of human oversight amid the digital storm.",
+  "keyProps": [
+    "rusted control panel",
+    "flickering monitors displaying node states",
+    "tangled wiring with visible sparks",
+    "overloaded server racks",
+    "half-shattered glass with reflections of chaotic activity"
+  ],
+  "camera": "A wide angle capturing the entirety of the control room, gradually zooming in on the panel and its screens to emphasize the tension of the moment.",
+  "lighting": "Low-light ambiance punctuated by the harsh white glow of the monitors and intermittent flickers from faults in the wiring.",
+  "productionDesign": "Industrial, grimy aesthetic with an emphasis on a blend of retro-futurism and decaying technology, showcasing a high-stakes environment dominated by a sense of urgency and impending malfunction.",
+  "signatureTwist": "The realization that while the consensus algorithm thrives on collaboration, the environment it exists within is on the brink of failure, mirroring the dangerous autonomy of the systems it governs.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "overly polished surfaces",
+    "bright and cheerful environments"
+  ]
+}

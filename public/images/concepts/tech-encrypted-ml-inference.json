@@ -1,0 +1,23 @@
+{
+  "archetype": "Encrypted Extraction",
+  "logline": "A sterile underground data center buzzes with the tension of encrypted computations under high surveillance.",
+  "scene": "The image captures a dimly lit, expansive room filled with rows of black, high-tech servers. Each server is equipped with multiple glowing screens displaying encrypted data streams but blurred to prevent any readable content. In the foreground, a group of technicians in anti-static gear nervously monitors their progress on an oversized holographic display showing a graphical representation of the computational burden—the latency indicator pinned at a staggering 1000x inflation. Meanwhile, reinforced glass walls reveal a heavy-duty security presence, watching for any signs of data breaches amidst the persistent whir of machines. The cold metal surfaces amplify the tension, suggesting a race against time with the fate of sensitive information hanging in the balance.",
+  "keyProps": [
+    "high-tech servers",
+    "holographic display",
+    "anti-static gear",
+    "reinforced glass walls",
+    "security personnel"
+  ],
+  "camera": "wide-angle lens capturing the full breadth of the data center, emphasizing both the scale of technology and the intimacy of the technicians' anxiety.",
+  "lighting": "harsh overhead LED lights paired with deep shadows to create a stark contrast, illuminating the troubled faces of the technicians against the dark machinery.",
+  "productionDesign": "a gritty, industrial aesthetic with visible cables, scattered coffee cups, and worn-down chairs, showcasing a blend of cutting-edge technology and the human toll of high-stakes computation.",
+  "signatureTwist": "one technician's anxious expression hints at a possible data leak, caught between their duty and the moral implications of their work.",
+  "avoid": [
+    "decorative elements",
+    "abstract visuals",
+    "humanoid robots",
+    "generic HUD overlays",
+    "readable text or logos"
+  ]
+}

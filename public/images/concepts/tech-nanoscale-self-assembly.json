@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit laboratory filled with decaying high-tech equipment buzzes ominously as a lone scientist desperately monitors an exponential growth simulation of self-replicating nanomachines on a decrepit computer screen.",
+  "scene": "Inside a dark, cluttered lab that feels like it’s on the verge of collapse, walls lined with peeling paint and faded posters of molecular structures hint at once-great ambitions. A flickering monitor dominates the center of the room, displaying chaotic graphs and alarming statistics on the self-replicating molecular system. Broken glass and spilled chemicals create a hazardous environment, contrasting the sterile precision of the nanotech that could spell doom. The scientist, sweat on his brow and wild eyes reflecting the glow of the screen, feverishly taps commands, desperate to control the spiraling replication rate while shadows loom large, echoing the impending catastrophe of the grey goo scenario.",
+  "keyProps": [
+    "Flickering computer monitor with alarming graphs",
+    "Old, rusted lab equipment partially covered in dust",
+    "Chemical spills and glass shards on the floor",
+    "Posters of molecular structures peeling from the wall",
+    "A heavy, stressed-looking lab coat worn by the scientist"
+  ],
+  "camera": "Close-up shot of the scientist's hands as they frantically type on a keyboard, revealing the monitor in the background displaying exponential growth graphs.",
+  "lighting": "Harsh overhead fluorescent lights flicker intermittently, casting stark shadows that enhance the tense atmosphere of chaos and desperation.",
+  "productionDesign": "The lab is a blend of high-tech machinery and disrepair, with advanced molecular modeling tools juxtaposed against a backdrop of neglect—think broken equipment and a cluttered workspace filled with the debris of failed experiments.",
+  "signatureTwist": "As the scientist looks up from the screen in horror, the camera slowly pulls back to reveal that the lab is abandoned, hinting that this frantic moment is a warning echoing through time, as no other living being is there to witness the impending doom.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "clean and sterile environments",
+    "clear resolutions or happy endings"
+  ]
+}

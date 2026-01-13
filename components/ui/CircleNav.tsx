@@ -49,12 +49,13 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
           <Link className={styles.menuLink} href="/story-studio">
             Story Studio
           </Link>
-          <Link href=""
+          <button
             className={styles.menuLink}
             onClick={() => setShelfOpen(!shelfOpen)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left' }}
           >
             Articles {shelfOpen ? '▲' : '▼'}
-          </Link>
+          </button>
           {shelfOpen && articles.map((article) => (
             <Link
               key={article.filename}

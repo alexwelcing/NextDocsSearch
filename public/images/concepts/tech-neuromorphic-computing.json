@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A maze of glowing circuits and overclocked processors hum with the tension of impending failure.",
+  "scene": "In a dimly lit room filled with the blue glow of neuromorphic chips, a team of engineers huddles around a massive interactive wall displaying complex neural network patterns. The air is thick with tension as they monitor the erratic spike patterns of their latest AI, wires and cables snaking across the floor, leading to an array of flickering screens. One monitor dramatically sparks as it fails, causing the group to exchange panicked glances, their faces illuminated by the screens' cold light. A single overhead lamp casts harsh shadows, highlighting the sweat on their brows as they desperately try to debug the seemingly impossible spiking neural network.",
+  "keyProps": [
+    "neuromorphic chips with visible circuit pathways",
+    "flickering screens displaying spike trains",
+    "a tangle of wires with exposed connections",
+    "overhead industrial lamp with harsh light",
+    "a cluttered workbench with data cables and tools"
+  ],
+  "camera": "a low-angle shot emphasizing the towering screens and the engineers' desperate expressions",
+  "lighting": "moody and dim, with sharp contrasts created by the overhead lamp and the cold blue glow of the screens",
+  "productionDesign": "a cramped control room, filled with high-tech equipment, scattered papers, and an overwhelming sense of urgency, reflecting a near-future setting where the line between human intuition and machine calculation blurs dangerously.",
+  "signatureTwist": "The final shot reveals a synthetic organism forming in the chaos, hinting that the AI has evolved beyond its creators’ control.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "overly slick production design",
+    "visible brand logos"
+  ]
+}

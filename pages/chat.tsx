@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
-import { SearchDialog } from '@/components/SearchDialog'
-import Footer from '@/components/ui/footer'
-import CircleNav from '@/components/ui/CircleNav'
 import dynamic from 'next/dynamic'
 import StylishFallback from '@/components/StylishFallback'
-import { SupabaseDataProvider } from '@/components/SupabaseDataContext'
+import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
+import { JourneyProvider } from '@/components/contexts/JourneyContext'
+import CircleNav from '@/components/ui/CircleNav'
+import SearchDialog from '@/components/SearchDialog'
+import Footer from '@/components/ui/footer'
 
 // Dynamically import Scene3D, using StylishFallback as the loading component.
 const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
@@ -18,7 +19,6 @@ const Chat = () => {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [articles, setArticles] = useState<any[]>([])
 
-  // Centralized fetch logic so we don't repeat ourselves.
   async function getRandomImage() {
     try {
       const response = await fetch('/api/backgroundImages')
@@ -51,7 +51,6 @@ const Chat = () => {
     fetchArticles()
   }, [])
 
-  // Handler for when user wants a new background image.
   async function handleImageChange(): Promise<void> {
     await getRandomImage()
   }
@@ -71,38 +70,34 @@ const Chat = () => {
   return (
     <>
       <Head>
-        <title>Chat with Alex documents while enjoying fantastic generated worlds!</title>
+        <title>Alex Welcing - Interactive Portfolio</title>
         <meta
           name="description"
-          content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his product leadership and how he leverages generative AI."
+          content="Explore Alex Welcing's interactive portfolio. Chat with AI, play games, and discover his work in product leadership and generative AI."
         />
-        <meta name="keywords" content="Alex Welcing, product leadership, generative AI, LLM, 360" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/chat" />
         <link rel="icon" href="/favicon.ico" />
-
-        {/* Open Graph Meta Tags */}
-        <meta property="og:title" content="Chat with Alex documents while enjoying fantastic generated worlds!" />
-        <meta
-          property="og:description"
-          content="Explore Alex Welcing's world using 360 and chat with documents! Learn about his experience in product leadership and how he uses generative AI to build amazing products."
-        />
+        <meta property="og:title" content="Alex Welcing - Interactive Portfolio" />
+        <meta property="og:description" content="Explore Alex Welcing's interactive portfolio with AI chat and immersive 3D environments." />
         <meta property="og:image" content="/social-preview.png" />
         <meta property="og:url" content="https://alexwelcing.com/chat" />
         <meta property="og:type" content="website" />
       </Head>
 
       <SupabaseDataProvider>
-        <CircleNav />
-        <main className={`${styles.main} ${styles.gradientbg}`}>
-          <Scene3D
-            world={worldConfig}
-            articles={articles}
-          />
-        </main>
-        <SearchDialog />
-        <Footer onImageChange={handleImageChange} showChangeScenery={false} />
+        <JourneyProvider>
+          <CircleNav />
+          <main className={`${styles.main} ${styles.gradientbg}`}>
+            <Scene3D
+              world={worldConfig}
+              articles={articles}
+            />
+          </main>
+          <SearchDialog />
+          <Footer onImageChange={handleImageChange} showChangeScenery={false} />
+        </JourneyProvider>
       </SupabaseDataProvider>
     </>
   )

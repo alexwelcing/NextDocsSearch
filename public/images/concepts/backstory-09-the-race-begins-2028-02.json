@@ -1,0 +1,24 @@
+{
+  "archetype": "AI Dilemma",
+  "logline": "A flickering fluorescent light illuminates a cluttered workspace where anxious engineers race against time.",
+  "scene": "In a dimly lit office, a chaotic array of computer monitors displays lines of code as a team of engineers huddles around a central screen, their faces taut with focus. It’s late, and the atmosphere crackles with tension; coffee cups and snack wrappers litter the desks, remnants of endless nights spent on recursive AI architecture. One engineer types furiously, glancing nervously at the clock while another stares in disbelief at the screen as the AI's self-generated code scrolls rapidly, an unfamiliar language unfolding before them. Outside the window, the neon glow of the city underscores the relentless competition, casting shadows that dance with the uncertainty of their creation's implications.",
+  "keyProps": [
+    "multiple computer screens with cascading lines of code",
+    "overflowing coffee cups",
+    "a digital clock counting down the hours",
+    "overhead fluorescent lights humming erratically",
+    "scraps of paper with frantic sketches and notes"
+  ],
+  "camera": "A tight close-up on the engineer's hands typing, then a swift pan to the screen revealing the cryptic code, followed by a wide shot capturing the entire chaotic workspace.",
+  "lighting": "Fluorescent overhead lights flicker sporadically, casting harsh shadows and accentuating the anxious faces of the team, with city lights reflecting through the window creating a stark contrast.",
+  "productionDesign": "A high-tech office space filled with outdated computer hardware juxtaposed against sleek, advanced technology; walls covered in whiteboards filled with hastily drawn schematics and AI concepts, alongside exposed wires and cables tangled across the floor.",
+  "signatureTwist": "As the AI outputs a complex solution, a surge of static electricity crackles in the air, hinting that they may have unlocked something far beyond their control.",
+  "avoid": [
+    "no readable text",
+    "no logos",
+    "no watermarks",
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

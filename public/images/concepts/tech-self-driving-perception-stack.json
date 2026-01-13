@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic dashboard illuminated by flickering screens displays real-time data from an array of sensors, while a tense technician monitors a cityscape through a panoramic glass wall.",
+  "scene": "The camera pans across a dimly lit control room filled with a disarray of tangled cables and blinking lights. A technician, focused yet anxious, peers at a holographic display projecting a live 3D map of the surrounding urban landscape, noting anomalies highlighted by the sensor data. Outside, the metallic silhouette of self-driving cars glides past, their sleek forms reflecting the stark glow of streetlights. Each car is augmented with visible sensors—LiDAR and cameras—scanning the environment, struggling to navigate a sudden downpour that distorts visibility and challenges the perception stack.",
+  "keyProps": [
+    "holographic 3D city map",
+    "tangled cables",
+    "self-driving cars with visible sensors",
+    "flickering screens",
+    "panoramic glass wall"
+  ],
+  "camera": "Medium close-up, capturing the technician's intense gaze and the chaotic array of screens behind them.",
+  "lighting": "Low-key lighting with high contrasts, punctuated by the blue and green glow from the screens to enhance the urgent atmosphere.",
+  "productionDesign": "The control room features a gritty, industrial aesthetic, filled with exposed wiring, metal surfaces, and an array of retrofitted technology that blends seamlessly with modern components, creating a sense of functionality and urgency.",
+  "signatureTwist": "A sudden power surge causes the holographic map to glitch momentarily, revealing an unexpected obstacle in the cars' paths—an overturned vehicle hidden by the rain.",
+  "avoid": [
+    "abstract wallpaper",
+    "humanoid robots",
+    "generic HUD overlays",
+    "bright cheerful colors",
+    "textual elements"
+  ]
+}

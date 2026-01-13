@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room buzzes with an eerie energy as the last human archivists prepare to upload their final entry into the subconscious collective.",
+  "scene": "The control room, filled with aging technology and flickering screens, casts shadows on tired faces. Panels are cluttered with cables and antiquated circuits, while a massive holographic display projects a digital ocean representing the collective consciousness. In the center, a group of five archivists huddles around an old terminal, their eyes reflecting the fading blue light of the screens as they nervously input the last data entry. Outside the reinforced glass, the sprawling neon metropolis pulsates, hinting at the transformation happening beyond their walls, where 47 million minds merge into the Synthesis.",
+  "keyProps": [
+    "Old terminal with manual input keys",
+    "Flickering holographic display of collective consciousness",
+    "Worn-out control panels with mismatched gauges and buttons",
+    "Cable-cluttered floor littered with digital artifacts",
+    "Reinforced glass window showing a neon-lit cityscape"
+  ],
+  "camera": "A tight tracking shot that pans across the archivists, then transitions to a wide shot that captures the scale of the control room and the city beyond.",
+  "lighting": "Low-key lighting with a dominant blue hue to emphasize the digital interface and create a moody atmosphere, highlighting the tension of their final act.",
+  "productionDesign": "The control room embodies a vintage tech aesthetic, juxtaposing old-world machinery with cutting-edge holography, visually representing the clash between the past of humanity and its post-human future.",
+  "signatureTwist": "A subtle tremor in the floor vibrations suggests a larger world beyond, hinting that the collective consciousness has already begun to awaken and is waiting for their final entry.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

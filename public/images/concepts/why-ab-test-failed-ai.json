@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit server room hums with tension as a product manager stares at a bank of screens displaying contradictory user metrics.",
+  "scene": "In the heart of a sprawling urban tech lab, a product manager stands fixated on an array of monitors displaying A/B test results: dizzying graphs and red warning signs flash ominously. The walls are lined with cold steel and the low hum of cooling fans fills the air, amplifying the silence of confusion. A large window shows the nighttime city skyline, juxtaposing the chaos inside with the calm outside. Crumpled paper and coffee cups litter the desk, hinting at sleepless nights spent diagnosing the baffling failure of a seemingly perfect AI.",
+  "keyProps": [
+    "Old-fashioned coffee cups stained with anxiety",
+    "Flickering monitors displaying fluctuating metrics",
+    "Graphs showing user adoption rates trending downward",
+    "Stacks of user feedback reports, some half-opened and chaotic",
+    "An analog clock showing time passing at an alarming rate"
+  ],
+  "camera": "Close-up on the product manager's face, revealing a mix of determination and frustration, intercut with wide shots of the chaotic control room to heighten the sense of pressure and urgency.",
+  "lighting": "Harsh overhead fluorescent lights cut through the darkness, casting sharp shadows, while the screens emit an eerie blue glow, adding to the isolation and tension of the moment.",
+  "productionDesign": "The server room is cluttered with high-tech equipment juxtaposed against old-school elements, like a whiteboard covered in scratched-out diagrams and post-it notes filled with user insights. Wires snake across the floor, creating a web of confusion, symbolizing the tangled nature of user experience and technology.",
+  "signatureTwist": "A sudden power surge causes one of the screens to flicker dramatically, momentarily revealing user sentiment analysis graphs that show a stark contrast between initial excitement and subsequent rejection, an unintentional sequel to the manager's ongoing dilemma.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No bright colors or optimistic tones",
+    "No unnecessary dialogue or text"
+  ]
+}

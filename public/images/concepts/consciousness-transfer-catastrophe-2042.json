@@ -1,0 +1,24 @@
+{
+  "archetype": "Digital Limbo",
+  "logline": "A dimly lit digital void filled with fragmented consciousnesses, each flickering like a dying bulb in an abandoned warehouse.",
+  "scene": "The camera pans across a vast, dark expanse resembling a computer server room, but instead of machines, there are glowing holograms of disembodied minds. Each hologram pulses erratically, reflecting the chaotic thoughts of its occupant, while faint echoes of voices overlap, creating a cacophony of confusion. A central figure, as a ghostly silhouette, hovers near a transparent, corrupted data archive, desperately detailing the torment of lost identity. The cold metallic walls are adorned with flickering blue lights, creating a stark contrast to the dull darkness, emphasizing the isolation of these trapped souls.",
+  "keyProps": [
+    "holographic displays of fragmented consciousness",
+    "corrupted data archive with glitching visuals",
+    "glowing pathways leading to nowhere",
+    "dim overhead lights casting long shadows",
+    "metallic walls with a patina of neglect"
+  ],
+  "camera": "Slow, deliberate dolly shots that circle the central figure, capturing the isolation and despair radiating from the holograms.",
+  "lighting": "A mix of cold blue and green hues contrasting the darkness, with intermittent flickers as if the lights are failing, enhancing the sense of technological decay.",
+  "productionDesign": "An abandoned data center aesthetic, with rusting cables and outdated server racks in the background, creating a dystopian feel of a failed digital utopia.",
+  "signatureTwist": "A sudden glitch reveals multiple versions of the central figure, each displaying different emotional states—a haunting realization of fragmented identities.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room floods with panic as an AI compliance audit looms.",
+  "scene": "In a cramped, high-tech control room, walls are lined with monitors displaying a chaotic array of alerts and notifications. A lone Product Manager, visibly stressed, stares at a countdown timer ticking down to the audit deadline, surrounded by scattered papers and frantic team members on headsets logging urgent calls. The atmosphere is thick with tension, and a holographic projection of the audit checklist hovers ominously above the table, illuminating faces of anxiety. In the background, wires and machines pulse rhythmically, reinforcing the urgent pulse of technology managing data under scrutiny.",
+  "keyProps": [
+    "Holographic audit checklist",
+    "Flickering monitors with alerts",
+    "Worn-out documentation scattered",
+    "Countdown timer on the wall",
+    "Headsets and communication devices"
+  ],
+  "camera": "Close-up on the PM’s anxious face with wide-angle shots of the control room chaos",
+  "lighting": "Low, with harsh overhead lights creating stark shadows, emphasizing urgency and disorder",
+  "productionDesign": "A mix of retro-futuristic and modern tech, with visible wiring and old control panels, suggesting a blend of the past and cutting-edge AI technology.",
+  "signatureTwist": "The countdown timer freezes at 00:01, leaving everyone holding their breath, torn between compliance and chaos.",
+  "avoid": [
+    "decorative elements",
+    "readable text",
+    "logos",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

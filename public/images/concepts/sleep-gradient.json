@@ -1,0 +1,25 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A deserted work station under the dim glow of flickering monitors evokes the relentless pressure of an always-on economy.",
+  "scene": "In a stark, high-tech control room abandoned at night, the only sound is the low hum of machines. Monitors flash urgent data streams, their cold light illuminating the empty chairs where exhausted workers once sat, now overtaken by shadows. An overflowing inbox of unread messages pulses ominously on one screen, displaying a clock that ticks mercilessly forward—3:00 AM. Outside the large glass windows, the city skyline glimmers, oblivious to the human cost below. A single coffee cup, half-full and cold, rests forgotten on the desk, a testament to the endless grind of wakefulness amid the urgent demands of AI.",
+  "keyProps": [
+    "Flickering monitors",
+    "Empty ergonomic chairs",
+    "Overflowing inbox on screen",
+    "Large glass windows showing city skyline",
+    "Half-full coffee cup",
+    "Emergency lights casting red hues"
+  ],
+  "camera": "A low-angle shot focusing on the monitors, slowly panning to reveal the empty control room from the corners.",
+  "lighting": "Cold, artificial overhead lighting punctuated by the intermittent flicker of the monitors; shadows creep along the walls, enhancing the sense of abandonment.",
+  "productionDesign": "A blend of sleek metal and glass surfaces with a stark color palette; cables and tech clutter scattered in disarray to project chaos amidst the cold efficiency of a high-tech environment.",
+  "signatureTwist": "A close-up reveals a digital clock ticking in reverse on one of the screens, symbolizing the unattainable chase of regaining lost time.",
+  "avoid": [
+    "No humanoid robots",
+    "No readable text",
+    "No logos",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No representations of sleep or rest"
+  ]
+}

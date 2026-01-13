@@ -1,0 +1,23 @@
+{
+  "archetype": "Edge Computing Unleashed",
+  "logline": "A close-up of an edge computing hub, pulsating with intense data flow and glowing circuits, set against a dystopian urban landscape.",
+  "scene": "In a gritty, rain-soaked alley of a near-future city, a sleek, metallic edge computing hub stands prominently on a rooftop. Wires snake across the surface, connecting it to a multitude of IoT devices scattered throughout the city. Neon lights from nearby skyscrapers reflect off the rain, creating an eerie glow that illuminates the hub's intricate circuitry and data streams, visualizing the flow of massive amounts of processed data. A lone technician is intently monitoring the data feeds on a rugged tablet, focused on ensuring seamless connectivity and security in this high-stakes digital environment.",
+  "keyProps": [
+    "Edge computing hub",
+    "IoT devices (sensors, cameras)",
+    "Rugged tablet",
+    "Stormy weather with rain",
+    "Neon cityscape"
+  ],
+  "camera": "Close-up and medium shots with a slight tilt to emphasize the urban sprawl and rain-drenched environment.",
+  "lighting": "Low-key lighting with vivid neon accents, creating a stark contrast between shadowy alleyways and the vibrant data stream.",
+  "productionDesign": "A blend of industrial elements with high-tech features, the edge computing hub is designed with exposed circuits and rugged metallic surfaces, surrounded by urban decay and cybernetic enhancements in the environment.",
+  "signatureTwist": "The scene captures a moment of urgency as a threat detection alert flashes on the technician's tablet, hinting at a looming cyber threat that could destabilize the entire city’s technological infrastructure.",
+  "avoid": [
+    "no humanoid robots",
+    "no logos or readable text",
+    "no abstract elements",
+    "no generic HUD overlays",
+    "no decorative aspects"
+  ]
+}

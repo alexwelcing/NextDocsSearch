@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A surveillance officer peers into a dimly lit control room, targeted by his own thermal imaging technology.",
+  "scene": "Inside a cramped, high-tech surveillance control room, a flickering array of thermal monitors illuminates the tense face of the officer. Each screen reveals a landscape of vibrant colors, depicting heat signatures of intruders hidden in the urban night. Yet, an unsettling anomaly catches his attention—a series of dark, almost invisible shapes indistinguishable against the backdrop of the city. These figures, equipped with advanced thermal camouflage, exhibit a chilling mastery of evasion as they move stealthily among the unaware. The officer's hands tremble over the keyboard as he struggles to decipher the impossible, balancing his instincts against the capabilities of his own technology.",
+  "keyProps": [
+    "thermal imaging monitors displaying various heat signatures",
+    "control switches for camera feeds",
+    "manuals on thermal camouflage technology",
+    "dim red ambient lighting strips on walls",
+    "a digital map of the urban landscape with real-time tracking"
+  ],
+  "camera": "close-up on the officer's anxious face, with monitors blurred in the foreground to highlight his focus",
+  "lighting": "low overhead light with an emphasis on the glow from the screens creating a stark contrast and shadows",
+  "productionDesign": "a cluttered, utilitarian control room, with scattered paperwork, empty coffee mugs, and visible wear on the machinery reflecting the long hours of tense surveillance work",
+  "signatureTwist": "the thermal cameras, once a symbol of security, become instruments of intimidation as the officer realizes he's being hunted, not just monitoring",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

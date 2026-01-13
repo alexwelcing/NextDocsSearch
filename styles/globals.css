@@ -54,19 +54,51 @@ body {
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
 
-  /* Color Theme Swatches in Hex */
-  --retro-1: #6a6699;
-  --retro-2: #3a2be0;
-  --retro-3: #b2e03d;
-  --retro-4: #941947;
-  --retro-5: #de7ea2;
+  /* Color Theme - Sophisticated Dark */
+  --color-deep-space: #030308;
+  --color-dark-surface: #0a0a1a;
+  --color-cyan-accent: #00d4ff;
+  --color-gold-highlight: #ffd700;
+  --color-text-primary: rgba(255, 255, 255, 0.9);
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-border-accent: rgba(0, 212, 255, 0.3);
+
+  /* Legacy compatibility (mapped to new system) */
+  --retro-1: #0a0a1a;
+  --retro-2: #030308;
+  --retro-3: #ffd700;
+  --retro-4: #00d4ff;
+  --retro-5: #00d4ff;
 
   /* Variables for easy tweaking */
-
-  --menu-bg: #212820;
-  --btn-hover: #de7ea2;
-  --link-color: #de7ea2;
+  --menu-bg: #030308;
+  --btn-hover: #00d4ff;
+  --link-color: #00d4ff;
   --btn-font: var(--font-mono);
+
+  /* Safe area insets for notched devices (iPhone X+, etc.) */
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+
+  /* Responsive spacing scale */
+  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --space-sm: clamp(0.5rem, 1vw, 1rem);
+  --space-md: clamp(1rem, 2vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 3vw, 2.5rem);
+  --space-xl: clamp(2rem, 4vw, 4rem);
+
+  /* Responsive typography scale */
+  --text-xs: clamp(0.75rem, 1.5vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 2vw, 1rem);
+  --text-base: clamp(1rem, 2.5vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 3vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 3.5vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 4vw, 2rem);
+  --text-3xl: clamp(2rem, 5vw, 3rem);
+  --text-4xl: clamp(2.5rem, 6vw, 4rem);
 
 }
 
@@ -104,7 +136,7 @@ body {
 /* Global Styles */
 body {
   color: var(--foreground-rgb);
-  background: linear-gradient(to bottom, transparent, var(--retro-1)) var(--retro-2);
+  background: var(--color-deep-space);
 }
 
 .article-container {

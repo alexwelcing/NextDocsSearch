@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sprawling data center hums with life as AI protocols stream health taxonomy analytics in real time.",
+  "scene": "Inside a cutting-edge Google Cloud data facility, rows of sleek, server racks pulse with LEDs while technicians monitor interactive displays showcasing a complex web of health data. The atmosphere is charged with urgency as a team of data scientists review real-time NLP output, deciphering evolving health trends and anomalies. Above, a massive digital screen projects a dynamic flow of data points and algorithmic predictions, capturing the transformative potential of AI in healthcare. In the corner, a lone technician leans closer to a terminal, their eyes reflecting a mix of awe and apprehension as they contemplate the implications of the AI's findings on real patient outcomes.",
+  "keyProps": [
+    "Rows of server racks with blinking LED lights",
+    "Large interactive digital display with flowing data visualizations",
+    "Workstations cluttered with tablets and health documents",
+    "Real-time analytics dashboard showing health trends",
+    "Coffee cups and energy drink cans, hinting at a long night of work"
+  ],
+  "camera": "Wide angle shot to capture the expanse of the data center, transitioning to a close-up of the technician's intense focus on the screen.",
+  "lighting": "Fluorescent overhead lighting sharply contrasted with glowing screens, creating a sterile yet dynamic environment.",
+  "productionDesign": "A blend of sleek modern technology and scattered personal items, emphasizing the human element within a high-tech setting.",
+  "signatureTwist": "The digital display flickers momentarily, revealing a hidden anomaly in the data suggesting an impending health crisis, underscoring the stakes of AI in healthcare.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

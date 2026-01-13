@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A tense moment unfolds in a sterile gene-editing lab, where scientists grapple with the consequences of precise genetic manipulation.",
+  "scene": "Inside a high-tech CRISPR laboratory, a large glass panel reveals the intricate machinery used for gene editing. Scientists in lab coats, faces illuminated by screens, monitor the live data streaming from a cutting-edge sequencer, assessing on-target efficiency and off-target risks. Tension escalates as an unexpected alert flashes: multiple potential off-target effects detected. One researcher clutches a tablet, his eyes wide, as he realizes their guide RNA design may have unintended consequences—threatening the entire project. The sterile environment is juxtaposed with the urgency of a life-altering decision.",
+  "keyProps": [
+    "High-tech sequencer",
+    "Digital screens displaying genomic data",
+    "Glass panel separating lab from control room",
+    "Tablet with alert notifications",
+    "CRISPR editing apparatus"
+  ],
+  "camera": "Wide shot capturing the entire lab with a focus on the intense expressions of the researchers, shifting to a close-up of the tablet showing alarming data.",
+  "lighting": "Fluorescent overhead lighting casts a clinical, sterile glow, while shadows deepen as tension rises in the room.",
+  "productionDesign": "The lab features sleek, minimalist design with stainless steel surfaces, high-tech consoles, and a central editing apparatus, surrounded by various screens displaying genetic sequences and analysis results, creating an atmosphere of high stakes and advanced technology.",
+  "signatureTwist": "The realization that their work could not only alter genomes but also disrupt ecological balance, emphasizing the moral dilemma of genetic engineering.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no readable text",
+    "no logos",
+    "no decorative elements"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room thrums with the tension of fluctuating data streams and the weight of past decisions.",
+  "scene": "An expansive control room filled with towering screens displaying cascading lines of event data, each line representing a critical aspect of an entity's history. The air is thick with the hum of machines as technicians in dark uniforms frantically adjust levers and buttons, faces illuminated by the harsh glow of the monitors. In one corner, a large digital clock counts down the moments until the next event replay, while shadows flicker ominously as each past action weighs heavily on the present. The atmosphere is charged with urgency, as operators grapple with the consequences of near-impossible choices in an ever-evolving digital landscape.",
+  "keyProps": [
+    "massive event log display",
+    "tangled wiring and circuits",
+    "analog dials for tracking performance",
+    "oversized risk assessment charts",
+    "glowing emergency alert lights"
+  ],
+  "camera": "A low-angle shot capturing the operators in silhouette against the backdrop of swirling data projections, emphasizing the tension in their body language.",
+  "lighting": "Fluorescent overhead lights flicker intermittently, casting sharp shadows, while the screens emit a cold blue light that creates a stark contrast with the darkness.",
+  "productionDesign": "The design features a mix of retro-futuristic elements and worn industrial materials, merging faded steel panels with sleek digital interfaces, creating a space that feels both advanced and exhausted by its own complexity.",
+  "signatureTwist": "A sudden surge in data reveals a hidden anomaly, highlighting the fragility of their constructed reality and forcing the team to confront a critical decision that could unravel everything.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "bright colors",
+    "idealized technology"
+  ]
+}

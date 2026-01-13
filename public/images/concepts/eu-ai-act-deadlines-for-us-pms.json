@@ -1,0 +1,25 @@
+{
+  "archetype": "Compliance Conundrum",
+  "logline": "A cluttered control room filled with tense product managers analyzing compliance data against a looming deadline.",
+  "scene": "In a dimly lit control room, multiple monitors flicker with lines of data, compliance checklists, and alarming red alerts. A product manager stands at the forefront, sweat dripping from their forehead as they navigate a complex risk management dashboard, urgently discussing their AI product's classifications. Papers litter the desk, detailed reports and timelines are sprawled haphazardly, while the clock on the wall ticks ominously toward the compliance deadline. A whiteboard in the background is scrawled with frantic notes, highlighting the risks of 'unacceptable' AI features, casting a palpable air of anxiety.",
+  "keyProps": [
+    "Monitors displaying complex compliance dashboards",
+    "Detailed compliance checklists papered across the desk",
+    "An industrial wall clock ticking down time",
+    "A large whiteboard filled with scribbled notes and risk categories",
+    "Old coffee cups stacked high, suggesting long hours",
+    "A stack of regulatory documents marked 'URGENT'"
+  ],
+  "camera": "Tight shot focusing on the product manager's anxious expression, transitioning to a wide shot capturing the entire chaotic control room.",
+  "lighting": "Low ambient lighting with flickering monitor light creating stark shadows, heightening the sense of urgency.",
+  "productionDesign": "A blend of modern and worn-out elements, showing a high-tech yet neglected control room filled with outdated tech, cables, and compliance documentation scattered about, emphasizing the stress of meeting upcoming regulatory demands.",
+  "signatureTwist": "A sudden alarm blares from one of the monitors, indicating a critical compliance error, forcing the team to confront the real-time consequences of their AI's decisions.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

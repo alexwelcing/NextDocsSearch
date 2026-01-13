@@ -1,0 +1,22 @@
+{
+  "archetype": "Distribution Crisis",
+  "logline": "A stark warehouse filled with surplus goods sits in stark contrast to a line of desperate citizens waiting outside.",
+  "scene": "The vast expanse of a dimly lit logistics warehouse looms overhead, its concrete walls lined with towering shelves stacked high with crates of food, medical supplies, and electronics, all labeled with bright tags indicating their abundance. Outside, a never-ending line of individuals and families waits under a gray sky, their faces reflecting a mix of hope and despair, each person clutching a flimsy, government-issued card that grants limited access to the wealth inside. Between the warehouse's heavy steel doors, shadows flicker as the guards exchange whispered words, locking the efficient flow of resources inside while the people outside grow restless. A distant drone whirrs above, its surveillance camera capturing the moments of frustration and longing, as the promise of abundance becomes a poignant reminder of new inequalities. The atmosphere is thick with tension, embodying the paradox of a world overflowing with resources yet fractured by human greed and political maneuvering.",
+  "keyProps": [
+    "steel crates stamped with GROS logos",
+    "government-issued access cards",
+    "surveillance drones hovering above",
+    "flickering fluorescent lights",
+    "pallets of canned food and medical supplies"
+  ],
+  "camera": "Wide-angle lens to capture the scale of the warehouse and the line of people, with a shallow depth of field focusing on the faces of the desperate citizens.",
+  "lighting": "Cold, harsh overhead fluorescent lights within the warehouse contrasting with the natural gray light outside, creating a stark split in tone.",
+  "productionDesign": "The warehouse features an industrial, dystopian aesthetic with exposed beams, concrete floors, and an open layout, emphasizing the contrast between abundance and scarcity outside. Sparse furniture like folding chairs for the waiting line adds to the utilitarian feel.",
+  "signatureTwist": "The juxtaposition of the overflowing warehouse and the impoverished citizens reveals that solving one type of scarcity has created another, visually encapsulating the article's central theme.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "visible logos or readable text"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A dimly lit, cluttered control room houses a frantic team of engineers monitoring a malfunctioning LiDAR unit.",
+  "scene": "In a cramped, metallic control room filled with flickering screens displaying chaotic point cloud data, a team of engineers, clad in rugged tech gear, scramble to diagnose an unexpected loop closure failure in their autonomous navigation system. The atmosphere is thick with tension as holographic displays project 3D maps that distort and glitch, revealing the stark contrasts between captured environments and the robot's miscalculations. Shadows dance across the walls, accentuating the wear of the machinery and the palpable urgency to rectify the chaos unfolding in real-time before it leads to calamity outside. The air is filled with the hum of failing electronics and the muted chatter of desperate strategizing amidst the impending crisis.",
+  "keyProps": [
+    "worn-out control panels with blinking lights",
+    "holographic display showing distorted 3D maps",
+    "scattered tools and coffee cups on desks",
+    "an aging LiDAR scanner with visible wear",
+    "cables and wires sprawled across the floor"
+  ],
+  "camera": "A low-angle shot emphasizes the towering screens, bringing a sense of overwhelming chaos to the foreground.",
+  "lighting": "Cool, harsh lighting casts stark shadows, highlighting the contours of the engineers' anxious faces while illuminating the chaotic data on the screens.",
+  "productionDesign": "The control room is designed with a gritty, utilitarian aesthetic—metallic surfaces, exposed wires, and makeshift improvements revealing a history of rapid trial and error. The decor is cluttered with tech relics from previous failed attempts, signifying an ongoing battle against the elusive perfect SLAM solution.",
+  "signatureTwist": "A sudden flicker on the screen reveals a potential error in the mapping algorithm tied to recent environmental changes, hinting that the terrain itself might be merging their reality with another, further complicating the situation.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no abstract wallpaper"
+  ]
+}

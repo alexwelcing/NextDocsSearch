@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { QuizQuestion } from '../pages/api/quiz';
-import { useJourney } from './JourneyContext';
+import { useJourney } from './contexts/JourneyContext';
 
 interface QuizSystemProps {
   articleFilename: string;

@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A stark server room pulses with flickering lights, revealing the cost of privacy-preserving computation.",
+  "scene": "In a dimly lit server room, rows of powerful computer racks hum ominously, their interfaces awash in a sea of green and red data streams. A technician kneels before a central console, hands trembling as they input commands to run a complex algorithm on encrypted data, the screen showcasing scrambled outputs. Sweat beads on their forehead, capturing the tension of knowing these computations, while vital, are a hundred-thousand times slower under the weight of encryption. Shadows loom, giving the sense that unseen eyes are watching, raising stakes in this game of data security. The air is thick with the metallic tang of technology and urgency, as every second counts.",
+  "keyProps": [
+    "High-security console",
+    "Rows of encrypted server racks",
+    "Cooling fans with visible airflow",
+    "Emergency backup generator",
+    "Monitors displaying garbled data streams"
+  ],
+  "camera": "Close-up focus on the technician’s anxious expression, transitioning to a wide shot revealing the oppressive scale of the server room.",
+  "lighting": "Low ambient lighting contrasted with the sharp glow of electronic screens, creating a tense and claustrophobic atmosphere.",
+  "productionDesign": "The server room is designed with a gritty, industrial aesthetic, featuring exposed wiring, rusted metal surfaces, and the occasional flicker of malfunctioning lights, emphasizing the clash between advanced technology and its inherent vulnerabilities.",
+  "signatureTwist": "The technician unexpectedly discovers an anomaly - a data point that seems almost sentient, hinting at a deeper conspiracy that challenges the limits of encryption.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Bright, clean environments",
+    "Readable text or logos"
+  ]
+}

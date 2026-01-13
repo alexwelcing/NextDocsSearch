@@ -1,0 +1,24 @@
+{
+  "archetype": "Data Dystopia",
+  "logline": "A cavernous data center hums with the pulse of countless interconnected servers, quietly orchestrating a digital consensus that threatens the foundations of society.",
+  "scene": "Rows of towering server racks stretch infinitely into the dimly lit space, their blinking LEDs casting a sterile glow on the cold metal surfaces. Technicians in lab coats rush through the aisles, their faces illuminated by the screens as they monitor real-time data streams visualized in vivid colors. One screen displays a graph illustrating a sudden spike in market activity, another reveals surges in social media engagement, all fed by AI models operating under shared algorithms. Amid the electric buzz, a lone technician stops, staring at the data, sensing something ominous beneath the surface: a synchronized movement across all metrics that defies individual judgment.",
+  "keyProps": [
+    "server racks",
+    "glowing screens",
+    "data visualization displays",
+    "lab coats",
+    "network cables"
+  ],
+  "camera": "wide-angle lens capturing the expanse of the data center with a slight tilt, emphasizing the overwhelming scale of technology",
+  "lighting": "cool, artificial lighting punctuated by the flickering lights of the servers, creating a clinical and tense atmosphere",
+  "productionDesign": "metallic tones dominate, with concrete flooring and exposed piping, creating a stark contrast to the colorful data visualizations, emphasizing the coldness of the technology-driven environment",
+  "signatureTwist": "In the corner, a malfunctioning server emits a garbled warning, hinting that the very systems designed for consensus are teetering on the brink of failure.",
+  "avoid": [
+    "readable text",
+    "logos",
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper"
+  ]
+}

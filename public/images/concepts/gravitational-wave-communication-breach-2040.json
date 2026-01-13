@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An isolated LIGO control room, foreboding and brimming with uncertainty, serves as the stage for humanity's confrontation with a predestined future.",
+  "scene": "The camera pans across a dimly lit LIGO control room, filled with blinking monitors and the low hum of machinery. The team huddles around a central display, where a complex waveform readout flickers ominously. Shadows dance on the walls from the glow of their screens, highlighting the anxious expressions of scientists as they decode gravitational waves that reveal future seismic events. In the corner, a whiteboard is scrawled with mathematical formulas and existential questions about free will, crumpled post-it notes scattered among them like remnants of hope. A distant rumble vibrates through the floor, a reminder of the unstoppable future that pulses just beyond their grasp.",
+  "keyProps": [
+    "Flickering computer screens displaying gravitational wave data",
+    "A large whiteboard full of equations and chaotic brainstorming",
+    "A seismic wave readout graph",
+    "Coffee cups strewn about, half-full, forgotten",
+    "A digital clock ticking down to a specified date/time"
+  ],
+  "camera": "A steady, low-angle shot that captures the tension and urgency of the scientists, emphasizing the looming threat of the future they cannot escape.",
+  "lighting": "Low-key ambient lighting with harsh spotlights focused on screens and faces, creating deep contrasts and shadows that evoke a sense of impending doom.",
+  "productionDesign": "The control room is cluttered with high-tech equipment, wires snaking across the floor, and posters of Einstein and Schrödinger juxtaposed with graffiti-like scrawls on the walls, reflecting the chaotic battle between science and existential dread.",
+  "signatureTwist": "The camera zooms in on a small, previously unnoticed note pinned beside the equations: 'The future is already written. It will happen.'",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

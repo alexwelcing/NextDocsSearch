@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room filled with electrical equipment buzzes with tension as engineers nervously monitor the first successful neural signal write operation.",
+  "scene": "The control room is cramped, with rows of blinking consoles displaying real-time EEG readings and complex waveforms. In the center, a large, glowing screen shows a live feed of a neural interface system engaged in stimulating a human subject's brain. Engineers, clad in lab coats, peer intently at the monitors, tension palpable as they debate the safety of the experimental procedure, surrounded by cables snaking across the floor. An alarm suddenly blares, echoing the urgency of the situation, as one engineer reaches for an emergency shutdown switch, reflecting the duality of innovation and risk in BCI technology.",
+  "keyProps": [
+    "EEG monitoring equipment with oscilloscopes",
+    "A large digital display showing neural signal data",
+    "Emergency shutdown switch prominently placed",
+    "Wires and cables sprawled across a metallic floor",
+    "A cluttered desk with technical manuals and safety protocols"
+  ],
+  "camera": "Wide-angle lens capturing the confined space with depth, focusing on the glowing screen and the tense faces of engineers in the foreground.",
+  "lighting": "Dim, with flickering overhead fluorescent lights creating stark shadows, accented by the soft glow of screens illuminating the anxious expressions of the engineers.",
+  "productionDesign": "Utilitarian and retro-futuristic, with worn metal surfaces and peeling labels on equipment, blending advanced technology and the gritty realness of hurried experimentation.",
+  "signatureTwist": "A close-up of the emergency shutdown switch that is just out of reach, emphasizing the precarious balance of safety and innovation.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no readable text, logos, or watermarks",
+    "no abstract wallpaper"
+  ]
+}

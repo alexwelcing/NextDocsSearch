@@ -1,0 +1,23 @@
+{
+  "archetype": "Cultural Collapse",
+  "logline": "A crumbling insurance office filled with outdated technology and stark warnings of societal disruption.",
+  "scene": "Set in a dilapidated insurance office, cracked walls adorned with peeling paint and obsolete advertisements for insurance products, the camera pans across desks cluttered with dusty calculators and fading actuarial charts. A worn-out employee stares blankly at an old computer screen displaying erratic graphs of risk assessments while a flickering neon sign outside illuminates the street with phrases like 'Your Future Insured' and 'Guaranteed Protection'. Outside, the skyline looms, with dilapidated buildings and a foreboding atmosphere hinting at the collapse of societal infrastructure fueled by AI-driven certainty. A post-apocalyptic feeling permeates through the scene as individuals gather in the streets discussing their newfound uninsurability amidst a backdrop of uncertainty.",
+  "keyProps": [
+    "Dusty calculators with cracked screens",
+    "Peeling posters advertising outdated insurance policies",
+    "Scattered actuarial tables on desks",
+    "Flickering neon signs with fading phrases",
+    "Old computer with a static-filled monitor",
+    "Broken windows overlooking a desolate urban landscape"
+  ],
+  "camera": "A handheld camera captures the disarray, creating an intimate yet chaotic feel as it weaves through the office, accentuating the sense of decay and urgency.",
+  "lighting": "Harsh overhead fluorescent lights intermittently flicker, casting sharp shadows and highlighting the dust particles in the air, while the dim glow of the neon sign outside bleeds into the room, creating a stark contrast between false hope and reality.",
+  "productionDesign": "The design embraces a retro-futuristic style, combining outdated technology with an atmosphere heavy on grime and neglect, depicting a society struggling with the aftermath of an insurance collapse. The juxtaposition of the old and the failed captures the essence of a world where risk management has crumbled.",
+  "signatureTwist": "The idle chatter of clients outside hints at the desperation of individuals who can no longer access insurance, emphasizing the severe impacts of AI that have stripped away their right to uncertainty.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text or logos"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control room filled with tangled cables and glowing screens reveals the chaotic underbelly of a decaying AI infrastructure.",
+  "scene": "In a claustrophobic control room, the camera pans across a wall of flickering monitors displaying incomprehensible data streams and ominously blinking alerts. Shadows of aging technicians cast against the walls reveal their weary faces, illuminated only by the harsh blue light of the screens. An outdated printout of code hangs crookedly on a bulletin board, the ink faded and barely legible, while an unattended coffee cup grows cold beside a half-finished manual, pages dog-eared and highlighted. A faint whirring sound indicates a nearby server, its metal casing dented and rusted, like a relic from a forgotten era. The atmosphere carries a palpable tension, as the technicians exchange anxious glances, aware that their expertise is waning and the systems they depend on are slipping through their fingers.",
+  "keyProps": [
+    "flickering monitors with glitching data",
+    "tangled cables sprawling across the floor",
+    "an outdated printout of code on the wall",
+    "a cold coffee cup beside a dog-eared manual",
+    "a rusted server with blinking lights"
+  ],
+  "camera": "handheld for a documentary feel, creating a sense of urgency and intimacy",
+  "lighting": "dim, with harsh blue hues from monitors contrasting with shadows, creating an unsettling atmosphere",
+  "productionDesign": "the room is cramped and cluttered, filled with outdated technology and signs of neglect, emphasizing the fragility of the system",
+  "signatureTwist": "the camera unexpectedly zooms in on a terminal screen, revealing a cryptic error message that hints at an impending system failure without obvious causes or solutions.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "clean, sterile environments",
+    "bright, cheerful lighting"
+  ]
+}

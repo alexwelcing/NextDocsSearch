@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "An overworked radiologist stares intently at a series of glowing X-ray images displayed on a high-tech screen, revealing hidden abnormalities through AI-enhanced heat maps.",
+  "scene": "Inside a dimly lit, high-tech control room filled with medical imaging consoles, an anxious radiologist scans the flickering screens displaying chest X-rays, the room echoing with the soft hum of machines. Layers of data visualizations cascade over the images, where AI-generated heat maps pulse subtly, highlighting critical regions of concern. The radiologist's eyes dart between the screen and a stack of files, the pressure palpable as they weigh the implications of each diagnosis. An urgent alert flashes as the AI prioritizes a critical case, its bounding box surrounding a potential pneumothorax, underscoring the gravity of the situation.",
+  "keyProps": [
+    "Medical imaging screens displaying X-rays",
+    "AI-generated heat maps overlaying images",
+    "Stacks of patient files",
+    "Flashing alert system indicating critical cases",
+    "Diagnostic tools scattered across the control panel"
+  ],
+  "camera": "A tight close-up on the radiologist's face, revealing intense concentration intercut with shots of the glowing screens, creating a sense of urgency.",
+  "lighting": "Low ambient light with focused bright spots illuminating the screens, creating a stark contrast and highlighting the tension in the room.",
+  "productionDesign": "A high-tech control room setting, outfitted with state-of-the-art imaging equipment, dimmed screens reflecting urgency, and medical paraphernalia that reinforces a gritty, clinical atmosphere.",
+  "signatureTwist": "An unexpected system error momentarily flickers the screens, leading to a disorienting pause as the radiologist grapples with the fear of a missed diagnosis amidst overwhelming pressure.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

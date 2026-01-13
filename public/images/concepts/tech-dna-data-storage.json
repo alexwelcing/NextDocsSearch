@@ -1,0 +1,24 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A frayed lab bench is cluttered with vials containing strands of synthetic DNA, the last hope for a mission-critical data recovery.",
+  "scene": "In a dimly lit biolab, the camera zooms in on a chaotic workbench strewn with small glass vials, each labeled with cryptic alphanumeric codes. Under the flickering fluorescent lights, a meticulous scientist, cloaked in a lab coat stained with chemical spills, hunches over a sequencer, feeding in the fragile DNA strands. The hum of machines fills the air, punctuated by the ominous beeping of an error alert on a nearby screen, signaling a failed sequence. In the background, large windows reveal a stormy cityscape, a reflection of the urgent stakes outside as the world teeters on the edge of a data crisis. An array of biological samples, illuminated under a microscope, hint at the fragile nature of each delicate experiment.",
+  "keyProps": [
+    "glass vials with DNA samples",
+    "sequencer machine",
+    "error alert screen",
+    "biological microscope",
+    "chemical stains on lab coat",
+    "stormy cityscape view"
+  ],
+  "camera": "Close-up shots of the vials and the scientist’s hands intercut with wide-angle views of the lab in chaos.",
+  "lighting": "Harsh overhead fluorescent lighting combined with ambient glow from the sequencer, casting an eerie array of shadows across the cluttered bench.",
+  "productionDesign": "A realistic lab environment with a gritty, lived-in feel—scattered notes, open textbooks on molecular biology, and cluttered surfaces indicating a long, frantic work session.",
+  "signatureTwist": "A close-up reveals one vial containing mutated DNA, hinting at unexpected consequences of their data recovery efforts.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "excessive color saturation",
+    "too much visual clarity or neatness"
+  ]
+}

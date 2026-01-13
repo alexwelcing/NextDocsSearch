@@ -10,6 +10,26 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          {/* Resource hints for performance */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+          <link rel="dns-prefetch" href="https://cookie-cdn.cookiepro.com" />
+
+          {/* Preload critical fonts */}
+          <link
+            rel="preload"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap"
+            as="style"
+          />
+          <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap"
+            rel="stylesheet"
+            media="print"
+            // @ts-ignore
+            onLoad="this.media='all'"
+          />
+
           <noscript
             dangerouslySetInnerHTML={{
               __html: `

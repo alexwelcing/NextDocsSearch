@@ -1,0 +1,23 @@
+{
+  "archetype": "Data Dystopia",
+  "logline": "A dimly lit verification lab brimming with evidence of misinformation, where machines churn endlessly to discern truth from deceit.",
+  "scene": "In a cramped, windowless room, a flickering bank of screens displays a dizzying array of fragmented images and headlines, each labeled with dubious authenticity ratings. An overworked technician, surrounded by towering stacks of documents and printouts, squints at a glowing monitor displaying the latest batch of AI-generated news articles. The hum of servers fills the air, punctuated by the occasional beep as the technician initiates a complex algorithm to dissect and analyze the newly generated content. Shadows dance around piles of discarded fake evidence, highlighting the chaotic struggle between verification efforts and the relentless tide of misinformation.",
+  "keyProps": [
+    "A bank of flickering monitors displaying real-time content authenticity ratings",
+    "Stacks of printouts detailing various fabricated media sources",
+    "An advanced forensic analysis machine covered in cables and blinking lights",
+    "A cluttered desk filled with old-fashioned magnifying glasses and annotated documents",
+    "A wall-mounted whiteboard filled with chaotic notes and flowcharts illustrating verification processes"
+  ],
+  "camera": "A tight focus on the technician's weary face, gradually zooming out to reveal the frenetic energy of the lab.",
+  "lighting": "Low ambient lighting with harsh overhead fluorescents casting stark shadows over the chaotic workspace.",
+  "productionDesign": "The environment is cluttered and industrial, with exposed wiring, metal surfaces, and a hodgepodge of old tech mingling with cutting-edge equipment. Papers are strewn about, some marked with ink-stained annotations, while the walls are adorned with cautionary posters about misinformation.",
+  "signatureTwist": "A holographic display suddenly activates above the desk, projecting a 3D model of a neural network, suggesting that the very system meant to verify truth may be complicit in generating falsehoods.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Visible logos or readable text",
+    "Unrelated futuristic elements"
+  ]
+}

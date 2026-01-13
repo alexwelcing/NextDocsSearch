@@ -27,7 +27,7 @@ import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
 import { IdeaExperience } from '@/components/ideas';
 
 // Re-export game types for convenience
-export type { GameState } from '@/components/ClickingGame';
+export type { GameState } from '@/components/3d/game/ClickingGame';
 
 interface Scene3DProps {
   /** World ID or configuration */

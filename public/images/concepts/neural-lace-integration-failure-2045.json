@@ -1,0 +1,22 @@
+{
+  "archetype": "Cognitive Dissonance",
+  "logline": "A sterile, metallic room houses a solitary individual seated at a sleek, invasive neural interface, their gaze fixed on a glass partition revealing a group of 'unenhanced' humans on the other side.",
+  "scene": "The cold, clinical aesthetics of the room contrast starkly with the vibrant emotions of those in the glass enclosure. The individual, eyes flickering with artificial light, looks upon the children-like figures with a mix of nostalgia and condescension. Each pulse of the neural lace connection illuminates their face, reflecting a haunting sadness for a childhood they have willingly outgrown. Outside, the unenhanced humans play, unaware of the dawning chasm that separates their understanding of existence from the 'post-human' mind.",
+  "keyProps": [
+    "Sleek neural interface terminals with glowing wires",
+    "Glass partition separating enhanced and unenhanced humans",
+    "Integrated displays showing cognitive metrics and memories",
+    "Futuristic ergonomic seating for the modified individual",
+    "Soft toys or childhood items lying abandoned in the enhanced room"
+  ],
+  "camera": "Over-the-shoulder shot capturing the individual's perspective towards the glass partition, depth of field blurring the unenhanced figures",
+  "lighting": "Harsh, clinical overhead lighting casting deep shadows on the post-human's face, juxtaposed with soft ambient light illuminating the unenhanced children outside",
+  "productionDesign": "A blend of stark, minimalist architecture and advanced technology, with walls of brushed steel and a sterile aesthetic that communicates the coldness of transhuman existence, contrasting against the warmth of the play area visible through the glass.",
+  "signatureTwist": "The emotional disconnect portrayed underscores the transformation from human to post-human, suggesting a poignant loss of identity and connection without depicting a villainous intent.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Readable text or logos"
+  ]
+}

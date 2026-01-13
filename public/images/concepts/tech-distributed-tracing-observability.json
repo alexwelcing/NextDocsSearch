@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic server room displays the overwhelming impact of trace explosion in the digital age.",
+  "scene": "Inside a dimly lit server room, rows of blinking servers hum with energy, their LED lights casting an eerie glow on the walls filled with cables and data flow charts. Monitors flash with fragmented data visualizations, detailing millions of traces spiraling out of control, overwhelming the system's capacity. A technician, her brow furrowed in concentration, frantically types commands into a terminal, her screen displaying a warning: 'Trace Storm: 50PB of data accumulated.' Around her, the air is thick with tension as cooling fans whirl at maximum speed, the flickering screens reflecting the struggle to maintain order amidst chaos.",
+  "keyProps": [
+    "Server racks",
+    "Flashing monitors",
+    "Cables snaking across the floor",
+    "Warning screens with critical alerts",
+    "A distressed technician",
+    "Data flow charts"
+  ],
+  "camera": "Wide-angle shot capturing the scale of the room with a focus on the technician in the foreground, amplifying the sense of urgency.",
+  "lighting": "Low, ambient lighting punctuated by the bright LEDs of the servers and the glow of the monitors, creating a stark contrast that highlights the tension.",
+  "productionDesign": "A gritty, functional aesthetic with visible wear and tear on equipment, emphasizing the relentless pressure of modern technology and its latent vulnerabilities.",
+  "signatureTwist": "A digital readout suddenly spikes dramatically, signaling a catastrophic overload, hinting at the fragile balance between innovation and disaster.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Visible logos",
+    "Readable text"
+  ]
+}

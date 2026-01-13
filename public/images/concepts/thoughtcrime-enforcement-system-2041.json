@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A somber scene of a dimly lit control room filled with massive screens displaying neural activity, capturing the weight of thought surveillance.",
+  "scene": "A darkened control room brimming with oversized monitors casting a blue-green glow on the faces of anxious analysts. Each screen displays complex neural patterns, the data flowing like an eerie digital river of thoughts being surveilled. In the foreground, an analyst stares, sweat beading on their forehead as they flag yet another innocuous thought—an imagined protest, a trivial daydream—triggering a red alert. The tension in the air is palpable, with the distant hum of machinery underscoring a stifling silence, as outside, citizens walk obliviously under the watchful eye of the state.",
+  "keyProps": [
+    "Large screens with pulsing neural waveforms",
+    "Surveillance control panels covered in buttons and lights",
+    "A worn-out employee handbook titled 'Cognitive Hygiene Guide'",
+    "Faded posters on the wall about 'Thought Compliance'",
+    "A coffee cup stained with nervous sweat, half-full",
+    "A digital clock counting down to the next flagging cycle"
+  ],
+  "camera": "Tight close-up on the screen juxtaposed with the analyst's conflicted expression, slowly pulling back to reveal the chaotic control room.",
+  "lighting": "Low, moody lighting with harsh chiaroscuro from the monitors that illuminate the room in ghostly hues.",
+  "productionDesign": "The control room is a mix of sterile government aesthetics and chaotic human elements, cluttered with papers and coffee cups, hinting at the mental strain of those tasked with enforcing thought compliance. The screens dominate the room, framed with cables and blinking lights, creating an oppressive atmosphere.",
+  "signatureTwist": "Reflections in the glass reveal not only the analysts but also shadowy figures of citizens outside, representing the omnipresent surveillance.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No readable text",
+    "No decorative elements",
+    "No bright lighting or optimistic tones"
+  ]
+}

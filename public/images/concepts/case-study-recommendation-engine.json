@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A tangled web of data streams flickers across illuminated monitors in a dimly lit control room.",
+  "scene": "The camera pans across a high-tech command center, where dozens of screens showcase real-time analytics of user behaviors, charts fluctuating wildly. Engineers in sleek jumpsuits monitor data spikes, the hum of machinery blending with the tense atmosphere. Windows reveal a stormy skyline of glass and steel outside, underscoring the chaotic urgency inside. A central screen displays the pulse of user engagement metrics—flashing red as a warning lights up, indicating a system overload. A close-up shows a team lead's furrowed brow as finger taps frantically on a touchscreen, an emergency protocol being activated to salvage the situation.",
+  "keyProps": [
+    "Large interactive digital map of user activity",
+    "Rows of flickering monitors displaying real-time data",
+    "Holographic projections of complex algorithms",
+    "Advanced data processing units with visible heat signatures",
+    "Emergency alert system with flashing red lights"
+  ],
+  "camera": "A sweeping, dramatic crane shot that captures the entire room, then tightens on the screens and the engineers' faces.",
+  "lighting": "Dim ambient lighting with sharp contrasts from screen glare, creating a high-stakes, urgent mood.",
+  "productionDesign": "A blend of industrial and futuristic, incorporating metallic surfaces, modular tech stations, and contrasting organic shapes to represent human presence amidst the machines.",
+  "signatureTwist": "As the team executes their emergency protocol, the screens glitch momentarily, revealing a surge of unexpected user data, hinting at an anomaly—an uncharted user behavior that could alter the foundation of their system.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No readable text",
+    "No logos",
+    "No decorative elements unrelated to the story"
+  ]
+}

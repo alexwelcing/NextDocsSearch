@@ -1,0 +1,21 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A cluttered control room filled with flickering screens displays real-time AI performance metrics and compliance dashboards, showcasing the tension of launching a high-stakes product under tight legal scrutiny.",
+  "scene": "Inside a dimly lit, high-tech control room, product managers and engineers huddle around a central console overloaded with digital displays. One screen shows a live feed of the AI's performance, the numbers rapidly changing as alerts flash red for potential compliance failures. An expansive wall features a large digital risk register, updated in real-time, with highlighted lines indicating issues like 'hallucinations' and 'data leak risks.' A tense atmosphere pervades the room as team members prepare for a crucial decision before the feature launch deadline looms.",
+  "keyProps": [
+    "A central console with touchscreen controls displaying real-time performance metrics",
+    "A large digital risk register on the wall with highlighted alerts and compliance notes",
+    "A stack of printed NIST documentation and launch checklists scattered across the tables",
+    "Smoke-filled air hinted at by illuminated emergency lights, adding pressure to the scene",
+    "Faint green glow from additional monitors showcasing AI model outputs and user feedback"
+  ],
+  "camera": "A low-angle shot captures the intensity of the team working together, emphasizing the large screens and the looming deadlines above their heads.",
+  "lighting": "Fluorescent overhead lights flicker intermittently, contrasting against the soft glow of monitors, creating a tense and urgent atmosphere.",
+  "productionDesign": "The control room is designed with industrial aesthetics, featuring metallic surfaces, exposed wiring, and a chaotic array of cables snaking across the floor, contributing to a gritty, high-tech vibe.",
+  "signatureTwist": "An unexpected notification pops up on one of the screens, displaying a critical compliance failure from the legal team that sends the room into a flurry of activity.",
+  "avoid": [
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Humanoid robots"
+  ]
+}

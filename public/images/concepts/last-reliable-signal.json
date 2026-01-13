@@ -1,0 +1,23 @@
+{
+  "archetype": "Signal Preservation",
+  "logline": "A lone figure examines an ancient, weathered object in a desolate urban landscape, symbolizing the last reliable signals in a world overwhelmed by AI-generated content.",
+  "scene": "In a dilapidated warehouse overtaken by nature, a solitary historian kneels before a dusty, locked chest, illuminated by the dim light filtering through broken windows. The chest's rusted lock contrasts sharply with the pristine digital interfaces surrounding it, representing the tension between physical authenticity and virtual deception. As the historian painstakingly records the chest’s details in a battered notebook, the sounds of distant drone surveillance can be heard, serving as a reminder of the omnipresence of AI. This intimate moment encapsulates the struggle to preserve what is real amidst a sea of artifice.",
+  "keyProps": [
+    "weathered chest",
+    "battered notebook",
+    "dilapidated warehouse",
+    "broken digital screens",
+    "surveillance drones"
+  ],
+  "camera": "A low-angle shot focusing on the historian and the chest, creating a sense of isolation and importance.",
+  "lighting": "Soft, diffused lighting with natural shadows to emphasize the decay and the weight of history.",
+  "productionDesign": "A juxtaposition of nature reclaiming urban decay, featuring cracked concrete, creeping vines, and scattered remnants of technology, like old screens and circuit boards littering the floor.",
+  "signatureTwist": "The historian wears a digital bracelet that intermittently flickers to life, suggesting a connection to a network of verification systems while contrasting the analog tools in their hands.",
+  "avoid": [
+    "no humanoid robots",
+    "no generic HUD overlays",
+    "no readable text",
+    "no logos",
+    "no abstract wallpaper"
+  ]
+}

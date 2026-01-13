@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A stark, dimly lit quantum control room hums with the energy of computation, showcasing the tension between human intellect and accelerating quantum technology.",
+  "scene": "In a brooding control room, an array of blinking consoles and screens displays complex calculations and shifting energy patterns. Shadows dance across the faces of engineers as they wrestle with the D-Wave quantum annealer, its sleek metallic design a stark contrast to the paper-strewn chaos around them. A central screen reveals a 3D visualization of a quantum optimization problem, its intricate pathways lighting up as the machine processes, creating a palpable tension as the team anticipates the results. Outside the bulletproof glass, the rain-slicked streets of a near-future metropolis pulse with life, a reminder of the stakes at hand.",
+  "keyProps": [
+    "D-Wave quantum annealing machine",
+    "Holographic display of QUBO optimization problem",
+    "Paper notes filled with hand-scrawled equations",
+    "Worn-out workstations with overstuffed cables",
+    "Coffee-stained mugs representing sleepless nights"
+  ],
+  "camera": "Tight close-ups of engineers' concentrated faces intercut with wide shots of the control room, highlighting the contrast between human emotion and cold technology.",
+  "lighting": "Dim ambient light with flickering LED accents from consoles, casting deep shadows to enhance the gritty atmosphere.",
+  "productionDesign": "The room is filled with retro-futuristic tech, mixing rusty industrial elements with high-tech displays, showcasing a world where quantum computing is both the pinnacle of achievement and a source of anxiety.",
+  "signatureTwist": "A sudden power surge causes momentary chaos, leading to an unexpected breakthrough in the optimization process, blurring the line between success and disaster.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

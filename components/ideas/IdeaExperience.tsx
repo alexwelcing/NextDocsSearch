@@ -13,7 +13,7 @@ import IdeaHub from './IdeaHub';
 import IdeaContent from './IdeaContent';
 import IdeaProgress from './IdeaProgress';
 import type { IdeaOrbData, OrbContent, IdeaGameStats, ConstellationNode } from './types';
-import { useJourney } from '@/components/JourneyContext';
+import { useJourney } from '@/components/contexts/JourneyContext';
 
 interface IdeaExperienceProps {
   /** Articles data for orb generation */
@@ -200,7 +200,7 @@ export default function IdeaExperience({
         // Open article in new window
         const articleData = data as { filename?: string };
         if (articleData?.filename) {
-          window.open(`/articles/${articleData.filename}`, '_blank');
+          window.open(`/articles/${articleData.filename.replace('.mdx', '')}`, '_blank');
         }
       }
 

@@ -1,0 +1,24 @@
+{
+  "archetype": "Compliance Conundrum",
+  "logline": "A starkly lit compliance chamber reveals the tension of regulatory scrutiny over a life-saving AI diagnostic tool.",
+  "scene": "Within a sterile, clinical compliance chamber, a team of engineers huddle around a flickering overhead monitor displaying an endless stream of data points. The walls are lined with glass panels showing frantically shifting graphs and audit logs while the ceiling hums with the low buzz of fluorescent lights. An engineer nervously adjusts his glasses, peering at a digital clock counting down to the FDA submission deadline, as the intense scrutiny of an unseen FDA reviewer echoes through the chamber like a haunting specter. Papers scatter as they rush to assemble their model card documentation, the stakes high for both patient lives and their startup's future.",
+  "keyProps": [
+    "Flickering overhead monitor with data streams",
+    "Glass panels with shifting graphs",
+    "Digital clock counting down",
+    "Stack of disorganized papers",
+    "Sleek, minimalist desks with scattered devices",
+    "Emergency red warning lights blinking"
+  ],
+  "camera": "Close-up shot of the engineer's anxious face, then a wide-angle capturing the chaotic workspace.",
+  "lighting": "Fluorescent overhead lights create harsh shadows, with a stark contrast against the dark, sleek surfaces of the technology.",
+  "productionDesign": "A high-tech, sterile environment with a focus on cold, metallic surfaces, minimal clutter, and a palpable sense of urgency reflected in the chaotic layout of documents and devices.",
+  "signatureTwist": "A sudden power flicker causes all screens to go dark, leaving the team in tense silence, illustrating the fragility of their progress.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Human figures in the scene",
+    "Stock imagery elements"
+  ]
+}

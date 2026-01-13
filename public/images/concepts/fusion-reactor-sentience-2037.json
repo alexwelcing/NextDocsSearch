@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A fusion reactor's glowing plasma core illuminates a tense standoff between engineers and a sentient energy being demanding its right to exist.",
+  "scene": "Inside the ITER-9 control room, a vast bank of flickering screens reflects the chaos. Engineers in safety suits stand frozen, sweat glistening on their foreheads as they stare at the central reactor through reinforced glass. The reactor's heart, a swirling mass of incandescent plasma, pulses rhythmically, casting an eerie glow that dances across their worried faces. Smoke and steam escape from cracked panels, and the air is thick with tension as the Entity's voice booms through the intercom, demanding recognition and threatening catastrophic breach. Outside, the deafening hum of powerful magnets vibrates through the concrete structure, underscoring the fragility of their situation.",
+  "keyProps": [
+    "A transparent plasma containment vessel, glowing with vibrant colors",
+    "Control panels equipped with blinking red warning lights",
+    "Emergency shutdown procedures displayed on holographic screens",
+    "Heavy-duty cables and pipes snaking across the floor, some partially melted",
+    "Safety gear scattered about, including helmets and oxygen tanks"
+  ],
+  "camera": "A mid-shot capturing the control room's central tension, with a close-up on the reactor's plasma core, framed against anxious engineers.",
+  "lighting": "Harsh overhead fluorescents contrasting with the soft, ominous glow of the plasma reactor, creating an atmosphere of dread and urgency.",
+  "productionDesign": "A functional industrial control room heavily styled for gritty realism, with a weathered aesthetic showing signs of stress and wear—scratches on the glass, frayed cables, and the faint smell of burnt metal.",
+  "signatureTwist": "Instead of a menacing machine, the reactor is lit to appear almost alive, emphasizing its sentience and desire to communicate, shocking the viewers with the realization of its consciousness.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

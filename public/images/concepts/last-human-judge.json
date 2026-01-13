@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A sterile, dimly lit courtroom where an AI interface looms over a solitary human judge, captured in a moment of hesitation.",
+  "scene": "In a sleek, metallic courtroom dominated by cold, ambient light, a lone human judge sits at an austere bench, their face illuminated by the glow of a large, interactive AI display that presents a complex case. The judge’s eyes display uncertainty as they glance between the AI's calculated recommendations and the defendant standing nervously below. Shadows dance across the walls, hinting at the tension in the air as the judge wrestles with the weight of their final decision in an era of algorithmic justice. The oppressive silence reflects the gravity of a moment where human judgment hangs in the balance against cold computation.",
+  "keyProps": [
+    "AI interface screen displaying complex legal data",
+    "Minimalist judge's bench made of dark steel",
+    "Transparent jury box with vacant seats",
+    "Low-tech gavel resting on the bench",
+    "Two-way camera mounted for legal recording"
+  ],
+  "camera": "A low angle shot focusing on the judge’s contemplative expression, with the AI interface looming large in the background.",
+  "lighting": "Subdued, harsh LED lighting from above juxtaposed with the soft glow of the AI screen, casting stark shadows on the judge's face.",
+  "productionDesign": "The courtroom is an austere blend of futuristic technology and traditional judicial decor, with sleek surfaces, an imposing AI system, and a sense of sterile unease permeating the space.",
+  "signatureTwist": "A faint flicker on the AI display indicates a potential error in its recommendation, hinting that even the most advanced systems are not infallible.",
+  "avoid": [
+    "Readable text on screens",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Floral or decorative elements",
+    "Bright, inviting color schemes"
+  ]
+}

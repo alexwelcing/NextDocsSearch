@@ -1,0 +1,23 @@
+{
+  "archetype": "Cultural Collapse",
+  "logline": "A weary professor's cluttered desk stands as a tribute to the last human endeavor in academia, overshadowed by the relentless march of AI.",
+  "scene": "Inside a dimly lit office, scattered papers and notes cover Dr. Sarah Chen's timeworn wooden desk. A single flickering fluorescent light casts harsh shadows across the space, highlighting the dust motes as they dance in the stale air. On one side, a decrepit old laptop displays a messy code editor filled with years of her work, while an AI-assisted monitor glows with the velocity of freshly generated papers, each ready for submission. A half-empty coffee cup sits precariously near the edge, a testament to countless sleepless nights spent in pursuit of understanding. The walls are lined with awards and degrees, but they feel more like relics of a bygone era, overshadowed by the looming presence of an advanced AI system humming softly in the background, perpetuating an existential crisis of relevance.",
+  "keyProps": [
+    "timeworn wooden desk",
+    "old laptop with a code editor",
+    "AI-assisted monitor displaying papers",
+    "half-empty coffee cup",
+    "awards and degrees on the wall",
+    "flickering fluorescent light"
+  ],
+  "camera": "Close-up on the desk, then a slow pan to the AI monitor, capturing the tension between the human and the machine.",
+  "lighting": "Harsh, flickering fluorescent light juxtaposed with the soft glow from the AI screen, creating a stark contrast between past and future.",
+  "productionDesign": "The office should feel cramped and cluttered, with a mix of modern tech and outdated research materials. Use worn furniture to evoke a sense of long-term dedication that is now overshadowed by sleek, sterile AI technology. Incorporate elements like dusty bookshelves and plants that are wilting, emphasizing the neglect of human effort in favor of robotic efficiency.",
+  "signatureTwist": "The desk has a 'Post-it note' reminder of her original hypothesis, symbolizing the fading significance of human intuition in the face of rapid AI advancement.",
+  "avoid": [
+    "no humanoid robots",
+    "no logos",
+    "no readable text",
+    "no abstract wallpaper"
+  ]
+}

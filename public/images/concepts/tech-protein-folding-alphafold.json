@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A high-tech lab filled with intricate equipment and swirling holographic displays, where researchers battle the enigmatic nature of protein folding.",
+  "scene": "Inside a dimly lit, sterile laboratory, a large cylindrical tank filled with a viscous solution bubbles ominously. On the walls, oversized screens display complex protein structures in vibrant 3D, shifting dynamically as if alive. A tense group of scientists hunch over their consoles, surrounded by glass vials and refracting lasers that analyze samples with precision. In a moment of frustration, one scientist slams a palm against a control panel, blurring a crucial protein structure on-screen that suddenly flickers, revealing a catastrophic conformation error due to misfolding. Outside the lab's reinforced glass, shadows of other researchers loom, whispering the implications of their failure.",
+  "keyProps": [
+    "Cylindrical tank of protein solution",
+    "3D holographic protein models",
+    "Glass vials with samples",
+    "Control panels with blinking lights",
+    "Advanced spectrometer",
+    "Refracting lasers"
+  ],
+  "camera": "Low angle shot that highlights the towering screens and the urgency of the scientists’ expressions.",
+  "lighting": "A mix of cold blue tones from the screens contrasting with warmer overhead fluorescents, creating a tense atmosphere.",
+  "productionDesign": "The lab is filled with stark, industrial materials - exposed metal beams, clean concrete surfaces, and high-tech equipment. The color palette is dominated by whites, greys, and hints of neon, enhancing the high-tech yet gritty feel.",
+  "signatureTwist": "Just as the protein model restructures, a sudden alarm sounds, indicating a potential contamination, raising the stakes of their research.",
+  "avoid": [
+    "watermarks",
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract elements",
+    "decorative features"
+  ]
+}

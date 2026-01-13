@@ -1,0 +1,21 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A frayed data server room illuminated by flickering overhead lights reveals the struggle between privacy and analytics.",
+  "scene": "In a dimly lit server room, rows of battered servers hum uneasily with the burden of anonymized data. An engineer, clad in a grease-stained jumpsuit, types furiously at an aging terminal, sweat beading on their brow as they grapple with a complex algorithm meant to introduce noise into the data streams. Wires snake across the floor like vines, and a digital display flickers ominously, displaying the diminishing privacy budget. Nearby, a stack of discarded hard drives looms, hinting at the cost of data retrieval gone awry, as the shadows seem to whisper the lost identities entangled within the code.",
+  "keyProps": [
+    "Aging server racks",
+    "Flickering fluorescent lights",
+    "An old terminal with a cluttered keyboard",
+    "Discarded hard drives stacked precariously",
+    "A whiteboard filled with complex equations and notes"
+  ],
+  "camera": "A low-angle shot that emphasizes the towering server racks, with the engineer in the foreground partially obscured by shadows.",
+  "lighting": "Harsh, flickering overhead lights create stark contrasts, casting deep shadows and highlighting the tension in the engineer's expression.",
+  "productionDesign": "The space is cluttered and chaotic, with wires hanging from the ceiling, scattered tools and coffee cups strewn about, creating a sense of urgency and desperation as the battle for data privacy unfolds.",
+  "signatureTwist": "A digital readout in the corner of the room glitches, unexpectedly revealing fragments of personal data still accessible despite the privacy measures.",
+  "avoid": [
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

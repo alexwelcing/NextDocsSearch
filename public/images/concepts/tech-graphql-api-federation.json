@@ -1,0 +1,22 @@
+{
+  "archetype": "Data Anomaly Encounter",
+  "logline": "A cluttered server room is illuminated by the glow of multiple screens displaying a chaotic array of disconnected GraphQL queries.",
+  "scene": "In a dimly lit server room, the walls are lined with towering racks of humming servers, each pulsating with lights that flicker erratically. In the foreground, a central terminal sits cluttered with cables and cooling fans, sparking as it processes a flood of requests. Graphical anomalies manifest on the screens—data points collapsing into themselves or appearing to multiply exponentially, revealing the chaos of the federated system under pressure. Shadows dance across the room as a technician, weary and focused, frantically types commands, attempting to untangle the resolution complexities that have emerged from the federated architecture.",
+  "keyProps": [
+    "Racks of servers with flickering lights",
+    "A central terminal with an array of cables",
+    "Screens displaying chaotic GraphQL queries and error messages",
+    "Cooling fans emitting steam",
+    "Tools and tech manuals scattered across the desk"
+  ],
+  "camera": "Wide-angle lens to capture the depth and chaos of the room, focusing on the central terminal while maintaining background detail of the server racks.",
+  "lighting": "Low-key lighting with harsh spotlights on the screens to emphasize the glowing data, creating a dramatic contrast between the shadows of the room and the illuminated technology.",
+  "productionDesign": "A hyper-realistic server room designed with a mix of recycled and futuristic tech, featuring real components like old mainframes and modern cloud servers, embodying a blend of past and future technology.",
+  "signatureTwist": "In the background, an unexpected visual glitch manifests on one of the screens, hinting at a deeper, underlying data corruption that could threaten the entire federated network.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No readable text or logos"
+  ]
+}

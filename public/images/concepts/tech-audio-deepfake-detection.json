@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A high-tech forensic analyst stares at a screen, revealing the moment a synthetic voice masquerades successfully as a human.",
+  "scene": "Inside a dimly lit control room, walls lined with screens displaying waveforms and spectrograms, an intense analyst adjusts her headphones, focusing intently on a file. The air is thick with tension as the synthetic voice plays back, its eerily calm tone echoing off the metal surfaces. Outside, a cityscape glows ominously, hinting at a society rife with deception. The camera zooms in on the analyst's furrowed brow, revealing beads of sweat that testify to the gravity of her work against an unseen adversary.",
+  "keyProps": [
+    "Multiple screens with audio waveforms",
+    "A high-tech audio interface with tactile buttons",
+    "Noise-cancelling headphones",
+    "A holographic display of voice authentication markers",
+    "A flickering red emergency light"
+  ],
+  "camera": "Close-up shots interspersed with wide angles of the control room, showcasing both the analyst's intense focus and the chaotic environment outside.",
+  "lighting": "Dim, with harsh overhead fluorescents casting stark shadows, creating a noir-like atmosphere that enhances the tension.",
+  "productionDesign": "Industrial, with metal and glass surfaces, wires running along the walls, and cluttered workstations filled with old-school forensic tools alongside cutting-edge tech.",
+  "signatureTwist": "A faint crackle emerges in the audio, hinting that the adversarial attack is actively learning from the detection attempts.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

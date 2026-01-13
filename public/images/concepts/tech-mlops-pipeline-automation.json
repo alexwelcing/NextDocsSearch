@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A cramped, dimly lit AI command center, filled with screens displaying fluctuating data, encapsulates the tension of monitoring an unstable machine learning model.",
+  "scene": "Rows of flickering monitors dominate the room, each showcasing real-time metrics and alerts of a failing AI model in the field. In the foreground, a worn-out technician, sweat beading on his brow, hunches over a keyboard, frantically typing commands as red warning lights blink ominously. The room is cluttered with old coffee cups and crumpled notes, hinting at long hours spent trying to stabilize the algorithm. Outside the reinforced glass walls, the stark expanse of a high-tech city looms, contrasting the chaos of the small command center. Tension mounts as an alarm sounds, heralding another setback in an already precarious situation.",
+  "keyProps": [
+    "Flickering monitors with data graphs",
+    "A cluttered desk with coffee cups",
+    "Worn keyboard and mouse",
+    "High-tech city visible through glass walls",
+    "Red warning lights and alarms"
+  ],
+  "camera": "A close-up on the technician's anxious face, panning slowly to reveal the chaotic screens behind him before pulling back to show the full command center.",
+  "lighting": "Gritty, low-key lighting with harsh shadows, punctuated by the cold glow of computer screens and flashing alarm lights, creating a tense atmosphere.",
+  "productionDesign": "The command center is an amalgam of high-tech and decay, with state-of-the-art equipment contrasted by the weariness of its occupants, showcasing the harsh realities of managing advanced technologies that remain stubbornly unpredictable.",
+  "signatureTwist": "A sudden power fluctuation causes all screens to go dark, plunging the room into silence and darkness, leaving the technician in a moment of desperate uncertainty.",
+  "avoid": [
+    "No humanoid robots",
+    "No readable text on screens",
+    "No logos or branding",
+    "No abstract wallpaper",
+    "No overly clean surfaces or futuristic utopias"
+  ]
+}

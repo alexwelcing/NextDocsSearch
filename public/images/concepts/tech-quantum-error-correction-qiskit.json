@@ -1,0 +1,24 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A chaotic control room filled with blinking consoles and frantic engineers monitors a holographic display of a quantum circuit grappling with error correction.",
+  "scene": "Inside a dimly-lit control room, engineers in lab coats pace anxiously around an enormous, interactive hologram displaying a complex quantum circuit grid. The air hums with tension as they track multiple data streams and erratic error messages flickering across various screens. One engineer frantically points to a visual representation of qubit states, while another types commands into a console, sweat glistening on their brow. The ambient glow of red warning lights contrasts starkly against the cool blue of the hologram, highlighting the high stakes of quantum error correction.",
+  "keyProps": [
+    "Holographic display of quantum circuit",
+    "Flashing consoles with error alerts",
+    "Worn-out lab coats of engineers",
+    "Flickering overhead industrial lights",
+    "Analog dials and gauges measuring quantum states"
+  ],
+  "camera": "Wide-angle lens capturing the entire control room atmosphere, with close-ups on frantic engineer faces and holographic displays.",
+  "lighting": "Harsh overhead lights mixed with dim emergency red lights creating a stark contrast, emphasizing urgency and technological tension.",
+  "productionDesign": "The control room is a mix of slick, cutting-edge technology juxtaposed with cluttered workbenches filled with notes and old quantum computing hardware, embodying the chaotic yet pioneering spirit of quantum research.",
+  "signatureTwist": "The moment of realization that the holographic circuit appears to glitch, reflecting a deeper problem within the quantum system itself, creating a sense of impending failure.",
+  "avoid": [
+    "Readable text",
+    "Logos",
+    "Watermarks",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper"
+  ]
+}

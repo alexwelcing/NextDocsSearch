@@ -9,7 +9,7 @@ import {
   getFeaturedTemplates,
   getRandomTemplate,
 } from '../lib/creation-templates';
-import { useJourney } from './JourneyContext';
+import { useJourney } from './contexts/JourneyContext';
 
 interface CreationStudioProps {
   onClose?: () => void;

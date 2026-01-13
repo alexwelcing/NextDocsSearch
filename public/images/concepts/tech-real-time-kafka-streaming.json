@@ -1,0 +1,22 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A dimly lit control center alive with flickering screens showcases the chaotic rhythm of real-time data streaming through a Kafka pipeline.",
+  "scene": "Inside a sprawling, gritty control room, a bank of monitors pulsates with colorful streams of data, depicting live sensor feeds from a sprawling metropolis. The atmosphere is thick with tension as engineers, clad in dirty work overalls, manage and monitor the incoming data surges on their screens, their faces illuminated by the glow of digital figures dancing frantically. An overhead digital display shows a cascading waterfall of real-time analytics while the clattering of keyboards punctuates the silence; it’s a race against time to process millions of messages per second. In the background, the faint hum of ventilation systems and the low chatter of concerned engineers add to the urgency of the scene, echoing the dependence on this robust data stream to keep the city’s lifeblood—its various systems—functioning correctly.",
+  "keyProps": [
+    "Flickering monitors displaying real-time data streams",
+    "Overhead digital analytics display",
+    "Worn office chairs with hastily scribbled notes",
+    "Dusty control panels with LED lights",
+    "A large clock ticking, counting down to a critical moment"
+  ],
+  "camera": "A handheld camera captures the dynamic energy of the room, weaving through the engineers and their bustling workstations, tightening in on the monitors showing the Kafka data flow.",
+  "lighting": "Dim overhead fluorescent lights intermixed with the vibrant color contrasts of the monitor screens, creating an intense yet moody atmosphere that highlights the urgency of the moment.",
+  "productionDesign": "Rugged and utilitarian, the control room is filled with outdated but functional tech, wires slung carelessly across surfaces, and a mix of vintage and modern equipment that speaks to the history of technology in this gritty future.",
+  "signatureTwist": "The moment a critical error flashes on one of the monitors, the engineers react instinctively, triggering a cascade of alarms, which reveals the true stakes of their task in this relentless data-driven world.",
+  "avoid": [
+    "No humanoid robots",
+    "No generic HUD overlays",
+    "No abstract wallpaper",
+    "No readable text or logos"
+  ]
+}

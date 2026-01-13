@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A medical pod cluster houses the lifeless yet contented bodies of permanent VR residents, juxtaposed against the stark reality of a derelict city crumbling around them.",
+  "scene": "Rows of sleek, futuristic medical pods sit in a dimly lit, sterile facility, their soft blue lights pulsating gently in the dark. Each pod cradles a body, motionless and connected to a web of cables delivering nutrients and maintaining vital functions, while a monitor above each pod displays serene landscapes from their chosen virtual worlds. Outside the large windows, the city is in disrepair, skyscrapers are shrouded in grime, and the streets are eerily vacant, suggesting that the world has been abandoned in favor of digital escapism. A lone technician in a hazmat suit checks the pods, reflecting on the stark contrast between the vibrant lives within and the decaying reality they forsake.",
+  "keyProps": [
+    "medical pods with glowing interfaces",
+    "neural cables and sensory devices",
+    "a monitor showing virtual landscapes",
+    "hazmat suit with equipment",
+    "abandoned cityscape visible through windows"
+  ],
+  "camera": "Wide-angle shot to capture the expanse of the facility and heighten the juxtaposition of life within the pods against the desolation outside.",
+  "lighting": "Cold, clinical overhead lights illuminate the pods, casting a sterile glow that enhances the eerie tranquility, while outside lights from the city glow dimly in the background, hinting at the chaos of reality.",
+  "productionDesign": "Futuristic medical facility designed for mass care, blending advanced technology with a dystopian atmosphere; the walls are smooth and white, accented with dark metallic components, contrasting sharply with the rundown, unkept exterior visible through the glass.",
+  "signatureTwist": "A single pod begins to show signs of malfunction, flickering its display and revealing a desperate plea written in virtual script, echoing the mental state of its occupant: 'Help me escape.'",
+  "avoid": [
+    "no humanoid robots",
+    "no readable text or logos",
+    "no generic HUD overlays",
+    "no abstract wallpaper",
+    "no bright and friendly designs"
+  ]
+}

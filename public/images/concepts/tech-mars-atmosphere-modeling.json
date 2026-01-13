@@ -1,0 +1,23 @@
+{
+  "archetype": "Control Room Dilemma",
+  "logline": "A weathered control panel flickers ominously, revealing a spiraling visual of Mars' warming atmosphere.",
+  "scene": "Inside a dimly lit terraforming control room, engineers and scientists huddle around a massive curved screen displaying a dynamic simulation of Mars’ atmosphere. Green and red graphs pulse ominously, indicating rising temperatures and CO2 levels. Steam rises from a nearby metal canister labeled 'SF6', hinting at the volatile gas being prepared for release. Each beep and glitch of the technology heightens the tension as a digital warning flashes: 'RUNAWAY RISK'. A stark view of the barren Martian landscape through a reinforced window contrasts sharply with the chaos inside, symbolizing the delicate balance of scientific ambition and environmental peril.",
+  "keyProps": [
+    "Curved holographic screen with atmospheric model simulation",
+    "Metal canister labeled 'SF6'",
+    "Rusty control panels with flickering lights",
+    "Data readouts showing alarming feedback loops",
+    "Reinforced glass window with view of Mars"
+  ],
+  "camera": "Wide-angle lens capturing the entire control room and the tension among the staff.",
+  "lighting": "Low-key lighting with green and red hues illuminating the screens, casting eerie shadows across the faces of the team.",
+  "productionDesign": "The control room feels utilitarian and aged, filled with exposed wires, bulky machinery, and scattered notes depicting calculations and warnings about the terraforming process.",
+  "signatureTwist": "A sudden power surge causes the simulation to glitch, suggesting a critical failure in the terraforming efforts, amplifying the urgency in the control room.",
+  "avoid": [
+    "Generic robot characters",
+    "Unrealistic futuristic technology",
+    "Bright, glossy aesthetics",
+    "Human-like figures",
+    "Abstract backgrounds"
+  ]
+}
