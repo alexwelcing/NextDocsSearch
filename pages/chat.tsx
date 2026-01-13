@@ -8,14 +8,15 @@ import dynamic from 'next/dynamic'
 import StylishFallback from '@/components/StylishFallback'
 import { SupabaseDataProvider } from '@/components/SupabaseDataContext'
 
-// Dynamically import ThreeSixty, using StylishFallback as the loading component.
-const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
+// Dynamically import Scene3D, using StylishFallback as the loading component.
+const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })
 
 const Chat = () => {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
+  const [articles, setArticles] = useState<any[]>([])
 
   // Centralized fetch logic so we don't repeat ourselves.
   async function getRandomImage() {
@@ -31,15 +32,41 @@ const Chat = () => {
     }
   }
 
-  // On mount, fetch the initial random background image.
+  async function fetchArticles() {
+    try {
+      const response = await fetch('/api/articles')
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      const data = await response.json()
+      setArticles(data)
+    } catch (error) {
+      console.error('Failed to fetch articles:', error)
+    }
+  }
+
+  // On mount, fetch the initial random background image and articles.
   useEffect(() => {
     getRandomImage()
+    fetchArticles()
   }, [])
 
   // Handler for when user wants a new background image.
   async function handleImageChange(): Promise<void> {
     await getRandomImage()
   }
+
+  // Build world config from random image
+  const worldConfig = React.useMemo(() => {
+    if (!currentImage) return 'default';
+    return {
+      id: 'dynamic-chat',
+      name: 'Dynamic Chat',
+      assets: {
+        fallbackPanorama: currentImage
+      }
+    } as any;
+  }, [currentImage]);
 
   return (
     <>
@@ -69,14 +96,10 @@ const Chat = () => {
       <SupabaseDataProvider>
         <CircleNav />
         <main className={`${styles.main} ${styles.gradientbg}`}>
-          {currentImage && (
-            // We no longer wrap ThreeSixty in <Suspense>—dynamic() handles the fallback
-            <ThreeSixty
-              currentImage={currentImage}
-              isDialogOpen={false}
-              onChangeImage={handleImageChange}
-            />
-          )}
+          <Scene3D
+            world={worldConfig}
+            articles={articles}
+          />
         </main>
         <SearchDialog />
         <Footer onImageChange={handleImageChange} showChangeScenery={false} />

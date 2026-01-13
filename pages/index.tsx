@@ -14,8 +14,8 @@ import styles from '@/styles/Home.module.css'
 import type { GameState } from '@/components/ClickingGame'
 import { useJourney } from '@/components/JourneyContext'
 
-// Dynamically import the 3D environment, same as your old Chat page
-const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
+// Dynamically import the 3D environment, using the new Scene3D orchestrator
+const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })
@@ -23,8 +23,9 @@ const ThreeSixty = dynamic(() => import('@/components/ThreeSixty'), {
 export default function HomePage() {
   // Reuse logic to fetch random background images
   const [currentImage, setCurrentImage] = useState<string | null>(null)
+  const [articles, setArticles] = useState<any[]>([])
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
-  const [gameState, setGameState] = useState<GameState>('IDLE')
+  const [gameState, setGameState] = useState<string>('idle')
 
   // Journey system
   const { achievements } = useJourney()
@@ -52,15 +53,41 @@ export default function HomePage() {
     }
   }
 
+  async function fetchArticles() {
+    try {
+      const response = await fetch('/api/articles')
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      const data = await response.json()
+      setArticles(data)
+    } catch (error) {
+      console.error('Failed to fetch articles:', error)
+    }
+  }
+
   // On initial mount, fetch a random background for the 3D environment
   useEffect(() => {
     getRandomImage()
+    fetchArticles()
   }, [])
 
   // Toggle function: 2D <-> 3D
   function handleToggle3D() {
     setIsIn3DMode((prev) => !prev)
   }
+
+  // Build world config from random image
+  const worldConfig = React.useMemo(() => {
+    if (!currentImage) return 'default';
+    return {
+      id: 'dynamic-home',
+      name: 'Dynamic Home',
+      assets: {
+        fallbackPanorama: currentImage
+      }
+    } as any;
+  }, [currentImage]);
 
   return (
     <>
@@ -95,7 +122,7 @@ export default function HomePage() {
 
       <SupabaseDataProvider>
         {/* Our global nav - shrink during gameplay */}
-        <CircleNav isGamePlaying={gameState === 'PLAYING'} />
+        <CircleNav isGamePlaying={gameState === 'playing'} />
 
         {/*
           If in 3D mode, we show a full-screen 3D environment + chat.
@@ -103,27 +130,15 @@ export default function HomePage() {
         */}
         {isIn3DMode ? (
           <main className={`${styles.main} ${styles.gradientbg}`}>
-            {/* Show the ThreeSixty VR environment */}
-            {currentImage && (
-              <ThreeSixty
-                currentImage={currentImage}
-                isDialogOpen={false}
-                onChangeImage={getRandomImage}
-                onGameStateChange={setGameState}
-              />
-            )}
+            {/* Show the Scene3D modern environment */}
+            <Scene3D
+              world={worldConfig}
+              articles={articles}
+              onGameStateChange={setGameState}
+            />
 
             {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'PLAYING' && <SearchDialog />}
-
-            {/* Journey UI - Quest Tracker */}
-            {gameState !== 'PLAYING' && gameState !== 'COUNTDOWN' && <QuestNotification />}
-
-            {/* Achievement Unlock Popup */}
-            <AchievementUnlock
-              achievement={currentAchievement}
-              onDismiss={() => setCurrentAchievement(null)}
-            />
+            {gameState !== 'playing' && <SearchDialog />}
 
             {/* Button to go back to 2D home */}
             <div className="absolute top-4 left-4 z-50">

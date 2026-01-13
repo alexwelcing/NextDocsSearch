@@ -108,8 +108,6 @@ export default function CreationStudio({ onClose }: CreationStudioProps) {
     // Track save
     updateCreationProgress('saved', 1);
     unlockAchievement('creation-saved');
-
-    alert('Creation saved to gallery!');
   };
 
   const categories: Array<{ id: ThemeCategory | 'all'; label: string }> = [
@@ -264,7 +262,19 @@ export default function CreationStudio({ onClose }: CreationStudioProps) {
             {/* Save Button */}
             {generatedConfig && (
               <button
-                onClick={handleSave}
+                onClick={(e) => {
+                  handleSave();
+                  const btn = e.currentTarget;
+                  const originalText = btn.innerText;
+                  btn.innerText = 'Saved!';
+                  btn.disabled = true;
+                  btn.classList.add('bg-gray-600');
+                  setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('bg-gray-600');
+                  }, 2000);
+                }}
                 className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition-colors"
               >
                 💾 Save to Gallery

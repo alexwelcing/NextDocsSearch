@@ -24,6 +24,7 @@ import SceneCamera from './SceneCamera';
 
 import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
 import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
+import { IdeaExperience } from '@/components/ideas';
 
 // Re-export game types for convenience
 export type { GameState } from '@/components/ClickingGame';
@@ -37,12 +38,16 @@ interface Scene3DProps {
   enableXR?: boolean;
   /** Show performance stats (dev mode) */
   showStats?: boolean;
+  /** Articles data for the idea experience */
+  articles?: any[];
   /** Children to render in the scene */
   children?: React.ReactNode;
   /** Callback when scene is ready */
   onReady?: () => void;
   /** Callback for camera mode changes */
   onCameraModeChange?: (mode: CameraMode) => void;
+  /** Callback for game state changes */
+  onGameStateChange?: (state: string) => void;
 }
 
 const Container = styled.div`
@@ -77,9 +82,11 @@ export default function Scene3D({
   quality: qualityOverride,
   enableXR = true,
   showStats = process.env.NODE_ENV === 'development',
+  articles,
   children,
   onReady,
   onCameraModeChange,
+  onGameStateChange,
 }: Scene3DProps) {
   // Scene state
   const [worldConfig, setWorldConfig] = useState<WorldConfig>(DEFAULT_WORLD);
@@ -174,8 +181,10 @@ export default function Scene3D({
                 cameraMode={cameraMode}
                 showCinematic={showCinematic}
                 cinematicProgress={cinematicProgress}
+                articles={articles}
                 onCinematicComplete={handleCinematicComplete}
                 onCinematicProgress={handleCinematicProgress}
+                onGameStateChange={onGameStateChange}
               >
                 {children}
               </SceneContent>
@@ -187,8 +196,10 @@ export default function Scene3D({
             cameraMode={cameraMode}
             showCinematic={showCinematic}
             cinematicProgress={cinematicProgress}
+            articles={articles}
             onCinematicComplete={handleCinematicComplete}
             onCinematicProgress={handleCinematicProgress}
+            onGameStateChange={onGameStateChange}
           >
             {children}
           </SceneContent>
@@ -208,16 +219,20 @@ function SceneContent({
   cameraMode,
   showCinematic,
   cinematicProgress,
+  articles,
   onCinematicComplete,
   onCinematicProgress,
+  onGameStateChange,
   children,
 }: {
   worldConfig: WorldConfig;
   cameraMode: CameraMode;
   showCinematic: boolean;
   cinematicProgress: number;
+  articles?: any[];
   onCinematicComplete: () => void;
   onCinematicProgress: (progress: number) => void;
+  onGameStateChange?: (state: string) => void;
   children?: React.ReactNode;
 }) {
   const capabilities = useSceneCapabilities();
@@ -246,6 +261,15 @@ function SceneContent({
         onCinematicComplete={onCinematicComplete}
         onCinematicProgress={onCinematicProgress}
       />
+
+      {/* Idea Experience - The new spatial content system */}
+      {!showCinematic && (
+        <IdeaExperience 
+          articles={articles} 
+          onGameStateChange={onGameStateChange}
+          isActive={true}
+        />
+      )}
 
       {/* Scene children (game, UI, etc.) */}
       {children}

@@ -14,6 +14,13 @@ import { Html, RoundedBox, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import type { OrbContent, OrbContentType } from './types';
 import { ORB_COLORS } from './types';
+import Generated3DObject from '../Generated3DObject';
+import { generateFromPrompt } from '@/lib/generators/sceneComposer';
+import { ParsedPrompt } from '@/lib/generators/types';
+import { getRandomTemplate } from '@/lib/creation-templates';
+
+import { useCompletion } from 'ai/react';
+import { X, Loader, User, Frown, CornerDownLeft, Search, Wand, ArrowLeftCircle } from 'lucide-react';
 
 interface IdeaContentProps {
   content: OrbContent | null;
@@ -94,6 +101,14 @@ export default function IdeaContent({
 
           {content.type === 'quiz' && (
             <QuizView
+              content={content}
+              onClose={onClose}
+              onAction={onAction}
+            />
+          )}
+
+          {content.type === 'creation' && (
+            <CreationView
               content={content}
               onClose={onClose}
               onAction={onAction}
@@ -209,20 +224,38 @@ function ChatView({
 }) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([]);
+  
+  const { complete, completion, isLoading, error } = useCompletion({
+    api: '/api/vector-search',
+  });
 
-  const handleSend = useCallback(() => {
-    if (!input.trim()) return;
-    setMessages((m) => [...m, { role: 'user', text: input }]);
-    onAction?.('ask', input);
+  // Update messages when completion arrives
+  useEffect(() => {
+    if (completion && !isLoading) {
+      setMessages(prev => {
+        const last = prev[prev.length - 1];
+        if (last?.role === 'assistant') {
+          return [...prev.slice(0, -1), { role: 'assistant', text: completion }];
+        }
+        return [...prev, { role: 'assistant', text: completion }];
+      });
+    }
+  }, [completion, isLoading]);
+
+  const handleSend = useCallback(async () => {
+    if (!input.trim() || isLoading) return;
+    
+    const userMessage = input;
+    setMessages((m) => [...m, { role: 'user', text: userMessage }]);
     setInput('');
-    // Simulate response
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
-        { role: 'assistant', text: 'I am thinking about your question...' },
-      ]);
-    }, 500);
-  }, [input, onAction]);
+    onAction?.('ask', userMessage);
+    
+    try {
+      await complete(userMessage);
+    } catch (err) {
+      console.error('Chat error:', err);
+    }
+  }, [input, isLoading, complete, onAction]);
 
   return (
     <Html center transform distanceFactor={5}>
@@ -250,21 +283,43 @@ function ChatView({
             overflow: 'auto',
             marginBottom: '12px',
             fontSize: '12px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
           }}
         >
+          {messages.length === 0 && (
+            <div style={{ opacity: 0.5, fontStyle: 'italic', textAlign: 'center', marginTop: '20px' }}>
+              The Oracle is listening...
+            </div>
+          )}
           {messages.map((m, i) => (
             <div
               key={i}
               style={{
-                marginBottom: '8px',
-                padding: '6px 10px',
-                background: m.role === 'user' ? 'rgba(68,136,255,0.2)' : 'rgba(255,255,255,0.1)',
-                borderRadius: '4px',
+                padding: '8px 12px',
+                background: m.role === 'user' ? 'rgba(68,136,255,0.15)' : 'rgba(255,255,255,0.05)',
+                borderRadius: '8px',
+                border: `1px solid ${m.role === 'user' ? 'rgba(68,136,255,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
+                maxWidth: '90%',
               }}
             >
               {m.text}
             </div>
           ))}
+          {isLoading && !completion && (
+            <div style={{ display: 'flex', gap: '4px', padding: '8px' }}>
+              <div className="animate-bounce">.</div>
+              <div className="animate-bounce" style={{ animationDelay: '0.2s' }}>.</div>
+              <div className="animate-bounce" style={{ animationDelay: '0.4s' }}>.</div>
+            </div>
+          )}
+          {error && (
+            <div style={{ color: '#ff4444', fontSize: '10px' }}>
+              Error connecting to Oracle.
+            </div>
+          )}
         </div>
 
         {/* Input */}
@@ -275,6 +330,7 @@ function ChatView({
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="What do you seek?"
+            disabled={isLoading}
             style={{
               flex: 1,
               padding: '8px 12px',
@@ -284,10 +340,12 @@ function ChatView({
               color: 'white',
               fontSize: '12px',
               outline: 'none',
+              opacity: isLoading ? 0.5 : 1,
             }}
           />
           <button
             onClick={handleSend}
+            disabled={isLoading || !input.trim()}
             style={{
               padding: '8px 16px',
               background: ORB_COLORS.chat,
@@ -297,9 +355,10 @@ function ChatView({
               cursor: 'pointer',
               fontFamily: 'monospace',
               fontSize: '12px',
+              opacity: (isLoading || !input.trim()) ? 0.5 : 1,
             }}
           >
-            Ask
+            {isLoading ? '...' : 'Ask'}
           </button>
         </div>
       </div>
@@ -412,6 +471,146 @@ function QuizView({
         )}
       </div>
     </Html>
+  );
+}
+
+/**
+ * Creation content view
+ */
+function CreationView({
+  content,
+  onClose,
+  onAction,
+}: {
+  content: OrbContent;
+  onClose?: () => void;
+  onAction?: (action: string, data?: unknown) => void;
+}) {
+  const [prompt, setPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [config, setConfig] = useState<ParsedPrompt | null>(null);
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) return;
+    setIsGenerating(true);
+    try {
+      const result = await generateFromPrompt(prompt, false);
+      if (result.success) {
+        setConfig(result.config);
+        onAction?.('create', result.config);
+      }
+    } catch (err) {
+      console.error('Generation failed:', err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleRandom = () => {
+    const template = getRandomTemplate();
+    if (template.baseConfig) {
+      setConfig(template.baseConfig as ParsedPrompt);
+      setPrompt(template.suggestedPrompts?.[0] || template.description);
+    }
+  };
+
+  return (
+    <group>
+      {/* 3D Preview Space */}
+      <group position={[1.2, 0, 0.5]}>
+        {config ? (
+          <React.Suspense fallback={null}>
+            <group scale={0.4}>
+              <Generated3DObject config={config} />
+            </group>
+          </React.Suspense>
+        ) : (
+          <Text
+            fontSize={0.1}
+            color="#444"
+            position={[0, 0, 0]}
+            maxWidth={2}
+            textAlign="center"
+          >
+            Enter a prompt to manifest an idea...
+          </Text>
+        )}
+      </group>
+
+      {/* UI Overlay */}
+      <Html position={[-1, 0, 0.2]} center transform distanceFactor={5}>
+        <div
+          style={{
+            width: '180px',
+            color: 'white',
+            fontFamily: 'system-ui, sans-serif',
+          }}
+        >
+          <h3
+            style={{
+              color: ORB_COLORS.creation,
+              margin: '0 0 12px 0',
+              fontSize: '14px',
+            }}
+          >
+            Creation Studio
+          </h3>
+
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="A floating crystal..."
+            style={{
+              width: '100%',
+              height: '60px',
+              padding: '8px',
+              background: 'rgba(255,255,255,0.1)',
+              border: `1px solid ${ORB_COLORS.creation}`,
+              borderRadius: '4px',
+              color: 'white',
+              fontSize: '11px',
+              marginBottom: '8px',
+              resize: 'none',
+              outline: 'none',
+            }}
+          />
+
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={handleGenerate}
+              disabled={isGenerating}
+              style={{
+                flex: 1,
+                padding: '8px',
+                background: ORB_COLORS.creation,
+                border: 'none',
+                borderRadius: '4px',
+                color: 'white',
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 'bold',
+              }}
+            >
+              {isGenerating ? '...' : 'Manifest'}
+            </button>
+            <button
+              onClick={handleRandom}
+              style={{
+                padding: '8px',
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid #444',
+                borderRadius: '4px',
+                color: 'white',
+                cursor: 'pointer',
+                fontSize: '11px',
+              }}
+            >
+              🎲
+            </button>
+          </div>
+        </div>
+      </Html>
+    </group>
   );
 }
 
