@@ -117,10 +117,28 @@ export const ARTICLE_COLLECTIONS = {
     title: 'The Backstory Chronicles',
     description: 'A 20-part narrative following the development of transformative AI from 2026-2030.',
     slugPattern: /^backstory-\d{2}-/,
-    articles: Array.from({ length: 20 }, (_, i) => {
-      const num = String(i + 1).padStart(2, '0');
-      return `backstory-${num}`;
-    }),
+    articles: [
+      'backstory-01-first-day-2026-01',
+      'backstory-02-first-breakthroughs-2026-03',
+      'backstory-03-neural-interface-2026-05',
+      'backstory-04-year-one-complete-2026-12',
+      'backstory-05-scaling-up-2027-02',
+      'backstory-06-ai-awakening-2027-05',
+      'backstory-07-fusion-nanotech-2027-09',
+      'backstory-08-year-two-reflections-2027-12',
+      'backstory-09-the-race-begins-2028-02',
+      'backstory-10-alien-code-2028-05',
+      'backstory-11-quantum-crypto-break-2028-08',
+      'backstory-12-year-three-2028-12',
+      'backstory-13-production-planning-2029-02',
+      'backstory-14-bidirectional-bci-2029-05',
+      'backstory-15-shutdown-protocols-2029-08',
+      'backstory-16-point-of-no-return-2029-11',
+      'backstory-17-launch-day-2030-01',
+      'backstory-18-first-contact-2030-03',
+      'backstory-19-global-deployment-2030-06',
+      'backstory-20-new-world-2030-12',
+    ],
   },
   productManagement: {
     title: 'AI Product Management Guide',
@@ -182,9 +200,11 @@ export function getFeaturedArticles(limit?: number): FeaturedArticle[] {
  * Get articles by tag
  */
 export function getArticlesByTag(tag: string): FeaturedArticle[] {
-  return [...FEATURED_ARTICLES, ...EXTENDED_FEATURED].filter((article) =>
-    article.tags.includes(tag)
-  );
+  const all = [...FEATURED_ARTICLES, ...EXTENDED_FEATURED];
+  return all.filter((article) => {
+    // Compatible with ES5
+    return article.tags.indexOf(tag) !== -1;
+  });
 }
 
 /**
@@ -198,16 +218,24 @@ export function getCollection(key: keyof typeof ARTICLE_COLLECTIONS) {
  * Check if an article is featured
  */
 export function isFeatured(slug: string): boolean {
-  return [...FEATURED_ARTICLES, ...EXTENDED_FEATURED].some(
-    (article) => article.slug === slug
-  );
+  const all = [...FEATURED_ARTICLES, ...EXTENDED_FEATURED];
+  for (let i = 0; i < all.length; i++) {
+    if (all[i].slug === slug) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
  * Get featured article metadata
  */
 export function getFeaturedMetadata(slug: string): FeaturedArticle | undefined {
-  return [...FEATURED_ARTICLES, ...EXTENDED_FEATURED].find(
-    (article) => article.slug === slug
-  );
+  const all = [...FEATURED_ARTICLES, ...EXTENDED_FEATURED];
+  for (let i = 0; i < all.length; i++) {
+    if (all[i].slug === slug) {
+      return all[i];
+    }
+  }
+  return undefined;
 }
