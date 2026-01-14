@@ -303,6 +303,7 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [debugMode, setDebugMode] = useState(false); // Toggle with keyboard shortcut
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -363,9 +364,16 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
     setIsFullscreen(false);
   };
 
-  // Keyboard navigation
+  // Keyboard navigation and debug toggle
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Debug mode toggle (Shift+D)
+      if (e.shiftKey && e.key === 'D') {
+        setDebugMode(prev => !prev);
+        console.log('[ArticleImageSlideshow] Debug mode:', !debugMode);
+        return;
+      }
+
       if (!isFullscreen || images.length === 0) return;
 
       if (e.key === 'ArrowLeft') goToPrevious();
@@ -375,7 +383,7 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isFullscreen, images.length, goToPrevious, goToNext]);
+  }, [isFullscreen, images.length, goToPrevious, goToNext, debugMode]);
 
   if (loading) {
     return <LoadingState>Loading images...</LoadingState>;
@@ -393,26 +401,57 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
         <SlideshowHeader>
           <SlideshowTitle>
             <ImageIcon />
-            Article Gallery
+            Article Gallery {debugMode && '🔍'}
           </SlideshowTitle>
           <ImageCounter>
             {currentIndex + 1} / {images.length}
           </ImageCounter>
         </SlideshowHeader>
 
+        {debugMode && (
+          <div style={{
+            background: 'rgba(255, 215, 0, 0.1)',
+            border: '1px solid rgba(255, 215, 0, 0.3)',
+            padding: '12px',
+            marginBottom: '16px',
+            borderRadius: '8px',
+            fontSize: '0.85rem',
+            color: '#ffd700'
+          }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>Debug Info (Press Shift+D to toggle):</div>
+            <div>Total images: {images.length}</div>
+            <div>Article slug: {articleSlug}</div>
+            {images.map((img, i) => (
+              <div key={img.id} style={{ marginTop: '8px', padding: '8px', background: 'rgba(0,0,0,0.3)', borderRadius: '4px' }}>
+                <div>#{i + 1} - {img.type.toUpperCase()} - {img.id}</div>
+                <div style={{ wordBreak: 'break-all', fontSize: '0.75rem', color: '#9ca3af' }}>
+                  {img.url}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         <SlideshowContainer>
           {images.map((image, index) => (
             <SlideImage key={image.id} $isActive={index === currentIndex}>
               <ImageWrapper onClick={openFullscreen}>
-                <Image
+                {/* Using regular img tag for better debugging */}
+                <img
                   src={image.url}
                   alt={image.alt_text || image.title || 'Article image'}
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  sizes="(max-width: 768px) 100vw, 800px"
-                  unoptimized={!image.url.includes('supabase.co')} // Don't optimize external URLs
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    display: 'block'
+                  }}
                   onError={(e) => {
                     console.error('[ArticleImageSlideshow] Failed to load image:', image.url);
+                    console.error('[ArticleImageSlideshow] Error event:', e);
+                  }}
+                  onLoad={() => {
+                    console.log('[ArticleImageSlideshow] Successfully loaded image:', image.url);
                   }}
                 />
                 <ImageOverlay>
@@ -421,6 +460,11 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
                     {image.title || 'Untitled'}
                   </ImageTitle>
                   {image.caption && <ImageCaption>{image.caption}</ImageCaption>}
+                  {debugMode && (
+                    <ImageCaption style={{ marginTop: '8px', fontSize: '0.7rem', wordBreak: 'break-all' }}>
+                      URL: {image.url}
+                    </ImageCaption>
+                  )}
                 </ImageOverlay>
               </ImageWrapper>
             </SlideImage>
@@ -446,13 +490,15 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
                 $isActive={index === currentIndex}
                 onClick={() => goToImage(index)}
               >
-                <Image
+                <img
                   src={image.url}
                   alt={image.title || 'Thumbnail'}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="100px"
-                  unoptimized={!image.url.includes('supabase.co')}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block'
+                  }}
                   onError={(e) => {
                     console.error('[ArticleImageSlideshow] Failed to load thumbnail:', image.url);
                   }}
@@ -473,13 +519,17 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
         </CloseButton>
         <FullscreenImage onClick={(e) => e.stopPropagation()}>
           {currentImage && (
-            <Image
+            <img
               src={currentImage.url}
               alt={currentImage.alt_text || currentImage.title || 'Fullscreen image'}
-              width={currentImage.width || 1200}
-              height={currentImage.height || 800}
-              style={{ maxWidth: '100%', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain' }}
-              unoptimized={!currentImage.url.includes('supabase.co')}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '90vh',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+                display: 'block'
+              }}
               onError={(e) => {
                 console.error('[ArticleImageSlideshow] Failed to load fullscreen image:', currentImage.url);
               }}
