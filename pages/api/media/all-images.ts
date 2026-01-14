@@ -80,13 +80,14 @@ export default async function handler(
       console.error('Error fetching article media:', mediaError);
     }
 
-    // Fetch generated artwork
+    // Fetch generated artwork - prioritize those with storage_path (permanent URLs)
     const { data: artworkData, error: artworkError } = await supabase
       .from('article_art_options')
       .select('*')
       .eq('article_slug', slug)
       .eq('status', 'completed')
-      .order('created_at', { ascending: true });
+      .order('storage_path', { ascending: false, nullsFirst: false }) // Prioritize images with storage_path
+      .order('created_at', { ascending: false }); // Then most recent
 
     if (artworkError) {
       console.error('Error fetching artwork:', artworkError);
@@ -154,8 +155,28 @@ export default async function handler(
       }
     }
 
-    // Sort all images by creation date (most recent first for slideshow)
-    images.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    // Sort all images - prioritize artwork with storage_path, then by date
+    images.sort((a, b) => {
+      // Prioritize artwork over media
+      if (a.type === 'artwork' && b.type === 'media') return -1;
+      if (a.type === 'media' && b.type === 'artwork') return 1;
+
+      // Within artwork, prioritize those with storage_path (permanent URLs from Supabase)
+      if (a.type === 'artwork' && b.type === 'artwork') {
+        const aHasStorage = a.url.includes('supabase.co');
+        const bHasStorage = b.url.includes('supabase.co');
+        if (aHasStorage && !bHasStorage) return -1;
+        if (!aHasStorage && bHasStorage) return 1;
+      }
+
+      // Finally sort by date (most recent first)
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+
+    // If no image is explicitly selected, auto-select the best one (first in sorted list)
+    if (!selectedImage && images.length > 0) {
+      selectedImage = images[0];
+    }
 
     return res.status(200).json({
       success: true,

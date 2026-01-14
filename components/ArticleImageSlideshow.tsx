@@ -310,19 +310,31 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
         const response = await fetch(`/api/media/all-images?slug=${articleSlug}`);
         const data: AllImagesResponse = await response.json();
 
+        console.log(`[ArticleImageSlideshow] Fetched ${data.count} images for article: ${articleSlug}`);
+
         if (data.success && data.images.length > 0) {
+          console.log('[ArticleImageSlideshow] Images:', data.images.map(img => ({
+            id: img.id,
+            type: img.type,
+            url: img.url.substring(0, 80) + '...',
+            hasStorage: img.url.includes('supabase.co'),
+          })));
+
           setImages(data.images);
 
           // If there's a selected image, show it first
           if (data.selectedImage) {
+            console.log('[ArticleImageSlideshow] Selected image:', data.selectedImage.id);
             const selectedIndex = data.images.findIndex(img => img.id === data.selectedImage?.id);
             if (selectedIndex !== -1) {
               setCurrentIndex(selectedIndex);
             }
           }
+        } else {
+          console.log('[ArticleImageSlideshow] No images found or API returned error:', data.error);
         }
       } catch (error) {
-        console.error('Error fetching images:', error);
+        console.error('[ArticleImageSlideshow] Error fetching images:', error);
       } finally {
         setLoading(false);
       }
@@ -398,6 +410,10 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
                   fill
                   style={{ objectFit: 'contain' }}
                   sizes="(max-width: 768px) 100vw, 800px"
+                  unoptimized={!image.url.includes('supabase.co')} // Don't optimize external URLs
+                  onError={(e) => {
+                    console.error('[ArticleImageSlideshow] Failed to load image:', image.url);
+                  }}
                 />
                 <ImageOverlay>
                   <ImageTitle>
@@ -436,6 +452,10 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
                   fill
                   style={{ objectFit: 'cover' }}
                   sizes="100px"
+                  unoptimized={!image.url.includes('supabase.co')}
+                  onError={(e) => {
+                    console.error('[ArticleImageSlideshow] Failed to load thumbnail:', image.url);
+                  }}
                 />
                 <TypeBadge $type={image.type}>
                   {image.type === 'artwork' ? <Zap /> : <ImageIcon />}
@@ -459,6 +479,10 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
               width={currentImage.width || 1200}
               height={currentImage.height || 800}
               style={{ maxWidth: '100%', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain' }}
+              unoptimized={!currentImage.url.includes('supabase.co')}
+              onError={(e) => {
+                console.error('[ArticleImageSlideshow] Failed to load fullscreen image:', currentImage.url);
+              }}
             />
           )}
         </FullscreenImage>
