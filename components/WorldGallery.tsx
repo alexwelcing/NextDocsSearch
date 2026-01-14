@@ -5,7 +5,7 @@ import { useWorldTracker, WorldInfo } from '@/lib/hooks/useWorldTracker';
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image';
   path: string;
 }
 
