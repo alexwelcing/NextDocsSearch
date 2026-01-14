@@ -3,6 +3,7 @@
 ## Vision
 
 Transform the 360 scene from a "menu-based app" into an **immersive idea space** where:
+
 - Content, games, and interactions are spatially integrated
 - Progress is visible as environmental transformation
 - Discovery replaces navigation
@@ -13,9 +14,11 @@ Transform the 360 scene from a "menu-based app" into an **immersive idea space**
 ## Core Concept: The Idea Constellation
 
 Instead of:
+
 - Tablet → Modal menu → Content
 
 We create:
+
 - **Floating idea orbs** in 3D space that you can explore
 - **Energy/activation** mechanic (the game) that unlocks deeper content
 - **Visual progression** as the space evolves
@@ -44,6 +47,7 @@ type OrbContent =
 ```
 
 **Visual States:**
+
 - Dormant: Dim, gray, slight pulse
 - Awakening: Bright, moving, game target
 - Active: Glowing halo, click to engage
@@ -53,7 +57,7 @@ type OrbContent =
 
 Replaces InteractiveTablet with a spatial hub:
 
-```
+```txt
                     ○ Article Orb
                    /
     ○ Quiz ─── [CORE] ─── ○ Chat
@@ -64,6 +68,7 @@ Replaces InteractiveTablet with a spatial hub:
 ```
 
 **Core Behaviors:**
+
 - Central "core" pulses with energy
 - Active orbs orbit around the core
 - Dormant orbs float in outer ring
@@ -74,6 +79,7 @@ Replaces InteractiveTablet with a spatial hub:
 Instead of "score points," the game becomes "awaken ideas":
 
 **Flow:**
+
 1. Click core to start "Awakening"
 2. Dormant orbs begin moving/glowing
 3. Click orbs to "awaken" them (same satisfying mechanic)
@@ -81,6 +87,7 @@ Instead of "score points," the game becomes "awaken ideas":
 5. End: See what you've unlocked
 
 **Scoring becomes:**
+
 - Ideas Awakened (count)
 - Insight Level (combo-based)
 - Discovery Bonus (golden = rare content)
@@ -89,7 +96,7 @@ Instead of "score points," the game becomes "awaken ideas":
 
 Background visualization of journey:
 
-```
+```txt
 Phase 1: Single point of light
 Phase 2: Line connecting to first idea
 Phase 3: Triangle of awakened ideas
@@ -98,6 +105,7 @@ Phase 5: Full mandala/galaxy formation
 ```
 
 Each completed interaction adds to the constellation:
+
 - Questions asked = blue nodes
 - Articles read = green nodes
 - Quizzes passed = purple nodes
@@ -145,7 +153,8 @@ Each completed interaction adds to the constellation:
 ### Content Engagement (Replacing Modals)
 
 **Article Orb:**
-```
+
+```txt
 Click → Orb expands into reading surface
        Text flows on curved 3D surface
        Scroll via gesture or buttons
@@ -153,14 +162,16 @@ Click → Orb expands into reading surface
 ```
 
 **Chat Orb (Core):**
-```
+
+```txt
 Click → Input field appears spatially
        Response manifests as floating text
        History forms a spiral trail
 ```
 
 **Quiz Orb:**
-```
+
+```txt
 Click → Questions appear on floating cards
        Answer by clicking correct card
        Wrong = card falls away
@@ -169,7 +180,8 @@ Click → Questions appear on floating cards
 ```
 
 **Creation Orb:**
-```
+
+```txt
 Click → Sculpting interface appears
        Generated object forms in space
        Save → Object joins your collection
@@ -180,7 +192,7 @@ Click → Sculpting interface appears
 
 ## Component Files to Create
 
-```
+```txt
 components/ideas/
 ├── IdeaOrb.tsx         # Unified orb component
 ├── IdeaHub.tsx         # Central hub orchestrator
@@ -199,23 +211,27 @@ components/ideas/
 ## Migration Path
 
 ### Phase 1: Core Components (This Session)
+
 - [x] Design document
 - [ ] IdeaOrb.tsx - Base orb with states
 - [ ] IdeaHub.tsx - Hub replacing tablet
 - [ ] IdeaGame.tsx - Game integration
 
 ### Phase 2: Content Surfaces (Next Session)
+
 - [ ] IdeaContent.tsx - Base content renderer
 - [ ] IdeaChat.tsx - Spatial chat
 - [ ] IdeaReader.tsx - Article reader
 
 ### Phase 3: Polish
+
 - [ ] IdeaProgress.tsx - Constellation
 - [ ] IdeaQuiz.tsx - Card quiz
 - [ ] Animations and transitions
 - [ ] Sound design hooks
 
 ### Phase 4: Cutover
+
 - [ ] Wire into Scene3D
 - [ ] Migrate journey progress
 - [ ] Remove old components
@@ -225,18 +241,21 @@ components/ideas/
 ## Technical Considerations
 
 ### Performance
+
 - Orb count limited by device capability
 - LOD system for distant orbs
 - Instanced rendering for constellation
 - Content lazy-loads on approach
 
 ### Accessibility
+
 - Keyboard navigation for orbs
 - Screen reader descriptions
 - Reduced motion mode
 - High contrast option
 
 ### State Management
+
 - Orb states in context
 - Content lazy-loaded
 - Progress persisted to localStorage

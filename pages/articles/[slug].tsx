@@ -759,8 +759,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       title: data.title as string,
-      date: data.date as string,
-      author: data.author as string[],
+      date: (data.date instanceof Date ? data.date.toISOString() : data.date) as string,
+      author: Array.isArray(data.author) ? (data.author as string[]) : ([data.author] as string[]),
       description: data.description || '',
       keywords: data.keywords || [],
       ogImage: data.ogImage || '',

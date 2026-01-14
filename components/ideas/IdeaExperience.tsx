@@ -8,10 +8,11 @@
  * - Game integration
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import IdeaHub from './IdeaHub';
 import IdeaContent from './IdeaContent';
-import type { IdeaOrbData, OrbContent, IdeaGameStats } from './types';
+import IdeaProgress from './IdeaProgress';
+import type { IdeaOrbData, OrbContent, IdeaGameStats, ConstellationNode } from './types';
 import { useJourney } from '@/components/contexts/JourneyContext';
 
 interface IdeaExperienceProps {
@@ -56,7 +57,7 @@ function generateInitialOrbs(
   if (articles) {
     articles.slice(0, 5).forEach((article, i) => {
       const angle = (i / 5) * Math.PI * 2;
-      const radius = 3;
+      const radius = 4;
       orbs.push({
         id: `article-${i}`,
         state: 'active',
@@ -80,26 +81,26 @@ function generateInitialOrbs(
   // Quiz orb
   orbs.push({
     id: 'quiz-challenge',
-    state: 'dormant', // Unlocks after reading
+    state: 'active',
     content: {
       type: 'quiz',
       id: 'main-quiz',
       title: 'Knowledge Challenge',
     },
-    position: [-2, 1, -2],
+    position: [-3, 1, -3],
     size: 0.5,
   });
 
   // Creation orb
   orbs.push({
     id: 'creation-studio',
-    state: 'dormant', // Unlocks after quiz
+    state: 'active',
     content: {
       type: 'creation',
       id: 'main-creation',
       title: 'Creation Studio',
     },
-    position: [2, 1, -2],
+    position: [3, 1, -3],
     size: 0.5,
   });
 
@@ -113,7 +114,7 @@ export default function IdeaExperience({
   isActive = true,
 }: IdeaExperienceProps) {
   // Journey integration
-  const { completeQuest, updateStats, isFeatureUnlocked } = useJourney();
+  const { progress, completeQuest, updateStats } = useJourney();
 
   // State
   const [engagedContent, setEngagedContent] = useState<OrbContent | null>(null);
@@ -125,6 +126,49 @@ export default function IdeaExperience({
     setOrbs(generateInitialOrbs(articles));
   }, [articles]);
 
+  // Generate constellation nodes from journey progress
+  const constellationNodes = useMemo(() => {
+    const nodes: ConstellationNode[] = [];
+    const radius = 12;
+
+    // Articles read
+    progress.stats.articlesRead.forEach((articleId, i) => {
+      const angle = (i / 10) * Math.PI * 2;
+      nodes.push({
+        id: `node-article-${articleId}`,
+        type: 'article',
+        position: [
+          Math.cos(angle) * radius,
+          Math.sin(angle * 2) * 2,
+          Math.sin(angle) * radius,
+        ],
+        connectedTo: i > 0 ? [`node-article-${progress.stats.articlesRead[i-1]}`] : [],
+        brightness: 0.8,
+        exploredAt: Date.now(),
+      });
+    });
+
+    // Quests completed
+    progress.completedQuests.forEach((questId, i) => {
+      const angle = (i / 8) * Math.PI * 2 + Math.PI / 4;
+      const qRadius = 15;
+      nodes.push({
+        id: `node-quest-${questId}`,
+        type: 'quiz',
+        position: [
+          Math.cos(angle) * qRadius,
+          3 + Math.sin(angle) * 2,
+          Math.sin(angle) * qRadius,
+        ],
+        connectedTo: i > 0 ? [`node-quest-${progress.completedQuests[i-1]}`] : [],
+        brightness: 1.0,
+        exploredAt: Date.now(),
+      });
+    });
+
+    return nodes;
+  }, [progress]);
+
   // Handle content engagement
   const handleContentEngage = useCallback(
     (content: OrbContent) => {
@@ -134,7 +178,7 @@ export default function IdeaExperience({
       if (content.type === 'chat') {
         // Chat engagement tracked on actual question
       } else if (content.type === 'article') {
-        updateStats('articlesRead', content.id);
+        updateStats('articlesRead', [content.id]);
         // Delay quest completion for actual reading
         setTimeout(() => {
           completeQuest('read-article');
@@ -150,15 +194,6 @@ export default function IdeaExperience({
       if (action === 'ask' && typeof data === 'string') {
         updateStats('questionsAsked', 1);
         completeQuest('first-question');
-
-        // Unlock article orbs
-        setOrbs((current) =>
-          current.map((orb) =>
-            orb.content.type === 'article'
-              ? { ...orb, state: 'active' as const }
-              : orb
-          )
-        );
       }
 
       if (action === 'read') {
@@ -173,7 +208,13 @@ export default function IdeaExperience({
         const answerData = data as { correct: boolean };
         if (answerData?.correct) {
           updateStats('quizzesTaken', 1);
+          completeQuest('take-quiz');
         }
+      }
+
+      if (action === 'create') {
+        updateStats('creationsGenerated', 1);
+        completeQuest('first-creation');
       }
     },
     [updateStats, completeQuest]
@@ -233,6 +274,9 @@ export default function IdeaExperience({
 
   return (
     <group position={position}>
+      {/* Background Constellation */}
+      <IdeaProgress nodes={constellationNodes} position={[0, 0, 0]} opacity={0.4} />
+
       {/* Main Hub */}
       <IdeaHub
         initialOrbs={orbs}

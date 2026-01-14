@@ -3,25 +3,26 @@ import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
+import { JourneyProvider, useJourney } from '@/components/contexts/JourneyContext'
 import AchievementUnlock from '@/components/AchievementUnlock'
-import EnhancedNav from '@/components/ui/EnhancedNav'
+import CircleNav from '@/components/ui/CircleNav'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
 import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
 import styles from '@/styles/Home.module.css'
-import type { GameState } from '@/components/3d/game/ClickingGame'
-import { useJourney } from '@/components/contexts/JourneyContext'
+import SearchDialog from '@/components/SearchDialog'
 
-// Dynamically import the 3D environment
-const ThreeSixty = dynamic(() => import('@/components/3d/scene/ThreeSixty'), {
+// Dynamically import the 3D environment, using the new Scene3D orchestrator
+const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })
 
-export default function HomePage() {
+function HomeContent() {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
+  const [articles, setArticles] = useState<any[]>([])
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
-  const [gameState, setGameState] = useState<GameState>('IDLE')
+  const [gameState, setGameState] = useState<string>('idle')
   const [isEntering, setIsEntering] = useState(false)
 
   const { achievements } = useJourney()
@@ -46,8 +47,23 @@ export default function HomePage() {
     }
   }, [])
 
+  async function fetchArticles() {
+    try {
+      const response = await fetch('/api/articles')
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      const data = await response.json()
+      setArticles(data)
+    } catch (error) {
+      console.error('Failed to fetch articles:', error)
+    }
+  }
+
+  // On initial mount, fetch a random background for the 3D environment
   useEffect(() => {
     getRandomImage()
+    fetchArticles()
   }, [getRandomImage])
 
   const handleEnter3D = useCallback(() => {
@@ -56,10 +72,21 @@ export default function HomePage() {
     setTimeout(() => setIsIn3DMode(true), 300)
   }, [])
 
-  // Handle changing to a specific image (from scene selection)
-  const handleChangeImage = useCallback((newImage: string) => {
-    setCurrentImage(newImage)
+  const handleToggle3D = useCallback(() => {
+    setIsIn3DMode(prev => !prev)
   }, [])
+
+  // Build world config from random image
+  const worldConfig = React.useMemo(() => {
+    if (!currentImage) return 'default';
+    return {
+      id: 'dynamic-home',
+      name: 'Dynamic Home',
+      assets: {
+        fallbackPanorama: currentImage
+      }
+    } as any;
+  }, [currentImage]);
 
   return (
     <>
@@ -127,18 +154,29 @@ export default function HomePage() {
         }}
       />
 
-      <SupabaseDataProvider>
         {isIn3DMode ? (
-          <main className={styles.main}>
-            {currentImage && (
-              <ThreeSixty
-                currentImage={currentImage}
-                isDialogOpen={false}
-                onChangeImage={handleChangeImage}
-                onGameStateChange={setGameState}
-                onExit={() => setIsIn3DMode(false)}
-              />
-            )}
+          <main className={`${styles.main} ${styles.gradientbg}`}>
+            {/* Show the Scene3D modern environment */}
+            <Scene3D
+              world={worldConfig}
+              articles={articles}
+              onGameStateChange={setGameState}
+            />
+
+            {/* SearchDialog for AI chat - only show when NOT playing game */}
+            {gameState !== 'playing' && <SearchDialog />}
+
+            {/* Button to go back to 2D home */}
+            <div className="absolute top-4 left-4 z-50">
+              <button
+                onClick={handleToggle3D}
+                className={styles.landingBtn}
+                style={{ padding: '0.5rem 1rem' }}
+              >
+                Return to 2D
+              </button>
+            </div>
+            
             <AchievementUnlock
               achievement={currentAchievement}
               onDismiss={() => setCurrentAchievement(null)}
@@ -152,7 +190,7 @@ export default function HomePage() {
               transition: 'opacity 0.3s ease-out',
             }}
           >
-            <EnhancedNav isGamePlaying={false} limit={3} />
+            <CircleNav isGamePlaying={false} />
             {/* Hero - Immersive, mysterious, minimal */}
             <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
               <EnhancedHeroCanvas />
@@ -261,7 +299,16 @@ export default function HomePage() {
             </section>
           </div>
         )}
-      </SupabaseDataProvider>
     </>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <SupabaseDataProvider>
+      <JourneyProvider>
+        <HomeContent />
+      </JourneyProvider>
+    </SupabaseDataProvider>
   )
 }

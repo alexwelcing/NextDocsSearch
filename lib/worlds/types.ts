@@ -110,12 +110,10 @@ export interface WorldProp {
 export interface WorldAssets {
   /** Primary environment - .splat or .glb */
   environment?: string;
-  /** Skybox/environment map - .hdr or .exr */
-  skybox?: string;
-  /** Fallback 360 image if splat fails */
-  fallbackPanorama?: string;
-  /** Additional props/objects */
-  props?: WorldProp[];
+  skybox?: string;           // .hdr path
+  fallbackPanorama?: string;  // .jpg/.png path
+  colliderUrl?: string;       // .glb path for physics
+  props?: WorldProp[];       // Additional 3D objects
 }
 
 /**

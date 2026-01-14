@@ -22,6 +22,7 @@
 // Main experience component
 export { default as IdeaExperience } from './IdeaExperience';
 export type { IdeaExperienceProps } from './IdeaExperience';
+export { default as IdeaProgress } from './IdeaProgress';
 
 // Individual components (for custom implementations)
 export { default as IdeaOrb, ConstellationOrb } from './IdeaOrb';
