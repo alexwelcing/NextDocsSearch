@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
-import { ChevronLeft, ChevronRight, X, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Image as ImageIcon, Zap } from 'lucide-react';
 import { ArticleImage, AllImagesResponse } from '@/pages/api/media/all-images';
 
 interface ArticleImageSlideshowProps {
@@ -201,12 +201,6 @@ const Thumbnail = styled.button<{ $isActive: boolean }>`
     transform: scale(1.05);
   }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
   @media (max-width: 768px) {
     width: 80px;
     height: 56px;
@@ -258,14 +252,9 @@ const FullscreenImage = styled.div`
   max-height: 90vh;
   width: auto;
   height: auto;
-
-  img {
-    max-width: 100%;
-    max-height: 90vh;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const CloseButton = styled.button`
@@ -342,13 +331,13 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
     fetchImages();
   }, [articleSlug]);
 
-  const goToPrevious = () => {
+  const goToPrevious = React.useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
+  }, [images.length]);
 
-  const goToNext = () => {
+  const goToNext = React.useCallback(() => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+  }, [images.length]);
 
   const goToImage = (index: number) => {
     setCurrentIndex(index);
@@ -374,7 +363,7 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isFullscreen, images.length]);
+  }, [isFullscreen, images.length, goToPrevious, goToNext]);
 
   if (loading) {
     return <LoadingState>Loading images...</LoadingState>;
@@ -412,7 +401,7 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
                 />
                 <ImageOverlay>
                   <ImageTitle>
-                    {image.type === 'artwork' && <Sparkles />}
+                    {image.type === 'artwork' && <Zap />}
                     {image.title || 'Untitled'}
                   </ImageTitle>
                   {image.caption && <ImageCaption>{image.caption}</ImageCaption>}
@@ -441,9 +430,15 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
                 $isActive={index === currentIndex}
                 onClick={() => goToImage(index)}
               >
-                <img src={image.url} alt={image.title || 'Thumbnail'} />
+                <Image
+                  src={image.url}
+                  alt={image.title || 'Thumbnail'}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="100px"
+                />
                 <TypeBadge $type={image.type}>
-                  {image.type === 'artwork' ? <Sparkles /> : <ImageIcon />}
+                  {image.type === 'artwork' ? <Zap /> : <ImageIcon />}
                   {image.type === 'artwork' ? 'AI' : 'IMG'}
                 </TypeBadge>
               </Thumbnail>
@@ -458,9 +453,12 @@ const ArticleImageSlideshow: React.FC<ArticleImageSlideshowProps> = ({ articleSl
         </CloseButton>
         <FullscreenImage onClick={(e) => e.stopPropagation()}>
           {currentImage && (
-            <img
+            <Image
               src={currentImage.url}
               alt={currentImage.alt_text || currentImage.title || 'Fullscreen image'}
+              width={currentImage.width || 1200}
+              height={currentImage.height || 800}
+              style={{ maxWidth: '100%', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain' }}
             />
           )}
         </FullscreenImage>
