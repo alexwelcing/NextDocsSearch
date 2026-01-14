@@ -781,7 +781,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         // Prefer storage path over temporary FAL URL
         if (artworkData.storage_path) {
           const { data: urlData } = supabase.storage
-            .from('media')
+            .from('article-artwork')
             .getPublicUrl(artworkData.storage_path);
           selectedArtworkUrl = urlData?.publicUrl || artworkData.image_url || '';
         } else {

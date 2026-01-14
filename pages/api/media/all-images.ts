@@ -127,7 +127,7 @@ export default async function handler(
         // Prefer storage path over temporary FAL URL
         if (artwork.storage_path) {
           const { data: urlData } = supabase.storage
-            .from('media')
+            .from('article-artwork')
             .getPublicUrl(artwork.storage_path);
           publicUrl = urlData?.publicUrl || artwork.image_url;
         }
