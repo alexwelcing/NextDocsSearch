@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 
 /**
  * API: Get Art Options for Article
- * 
+ *
  * GET /api/art/options?slug=article-slug
  * Returns all generated art options for an article
  */
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const { slug } = req.query;
-  
+
   if (!slug || typeof slug !== 'string') {
     return res.status(400).json({ error: 'Article slug is required' });
   }
@@ -56,14 +56,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Get public URLs for storage paths
     const options = data?.map(option => {
       let publicUrl = option.image_url;
-      
+
       if (option.storage_path) {
         const { data: urlData } = supabase.storage
           .from('media')
           .getPublicUrl(option.storage_path);
         publicUrl = urlData?.publicUrl || option.image_url;
       }
-      
+
       return {
         ...option,
         public_url: publicUrl,
@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       hasSelection: options.some(o => o.is_selected),
       totalOptions: options.length,
     });
-    
+
   } catch (err) {
     console.error('API error:', err);
     return res.status(500).json({ error: 'Internal server error' });

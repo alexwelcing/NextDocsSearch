@@ -369,12 +369,12 @@ Here's a TypeScript configuration you can use for a multi-model system:
 ```typescript
 // lib/fal-models.ts
 
-export type ModelCategory = 
-  | 'fast' 
-  | 'quality' 
-  | 'balanced' 
-  | 'artistic' 
-  | 'text-rendering' 
+export type ModelCategory =
+  | 'fast'
+  | 'quality'
+  | 'balanced'
+  | 'artistic'
+  | 'text-rendering'
   | 'photorealistic'
   | 'editing';
 
@@ -877,7 +877,7 @@ export const IMAGE_SIZE_PRESETS = {
   portrait_16_9: { width: 576, height: 1024 },
   landscape_4_3: { width: 1024, height: 768 },
   landscape_16_9: { width: 1024, height: 576 },
-  
+
   // Custom presets
   thumbnail: { width: 512, height: 512 },
   hero_banner: { width: 1920, height: 1080 },

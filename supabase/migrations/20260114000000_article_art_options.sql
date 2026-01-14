@@ -23,52 +23,52 @@ CREATE TYPE model_tier AS ENUM (
 -- Main table for storing generated art options
 CREATE TABLE IF NOT EXISTS public.article_art_options (
   id BIGSERIAL PRIMARY KEY,
-  
+
   -- Article reference
   article_slug TEXT NOT NULL,
-  
+
   -- Generation batch (groups 3 options together)
   batch_id UUID NOT NULL DEFAULT gen_random_uuid(),
   option_number INTEGER NOT NULL CHECK (option_number BETWEEN 1 AND 3),
-  
+
   -- Model info
   model_id TEXT NOT NULL,           -- e.g., "fal-ai/flux/schnell"
   model_name TEXT NOT NULL,         -- Human readable name
   model_tier model_tier NOT NULL,
-  
+
   -- Prompt used
   prompt TEXT NOT NULL,
   negative_prompt TEXT,
-  
+
   -- Model parameters (stored as JSON)
   model_params JSONB DEFAULT '{}',
-  
+
   -- Generation tracking
   fal_request_id TEXT,              -- FAL queue request ID
   status art_generation_status DEFAULT 'pending',
   error_message TEXT,
-  
+
   -- Result
   image_url TEXT,                   -- FAL CDN URL (temporary)
   storage_path TEXT,                -- Supabase Storage path (permanent)
   thumbnail_path TEXT,              -- Smaller version for previews
-  
+
   -- Image metadata
   width INTEGER,
   height INTEGER,
   file_size_bytes BIGINT,
   seed BIGINT,                      -- For reproducibility
-  
+
   -- Cost tracking
   estimated_cost_usd DECIMAL(10, 6),
   actual_cost_usd DECIMAL(10, 6),
   generation_time_ms INTEGER,
-  
+
   -- Selection
   is_selected BOOLEAN DEFAULT FALSE,
   selected_at TIMESTAMP WITH TIME ZONE,
   selected_by TEXT,                 -- Admin who selected
-  
+
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS public.article_art_options (
 );
 
 -- Create unique constraint: only one selected image per article
-CREATE UNIQUE INDEX idx_article_art_options_selected 
-ON public.article_art_options (article_slug) 
+CREATE UNIQUE INDEX idx_article_art_options_selected
+ON public.article_art_options (article_slug)
 WHERE is_selected = TRUE;
 
 -- Indexes for common queries
@@ -125,32 +125,32 @@ WITH CHECK (true);
 
 CREATE TABLE IF NOT EXISTS public.art_generation_batches (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Batch metadata
   name TEXT,                        -- Optional batch name
   description TEXT,
-  
+
   -- Scope
   article_slugs TEXT[],             -- Which articles are included
   total_articles INTEGER NOT NULL DEFAULT 0,
-  
+
   -- Models used
   models_used TEXT[] NOT NULL,      -- Array of model IDs
-  
+
   -- Progress tracking
   total_generations INTEGER NOT NULL DEFAULT 0,
   completed_generations INTEGER DEFAULT 0,
   failed_generations INTEGER DEFAULT 0,
-  
+
   -- Cost tracking
   estimated_total_cost_usd DECIMAL(10, 4),
   actual_total_cost_usd DECIMAL(10, 4) DEFAULT 0,
-  
+
   -- Status
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'running', 'completed', 'failed', 'cancelled')),
   started_at TIMESTAMP WITH TIME ZONE,
   completed_at TIMESTAMP WITH TIME ZONE,
-  
+
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -167,7 +167,7 @@ EXECUTE FUNCTION update_updated_at_column();
 
 -- View: Articles awaiting art selection (have options but none selected)
 CREATE OR REPLACE VIEW public.articles_pending_selection AS
-SELECT 
+SELECT
   article_slug,
   batch_id,
   COUNT(*) as option_count,
@@ -176,8 +176,8 @@ SELECT
   MAX(completed_at) as last_completed
 FROM public.article_art_options
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.article_art_options aao2 
-  WHERE aao2.article_slug = article_art_options.article_slug 
+  SELECT 1 FROM public.article_art_options aao2
+  WHERE aao2.article_slug = article_art_options.article_slug
   AND aao2.is_selected = TRUE
 )
 GROUP BY article_slug, batch_id
@@ -185,7 +185,7 @@ HAVING COUNT(*) FILTER (WHERE status = 'completed') >= 1;
 
 -- View: Selected artwork per article
 CREATE OR REPLACE VIEW public.article_selected_artwork AS
-SELECT 
+SELECT
   article_slug,
   model_id,
   model_name,
@@ -200,7 +200,7 @@ WHERE is_selected = TRUE;
 
 -- View: Model usage statistics
 CREATE OR REPLACE VIEW public.art_model_stats AS
-SELECT 
+SELECT
   model_id,
   model_name,
   model_tier,
@@ -230,16 +230,16 @@ BEGIN
   UPDATE public.article_art_options
   SET is_selected = FALSE, selected_at = NULL, selected_by = NULL
   WHERE article_slug = p_article_slug AND is_selected = TRUE;
-  
+
   -- Select the new option
   UPDATE public.article_art_options
-  SET 
-    is_selected = TRUE, 
+  SET
+    is_selected = TRUE,
     selected_at = NOW(),
     selected_by = p_selected_by,
     status = 'selected'
   WHERE id = p_option_id AND article_slug = p_article_slug;
-  
+
   RETURN FOUND;
 END;
 $$ LANGUAGE plpgsql;
@@ -259,7 +259,7 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
   RETURN QUERY
-  SELECT 
+  SELECT
     aao.id,
     aao.option_number,
     aao.model_name,

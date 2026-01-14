@@ -1,9 +1,9 @@
 /**
  * FAL AI Image Generation Models Configuration
- * 
+ *
  * A comprehensive catalog of image generation models available on FAL AI,
  * organized for easy selection based on speed, quality, style, and cost.
- * 
+ *
  * @see https://fal.ai/models
  * @lastUpdated 2026-01-14
  */
@@ -12,12 +12,12 @@
 // TYPE DEFINITIONS
 // ═══════════════════════════════════════════════════════════════
 
-export type ModelCategory = 
-  | 'fast' 
-  | 'quality' 
-  | 'balanced' 
-  | 'artistic' 
-  | 'text-rendering' 
+export type ModelCategory =
+  | 'fast'
+  | 'quality'
+  | 'balanced'
+  | 'artistic'
+  | 'text-rendering'
   | 'photorealistic'
   | 'editing'
   | 'lora';
@@ -1100,7 +1100,7 @@ export const IMAGE_SIZE_PRESETS: Record<string, ImageSizeOption> = {
   portrait_16_9: { width: 576, height: 1024, label: 'Portrait 16:9', aspectRatio: '9:16' },
   landscape_4_3: { width: 1024, height: 768, label: 'Landscape 4:3', aspectRatio: '4:3' },
   landscape_16_9: { width: 1024, height: 576, label: 'Landscape 16:9', aspectRatio: '16:9' },
-  
+
   // Custom presets
   thumbnail: { width: 512, height: 512, label: 'Thumbnail', aspectRatio: '1:1' },
   hero_banner: { width: 1920, height: 1080, label: 'Hero Banner', aspectRatio: '16:9' },

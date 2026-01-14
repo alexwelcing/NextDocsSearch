@@ -3,10 +3,10 @@ import { createClient } from '@supabase/supabase-js';
 
 /**
  * API: Get Selected Article Artwork
- * 
+ *
  * GET /api/art/selected?slug=article-slug
  * Returns the selected artwork for an article (or null if none selected)
- * 
+ *
  * Used by the frontend to display article images.
  */
 
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const { slug } = req.query;
-  
+
   if (!slug || typeof slug !== 'string') {
     return res.status(400).json({ error: 'Article slug is required' });
   }
@@ -49,9 +49,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (!data) {
-      return res.status(200).json({ 
-        hasArtwork: false, 
-        artwork: null 
+      return res.status(200).json({
+        hasArtwork: false,
+        artwork: null
       });
     }
 
@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         prompt: data.prompt,
       },
     });
-    
+
   } catch (err) {
     console.error('API error:', err);
     return res.status(500).json({ error: 'Internal server error' });

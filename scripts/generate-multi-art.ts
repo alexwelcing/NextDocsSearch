@@ -2,10 +2,10 @@
 
 /**
  * Multi-Model Article Art Generator
- * 
+ *
  * Generates 3 different art options per article using different AI models.
  * Results are stored in Supabase for easy selection.
- * 
+ *
  * Usage:
  *   pnpm generate:multi-art                    # Generate for articles missing art
  *   pnpm generate:multi-art --limit 10         # Limit to 10 articles
@@ -26,8 +26,8 @@ import { hideBin } from 'yargs/helpers';
 
 import { FalClient } from '../lib/art-generation/fal-client';
 import { buildModelPrompt, ArticleContext, detectArticleTheme } from '../lib/art-generation/prompt-customizer';
-import { 
-  FalImageModel, 
+import {
+  FalImageModel,
   getModelById,
   FAST_MODELS,
   QUALITY_MODELS,
@@ -43,6 +43,42 @@ import {
 const ARTICLES_DIR = path.join(process.cwd(), 'pages', 'docs', 'articles');
 const OUTPUT_DIR = path.join(process.cwd(), 'public', 'images', 'multi-art');
 
+// Self-healing: Track failed models to avoid them until healed
+const failedModels = new Set<string>();
+
+/**
+ * Mark a model as failed (self-healing)
+ */
+function markModelFailed(modelId: string) {
+  if (!failedModels.has(modelId)) {
+    console.log(`   🩺 Model ${modelId} marked as failed (self-healing)`);
+    failedModels.add(modelId);
+  }
+}
+
+/**
+ * Check if a model is currently failed
+ */
+function isModelFailed(modelId: string): boolean {
+  return failedModels.has(modelId);
+}
+
+/**
+ * Get available models from a pool, excluding failed ones
+ */
+function getAvailableModels(pool: string[]): string[] {
+  return pool.filter(modelId => !isModelFailed(modelId));
+}
+
+/**
+ * Reset failed models (for manual recovery)
+ */
+function resetFailedModels() {
+  const count = failedModels.size;
+  failedModels.clear();
+  console.log(`🔄 Reset ${count} failed models`);
+}
+
 // Model selection strategy - pick 3 diverse models per article
 interface ModelSelectionStrategy {
   name: string;
@@ -57,12 +93,12 @@ const MODEL_STRATEGIES: ModelSelectionStrategy[] = [
     selectModels: (ctx) => {
       const theme = detectArticleTheme(ctx);
       const seed = hashString(ctx.slug);
-      
+
       // Pick from different tiers for variety
       const fast = pickFromArray(FAST_MODELS.filter(m => m.qualityTier >= 3), seed);
       const balanced = pickFromArray(BALANCED_MODELS, seed + 1);
       const quality = pickFromArray(QUALITY_MODELS.filter(m => m.speedTier !== 'slow' || m.qualityTier === 5), seed + 2);
-      
+
       return [fast, balanced, quality];
     },
   },
@@ -71,11 +107,11 @@ const MODEL_STRATEGIES: ModelSelectionStrategy[] = [
     description: 'Mix of artistic and photorealistic styles',
     selectModels: (ctx) => {
       const seed = hashString(ctx.slug);
-      
+
       const artistic = pickFromArray(ARTISTIC_MODELS, seed);
       const photo = pickFromArray(PHOTOREALISTIC_MODELS, seed + 1);
       const balanced = pickFromArray(BALANCED_MODELS, seed + 2);
-      
+
       return [artistic, photo, balanced];
     },
   },
@@ -85,7 +121,7 @@ const MODEL_STRATEGIES: ModelSelectionStrategy[] = [
     selectModels: (ctx) => {
       const seed = hashString(ctx.slug);
       const fastModels = FAST_MODELS.filter(m => m.qualityTier >= 3);
-      
+
       return [
         pickFromArray(fastModels, seed),
         pickFromArray(fastModels, seed + 1),
@@ -102,16 +138,16 @@ const CURATED_MODEL_POOLS = {
   fast: [
     'fal-ai/flux/schnell',      // ✅ verified
     'fal-ai/fast-sdxl',         // ✅ verified
-    'fal-ai/flux-pro/v1.1',     // ✅ verified (fast pro variant)
+    'fal-ai/flux-pro/v1',       // ✅ verified (fast pro variant)
   ],
-  
+
   // Quality models worth the wait
   quality: [
     'fal-ai/flux/dev',          // ✅ verified
     'fal-ai/stable-diffusion-v35-large', // ✅ verified
     'fal-ai/recraft-v3',        // ✅ verified
   ],
-  
+
   // Unique/experimental worth trying
   experimental: [
     'fal-ai/ideogram/v2',       // ✅ verified (v2 not v3)
@@ -120,7 +156,7 @@ const CURATED_MODEL_POOLS = {
     'fal-ai/stable-cascade',    // experimental
     'fal-ai/pixart-sigma',      // experimental
   ],
-  
+
   // Photorealistic specialists
   photorealistic: [
     'fal-ai/flux/dev',          // best for photorealism
@@ -173,6 +209,11 @@ const argv = yargs(hideBin(process.argv))
     description: 'Also save images locally',
     default: true,
   })
+  .option('reset-failed', {
+    type: 'boolean',
+    description: 'Reset failed models list (retry previously failed models)',
+    default: false,
+  })
   .help()
   .parseSync();
 
@@ -214,39 +255,79 @@ function pickRandom<T>(arr: T[]): T {
 
 /**
  * Select 3 diverse models using the "intelligent crapshoot" approach
+ * Self-healing: Automatically excludes failed models
  */
 function selectDiverseModels(context: ArticleContext): [string, string, string] {
   const theme = detectArticleTheme(context);
   const seed = hashString(context.slug);
-  
-  // Always include one fast model for quick feedback
-  const fastModel = pickFromArray(CURATED_MODEL_POOLS.fast, seed);
-  
+
+  // Get available models from each pool (excluding failed ones)
+  const availableFast = getAvailableModels(CURATED_MODEL_POOLS.fast);
+  const availableQuality = getAvailableModels(CURATED_MODEL_POOLS.quality);
+  const availableExperimental = getAvailableModels(CURATED_MODEL_POOLS.experimental);
+  const availablePhotorealistic = getAvailableModels(CURATED_MODEL_POOLS.photorealistic);
+
+  // Fallback: if a pool is empty, use all available models from other pools
+  const allAvailable = [
+    ...availableFast,
+    ...availableQuality,
+    ...availableExperimental,
+    ...availablePhotorealistic
+  ];
+
+  if (allAvailable.length < 3) {
+    throw new Error(`Not enough available models (${allAvailable.length}). Too many failures. Run with --reset-failed to retry failed models.`);
+  }
+
+  // Always include one fast model for quick feedback (if available)
+  let fastModel: string;
+  if (availableFast.length > 0) {
+    fastModel = pickFromArray(availableFast, seed);
+  } else {
+    fastModel = pickFromArray(allAvailable, seed);
+  }
+
   // Second model based on theme
   let secondPool: string[];
   if (theme === 'tech-horror' || theme === 'ai-tech') {
-    secondPool = CURATED_MODEL_POOLS.experimental;
+    secondPool = availableExperimental.length > 0 ? availableExperimental : allAvailable;
   } else if (theme === 'business' || theme === 'narrative') {
-    secondPool = CURATED_MODEL_POOLS.photorealistic;
+    secondPool = availablePhotorealistic.length > 0 ? availablePhotorealistic : allAvailable;
   } else {
-    secondPool = CURATED_MODEL_POOLS.quality;
+    secondPool = availableQuality.length > 0 ? availableQuality : allAvailable;
   }
   const secondModel = pickFromArray(secondPool, seed + 1);
-  
-  // Third model - randomize from experimental for variety
-  const thirdModel = pickFromArray(CURATED_MODEL_POOLS.experimental, seed + 2);
-  
+
+  // Third model - randomize from experimental for variety (fallback to all available)
+  const thirdPool = availableExperimental.length > 0 ? availableExperimental : allAvailable;
+  let thirdModel = pickFromArray(thirdPool, seed + 2);
+
   // Ensure all three are different
   const models = new Set([fastModel]);
   models.add(secondModel);
-  
+
   let third = thirdModel;
-  while (models.has(third)) {
-    third = pickRandom([...CURATED_MODEL_POOLS.quality, ...CURATED_MODEL_POOLS.experimental]);
+  let attempts = 0;
+  while (models.has(third) && attempts < 10) {
+    third = pickFromArray(allAvailable, seed + 2 + attempts);
+    attempts++;
   }
+
+  if (models.has(third)) {
+    // If we still can't find a unique model, just use what we have
+    third = pickRandom(allAvailable.filter(m => !models.has(m))) || third;
+  }
+
   models.add(third);
-  
-  return Array.from(models) as [string, string, string];
+
+  const result = Array.from(models) as [string, string, string];
+
+  // Log if we're using fallback models due to failures
+  if (availableFast.length === 0 || availableQuality.length === 0 || availableExperimental.length === 0) {
+    console.log(`   ⚠️  Using fallback models due to ${failedModels.size} failed models`);
+  }
+
+  return result;
 }
 
 /**
@@ -256,9 +337,9 @@ function getArticleContext(filePath: string): ArticleContext | null {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
     const { data, content: bodyContent } = matter(content);
-    
+
     const slug = path.basename(filePath, '.mdx');
-    
+
     return {
       slug,
       title: data.title || slug,
@@ -278,12 +359,12 @@ function getArticleContext(filePath: string): ArticleContext | null {
 function getAllArticles(): ArticleContext[] {
   const files = fs.readdirSync(ARTICLES_DIR).filter(f => f.endsWith('.mdx'));
   const articles: ArticleContext[] = [];
-  
+
   for (const file of files) {
     const ctx = getArticleContext(path.join(ARTICLES_DIR, file));
     if (ctx) articles.push(ctx);
   }
-  
+
   return articles;
 }
 
@@ -297,12 +378,12 @@ async function hasExistingOptions(slug: string): Promise<boolean> {
     .eq('article_slug', slug)
     .eq('status', 'completed')
     .limit(1);
-  
+
   if (error) {
     console.error(`Error checking existing options for ${slug}:`, error);
     return false;
   }
-  
+
   return (data?.length || 0) > 0;
 }
 
@@ -310,30 +391,30 @@ async function hasExistingOptions(slug: string): Promise<boolean> {
  * Save image to local filesystem
  */
 async function saveImageLocally(
-  imageUrl: string, 
-  slug: string, 
+  imageUrl: string,
+  slug: string,
   optionNumber: number,
   modelId: string
 ): Promise<string | null> {
   try {
     const response = await fetch(imageUrl);
     if (!response.ok) return null;
-    
+
     const buffer = Buffer.from(await response.arrayBuffer());
-    
+
     // Create directory if needed
     const articleDir = path.join(OUTPUT_DIR, slug);
     if (!fs.existsSync(articleDir)) {
       fs.mkdirSync(articleDir, { recursive: true });
     }
-    
+
     // Create filename from model
     const modelName = modelId.split('/').pop() || 'unknown';
     const filename = `option-${optionNumber}-${modelName}.png`;
     const localPath = path.join(articleDir, filename);
-    
+
     fs.writeFileSync(localPath, buffer);
-    
+
     return localPath;
   } catch (err) {
     console.error('Failed to save locally:', err);
@@ -353,24 +434,24 @@ async function uploadToStorage(
   try {
     const response = await fetch(imageUrl);
     if (!response.ok) return null;
-    
+
     const buffer = Buffer.from(await response.arrayBuffer());
-    
+
     const modelName = modelId.split('/').pop() || 'unknown';
     const storagePath = `${slug}/option-${optionNumber}-${modelName}.png`;
-    
+
     const { error } = await supabase.storage
       .from('article-artwork')
       .upload(storagePath, buffer, {
         contentType: 'image/png',
         upsert: true,
       });
-    
+
     if (error) {
       console.error('Storage upload error:', error);
       return null;
     }
-    
+
     return storagePath;
   } catch (err) {
     console.error('Upload failed:', err);
@@ -388,34 +469,34 @@ async function generateArticleArt(
 ): Promise<{ success: number; failed: number }> {
   const modelIds = selectDiverseModels(context);
   const results = { success: 0, failed: 0 };
-  
+
   console.log(`\n📸 ${context.slug}`);
   console.log(`   Theme: ${detectArticleTheme(context)}`);
   console.log(`   Models: ${modelIds.join(', ')}`);
-  
+
   for (let i = 0; i < modelIds.length; i++) {
     const modelId = modelIds[i];
     const model = getModelById(modelId);
     const optionNumber = i + 1;
-    
+
     if (!model) {
       console.log(`   ❌ Option ${optionNumber}: Model not found: ${modelId}`);
       results.failed++;
       continue;
     }
-    
+
     // Build model-specific prompt
     const { prompt, negativePrompt } = buildModelPrompt(modelId, context, i);
-    
+
     console.log(`   🎨 Option ${optionNumber}: ${model.name}`);
     console.log(`      Prompt: "${prompt.substring(0, 80)}..."`);
-    
+
     if (argv.dryRun) {
       console.log(`      [DRY RUN] Would generate with ${model.name}`);
       results.success++;
       continue;
     }
-    
+
     // Insert pending record
     const { data: record, error: insertError } = await supabase
       .from('article_art_options')
@@ -433,13 +514,13 @@ async function generateArticleArt(
       })
       .select()
       .single();
-    
+
     if (insertError) {
       console.error(`      ❌ Failed to insert record:`, insertError);
       results.failed++;
       continue;
     }
-    
+
     // Generate image
     const startTime = Date.now();
     const result = await falClient.generate({
@@ -448,10 +529,13 @@ async function generateArticleArt(
       negativePrompt,
       params: model.defaultParams,
     });
-    
+
     if (!result.success || !result.imageUrl) {
       console.log(`      ❌ Generation failed: ${result.error}`);
-      
+
+      // Self-healing: Mark this model as failed
+      markModelFailed(modelId);
+
       await supabase
         .from('article_art_options')
         .update({
@@ -459,13 +543,13 @@ async function generateArticleArt(
           error_message: result.error,
         })
         .eq('id', record.id);
-      
+
       results.failed++;
       continue;
     }
-    
+
     console.log(`      ✅ Generated in ${result.generationTimeMs}ms`);
-    
+
     // Save locally if configured
     let localPath: string | null = null;
     if (argv.saveLocal) {
@@ -474,10 +558,10 @@ async function generateArticleArt(
         console.log(`      💾 Saved: ${path.relative(process.cwd(), localPath)}`);
       }
     }
-    
+
     // Upload to Supabase Storage
     const storagePath = await uploadToStorage(result.imageUrl, context.slug, optionNumber, modelId);
-    
+
     // Update record with results
     await supabase
       .from('article_art_options')
@@ -493,13 +577,13 @@ async function generateArticleArt(
         completed_at: new Date().toISOString(),
       })
       .eq('id', record.id);
-    
+
     results.success++;
-    
+
     // Small delay between models to avoid rate limits
     await new Promise(resolve => setTimeout(resolve, 500));
   }
-  
+
   return results;
 }
 
@@ -519,26 +603,33 @@ async function main() {
   console.log('\n' + '═'.repeat(60));
   console.log('🎨 MULTI-MODEL ARTICLE ART GENERATOR');
   console.log('═'.repeat(60));
-  
+
   // Validate environment
   const falKey = process.env.FAL_KEY;
   console.log(`\n🔧 Environment:`);
   console.log(`   FAL_KEY: ${falKey ? falKey.substring(0, 12) + '...' : '❌ NOT FOUND'}`);
   console.log(`   Supabase: ${supabaseUrl ? '✅' : '❌'}`);
-  console.log(`   Strategy: ${argv.strategy}`);
-  console.log(`   Dry Run: ${argv.dryRun}`);
-  
+  // Reset failed models if requested
+  if (argv.resetFailed) {
+    resetFailedModels();
+  }
+
+  // Show failed models status
+  if (failedModels.size > 0) {
+    console.log(`   Self-healing: ${failedModels.size} models currently failed`);
+  }
+
   if (!falKey && !argv.dryRun) {
     console.error('\n❌ FAL_KEY is required for generation');
     process.exit(1);
   }
-  
+
   // Initialize FAL client
   const falClient = argv.dryRun ? null : new FalClient(falKey);
-  
+
   // Get articles to process
   let articles: ArticleContext[];
-  
+
   if (argv.article) {
     const ctx = getArticleContext(path.join(ARTICLES_DIR, `${argv.article}.mdx`));
     if (!ctx) {
@@ -549,9 +640,9 @@ async function main() {
   } else {
     articles = getAllArticles();
   }
-  
+
   console.log(`\n📚 Found ${articles.length} articles`);
-  
+
   // Filter to articles needing art
   if (!argv.force) {
     const needsArt: ArticleContext[] = [];
@@ -562,21 +653,21 @@ async function main() {
     articles = needsArt;
     console.log(`📋 ${articles.length} articles need art generation`);
   }
-  
+
   // Apply limit
   if (argv.limit && argv.limit < articles.length) {
     articles = articles.slice(0, argv.limit);
     console.log(`🔢 Limited to ${articles.length} articles`);
   }
-  
+
   if (articles.length === 0) {
     console.log('\n✅ All articles have art options!');
     return;
   }
-  
+
   // Create batch record
   const batchId = crypto.randomUUID();
-  
+
   if (!argv.dryRun) {
     await supabase.from('art_generation_batches').insert({
       id: batchId,
@@ -589,24 +680,24 @@ async function main() {
       started_at: new Date().toISOString(),
     });
   }
-  
+
   console.log(`\n🚀 Starting generation batch: ${batchId.substring(0, 8)}...`);
   console.log(`   Articles: ${articles.length}`);
   console.log(`   Total images: ${articles.length * 3}`);
-  
+
   // Process articles
   let totalSuccess = 0;
   let totalFailed = 0;
-  
+
   for (let i = 0; i < articles.length; i++) {
     const article = articles[i];
     console.log(`\n[${i + 1}/${articles.length}]`);
-    
+
     const results = await generateArticleArt(article, falClient!, batchId);
     totalSuccess += results.success;
     totalFailed += results.failed;
   }
-  
+
   // Update batch status
   if (!argv.dryRun) {
     await supabase.from('art_generation_batches').update({
@@ -616,7 +707,7 @@ async function main() {
       completed_at: new Date().toISOString(),
     }).eq('id', batchId);
   }
-  
+
   // Summary
   console.log('\n' + '═'.repeat(60));
   console.log('📊 GENERATION COMPLETE');

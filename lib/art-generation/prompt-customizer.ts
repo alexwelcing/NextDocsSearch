@@ -1,6 +1,6 @@
 /**
  * Multi-Model Prompt Customization System
- * 
+ *
  * Different models have different strengths and prompt preferences.
  * This system adapts prompts per model to get the best results.
  */
@@ -45,28 +45,28 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     qualityBoosters: ['8k resolution', 'highly detailed', 'sharp focus'],
     includeKeywords: true,
   },
-  
+
   'fal-ai/flux/dev': {
     stylePrefix: 'Award-winning digital art,',
     styleSuffix: ', masterful composition, dramatic lighting, cinematic atmosphere',
     qualityBoosters: ['ultra detailed', 'professional quality', 'stunning visuals'],
     includeKeywords: true,
   },
-  
+
   'fal-ai/flux-2-max': {
     stylePrefix: 'Hyperrealistic digital masterpiece,',
     styleSuffix: ', gallery quality, perfect lighting, incredible detail',
     qualityBoosters: ['photorealistic', '16k', 'award winning'],
     includeKeywords: true,
   },
-  
+
   'fal-ai/flux-2/turbo': {
     stylePrefix: 'Dynamic digital art,',
     styleSuffix: ', vivid colors, professional quality',
     qualityBoosters: ['sharp', 'detailed'],
     includeKeywords: true,
   },
-  
+
   // Imagen models - excellent with natural language
   'fal-ai/imagen4/preview': {
     stylePrefix: 'A stunning photograph of',
@@ -74,21 +74,21 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     qualityBoosters: ['photorealistic', 'professional photography', 'magazine quality'],
     includeKeywords: false,
   },
-  
+
   'fal-ai/imagen4/preview/ultra': {
     stylePrefix: 'An extraordinary photograph capturing',
     styleSuffix: '. Masterful composition, perfect exposure, gallery-worthy image.',
     qualityBoosters: ['award-winning photography', 'museum quality'],
     includeKeywords: false,
   },
-  
+
   'fal-ai/imagen3': {
     stylePrefix: 'High quality image of',
     styleSuffix: ', professional photography, excellent lighting',
     qualityBoosters: ['detailed', 'sharp focus', 'high resolution'],
     includeKeywords: false,
   },
-  
+
   // Ideogram - verified working
   'fal-ai/ideogram/v2': {
     stylePrefix: 'Digital illustration with',
@@ -96,7 +96,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     qualityBoosters: ['sharp text', 'clear graphics'],
     includeKeywords: true,
   },
-  
+
   // Recraft - verified working
   'fal-ai/recraft-v3': {
     stylePrefix: 'Professional digital illustration,',
@@ -104,7 +104,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     qualityBoosters: ['graphic design quality', 'polished', 'professional'],
     includeKeywords: true,
   },
-  
+
   // Aura Flow - experimental
   'fal-ai/aura-flow': {
     stylePrefix: 'Flowing artistic visualization of',
@@ -112,7 +112,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     qualityBoosters: ['soft lighting', 'elegant', 'refined'],
     includeKeywords: true,
   },
-  
+
   // Stable Cascade - experimental
   'fal-ai/stable-cascade': {
     stylePrefix: 'High-fidelity digital art of',
@@ -121,7 +121,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'blurry, low quality, artifacts',
     includeKeywords: true,
   },
-  
+
   // PixArt Sigma - experimental
   'fal-ai/pixart-sigma': {
     stylePrefix: 'Artistic digital creation of',
@@ -129,7 +129,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     qualityBoosters: ['artistic', 'imaginative', 'quality'],
     includeKeywords: true,
   },
-  
+
   // Stable Diffusion variants - flexible with negative prompts
   'fal-ai/fast-sdxl': {
     stylePrefix: 'Stunning digital art of',
@@ -138,7 +138,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'blurry, low quality, distorted, ugly, bad anatomy, watermark, text, logo',
     includeKeywords: true,
   },
-  
+
   'fal-ai/stable-diffusion-v35-large': {
     stylePrefix: 'Exceptional digital artwork depicting',
     styleSuffix: ', intricate details, professional lighting, stunning composition',
@@ -146,7 +146,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'worst quality, low quality, blurry, jpeg artifacts, watermark, signature',
     includeKeywords: true,
   },
-  
+
   'fal-ai/fast-lightning-sdxl': {
     stylePrefix: 'Digital art,',
     styleSuffix: ', detailed, quality',
@@ -154,7 +154,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'blurry, ugly, bad',
     includeKeywords: false,
   },
-  
+
   // Artistic/stylized models
   'fal-ai/dreamshaper': {
     stylePrefix: 'Fantasy digital painting of',
@@ -163,7 +163,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'ugly, tiling, poorly drawn hands, out of frame, mutation, blurry',
     includeKeywords: true,
   },
-  
+
   'fal-ai/playground-v25': {
     stylePrefix: 'Vibrant creative artwork showing',
     styleSuffix: ', rich colors, dynamic composition, artistic flair',
@@ -171,7 +171,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'dull, boring, low contrast',
     includeKeywords: true,
   },
-  
+
   'fal-ai/kolors': {
     stylePrefix: 'Colorful artistic interpretation of',
     styleSuffix: ', bold palette, striking visuals, artistic style',
@@ -179,7 +179,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'monochrome, dull, washed out',
     includeKeywords: true,
   },
-  
+
   // Photorealistic models
   'fal-ai/realistic-vision': {
     stylePrefix: 'Photorealistic image of',
@@ -188,14 +188,14 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'cartoon, illustration, painting, drawing, artificial, fake',
     includeKeywords: false,
   },
-  
+
   'fal-ai/luma-photon': {
     stylePrefix: 'Cinematic photograph of',
     styleSuffix: ', studio lighting, high production value',
     qualityBoosters: ['photographic', 'cinematic', 'professional'],
     includeKeywords: false,
   },
-  
+
   // Chinese/Asian models
   'fal-ai/hunyuan-image/v3/text-to-image': {
     stylePrefix: 'Exquisite digital art,',
@@ -204,7 +204,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'low quality, worst quality, blurry, watermark',
     includeKeywords: true,
   },
-  
+
   'fal-ai/cogview4': {
     stylePrefix: 'High quality digital creation,',
     styleSuffix: ', professional finish, excellent detail',
@@ -212,7 +212,7 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     negativePrompt: 'low quality, blurry',
     includeKeywords: true,
   },
-  
+
   // Unique/experimental models
   'fal-ai/bagel': {
     stylePrefix: 'Unique artistic visualization of',
@@ -220,14 +220,14 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     qualityBoosters: ['artistic', 'creative', 'unique'],
     includeKeywords: true,
   },
-  
+
   'fal-ai/gpt-image-1': {
     stylePrefix: 'A detailed image of',
     styleSuffix: ', high quality, clear and well-composed',
     qualityBoosters: ['detailed', 'professional'],
     includeKeywords: false,
   },
-  
+
   'fal-ai/minimax/image-01': {
     stylePrefix: 'Professional quality image of',
     styleSuffix: ', excellent composition, high detail',
@@ -269,7 +269,7 @@ const ARTICLE_THEMES: Record<string, VisualTheme> = {
     colorPalette: ['deep crimson', 'electric blue', 'warning orange', 'toxic green', 'void black'],
     composition: ['dutch angle', 'dramatic perspective', 'silhouette', 'stark contrast'],
   },
-  
+
   // AI/ML technical content
   'ai-tech': {
     primaryElements: [
@@ -283,7 +283,7 @@ const ARTICLE_THEMES: Record<string, VisualTheme> = {
     colorPalette: ['electric cyan', 'deep purple', 'gold accents', 'clean white', 'steel blue'],
     composition: ['symmetrical', 'centered', 'clean lines', 'minimalist'],
   },
-  
+
   // Business/strategy content
   'business': {
     primaryElements: [
@@ -297,7 +297,7 @@ const ARTICLE_THEMES: Record<string, VisualTheme> = {
     colorPalette: ['navy blue', 'gold', 'silver', 'white', 'accent red'],
     composition: ['balanced', 'professional', 'clean', 'corporate'],
   },
-  
+
   // R3F/3D development content
   'r3f-dev': {
     primaryElements: [
@@ -311,7 +311,7 @@ const ARTICLE_THEMES: Record<string, VisualTheme> = {
     colorPalette: ['neon pink', 'electric blue', 'bright green', 'purple', 'white grid lines'],
     composition: ['depth', 'layers', 'perspective', 'floating elements'],
   },
-  
+
   // Backstory/narrative content
   'narrative': {
     primaryElements: [
@@ -325,7 +325,7 @@ const ARTICLE_THEMES: Record<string, VisualTheme> = {
     colorPalette: ['warm amber', 'cool blue', 'dramatic shadows', 'spotlight white'],
     composition: ['cinematic', 'story-driven', 'emotional focus', 'dramatic lighting'],
   },
-  
+
   // Default/generic
   'default': {
     primaryElements: [
@@ -350,32 +350,32 @@ const ARTICLE_THEMES: Record<string, VisualTheme> = {
  */
 export function detectArticleTheme(context: ArticleContext): keyof typeof ARTICLE_THEMES {
   const text = `${context.title} ${context.description} ${context.keywords.join(' ')}`.toLowerCase();
-  
+
   // Check for tech horror indicators
   if (text.match(/incident|failure|catastrophe|disaster|malfunction|outbreak|collapse|horror|2\d{3}/)) {
     return 'tech-horror';
   }
-  
+
   // Check for R3F/3D development
   if (text.match(/r3f|three\.?js|3d|webgl|shader|mesh|geometry|canvas|scene/)) {
     return 'r3f-dev';
   }
-  
+
   // Check for AI/ML technical
   if (text.match(/neural|ai|ml|model|training|inference|llm|gpt|transformer/)) {
     return 'ai-tech';
   }
-  
+
   // Check for narrative/backstory
   if (text.match(/backstory|chapter|story|journey|chronicle|memoir/)) {
     return 'narrative';
   }
-  
+
   // Check for business/strategy
   if (text.match(/strategy|business|executive|leadership|roadmap|framework/)) {
     return 'business';
   }
-  
+
   return 'default';
 }
 
@@ -385,20 +385,20 @@ export function detectArticleTheme(context: ArticleContext): keyof typeof ARTICL
 export function generateVisualConcept(context: ArticleContext, variationSeed: number = 0): string {
   const theme = detectArticleTheme(context);
   const themeConfig = ARTICLE_THEMES[theme];
-  
+
   // Use seed to pick consistent but varied elements
   const seed = hashString(context.slug) + variationSeed;
   const random = seededRandom(seed);
-  
+
   const element = themeConfig.primaryElements[Math.floor(random() * themeConfig.primaryElements.length)];
   const atmosphere = themeConfig.atmosphere[Math.floor(random() * themeConfig.atmosphere.length)];
   const color1 = themeConfig.colorPalette[Math.floor(random() * themeConfig.colorPalette.length)];
   const color2 = themeConfig.colorPalette[Math.floor(random() * themeConfig.colorPalette.length)];
   const composition = themeConfig.composition[Math.floor(random() * themeConfig.composition.length)];
-  
+
   // Build concept incorporating article specifics
   const titleWords = context.title.split(' ').slice(0, 4).join(' ');
-  
+
   return `${element}, representing "${titleWords}", ${atmosphere} mood, ${color1} and ${color2} color scheme, ${composition} composition`;
 }
 
@@ -411,45 +411,45 @@ export function buildModelPrompt(
   variationSeed: number = 0
 ): { prompt: string; negativePrompt?: string } {
   const config = { ...DEFAULT_CONFIG, ...(PROMPT_CONFIGS[modelId] || {}) };
-  
+
   // Generate base visual concept
   const baseConcept = generateVisualConcept(context, variationSeed);
-  
+
   // Build prompt parts
   const parts: string[] = [];
-  
+
   // Style prefix
   parts.push(config.stylePrefix);
-  
+
   // Base concept
   parts.push(baseConcept);
-  
+
   // Include keywords if configured
   if (config.includeKeywords && context.keywords.length > 0) {
     const keywordStr = context.keywords.slice(0, 3).join(', ');
     parts.push(`themes of ${keywordStr}`);
   }
-  
+
   // Style suffix
   parts.push(config.styleSuffix);
-  
+
   // Quality boosters
   if (config.qualityBoosters.length > 0) {
     parts.push(config.qualityBoosters.join(', '));
   }
-  
+
   let prompt = parts.join(' ').replace(/\s+/g, ' ').trim();
-  
+
   // Apply custom transformation if defined
   if (config.transformPrompt) {
     prompt = config.transformPrompt(prompt, context);
   }
-  
+
   // Truncate if needed
   if (config.maxPromptLength && prompt.length > config.maxPromptLength) {
     prompt = prompt.substring(0, config.maxPromptLength - 3) + '...';
   }
-  
+
   return {
     prompt,
     negativePrompt: config.negativePrompt,

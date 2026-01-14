@@ -3,10 +3,10 @@ import { createClient } from '@supabase/supabase-js';
 
 /**
  * API: Select Art Option for Article
- * 
+ *
  * POST /api/art/select
  * Body: { optionId: number, articleSlug: string }
- * 
+ *
  * Selects an art option as the active artwork for an article.
  * Deselects any previously selected option.
  */
@@ -23,13 +23,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Validate admin key
   const authHeader = req.headers.authorization;
   const providedKey = authHeader?.replace('Bearer ', '');
-  
+
   if (adminApiKey && providedKey !== adminApiKey) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const { optionId, articleSlug } = req.body;
-  
+
   if (!optionId || !articleSlug) {
     return res.status(400).json({ error: 'optionId and articleSlug are required' });
   }
@@ -40,8 +40,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // First, deselect any currently selected option for this article
     await supabase
       .from('article_art_options')
-      .update({ 
-        is_selected: false, 
+      .update({
+        is_selected: false,
         selected_at: null,
       })
       .eq('article_slug', articleSlug)
@@ -50,8 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Now select the new option
     const { data, error } = await supabase
       .from('article_art_options')
-      .update({ 
-        is_selected: true, 
+      .update({
+        is_selected: true,
         selected_at: new Date().toISOString(),
         status: 'selected',
       })
@@ -77,7 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         storagePath: data.storage_path,
       },
     });
-    
+
   } catch (err) {
     console.error('API error:', err);
     return res.status(500).json({ error: 'Internal server error' });
