@@ -43,7 +43,8 @@ const CameraController: React.FC<CameraControllerProps> = ({ gameState }) => {
 
   // Smooth camera pan animation
   useFrame((state, delta) => {
-    if (!isPanningRef.current || !controls) return;
+    // @ts-ignore
+    if (!isPanningRef.current || !controls || !controls.target) return;
 
     // Increment progress (takes ~1.5 seconds to complete)
     panProgressRef.current = Math.min(1, panProgressRef.current + delta * 0.8);

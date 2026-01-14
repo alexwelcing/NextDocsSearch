@@ -140,6 +140,12 @@ export default function SceneCamera({
   const { camera } = useThree();
   const controlsRef = useRef<any>(null);
 
+  // Safe configuration with defaults
+  const safeConfig = useMemo(() => ({
+    target: (config && config.target) ? config.target : [0, 0, 0] as [number, number, number],
+    initial: (config && config.initial) ? config.initial : [0, 5, 10] as [number, number, number],
+  }), [config]);
+
   // Cinematic state
   const [cinematicActive, setCinematicActive] = useState(mode === 'cinematic');
   const cinematicStartTime = useRef<number | null>(null);
@@ -147,7 +153,7 @@ export default function SceneCamera({
   const totalDuration = useMemo(() => getTotalDuration(keyframes), [keyframes]);
 
   // Target for lookAt
-  const targetRef = useRef(new THREE.Vector3(...config.target));
+  const targetRef = useRef(new THREE.Vector3(...safeConfig.target));
 
   // Handle mode changes
   useEffect(() => {
@@ -160,11 +166,11 @@ export default function SceneCamera({
 
     // Set initial camera position for non-cinematic modes
     if (mode !== 'cinematic') {
-      camera.position.set(...config.initial);
-      targetRef.current.set(...config.target);
+      camera.position.set(...safeConfig.initial);
+      targetRef.current.set(...safeConfig.target);
       camera.lookAt(targetRef.current);
     }
-  }, [mode, config, camera]);
+  }, [mode, safeConfig, camera]);
 
   // Animation frame
   useFrame((state) => {
