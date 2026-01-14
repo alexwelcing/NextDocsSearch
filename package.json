@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "pnpm run validate:all",
+    "prebuild": "pnpm run validate:ci",
     "build": "pnpm run embeddings && next build",
     "postbuild": "next-sitemap",
     "start": "next start",
@@ -15,6 +15,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "validate": "pnpm run lint && pnpm run type-check",
+    "validate:ci": "pnpm run lint && pnpm run type-check && pnpm run validate:prebuild",
     "validate:all": "pnpm run lint && pnpm run type-check && pnpm run test && pnpm run validate:prebuild",
     "validate:prebuild": "tsx scripts/pre-build-validation.ts",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
