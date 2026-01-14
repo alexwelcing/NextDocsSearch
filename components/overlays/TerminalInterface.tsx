@@ -68,6 +68,7 @@ export default function TerminalInterface({
   const [enhancedArticles, setEnhancedArticles] = useState<EnhancedArticleData[]>([]);
   const [articleSearch, setArticleSearch] = useState('');
   const [articleFilter, setArticleFilter] = useState<string>('all');
+  const [isChatFocused, setIsChatFocused] = useState(false);
 
   const { chatData, sendMessage, chatHistory } = useSupabaseData();
   const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
@@ -254,6 +255,17 @@ export default function TerminalInterface({
     { id: 'about', label: 'ABOUT' },
   ] as const;
 
+  // Calculate terminal dimensions based on chat focus
+  const isExpanded = isChatFocused && viewMode === 'chat';
+  const terminalWidth = isMobile 
+    ? '100%' 
+    : isExpanded 
+      ? 'min(95vw, 900px)'  // Expanded width for desktop
+      : 'min(95vw, 600px)';
+  const terminalHeight = isMobile
+    ? isExpanded ? '85vh' : '70vh'  // Expanded height for mobile
+    : isExpanded ? '80vh' : '65vh';  // Expanded height for desktop
+
   return (
     <div
       style={{
@@ -276,8 +288,8 @@ export default function TerminalInterface({
         aria-modal="true"
         aria-label="Terminal Interface"
         style={{
-          width: isMobile ? '100%' : 'min(95vw, 600px)',
-          maxHeight: isMobile ? '70vh' : '65vh',
+          width: terminalWidth,
+          maxHeight: terminalHeight,
           background: 'rgba(10, 10, 10, 0.95)',
           borderRadius: isMobile ? '20px 20px 0 0' : '16px 16px 0 0',
           border: '1px solid #222',
@@ -286,6 +298,7 @@ export default function TerminalInterface({
           flexDirection: 'column',
           overflow: 'hidden',
           boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.5)',
+          transition: 'all 0.3s ease-in-out',
         }}
       >
       {/* Header */}
@@ -606,6 +619,8 @@ export default function TerminalInterface({
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
+                onFocus={() => setIsChatFocused(true)}
+                onBlur={() => setIsChatFocused(false)}
                 placeholder="What would you love to know? 🚀"
                 aria-label="Chat input"
                 autoFocus={!isMobile}

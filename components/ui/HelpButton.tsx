@@ -243,10 +243,19 @@ export default function HelpButton() {
       if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
       }
-      // Open help with ? or F1
+      // Open help with ? or F1, but only if NOT typing in an input field
       if ((e.key === '?' || e.key === 'F1') && !isOpen) {
-        e.preventDefault();
-        setIsOpen(true);
+        const target = e.target as HTMLElement;
+        const isTyping = 
+          target.tagName === 'INPUT' || 
+          target.tagName === 'TEXTAREA' || 
+          target.isContentEditable;
+        
+        // Only open help if user is not typing
+        if (!isTyping) {
+          e.preventDefault();
+          setIsOpen(true);
+        }
       }
     };
 
