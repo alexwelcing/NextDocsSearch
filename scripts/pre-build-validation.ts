@@ -52,21 +52,17 @@ function validateLucideIcons() {
   const componentsDir = path.join(process.cwd(), 'components');
   const pagesDir = path.join(process.cwd(), 'pages');
 
-  const validIcons = [
-    'ChevronLeft', 'ChevronRight', 'X', 'Image', 'Zap',
-    'Compass', 'Star', 'ArrowRight', 'ArrowLeft',
-    'BookOpen', 'ChevronUp', 'ChevronDown', 'Menu',
-    'Search', 'Settings', 'User', 'Home', 'FileText',
-  ];
+  // Only check for known invalid icons that cause build failures
+  const invalidIcons = ['Sparkles', 'Sparkle'];
 
-  const invalidIcons = ['Sparkles', 'Sparkle']; // Known invalid icons
+  let hasInvalidIcons = false;
 
   function checkFile(filePath: string) {
     if (!filePath.endsWith('.tsx') && !filePath.endsWith('.ts')) return;
 
     const content = fs.readFileSync(filePath, 'utf-8');
 
-    // Check for invalid icons
+    // Check for invalid icons only
     for (const invalidIcon of invalidIcons) {
       const importRegex = new RegExp(`import.*\\{[^}]*${invalidIcon}[^}]*\\}.*from.*['"]lucide-react['"]`);
       if (importRegex.test(content)) {
@@ -75,23 +71,7 @@ function validateLucideIcons() {
           false,
           `Invalid lucide-react icon '${invalidIcon}' found in ${path.relative(process.cwd(), filePath)}`
         );
-        return false;
-      }
-    }
-
-    // Check for any lucide-react imports and validate them
-    const importMatch = content.match(/import\s*\{([^}]+)\}\s*from\s*['"]lucide-react['"]/);
-    if (importMatch) {
-      const imports = importMatch[1].split(',').map(i => i.trim());
-      for (const importName of imports) {
-        const cleanName = importName.replace(/\s+as\s+.+$/, '').trim();
-        if (!validIcons.includes(cleanName) && cleanName !== '') {
-          addResult(
-            'Icon Validation',
-            false,
-            `Potentially invalid icon '${cleanName}' in ${path.relative(process.cwd(), filePath)}`
-          );
-        }
+        hasInvalidIcons = true;
       }
     }
 
@@ -117,7 +97,9 @@ function validateLucideIcons() {
   walkDir(componentsDir);
   walkDir(pagesDir);
 
-  addResult('Icon Validation', true, 'All lucide-react icons are valid');
+  if (!hasInvalidIcons) {
+    addResult('Icon Validation', true, 'No invalid lucide-react icons found');
+  }
 }
 
 // 2. Validate Gaussian Splat removal
