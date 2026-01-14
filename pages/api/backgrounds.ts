@@ -6,7 +6,7 @@ interface BackgroundInfo {
   id: string;
   name: string;
   path: string;
-  type: 'image' | 'splat';
+  type: 'image';
   size?: number;
 }
 
@@ -36,24 +36,18 @@ export default function handler(
       });
     }
 
-    // Scan for Gaussian splat files
-    const splatPath = path.join(process.cwd(), 'public', 'splats');
-    if (fs.existsSync(splatPath)) {
-      const files = fs.readdirSync(splatPath);
-      files.forEach((file) => {
-        if (/\.(splat|ply|ksplat|spz)$/i.test(file)) {
-          const stats = fs.statSync(path.join(splatPath, file));
-          const name = file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-          backgrounds.push({
-            id: `splat-${file}`,
-            name: `3D: ${name.charAt(0).toUpperCase() + name.slice(1)}`,
-            path: `/splats/${file}`,
-            type: 'splat',
-            size: stats.size,
-          });
-        }
-      });
-    }
+    // Gaussian splat files disabled - using pano method only
+    // const splatPath = path.join(process.cwd(), 'public', 'splats');
+    // if (fs.existsSync(splatPath)) {
+    //   const files = fs.readdirSync(splatPath);
+    //   files.forEach((file) => {
+    //     if (/\.(splat|ply|ksplat|spz)$/i.test(file)) {
+    //       const stats = fs.statSync(path.join(splatPath, file));
+    //       const name = file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+    //       // Splat backgrounds no longer supported
+    //     }
+    //   });
+    // }
 
     // Cache for 10 minutes
     res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate');
