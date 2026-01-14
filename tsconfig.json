@@ -41,6 +41,10 @@
   "exclude": [
     "node_modules",
     "vitest.config.ts",
-    "vitest.setup.ts"
+    "vitest.setup.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/__tests__/**",
+    "tests/**"
   ]
 }

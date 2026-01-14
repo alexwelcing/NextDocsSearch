@@ -102,7 +102,7 @@ describe('Article Page Integration', () => {
   describe('Component Integration', () => {
     it('should render ArticleImageSlideshow component', async () => {
       // Dynamic import to avoid ESM issues in tests
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -112,7 +112,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should pass correct slug to ArticleImageSlideshow', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} slug="custom-slug" />);
 
@@ -123,7 +123,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should render DeskSurface component', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -133,7 +133,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should render article classification', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -145,7 +145,7 @@ describe('Article Page Integration', () => {
 
   describe('Article Metadata', () => {
     it('should display article title', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -155,7 +155,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should display reading time', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -165,7 +165,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should display author information', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -177,7 +177,7 @@ describe('Article Page Integration', () => {
 
   describe('Component Order', () => {
     it('should render components in correct order', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       const { container } = render(<ArticlePage {...mockArticleProps} />);
 
@@ -199,7 +199,7 @@ describe('Article Page Integration', () => {
 
   describe('OG Image Handling', () => {
     it('should use provided ogImage', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
       const customOgImage = 'https://example.com/custom-og.jpg';
 
       render(<ArticlePage {...mockArticleProps} ogImage={customOgImage} />);
@@ -212,7 +212,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should handle missing ogImage gracefully', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} ogImage="" />);
 
@@ -225,7 +225,7 @@ describe('Article Page Integration', () => {
 
   describe('Content Rendering', () => {
     it('should render markdown content', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -235,7 +235,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should render video if videoURL provided', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(
         <ArticlePage
@@ -253,7 +253,7 @@ describe('Article Page Integration', () => {
 
   describe('Navigation Elements', () => {
     it('should render internal links', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -264,7 +264,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should render discovery section', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} />);
 
@@ -276,7 +276,7 @@ describe('Article Page Integration', () => {
 
   describe('Related Articles', () => {
     it('should render related articles when provided', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
       const relatedArticles = [
         {
           slug: 'related-1',
@@ -294,7 +294,7 @@ describe('Article Page Integration', () => {
     });
 
     it('should not render related section when empty', async () => {
-      const ArticlePage = (await import('../[slug]')).default;
+      const ArticlePage = (await import('../../../pages/articles/[slug]')).default;
 
       render(<ArticlePage {...mockArticleProps} relatedArticles={[]} />);
 
