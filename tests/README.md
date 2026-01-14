@@ -6,14 +6,18 @@ This directory contains comprehensive tests to ensure code quality and prevent d
 
 ```
 tests/
-├── components/__tests__/
-│   └── ArticleImageSlideshow.test.tsx
-├── components/3d/scene/__tests__/
-│   └── ThreeSixty.test.tsx
-├── pages/articles/__tests__/
+├── pages/articles/
 │   └── article-page.test.tsx
-└── scripts/
-    └── pre-build-validation.ts
+└── README.md
+
+components/
+├── __tests__/
+│   └── ArticleImageSlideshow.test.tsx
+└── 3d/scene/__tests__/
+    └── ThreeSixty.test.tsx
+
+scripts/
+└── pre-build-validation.ts
 ```
 
 ## Running Tests
