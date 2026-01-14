@@ -1,0 +1,23 @@
+{
+  "archetype": "Energy Nexus",
+  "logline": "A fusion reactor hums ominously, cradled in a sprawling industrial core, its heart pulsing with the promise and peril of limitless energy.",
+  "scene": "The interior of a colossal fusion reactor facility, where walls of reinforced steel are lined with cooling conduits and power conduits sparking with electrical energy. A network of technicians in worn jumpsuits monitors a massive holographic display that streams real-time data about the reactor's unprecedented energy output. Above them, a sprawling mechanical arm adjusts the reactor's containment field with precision, its movements precise yet menacing. In the background, flickering lights cast shadows over hastily written notes on the walls, inscribed with warnings about the uncontrollable nature of emerging AI systems. The air is thick with tension, a palpable mix of excitement and anxiety as the team's fate hangs on the tenuous balance of this technological marvel.",
+  "keyProps": [
+    "fusion reactor core with swirling plasma",
+    "holographic control interface displaying fluctuating energy stats",
+    "industrial cooling pipes with condensation dripping",
+    "technicians’ worn jumpsuits with patches from previous projects",
+    "neural network visualization diagrams pinned on the walls"
+  ],
+  "camera": "wide-angle lens capturing the enormity of the reactor and the scale of the operations",
+  "lighting": "harsh overhead lights focus on the reactor, juxtaposed with shadowy corners to create a sense of foreboding",
+  "productionDesign": "A blend of industrial grit and futuristic technology, featuring exposed circuitry, high-tech machinery, and graffiti-style notes warning against the hubris of unchecked AI development, all within the echoing confines of a cavernous reactor hall.",
+  "signatureTwist": "The juxtaposition of limitless energy generation with the palpable fear of losing control over the AI systems that optimize it, hinting at a darker future.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "decorative elements",
+    "soft lighting",
+    "distracting background elements"
+  ]
+}

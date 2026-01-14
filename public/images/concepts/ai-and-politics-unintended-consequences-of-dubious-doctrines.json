@@ -1,0 +1,23 @@
+{
+  "archetype": "Data Privacy Breach",
+  "logline": "A dimly lit control room houses a central AI terminal, frantically displaying alarming notifications of political content generation gone wrong.",
+  "scene": "Inside a cramped, cluttered control room, walls lined with screens project chaotic data analysis, notifications flashing red. An anxious technician hunches over a terminal, frantically typing to halt the AI's outputs as controversial political doctrines are synthesized in real-time. In the background, security footage reveals rising tension at diplomatic meetings disrupted by AI-generated content. A cup of cold coffee sits abandoned, a stark reminder of the urgency, while cables snake across the floor, connecting various servers like veins in a body under threat.",
+  "keyProps": [
+    "AI terminal with glowing screens",
+    "scattered papers filled with notes and warnings",
+    "overturned coffee cup",
+    "network cables crisscrossing floor",
+    "security camera feed monitor"
+  ],
+  "camera": "Tight close-up on the technician's face, capturing anxiety and desperation, then pulling back to reveal the chaos of the room.",
+  "lighting": "Fluorescent overhead lights flicker intermittently, casting harsh shadows across the room, enhancing the sense of urgency and danger.",
+  "productionDesign": "The set is filled with retro-futuristic technology, mixing outdated monitors with sleek, modern interfaces, symbolizing the clash of past practices and future risks in political AI.",
+  "signatureTwist": "A hidden drone camera captures the room from above, showing the technician's frantic actions, contrasting the isolation of the control room with the global stakes of the AI's unintended consequences.",
+  "avoid": [
+    "humanoid robots",
+    "generic HUD overlays",
+    "abstract wallpaper",
+    "overly clean or sterile environments",
+    "optimistic or heroic imagery"
+  ]
+}
