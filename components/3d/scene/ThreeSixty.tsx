@@ -441,10 +441,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* Camera controller for smooth game transitions */}
-              {cinematicComplete && <CameraController gameState={gameState} />}
-
-              {/* OrbitControls - disabled during cinematic intro */}
+              {/* OrbitControls - disabled during cinematic intro, must mount BEFORE CameraController */}
               {cinematicComplete && !isDialogOpen && (
                 <OrbitControls
                   makeDefault
@@ -460,6 +457,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   target={[0, 0, 0]}
                 />
               )}
+
+              {/* Camera controller for smooth game transitions - only when OrbitControls is active */}
+              {cinematicComplete && !isDialogOpen && <CameraController gameState={gameState} />}
 
               {/* Sphere Hunter Game */}
               <ClickingGame
