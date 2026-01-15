@@ -423,6 +423,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           alpha: false,
         }}
         camera={{ position: [0, 2, 10], fov: isMobile ? 70 : 60 }}
+        onCreated={({ gl }) => {
+          // Ensure canvas is ready for event listeners
+          gl.domElement.style.touchAction = 'none';
+        }}
       >
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
@@ -441,8 +445,9 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               {cinematicComplete && <CameraController gameState={gameState} />}
 
               {/* OrbitControls - disabled during cinematic intro */}
-              {cinematicComplete && (
+              {cinematicComplete && !isDialogOpen && (
                 <OrbitControls
+                  makeDefault
                   enableDamping
                   dampingFactor={0.1}
                   rotateSpeed={0.5}
@@ -452,6 +457,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   maxDistance={50}
                   maxPolarAngle={Math.PI / 2}
                   enablePan={false}
+                  target={[0, 0, 0]}
                 />
               )}
 

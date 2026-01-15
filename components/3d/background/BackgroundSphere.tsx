@@ -44,6 +44,7 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
 
   // 1) On mount, load initial texture immediately so we have something displayed
   useEffect(() => {
+    if (!imageUrl) return;
     loadTexture(imageUrl, (loadedTex) => {
       setOldTexture(loadedTex)
       if (onLoad) onLoad()
