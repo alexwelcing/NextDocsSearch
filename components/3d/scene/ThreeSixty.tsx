@@ -6,6 +6,7 @@ import { Physics } from '@react-three/cannon';
 import { OrbitControls, Stats } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BackgroundSphere from '../background/BackgroundSphere';
+import HybridBackground from '../background/HybridBackground';
 import type { ArticleData } from '../interactive/GlowingArticleDisplay';
 import InteractiveTablet from '../interactive/InteractiveTablet';
 import ClickingGame, { GameStats } from '../game/ClickingGame';
@@ -471,9 +472,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 onTimeUpdate={setTimeRemaining}
               />
 
-              {/* Background: Always use panorama sphere (pano method) */}
+              {/* Background: Hybrid - starts with pano, loads splat in background */}
               {!is3DExploreActive && (
-                <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+                <HybridBackground
+                  panoUrl="https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/threesixty/world/ornate-outside-architecture-pano.png"
+                  splatUrl="https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/threesixty/world/ornate-outside-architecture-low.spz"
+                  transitionDuration={2.5}
+                />
               )}
 
               {/* 3D Article Explorer - Immersive InfiniteLibrary Experience */}
