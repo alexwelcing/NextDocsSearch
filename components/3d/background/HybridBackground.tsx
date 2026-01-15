@@ -77,7 +77,6 @@ const HybridBackground: React.FC<HybridBackgroundProps> = ({
           initialCameraLookAt: [0, 0, 0],
           renderer: gl,
           camera: camera,
-          scene: scene,
           selfDrivenMode: false, // We control the render loop
         })
 
@@ -88,7 +87,6 @@ const HybridBackground: React.FC<HybridBackgroundProps> = ({
             position: [0, 0, 0],
             rotation: [0, 0, 0],
             scale: [1, 1, 1],
-            splatAlphaRemovalThreshold: 5,
           })
           .then(() => {
             console.log('[HybridBackground] Splat loaded successfully')
