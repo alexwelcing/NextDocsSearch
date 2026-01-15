@@ -77,7 +77,6 @@ const HybridBackground: React.FC<HybridBackgroundProps> = ({
           initialCameraLookAt: [0, 0, 0],
           renderer: gl,
           camera: camera,
-          selfDrivenMode: false, // We control the render loop
         })
 
         splatViewerRef.current = viewer
@@ -90,6 +89,7 @@ const HybridBackground: React.FC<HybridBackgroundProps> = ({
           })
           .then(() => {
             console.log('[HybridBackground] Splat loaded successfully')
+            viewer.start()
             setSplatLoaded(true)
             setIsTransitioning(true)
             transitionProgressRef.current = 0
