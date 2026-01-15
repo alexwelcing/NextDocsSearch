@@ -6,8 +6,8 @@ import { Physics } from '@react-three/cannon';
 import { OrbitControls, Stats } from '@react-three/drei';
 import PhysicsGround from './PhysicsGround';
 import BackgroundSphere from '../background/BackgroundSphere';
+import HybridBackground from '../background/HybridBackground';
 import type { ArticleData } from '../interactive/GlowingArticleDisplay';
-import GaussianSplatBackground from '../background/GaussianSplatBackground';
 import InteractiveTablet from '../interactive/InteractiveTablet';
 import ClickingGame, { GameStats } from '../game/ClickingGame';
 import GameHUD from '../../overlays/GameHUD';
@@ -115,35 +115,23 @@ interface ThreeSixtyProps {
   onExit?: () => void;
 }
 
-interface SplatFile {
-  filename: string;
-  path: string;
-  size: number;
-}
-
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image';
   path: string;
 }
 
 interface PerformanceFlags {
-  allowSplats: boolean;
   forceLowPower: boolean;
 }
 
 const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onChangeImage, onGameStateChange, onExit }) => {
   const [articles, setArticles] = useState<ArticleData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [useGaussianSplat, setUseGaussianSplat] = useState(false);
-  const [availableSplats, setAvailableSplats] = useState<SplatFile[]>([]);
-  const [selectedSplat, setSelectedSplat] = useState<string>('');
-  const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isLowEndDevice, setIsLowEndDevice] = useState(false);
   const [performanceFlags, setPerformanceFlags] = useState<PerformanceFlags>({
-    allowSplats: true,
     forceLowPower: false,
   });
 
@@ -229,20 +217,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     const perfMode = params.get('perf');
     const forceLowPower = perfMode === 'low';
     const forceHighPower = perfMode === 'high';
-    const splatsDisabled = params.get('splats') === 'off';
-
-    const allowSplats = !splatsDisabled && (forceHighPower || (!forceLowPower && !isLowEndDevice));
 
     setPerformanceFlags({
-      allowSplats,
       forceLowPower: forceLowPower && !forceHighPower,
     });
   }, [isLowEndDevice]);
-
-  useEffect(() => {
-    if (performanceFlags.allowSplats || !useGaussianSplat) return;
-    setUseGaussianSplat(false);
-  }, [performanceFlags.allowSplats, useGaussianSplat]);
 
   // Notify parent of game state changes
   useEffect(() => {
@@ -257,16 +236,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
   }, [gameState]);
 
-  useEffect(() => {
-    if (useGaussianSplat && performanceFlags.allowSplats && selectedSplat) {
-      perfLogger.markEvent('artifact-splat');
-    }
-  }, [useGaussianSplat, performanceFlags.allowSplats, selectedSplat]);
-
   // Create XR store for VR support
   const store = useMemo(() => createXRStore(), []);
 
-  // Build scenery options for the tablet menu
+  // Build scenery options for the tablet menu - only panoramas
   const sceneryOptions = useMemo<SceneryOption[]>(() => {
     const options: SceneryOption[] = [];
 
@@ -278,37 +251,17 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       path: currentImage,
     });
 
-    // Add available splats
-    if (performanceFlags.allowSplats) {
-      availableSplats.forEach((splat, i) => {
-        options.push({
-          id: `splat-${i}`,
-          name: splat.filename.replace('.splat', ''),
-          type: 'splat',
-          path: splat.path,
-        });
-      });
-    }
-
+    // Note: Splats disabled - using pano method only
     return options;
-  }, [currentImage, availableSplats, performanceFlags.allowSplats]);
+  }, [currentImage]);
 
-  // Handle scenery change from tablet
+  // Handle scenery change from tablet - panoramas only
   const handleSceneryChange = useCallback((scenery: SceneryOption) => {
-    if (scenery.type === 'splat') {
-      if (!performanceFlags.allowSplats) {
-        return;
-      }
-      setUseGaussianSplat(true);
-      setSelectedSplat(scenery.path);
-    } else {
-      setUseGaussianSplat(false);
-      onChangeImage(scenery.path);
-    }
-  }, [onChangeImage, performanceFlags.allowSplats]);
+    onChangeImage(scenery.path);
+  }, [onChangeImage]);
 
-  // Get current scenery path for tablet display
-  const currentSceneryPath = useGaussianSplat ? selectedSplat : currentImage;
+  // Get current scenery path for tablet display - always panorama
+  const currentSceneryPath = currentImage;
 
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
@@ -344,26 +297,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
         .catch(err => console.error('Failed to fetch enhanced articles:', err));
     }
   }, [is3DExploreActive, isArticleDisplayOpen, enhancedArticles.length]);
-
-  // Auto-detect available splat files
-  useEffect(() => {
-    const fetchSplats = async () => {
-      try {
-        const response = await fetch('/api/getSplats');
-        const data = await response.json();
-
-        if (data.hasSplats && data.splats.length > 0) {
-          setAvailableSplats(data.splats);
-          setHasSplats(true);
-          setSelectedSplat(data.splats[0].path);
-        }
-      } catch (error) {
-        console.error("Failed fetching splat files:", error);
-      }
-    };
-
-    fetchSplats();
-  }, []);
 
   const handleEnterVR = async () => {
     try {
@@ -491,6 +424,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           alpha: false,
         }}
         camera={{ position: [0, 2, 10], fov: isMobile ? 70 : 60 }}
+        onCreated={({ gl }) => {
+          // Ensure canvas is ready for event listeners
+          gl.domElement.style.touchAction = 'none';
+        }}
       >
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
@@ -505,12 +442,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* Camera controller for smooth game transitions */}
-              {cinematicComplete && <CameraController gameState={gameState} />}
-
-              {/* OrbitControls - disabled during cinematic intro */}
-              {cinematicComplete && (
+              {/* OrbitControls - disabled during cinematic intro, must mount BEFORE CameraController */}
+              {cinematicComplete && !isDialogOpen && (
                 <OrbitControls
+                  makeDefault
                   enableDamping
                   dampingFactor={0.1}
                   rotateSpeed={0.5}
@@ -520,8 +455,12 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   maxDistance={50}
                   maxPolarAngle={Math.PI / 2}
                   enablePan={false}
+                  target={[0, 0, 0]}
                 />
               )}
+
+              {/* Camera controller for smooth game transitions - only when OrbitControls is active */}
+              {cinematicComplete && !isDialogOpen && <CameraController gameState={gameState} />}
 
               {/* Sphere Hunter Game */}
               <ClickingGame
@@ -533,23 +472,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 onTimeUpdate={setTimeRemaining}
               />
 
-              {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
+              {/* Background: Hybrid - starts with pano, loads splat in background */}
               {!is3DExploreActive && (
-                <>
-                  {useGaussianSplat &&
-                  selectedSplat &&
-                  !isMobile &&
-                  performanceFlags.allowSplats &&
-                  gameState !== 'PLAYING' ? (
-                    <GaussianSplatBackground
-                      splatUrl={selectedSplat}
-                      position={[0, 0, 0]}
-                      scale={1}
-                    />
-                  ) : (
-                    <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
-                  )}
-                </>
+                <HybridBackground
+                  panoUrl="https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/threesixty/world/ornate-outside-architecture-pano.png"
+                  splatUrl="https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/threesixty/world/ornate-outside-architecture-low.spz"
+                  transitionDuration={2.5}
+                />
               )}
 
               {/* 3D Article Explorer - Immersive InfiniteLibrary Experience */}

@@ -19,6 +19,7 @@ import { useEffect } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import DeskSurface from '@/components/ui/DeskSurface';
+import ArticleImageSlideshow from '@/components/ArticleImageSlideshow';
 
 interface ArticleProps {
   title: string;
@@ -580,6 +581,9 @@ const ArticlePage: NextPage<ArticleProps> = ({
         {/* Classification Header - Shows article taxonomy */}
         <ArticleClassification {...inferClassificationFromSlug(slug)} />
 
+        {/* Article Image Slideshow - Shows all generated artwork and uploaded media */}
+        <ArticleImageSlideshow articleSlug={slug} />
+
         {videoURL && (
           <div style={{ margin: '2rem 0' }}>
             <iframe
@@ -756,6 +760,42 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const readingTime = calculateReadingTime(content);
   const relatedArticles = getRelatedArticles(slug, allArticles);
 
+  // Fetch selected artwork for og:image (server-side)
+  let selectedArtworkUrl = '';
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (supabaseUrl && supabaseServiceKey) {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+      const { data: artworkData } = await supabase
+        .from('article_art_options')
+        .select('image_url, storage_path')
+        .eq('article_slug', slug)
+        .eq('is_selected', true)
+        .single();
+
+      if (artworkData) {
+        // Prefer storage path over temporary FAL URL
+        if (artworkData.storage_path) {
+          const { data: urlData } = supabase.storage
+            .from('article-artwork')
+            .getPublicUrl(artworkData.storage_path);
+          selectedArtworkUrl = urlData?.publicUrl || artworkData.image_url || '';
+        } else {
+          selectedArtworkUrl = artworkData.image_url || '';
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Could not fetch selected artwork for og:image:', error);
+  }
+
+  // Use selected artwork if available, otherwise fall back to frontmatter ogImage
+  const finalOgImage = selectedArtworkUrl || data.ogImage || '';
+
   return {
     props: {
       title: data.title as string,
@@ -763,7 +803,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       author: Array.isArray(data.author) ? (data.author as string[]) : ([data.author] as string[]),
       description: data.description || '',
       keywords: data.keywords || [],
-      ogImage: data.ogImage || '',
+      ogImage: finalOgImage,
       videoURL: data.videoURL || '',
       content: escapedContent,
       readingTime,

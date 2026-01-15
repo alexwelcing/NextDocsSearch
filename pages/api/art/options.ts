@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (option.storage_path) {
         const { data: urlData } = supabase.storage
-          .from('media')
+          .from('article-artwork')
           .getPublicUrl(option.storage_path);
         publicUrl = urlData?.publicUrl || option.image_url;
       }

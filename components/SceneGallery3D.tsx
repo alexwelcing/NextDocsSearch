@@ -6,7 +6,7 @@ import * as THREE from 'three';
 interface SceneOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image';
   path: string;
   description?: string;
 }

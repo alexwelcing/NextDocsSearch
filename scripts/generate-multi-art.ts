@@ -675,7 +675,7 @@ async function main() {
       article_slugs: articles.map(a => a.slug),
       total_articles: articles.length,
       total_generations: articles.length * 3,
-      models_used: [...new Set(articles.flatMap(a => selectDiverseModels(a)))],
+      models_used: Array.from(new Set(articles.flatMap(a => selectDiverseModels(a)))),
       status: 'running',
       started_at: new Date().toISOString(),
     });
