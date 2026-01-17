@@ -2,6 +2,8 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import GameOrb from './GameOrb';
 import ParticleExplosion from './ParticleExplosion';
+import LaserBeam from './LaserBeam';
+import CosmicExplosion from './CosmicExplosion';
 import * as THREE from 'three';
 
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -16,6 +18,15 @@ interface Explosion {
   id: string;
   position: [number, number, number];
   color: string;
+  isCosmic?: boolean;
+  isGolden?: boolean;
+}
+
+interface LaserEffect {
+  id: string;
+  targetPosition: [number, number, number];
+  color: string;
+  isGolden: boolean;
 }
 
 interface ClickingGameProps {
@@ -25,6 +36,10 @@ interface ClickingGameProps {
   onScoreUpdate?: (score: number) => void;
   onComboUpdate?: (combo: number) => void;
   onTimeUpdate?: (timeRemaining: number) => void;
+  // Cosmic power props
+  cosmicPowerActive?: boolean;
+  clickRadiusMultiplier?: number;
+  comboBoostMultiplier?: number;
 }
 
 export interface GameStats {
@@ -42,9 +57,13 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
   onScoreUpdate,
   onComboUpdate,
   onTimeUpdate,
+  cosmicPowerActive = false,
+  clickRadiusMultiplier = 1,
+  comboBoostMultiplier = 1,
 }) => {
   const [orbs, setOrbs] = useState<Orb[]>([]);
   const [explosions, setExplosions] = useState<Explosion[]>([]);
+  const [lasers, setLasers] = useState<LaserEffect[]>([]);
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
   const [comboMax, setComboMax] = useState(0);
@@ -87,6 +106,7 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
   const resetGame = useCallback(() => {
     setOrbs([]);
     setExplosions([]);
+    setLasers([]);
     setScore(0);
     setCombo(0);
     setComboMax(0);
@@ -219,11 +239,27 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
       // Remove orb
       setOrbs((prev) => prev.filter((o) => o.id !== orbId));
 
-      // Add explosion (limit to 5 concurrent explosions for performance)
+      // Add laser effect if cosmic power is active
+      if (cosmicPowerActive) {
+        const laser: LaserEffect = {
+          id: `laser-${Date.now()}-${Math.random()}`,
+          targetPosition: position,
+          color: isGolden ? '#ffd700' : '#00ffff',
+          isGolden,
+        };
+        setLasers((prev) => {
+          const updated = [...prev, laser];
+          return updated.slice(-3); // Keep only last 3 lasers for performance
+        });
+      }
+
+      // Add explosion (cosmic or regular based on power state)
       const explosion: Explosion = {
         id: `explosion-${Date.now()}-${Math.random()}`,
         position,
         color: isGolden ? '#FFD700' : '#00BFFF',
+        isCosmic: cosmicPowerActive,
+        isGolden,
       };
       setExplosions((prev) => {
         const updated = [...prev, explosion];
@@ -238,15 +274,17 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
       // Every orb hit is a click - increment totalClicks since stopPropagation prevents bubbling
       setTotalClicks((prev) => prev + 1);
 
-      // Apply combo multiplier
+      // Apply combo multiplier with cosmic boost
       let multiplier = 1;
       if (newCombo >= 5) multiplier = 3;
       else if (newCombo >= 3) multiplier = 2;
 
-      const earnedPoints = points * multiplier;
+      // Apply cosmic power combo boost
+      const finalMultiplier = multiplier * comboBoostMultiplier;
+      const earnedPoints = Math.round(points * finalMultiplier);
       setScore((prev) => prev + earnedPoints);
     },
-    [combo]
+    [combo, cosmicPowerActive, comboBoostMultiplier]
   );
 
   // Handle orb miss (timeout/despawn)
@@ -258,6 +296,11 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
   // Handle explosion complete
   const handleExplosionComplete = useCallback((explosionId: string) => {
     setExplosions((prev) => prev.filter((e) => e.id !== explosionId));
+  }, []);
+
+  // Handle laser complete
+  const handleLaserComplete = useCallback((laserId: string) => {
+    setLasers((prev) => prev.filter((l) => l.id !== laserId));
   }, []);
 
   // Handle missed click (clicking on background, not hitting any orb)
@@ -291,18 +334,41 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
           lifetime={gameState === 'IDLE' ? 999999 : 3} // Idle orbs don't despawn
           onHit={(points) => handleOrbHit(orb.id, points, orb.position, orb.isGolden)}
           onMiss={() => handleOrbMiss(orb.id)}
+          clickRadiusMultiplier={cosmicPowerActive ? clickRadiusMultiplier : 1}
+          cosmicPowerActive={cosmicPowerActive}
         />
       ))}
 
-      {/* Render explosions */}
-      {explosions.map((explosion) => (
-        <ParticleExplosion
-          key={explosion.id}
-          position={explosion.position}
-          color={explosion.color}
-          onComplete={() => handleExplosionComplete(explosion.id)}
+      {/* Render laser beams (cosmic power only) */}
+      {lasers.map((laser) => (
+        <LaserBeam
+          key={laser.id}
+          targetPosition={laser.targetPosition}
+          color={laser.color}
+          isGolden={laser.isGolden}
+          onComplete={() => handleLaserComplete(laser.id)}
         />
       ))}
+
+      {/* Render explosions - cosmic or regular based on power state */}
+      {explosions.map((explosion) =>
+        explosion.isCosmic ? (
+          <CosmicExplosion
+            key={explosion.id}
+            position={explosion.position}
+            color={explosion.color}
+            isGolden={explosion.isGolden}
+            onComplete={() => handleExplosionComplete(explosion.id)}
+          />
+        ) : (
+          <ParticleExplosion
+            key={explosion.id}
+            position={explosion.position}
+            color={explosion.color}
+            onComplete={() => handleExplosionComplete(explosion.id)}
+          />
+        )
+      )}
     </group>
   );
 };
