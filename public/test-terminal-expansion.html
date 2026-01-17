@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Expansion & Keyboard Shortcut Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00d4ff;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    .demo-section {
+      background: rgba(10, 10, 26, 0.8);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .demo-section h2 {
+      color: #0f0;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .demo-section p {
+      color: #aaa;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .help-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      background: rgba(10, 10, 16, 0.85);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 50%;
+      color: #00d4ff;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+      z-index: 2000;
+    }
+
+    .help-button:hover {
+      background: rgba(0, 212, 255, 0.15);
+      border-color: rgba(0, 212, 255, 0.6);
+      transform: scale(1.05);
+    }
+
+    .help-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .help-overlay.visible {
+      display: flex;
+    }
+
+    .help-panel {
+      max-width: 600px;
+      width: 100%;
+      background: rgba(10, 10, 16, 0.95);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 30px;
+    }
+
+    .help-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .help-title {
+      color: #00d4ff;
+      font-size: 1.5rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 24px;
+      padding: 8px;
+    }
+
+    .close-btn:hover {
+      color: #ff6b6b;
+    }
+
+    .terminal-button {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #0a0 0%, #060 100%);
+      border: 2px solid #0f0;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: monospace;
+      margin-top: 20px;
+    }
+
+    .terminal-button:hover {
+      opacity: 0.9;
+    }
+
+    .terminal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(2px);
+    }
+
+    .terminal-overlay.visible {
+      display: flex;
+    }
+
+    .terminal {
+      width: min(95vw, 600px);
+      max-height: 65vh;
+      background: rgba(10, 10, 10, 0.95);
+      border-radius: 16px 16px 0 0;
+      border: 1px solid #222;
+      border-bottom: none;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .terminal.expanded {
+      width: min(95vw, 900px);
+      max-height: 80vh;
+    }
+
+    .terminal-header {
+      height: 44px;
+      background: rgba(17, 17, 17, 0.9);
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      justify-content: space-between;
+    }
+
+    .terminal-title {
+      color: #0f0;
+      font-size: 14px;
+    }
+
+    .terminal-close {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      line-height: 1;
+    }
+
+    .terminal-tabs {
+      display: flex;
+      border-bottom: 1px solid #222;
+      background: rgba(13, 13, 13, 0.9);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #555;
+      font-family: monospace;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn.active {
+      background: #1a1a1a;
+      border-bottom-color: #0f0;
+      color: #0f0;
+    }
+
+    .terminal-content {
+      flex: 1;
+      overflow: auto;
+      padding: 20px 24px;
+      min-height: 0;
+    }
+
+    .chat-area {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-display {
+      flex: 1;
+      background: #111;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #8f8;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-family: monospace;
+      outline: none;
+    }
+
+    .chat-input:focus {
+      border-color: #0f0;
+    }
+
+    .send-btn {
+      background: #0f0;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 20px;
+      color: #000;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: monospace;
+    }
+
+    .status-indicator {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 15px 20px;
+      font-size: 12px;
+      color: #aaa;
+      z-index: 3000;
+    }
+
+    .status-line {
+      margin: 5px 0;
+    }
+
+    .status-line.active {
+      color: #0f0;
+    }
+
+    code {
+      background: rgba(0, 255, 0, 0.1);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #0f0;
+    }
+
+    @media (max-width: 768px) {
+      .terminal {
+        width: 100%;
+        max-height: 70vh;
+      }
+      
+      .terminal.expanded {
+        max-height: 85vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Keyboard Shortcut & Terminal Expansion Demo</h1>
+    
+    <div class="demo-section">
+      <h2>Feature 1: Disable "?" Help When Typing</h2>
+      <p><strong>Test it:</strong></p>
+      <ol style="color: #aaa; line-height: 2; margin-left: 20px;">
+        <li>Press <code>?</code> anywhere on this page → Help menu opens</li>
+        <li>Close help menu (ESC or click X)</li>
+        <li>Click "Open Terminal" below</li>
+        <li>Click on CHAT tab</li>
+        <li>Click in the chat input field</li>
+        <li>Type <code>?</code> → Character appears in input, help menu does NOT open ✅</li>
+        <li>Click outside input</li>
+        <li>Press <code>?</code> → Help menu opens again ✅</li>
+      </ol>
+      <button class="terminal-button" onclick="openTerminal()">Open Terminal (Click Chat Tab)</button>
+    </div>
+
+    <div class="demo-section">
+      <h2>Feature 2: Terminal Expansion on Chat Focus</h2>
+      <p><strong>Test it:</strong></p>
+      <ol style="color: #aaa; line-height: 2; margin-left: 20px;">
+        <li>Click "Open Terminal" above</li>
+        <li>Click on CHAT tab</li>
+        <li>Observe terminal dimensions (normal size)</li>
+        <li>Click in the chat input field to focus</li>
+        <li>Watch terminal smoothly expand (larger and taller) ✅</li>
+        <li>Click outside or press TAB to blur</li>
+        <li>Watch terminal smoothly shrink back ✅</li>
+      </ol>
+      <p style="margin-top: 20px;"><strong>Expansion Details:</strong></p>
+      <ul style="color: #aaa; line-height: 2; margin-left: 20px;">
+        <li>Desktop: 600px → 900px width (50% larger)</li>
+        <li>Desktop: 65vh → 80vh height (~23% taller)</li>
+        <li>Mobile: 70vh → 85vh height (~21% taller)</li>
+        <li>Smooth 0.3s transition</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Help Button -->
+  <button class="help-button" onclick="openHelp()" title="Press ? or F1">?</button>
+
+  <!-- Help Overlay -->
+  <div class="help-overlay" id="helpOverlay" onclick="closeHelp()">
+    <div class="help-panel" onclick="event.stopPropagation()">
+      <div class="help-header">
+        <h2 class="help-title">Help & Shortcuts</h2>
+        <button class="close-btn" onclick="closeHelp()">×</button>
+      </div>
+      <div>
+        <p style="color: #aaa; line-height: 1.8;">
+          <strong style="color: #00d4ff;">Keyboard Shortcuts:</strong><br>
+          • Press <code>?</code> or <code>F1</code> to open this help<br>
+          • Press <code>ESC</code> to close panels<br>
+          <br>
+          <strong style="color: #00d4ff;">✅ Fixed:</strong><br>
+          • Help menu no longer opens when typing <code>?</code> in input fields<br>
+          • Chat input area expands when focused for better readability
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminal Overlay -->
+  <div class="terminal-overlay" id="terminalOverlay" onclick="closeTerminal()">
+    <div class="terminal" id="terminal" onclick="event.stopPropagation()">
+      <div class="terminal-header">
+        <div class="terminal-title">>_ terminal</div>
+        <button class="terminal-close" onclick="closeTerminal()">×</button>
+      </div>
+      
+      <div class="terminal-tabs">
+        <button class="tab-btn" onclick="switchTab('explore')">EXPLORE</button>
+        <button class="tab-btn active" id="chatTab" onclick="switchTab('chat')">CHAT</button>
+        <button class="tab-btn" onclick="switchTab('game')">GAME</button>
+      </div>
+
+      <div class="terminal-content">
+        <div class="chat-area">
+          <div class="chat-display">
+            🚀 Hey there! I'm Ship AI, and I'm genuinely excited to help you!<br><br>
+            Try typing "?" in the input below - it should appear as text, not open the help menu!<br><br>
+            <strong style="color: #0f0;">Also notice:</strong> When you click/focus on the input below, the terminal expands smoothly!
+          </div>
+          <div class="chat-input-row">
+            <input 
+              type="text" 
+              class="chat-input" 
+              id="chatInput"
+              placeholder="What would you love to know? 🚀"
+              onfocus="handleChatFocus()"
+              onblur="handleChatBlur()"
+            >
+            <button class="send-btn">SEND</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Indicator -->
+  <div class="status-indicator">
+    <div class="status-line">Terminal expanded: <span id="expandedStatus">false</span></div>
+    <div class="status-line">Help menu open: <span id="helpStatus">false</span></div>
+    <div class="status-line">Active element: <span id="activeElement">body</span></div>
+  </div>
+
+  <script>
+    let helpOpen = false;
+    let terminalOpen = false;
+    let chatFocused = false;
+
+    // Keyboard shortcut handler
+    document.addEventListener('keydown', (e) => {
+      updateStatus();
+
+      // ESC closes help
+      if (e.key === 'Escape' && helpOpen) {
+        closeHelp();
+        return;
+      }
+
+      // ESC closes terminal
+      if (e.key === 'Escape' && terminalOpen) {
+        closeTerminal();
+        return;
+      }
+
+      // ? or F1 opens help (only if not typing)
+      if ((e.key === '?' || e.key === 'F1') && !helpOpen) {
+        const target = e.target;
+        const isTyping = 
+          target.tagName === 'INPUT' || 
+          target.tagName === 'TEXTAREA' || 
+          target.isContentEditable;
+        
+        if (!isTyping) {
+          e.preventDefault();
+          openHelp();
+        }
+      }
+    });
+
+    function openHelp() {
+      helpOpen = true;
+      document.getElementById('helpOverlay').classList.add('visible');
+      updateStatus();
+    }
+
+    function closeHelp() {
+      helpOpen = false;
+      document.getElementById('helpOverlay').classList.remove('visible');
+      updateStatus();
+    }
+
+    function openTerminal() {
+      terminalOpen = true;
+      document.getElementById('terminalOverlay').classList.add('visible');
+      // Auto-focus chat input
+      setTimeout(() => {
+        document.getElementById('chatInput').focus();
+      }, 100);
+      updateStatus();
+    }
+
+    function closeTerminal() {
+      terminalOpen = false;
+      chatFocused = false;
+      document.getElementById('terminalOverlay').classList.remove('visible');
+      document.getElementById('terminal').classList.remove('expanded');
+      updateStatus();
+    }
+
+    function switchTab(tab) {
+      // Just visual feedback
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      if (tab === 'chat') {
+        document.getElementById('chatTab').classList.add('active');
+      }
+    }
+
+    function handleChatFocus() {
+      chatFocused = true;
+      document.getElementById('terminal').classList.add('expanded');
+      updateStatus();
+    }
+
+    function handleChatBlur() {
+      chatFocused = false;
+      document.getElementById('terminal').classList.remove('expanded');
+      updateStatus();
+    }
+
+    function updateStatus() {
+      document.getElementById('expandedStatus').textContent = chatFocused;
+      document.getElementById('expandedStatus').className = chatFocused ? 'active' : '';
+      
+      document.getElementById('helpStatus').textContent = helpOpen;
+      document.getElementById('helpStatus').className = helpOpen ? 'active' : '';
+      
+      const activeEl = document.activeElement.tagName.toLowerCase();
+      const isInput = activeEl === 'input' || activeEl === 'textarea';
+      document.getElementById('activeElement').textContent = isInput ? `${activeEl} (typing)` : activeEl;
+      document.getElementById('activeElement').className = isInput ? 'active' : '';
+    }
+
+    // Update status on page load and when focus changes
+    updateStatus();
+    document.addEventListener('focusin', updateStatus);
+    document.addEventListener('focusout', updateStatus);
+  </script>
+</body>
+</html>
