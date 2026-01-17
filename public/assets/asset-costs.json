@@ -1,6 +1,55 @@
 {
-  "generatedAt": null,
+  "generatedAt": "2026-01-14T05:39:06.673Z",
   "totalCostUsd": 0,
   "currency": "USD",
-  "results": []
+  "results": [
+    {
+      "id": "chapter-icon-01",
+      "label": "Chapter icon 1 - Genesis",
+      "model": "fal-ai/flux/schnell",
+      "outputPath": "public/assets/ui/chapter-icon-01-genesis.png",
+      "costUsd": null,
+      "status": "success"
+    },
+    {
+      "id": "chapter-icon-02",
+      "label": "Chapter icon 2 - Discovery",
+      "model": "fal-ai/flux/schnell",
+      "outputPath": "public/assets/ui/chapter-icon-02-discovery.png",
+      "costUsd": null,
+      "status": "success"
+    },
+    {
+      "id": "chapter-icon-03",
+      "label": "Chapter icon 3 - Nexus",
+      "model": "fal-ai/flux/schnell",
+      "outputPath": "public/assets/ui/chapter-icon-03-nexus.png",
+      "costUsd": null,
+      "status": "success"
+    },
+    {
+      "id": "chapter-icon-04",
+      "label": "Chapter icon 4 - Eclipse",
+      "model": "fal-ai/flux/schnell",
+      "outputPath": "public/assets/ui/chapter-icon-04-eclipse.png",
+      "costUsd": null,
+      "status": "success"
+    },
+    {
+      "id": "chapter-icon-05",
+      "label": "Chapter icon 5 - Ascension",
+      "model": "fal-ai/flux/schnell",
+      "outputPath": "public/assets/ui/chapter-icon-05-ascension.png",
+      "costUsd": null,
+      "status": "success"
+    },
+    {
+      "id": "mission-card-background",
+      "label": "Mission card background",
+      "model": "fal-ai/flux/schnell",
+      "outputPath": "public/assets/ui/mission-card-background.png",
+      "costUsd": null,
+      "status": "success"
+    }
+  ]
 }

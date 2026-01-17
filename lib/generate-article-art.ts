@@ -16,8 +16,8 @@ import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
 
-// Load environment variables from .env.local
-dotenv.config({ path: '.env.local' })
+// Load environment variables from .env
+dotenv.config()
 
 import matter from 'gray-matter'
 import yargs from 'yargs/yargs'

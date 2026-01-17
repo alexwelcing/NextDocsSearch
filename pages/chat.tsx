@@ -5,14 +5,19 @@ import dynamic from 'next/dynamic'
 import StylishFallback from '@/components/StylishFallback'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import { JourneyProvider } from '@/components/contexts/JourneyContext'
+import CircleNav from '@/components/ui/CircleNav'
+import SearchDialog from '@/components/SearchDialog'
+import Footer from '@/components/ui/footer'
 
-const ThreeSixty = dynamic(() => import('@/components/3d/scene/ThreeSixty'), {
+// Dynamically import Scene3D, using StylishFallback as the loading component.
+const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })
 
 const Chat = () => {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
+  const [articles, setArticles] = useState<any[]>([])
 
   async function getRandomImage() {
     try {
@@ -27,13 +32,40 @@ const Chat = () => {
     }
   }
 
+  async function fetchArticles() {
+    try {
+      const response = await fetch('/api/articles')
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      const data = await response.json()
+      setArticles(data)
+    } catch (error) {
+      console.error('Failed to fetch articles:', error)
+    }
+  }
+
+  // On mount, fetch the initial random background image and articles.
   useEffect(() => {
     getRandomImage()
+    fetchArticles()
   }, [])
 
   async function handleImageChange(): Promise<void> {
     await getRandomImage()
   }
+
+  // Build world config from random image
+  const worldConfig = React.useMemo(() => {
+    if (!currentImage) return 'default';
+    return {
+      id: 'dynamic-chat',
+      name: 'Dynamic Chat',
+      assets: {
+        fallbackPanorama: currentImage
+      }
+    } as any;
+  }, [currentImage]);
 
   return (
     <>
@@ -56,15 +88,15 @@ const Chat = () => {
 
       <SupabaseDataProvider>
         <JourneyProvider>
-          <main className={styles.main} style={{ background: '#000' }}>
-            {currentImage && (
-              <ThreeSixty
-                currentImage={currentImage}
-                isDialogOpen={false}
-                onChangeImage={handleImageChange}
-              />
-            )}
+          <CircleNav />
+          <main className={`${styles.main} ${styles.gradientbg}`}>
+            <Scene3D
+              world={worldConfig}
+              articles={articles}
+            />
           </main>
+          <SearchDialog />
+          <Footer onImageChange={handleImageChange} showChangeScenery={false} />
         </JourneyProvider>
       </SupabaseDataProvider>
     </>

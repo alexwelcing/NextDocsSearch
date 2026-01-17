@@ -1,36 +1,270 @@
 {
-  "totalGenerated": 5,
-  "generationDate": "2025-11-06T03:13:04.619Z",
+  "totalGenerated": 120,
+  "generationDate": "2026-01-14T09:34:52.705Z",
   "topics": {
     "r3f-vr-setup": {
-      "count": 1,
+      "count": 3,
       "difficulty": "advanced",
       "category": "XR & Immersive",
       "seoScore": 9
     },
     "r3f-pmndrs-ecosystem": {
-      "count": 1,
+      "count": 3,
       "difficulty": "intermediate",
       "category": "Ecosystem & Libraries",
       "seoScore": 8
     },
     "r3f-demand-rendering": {
-      "count": 1,
+      "count": 4,
       "difficulty": "advanced",
       "category": "Performance & Optimization",
       "seoScore": 7
     },
     "r3f-texture-optimization": {
-      "count": 1,
+      "count": 2,
       "difficulty": "intermediate",
       "category": "Performance & Optimization",
       "seoScore": 8
     },
     "r3f-custom-effects": {
-      "count": 1,
+      "count": 3,
       "difficulty": "expert",
       "category": "Post-Processing",
       "seoScore": 6
+    },
+    "r3f-canvas-fundamentals": {
+      "count": 2,
+      "difficulty": "beginner",
+      "category": "Core Concepts",
+      "seoScore": 9
+    },
+    "r3f-component-tree": {
+      "count": 3,
+      "difficulty": "beginner",
+      "category": "Core Concepts",
+      "seoScore": 8
+    },
+    "r3f-declarative-rendering": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Core Concepts",
+      "seoScore": 7
+    },
+    "r3f-useframe-hook": {
+      "count": 2,
+      "difficulty": "beginner",
+      "category": "Hooks & APIs",
+      "seoScore": 10
+    },
+    "r3f-usethree-hook": {
+      "count": 2,
+      "difficulty": "beginner",
+      "category": "Hooks & APIs",
+      "seoScore": 9
+    },
+    "r3f-useloader-hook": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Hooks & APIs",
+      "seoScore": 8
+    },
+    "r3f-usegltf-hook": {
+      "count": 3,
+      "difficulty": "beginner",
+      "category": "Hooks & APIs",
+      "seoScore": 9
+    },
+    "r3f-usetexture-hook": {
+      "count": 3,
+      "difficulty": "beginner",
+      "category": "Hooks & APIs",
+      "seoScore": 7
+    },
+    "r3f-primitive-components": {
+      "count": 2,
+      "difficulty": "beginner",
+      "category": "Components & Primitives",
+      "seoScore": 8
+    },
+    "r3f-drei-helpers": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Components & Primitives",
+      "seoScore": 9
+    },
+    "r3f-orbit-controls": {
+      "count": 2,
+      "difficulty": "beginner",
+      "category": "Components & Primitives",
+      "seoScore": 8
+    },
+    "r3f-environment-lighting": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Components & Primitives",
+      "seoScore": 7
+    },
+    "r3f-instance-rendering": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "Performance & Optimization",
+      "seoScore": 9
+    },
+    "r3f-frustum-culling": {
+      "count": 2,
+      "difficulty": "advanced",
+      "category": "Performance & Optimization",
+      "seoScore": 7
+    },
+    "r3f-dispose-patterns": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Performance & Optimization",
+      "seoScore": 8
+    },
+    "r3f-cannon-physics": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Physics & Simulation",
+      "seoScore": 8
+    },
+    "r3f-rapier-physics": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "Physics & Simulation",
+      "seoScore": 8
+    },
+    "r3f-particle-systems": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "Physics & Simulation",
+      "seoScore": 7
+    },
+    "r3f-custom-shaders": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "Shaders & Materials",
+      "seoScore": 9
+    },
+    "r3f-shader-uniforms": {
+      "count": 2,
+      "difficulty": "advanced",
+      "category": "Shaders & Materials",
+      "seoScore": 7
+    },
+    "r3f-shader-chunks": {
+      "count": 3,
+      "difficulty": "expert",
+      "category": "Shaders & Materials",
+      "seoScore": 6
+    },
+    "r3f-pbr-materials": {
+      "count": 2,
+      "difficulty": "intermediate",
+      "category": "Shaders & Materials",
+      "seoScore": 8
+    },
+    "r3f-spring-animations": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Animation & Motion",
+      "seoScore": 8
+    },
+    "r3f-animation-mixer": {
+      "count": 2,
+      "difficulty": "intermediate",
+      "category": "Animation & Motion",
+      "seoScore": 7
+    },
+    "r3f-lerp-patterns": {
+      "count": 3,
+      "difficulty": "beginner",
+      "category": "Animation & Motion",
+      "seoScore": 7
+    },
+    "r3f-camera-animations": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "Animation & Motion",
+      "seoScore": 7
+    },
+    "r3f-pointer-events": {
+      "count": 3,
+      "difficulty": "beginner",
+      "category": "User Interaction",
+      "seoScore": 9
+    },
+    "r3f-drag-controls": {
+      "count": 2,
+      "difficulty": "intermediate",
+      "category": "User Interaction",
+      "seoScore": 7
+    },
+    "r3f-hover-states": {
+      "count": 2,
+      "difficulty": "beginner",
+      "category": "User Interaction",
+      "seoScore": 6
+    },
+    "r3f-ar-experiences": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "XR & Immersive",
+      "seoScore": 9
+    },
+    "r3f-xr-controllers": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "XR & Immersive",
+      "seoScore": 7
+    },
+    "r3f-effectcomposer": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Post-Processing",
+      "seoScore": 8
+    },
+    "r3f-bloom-effects": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Post-Processing",
+      "seoScore": 7
+    },
+    "r3f-leva-controls": {
+      "count": 3,
+      "difficulty": "beginner",
+      "category": "Ecosystem & Libraries",
+      "seoScore": 6
+    },
+    "r3f-r3f-perf": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Ecosystem & Libraries",
+      "seoScore": 7
+    },
+    "r3f-component-patterns": {
+      "count": 3,
+      "difficulty": "intermediate",
+      "category": "Patterns & Architecture",
+      "seoScore": 7
+    },
+    "r3f-state-management": {
+      "count": 2,
+      "difficulty": "intermediate",
+      "category": "Patterns & Architecture",
+      "seoScore": 8
+    },
+    "r3f-scene-transitions": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "Patterns & Architecture",
+      "seoScore": 7
+    },
+    "r3f-ssr-nextjs": {
+      "count": 3,
+      "difficulty": "advanced",
+      "category": "Patterns & Architecture",
+      "seoScore": 9
     }
   }
 }

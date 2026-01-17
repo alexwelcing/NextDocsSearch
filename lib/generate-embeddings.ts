@@ -18,7 +18,6 @@ import { filter } from 'unist-util-filter'
 import { inspect } from 'util'
 import yargs from 'yargs'
 
-dotenv.config({ path: '.env.local' })
 dotenv.config()
 
 const ignoredFiles = ['pages/404.mdx']

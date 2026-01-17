@@ -4,8 +4,8 @@ import fs from 'fs/promises'
 import path from 'path'
 import dotenv from 'dotenv'
 
-// Load environment variables from .env.local
-dotenv.config({ path: '.env.local' })
+// Load environment variables from .env
+dotenv.config()
 
 import { assetPromptSet, AssetPrompt } from '../lib/assets/falPromptSet'
 
@@ -67,48 +67,76 @@ async function runFalGeneration(prompt: AssetPrompt, falKey: string) {
     ...prompt.params,
   }
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      [AUTH_HEADER]: `Key ${falKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  })
+  console.log(`   📡 Calling: ${endpoint}`)
+  console.log(`   📝 Prompt: "${prompt.prompt.substring(0, 60)}..."`)
 
-  if (!response.ok) {
-    const text = await response.text()
-    throw new Error(`Fal request failed (${response.status}): ${text}`)
+  // Add timeout with AbortController
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 120000) // 2 min timeout
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        [AUTH_HEADER]: `Key ${falKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    })
+
+    clearTimeout(timeoutId)
+
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(`Fal request failed (${response.status}): ${text}`)
+    }
+
+    const data = (await response.json()) as {
+      images?: { url: string }[]
+      audio?: { url: string }[]
+      video?: { url: string }[]
+      model?: { url: string }[]
+      output?: { url: string }[]
+    }
+
+    console.log(`   ✅ Response received, extracting URL...`)
+
+    const fileUrl =
+      data.audio?.[0]?.url ||
+      data.images?.[0]?.url ||
+      data.model?.[0]?.url ||
+      data.output?.[0]?.url ||
+      data.video?.[0]?.url
+
+    if (!fileUrl) {
+      console.log(`   ⚠️ Response data:`, JSON.stringify(data, null, 2).substring(0, 500))
+      throw new Error('Fal response did not include a downloadable asset URL.')
+    }
+
+    await downloadToFile(fileUrl, prompt.outputPath)
+
+    return extractCost(data)
+  } catch (err) {
+    clearTimeout(timeoutId)
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new Error('Request timed out after 2 minutes')
+    }
+    throw err
   }
-
-  const data = (await response.json()) as {
-    images?: { url: string }[]
-    audio?: { url: string }[]
-    video?: { url: string }[]
-    model?: { url: string }[]
-    output?: { url: string }[]
-  }
-
-  const fileUrl =
-    data.audio?.[0]?.url ||
-    data.images?.[0]?.url ||
-    data.model?.[0]?.url ||
-    data.output?.[0]?.url ||
-    data.video?.[0]?.url
-
-  if (!fileUrl) {
-    throw new Error('Fal response did not include a downloadable asset URL.')
-  }
-
-  await downloadToFile(fileUrl, prompt.outputPath)
-
-  return extractCost(data)
 }
 
 async function main() {
   const dryRun = getArgFlag('--dry-run')
   const onlyCategory = getArgValue('--category')
+
+  // Load and validate environment variables
   const falKey = process.env.FAL_KEY
+
+  console.log('\n🔧 Environment Check:')
+  console.log(`   FAL_KEY: ${falKey ? falKey.substring(0, 12) + '...' : '❌ NOT FOUND'}`)
+  console.log(`   FAL_BASE_URL: ${FAL_BASE_URL}`)
+  console.log('')
 
   if (!falKey && !dryRun) {
     console.error('❌ Missing FAL_KEY environment variable. Use --dry-run to preview outputs.')
@@ -119,7 +147,7 @@ async function main() {
     onlyCategory ? item.category === onlyCategory : true
   )
 
-  console.log(`\n🎛️  Fal Asset Generator`)
+  console.log(`🎛️  Fal Asset Generator`)
   console.log(`Generating ${prompts.length} asset(s)${dryRun ? ' (dry run)' : ''}\n`)
 
   const results: AssetRunResult[] = []

@@ -13,6 +13,7 @@ import { useFrame } from '@react-three/fiber';
 import { Sphere, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import IdeaOrb from './IdeaOrb';
+import ParticleExplosion from '../3d/game/ParticleExplosion';
 import type {
   IdeaOrbData,
   OrbState,
@@ -112,7 +113,9 @@ export default function IdeaHub({
   // Orb management
   const [orbs, setOrbs] = useState<IdeaOrbData[]>(initialOrbs);
   const [gameOrbs, setGameOrbs] = useState<IdeaOrbData[]>([]);
+  const [explosions, setExplosions] = useState<{ id: number; position: [number, number, number]; color: string }[]>([]);
   const orbCounterRef = useRef(0);
+  const explosionCounterRef = useRef(0);
 
   // Game state
   const [gameState, setGameState] = useState<IdeaGameState>('idle');
@@ -177,6 +180,17 @@ export default function IdeaHub({
   // Handle orb awakening (game click)
   const handleOrbAwaken = useCallback(
     (id: string, points: number) => {
+      const orb = gameOrbs.find(o => o.id === id);
+      if (orb) {
+        explosionCounterRef.current++;
+        const color = orb.content.isRare ? ORB_COLORS.rare : ORB_COLORS.awakening;
+        setExplosions(prev => [...prev, { 
+          id: explosionCounterRef.current, 
+          position: orb.position,
+          color 
+        }]);
+      }
+
       setGameOrbs((current) => current.filter((o) => o.id !== id));
 
       const newCombo = combo + 1;
@@ -198,7 +212,7 @@ export default function IdeaHub({
 
       onOrbAwakened?.(id);
     },
-    [combo, onOrbAwakened]
+    [combo, onOrbAwakened, gameOrbs]
   );
 
   // Handle orb expire (missed)
@@ -336,6 +350,18 @@ export default function IdeaHub({
             lifetime={3}
           />
         ))}
+
+      {/* Explosions */}
+      {explosions.map(exp => (
+        <ParticleExplosion
+          key={exp.id}
+          position={exp.position}
+          color={exp.color}
+          onComplete={() => {
+            setExplosions(prev => prev.filter(e => e.id !== exp.id));
+          }}
+        />
+      ))}
 
       {/* UI Overlays - positioned above the hub */}
       {/* Countdown - prominent center display */}

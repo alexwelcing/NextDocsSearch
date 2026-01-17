@@ -6,40 +6,42 @@
  */
 
 import type { WorldConfig } from './types';
+import { MARBLE_WORLD } from './marbleWorld';
 
 /**
  * Default world configuration
  * Used when no world is specified or as fallback
  */
 export const DEFAULT_WORLD: WorldConfig = {
-  id: 'default',
-  name: 'Default Environment',
-  description: 'The default 360 scene environment',
+  id: MARBLE_WORLD.id,
+  name: MARBLE_WORLD.name,
+  description: 'The immersive marble world from Supabase',
   assets: {
-    // No splat by default - will use panorama fallback
-    fallbackPanorama: '/backgrounds/default.jpg',
+    environment: MARBLE_WORLD.splatUrl,
+    fallbackPanorama: MARBLE_WORLD.panoUrl,
+    colliderUrl: MARBLE_WORLD.colliderUrl,
   },
   camera: {
-    initial: [0, 2, 10],
-    target: [0, 0, 0],
+    initial: [0, 2, 8],
+    target: [0, 1.5, 0],
     fov: 60,
     constraints: {
-      minDistance: 5,
-      maxDistance: 50,
+      minDistance: 3,
+      maxDistance: 25,
       minPolarAngle: 0.1,
-      maxPolarAngle: Math.PI / 2,
+      maxPolarAngle: Math.PI / 1.5,
       enablePan: false,
     },
   },
   lighting: {
     preset: 'day',
     ambient: 0.5,
-    directionalIntensity: 0.9,
-    shadowsEnabled: false,
+    directionalIntensity: 0.8,
+    shadowsEnabled: true,
     envMapIntensity: 1,
   },
   atmosphere: {
-    fog: { enabled: false },
+    fog: { enabled: true, color: '#a0a0b0', near: 10, far: 50 },
     particles: { type: 'none' },
   },
 };
