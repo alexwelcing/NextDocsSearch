@@ -451,8 +451,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
 }) => {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alexwelcing.com';
   const articleUrl = `${siteUrl}/articles/${slug}`;
-  const defaultOgImage = `${siteUrl}/og-default.png`;
-  const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : defaultOgImage;
+  const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : null;
 
   // Discovery context integration
   const { openModal, setCurrentArticle } = useArticleDiscovery();
@@ -492,9 +491,9 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="og:url" content={articleUrl} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description || `Read ${title}`} />
-        <meta property="og:image" content={fullOgImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        {fullOgImage && <meta property="og:image" content={fullOgImage} />}
+        {fullOgImage && <meta property="og:image:width" content="1200" />}
+        {fullOgImage && <meta property="og:image:height" content="630" />}
         <meta property="article:published_time" content={date} />
         <meta property="article:author" content={author.join(', ')} />
 
@@ -519,7 +518,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
         data={{
           headline: title,
           description: description,
-          image: fullOgImage,
+          image: fullOgImage || undefined,
           datePublished: date,
           dateModified: date,
           url: articleUrl,

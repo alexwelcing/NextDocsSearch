@@ -23,7 +23,7 @@ import SceneBackground from './SceneBackground';
 import SceneCamera from './SceneCamera';
 
 import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
-import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
+import { loadWorld, DEFAULT_WORLD, mergeWithDefaults } from '@/lib/worlds/loader';
 import { IdeaExperience } from '@/components/ideas';
 
 // Re-export game types for convenience
@@ -114,7 +114,7 @@ export default function Scene3D({
           const config = await loadWorld(worldProp);
           setWorldConfig(config);
         } else if (worldProp) {
-          setWorldConfig(worldProp);
+          setWorldConfig(mergeWithDefaults(worldProp));
         }
       } catch (error) {
         console.error('Failed to load world:', error);

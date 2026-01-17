@@ -7,14 +7,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { Configuration, OpenAIApi } from 'openai-edge';
+import OpenAI from 'openai';
 
 const openAiKey = process.env.OPENAI_KEY;
 
-const config = new Configuration({
+const openai = new OpenAI({
   apiKey: openAiKey,
 });
-const openai = new OpenAIApi(config);
 
 export interface QuizQuestion {
   question: string;
@@ -93,7 +92,7 @@ Important:
 Return ONLY valid JSON, no other text.`;
 
     // Call OpenAI API
-    const response = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         {
@@ -108,8 +107,6 @@ Return ONLY valid JSON, no other text.`;
       temperature: 0.7,
       max_tokens: 2000,
     });
-
-    const completion = await response.json();
 
     if (!completion.choices || completion.choices.length === 0) {
       return res.status(500).json({ error: 'Failed to generate quiz questions' });

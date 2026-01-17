@@ -2,13 +2,7 @@ import type { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { codeBlock, oneLine } from 'common-tags';
 import GPT3Tokenizer from 'gpt3-tokenizer';
-import {
-  Configuration,
-  OpenAIApi,
-  CreateModerationResponse,
-  CreateEmbeddingResponse,
-  ChatCompletionRequestMessage,
-} from 'openai-edge';
+import OpenAI from 'openai';
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import { ApplicationError, UserError } from '@/lib/errors';
 import { shipPersona } from '@/lib/ai/shipPersona';
@@ -17,10 +11,9 @@ const openAiKey = process.env.OPENAI_KEY;
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const config = new Configuration({
+const openai = new OpenAI({
   apiKey: openAiKey,
 });
-const openai = new OpenAIApi(config);
 
 export const runtime = 'edge';
 
@@ -54,9 +47,7 @@ export default async function handler(req: NextRequest) {
 
     // Moderate the content to comply with OpenAI T&C
     const sanitizedQuery = query.trim()
-    const moderationResponse: CreateModerationResponse = await openai
-      .createModeration({ input: sanitizedQuery })
-      .then((res) => res.json())
+    const moderationResponse = await openai.moderations.create({ input: sanitizedQuery })
 
     const [results] = moderationResponse.results
 
@@ -68,18 +59,12 @@ export default async function handler(req: NextRequest) {
     }
 
     // Create embedding from query
-    const embeddingResponse = await openai.createEmbedding({
+    const embeddingResponse = await openai.embeddings.create({
       model: 'text-embedding-ada-002',
       input: sanitizedQuery.replaceAll('\n', ' '),
     })
 
-    if (embeddingResponse.status !== 200) {
-      throw new ApplicationError('Failed to create embedding for question', { status: embeddingResponse.status, statusText: embeddingResponse.statusText })
-    }
-
-    const {
-      data: [{ embedding }],
-    }: CreateEmbeddingResponse = await embeddingResponse.json()
+    const [{ embedding }] = embeddingResponse.data
 
     const { error: matchError, data: pageSections } = await supabaseClient.rpc(
       'match_page_sections',
@@ -138,16 +123,16 @@ export default async function handler(req: NextRequest) {
       Answer in a warm, engaging way that makes this conversation memorable. Be enthusiastic and make them excited about what they're discovering!
     `
 
-    const historyMessages: ChatCompletionRequestMessage[] = Array.isArray(history)
+    const historyMessages: any[] = Array.isArray(history)
       ? history
         .slice(-shipPersona.memory.maxInteractions)
         .flatMap((entry: { question?: string; response?: string }) => ([
           entry.question ? { role: 'user', content: entry.question } : null,
           entry.response ? { role: 'assistant', content: entry.response } : null,
-        ].filter(Boolean) as ChatCompletionRequestMessage[]))
+        ].filter(Boolean)))
       : [];
 
-    const response = await openai.createChatCompletion({
+    const response = await openai.chat.completions.create({
       model: 'gpt-4-turbo-preview',
       messages: [
         { role: 'system', content: shipPersona.systemPrompt },
@@ -158,11 +143,6 @@ export default async function handler(req: NextRequest) {
       temperature: 0.3,
       stream: true,
     })
-
-    if (!response.ok) {
-      const error = await response.json()
-      throw new ApplicationError('Failed to generate completion', error)
-    }
 
     // Transform the response into a readable stream
     const stream = OpenAIStream(response)

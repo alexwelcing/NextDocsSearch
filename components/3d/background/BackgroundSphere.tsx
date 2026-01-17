@@ -44,6 +44,7 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
 
   // 1) On mount, load initial texture immediately so we have something displayed
   useEffect(() => {
+    if (!imageUrl) return;
     loadTexture(imageUrl, (loadedTex) => {
       setOldTexture(loadedTex)
       if (onLoad) onLoad()
@@ -52,6 +53,7 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
 
   // 2) If imageUrl changes, load the new texture but don't fade until it's fully loaded
   useEffect(() => {
+    if (!imageUrl) return;
     // If the same image is reloaded, skip
     if (oldTexture && oldTexture.userData?.sourceUrl === imageUrl) {
       return
@@ -90,6 +92,8 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
 
   // A helper function to load textures with a callback - optimized settings
   function loadTexture(url: string, onTexLoad: (tex: TextureWithSource) => void) {
+    if (!url) return;
+    
     const loader = new THREE.TextureLoader()
     loader.load(
       url,
@@ -98,6 +102,18 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
 
         // Optimize texture settings for better performance
         textureWithSource.generateMipmaps = true
+        textureWithSource.minFilter = THREE.LinearMipmapLinearFilter
+        textureWithSource.magFilter = THREE.LinearFilter
+        textureWithSource.userData = { sourceUrl: url }
+        
+        onTexLoad(textureWithSource)
+      },
+      undefined,
+      (err) => {
+        console.error(`Failed to load background texture: ${url}`, err);
+      }
+    )
+  }
         textureWithSource.minFilter = THREE.LinearMipmapLinearFilter
         textureWithSource.magFilter = THREE.LinearFilter
         textureWithSource.anisotropy = 2 // Reduced from 4 to 2 for better performance

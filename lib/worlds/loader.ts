@@ -52,6 +52,36 @@ export const DEFAULT_WORLD: WorldConfig = {
 const worldCache = new Map<string, WorldConfig>();
 
 /**
+ * Merge a partial world config with defaults
+ */
+export function mergeWithDefaults(config: Partial<WorldConfig>): WorldConfig {
+  return {
+    ...DEFAULT_WORLD,
+    ...config,
+    assets: {
+      ...DEFAULT_WORLD.assets,
+      ...config.assets,
+    },
+    camera: {
+      ...DEFAULT_WORLD.camera,
+      ...config.camera,
+      constraints: {
+        ...DEFAULT_WORLD.camera.constraints,
+        ...config.camera?.constraints,
+      },
+    },
+    lighting: {
+      ...DEFAULT_WORLD.lighting,
+      ...config.lighting,
+    },
+    atmosphere: {
+      ...DEFAULT_WORLD.atmosphere,
+      ...config.atmosphere,
+    },
+  };
+}
+
+/**
  * Load a world configuration by ID
  *
  * @param worldId - The world ID (matches folder name in public/worlds/)
@@ -81,31 +111,7 @@ export async function loadWorld(worldId: string): Promise<WorldConfig> {
     const config: Partial<WorldConfig> = await response.json();
 
     // Merge with defaults
-    const fullConfig: WorldConfig = {
-      ...DEFAULT_WORLD,
-      ...config,
-      id: worldId,
-      assets: {
-        ...DEFAULT_WORLD.assets,
-        ...config.assets,
-      },
-      camera: {
-        ...DEFAULT_WORLD.camera,
-        ...config.camera,
-        constraints: {
-          ...DEFAULT_WORLD.camera.constraints,
-          ...config.camera?.constraints,
-        },
-      },
-      lighting: {
-        ...DEFAULT_WORLD.lighting,
-        ...config.lighting,
-      },
-      atmosphere: {
-        ...DEFAULT_WORLD.atmosphere,
-        ...config.atmosphere,
-      },
-    };
+    const fullConfig = mergeWithDefaults({ ...config, id: worldId });
 
     // Resolve relative asset paths
     fullConfig.assets = resolveAssetPaths(fullConfig.assets, worldId);
