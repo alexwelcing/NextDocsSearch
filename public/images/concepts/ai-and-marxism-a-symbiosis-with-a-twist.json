@@ -1,0 +1,23 @@
+{
+  "archetype": "Automated Revolution",
+  "logline": "An underground workspace where AI algorithms and human workers collaborate to redefine the means of production.",
+  "scene": "In a dimly lit, industrial warehouse, a large wall of screens flashes with streams of data and visualizations of AI architectures. Engineers in rugged clothing monitor complex interfaces, surrounded by an assortment of mechanical tools and open-source hardware components. Central to the scene is a massive, partially dismantled AI server, cables snaking across the concrete floor, symbolizing the nexus of technology and labor. Workers huddle around a holographic projection displaying real-time analytics, strategizing on how to democratize the AI-driven advancements for their community. Shadows dance on the walls, capturing the tension between innovation and exploitation in this gritty environment.",
+  "keyProps": [
+    "Industrial server",
+    "Holographic projection",
+    "Open-source hardware",
+    "Data visualization screens",
+    "Mechanical tools"
+  ],
+  "camera": "Wide angle lens capturing the expansive workspace, focusing on the interplay between shadows and light",
+  "lighting": "Harsh overhead lights combined with flickering screens, creating a stark contrast between illuminated data and shadowy figures",
+  "productionDesign": "A blend of retro-futuristic technology and rugged, functional decor, with exposed pipes, concrete walls, and a chaotic arrangement of tools and tech, emphasizing the gritty reality of AI integration into labor",
+  "signatureTwist": "Despite the high-tech surroundings, a banner with slogans advocating for equitable AI governance hangs from the ceiling, merging Marxist ideals with modern technology",
+  "avoid": [
+    "Readability",
+    "Humanoid robots",
+    "Generic HUD overlays",
+    "Abstract wallpaper",
+    "Clean, sterile environments"
+  ]
+}
