@@ -94,10 +94,10 @@ const GameOrb: React.FC<GameOrbProps> = ({
     : (isGolden ? 0.8 : 0.5);
 
   return (
-    <group position={position}>
+    <group position={position} onClick={handleClick}>
       {/* Invisible enlarged hit zone when cosmic power is active */}
       {clickRadiusMultiplier > 1 && (
-        <mesh ref={hitZoneRef} onClick={handleClick}>
+        <mesh ref={hitZoneRef}>
           <sphereGeometry args={[hitRadius, 8, 8]} />
           <meshBasicMaterial
             transparent
@@ -108,7 +108,7 @@ const GameOrb: React.FC<GameOrbProps> = ({
       )}
 
       {/* Main orb */}
-      <mesh ref={meshRef} onClick={clickRadiusMultiplier > 1 ? undefined : handleClick}>
+      <mesh ref={meshRef}>
         <sphereGeometry args={[baseRadius, 12, 12]} />
         <meshStandardMaterial
           color={baseColor}

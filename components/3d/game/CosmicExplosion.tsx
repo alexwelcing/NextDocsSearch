@@ -83,11 +83,11 @@ const CosmicExplosion: React.FC<CosmicExplosionProps> = ({
         if (particleProgress < 1) {
           allDead = false;
 
-          // Position with some gravity
+          // Position with some gravity (local coordinates - group handles world position)
           tempPosition.set(
-            position[0] + particle.velocity.x * particleProgress * 0.5,
-            position[1] + particle.velocity.y * particleProgress * 0.5 - particleProgress * particleProgress * 2,
-            position[2] + particle.velocity.z * particleProgress * 0.5
+            particle.velocity.x * particleProgress * 0.5,
+            particle.velocity.y * particleProgress * 0.5 - particleProgress * particleProgress * 2,
+            particle.velocity.z * particleProgress * 0.5
           );
 
           // Scale based on remaining life with trail effect
