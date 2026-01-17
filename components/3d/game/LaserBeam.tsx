@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -22,53 +22,78 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
   const glowRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const impactRef = useRef<THREE.Mesh>(null);
+  const beamContainerRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
+  const initializedRef = useRef(false);
   const { camera } = useThree();
 
   // Laser colors based on orb type
   const laserColor = isGolden ? '#ffd700' : color;
-  const coreColor = isGolden ? '#ffffff' : '#ffffff';
+  const coreColor = '#ffffff';
   const glowColor = isGolden ? '#ff8c00' : '#00bfff';
 
-  // Calculate beam geometry
-  const { beamLength, beamDirection, midPoint } = useMemo(() => {
-    const start = new THREE.Vector3(0, 0, -2); // Start slightly in front of camera
-    const end = new THREE.Vector3(...targetPosition);
-    const direction = end.clone().sub(start);
-    const length = direction.length();
-    direction.normalize();
-
-    const mid = start.clone().add(end).multiplyScalar(0.5);
-
-    return {
-      beamLength: length,
-      beamDirection: direction,
-      midPoint: mid,
-    };
-  }, [targetPosition]);
-
-  // Create beam rotation to face target
-  const beamRotation = useMemo(() => {
-    const start = new THREE.Vector3(0, 0, -2);
-    const end = new THREE.Vector3(...targetPosition);
-    const direction = end.clone().sub(start).normalize();
-
-    const quaternion = new THREE.Quaternion();
-    quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
-
-    const euler = new THREE.Euler().setFromQuaternion(quaternion);
-    return euler;
+  // Calculate initial beam length (will be updated in useFrame)
+  const initialBeamLength = useMemo(() => {
+    const target = new THREE.Vector3(...targetPosition);
+    return target.length() + 2; // Approximate length
   }, [targetPosition]);
 
   useFrame((state, delta) => {
     timeRef.current += delta;
     const progress = Math.min(timeRef.current / duration, 1);
 
-    if (!groupRef.current) return;
+    if (!groupRef.current || !camera) return;
 
-    // Update group position to follow camera
+    // Position the group at the camera
     groupRef.current.position.copy(camera.position);
     groupRef.current.quaternion.copy(camera.quaternion);
+
+    // Calculate beam direction and length from camera to target
+    const target = new THREE.Vector3(...targetPosition);
+    const cameraWorldPos = camera.position.clone();
+    const startOffset = new THREE.Vector3(0, 0, -2).applyQuaternion(camera.quaternion);
+    const beamStart = cameraWorldPos.add(startOffset);
+
+    const direction = target.clone().sub(beamStart);
+    const beamLength = direction.length();
+    direction.normalize();
+
+    // Update beam container rotation to face target
+    if (beamContainerRef.current) {
+      const quaternion = new THREE.Quaternion();
+      quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
+      beamContainerRef.current.quaternion.copy(quaternion);
+
+      // Update beam geometries to correct length
+      if (!initializedRef.current) {
+        initializedRef.current = true;
+        // Update cylinder heights
+        if (coreRef.current) {
+          coreRef.current.geometry.dispose();
+          coreRef.current.geometry = new THREE.CylinderGeometry(0.02, 0.02, beamLength, 8);
+          coreRef.current.position.set(0, beamLength / 2, 0);
+        }
+        if (beamRef.current) {
+          beamRef.current.geometry.dispose();
+          beamRef.current.geometry = new THREE.CylinderGeometry(0.08, 0.05, beamLength, 12);
+          beamRef.current.position.set(0, beamLength / 2, 0);
+        }
+        if (glowRef.current) {
+          glowRef.current.geometry.dispose();
+          glowRef.current.geometry = new THREE.CylinderGeometry(0.2, 0.15, beamLength, 12);
+          glowRef.current.position.set(0, beamLength / 2, 0);
+        }
+      }
+    }
+
+    // Update impact position (in world space, relative to group)
+    if (impactRef.current) {
+      const localTarget = target.clone().sub(camera.position);
+      // Transform to camera local space
+      const invQuaternion = camera.quaternion.clone().invert();
+      localTarget.applyQuaternion(invQuaternion);
+      impactRef.current.position.copy(localTarget);
+    }
 
     // Animate beam appearance and disappearance
     const beamProgress = progress < 0.5
@@ -79,14 +104,15 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
     if (coreRef.current) {
       const material = coreRef.current.material as THREE.MeshBasicMaterial;
       material.opacity = beamProgress * 1.0;
-      coreRef.current.scale.set(1, beamProgress, 1);
+      coreRef.current.scale.set(1, Math.max(0.001, beamProgress), 1);
     }
 
     // Main beam
     if (beamRef.current) {
       const material = beamRef.current.material as THREE.MeshBasicMaterial;
       material.opacity = beamProgress * 0.8;
-      beamRef.current.scale.set(1 + Math.sin(timeRef.current * 30) * 0.1, beamProgress, 1 + Math.sin(timeRef.current * 30) * 0.1);
+      const pulse = 1 + Math.sin(timeRef.current * 30) * 0.1;
+      beamRef.current.scale.set(pulse, Math.max(0.001, beamProgress), pulse);
     }
 
     // Outer glow - larger, more transparent
@@ -94,13 +120,13 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
       const material = glowRef.current.material as THREE.MeshBasicMaterial;
       material.opacity = beamProgress * 0.3;
       const pulse = 1 + Math.sin(timeRef.current * 50) * 0.2;
-      glowRef.current.scale.set(pulse, beamProgress, pulse);
+      glowRef.current.scale.set(pulse, Math.max(0.001, beamProgress), pulse);
     }
 
     // Impact flash at target
     if (impactRef.current) {
       const impactProgress = progress < 0.3 ? progress / 0.3 : 1 - (progress - 0.3) / 0.7;
-      const impactScale = impactProgress * 3;
+      const impactScale = Math.max(0.001, impactProgress * 3);
       impactRef.current.scale.setScalar(impactScale);
       const impactMaterial = impactRef.current.material as THREE.MeshBasicMaterial;
       impactMaterial.opacity = impactProgress * 0.9;
@@ -114,8 +140,8 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
 
   return (
     <group ref={groupRef}>
-      {/* Impact flash at target position */}
-      <mesh ref={impactRef} position={[targetPosition[0] - camera.position.x, targetPosition[1] - camera.position.y, targetPosition[2] - camera.position.z]}>
+      {/* Impact flash at target position - position updated in useFrame */}
+      <mesh ref={impactRef} position={[0, 0, -5]}>
         <sphereGeometry args={[0.5, 16, 16]} />
         <meshBasicMaterial
           color={coreColor}
@@ -127,10 +153,10 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
       </mesh>
 
       {/* Beam container - positioned and rotated toward target */}
-      <group position={[0, 0, -2]} rotation={beamRotation}>
+      <group ref={beamContainerRef} position={[0, 0, -2]}>
         {/* Core beam - brightest, thinnest */}
-        <mesh ref={coreRef} position={[0, beamLength / 2, 0]}>
-          <cylinderGeometry args={[0.02, 0.02, beamLength, 8]} />
+        <mesh ref={coreRef} position={[0, initialBeamLength / 2, 0]}>
+          <cylinderGeometry args={[0.02, 0.02, initialBeamLength, 8]} />
           <meshBasicMaterial
             color={coreColor}
             transparent
@@ -141,8 +167,8 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
         </mesh>
 
         {/* Main beam */}
-        <mesh ref={beamRef} position={[0, beamLength / 2, 0]}>
-          <cylinderGeometry args={[0.08, 0.05, beamLength, 12]} />
+        <mesh ref={beamRef} position={[0, initialBeamLength / 2, 0]}>
+          <cylinderGeometry args={[0.08, 0.05, initialBeamLength, 12]} />
           <meshBasicMaterial
             color={laserColor}
             transparent
@@ -153,8 +179,8 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
         </mesh>
 
         {/* Outer glow */}
-        <mesh ref={glowRef} position={[0, beamLength / 2, 0]}>
-          <cylinderGeometry args={[0.2, 0.15, beamLength, 12]} />
+        <mesh ref={glowRef} position={[0, initialBeamLength / 2, 0]}>
+          <cylinderGeometry args={[0.2, 0.15, initialBeamLength, 12]} />
           <meshBasicMaterial
             color={glowColor}
             transparent
