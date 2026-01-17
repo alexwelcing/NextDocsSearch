@@ -18,6 +18,7 @@ import Generated3DObject from '../Generated3DObject';
 import { generateFromPrompt } from '@/lib/generators/sceneComposer';
 import { ParsedPrompt } from '@/lib/generators/types';
 import { getRandomTemplate } from '@/lib/creation-templates';
+import Terminal3D from './Terminal3D';
 
 import { useCompletion } from 'ai/react';
 import { useRouter } from 'next/router';
@@ -258,112 +259,104 @@ function ChatView({
     }
   }, [input, isLoading, complete, onAction]);
 
+  // Derive display state for Terminal3D
+  // We show the latest completion if loading, or the last assistant message
+  // If loading and no completion yet, text is empty (Terminal handles this with status)
+  
+  const lastUserMessage = messages.slice().reverse().find(m => m.role === 'user');
+  
+  // If we are loading, we might be streaming. 'completion' holds the stream.
+  // If not loading, we use the last assistant message from history.
+  let displayText = '';
+  if (isLoading) {
+    displayText = completion;
+  } else {
+    const lastAssistant = messages.slice().reverse().find(m => m.role === 'assistant');
+    displayText = lastAssistant?.text || 'Greetings. I am the Oracle. Ask me anything about this world.';
+  }
+
   return (
-    <Html center transform distanceFactor={5}>
-      <div
-        style={{
-          width: '320px',
-          color: 'white',
-          fontFamily: 'system-ui, sans-serif',
-        }}
-      >
-        <h3
-          style={{
-            color: ORB_COLORS.chat,
-            margin: '0 0 12px 0',
-            fontSize: '14px',
-          }}
-        >
-          Ask the Oracle
-        </h3>
+    <group>
+        {/* 3D Terminal Output */}
+        <Terminal3D 
+            text={displayText} 
+            isLoading={isLoading} 
+            prompt={lastUserMessage?.text} 
+        />
 
-        {/* Messages */}
+        {/* Floating Input Control */}
+        <Html position={[0, -1.2, 0.1]} center transform distanceFactor={5}>
         <div
-          style={{
-            maxHeight: '120px',
-            overflow: 'auto',
-            marginBottom: '12px',
-            fontSize: '12px',
+            style={{
+            width: '400px',
             display: 'flex',
-            flexDirection: 'column',
             gap: '8px',
-          }}
+            padding: '12px',
+            background: 'rgba(0, 10, 20, 0.8)',
+            border: `1px solid ${ORB_COLORS.chat}`,
+            borderRadius: '12px',
+            backdropFilter: 'blur(8px)',
+            boxShadow: `0 0 20px ${ORB_COLORS.chat}40`,
+            }}
         >
-          {messages.length === 0 && (
-            <div style={{ opacity: 0.5, fontStyle: 'italic', textAlign: 'center', marginTop: '20px' }}>
-              The Oracle is listening...
-            </div>
-          )}
-          {messages.map((m, i) => (
-            <div
-              key={i}
-              style={{
-                padding: '8px 12px',
-                background: m.role === 'user' ? 'rgba(68,136,255,0.15)' : 'rgba(255,255,255,0.05)',
-                borderRadius: '8px',
-                border: `1px solid ${m.role === 'user' ? 'rgba(68,136,255,0.3)' : 'rgba(255,255,255,0.1)'}`,
-                alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                maxWidth: '90%',
-              }}
-            >
-              {m.text}
-            </div>
-          ))}
-          {isLoading && !completion && (
-            <div style={{ display: 'flex', gap: '4px', padding: '8px' }}>
-              <div className="animate-bounce">.</div>
-              <div className="animate-bounce" style={{ animationDelay: '0.2s' }}>.</div>
-              <div className="animate-bounce" style={{ animationDelay: '0.4s' }}>.</div>
-            </div>
-          )}
-          {error && (
-            <div style={{ color: '#ff4444', fontSize: '10px' }}>
-              Error connecting to Oracle.
-            </div>
-          )}
-        </div>
-
-        {/* Input */}
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <input
+            <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="What do you seek?"
+            placeholder="Enter command / query..."
             disabled={isLoading}
+            autoFocus
             style={{
-              flex: 1,
-              padding: '8px 12px',
-              background: 'rgba(255,255,255,0.1)',
-              border: `1px solid ${ORB_COLORS.chat}`,
-              borderRadius: '6px',
-              color: 'white',
-              fontSize: '12px',
-              outline: 'none',
-              opacity: isLoading ? 0.5 : 1,
+                flex: 1,
+                padding: '10px 14px',
+                background: 'rgba(0,0,0,0.3)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '6px',
+                color: '#aaffff',
+                fontFamily: 'monospace',
+                fontSize: '14px',
+                outline: 'none',
+                opacity: isLoading ? 0.5 : 1,
             }}
-          />
-          <button
+            />
+            <button
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
             style={{
-              padding: '8px 16px',
-              background: ORB_COLORS.chat,
-              border: 'none',
-              borderRadius: '6px',
-              color: 'white',
-              cursor: 'pointer',
-              fontFamily: 'monospace',
-              fontSize: '12px',
-              opacity: (isLoading || !input.trim()) ? 0.5 : 1,
+                padding: '10px 20px',
+                background: ORB_COLORS.chat,
+                border: 'none',
+                borderRadius: '6px',
+                color: 'white',
+                cursor: 'pointer',
+                fontFamily: 'monospace',
+                fontWeight: 'bold',
+                fontSize: '14px',
+                opacity: (isLoading || !input.trim()) ? 0.5 : 1,
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
             }}
-          >
-            {isLoading ? '...' : 'Ask'}
-          </button>
+            >
+            {isLoading ? '...' : 'SEND'}
+            </button>
         </div>
-      </div>
-    </Html>
+        {error && (
+            <div style={{ 
+                position: 'absolute', 
+                bottom: '-24px', 
+                left: '0', 
+                width: '100%', 
+                textAlign: 'center', 
+                color: '#ff4444', 
+                fontSize: '10px', 
+                fontFamily: 'monospace' 
+            }}>
+            [ERROR: CONNECTION INTERRUPTED]
+            </div>
+        )}
+        </Html>
+    </group>
   );
 }
 

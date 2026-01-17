@@ -104,19 +104,7 @@ const BackgroundSphere: React.FC<BackgroundSphereProps> = ({
         textureWithSource.generateMipmaps = true
         textureWithSource.minFilter = THREE.LinearMipmapLinearFilter
         textureWithSource.magFilter = THREE.LinearFilter
-        textureWithSource.userData = { sourceUrl: url }
-        
-        onTexLoad(textureWithSource)
-      },
-      undefined,
-      (err) => {
-        console.error(`Failed to load background texture: ${url}`, err);
-      }
-    )
-  }
-        textureWithSource.minFilter = THREE.LinearMipmapLinearFilter
-        textureWithSource.magFilter = THREE.LinearFilter
-        textureWithSource.anisotropy = 2 // Reduced from 4 to 2 for better performance
+        textureWithSource.anisotropy = 2
 
         // Store the original URL on the texture for comparison
         textureWithSource.userData = { ...textureWithSource.userData, sourceUrl: url };

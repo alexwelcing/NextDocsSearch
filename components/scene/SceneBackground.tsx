@@ -10,7 +10,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
 import type { WorldAssets, QualityLevel } from '@/lib/worlds/types';
 
 interface SceneBackgroundProps {
@@ -43,17 +42,17 @@ function determineBestMode(
     return 'none';
   }
 
-  // Try splat first
-  if (
-    assets.environment &&
-    (assets.environment.endsWith('.splat') ||
-      assets.environment.endsWith('.spz') ||
-      assets.environment.endsWith('.ksplat') ||
-      assets.environment.endsWith('.ply')) &&
-    supportsSplats
-  ) {
-    return 'splat';
-  }
+  // Splats temporarily disabled due to missing dependency
+  // if (
+  //   assets.environment &&
+  //   (assets.environment.endsWith('.splat') ||
+  //     assets.environment.endsWith('.spz') ||
+  //     assets.environment.endsWith('.ksplat') ||
+  //     assets.environment.endsWith('.ply')) &&
+  //   supportsSplats
+  // ) {
+  //   return 'splat';
+  // }
 
   // Then skybox
   if (assets.skybox) return 'skybox';
@@ -100,14 +99,6 @@ export default function SceneBackground({
 
   return (
     <>
-      {state.mode === 'splat' && assets.environment && (
-        <GaussianSplatRenderer
-          splatUrl={assets.environment}
-          onLoad={handleLoadComplete}
-          onError={handleLoadError}
-        />
-      )}
-
       {state.mode === 'panorama' && assets.fallbackPanorama && (
         <PanoramaSphere
           imageUrl={assets.fallbackPanorama}
@@ -121,68 +112,6 @@ export default function SceneBackground({
       )}
     </>
   );
-}
-
-/**
- * Gaussian Splat Renderer
- */
-function GaussianSplatRenderer({
-  splatUrl,
-  onLoad,
-  onError,
-}: {
-  splatUrl: string;
-  onLoad: () => void;
-  onError: (error: string) => void;
-}) {
-  const { scene, camera, gl } = useThree();
-  const viewerRef = useRef<any>(null);
-  const loadedRef = useRef(false);
-
-  useEffect(() => {
-    if (loadedRef.current) return;
-    loadedRef.current = true;
-
-    try {
-      const viewer = new GaussianSplats3D.Viewer({
-        cameraUp: [0, 1, 0],
-        initialCameraPosition: [0, 0, 0],
-        initialCameraLookAt: [0, 0, -1],
-        renderer: gl,
-        camera: camera,
-      });
-
-      viewerRef.current = viewer;
-
-      viewer
-        .addSplatScene(splatUrl, {
-          position: [0, 0, 0],
-          rotation: [0, 0, 0],
-          scale: [1, 1, 1],
-        })
-        .then(() => {
-          console.log('Gaussian Splat loaded:', splatUrl);
-          viewer.start();
-          onLoad();
-        })
-        .catch((error: Error) => {
-          console.error('Failed to load Gaussian Splat:', error);
-          onError(error.message);
-        });
-    } catch (error) {
-      onError((error as Error).message);
-    }
-
-    return () => {
-      if (viewerRef.current) {
-        viewerRef.current.dispose();
-        viewerRef.current = null;
-        loadedRef.current = false;
-      }
-    };
-  }, [splatUrl, scene, camera, gl, onLoad, onError]);
-
-  return null;
 }
 
 /**

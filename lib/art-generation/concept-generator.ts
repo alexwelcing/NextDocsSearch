@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
 
 export type ImageConcept = {
   // Short unique identifier for diversity tracking
@@ -20,20 +20,20 @@ export type ImageConcept = {
   avoid: string[]
 }
 
-let cachedOpenAI: OpenAIApi | null = null
+let cachedOpenAI: OpenAI | null = null
 
 function getOpenAIKey(): string {
   const raw = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY || ''
   return raw.replace(/^Bearer\s+/i, '').trim()
 }
 
-function getOpenAIClient(): OpenAIApi {
+function getOpenAIClient(): OpenAI {
   if (cachedOpenAI) return cachedOpenAI
   const apiKey = getOpenAIKey()
   if (!apiKey) {
     throw new Error('Missing OpenAI API key. Set OPENAI_API_KEY or OPENAI_KEY.')
   }
-  cachedOpenAI = new OpenAIApi(new Configuration({ apiKey }))
+  cachedOpenAI = new OpenAI({ apiKey })
   return cachedOpenAI
 }
 
@@ -110,19 +110,16 @@ export async function generateImageConcept(params: {
     }
   }
 
-  const response = await openai.createChatCompletion({
+  const response = await openai.chat.completions.create({
     model,
     temperature: 0.9,
     messages: [
       { role: 'system', content: system },
       { role: 'user', content: JSON.stringify(user) },
     ],
-  } as any)
+  })
 
-  const text =
-    (response.data as any).choices?.[0]?.message?.content ||
-    (response.data as any).choices?.[0]?.text ||
-    ''
+  const text = response.choices[0]?.message?.content || ''
 
   const parsed = safeJsonParse<ImageConcept>(text)
   if (!parsed) {

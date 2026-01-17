@@ -145,7 +145,7 @@ export default async function handler(req: NextRequest) {
     })
 
     // Transform the response into a readable stream
-    const stream = OpenAIStream(response)
+    const stream = OpenAIStream(response as any)
 
     // Return a StreamingTextResponse, which can be consumed by the client
     return new StreamingTextResponse(stream)

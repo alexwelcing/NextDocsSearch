@@ -503,7 +503,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="twitter:url" content={articleUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description || `Read ${title}`} />
-        <meta property="twitter:image" content={fullOgImage} />
+        {fullOgImage && <meta property="twitter:image" content={fullOgImage} />}
 
         {/* Performance hints */}
         <meta name="theme-color" content="#0a0a0a" />
@@ -755,6 +755,29 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const readingTime = calculateReadingTime(content);
   const relatedArticles = getRelatedArticles(slug, allArticles);
 
+  // Check for multi-art options
+  let selectedOgImage = data.ogImage || '';
+  const multiArtDir = path.join(process.cwd(), 'public', 'images', 'multi-art', slug);
+  
+  if (fs.existsSync(multiArtDir)) {
+    try {
+      const files = fs.readdirSync(multiArtDir);
+      const option1 = files.find(f => f.startsWith('option-1-') && f.endsWith('.png'));
+      const option2 = files.find(f => f.startsWith('option-2-') && f.endsWith('.png'));
+      const option3 = files.find(f => f.startsWith('option-3-') && f.endsWith('.png'));
+      
+      if (option1) {
+        selectedOgImage = `/images/multi-art/${slug}/${option1}`;
+      } else if (option2) {
+        selectedOgImage = `/images/multi-art/${slug}/${option2}`;
+      } else if (option3) {
+        selectedOgImage = `/images/multi-art/${slug}/${option3}`;
+      }
+    } catch (e) {
+      console.error(`Error checking multi-art for ${slug}:`, e);
+    }
+  }
+
   return {
     props: {
       title: data.title as string,
@@ -762,7 +785,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       author: Array.isArray(data.author) ? (data.author as string[]) : ([data.author] as string[]),
       description: data.description || '',
       keywords: data.keywords || [],
-      ogImage: data.ogImage || '',
+      ogImage: selectedOgImage,
       videoURL: data.videoURL || '',
       content: escapedContent,
       readingTime,

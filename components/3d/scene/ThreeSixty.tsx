@@ -117,7 +117,7 @@ interface ThreeSixtyProps {
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image';
+  type: 'image' | 'splat';
   path: string;
 }
 

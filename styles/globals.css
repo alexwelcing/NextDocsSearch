@@ -1,10 +1,10 @@
+/* External libraries */
+@import 'hover.css/css/hover-min.css';
+
 /* Tailwind CSS imports */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* External libraries */
-@import '~hover.css/css/hover-min.css';
 
 /* Basic resets and global settings */
 * {

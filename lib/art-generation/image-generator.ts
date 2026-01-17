@@ -5,14 +5,14 @@
  * for blog articles using the signature NextDocs Quantum Aesthetic style.
  */
 
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
 import fs from 'fs'
 import path from 'path'
 import https from 'https'
 import sharp from 'sharp'
 import { randomFillSync } from 'crypto'
 
-let cachedOpenAI: OpenAIApi | null = null
+let cachedOpenAI: OpenAI | null = null
 
 function getOpenAIKey(): string {
   const raw = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY || ''
@@ -20,7 +20,7 @@ function getOpenAIKey(): string {
   return raw.replace(/^Bearer\s+/i, '').trim()
 }
 
-function getOpenAIClient(): OpenAIApi {
+function getOpenAIClient(): OpenAI {
   if (cachedOpenAI) return cachedOpenAI
 
   const apiKey = getOpenAIKey()
@@ -30,8 +30,7 @@ function getOpenAIClient(): OpenAIApi {
     )
   }
 
-  const configuration = new Configuration({ apiKey })
-  cachedOpenAI = new OpenAIApi(configuration)
+  cachedOpenAI = new OpenAI({ apiKey })
   return cachedOpenAI
 }
 
@@ -71,18 +70,18 @@ export async function generateImage(
 
   try {
     const openai = getOpenAIClient()
-    const response = await openai.createImage({
+    const response = await openai.images.generate({
       model: 'dall-e-3',
       prompt,
       n: 1,
-      size: options.size as any, // DALL-E 3 sizes not in old openai package types
-      quality: options.quality || 'hd' as any,
-      style: options.style || 'vivid' as any,
-    } as any)
+      size: options.size,
+      quality: options.quality || 'hd',
+      style: options.style || 'vivid',
+    })
 
-    const imageData = response.data.data[0] as any
+    const imageData = response.data ? response.data[0] : null
 
-    if (!imageData.url) {
+    if (!imageData || !imageData.url) {
       throw new Error('No image URL returned from OpenAI')
     }
 
@@ -96,18 +95,14 @@ export async function generateImage(
       revisedPrompt: imageData.revised_prompt,
     }
   } catch (error: any) {
-    const status = error?.response?.status
-    const data = error?.response?.data
-    if (status) {
-      console.error(`❌ Error generating image: HTTP ${status}`)
-      if (data) {
-        const message = data?.error?.message || data?.message
-        const code = data?.error?.code
-        if (message) console.error(`   OpenAI: ${message}`)
-        if (code) console.error(`   Code: ${code}`)
-      }
+    // OpenAI v4 error handling
+    if (error instanceof OpenAI.APIError) {
+      console.error(`❌ Error generating image: HTTP ${error.status}`)
+      console.error(`   OpenAI: ${error.message}`)
+      console.error(`   Code: ${error.code}`)
+      console.error(`   Type: ${error.type}`)
     } else {
-      console.error('❌ Error generating image:', error.message)
+      console.error('❌ Error generating image:', error.message || error)
     }
     throw error
   }
