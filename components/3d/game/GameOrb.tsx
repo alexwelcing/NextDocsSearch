@@ -94,20 +94,18 @@ const GameOrb: React.FC<GameOrbProps> = ({
     : (isGolden ? 0.8 : 0.5);
 
   return (
-    <group position={position} onClick={handleClick}>
-      {/* Invisible enlarged hit zone when cosmic power is active */}
-      {clickRadiusMultiplier > 1 && (
-        <mesh ref={hitZoneRef}>
-          <sphereGeometry args={[hitRadius, 8, 8]} />
-          <meshBasicMaterial
-            transparent
-            opacity={0}
-            depthWrite={false}
-          />
-        </mesh>
-      )}
+    <group position={position}>
+      {/* Clickable hit zone - always present, sized based on cosmic power */}
+      <mesh ref={hitZoneRef} onClick={handleClick}>
+        <sphereGeometry args={[hitRadius, 12, 12]} />
+        <meshBasicMaterial
+          transparent
+          opacity={0}
+          depthWrite={false}
+        />
+      </mesh>
 
-      {/* Main orb */}
+      {/* Visual orb - not clickable, just for display */}
       <mesh ref={meshRef}>
         <sphereGeometry args={[baseRadius, 12, 12]} />
         <meshStandardMaterial
@@ -119,16 +117,17 @@ const GameOrb: React.FC<GameOrbProps> = ({
           transparent
           opacity={1}
         />
-        {/* Outer glow effect */}
-        <mesh scale={1.3}>
-          <sphereGeometry args={[baseRadius, 8, 8]} />
-          <meshBasicMaterial
-            color={baseColor}
-            transparent
-            opacity={0.2}
-            side={THREE.BackSide}
-          />
-        </mesh>
+      </mesh>
+
+      {/* Outer glow effect */}
+      <mesh scale={1.3}>
+        <sphereGeometry args={[baseRadius, 8, 8]} />
+        <meshBasicMaterial
+          color={baseColor}
+          transparent
+          opacity={0.2}
+          side={THREE.BackSide}
+        />
       </mesh>
 
       {/* Cosmic power visual effects */}
