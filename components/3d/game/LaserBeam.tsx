@@ -68,17 +68,17 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
       if (!initializedRef.current) {
         initializedRef.current = true;
         // Update cylinder heights
-        if (coreRef.current) {
+        if (coreRef.current?.geometry) {
           coreRef.current.geometry.dispose();
           coreRef.current.geometry = new THREE.CylinderGeometry(0.02, 0.02, beamLength, 8);
           coreRef.current.position.set(0, beamLength / 2, 0);
         }
-        if (beamRef.current) {
+        if (beamRef.current?.geometry) {
           beamRef.current.geometry.dispose();
           beamRef.current.geometry = new THREE.CylinderGeometry(0.08, 0.05, beamLength, 12);
           beamRef.current.position.set(0, beamLength / 2, 0);
         }
-        if (glowRef.current) {
+        if (glowRef.current?.geometry) {
           glowRef.current.geometry.dispose();
           glowRef.current.geometry = new THREE.CylinderGeometry(0.2, 0.15, beamLength, 12);
           glowRef.current.position.set(0, beamLength / 2, 0);
@@ -101,14 +101,14 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
       : 2 - progress * 2; // Shrink in second half
 
     // Core beam - thin, bright white
-    if (coreRef.current) {
+    if (coreRef.current?.material) {
       const material = coreRef.current.material as THREE.MeshBasicMaterial;
       material.opacity = beamProgress * 1.0;
       coreRef.current.scale.set(1, Math.max(0.001, beamProgress), 1);
     }
 
     // Main beam
-    if (beamRef.current) {
+    if (beamRef.current?.material) {
       const material = beamRef.current.material as THREE.MeshBasicMaterial;
       material.opacity = beamProgress * 0.8;
       const pulse = 1 + Math.sin(timeRef.current * 30) * 0.1;
@@ -116,7 +116,7 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
     }
 
     // Outer glow - larger, more transparent
-    if (glowRef.current) {
+    if (glowRef.current?.material) {
       const material = glowRef.current.material as THREE.MeshBasicMaterial;
       material.opacity = beamProgress * 0.3;
       const pulse = 1 + Math.sin(timeRef.current * 50) * 0.2;
@@ -124,7 +124,7 @@ const LaserBeam: React.FC<LaserBeamProps> = ({
     }
 
     // Impact flash at target
-    if (impactRef.current) {
+    if (impactRef.current?.material) {
       const impactProgress = progress < 0.3 ? progress / 0.3 : 1 - (progress - 0.3) / 0.7;
       const impactScale = Math.max(0.001, impactProgress * 3);
       impactRef.current.scale.setScalar(impactScale);

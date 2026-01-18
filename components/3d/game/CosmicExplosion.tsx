@@ -116,7 +116,7 @@ const CosmicExplosion: React.FC<CosmicExplosionProps> = ({
     }
 
     // Animate expanding ring
-    if (ringRef.current) {
+    if (ringRef.current?.material) {
       const ringProgress = Math.min(progress * 2, 1);
       const ringScale = ringProgress * 4;
       ringRef.current.scale.set(ringScale, ringScale, ringScale);
@@ -127,7 +127,7 @@ const CosmicExplosion: React.FC<CosmicExplosionProps> = ({
     }
 
     // Animate secondary ring (perpendicular)
-    if (secondaryRingRef.current) {
+    if (secondaryRingRef.current?.material) {
       const ringProgress = Math.min(progress * 1.5, 1);
       const ringScale = ringProgress * 3;
       secondaryRingRef.current.scale.set(ringScale, ringScale, ringScale);
@@ -138,7 +138,7 @@ const CosmicExplosion: React.FC<CosmicExplosionProps> = ({
     }
 
     // Animate shockwave (flat expanding ring)
-    if (shockwaveRef.current) {
+    if (shockwaveRef.current?.material) {
       const swProgress = Math.min(progress * 1.2, 1);
       const swScale = swProgress * 6;
       shockwaveRef.current.scale.set(swScale, swScale, 0.1);
@@ -147,7 +147,7 @@ const CosmicExplosion: React.FC<CosmicExplosionProps> = ({
     }
 
     // Animate core flash
-    if (coreRef.current) {
+    if (coreRef.current?.material) {
       const coreProgress = progress < 0.2 ? progress * 5 : 1 - (progress - 0.2) / 0.8;
       const coreScale = coreProgress * 1.5;
       coreRef.current.scale.setScalar(coreScale);

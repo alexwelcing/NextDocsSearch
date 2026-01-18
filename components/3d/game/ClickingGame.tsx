@@ -305,8 +305,10 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
 
   // Handle missed click (clicking on background, not hitting any orb)
   const handleMissedClick = useCallback(
-    (e: any) => {
-      e.stopPropagation();
+    (e?: { stopPropagation?: () => void }) => {
+      if (e?.stopPropagation) {
+        e.stopPropagation();
+      }
       if (gameState === 'PLAYING') {
         setTotalClicks((prev) => prev + 1);
         setCombo(0); // Reset combo on missed click

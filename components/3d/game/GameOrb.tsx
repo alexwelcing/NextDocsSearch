@@ -68,7 +68,7 @@ const GameOrb: React.FC<GameOrbProps> = ({
     meshRef.current.rotation.x += delta * 0.3;
 
     // Animate cosmic power ring
-    if (cosmicRingRef.current && cosmicPowerActive) {
+    if (cosmicRingRef.current?.material && cosmicPowerActive) {
       cosmicRingRef.current.rotation.z += delta * 3;
       cosmicRingRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 2) * 0.3;
       // Pulsing opacity for the cosmic ring
@@ -77,7 +77,7 @@ const GameOrb: React.FC<GameOrbProps> = ({
     }
 
     // Fade out in last 0.5 seconds
-    if (timeAliveRef.current > lifetime - 0.5) {
+    if (timeAliveRef.current > lifetime - 0.5 && meshRef.current?.material) {
       const fadeProgress = (lifetime - timeAliveRef.current) / 0.5;
       const material = meshRef.current.material as THREE.MeshStandardMaterial;
       material.opacity = fadeProgress;
