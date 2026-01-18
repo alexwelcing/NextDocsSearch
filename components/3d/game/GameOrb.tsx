@@ -34,8 +34,8 @@ const GameOrb: React.FC<GameOrbProps> = ({
   const baseRadius = 0.5;
   const hitRadius = baseRadius * clickRadiusMultiplier;
 
-  const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    e.stopPropagation();
+  const handleClick = (e?: ThreeEvent<MouseEvent>) => {
+    e?.stopPropagation();
     if (!isVisible) return;
 
     const points = isGolden ? 30 : 10;

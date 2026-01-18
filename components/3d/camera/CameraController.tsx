@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { GameState } from '../game/ClickingGame';
 import * as THREE from 'three';
@@ -31,14 +31,23 @@ const CameraController: React.FC<CameraControllerProps> = ({ gameState }) => {
   const targetAzimuth = 0; // 0 radians = facing forward (negative Z)
   const targetPolar = Math.PI / 2; // 90 degrees = horizontal view
 
-  // Helper to safely get controls as OrbitControls
-  const getOrbitControls = (): OrbitControlsLike | null => {
+  // Helper to safely get controls as OrbitControls - memoized to avoid recreation
+  const getOrbitControls = useCallback((): OrbitControlsLike | null => {
     if (!controls) return null;
-    const ctrl = controls as unknown as OrbitControlsLike;
-    // Validate that it has the required methods/properties
-    if (!ctrl.target || typeof ctrl.getAzimuthalAngle !== 'function') return null;
-    return ctrl;
-  };
+    // Safe type assertion with runtime validation
+    const ctrl = controls as unknown as Partial<OrbitControlsLike>;
+    // Validate that it has the required methods/properties before returning
+    if (
+      !ctrl.target ||
+      typeof ctrl.getAzimuthalAngle !== 'function' ||
+      typeof ctrl.getPolarAngle !== 'function' ||
+      typeof ctrl.getDistance !== 'function' ||
+      typeof ctrl.update !== 'function'
+    ) {
+      return null;
+    }
+    return ctrl as OrbitControlsLike;
+  }, [controls]);
 
   // When game countdown begins, start camera pan
   useEffect(() => {
@@ -56,7 +65,7 @@ const CameraController: React.FC<CameraControllerProps> = ({ gameState }) => {
       isPanningRef.current = false;
       panProgressRef.current = 0;
     }
-  }, [gameState, controls]);
+  }, [gameState, getOrbitControls]);
 
   // Smooth camera pan animation
   useFrame((state, delta) => {
