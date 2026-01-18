@@ -1,7 +1,16 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { GameState } from '../game/ClickingGame';
 import * as THREE from 'three';
+
+// Type for OrbitControls-like object
+interface OrbitControlsLike {
+  target: THREE.Vector3;
+  getAzimuthalAngle: () => number;
+  getPolarAngle: () => number;
+  getDistance: () => number;
+  update: () => void;
+}
 
 interface CameraControllerProps {
   gameState: GameState;
@@ -17,20 +26,37 @@ const CameraController: React.FC<CameraControllerProps> = ({ gameState }) => {
   const panProgressRef = useRef(0);
   const startAzimuthRef = useRef(0);
   const startPolarRef = useRef(0);
-  
+
   // Target angles: face forward
   const targetAzimuth = 0; // 0 radians = facing forward (negative Z)
   const targetPolar = Math.PI / 2; // 90 degrees = horizontal view
 
+  // Helper to safely get controls as OrbitControls - memoized to avoid recreation
+  const getOrbitControls = useCallback((): OrbitControlsLike | null => {
+    if (!controls) return null;
+    // Safe type assertion with runtime validation
+    const ctrl = controls as unknown as Partial<OrbitControlsLike>;
+    // Validate that it has the required methods/properties before returning
+    if (
+      !ctrl.target ||
+      typeof ctrl.getAzimuthalAngle !== 'function' ||
+      typeof ctrl.getPolarAngle !== 'function' ||
+      typeof ctrl.getDistance !== 'function' ||
+      typeof ctrl.update !== 'function'
+    ) {
+      return null;
+    }
+    return ctrl as OrbitControlsLike;
+  }, [controls]);
+
   // When game countdown begins, start camera pan
   useEffect(() => {
     if (gameState === 'COUNTDOWN') {
-      if (!isPanningRef.current && controls) {
+      const orbitControls = getOrbitControls();
+      if (!isPanningRef.current && orbitControls) {
         // Store the starting angles from OrbitControls
-        // @ts-ignore - accessing OrbitControls methods
-        startAzimuthRef.current = controls.getAzimuthalAngle();
-        // @ts-ignore - accessing OrbitControls methods
-        startPolarRef.current = controls.getPolarAngle();
+        startAzimuthRef.current = orbitControls.getAzimuthalAngle();
+        startPolarRef.current = orbitControls.getPolarAngle();
         isPanningRef.current = true;
         panProgressRef.current = 0;
       }
@@ -39,15 +65,18 @@ const CameraController: React.FC<CameraControllerProps> = ({ gameState }) => {
       isPanningRef.current = false;
       panProgressRef.current = 0;
     }
-  }, [gameState, controls]);
+  }, [gameState, getOrbitControls]);
 
   // Smooth camera pan animation
   useFrame((state, delta) => {
-    if (!isPanningRef.current || !controls) return;
+    if (!isPanningRef.current) return;
+
+    const orbitControls = getOrbitControls();
+    if (!orbitControls) return;
 
     // Increment progress (takes ~1.5 seconds to complete)
     panProgressRef.current = Math.min(1, panProgressRef.current + delta * 0.8);
-    
+
     // Ease-out interpolation for smooth deceleration
     const easeOut = 1 - Math.pow(1 - panProgressRef.current, 3);
 
@@ -55,7 +84,7 @@ const CameraController: React.FC<CameraControllerProps> = ({ gameState }) => {
     let deltaAzimuth = targetAzimuth - startAzimuthRef.current;
     if (deltaAzimuth > Math.PI) deltaAzimuth -= Math.PI * 2;
     if (deltaAzimuth < -Math.PI) deltaAzimuth += Math.PI * 2;
-    
+
     const currentAzimuth = startAzimuthRef.current + deltaAzimuth * easeOut;
     const currentPolar = THREE.MathUtils.lerp(
       startPolarRef.current,
@@ -64,23 +93,19 @@ const CameraController: React.FC<CameraControllerProps> = ({ gameState }) => {
     );
 
     // Update OrbitControls using spherical coordinates
-    // @ts-ignore - accessing OrbitControls methods
-    const radius = controls.getDistance();
+    const radius = orbitControls.getDistance();
     const offset = new THREE.Vector3();
-    
+
     // Convert spherical to Cartesian
     offset.x = radius * Math.sin(currentPolar) * Math.sin(currentAzimuth);
     offset.y = radius * Math.cos(currentPolar);
     offset.z = radius * Math.sin(currentPolar) * Math.cos(currentAzimuth);
-    
+
     // Set camera position relative to target
-    // @ts-ignore - accessing OrbitControls target
-    camera.position.copy(controls.target).add(offset);
-    // @ts-ignore - accessing OrbitControls target
-    camera.lookAt(controls.target);
-    
-    // @ts-ignore - accessing OrbitControls update
-    controls.update();
+    camera.position.copy(orbitControls.target).add(offset);
+    camera.lookAt(orbitControls.target);
+
+    orbitControls.update();
 
     // Stop panning when complete
     if (panProgressRef.current >= 1) {
