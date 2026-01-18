@@ -520,6 +520,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               {/* OrbitControls - disabled during cinematic intro */}
               {cinematicComplete && (
                 <OrbitControls
+                  makeDefault
                   enableDamping
                   dampingFactor={0.1}
                   rotateSpeed={0.5}
