@@ -102,6 +102,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@tweenjs/tween.js": "^21.1.1",

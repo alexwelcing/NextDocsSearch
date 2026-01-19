@@ -81,31 +81,7 @@ export async function loadWorld(worldId: string): Promise<WorldConfig> {
     const config: Partial<WorldConfig> = await response.json();
 
     // Merge with defaults
-    const fullConfig: WorldConfig = {
-      ...DEFAULT_WORLD,
-      ...config,
-      id: worldId,
-      assets: {
-        ...DEFAULT_WORLD.assets,
-        ...config.assets,
-      },
-      camera: {
-        ...DEFAULT_WORLD.camera,
-        ...config.camera,
-        constraints: {
-          ...DEFAULT_WORLD.camera.constraints,
-          ...config.camera?.constraints,
-        },
-      },
-      lighting: {
-        ...DEFAULT_WORLD.lighting,
-        ...config.lighting,
-      },
-      atmosphere: {
-        ...DEFAULT_WORLD.atmosphere,
-        ...config.atmosphere,
-      },
-    };
+    const fullConfig = mergeWorldConfig(config, worldId);
 
     // Resolve relative asset paths
     fullConfig.assets = resolveAssetPaths(fullConfig.assets, worldId);
@@ -118,6 +94,40 @@ export async function loadWorld(worldId: string): Promise<WorldConfig> {
     console.error(`Failed to load world "${worldId}":`, error);
     return DEFAULT_WORLD;
   }
+}
+
+/**
+ * Merge a partial configuration with defaults
+ */
+export function mergeWorldConfig(
+  config: Partial<WorldConfig>,
+  worldId: string = 'default'
+): WorldConfig {
+  return {
+    ...DEFAULT_WORLD,
+    ...config,
+    id: config.id || worldId,
+    assets: {
+      ...DEFAULT_WORLD.assets,
+      ...config.assets,
+    },
+    camera: {
+      ...DEFAULT_WORLD.camera,
+      ...config.camera,
+      constraints: {
+        ...DEFAULT_WORLD.camera.constraints,
+        ...config.camera?.constraints,
+      },
+    },
+    lighting: {
+      ...DEFAULT_WORLD.lighting,
+      ...config.lighting,
+    },
+    atmosphere: {
+      ...DEFAULT_WORLD.atmosphere,
+      ...config.atmosphere,
+    },
+  };
 }
 
 /**

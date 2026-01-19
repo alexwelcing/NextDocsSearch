@@ -9,14 +9,14 @@ import CircleNav from '@/components/ui/CircleNav'
 import SearchDialog from '@/components/SearchDialog'
 import Footer from '@/components/ui/footer'
 
-// Dynamically import Scene3D, using StylishFallback as the loading component.
-const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
+// Dynamically import ThreeSixty, using StylishFallback as the loading component.
+const ThreeSixty = dynamic(() => import('@/components/3d/scene/ThreeSixty'), {
   ssr: false,
   loading: () => <StylishFallback />,
 })
 
 const Chat = () => {
-  const [currentImage, setCurrentImage] = useState<string | null>(null)
+  const [currentImage, setCurrentImage] = useState<string>('')
   const [articles, setArticles] = useState<any[]>([])
 
   async function getRandomImage() {
@@ -51,21 +51,13 @@ const Chat = () => {
     fetchArticles()
   }, [])
 
-  async function handleImageChange(): Promise<void> {
-    await getRandomImage()
+  async function handleImageChange(newImage: string): Promise<void> {
+    if (newImage) {
+      setCurrentImage(newImage)
+    } else {
+      await getRandomImage()
+    }
   }
-
-  // Build world config from random image
-  const worldConfig = React.useMemo(() => {
-    if (!currentImage) return 'default';
-    return {
-      id: 'dynamic-chat',
-      name: 'Dynamic Chat',
-      assets: {
-        fallbackPanorama: currentImage
-      }
-    } as any;
-  }, [currentImage]);
 
   return (
     <>
@@ -90,13 +82,14 @@ const Chat = () => {
         <JourneyProvider>
           <CircleNav />
           <main className={`${styles.main} ${styles.gradientbg}`}>
-            <Scene3D
-              world={worldConfig}
-              articles={articles}
+            <ThreeSixty
+              currentImage={currentImage || ''}
+              isDialogOpen={false}
+              onChangeImage={handleImageChange}
             />
           </main>
           <SearchDialog />
-          <Footer onImageChange={handleImageChange} showChangeScenery={false} />
+          <Footer onImageChange={() => getRandomImage()} showChangeScenery={false} />
         </JourneyProvider>
       </SupabaseDataProvider>
     </>
