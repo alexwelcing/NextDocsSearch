@@ -5,7 +5,7 @@ import { useWorldTracker, WorldInfo } from '@/lib/hooks/useWorldTracker';
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image';
   path: string;
 }
 
@@ -649,23 +649,7 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
                 </div>
               )}
 
-              {/* 3D badge for splats */}
-              {world.type === 'splat' && !isCurrent && (
-                <div style={{
-                  position: 'absolute',
-                  top: '6px',
-                  left: '6px',
-                  padding: '3px 8px',
-                  background: 'rgba(0, 255, 255, 0.9)',
-                  color: '#000',
-                  fontSize: '9px',
-                  fontWeight: 700,
-                  fontFamily: 'monospace',
-                  borderRadius: '3px',
-                }}>
-                  3D
-                </div>
-              )}
+              {/* 3D badge removed - splats no longer supported */}
 
               {/* World name */}
               <div style={{

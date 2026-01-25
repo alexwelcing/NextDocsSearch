@@ -25,7 +25,7 @@ interface LeaderboardEntry {
 interface SceneryOption {
   id: string;
   name: string;
-  type: 'image' | 'splat';
+  type: 'image';
   path: string;
 }
 
