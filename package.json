@@ -55,6 +55,7 @@
     "@react-three/fiber": "^9.4.2",
     "@react-three/postprocessing": "^3.0.4",
     "@react-three/xr": "^6.6.28",
+    "@sparkjsdev/spark": "^0.1.10",
     "@supabase/ssr": "^0.0.9",
     "@supabase/supabase-js": "^2.45.1",
     "@types/node": "^22.10.2",

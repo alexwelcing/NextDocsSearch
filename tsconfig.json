@@ -42,6 +42,7 @@
     "node_modules",
     "scripts",
     "vitest.config.ts",
-    "vitest.setup.ts"
+    "vitest.setup.ts",
+    "scripts"
   ]
 }
