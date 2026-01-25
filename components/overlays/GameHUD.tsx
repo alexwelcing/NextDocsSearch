@@ -6,8 +6,6 @@ interface GameHUDProps {
   timeRemaining: number;
   combo: number;
   isPlaying: boolean;
-  cosmicPowerActive?: boolean;
-  comboBoostMultiplier?: number;
 }
 
 const pulse = keyframes`
@@ -21,26 +19,6 @@ const comboGlow = keyframes`
   }
   50% {
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-  }
-`;
-
-const cosmicPulse = keyframes`
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6);
-  }
-`;
-
-const laserSweep = keyframes`
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
   }
 `;
 
@@ -146,63 +124,7 @@ const MultiplierBadge = styled.div`
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
 `;
 
-const CosmicPowerDisplay = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, rgba(128, 0, 255, 0.85), rgba(0, 255, 255, 0.85));
-  padding: 12px 28px;
-  border-radius: 30px;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  animation: ${cosmicPulse} 2s infinite ease-in-out;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const CosmicIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  background: radial-gradient(circle, #fff 0%, #ff00ff 40%, #00ffff 100%);
-  border-radius: 50%;
-  box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffff;
-`;
-
-const CosmicText = styled.div`
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-  background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: ${laserSweep} 3s linear infinite;
-`;
-
-const CosmicBonus = styled.span`
-  background: rgba(255, 255, 255, 0.2);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  color: #fff;
-  -webkit-text-fill-color: #fff;
-  margin-left: 8px;
-`;
-
-const GameHUD: React.FC<GameHUDProps> = ({
-  score,
-  timeRemaining,
-  combo,
-  isPlaying,
-  cosmicPowerActive = false,
-  comboBoostMultiplier = 1,
-}) => {
+const GameHUD: React.FC<GameHUDProps> = ({ score, timeRemaining, combo, isPlaying }) => {
   const [displayScore, setDisplayScore] = useState(0);
   const isWarning = timeRemaining <= 5;
   const showCombo = combo >= 3;
@@ -223,22 +145,10 @@ const GameHUD: React.FC<GameHUDProps> = ({
 
   if (!isPlaying) return null;
 
-  const baseMultiplier = highCombo ? 3 : combo >= 3 ? 2 : 1;
-  const totalMultiplier = Math.round(baseMultiplier * comboBoostMultiplier * 10) / 10;
+  const multiplier = highCombo ? 3 : combo >= 3 ? 2 : 1;
 
   return (
     <HUDContainer>
-      {/* Cosmic Power Indicator */}
-      {cosmicPowerActive && (
-        <CosmicPowerDisplay>
-          <CosmicIcon />
-          <CosmicText>
-            COSMIC POWER
-            <CosmicBonus>2.5x HIT ZONE</CosmicBonus>
-          </CosmicText>
-        </CosmicPowerDisplay>
-      )}
-
       <ScoreDisplay>
         <ScoreLabel>Score</ScoreLabel>
         <ScoreValue>{displayScore.toLocaleString()}</ScoreValue>
@@ -254,11 +164,8 @@ const GameHUD: React.FC<GameHUDProps> = ({
       <ComboDisplay visible={showCombo} highCombo={highCombo}>
         <ComboText>
           {combo}x COMBO
-          {totalMultiplier > 1 && (
-            <MultiplierBadge>
-              {totalMultiplier}x POINTS
-              {cosmicPowerActive && comboBoostMultiplier > 1 && ' +BOOST'}
-            </MultiplierBadge>
+          {multiplier > 1 && (
+            <MultiplierBadge>{multiplier}x POINTS</MultiplierBadge>
           )}
         </ComboText>
       </ComboDisplay>

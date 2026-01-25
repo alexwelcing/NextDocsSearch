@@ -325,136 +325,55 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
         </div>
       )}
 
-      {/* Unlock Animation Overlay - Cosmic Power Celebration */}
+      {/* Unlock Animation Overlay */}
       {showUnlockAnimation && (
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'radial-gradient(ellipse at center, rgba(128, 0, 255, 0.3) 0%, rgba(0, 0, 0, 0.98) 70%)',
+          background: 'rgba(0, 0, 0, 0.95)',
           zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-          {/* Animated cosmic orb */}
           <div style={{
-            width: '100px',
-            height: '100px',
+            width: '64px',
+            height: '64px',
+            border: '2px solid #0f0',
             borderRadius: '50%',
-            marginBottom: '32px',
-            background: 'radial-gradient(circle at 30% 30%, #fff 0%, #ff00ff 30%, #00ffff 60%, #8000ff 100%)',
-            boxShadow: '0 0 60px #ff00ff, 0 0 100px #00ffff, 0 0 140px #8000ff',
-            animation: 'cosmicPulse 1.5s ease-in-out infinite, cosmicSpin 3s linear infinite',
-          }} />
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            animation: 'pulse 1s ease-in-out infinite',
+          }}>
+            <span style={{ fontSize: '28px', color: '#0f0' }}>★</span>
+          </div>
           <style>{`
-            @keyframes cosmicPulse {
-              0%, 100% { transform: scale(1); box-shadow: 0 0 60px #ff00ff, 0 0 100px #00ffff, 0 0 140px #8000ff; }
-              50% { transform: scale(1.15); box-shadow: 0 0 80px #ff00ff, 0 0 130px #00ffff, 0 0 180px #8000ff; }
-            }
-            @keyframes cosmicSpin {
-              to { filter: hue-rotate(360deg); }
-            }
-            @keyframes laserFlash {
-              0%, 100% { opacity: 0; }
-              50% { opacity: 1; }
+            @keyframes pulse {
+              0%, 100% { transform: scale(1); opacity: 1; }
+              50% { transform: scale(1.1); opacity: 0.8; }
             }
           `}</style>
-
-          {/* Laser beam decorations */}
-          <div style={{
-            position: 'absolute',
-            width: '2px',
-            height: '40%',
-            background: 'linear-gradient(to bottom, transparent, #00ffff, transparent)',
-            top: '0',
-            animation: 'laserFlash 0.5s ease-in-out infinite',
-          }} />
-          <div style={{
-            position: 'absolute',
-            width: '40%',
-            height: '2px',
-            background: 'linear-gradient(to right, transparent, #ff00ff, transparent)',
-            left: '30%',
-            animation: 'laserFlash 0.5s ease-in-out infinite 0.25s',
-          }} />
-
           <div style={{
             color: '#fff',
-            fontSize: '2rem',
-            fontWeight: 700,
+            fontSize: '1.5rem',
+            fontWeight: 600,
             fontFamily: 'monospace',
             textAlign: 'center',
-            marginBottom: '16px',
-            letterSpacing: '0.15em',
-            textShadow: '0 0 20px #ff00ff, 0 0 40px #00ffff',
-          }}>
-            COSMIC POWER UNLOCKED
-          </div>
-
-          <div style={{
-            color: '#0ff',
-            fontSize: '1.1rem',
-            fontFamily: 'monospace',
-            textAlign: 'center',
-            marginBottom: '24px',
+            marginBottom: '12px',
             letterSpacing: '0.1em',
           }}>
-            All Worlds Discovered
+            ALL WORLDS DISCOVERED
           </div>
-
-          {/* Bonus list */}
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            padding: '20px',
-            background: 'rgba(0, 0, 0, 0.5)',
-            borderRadius: '12px',
-            border: '1px solid rgba(255, 0, 255, 0.3)',
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              color: '#ff00ff',
-              fontFamily: 'monospace',
-              fontSize: '0.9rem',
-            }}>
-              <span style={{ fontSize: '1.2rem' }}>⚡</span>
-              <span>2.5x LARGER HIT ZONE</span>
-            </div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              color: '#00ffff',
-              fontFamily: 'monospace',
-              fontSize: '0.9rem',
-            }}>
-              <span style={{ fontSize: '1.2rem' }}>━━━</span>
-              <span>LASER BEAM EFFECTS</span>
-            </div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              color: '#ffd700',
-              fontFamily: 'monospace',
-              fontSize: '0.9rem',
-            }}>
-              <span style={{ fontSize: '1.2rem' }}>★</span>
-              <span>1.5x COMBO BOOST</span>
-            </div>
-          </div>
-
-          <div style={{
-            marginTop: '24px',
-            color: '#888',
-            fontSize: '0.75rem',
+            color: '#0f0',
+            fontSize: '0.9rem',
             fontFamily: 'monospace',
+            textAlign: 'center',
           }}>
-            Play the game to experience your new powers
+            Special features unlocked
           </div>
         </div>
       )}

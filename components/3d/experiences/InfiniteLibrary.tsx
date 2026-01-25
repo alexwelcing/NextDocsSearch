@@ -8,6 +8,7 @@
 
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 import Atmosphere from '../atmosphere/Atmosphere';
@@ -342,7 +343,15 @@ export default function InfiniteLibrary({
       {/* Atmosphere and effects */}
       <Atmosphere theme={theme} quality={quality} />
 
-      {/* Note: OrbitControls are provided by the parent ThreeSixty component */}
+      {/* Camera controls */}
+      <OrbitControls
+        enableDamping
+        dampingFactor={0.05}
+        minDistance={5}
+        maxDistance={radius * 2}
+        maxPolarAngle={Math.PI * 0.85}
+        minPolarAngle={Math.PI * 0.15}
+      />
 
       {/* Connection lines */}
       {connections.length > 0 && (

@@ -21,7 +21,6 @@ import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExp
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
 import InfiniteLibrary, { COSMIC_LIBRARY, DIGITAL_GARDEN } from '../experiences/InfiniteLibrary';
 import { useJourney } from '../../contexts/JourneyContext';
-import { useCosmicPower } from '../../contexts/CosmicPowerContext';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
@@ -175,14 +174,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
-
-  // Cosmic power bonus from visiting all worlds
-  const {
-    isActive: cosmicPowerActive,
-    clickRadiusMultiplier,
-    comboBoostMultiplier,
-    isUnlocked: cosmicPowerUnlocked,
-  } = useCosmicPower();
 
   // Article discovery - hide floating button during game
   const { setShowFloatingButton } = useArticleDiscovery();
@@ -514,10 +505,12 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* OrbitControls - MUST be before CameraController so makeDefault is set first */}
+              {/* Camera controller for smooth game transitions */}
+              {cinematicComplete && <CameraController gameState={gameState} />}
+
+              {/* OrbitControls - disabled during cinematic intro */}
               {cinematicComplete && (
                 <OrbitControls
-                  makeDefault
                   enableDamping
                   dampingFactor={0.1}
                   rotateSpeed={0.5}
@@ -530,9 +523,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 />
               )}
 
-              {/* Camera controller for smooth game transitions - after OrbitControls */}
-              {cinematicComplete && <CameraController gameState={gameState} />}
-
               {/* Sphere Hunter Game */}
               <ClickingGame
                 gameState={gameState}
@@ -541,9 +531,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 onScoreUpdate={setScore}
                 onComboUpdate={setCombo}
                 onTimeUpdate={setTimeRemaining}
-                cosmicPowerActive={cosmicPowerActive}
-                clickRadiusMultiplier={clickRadiusMultiplier}
-                comboBoostMultiplier={comboBoostMultiplier}
               />
 
               {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
@@ -711,8 +698,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           timeRemaining={timeRemaining}
           combo={combo}
           isPlaying={true}
-          cosmicPowerActive={cosmicPowerActive}
-          comboBoostMultiplier={comboBoostMultiplier}
         />
       )}
 

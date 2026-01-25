@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { trackEvent } from '@/lib/google-analytics';
 import { JourneyProvider } from '@/components/contexts/JourneyContext';
-import { CosmicPowerProvider } from '@/components/contexts/CosmicPowerContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { ArticleDiscoveryProvider } from '@/components/ArticleDiscoveryProvider';
 
@@ -56,13 +55,11 @@ function App({ Component, pageProps }: AppProps) {
       </Script>
 
       <JourneyProvider>
-        <CosmicPowerProvider>
-          <ArticleDiscoveryProvider>
-            <ErrorBoundary>
-              <Component {...pageProps} />
-            </ErrorBoundary>
-          </ArticleDiscoveryProvider>
-        </CosmicPowerProvider>
+        <ArticleDiscoveryProvider>
+          <ErrorBoundary>
+            <Component {...pageProps} />
+          </ErrorBoundary>
+        </ArticleDiscoveryProvider>
       </JourneyProvider>
     </>
   )
