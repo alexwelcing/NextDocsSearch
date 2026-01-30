@@ -1,102 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
-import { JourneyProvider, useJourney } from '@/components/contexts/JourneyContext'
-import AchievementUnlock from '@/components/AchievementUnlock'
-import CircleNav from '@/components/ui/CircleNav'
-import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
-import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
 import styles from '@/styles/Home.module.css'
-import SearchDialog from '@/components/SearchDialog'
 
-// Dynamically import the 3D environment, using the new Scene3D orchestrator
-const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
-  ssr: false,
-  loading: () => <StylishFallback />,
-})
-
-function HomeContent() {
-  const [currentImage, setCurrentImage] = useState<string | null>(null)
-  const [articles, setArticles] = useState<any[]>([])
-  const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
-  const [gameState, setGameState] = useState<string>('idle')
-  const [isEntering, setIsEntering] = useState(false)
-
-  const { achievements } = useJourney()
-  const [currentAchievement, setCurrentAchievement] = useState<typeof achievements[0] | null>(null)
-
-  useEffect(() => {
-    const unlockedAchievements = achievements.filter(a => a.unlocked)
-    if (unlockedAchievements.length > 0) {
-      const latest = unlockedAchievements[unlockedAchievements.length - 1]
-      setCurrentAchievement(latest)
-    }
-  }, [achievements])
-
-  const getRandomImage = useCallback(async () => {
-    try {
-      const response = await fetch('/api/backgroundImages')
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
-      const data = await response.json()
-      setCurrentImage(data.image)
-    } catch (error) {
-      console.error('Failed fetching background image:', error)
-    }
-  }, [])
-
-  async function fetchArticles() {
-    try {
-      const response = await fetch('/api/articles')
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      const data = await response.json()
-      setArticles(data)
-    } catch (error) {
-      console.error('Failed to fetch articles:', error)
-    }
-  }
-
-  // On initial mount, fetch a random background for the 3D environment
-  useEffect(() => {
-    getRandomImage()
-    fetchArticles()
-  }, [getRandomImage])
-
-  const handleEnter3D = useCallback(() => {
-    setIsEntering(true)
-    // Small delay for transition effect
-    setTimeout(() => setIsIn3DMode(true), 300)
-  }, [])
-
-  const handleToggle3D = useCallback(() => {
-    setIsIn3DMode(prev => !prev)
-  }, [])
-
-  // Build world config from random image
-  const worldConfig = React.useMemo(() => {
-    if (!currentImage) return 'default';
-    return {
-      id: 'dynamic-home',
-      name: 'Dynamic Home',
-      assets: {
-        fallbackPanorama: currentImage
-      }
-    } as any;
-  }, [currentImage]);
-
+export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Alex Welcing | Speculative AI Futures</title>
+        <title>Alex Welcing | AI Product Manager - Building Intelligent Systems</title>
         <meta
           name="description"
-          content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems."
+          content="AI Product Manager with 10+ years building intelligent systems. Expert in ML/AI product strategy, platform development, and driving business outcomes through technology innovation."
         />
-        <meta name="keywords" content="speculative AI, emergent intelligence, AI futures, Alex Welcing" />
+        <meta 
+          name="keywords" 
+          content="AI Product Manager, Machine Learning, AI Strategy, Product Leadership, SaaS, Platform Development, Alex Welcing" 
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com" />
@@ -105,11 +25,11 @@ function HomeContent() {
         {/* Open Graph Meta Tags */}
         <meta
           property="og:title"
-          content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing"
+          content="Alex Welcing | AI Product Manager - Building Intelligent Systems"
         />
         <meta
           property="og:description"
-          content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant."
+          content="AI Product Manager with 10+ years building intelligent systems. Expert in ML/AI product strategy, platform development, and driving business outcomes."
         />
         <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
@@ -117,198 +37,352 @@ function HomeContent() {
         <meta property="og:url" content="https://alexwelcing.com" />
         <meta property="og:type" content="website" />
 
-        {/* X (Twitter) Card Meta Tags */}
+        {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing" />
-        <meta name="twitter:description" content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant." />
+        <meta name="twitter:title" content="Alex Welcing | AI Product Manager" />
+        <meta name="twitter:description" content="Building intelligent systems and AI products. 10+ years of product leadership in SaaS, ML/AI, and platform technologies." />
         <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
 
         {/* Performance and PWA hints */}
         <meta name="theme-color" content="#0a0a0a" />
-        <link rel="preload" as="image" href="/social-preview.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Head>
-
-      <StructuredData
-        type="Website"
-        data={{
-          name: "Alex Welcing - Speculative AI Futures",
-          url: "https://alexwelcing.com",
-          description: "Exploring speculative AI futures, agent civilizations, and emergent intelligence systems.",
-          author: { "@type": "Person", name: "Alex Welcing", url: "https://alexwelcing.com/about" }
-        }}
-      />
 
       <StructuredData
         type="Person"
         data={{
           name: "Alex Welcing",
           url: "https://alexwelcing.com",
-          jobTitle: "AI Futures Researcher",
-          description: "Exploring speculative AI futures, agent civilizations, and emergent intelligence systems.",
+          jobTitle: "AI Product Manager",
+          description: "AI Product Manager with expertise in machine learning systems, platform development, and driving business outcomes through intelligent technology.",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
             "https://x.com/alexwelcing"
+          ],
+          knowsAbout: [
+            "AI Product Management",
+            "Machine Learning",
+            "Product Strategy",
+            "Platform Development",
+            "SaaS",
+            "System Architecture"
           ]
         }}
       />
 
-        {isIn3DMode ? (
-          <main className={`${styles.main} ${styles.gradientbg}`}>
-            {/* Show the Scene3D modern environment */}
-            <Scene3D
-              world={worldConfig}
-              articles={articles}
-              onGameStateChange={setGameState}
-            />
-
-            {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'playing' && <SearchDialog />}
-
-            {/* Button to go back to 2D home */}
-            <div className="absolute top-4 left-4 z-50">
-              <button
-                onClick={handleToggle3D}
-                className={styles.landingBtn}
-                style={{ padding: '0.5rem 1rem' }}
-              >
-                Return to 2D
-              </button>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+        {/* Navigation */}
+        <nav className="fixed top-0 w-full z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <Link href="/" className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Alex Welcing
+              </Link>
+              <div className="flex gap-8">
+                <a href="#about" className="hover:text-blue-400 transition-colors">About</a>
+                <a href="#experience" className="hover:text-blue-400 transition-colors">Experience</a>
+                <Link href="/articles" className="hover:text-blue-400 transition-colors">Articles</Link>
+                <a href="#contact" className="hover:text-blue-400 transition-colors">Contact</a>
+              </div>
             </div>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center space-y-8">
+              <div className="inline-block px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium mb-4">
+                Available for AI Product Leadership Roles
+              </div>
+              
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
+                <span className="bg-gradient-to-r from-white via-blue-100 to-cyan-300 bg-clip-text text-transparent">
+                  Building Intelligent Systems
+                </span>
+                <br />
+                <span className="text-gray-300">
+                  That Drive Business Impact
+                </span>
+              </h1>
+
+              <p className="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                AI Product Manager with 10+ years turning complex ML/AI capabilities into 
+                successful products. Expert in product strategy, platform development, and 
+                bridging the research-to-production gap.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                <a
+                  href="#contact"
+                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors shadow-lg shadow-blue-500/25"
+                >
+                  Get In Touch
+                </a>
+                <Link
+                  href="/about"
+                  className="px-8 py-4 bg-gray-800 hover:bg-gray-700 rounded-lg font-semibold transition-colors border border-gray-700"
+                >
+                  View Resume
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Key Strengths Section */}
+        <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800/30">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold mb-12 text-center">
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Core Expertise
+              </span>
+            </h2>
             
-            <AchievementUnlock
-              achievement={currentAchievement}
-              onDismiss={() => setCurrentAchievement(null)}
-            />
-          </main>
-        ) : (
-          <div
-            className="min-h-screen text-white"
-            style={{
-              opacity: isEntering ? 0 : 1,
-              transition: 'opacity 0.3s ease-out',
-            }}
-          >
-            <CircleNav isGamePlaying={false} />
-            {/* Hero - Immersive, mysterious, minimal */}
-            <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-              <EnhancedHeroCanvas />
-
-              {/* Content overlay */}
-              <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
-                <h1
-                  className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
-                  style={{
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    letterSpacing: '-0.03em',
-                    lineHeight: 1.05,
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    fontWeight: 800,
-                  }}
-                >
-                  <span style={{
-                    background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}>
-                    AI Strategy & Product Leadership
-                  </span>
-                </h1>
-                <p
-                  className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2"
-                  style={{
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    letterSpacing: '0.01em',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    maxWidth: '600px',
-                  }}
-                >
-                  Building intelligent systems and frameworks for emergent AI futures
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-gray-800/50 p-8 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
+                <div className="text-3xl mb-4">🤖</div>
+                <h3 className="text-xl font-bold mb-3 text-blue-400">AI Product Strategy</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Defining product vision and roadmaps for ML/AI systems. Expert in prioritization 
+                  frameworks (RIBS) and balancing innovation with business value.
                 </p>
+              </div>
 
-                {/* Two clear paths */}
-                <div className="flex flex-col sm:flex-row gap-6 mt-12">
-                  <Link
-                    href="/articles"
-                    className="group relative px-8 py-4 overflow-hidden"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-white/80 group-hover:text-white transition-colors">
-                      Read Articles
-                    </span>
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(255, 215, 0, 0.05))',
-                      }}
-                    />
-                  </Link>
+              <div className="bg-gray-800/50 p-8 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
+                <div className="text-3xl mb-4">⚡</div>
+                <h3 className="text-xl font-bold mb-3 text-blue-400">Platform Development</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Building scalable SaaS platforms from concept to launch. Experience across 
+                  legal tech, healthcare, and analytics verticals.
+                </p>
+              </div>
 
-                  <button
-                    onClick={handleEnter3D}
-                    className="group relative px-8 py-4 overflow-hidden cursor-pointer"
-                    style={{
-                      background: 'rgba(0, 212, 255, 0.08)',
-                      border: '1px solid rgba(0, 212, 255, 0.3)',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase" style={{ color: 'rgba(0, 212, 255, 0.9)' }}>
-                      3D Experience
-                    </span>
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05))',
-                      }}
-                    />
-                  </button>
+              <div className="bg-gray-800/50 p-8 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
+                <div className="text-3xl mb-4">📊</div>
+                <h3 className="text-xl font-bold mb-3 text-blue-400">Research to Production</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Translating cutting-edge AI research into production-ready features. 
+                  Bridging technical teams and business stakeholders.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Experience Highlights */}
+        <section id="experience" className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold mb-4 text-center">
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Experience Highlights
+              </span>
+            </h2>
+            <p className="text-center text-gray-400 mb-12 text-lg">
+              10+ years building products across legal, healthcare, and analytics
+            </p>
+
+            <div className="space-y-6">
+              <div className="bg-gray-800/50 p-8 rounded-xl border border-gray-700">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Technical Product Manager</h3>
+                    <p className="text-blue-400 font-medium">Various SaaS Companies</p>
+                  </div>
+                  <span className="text-gray-500 mt-2 sm:mt-0">2014 - Present</span>
+                </div>
+                <ul className="space-y-3 text-gray-400">
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2">→</span>
+                    Led AI/ML product initiatives from ideation to launch
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2">→</span>
+                    Managed cross-functional teams (engineering, design, data science)
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2">→</span>
+                    Drove product strategy and roadmap for B2B SaaS platforms
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2">→</span>
+                    Established metrics frameworks and KPIs for AI product success
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-800/50 p-8 rounded-xl border border-gray-700">
+                <h3 className="text-xl font-bold text-white mb-4">Key Achievements</h3>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">$10M+</div>
+                    <p className="text-gray-400">Revenue generated through AI product launches</p>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">85%</div>
+                    <p className="text-gray-400">Average user satisfaction score</p>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">15+</div>
+                    <p className="text-gray-400">Successful product launches</p>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">50+</div>
+                    <p className="text-gray-400">Team members led across multiple projects</p>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              {/* Scroll indicator */}
-              <div
-                className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-                style={{
-                  animation: 'float 3s ease-in-out infinite',
-                }}
-              >
+        {/* Skills Section */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800/30">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold mb-12 text-center">
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Technical Skills
+              </span>
+            </h2>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                'Product Strategy', 'ML/AI Systems', 'Platform Architecture', 'API Design',
+                'User Research', 'Data Analytics', 'Agile/Scrum', 'Technical Specs',
+                'Roadmap Planning', 'Stakeholder Mgmt', 'A/B Testing', 'Market Analysis'
+              ].map((skill) => (
                 <div
-                  className="w-px h-16 opacity-30"
-                  style={{
-                    background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
-                  }}
-                />
+                  key={skill}
+                  className="px-4 py-3 bg-gray-800/50 rounded-lg border border-gray-700 text-center hover:border-blue-500/50 transition-colors"
+                >
+                  {skill}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Recent Thinking */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold mb-4 text-center">
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Recent Thinking
+              </span>
+            </h2>
+            <p className="text-center text-gray-400 mb-12 text-lg">
+              Insights on AI product management and intelligent systems
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div className="bg-gray-800/50 p-8 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-all hover:shadow-lg hover:shadow-blue-500/10">
+                <div className="text-sm text-blue-400 mb-2 font-medium">AI STRATEGY</div>
+                <h3 className="text-xl font-bold mb-3">The RIBS Framework for AI Feature Prioritization</h3>
+                <p className="text-gray-400 mb-4 leading-relaxed">
+                  A systematic approach to prioritizing AI features based on Research readiness, 
+                  Integration complexity, Business value, and Stakeholder alignment.
+                </p>
+                <Link href="/articles" className="text-blue-400 hover:text-blue-300 font-medium">
+                  Read more →
+                </Link>
               </div>
 
-              <style jsx>{`
-                @keyframes float {
-                  0%, 100% { transform: translateX(-50%) translateY(0); }
-                  50% { transform: translateX(-50%) translateY(8px); }
-                }
-              `}</style>
-            </section>
-          </div>
-        )}
-    </>
-  )
-}
+              <div className="bg-gray-800/50 p-8 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-all hover:shadow-lg hover:shadow-blue-500/10">
+                <div className="text-sm text-blue-400 mb-2 font-medium">PRODUCT LEADERSHIP</div>
+                <h3 className="text-xl font-bold mb-3">Bridging Research and Production</h3>
+                <p className="text-gray-400 mb-4 leading-relaxed">
+                  How to translate cutting-edge AI research into production systems that 
+                  deliver real business value while managing technical risk.
+                </p>
+                <Link href="/articles" className="text-blue-400 hover:text-blue-300 font-medium">
+                  Read more →
+                </Link>
+              </div>
+            </div>
 
-export default function HomePage() {
-  return (
-    <SupabaseDataProvider>
-      <JourneyProvider>
-        <HomeContent />
-      </JourneyProvider>
-    </SupabaseDataProvider>
+            <div className="text-center">
+              <Link
+                href="/articles"
+                className="inline-block px-8 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-semibold transition-colors border border-gray-700"
+              >
+                View All Articles
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Section */}
+        <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800/30">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Let&apos;s Build Something Great
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 mb-8 leading-relaxed">
+              Looking for an AI Product Manager who can bridge technical innovation 
+              and business outcomes? Let&apos;s talk.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              <a
+                href="mailto:AlexWelcing@gmail.com"
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
+              >
+                <span>📧</span>
+                AlexWelcing@gmail.com
+              </a>
+              <a
+                href="tel:817-734-5375"
+                className="flex items-center gap-2 px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-semibold transition-colors border border-gray-700"
+              >
+                <span>📱</span>
+                817-734-5375
+              </a>
+            </div>
+
+            <div className="flex gap-6 justify-center">
+              <a
+                href="https://linkedin.com/in/alexwelcing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-blue-400 transition-colors"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://github.com/alexwelcing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-blue-400 transition-colors"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://x.com/alexwelcing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-blue-400 transition-colors"
+              >
+                Twitter/X
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-800">
+          <div className="max-w-6xl mx-auto text-center text-gray-500">
+            <p>© 2024 Alex Welcing. All rights reserved.</p>
+            <p className="mt-2 text-sm">
+              Based in New York, NY • Available for remote opportunities
+            </p>
+          </div>
+        </footer>
+      </div>
+    </>
   )
 }
