@@ -83,6 +83,7 @@ export default function ArticlesIndex() {
             <Link href="/" style={{ color: '#888', textDecoration: 'none' }}>Home</Link>
             <Link href="/about" style={{ color: '#888', textDecoration: 'none' }}>About</Link>
             <Link href="/chat" style={{ color: '#888', textDecoration: 'none' }}>Chat</Link>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a href="/api/rss" style={{ color: '#888', textDecoration: 'none' }}>RSS</a>
           </div>
         </nav>
