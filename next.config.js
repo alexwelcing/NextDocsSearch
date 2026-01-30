@@ -31,7 +31,7 @@ const nextConfig = {
 
   // Experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', 'react-icons', '@react-three/fiber', '@react-three/drei'],
+    optimizePackageImports: ['lucide-react', 'react-icons'],
   },
 
   // Headers for caching and security
