@@ -5,6 +5,8 @@ import StructuredData from '@/components/StructuredData'
 import styles from '@/styles/Home.module.css'
 
 export default function HomePage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+
   return (
     <>
       <Head>
@@ -81,13 +83,66 @@ export default function HomePage() {
               <Link href="/" className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Alex Welcing
               </Link>
-              <div className="flex gap-8">
+              
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex gap-8">
                 <a href="#about" className="hover:text-blue-400 transition-colors">About</a>
                 <a href="#experience" className="hover:text-blue-400 transition-colors">Experience</a>
                 <Link href="/articles" className="hover:text-blue-400 transition-colors">Articles</Link>
                 <a href="#contact" className="hover:text-blue-400 transition-colors">Contact</a>
               </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden text-white p-2"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
             </div>
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+              <div className="md:hidden py-4 space-y-3">
+                <a 
+                  href="#about" 
+                  className="block hover:text-blue-400 transition-colors py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  About
+                </a>
+                <a 
+                  href="#experience" 
+                  className="block hover:text-blue-400 transition-colors py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Experience
+                </a>
+                <Link 
+                  href="/articles" 
+                  className="block hover:text-blue-400 transition-colors py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Articles
+                </Link>
+                <a 
+                  href="#contact" 
+                  className="block hover:text-blue-400 transition-colors py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Contact
+                </a>
+              </div>
+            )}
           </div>
         </nav>
 
