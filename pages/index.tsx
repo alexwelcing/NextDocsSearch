@@ -1,140 +1,73 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
-import { JourneyProvider, useJourney } from '@/components/contexts/JourneyContext'
-import AchievementUnlock from '@/components/AchievementUnlock'
-import CircleNav from '@/components/ui/CircleNav'
-import StylishFallback from '@/components/StylishFallback'
+import { GetStaticProps } from 'next'
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
 import StructuredData from '@/components/StructuredData'
-import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
-import styles from '@/styles/Home.module.css'
-import SearchDialog from '@/components/SearchDialog'
 
-// Dynamically import the 3D environment, using the new Scene3D orchestrator
-const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
-  ssr: false,
-  loading: () => <StylishFallback />,
-})
+interface Article {
+  slug: string
+  title: string
+  description: string
+  date: string
+  keywords: string[]
+  ogImage?: string
+  featured?: boolean
+  featuredPriority?: number
+}
 
-function HomeContent() {
-  const [currentImage, setCurrentImage] = useState<string | null>(null)
-  const [articles, setArticles] = useState<any[]>([])
-  const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
-  const [gameState, setGameState] = useState<string>('idle')
-  const [isEntering, setIsEntering] = useState(false)
+interface HomeProps {
+  featuredArticles: Article[]
+  recentArticles: Article[]
+  totalArticles: number
+}
 
-  const { achievements } = useJourney()
-  const [currentAchievement, setCurrentAchievement] = useState<typeof achievements[0] | null>(null)
-
-  useEffect(() => {
-    const unlockedAchievements = achievements.filter(a => a.unlocked)
-    if (unlockedAchievements.length > 0) {
-      const latest = unlockedAchievements[unlockedAchievements.length - 1]
-      setCurrentAchievement(latest)
-    }
-  }, [achievements])
-
-  const getRandomImage = useCallback(async () => {
-    try {
-      const response = await fetch('/api/backgroundImages')
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
-      const data = await response.json()
-      setCurrentImage(data.image)
-    } catch (error) {
-      console.error('Failed fetching background image:', error)
-    }
-  }, [])
-
-  async function fetchArticles() {
-    try {
-      const response = await fetch('/api/articles')
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      const data = await response.json()
-      setArticles(data)
-    } catch (error) {
-      console.error('Failed to fetch articles:', error)
-    }
-  }
-
-  // On initial mount, fetch a random background for the 3D environment
-  useEffect(() => {
-    getRandomImage()
-    fetchArticles()
-  }, [getRandomImage])
-
-  const handleEnter3D = useCallback(() => {
-    setIsEntering(true)
-    // Small delay for transition effect
-    setTimeout(() => setIsIn3DMode(true), 300)
-  }, [])
-
-  const handleToggle3D = useCallback(() => {
-    setIsIn3DMode(prev => !prev)
-  }, [])
-
-  // Build world config from random image
-  const worldConfig = React.useMemo(() => {
-    if (!currentImage) return 'default';
-    return {
-      id: 'dynamic-home',
-      name: 'Dynamic Home',
-      assets: {
-        fallbackPanorama: currentImage
-      }
-    } as any;
-  }, [currentImage]);
-
+export default function HomePage({ featuredArticles, recentArticles, totalArticles }: HomeProps) {
   return (
     <>
       <Head>
-        <title>Alex Welcing | Speculative AI Futures</title>
+        <title>Alex Welcing | AI Strategy & Speculative Futures</title>
         <meta
           name="description"
-          content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems."
+          content="Original research on speculative AI futures, agent civilizations, and emergent intelligence systems. Building frameworks for abundant cognition."
         />
-        <meta name="keywords" content="speculative AI, emergent intelligence, AI futures, Alex Welcing" />
+        <meta name="keywords" content="speculative AI, emergent intelligence, AI futures, AI strategy, product leadership" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com" />
         <link rel="icon" href="/favicon.ico" />
 
-        {/* Open Graph Meta Tags */}
-        <meta
-          property="og:title"
-          content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing"
-        />
-        <meta
-          property="og:description"
-          content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant."
-        />
+        {/* Open Graph */}
+        <meta property="og:title" content="Alex Welcing | AI Strategy & Speculative Futures" />
+        <meta property="og:description" content="Original research on speculative AI futures, agent civilizations, and emergent intelligence systems." />
         <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com" />
         <meta property="og:type" content="website" />
 
-        {/* X (Twitter) Card Meta Tags */}
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing" />
-        <meta name="twitter:description" content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant." />
+        <meta name="twitter:title" content="Alex Welcing | AI Strategy & Speculative Futures" />
+        <meta name="twitter:description" content="Original research on speculative AI futures, agent civilizations, and emergent intelligence systems." />
         <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
 
-        {/* Performance and PWA hints */}
         <meta name="theme-color" content="#0a0a0a" />
-        <link rel="preload" as="image" href="/social-preview.png" />
+
+        {/* Preload critical fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Head>
 
       <StructuredData
         type="Website"
         data={{
-          name: "Alex Welcing - Speculative AI Futures",
+          name: "Alex Welcing - AI Strategy & Speculative Futures",
           url: "https://alexwelcing.com",
-          description: "Exploring speculative AI futures, agent civilizations, and emergent intelligence systems.",
+          description: "Original research on speculative AI futures, agent civilizations, and emergent intelligence systems.",
           author: { "@type": "Person", name: "Alex Welcing", url: "https://alexwelcing.com/about" }
         }}
       />
@@ -144,8 +77,8 @@ function HomeContent() {
         data={{
           name: "Alex Welcing",
           url: "https://alexwelcing.com",
-          jobTitle: "AI Futures Researcher",
-          description: "Exploring speculative AI futures, agent civilizations, and emergent intelligence systems.",
+          jobTitle: "AI Strategy & Product Leadership",
+          description: "Building frameworks for understanding worlds where intelligence becomes abundant.",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
@@ -154,161 +87,224 @@ function HomeContent() {
         }}
       />
 
-        {isIn3DMode ? (
-          <main className={`${styles.main} ${styles.gradientbg}`}>
-            {/* Show the Scene3D modern environment */}
-            <Scene3D
-              world={worldConfig}
-              articles={articles}
-              onGameStateChange={setGameState}
-            />
-
-            {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'playing' && <SearchDialog />}
-
-            {/* Button to go back to 2D home */}
-            <div className="absolute top-4 left-4 z-50">
-              <button
-                onClick={handleToggle3D}
-                className={styles.landingBtn}
-                style={{ padding: '0.5rem 1rem' }}
+      <div className="min-h-screen bg-[#030308] text-white">
+        {/* Nav */}
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-[#030308]/90 backdrop-blur-sm border-b border-white/5">
+          <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+            <Link href="/" className="font-mono text-sm tracking-wide text-white/90 hover:text-white transition-colors">
+              ALEX WELCING
+            </Link>
+            <div className="flex items-center gap-6">
+              <Link href="/articles" className="font-mono text-xs tracking-wider text-white/60 hover:text-white transition-colors">
+                RESEARCH
+              </Link>
+              <Link href="/about" className="font-mono text-xs tracking-wider text-white/60 hover:text-white transition-colors">
+                ABOUT
+              </Link>
+              <a
+                href="https://x.com/alexwelcing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-xs tracking-wider text-white/60 hover:text-cyan-400 transition-colors"
               >
-                Return to 2D
-              </button>
+                @X
+              </a>
             </div>
-            
-            <AchievementUnlock
-              achievement={currentAchievement}
-              onDismiss={() => setCurrentAchievement(null)}
-            />
-          </main>
-        ) : (
-          <div
-            className="min-h-screen text-white"
-            style={{
-              opacity: isEntering ? 0 : 1,
-              transition: 'opacity 0.3s ease-out',
-            }}
-          >
-            <CircleNav isGamePlaying={false} />
-            {/* Hero - Immersive, mysterious, minimal */}
-            <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-              <EnhancedHeroCanvas />
-
-              {/* Content overlay */}
-              <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
-                <h1
-                  className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
-                  style={{
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    letterSpacing: '-0.03em',
-                    lineHeight: 1.05,
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    fontWeight: 800,
-                  }}
-                >
-                  <span style={{
-                    background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}>
-                    AI Strategy & Product Leadership
-                  </span>
-                </h1>
-                <p
-                  className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2"
-                  style={{
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    letterSpacing: '0.01em',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    maxWidth: '600px',
-                  }}
-                >
-                  Building intelligent systems and frameworks for emergent AI futures
-                </p>
-
-                {/* Two clear paths */}
-                <div className="flex flex-col sm:flex-row gap-6 mt-12">
-                  <Link
-                    href="/articles"
-                    className="group relative px-8 py-4 overflow-hidden"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-white/80 group-hover:text-white transition-colors">
-                      Read Articles
-                    </span>
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(255, 215, 0, 0.05))',
-                      }}
-                    />
-                  </Link>
-
-                  <button
-                    onClick={handleEnter3D}
-                    className="group relative px-8 py-4 overflow-hidden cursor-pointer"
-                    style={{
-                      background: 'rgba(0, 212, 255, 0.08)',
-                      border: '1px solid rgba(0, 212, 255, 0.3)',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase" style={{ color: 'rgba(0, 212, 255, 0.9)' }}>
-                      3D Experience
-                    </span>
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05))',
-                      }}
-                    />
-                  </button>
-                </div>
-              </div>
-
-              {/* Scroll indicator */}
-              <div
-                className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-                style={{
-                  animation: 'float 3s ease-in-out infinite',
-                }}
-              >
-                <div
-                  className="w-px h-16 opacity-30"
-                  style={{
-                    background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
-                  }}
-                />
-              </div>
-
-              <style jsx>{`
-                @keyframes float {
-                  0%, 100% { transform: translateX(-50%) translateY(0); }
-                  50% { transform: translateX(-50%) translateY(8px); }
-                }
-              `}</style>
-            </section>
           </div>
+        </nav>
+
+        {/* Hero */}
+        <header className="pt-32 pb-20 px-6">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent">
+                AI Strategy &
+              </span>
+              <br />
+              <span className="text-white/90">
+                Speculative Futures
+              </span>
+            </h1>
+            <p className="text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed mb-8">
+              Original frameworks for understanding worlds where intelligence becomes abundant.
+              Exploring what happens when cognitive labor approaches zero marginal cost.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/articles"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-sm tracking-wide hover:bg-cyan-500/20 hover:border-cyan-500/50 transition-all"
+              >
+                READ RESEARCH
+                <span className="text-xs opacity-60">({totalArticles} articles)</span>
+              </Link>
+              <a
+                href="/feed.xml"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/10 text-white/60 font-mono text-sm tracking-wide hover:border-white/30 hover:text-white/80 transition-all"
+              >
+                RSS FEED
+              </a>
+            </div>
+          </div>
+        </header>
+
+        {/* Featured Section */}
+        {featuredArticles.length > 0 && (
+          <section className="py-16 px-6 border-t border-white/5">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="font-mono text-xs tracking-widest text-cyan-400/80 mb-8">FEATURED RESEARCH</h2>
+              <div className="grid gap-6">
+                {featuredArticles.map((article, index) => (
+                  <Link
+                    key={article.slug}
+                    href={`/articles/${article.slug}`}
+                    className="group block p-6 -mx-6 hover:bg-white/[0.02] transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-xl md:text-2xl font-semibold text-white/90 group-hover:text-cyan-400 transition-colors mb-2 leading-tight">
+                          {article.title}
+                        </h3>
+                        <p className="text-white/50 leading-relaxed line-clamp-2 mb-3">
+                          {article.description}
+                        </p>
+                        <div className="flex items-center gap-4 text-xs font-mono text-white/30">
+                          <time dateTime={article.date}>
+                            {new Date(article.date).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </time>
+                          {article.keywords?.slice(0, 2).map(kw => (
+                            <span key={kw} className="px-2 py-0.5 bg-white/5 rounded">
+                              {kw}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <span className="hidden md:block text-cyan-400/50 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all text-2xl">
+                        &rarr;
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
         )}
+
+        {/* Recent Articles */}
+        <section className="py-16 px-6 border-t border-white/5">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="font-mono text-xs tracking-widest text-white/40">RECENT</h2>
+              <Link
+                href="/articles"
+                className="font-mono text-xs tracking-wider text-cyan-400/60 hover:text-cyan-400 transition-colors"
+              >
+                VIEW ALL &rarr;
+              </Link>
+            </div>
+            <div className="space-y-1">
+              {recentArticles.map((article) => (
+                <Link
+                  key={article.slug}
+                  href={`/articles/${article.slug}`}
+                  className="group flex items-center justify-between py-4 border-b border-white/5 hover:border-cyan-500/20 transition-colors"
+                >
+                  <span className="text-white/70 group-hover:text-white transition-colors truncate pr-4">
+                    {article.title}
+                  </span>
+                  <time
+                    dateTime={article.date}
+                    className="font-mono text-xs text-white/30 whitespace-nowrap"
+                  >
+                    {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </time>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 px-6 border-t border-white/5 bg-gradient-to-b from-transparent to-cyan-950/10">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold text-white/90 mb-4">
+              New research every 4 hours
+            </h2>
+            <p className="text-white/50 mb-8 max-w-lg mx-auto">
+              Follow on X for automated article drops exploring AI futures, emergent systems, and speculative scenarios.
+            </p>
+            <a
+              href="https://x.com/alexwelcing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-mono text-sm tracking-wide hover:bg-cyan-400 transition-colors"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              FOLLOW @ALEXWELCING
+            </a>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-12 px-6 border-t border-white/5">
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="font-mono text-xs text-white/30">
+              &copy; {new Date().getFullYear()} Alex Welcing
+            </p>
+            <div className="flex items-center gap-6">
+              <a href="/feed.xml" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">RSS</a>
+              <a href="/sitemap.xml" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">SITEMAP</a>
+              <a href="https://github.com/alexwelcing" target="_blank" rel="noopener noreferrer" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">GITHUB</a>
+              <a href="https://linkedin.com/in/alexwelcing" target="_blank" rel="noopener noreferrer" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">LINKEDIN</a>
+            </div>
+          </div>
+        </footer>
+      </div>
     </>
   )
 }
 
-export default function HomePage() {
-  return (
-    <SupabaseDataProvider>
-      <JourneyProvider>
-        <HomeContent />
-      </JourneyProvider>
-    </SupabaseDataProvider>
-  )
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const articlesDir = path.join(process.cwd(), 'pages', 'docs', 'articles')
+  const filenames = fs.readdirSync(articlesDir).filter(f => f.endsWith('.mdx'))
+
+  const articles: Article[] = filenames.map(filename => {
+    const filePath = path.join(articlesDir, filename)
+    const fileContents = fs.readFileSync(filePath, 'utf8')
+    const { data } = matter(fileContents)
+
+    return {
+      slug: filename.replace('.mdx', ''),
+      title: data.title || 'Untitled',
+      description: data.description || '',
+      date: data.date instanceof Date ? data.date.toISOString() : (data.date || new Date().toISOString()),
+      keywords: data.keywords || [],
+      ogImage: data.ogImage || null,
+      featured: data.featured || false,
+      featuredPriority: data.featuredPriority || 999,
+    }
+  }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+  const featuredArticles = articles
+    .filter(a => a.featured)
+    .sort((a, b) => (a.featuredPriority || 999) - (b.featuredPriority || 999))
+    .slice(0, 3)
+
+  const recentArticles = articles
+    .filter(a => !a.featured)
+    .slice(0, 8)
+
+  return {
+    props: {
+      featuredArticles,
+      recentArticles,
+      totalArticles: articles.length,
+    },
+    revalidate: 3600, // ISR: Regenerate every hour
+  }
 }

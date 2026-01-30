@@ -4,22 +4,28 @@ const nextConfig = {
 
   // Environment variables
   env: {
-    GOOGLE_ANALYTICS_ID: 'GTM-W24L468',
-    GTM_ID: 'GTM-W24L468',
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://alexwelcing.com',
   },
 
   // Performance optimizations
-  compress: true, // Enable gzip compression
+  compress: true,
 
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 86400, // 24 hours
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'alexwelcing.com',
+      },
+    ],
   },
 
   // Compiler optimizations
@@ -29,9 +35,9 @@ const nextConfig = {
     } : false,
   },
 
-  // Experimental features for better performance
+  // Experimental features
   experimental: {
-    optimizePackageImports: ['lucide-react', 'react-icons', '@react-three/fiber', '@react-three/drei'],
+    optimizePackageImports: ['lucide-react'],
   },
 
   // Headers for caching and security
@@ -55,7 +61,48 @@ const nextConfig = {
           },
         ],
       },
-    ];
+      {
+        source: '/feed.xml',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/rss+xml; charset=utf-8',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+    ]
+  },
+
+  // Redirects for old URLs
+  async redirects() {
+    return [
+      {
+        source: '/docs/articles/:slug',
+        destination: '/articles/:slug',
+        permanent: true,
+      },
+    ]
   },
 }
 
