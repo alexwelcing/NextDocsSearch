@@ -1,26 +1,36 @@
-import React from 'react'
-import Head from 'next/head'
 import Link from 'next/link'
-import styles from '@/styles/Home.module.css'
-import CircleNav from '@/components/ui/CircleNav'
+import Head from 'next/head'
 
-export default function Custom404() {
+export default function NotFound() {
   return (
     <>
       <Head>
-        <title>This page is real, but the one you clicked on was not. 404.</title>
-        <meta
-          name="description"
-          content="The page you are looking for on Alex Welcing's site does not exist, sorry about that."
-        />
-        <link rel="icon" href="/favicon.ico" />
+        <title>404 - Page Not Found | Alex Welcing</title>
+        <meta name="robots" content="noindex" />
       </Head>
-      <CircleNav />
-      <div className={styles.gradientbg + ' flex flex-col items-center justify-center min-h-screen'}>
-        <h1 className="text-3xl font-bold mb-4">This page is real, but the one you clicked on was not. 404.</h1>
-        <Link href="/" className={styles.landingBtn}>
-          Return to Home
-        </Link>
+
+      <div className="min-h-screen bg-[#030308] text-white flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <h1 className="font-mono text-6xl text-cyan-400 mb-4">404</h1>
+          <h2 className="text-2xl font-semibold mb-4 text-white/90">Page Not Found</h2>
+          <p className="text-white/50 mb-8">
+            The page you're looking for doesn't exist or has been moved.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/"
+              className="px-6 py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-sm tracking-wide hover:bg-cyan-500/20 transition-all"
+            >
+              GO HOME
+            </Link>
+            <Link
+              href="/articles"
+              className="px-6 py-3 border border-white/10 text-white/60 font-mono text-sm tracking-wide hover:border-white/30 hover:text-white/80 transition-all"
+            >
+              VIEW ARTICLES
+            </Link>
+          </div>
+        </div>
       </div>
     </>
   )
