@@ -68,7 +68,7 @@ export default function AboutPage() {
                 <h2 className="font-mono text-xs tracking-widest text-cyan-400/80 mb-4">BIO</h2>
                 <div className="space-y-4 text-white/70 leading-relaxed">
                   <p>
-                    I'm Alex Welcing, focused on AI strategy and product leadership at the intersection of
+                    I&apos;m Alex Welcing, focused on AI strategy and product leadership at the intersection of
                     emerging technology and human systems. My work explores speculative AI futures,
                     emergent intelligence patterns, and the systemic consequences of abundant cognition.
                   </p>
