@@ -53,6 +53,10 @@ module.exports = {
         },
         // Terracotta accent
         terra: {
+          50: '#FDF5F2',
+          100: '#FAEBE5',
+          200: '#F5D4C8',
+          300: '#E5A88F',
           400: '#CD7F5C',
           500: '#B86B4A',
           600: '#9E5A3C',
