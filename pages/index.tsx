@@ -28,38 +28,34 @@ export default function HomePage({ featuredArticles, recentArticles, totalArticl
   return (
     <>
       <Head>
-        <title>Alex Welcing | AI Strategy & Speculative Futures</title>
+        <title>Alex Welcing | AI Strategy &amp; Speculative Futures</title>
         <meta
           name="description"
-          content="Original research on speculative AI futures, agent civilizations, and emergent intelligence systems. Building frameworks for abundant cognition."
+          content="Original research on speculative AI futures, emergent intelligence, and the transformation of human systems. Building frameworks for abundant cognition."
         />
-        <meta name="keywords" content="speculative AI, emergent intelligence, AI futures, AI strategy, product leadership" />
+        <meta name="keywords" content="speculative AI, emergent intelligence, AI futures, AI strategy, product leadership, AI research" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index, follow" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
         <link rel="canonical" href="https://alexwelcing.com" />
-        <link rel="icon" href="/favicon.ico" />
 
-        {/* Open Graph */}
         <meta property="og:title" content="Alex Welcing | AI Strategy & Speculative Futures" />
-        <meta property="og:description" content="Original research on speculative AI futures, agent civilizations, and emergent intelligence systems." />
+        <meta property="og:description" content="Original research on speculative AI futures, emergent intelligence, and the transformation of human systems." />
         <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com" />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Alex Welcing" />
 
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:creator" content="@alexwelcing" />
         <meta name="twitter:title" content="Alex Welcing | AI Strategy & Speculative Futures" />
-        <meta name="twitter:description" content="Original research on speculative AI futures, agent civilizations, and emergent intelligence systems." />
+        <meta name="twitter:description" content="Original research on speculative AI futures and emergent intelligence systems." />
         <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
 
-        <meta name="theme-color" content="#0a0a0a" />
-
-        {/* Preload critical fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <meta name="theme-color" content="#F5D547" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <StructuredData
@@ -67,7 +63,7 @@ export default function HomePage({ featuredArticles, recentArticles, totalArticl
         data={{
           name: "Alex Welcing - AI Strategy & Speculative Futures",
           url: "https://alexwelcing.com",
-          description: "Original research on speculative AI futures, agent civilizations, and emergent intelligence systems.",
+          description: "Original research on speculative AI futures, emergent intelligence, and the transformation of human systems.",
           author: { "@type": "Person", name: "Alex Welcing", url: "https://alexwelcing.com/about" }
         }}
       />
@@ -87,104 +83,112 @@ export default function HomePage({ featuredArticles, recentArticles, totalArticl
         }}
       />
 
-      <div className="min-h-screen bg-[#030308] text-white">
-        {/* Nav */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-[#030308]/90 backdrop-blur-sm border-b border-white/5">
-          <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="font-mono text-sm tracking-wide text-white/90 hover:text-white transition-colors">
-              ALEX WELCING
+      <div className="min-h-screen bg-parchment-50">
+        {/* Navigation */}
+        <nav className="sticky top-0 z-50 bg-parchment-50/95 backdrop-blur-sm border-b border-earth-200">
+          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2 group">
+              <span className="w-8 h-8 rounded-full bg-gradient-to-br from-sun-400 to-flora-500 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">AW</span>
+              </span>
+              <span className="font-serif text-lg text-earth-700 group-hover:text-flora-600 transition-colors">
+                Alex Welcing
+              </span>
             </Link>
-            <div className="flex items-center gap-6">
-              <Link href="/articles" className="font-mono text-xs tracking-wider text-white/60 hover:text-white transition-colors">
-                RESEARCH
+            <div className="flex items-center gap-8">
+              <Link href="/articles" className="text-sm text-earth-600 hover:text-flora-600 transition-colors font-medium">
+                Research
               </Link>
-              <Link href="/about" className="font-mono text-xs tracking-wider text-white/60 hover:text-white transition-colors">
-                ABOUT
+              <Link href="/about" className="text-sm text-earth-600 hover:text-flora-600 transition-colors font-medium">
+                About
               </Link>
               <a
                 href="https://x.com/alexwelcing"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-xs tracking-wider text-white/60 hover:text-cyan-400 transition-colors"
+                className="text-sm text-earth-500 hover:text-sun-600 transition-colors"
               >
-                @X
+                @alexwelcing
               </a>
             </div>
           </div>
         </nav>
 
-        {/* Hero */}
-        <header className="pt-32 pb-20 px-6">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent">
-                AI Strategy &
-              </span>
-              <br />
-              <span className="text-white/90">
-                Speculative Futures
-              </span>
-            </h1>
-            <p className="text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed mb-8">
-              Original frameworks for understanding worlds where intelligence becomes abundant.
-              Exploring what happens when cognitive labor approaches zero marginal cost.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/articles"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-sm tracking-wide hover:bg-cyan-500/20 hover:border-cyan-500/50 transition-all"
-              >
-                READ RESEARCH
-                <span className="text-xs opacity-60">({totalArticles} articles)</span>
-              </Link>
-              <a
-                href="/feed.xml"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-white/10 text-white/60 font-mono text-sm tracking-wide hover:border-white/30 hover:text-white/80 transition-all"
-              >
-                RSS FEED
-              </a>
+        {/* Hero Section */}
+        <header className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-sun-100 via-parchment-50 to-flora-50 opacity-60" />
+          <div className="absolute top-20 right-10 w-64 h-64 bg-sun-300/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 left-10 w-48 h-48 bg-flora-300/20 rounded-full blur-3xl" />
+
+          <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-24">
+            <div className="max-w-3xl">
+              <p className="text-flora-600 font-medium mb-4 tracking-wide text-sm uppercase">
+                AI Research &amp; Strategy
+              </p>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-earth-700 leading-tight mb-6">
+                Cultivating
+                <span className="block bg-gradient-to-r from-sun-500 via-sun-400 to-flora-500 bg-clip-text text-transparent">
+                  Intelligent Futures
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-earth-500 leading-relaxed mb-10 max-w-2xl">
+                Original research exploring what happens when cognitive abundance transforms human systems.
+                Growing ideas at the intersection of AI, strategy, and speculative futures.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/articles"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-sun-400 to-sun-500 text-earth-700 font-semibold rounded-full hover:from-sun-500 hover:to-sun-600 transition-all shadow-lg shadow-sun-400/25 hover:shadow-sun-500/30"
+                >
+                  Explore Research
+                  <span className="text-sm opacity-70">({totalArticles} articles)</span>
+                </Link>
+                <a
+                  href="/feed.xml"
+                  className="inline-flex items-center gap-2 px-6 py-4 border-2 border-earth-300 text-earth-600 font-medium rounded-full hover:border-flora-400 hover:text-flora-600 transition-all"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/>
+                  </svg>
+                  RSS Feed
+                </a>
+              </div>
             </div>
           </div>
         </header>
 
-        {/* Featured Section */}
+        {/* Featured Research */}
         {featuredArticles.length > 0 && (
-          <section className="py-16 px-6 border-t border-white/5">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="font-mono text-xs tracking-widest text-cyan-400/80 mb-8">FEATURED RESEARCH</h2>
-              <div className="grid gap-6">
-                {featuredArticles.map((article, index) => (
+          <section className="py-20 bg-white border-y border-earth-100">
+            <div className="max-w-5xl mx-auto px-6">
+              <div className="flex items-center gap-3 mb-10">
+                <span className="w-2 h-2 rounded-full bg-sun-400" />
+                <h2 className="text-sm font-semibold text-earth-500 uppercase tracking-wider">Featured Research</h2>
+              </div>
+              <div className="grid gap-8 md:grid-cols-3">
+                {featuredArticles.map((article) => (
                   <Link
                     key={article.slug}
                     href={`/articles/${article.slug}`}
-                    className="group block p-6 -mx-6 hover:bg-white/[0.02] transition-colors"
+                    className="group block p-6 bg-parchment-50 rounded-2xl border border-earth-100 hover:border-sun-300 hover:shadow-lg hover:shadow-sun-100 transition-all"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-xl md:text-2xl font-semibold text-white/90 group-hover:text-cyan-400 transition-colors mb-2 leading-tight">
-                          {article.title}
-                        </h3>
-                        <p className="text-white/50 leading-relaxed line-clamp-2 mb-3">
-                          {article.description}
-                        </p>
-                        <div className="flex items-center gap-4 text-xs font-mono text-white/30">
-                          <time dateTime={article.date}>
-                            {new Date(article.date).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric'
-                            })}
-                          </time>
-                          {article.keywords?.slice(0, 2).map(kw => (
-                            <span key={kw} className="px-2 py-0.5 bg-white/5 rounded">
-                              {kw}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <span className="hidden md:block text-cyan-400/50 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all text-2xl">
-                        &rarr;
-                      </span>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-flora-400" />
+                      <time dateTime={article.date} className="text-xs text-earth-400">
+                        {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </time>
+                    </div>
+                    <h3 className="font-serif text-xl font-semibold text-earth-700 group-hover:text-flora-600 transition-colors mb-3 leading-snug">
+                      {article.title}
+                    </h3>
+                    <p className="text-earth-500 text-sm leading-relaxed line-clamp-3">
+                      {article.description}
+                    </p>
+                    <div className="mt-4 flex items-center gap-2 text-sun-600 text-sm font-medium group-hover:gap-3 transition-all">
+                      Read more
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
                     </div>
                   </Link>
                 ))}
@@ -194,31 +198,36 @@ export default function HomePage({ featuredArticles, recentArticles, totalArticl
         )}
 
         {/* Recent Articles */}
-        <section className="py-16 px-6 border-t border-white/5">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-mono text-xs tracking-widest text-white/40">RECENT</h2>
+        <section className="py-20">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-flora-400" />
+                <h2 className="text-sm font-semibold text-earth-500 uppercase tracking-wider">Latest Growth</h2>
+              </div>
               <Link
                 href="/articles"
-                className="font-mono text-xs tracking-wider text-cyan-400/60 hover:text-cyan-400 transition-colors"
+                className="text-sm text-flora-600 hover:text-flora-700 font-medium flex items-center gap-1"
               >
-                VIEW ALL &rarr;
+                View all
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </Link>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-4">
               {recentArticles.map((article) => (
                 <Link
                   key={article.slug}
                   href={`/articles/${article.slug}`}
-                  className="group flex items-center justify-between py-4 border-b border-white/5 hover:border-cyan-500/20 transition-colors"
+                  className="group flex items-center justify-between py-5 border-b border-earth-100 hover:border-sun-300 transition-colors"
                 >
-                  <span className="text-white/70 group-hover:text-white transition-colors truncate pr-4">
-                    {article.title}
-                  </span>
-                  <time
-                    dateTime={article.date}
-                    className="font-mono text-xs text-white/30 whitespace-nowrap"
-                  >
+                  <div className="flex-1 min-w-0 pr-4">
+                    <h3 className="font-serif text-lg text-earth-700 group-hover:text-flora-600 transition-colors truncate">
+                      {article.title}
+                    </h3>
+                  </div>
+                  <time dateTime={article.date} className="text-sm text-earth-400 whitespace-nowrap">
                     {new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </time>
                 </Link>
@@ -228,39 +237,48 @@ export default function HomePage({ featuredArticles, recentArticles, totalArticl
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 px-6 border-t border-white/5 bg-gradient-to-b from-transparent to-cyan-950/10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-semibold text-white/90 mb-4">
+        <section className="py-20 bg-gradient-to-br from-flora-600 to-flora-700 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-sun-400 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-sun-300 rounded-full blur-3xl" />
+          </div>
+          <div className="relative max-w-3xl mx-auto px-6 text-center">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">
               New research every 4 hours
             </h2>
-            <p className="text-white/50 mb-8 max-w-lg mx-auto">
-              Follow on X for automated article drops exploring AI futures, emergent systems, and speculative scenarios.
+            <p className="text-flora-100 text-lg mb-8 max-w-xl mx-auto">
+              Follow along as ideas germinate. Fresh perspectives on AI futures, emergent systems, and speculative scenarios delivered to your feed.
             </p>
             <a
               href="https://x.com/alexwelcing"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-mono text-sm tracking-wide hover:bg-cyan-400 transition-colors"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-sun-400 text-earth-700 font-semibold rounded-full hover:bg-sun-300 transition-colors shadow-lg"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
-              FOLLOW @ALEXWELCING
+              Follow @alexwelcing
             </a>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="py-12 px-6 border-t border-white/5">
-          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="font-mono text-xs text-white/30">
-              &copy; {new Date().getFullYear()} Alex Welcing
-            </p>
-            <div className="flex items-center gap-6">
-              <a href="/feed.xml" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">RSS</a>
-              <a href="/sitemap.xml" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">SITEMAP</a>
-              <a href="https://github.com/alexwelcing" target="_blank" rel="noopener noreferrer" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">GITHUB</a>
-              <a href="https://linkedin.com/in/alexwelcing" target="_blank" rel="noopener noreferrer" className="font-mono text-xs text-white/30 hover:text-white/60 transition-colors">LINKEDIN</a>
+        <footer className="py-12 bg-earth-700">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-sun-400 to-flora-500 flex items-center justify-center">
+                  <span className="text-white font-bold text-xs">AW</span>
+                </span>
+                <span className="text-earth-300 text-sm">&copy; {new Date().getFullYear()} Alex Welcing</span>
+              </div>
+              <div className="flex items-center gap-8">
+                <a href="/feed.xml" className="text-earth-400 hover:text-sun-400 text-sm transition-colors">RSS</a>
+                <a href="/sitemap.xml" className="text-earth-400 hover:text-sun-400 text-sm transition-colors">Sitemap</a>
+                <a href="https://github.com/alexwelcing" target="_blank" rel="noopener noreferrer" className="text-earth-400 hover:text-sun-400 text-sm transition-colors">GitHub</a>
+                <a href="https://linkedin.com/in/alexwelcing" target="_blank" rel="noopener noreferrer" className="text-earth-400 hover:text-sun-400 text-sm transition-colors">LinkedIn</a>
+              </div>
             </div>
           </div>
         </footer>
@@ -295,16 +313,18 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     .sort((a, b) => (a.featuredPriority || 999) - (b.featuredPriority || 999))
     .slice(0, 3)
 
+  const displayFeatured = featuredArticles.length > 0 ? featuredArticles : articles.slice(0, 3)
+
   const recentArticles = articles
-    .filter(a => !a.featured)
-    .slice(0, 8)
+    .filter(a => !displayFeatured.find(f => f.slug === a.slug))
+    .slice(0, 6)
 
   return {
     props: {
-      featuredArticles,
+      featuredArticles: displayFeatured,
       recentArticles,
       totalArticles: articles.length,
     },
-    revalidate: 3600, // ISR: Regenerate every hour
+    revalidate: 3600,
   }
 }

@@ -3,14 +3,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables */
+/* CSS Variables - Natural/Organic Theme */
 :root {
-  --color-bg: #030308;
-  --color-text: #ffffff;
-  --color-text-muted: rgba(255, 255, 255, 0.6);
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-cyan: #00d4ff;
-  --font-mono: ui-monospace, SFMono-Regular, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  /* Parchment background */
+  --color-bg: #FFFEFB;
+  --color-bg-alt: #FDF9F0;
+
+  /* Earth tones for text */
+  --color-text: #3D2914;
+  --color-text-muted: #5D4037;
+  --color-text-light: #8B7355;
+
+  /* Sun yellows */
+  --color-sun: #F5D547;
+  --color-sun-light: #FFE066;
+  --color-sun-dark: #D4A836;
+
+  /* Flora greens */
+  --color-flora: #4A7C59;
+  --color-flora-light: #6B8E23;
+  --color-flora-dark: #355E3B;
+
+  /* Earth browns */
+  --color-earth: #5D4037;
+  --color-earth-light: #8B7355;
+  --color-earth-dark: #3D2914;
+
+  /* Border */
+  --color-border: rgba(93, 64, 55, 0.15);
+
+  /* Fonts */
+  --font-serif: Georgia, 'Times New Roman', Times, serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Base Styles */
@@ -29,21 +53,21 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.6;
   min-height: 100vh;
 }
 
-/* Focus Styles */
+/* Focus Styles - Organic accent */
 :focus-visible {
-  outline: 2px solid var(--color-cyan);
+  outline: 2px solid var(--color-flora);
   outline-offset: 2px;
 }
 
-/* Selection */
+/* Selection - Warm yellow highlight */
 ::selection {
-  background: rgba(0, 212, 255, 0.3);
-  color: #ffffff;
+  background: rgba(245, 213, 71, 0.4);
+  color: var(--color-earth-dark);
 }
 
 /* Links */
@@ -52,23 +76,24 @@ a {
   text-decoration: none;
 }
 
-/* Scrollbar */
+/* Scrollbar - Earthy tones */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: var(--color-bg-alt);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  background: linear-gradient(180deg, var(--color-sun), var(--color-flora-light));
+  border-radius: 5px;
+  border: 2px solid var(--color-bg-alt);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, var(--color-sun-dark), var(--color-flora));
 }
 
 /* Typography utilities */
@@ -86,23 +111,30 @@ a {
   overflow: hidden;
 }
 
-/* Prose overrides for dark mode */
-.prose-invert {
-  --tw-prose-body: rgba(255, 255, 255, 0.7);
-  --tw-prose-headings: rgba(255, 255, 255, 0.95);
-  --tw-prose-links: var(--color-cyan);
-  --tw-prose-bold: rgba(255, 255, 255, 0.9);
-  --tw-prose-counters: rgba(255, 255, 255, 0.5);
-  --tw-prose-bullets: rgba(255, 255, 255, 0.3);
-  --tw-prose-hr: rgba(255, 255, 255, 0.1);
-  --tw-prose-quotes: rgba(255, 255, 255, 0.5);
-  --tw-prose-quote-borders: var(--color-cyan);
-  --tw-prose-captions: rgba(255, 255, 255, 0.4);
-  --tw-prose-code: var(--color-cyan);
-  --tw-prose-pre-code: rgba(255, 255, 255, 0.8);
-  --tw-prose-pre-bg: rgba(255, 255, 255, 0.05);
-  --tw-prose-th-borders: rgba(255, 255, 255, 0.2);
-  --tw-prose-td-borders: rgba(255, 255, 255, 0.1);
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Prose styles for natural theme */
+.prose {
+  --tw-prose-body: var(--color-text-muted);
+  --tw-prose-headings: var(--color-earth-dark);
+  --tw-prose-links: var(--color-flora);
+  --tw-prose-bold: var(--color-earth-dark);
+  --tw-prose-counters: var(--color-text-light);
+  --tw-prose-bullets: var(--color-flora-light);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-text-muted);
+  --tw-prose-quote-borders: var(--color-sun);
+  --tw-prose-captions: var(--color-text-light);
+  --tw-prose-code: var(--color-flora-dark);
+  --tw-prose-pre-code: #E8F5E9;
+  --tw-prose-pre-bg: var(--color-earth-dark);
+  --tw-prose-th-borders: var(--color-border);
+  --tw-prose-td-borders: var(--color-border);
 }
 
 /* Animation utilities */
@@ -111,8 +143,49 @@ a {
   to { opacity: 1; }
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grow {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-grow {
+  animation: grow 0.3s ease-out;
+}
+
+/* Organic card hover effect */
+.card-organic {
+  transition: all 0.3s ease;
+}
+
+.card-organic:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px -10px rgba(74, 124, 89, 0.2),
+              0 4px 20px -5px rgba(245, 213, 71, 0.15);
 }
 
 /* Print styles */
@@ -124,5 +197,16 @@ a {
 
   nav, footer, .no-print {
     display: none !important;
+  }
+}
+
+/* Smooth page transitions */
+@layer utilities {
+  .gradient-organic {
+    background: linear-gradient(135deg,
+      rgba(245, 213, 71, 0.1) 0%,
+      rgba(255, 254, 251, 1) 50%,
+      rgba(74, 124, 89, 0.1) 100%
+    );
   }
 }
