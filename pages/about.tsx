@@ -1,303 +1,209 @@
-import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
-import CircleNav from '@/components/ui/CircleNav';
-import PDFLinks from '@/components/PDFLinks';
-import StructuredData from '@/components/StructuredData';
-import styles from '@/styles/About.module.css';
+import Head from 'next/head'
+import Link from 'next/link'
+import StructuredData from '@/components/StructuredData'
 
-const About: React.FC = () => {
-  const [pdfFiles, setPdfFiles] = useState<string[]>([]);
-
-  useEffect(() => {
-    fetch('/api/getPDFs')
-      .then((res) => res.json())
-      .then((data) => setPdfFiles(data.pdfFiles));
-  }, []);
-
+export default function AboutPage() {
   return (
-    <div className={styles.pageWrapper}>
+    <>
       <Head>
-        <title>Alex Welcing | Technical Product Manager</title>
+        <title>About | Alex Welcing</title>
         <meta
           name="description"
-          content="Results-driven product leader with expertise in AI, analytics, and platform technologies. 10+ years building SaaS products for legal, healthcare, and technology sectors."
+          content="Alex Welcing - AI Strategy & Product Leadership. Building frameworks for understanding worlds where intelligence becomes abundant."
         />
-        <meta name="keywords" content="Alex Welcing, Technical Product Manager, AI, SaaS, Product Leader, New York" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/about" />
-        <link rel="icon" href="/favicon.ico" />
-
-        <meta property="og:title" content="Alex Welcing | Technical Product Manager" />
-        <meta property="og:description" content="Results-driven product leader building platform technologies for SaaS, information and professional services." />
-        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:title" content="About | Alex Welcing" />
+        <meta property="og:description" content="AI Strategy & Product Leadership. Building frameworks for abundant cognition." />
         <meta property="og:url" content="https://alexwelcing.com/about" />
         <meta property="og:type" content="profile" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Alex Welcing | Technical Product Manager" />
-        <meta name="twitter:description" content="Results-driven product leader building platform technologies for SaaS, information and professional services." />
-        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
       </Head>
 
       <StructuredData
         type="Person"
         data={{
           name: "Alex Welcing",
-          jobTitle: "Technical Product Manager",
           url: "https://alexwelcing.com",
+          jobTitle: "AI Strategy & Product Leadership",
+          description: "Building frameworks for understanding worlds where intelligence becomes abundant.",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
             "https://x.com/alexwelcing"
-          ],
-          description: "Results-driven product leader with expertise in AI, analytics, and platform technologies for SaaS and professional services.",
-          knowsAbout: [
-            "Product Management",
-            "AI & Machine Learning",
-            "SaaS Platforms",
-            "System Architecture",
-            "API Design"
           ]
         }}
       />
 
-      <header className={styles.header}>
-        <CircleNav />
-      </header>
+      <div className="min-h-screen bg-parchment-50">
+        {/* Navigation */}
+        <nav className="sticky top-0 z-50 bg-parchment-50/95 backdrop-blur-sm border-b border-earth-200">
+          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2 group">
+              <span className="w-8 h-8 rounded-full bg-gradient-to-br from-sun-400 to-flora-500 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">AW</span>
+              </span>
+              <span className="font-serif text-lg text-earth-700 group-hover:text-flora-600 transition-colors">
+                Alex Welcing
+              </span>
+            </Link>
+            <div className="flex items-center gap-8">
+              <Link href="/articles" className="text-sm text-earth-600 hover:text-flora-600 transition-colors font-medium">
+                Research
+              </Link>
+              <Link href="/about" className="text-sm text-flora-600 font-medium">
+                About
+              </Link>
+            </div>
+          </div>
+        </nav>
 
-      <main className={styles.mainContent}>
-        {/* Hero Section */}
-        <section className={styles.heroSection}>
-          <div className={styles.heroContent}>
-            <h1 className={styles.name}>Alex Welcing</h1>
-            <p className={styles.title}>Technical Product Manager</p>
-            <p className={styles.location}>
-              <span className="material-icons-outlined">location_on</span>
-              New York, NY
+        {/* Hero */}
+        <header className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-flora-50 via-parchment-50 to-sun-50 opacity-60" />
+          <div className="absolute top-10 right-20 w-48 h-48 bg-flora-300/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-10 w-32 h-32 bg-sun-300/30 rounded-full blur-2xl" />
+
+          <div className="relative max-w-3xl mx-auto px-6 pt-20 pb-16">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-2 h-2 rounded-full bg-flora-400" />
+              <span className="text-sm font-medium text-flora-600 uppercase tracking-wide">About</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-serif font-bold text-earth-700 mb-6">
+              Cultivating Ideas at the
+              <span className="block bg-gradient-to-r from-flora-600 to-sun-500 bg-clip-text text-transparent">
+                Edge of Tomorrow
+              </span>
+            </h1>
+            <p className="text-xl text-earth-500 leading-relaxed">
+              Building frameworks for understanding worlds where intelligence becomes abundant.
             </p>
           </div>
+        </header>
 
-          <div className={styles.contactBar}>
-            <a href="mailto:AlexWelcing@gmail.com" className={styles.contactLink}>
-              <span className="material-icons-outlined">email</span>
-              AlexWelcing@gmail.com
-            </a>
-            <a href="tel:817-734-5375" className={styles.contactLink}>
-              <span className="material-icons-outlined">phone</span>
-              817-734-5375
-            </a>
-            <a href="https://linkedin.com/in/alexwelcing" target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
-              <span className="material-icons-outlined">person</span>
-              LinkedIn
-            </a>
-            <a href="https://www.alexwelcing.com" target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
-              <span className="material-icons-outlined">language</span>
-              alexwelcing.com
-            </a>
+        <main className="pb-20 px-6">
+          <div className="max-w-3xl mx-auto">
+            <div className="space-y-16">
+              {/* Bio Section */}
+              <section className="bg-white rounded-3xl p-8 md:p-10 border border-earth-100 shadow-sm">
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sun-400" />
+                  <h2 className="text-sm font-semibold text-earth-500 uppercase tracking-wider">Bio</h2>
+                </div>
+                <div className="space-y-5 text-earth-600 leading-relaxed">
+                  <p className="text-lg">
+                    I&apos;m Alex Welcing, focused on AI strategy and product leadership at the intersection of
+                    emerging technology and human systems. My work explores speculative AI futures,
+                    emergent intelligence patterns, and the systemic consequences of abundant cognition.
+                  </p>
+                  <p>
+                    This site hosts original research on what happens when cognitive labor approaches
+                    zero marginal cost—examining agent civilizations, governance frameworks, and the
+                    economic transformations ahead.
+                  </p>
+                </div>
+              </section>
+
+              {/* Focus Areas */}
+              <section>
+                <div className="flex items-center gap-2 mb-8">
+                  <span className="w-1.5 h-1.5 rounded-full bg-flora-400" />
+                  <h2 className="text-sm font-semibold text-earth-500 uppercase tracking-wider">Focus Areas</h2>
+                </div>
+                <div className="grid gap-4">
+                  <div className="p-6 bg-gradient-to-br from-sun-50 to-parchment-50 rounded-2xl border border-sun-200 hover:border-sun-300 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-sun-400/20 flex items-center justify-center mb-4">
+                      <svg className="w-5 h-5 text-sun-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-serif text-xl font-semibold text-earth-700 mb-2">Speculative AI Research</h3>
+                    <p className="text-earth-500">Scenario planning and analysis of near-future AI developments and their cascading effects on society.</p>
+                  </div>
+                  <div className="p-6 bg-gradient-to-br from-flora-50 to-parchment-50 rounded-2xl border border-flora-200 hover:border-flora-300 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-flora-400/20 flex items-center justify-center mb-4">
+                      <svg className="w-5 h-5 text-flora-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-serif text-xl font-semibold text-earth-700 mb-2">Emergent Intelligence</h3>
+                    <p className="text-earth-500">Studying collective behaviors and unexpected capabilities that arise in complex AI systems.</p>
+                  </div>
+                  <div className="p-6 bg-gradient-to-br from-terra-50 to-parchment-50 rounded-2xl border border-terra-200 hover:border-terra-300 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-terra-400/20 flex items-center justify-center mb-4">
+                      <svg className="w-5 h-5 text-terra-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                    <h3 className="font-serif text-xl font-semibold text-earth-700 mb-2">AI Product Strategy</h3>
+                    <p className="text-earth-500">Building products that leverage AI capabilities responsibly and create genuine value.</p>
+                  </div>
+                </div>
+              </section>
+
+              {/* Connect */}
+              <section>
+                <div className="flex items-center gap-2 mb-8">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sun-400" />
+                  <h2 className="text-sm font-semibold text-earth-500 uppercase tracking-wider">Connect</h2>
+                </div>
+                <div className="flex flex-wrap gap-4">
+                  <a
+                    href="https://x.com/alexwelcing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-5 py-3 bg-white border border-earth-200 text-earth-600 hover:text-earth-700 hover:border-sun-300 hover:shadow-md transition-all rounded-xl font-medium"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    @alexwelcing
+                  </a>
+                  <a
+                    href="https://linkedin.com/in/alexwelcing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-5 py-3 bg-white border border-earth-200 text-earth-600 hover:text-earth-700 hover:border-flora-300 hover:shadow-md transition-all rounded-xl font-medium"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    LinkedIn
+                  </a>
+                  <a
+                    href="https://github.com/alexwelcing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-5 py-3 bg-white border border-earth-200 text-earth-600 hover:text-earth-700 hover:border-earth-400 hover:shadow-md transition-all rounded-xl font-medium"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                  </a>
+                </div>
+              </section>
+            </div>
           </div>
-        </section>
+        </main>
 
-        {/* Summary Section */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Summary</h2>
-          <p className={styles.summaryText}>
-            Results-driven product leader with a strong track record of success in building and growing platform technologies for SaaS, information and professional services. Specialized experience in AI, analytics, development, and marketing, including user management and monetization platforms. An innovative thinker with a strong background in technical product management, adept at setting long-term vision, driving product requirements, generating insights, and executing strategies aligned with customer needs. Demonstrated proficiency in technical decisions, relational databases, problem-solving, and cross-functional collaboration.
-          </p>
-        </section>
-
-        {/* Experience Section */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Experience</h2>
-
-          {/* Law Business Research */}
-          <article className={styles.experienceCard}>
-            <div className={styles.experienceHeader}>
-              <div className={styles.experienceTitle}>
-                <h3>Technical Product Manager</h3>
-                <p className={styles.company}>Law Business Research</p>
+        {/* Footer */}
+        <footer className="py-12 bg-earth-700">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-sun-400 to-flora-500 flex items-center justify-center">
+                  <span className="text-white font-bold text-xs">AW</span>
+                </span>
+                <span className="text-earth-300 text-sm">&copy; {new Date().getFullYear()} Alex Welcing</span>
               </div>
-              <div className={styles.experienceMeta}>
-                <span className={styles.dates}>January 2024 - Present</span>
-                <span className={styles.experienceLocation}>New York, NY</span>
-              </div>
-            </div>
-            <p className={styles.companyDescription}>
-              Technology-enabled information services business powering the global legal industry with intelligence and analytics.
-            </p>
-            <ul className={styles.achievementList}>
-              <li>Replaced a legacy entitlement and key system servicing billions of monthly requests and underpinning all client subscriptions — restoring reliability, unlocking revenue growth, and unifying product access across the platform.</li>
-              <li>Managed client identity and subscription platform connecting multiple legal and analytics products, configuring SSO for more than 50% of the AmLaw 200.</li>
-              <li>Launched monorepo approach for AI API execution hub — a secure workspace with type safety, live introspection, and self-improving model usage accuracy across 3 separate APIs for internal use.</li>
-              <li>Rebuilt the client settings and analytics applications from the ground up, improving usability and cutting configuration time by 60%.</li>
-              <li>Blended strategy and engineering execution, acting as a &ldquo;hands-on architect PM&rdquo; trusted to prototype, ship, and scale products that balance rigor, creativity, and measurable business impact.</li>
-              <li>Formulated and prioritized ambitious product initiatives by synthesizing feedback from legal, commercial, and engineering leaders, enabling the launch and scale of high-impact subscription workflows.</li>
-            </ul>
-          </article>
-
-          {/* Obsess VR */}
-          <article className={styles.experienceCard}>
-            <div className={styles.experienceHeader}>
-              <div className={styles.experienceTitle}>
-                <h3>Product Manager</h3>
-                <p className={styles.company}>Obsess VR</p>
-              </div>
-              <div className={styles.experienceMeta}>
-                <span className={styles.dates}>April 2022 - May 2023</span>
-                <span className={styles.experienceLocation}>New York, NY</span>
-              </div>
-            </div>
-            <p className={styles.companyDescription}>
-              3D virtual store platform enabling brands to build immersive, engaging shopping experiences on their e-commerce sites.
-            </p>
-            <ul className={styles.achievementList}>
-              <li>Drove long-term strategic planning efforts and enhanced consumer product experience by demonstrating exceptional leadership.</li>
-              <li>Set long-term strategy for SaaS platform technologies and VR capabilities, aligning with stakeholders.</li>
-              <li>Spearheaded product requirements definition, planning, design, and testing for new features.</li>
-              <li>Utilized insights from data, industry trends, and customer feedback to prioritize product features.</li>
-              <li>Acted as a liaison between marketing, sales, development, and CX to manage the product lifecycle.</li>
-              <li>Collaborated with development to execute fixes for critical bugs impacting product performance.</li>
-            </ul>
-          </article>
-
-          {/* Manatt Developer */}
-          <article className={styles.experienceCard}>
-            <div className={styles.experienceHeader}>
-              <div className={styles.experienceTitle}>
-                <h3>Developer</h3>
-                <p className={styles.company}>Manatt, Phelps, & Phillips</p>
-              </div>
-              <div className={styles.experienceMeta}>
-                <span className={styles.dates}>January 2019 - April 2022</span>
-                <span className={styles.experienceLocation}>New York, NY</span>
-              </div>
-            </div>
-            <p className={styles.companyDescription}>
-              Law and consulting firm providing legal and consulting services to clients.
-            </p>
-            <ul className={styles.achievementList}>
-              <li>Guided a cross-functional team in providing secure access to legal and regulatory analysis through an exclusive SaaS platform.</li>
-              <li>Generated in-depth data analysis content for executive leadership within the healthcare sector.</li>
-              <li>Devised AI-based document scanning and image selection for publication, streamlining consultant tasks, enhancing product knowledge graph precision, and eliminating potential human errors.</li>
-              <li>Built and maintained firm-wide knowledge and training portal, delivering extraordinary ROI with minimal operating and development costs.</li>
-              <li>Equipped strategic leaders with comprehensive data analysis content tailored for executive leadership, enabling well-informed decisions and a competitive edge.</li>
-            </ul>
-          </article>
-
-          {/* Manatt Consultant */}
-          <article className={styles.experienceCard}>
-            <div className={styles.experienceHeader}>
-              <div className={styles.experienceTitle}>
-                <h3>Consultant</h3>
-                <p className={styles.company}>Manatt Phelps & Phillips</p>
-              </div>
-              <div className={styles.experienceMeta}>
-                <span className={styles.dates}>August 2017 - January 2019</span>
-                <span className={styles.experienceLocation}>New York, NY</span>
-              </div>
-            </div>
-            <ul className={styles.achievementList}>
-              <li>Conducted comprehensive data analysis to provide internal executives with insights into product utilization for top 1000 clients.</li>
-              <li>Spearheaded end-to-end publication data reporting, security, and service monitoring, resulting in enhanced data connector performance.</li>
-              <li>Conceptualized and introduced an exclusive client-centric publishing SaaS platform, orchestrating app evolution from beta product to generating millions in annual recurring revenue.</li>
-              <li>Directed quarterly prioritization sessions using JIRA and Asana with cross-functional teams, optimizing backlog refinement for 18 client projects and increasing on-time feature delivery by 27% over 12 months.</li>
-            </ul>
-          </article>
-
-          {/* Arkadium */}
-          <article className={styles.experienceCard}>
-            <div className={styles.experienceHeader}>
-              <div className={styles.experienceTitle}>
-                <h3>Partner Development</h3>
-                <p className={styles.company}>Arkadium</p>
-              </div>
-              <div className={styles.experienceMeta}>
-                <span className={styles.dates}>July 2016 - August 2017</span>
-                <span className={styles.experienceLocation}>New York, NY</span>
-              </div>
-            </div>
-            <ul className={styles.achievementList}>
-              <li>Introduced NLP-driven interactive advertising content solution specifically designed for publishers by leveraging expertise in new business development.</li>
-              <li>Pioneered the development of groundbreaking AI partnerships by leveraging NLP contextual understanding to create interactive content.</li>
-              <li>Directed discovery sessions with 15+ prospective partners over 6 months, utilizing campaigns in CRM to increase qualified partner pipeline by 40%.</li>
-              <li>Spearheaded the integration of AI technologies into partner co-development initiatives over a 6-month period, resulting in 25% faster solution go-to-market.</li>
-            </ul>
-          </article>
-        </section>
-
-        {/* Skills Section */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Skills</h2>
-
-          <div className={styles.skillsGrid}>
-            <div className={styles.skillCategory}>
-              <h3 className={styles.skillCategoryTitle}>
-                <span className="material-icons-outlined">dashboard</span>
-                Product Management & Development
-              </h3>
-              <div className={styles.skillTags}>
-                <span className={styles.skillTag}>Product Management</span>
-                <span className={styles.skillTag}>Product Vision</span>
-                <span className={styles.skillTag}>Scenario Planning</span>
-                <span className={styles.skillTag}>Simulation Modeling</span>
-              </div>
-            </div>
-
-            <div className={styles.skillCategory}>
-              <h3 className={styles.skillCategoryTitle}>
-                <span className="material-icons-outlined">analytics</span>
-                Data Analytics & User Insights
-              </h3>
-              <div className={styles.skillTags}>
-                <span className={styles.skillTag}>Development</span>
-                <span className={styles.skillTag}>Software Design</span>
-                <span className={styles.skillTag}>API Design</span>
-                <span className={styles.skillTag}>API Management</span>
-                <span className={styles.skillTag}>Nginx Plus</span>
-              </div>
-            </div>
-
-            <div className={styles.skillCategory}>
-              <h3 className={styles.skillCategoryTitle}>
-                <span className="material-icons-outlined">psychology</span>
-                AI & Machine Learning
-              </h3>
-              <div className={styles.skillTags}>
-                <span className={styles.skillTag}>System Design</span>
-                <span className={styles.skillTag}>Access Control</span>
-                <span className={styles.skillTag}>SSO</span>
-                <span className={styles.skillTag}>Full-stack Development</span>
-                <span className={styles.skillTag}>Solution Architecture</span>
-                <span className={styles.skillTag}>Enterprise Architecture</span>
-                <span className={styles.skillTag}>AI</span>
+              <div className="flex items-center gap-8">
+                <Link href="/" className="text-earth-400 hover:text-sun-400 text-sm transition-colors">Home</Link>
+                <a href="/feed.xml" className="text-earth-400 hover:text-sun-400 text-sm transition-colors">RSS</a>
+                <a href="/sitemap.xml" className="text-earth-400 hover:text-sun-400 text-sm transition-colors">Sitemap</a>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Education Section */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Education</h2>
-          <article className={styles.educationCard}>
-            <h3>Bachelor of Science in Marketing</h3>
-            <p className={styles.school}>University of Texas, Dallas</p>
-            <p className={styles.schoolDetail}>Naveen Jindal School of Management</p>
-          </article>
-        </section>
-
-        {/* Resume Downloads */}
-        {pdfFiles.length > 0 && (
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Download Resume</h2>
-            <div className={styles.resumeGrid}>
-              <PDFLinks files={pdfFiles} />
-            </div>
-          </section>
-        )}
-      </main>
-    </div>
-  );
-};
-
-export default About;
+        </footer>
+      </div>
+    </>
+  )
+}

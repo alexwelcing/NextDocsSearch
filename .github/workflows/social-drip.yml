@@ -1,0 +1,83 @@
+name: Social Drip - Auto Post Articles
+
+on:
+  # Run every 4 hours
+  schedule:
+    - cron: '0 */4 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      preview:
+        description: 'Preview mode (no actual posting)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  post-article:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Load drip state from cache
+        uses: actions/cache@v4
+        with:
+          path: .drip-state.json
+          key: drip-state-${{ github.run_id }}
+          restore-keys: |
+            drip-state-
+
+      - name: Run social drip
+        id: drip
+        env:
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
+          NEXT_PUBLIC_SITE_URL: https://alexwelcing.com
+        run: |
+          if [ "${{ github.event.inputs.preview }}" = "true" ]; then
+            pnpm tsx scripts/social-drip.ts --preview
+          else
+            pnpm tsx scripts/social-drip.ts
+          fi
+
+      - name: Commit drip state
+        if: success() && github.event.inputs.preview != 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .drip-state.json || true
+          git diff --staged --quiet || git commit -m "chore: update social drip state [skip ci]"
+          git push origin main || echo "No changes to push"
+
+      - name: Summary
+        run: |
+          echo "## Social Drip Run Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "**Mode:** ${{ github.event.inputs.preview == 'true' && 'Preview' || 'Live' }}" >> $GITHUB_STEP_SUMMARY
+          if [ -f .drip-state.json ]; then
+            echo "**Total Posted:** $(cat .drip-state.json | jq '.totalPosted')" >> $GITHUB_STEP_SUMMARY
+            echo "**Last Posted:** $(cat .drip-state.json | jq -r '.lastPostedAt')" >> $GITHUB_STEP_SUMMARY
+          fi

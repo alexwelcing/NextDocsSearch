@@ -1,50 +1,36 @@
-import '@/styles/globals.css';
-import type { AppProps } from 'next/app';
-import Script from 'next/script';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { trackEvent } from '@/lib/google-analytics';
-import { JourneyProvider } from '@/components/contexts/JourneyContext';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import { ArticleDiscoveryProvider } from '@/components/ArticleDiscoveryProvider';
+import '@/styles/globals.css'
+import type { AppProps } from 'next/app'
+import Script from 'next/script'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
-
-const GTM_ID = 'GTM-W24L468'
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-W24L468'
 
 function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
+  const router = useRouter()
 
+  // Track page views
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      const urlObj = new URL(url, window.location.origin);
-      const abTestVariant = urlObj.searchParams.get('ab_test_variant');
-      if (abTestVariant) {
-        trackEvent('ab_test_variant', { variant: abTestVariant });
+      // Push to dataLayer for GTM
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
+          event: 'pageview',
+          page: url,
+        })
       }
-    };
+    }
 
-    // Subscribe to route changes
-    router.events.on('routeChangeComplete', handleRouteChange);
-
-    // Unsubscribe from events when component unmounts
+    router.events.on('routeChangeComplete', handleRouteChange)
     return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);  return (
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events])
+
+  return (
     <>
-      <Script
-        src="https://cookie-cdn.cookiepro.com/scripttemplates/otSDKStub.js"
-        data-domain-script="2767f96d-f8c2-489d-862e-bfeb24f3c968"
-      />
-
-      {/* Material icons are now loaded in _document.tsx for better performance */}
-
-      {/* Inline script for cookie pro */}
-      <Script id="optanon" strategy="afterInteractive">
-        {`function OptanonWrapper() { }`}
-      </Script>
-            {/* Inline script for gtm */}
-      <Script id="google-tag-manager" strategy="afterInteractive">
+      {/* Google Tag Manager */}
+      <Script id="gtm" strategy="afterInteractive">
         {`
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -54,15 +40,9 @@ function App({ Component, pageProps }: AppProps) {
         `}
       </Script>
 
-      <JourneyProvider>
-        <ArticleDiscoveryProvider>
-          <ErrorBoundary>
-            <Component {...pageProps} />
-          </ErrorBoundary>
-        </ArticleDiscoveryProvider>
-      </JourneyProvider>
+      <Component {...pageProps} />
     </>
   )
 }
 
-export default App;
+export default App
