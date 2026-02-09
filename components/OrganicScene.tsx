@@ -1,22 +1,58 @@
-import { useRef, useMemo, Suspense } from 'react'
+import { useRef, useMemo, useState, useEffect, Component, ReactNode } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Float, Environment, MeshDistortMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
-// Floating seed/spore particles
-function FloatingParticles({ count = 50 }) {
+// Error Boundary to catch Three.js crashes
+interface ErrorBoundaryState {
+  hasError: boolean
+}
+
+class SceneErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, ErrorBoundaryState> {
+  constructor(props: { children: ReactNode; fallback: ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback
+    }
+    return this.props.children
+  }
+}
+
+// Check if WebGL is available
+function isWebGLAvailable(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+    )
+  } catch {
+    return false
+  }
+}
+
+// Simple floating particles
+function Particles({ count = 30 }: { count?: number }) {
   const mesh = useRef<THREE.InstancedMesh>(null)
   const dummy = useMemo(() => new THREE.Object3D(), [])
 
   const particles = useMemo(() => {
     return Array.from({ length: count }, () => ({
       position: [
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10 - 5,
-      ],
-      scale: 0.02 + Math.random() * 0.04,
-      speed: 0.1 + Math.random() * 0.3,
+        (Math.random() - 0.5) * 16,
+        (Math.random() - 0.5) * 8,
+        (Math.random() - 0.5) * 8 - 3,
+      ] as [number, number, number],
+      scale: 0.03 + Math.random() * 0.05,
+      speed: 0.2 + Math.random() * 0.3,
       offset: Math.random() * Math.PI * 2,
     }))
   }, [count])
@@ -27,13 +63,12 @@ function FloatingParticles({ count = 50 }) {
 
     particles.forEach((particle, i) => {
       const { position, scale, speed, offset } = particle
-
       dummy.position.set(
         position[0] + Math.sin(time * speed + offset) * 0.5,
-        position[1] + Math.cos(time * speed * 0.7 + offset) * 0.3,
-        position[2] + Math.sin(time * speed * 0.5 + offset) * 0.2
+        position[1] + Math.cos(time * speed * 0.7 + offset) * 0.4,
+        position[2]
       )
-      dummy.scale.setScalar(scale * (1 + Math.sin(time * 2 + offset) * 0.2))
+      dummy.scale.setScalar(scale * (1 + Math.sin(time * 2 + offset) * 0.15))
       dummy.updateMatrix()
       mesh.current!.setMatrixAt(i, dummy.matrix)
     })
@@ -43,178 +78,103 @@ function FloatingParticles({ count = 50 }) {
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
       <sphereGeometry args={[1, 8, 8]} />
-      <meshStandardMaterial
-        color="#F5D547"
-        emissive="#F5D547"
-        emissiveIntensity={0.3}
-        transparent
-        opacity={0.6}
-      />
+      <meshBasicMaterial color="#F5D547" transparent opacity={0.6} />
     </instancedMesh>
   )
 }
 
-// Organic blob shape
-function OrganicBlob({ position, color, size = 1, speed = 1 }: {
+// Soft glowing orb
+function GlowOrb({ position, color, size = 1 }: {
   position: [number, number, number]
   color: string
   size?: number
-  speed?: number
 }) {
   const meshRef = useRef<THREE.Mesh>(null)
 
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.1 * speed
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.15 * speed
-    }
-  })
-
-  return (
-    <Float speed={speed} rotationIntensity={0.5} floatIntensity={0.5}>
-      <mesh ref={meshRef} position={position} scale={size}>
-        <icosahedronGeometry args={[1, 4]} />
-        <MeshDistortMaterial
-          color={color}
-          speed={2}
-          distort={0.4}
-          radius={1}
-          transparent
-          opacity={0.7}
-        />
-      </mesh>
-    </Float>
-  )
-}
-
-// Leaf-like floating elements
-function FloatingLeaf({ position, rotation }: {
-  position: [number, number, number]
-  rotation: number
-}) {
-  const meshRef = useRef<THREE.Mesh>(null)
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.z = rotation + Math.sin(state.clock.elapsedTime * 0.5) * 0.2
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.3 + rotation) * 0.3
+      meshRef.current.scale.setScalar(size * (1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.1))
     }
   })
 
   return (
     <mesh ref={meshRef} position={position}>
-      <planeGeometry args={[0.3, 0.5]} />
-      <meshStandardMaterial
-        color="#6B8E23"
-        transparent
-        opacity={0.5}
-        side={THREE.DoubleSide}
-      />
+      <sphereGeometry args={[1, 16, 16]} />
+      <meshBasicMaterial color={color} transparent opacity={0.3} />
     </mesh>
   )
 }
 
-// Sun rays effect
-function SunRays() {
-  const raysRef = useRef<THREE.Mesh>(null)
-
-  useFrame((state) => {
-    if (raysRef.current) {
-      raysRef.current.rotation.z = state.clock.elapsedTime * 0.05
-    }
-  })
-
-  return (
-    <mesh ref={raysRef} position={[5, 4, -10]}>
-      <circleGeometry args={[3, 32]} />
-      <meshBasicMaterial
-        color="#FFE066"
-        transparent
-        opacity={0.15}
-      />
-    </mesh>
-  )
-}
-
-// Main scene content
+// Main scene content - kept simple
 function SceneContent() {
   return (
     <>
-      {/* Ambient lighting */}
-      <ambientLight intensity={0.4} />
-      <directionalLight
-        position={[5, 5, 5]}
-        intensity={0.8}
-        color="#FFE066"
-      />
-      <pointLight
-        position={[-5, 3, -5]}
-        intensity={0.5}
-        color="#4A7C59"
-      />
+      <color attach="background" args={['#FFFEFB']} />
 
-      {/* Background gradient sphere */}
-      <mesh position={[0, 0, -15]} scale={30}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshBasicMaterial color="#FFFEFB" side={THREE.BackSide} />
-      </mesh>
-
-      {/* Sun rays */}
-      <SunRays />
-
-      {/* Organic blobs */}
-      <OrganicBlob position={[-3, 1, -3]} color="#F5D547" size={0.8} speed={0.5} />
-      <OrganicBlob position={[4, -1, -5]} color="#4A7C59" size={0.6} speed={0.7} />
-      <OrganicBlob position={[0, 2, -4]} color="#6B8E23" size={0.5} speed={0.6} />
-      <OrganicBlob position={[-2, -2, -6]} color="#FFE066" size={0.4} speed={0.8} />
-      <OrganicBlob position={[3, 2, -7]} color="#355E3B" size={0.7} speed={0.4} />
+      {/* Soft ambient light */}
+      <ambientLight intensity={0.6} />
 
       {/* Floating particles */}
-      <FloatingParticles count={40} />
+      <Particles count={25} />
 
-      {/* Floating leaves */}
-      {[...Array(8)].map((_, i) => (
-        <FloatingLeaf
-          key={i}
-          position={[
-            (Math.random() - 0.5) * 12,
-            (Math.random() - 0.5) * 6,
-            -3 - Math.random() * 5,
-          ]}
-          rotation={Math.random() * Math.PI}
-        />
-      ))}
-
-      {/* Environment for reflections */}
-      <Environment preset="forest" />
+      {/* Soft glowing orbs */}
+      <GlowOrb position={[-4, 1, -5]} color="#F5D547" size={1.5} />
+      <GlowOrb position={[3, -1, -6]} color="#4A7C59" size={1.2} />
+      <GlowOrb position={[0, 2, -4]} color="#6B8E23" size={0.8} />
+      <GlowOrb position={[-2, -1.5, -7]} color="#FFE066" size={1} />
+      <GlowOrb position={[4, 1.5, -8]} color="#4A7C59" size={1.3} />
     </>
   )
 }
 
-// Loading fallback
-function Loader() {
+// Fallback component when 3D isn't available
+function StaticFallback() {
   return (
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="#F5D547" wireframe />
-    </mesh>
+    <div className="absolute inset-0 bg-gradient-to-br from-sun-100 via-parchment-50 to-flora-50">
+      <div className="absolute top-20 right-10 w-64 h-64 bg-sun-300/30 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-10 left-10 w-48 h-48 bg-flora-300/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute top-1/3 left-1/4 w-32 h-32 bg-sun-200/40 rounded-full blur-2xl" />
+    </div>
   )
 }
 
 // Main exported component
 export default function OrganicScene({ className = '' }: { className?: string }) {
+  const [canRender, setCanRender] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    setCanRender(isWebGLAvailable())
+  }, [])
+
+  // Server-side or before mount: show nothing (will be replaced client-side)
+  if (!mounted) {
+    return <StaticFallback />
+  }
+
+  // No WebGL: show static fallback
+  if (!canRender) {
+    return <StaticFallback />
+  }
+
   return (
     <div className={`w-full h-full ${className}`}>
-      <Canvas
-        camera={{ position: [0, 0, 8], fov: 50 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
-      >
-        <Suspense fallback={<Loader />}>
+      <SceneErrorBoundary fallback={<StaticFallback />}>
+        <Canvas
+          camera={{ position: [0, 0, 6], fov: 50 }}
+          dpr={[1, 1.5]}
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: 'default',
+            failIfMajorPerformanceCaveat: true
+          }}
+          style={{ background: 'transparent' }}
+        >
           <SceneContent />
-        </Suspense>
-      </Canvas>
+        </Canvas>
+      </SceneErrorBoundary>
     </div>
   )
 }

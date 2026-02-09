@@ -1,11 +1,17 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { GetStaticProps } from 'next'
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import StructuredData from '@/components/StructuredData'
+
+// Dynamic import for 3D scene - only loads on client
+const OrganicScene = dynamic(() => import('@/components/OrganicScene'), {
+  ssr: false,
+})
 
 interface Article {
   slug: string
@@ -115,12 +121,16 @@ export default function HomePage({ featuredArticles, recentArticles, totalArticl
         </nav>
 
         {/* Hero Section */}
-        <header className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-sun-100 via-parchment-50 to-flora-50 opacity-60" />
-          <div className="absolute top-20 right-10 w-64 h-64 bg-sun-300/30 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-48 h-48 bg-flora-300/20 rounded-full blur-3xl" />
+        <header className="relative overflow-hidden min-h-[80vh] flex items-center">
+          {/* 3D Scene Background */}
+          <div className="absolute inset-0">
+            <OrganicScene />
+          </div>
+          {/* Gradient overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-parchment-50/95 via-parchment-50/80 to-parchment-50/40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-parchment-50/50 via-transparent to-parchment-50" />
 
-          <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-24">
+          <div className="relative max-w-5xl mx-auto px-6 py-20">
             <div className="max-w-3xl">
               <p className="text-flora-600 font-medium mb-4 tracking-wide text-sm uppercase">
                 AI Research &amp; Strategy
