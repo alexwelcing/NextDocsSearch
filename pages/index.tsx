@@ -1,11 +1,20 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { GetStaticProps } from 'next'
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import StructuredData from '@/components/StructuredData'
+
+// Dynamic import for 3D scene (client-side only)
+const OrganicScene = dynamic(() => import('@/components/OrganicScene'), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 bg-gradient-to-br from-sun-100 via-parchment-50 to-flora-50 opacity-60" />
+  ),
+})
 
 interface Article {
   slug: string
@@ -114,13 +123,17 @@ export default function HomePage({ featuredArticles, recentArticles, totalArticl
           </div>
         </nav>
 
-        {/* Hero Section */}
-        <header className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-sun-100 via-parchment-50 to-flora-50 opacity-60" />
-          <div className="absolute top-20 right-10 w-64 h-64 bg-sun-300/30 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-48 h-48 bg-flora-300/20 rounded-full blur-3xl" />
+        {/* Hero Section with 3D Scene */}
+        <header className="relative overflow-hidden min-h-[85vh] flex items-center">
+          {/* 3D Background */}
+          <div className="absolute inset-0 z-0">
+            <OrganicScene className="opacity-80" />
+          </div>
+          {/* Gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-parchment-50/90 via-parchment-50/70 to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-parchment-50 via-transparent to-parchment-50/50 z-10" />
 
-          <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-24">
+          <div className="relative z-20 max-w-5xl mx-auto px-6 py-20">
             <div className="max-w-3xl">
               <p className="text-flora-600 font-medium mb-4 tracking-wide text-sm uppercase">
                 AI Research &amp; Strategy
