@@ -31,10 +31,15 @@ interface BackgroundState {
 /**
  * Determine the best background mode based on assets and capabilities
  */
-function determineBestMode(
+export function isSplatOptedIn(search: string): boolean {
+  return new URLSearchParams(search).get('splats') === 'on';
+}
+
+export function determineBestMode(
   assets: WorldAssets,
   supportsSplats: boolean,
-  quality: QualityLevel
+  quality: QualityLevel,
+  splatsEnabled: boolean
 ): BackgroundMode {
   // Low quality devices skip splats
   if (quality === 'low') {
@@ -50,7 +55,8 @@ function determineBestMode(
       assets.environment.endsWith('.spz') ||
       assets.environment.endsWith('.ksplat') ||
       assets.environment.endsWith('.ply')) &&
-    supportsSplats
+    supportsSplats &&
+    splatsEnabled
   ) {
     return 'splat';
   }
@@ -78,7 +84,8 @@ export default function SceneBackground({
 
   // Determine best mode on mount/change
   useEffect(() => {
-    const mode = determineBestMode(assets, supportsSplats, quality);
+    const splatsEnabled = typeof window !== 'undefined' && isSplatOptedIn(window.location.search);
+    const mode = determineBestMode(assets, supportsSplats, quality, splatsEnabled);
     setState({ mode, isLoading: true, error: null });
   }, [assets, supportsSplats, quality]);
 

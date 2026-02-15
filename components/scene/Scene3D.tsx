@@ -50,6 +50,33 @@ interface Scene3DProps {
   onGameStateChange?: (state: string) => void;
 }
 
+export function mergeWorldConfig(world: Partial<WorldConfig>): WorldConfig {
+  return {
+    ...DEFAULT_WORLD,
+    ...world,
+    assets: {
+      ...DEFAULT_WORLD.assets,
+      ...world.assets,
+    },
+    camera: {
+      ...DEFAULT_WORLD.camera,
+      ...world.camera,
+      constraints: {
+        ...DEFAULT_WORLD.camera.constraints,
+        ...world.camera?.constraints,
+      },
+    },
+    lighting: {
+      ...DEFAULT_WORLD.lighting,
+      ...world.lighting,
+    },
+    atmosphere: {
+      ...DEFAULT_WORLD.atmosphere,
+      ...world.atmosphere,
+    },
+  };
+}
+
 const Container = styled.div`
   position: fixed;
   top: 0;
@@ -114,7 +141,7 @@ export default function Scene3D({
           const config = await loadWorld(worldProp);
           setWorldConfig(config);
         } else if (worldProp) {
-          setWorldConfig(worldProp);
+          setWorldConfig(mergeWorldConfig(worldProp));
         }
       } catch (error) {
         console.error('Failed to load world:', error);
