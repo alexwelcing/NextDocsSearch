@@ -25,6 +25,8 @@ interface PostProcessingEffectsProps {
   isCinematic?: boolean;
   /** Cinematic progress 0-1 */
   cinematicProgress?: number;
+  /** Whether the device is mobile (disables DOF to save fill-rate) */
+  isMobile?: boolean;
 }
 
 export default function PostProcessingEffects({
@@ -33,6 +35,7 @@ export default function PostProcessingEffects({
   enabled = true,
   isCinematic = false,
   cinematicProgress = 0,
+  isMobile = false,
 }: PostProcessingEffectsProps) {
   // Get post-processing config from theme
   const config = useMemo(() => {
@@ -79,8 +82,8 @@ export default function PostProcessingEffects({
 
   if (!enabled || quality === 'low') return null;
 
-  // During cinematic: include DOF in the effect chain
-  if (isCinematic) {
+  // During cinematic: include DOF in the effect chain (desktop only - too expensive on mobile)
+  if (isCinematic && !isMobile) {
     return (
       <EffectComposer multisampling={quality === 'ultra' ? 8 : quality === 'high' ? 4 : 0}>
         <DepthOfField
@@ -88,6 +91,26 @@ export default function PostProcessingEffects({
           focalLength={dofFocalLength}
           bokehScale={dofBokehScale}
         />
+        <Bloom
+          intensity={config.bloomIntensity}
+          luminanceThreshold={config.bloomThreshold}
+          luminanceSmoothing={0.9}
+          radius={config.bloomRadius}
+          mipmapBlur
+        />
+        <Vignette
+          offset={0.3}
+          darkness={config.vignetteIntensity}
+          blendFunction={BlendFunction.NORMAL}
+        />
+      </EffectComposer>
+    );
+  }
+
+  // Cinematic on mobile: bloom + vignette only (no DOF)
+  if (isCinematic && isMobile) {
+    return (
+      <EffectComposer multisampling={0}>
         <Bloom
           intensity={config.bloomIntensity}
           luminanceThreshold={config.bloomThreshold}

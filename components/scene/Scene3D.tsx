@@ -12,7 +12,6 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Physics } from '@react-three/cannon';
 import { createXRStore, XR, XROrigin } from '@react-three/xr';
 import { Stats } from '@react-three/drei';
 import styled from 'styled-components';
@@ -88,20 +87,8 @@ const Container = styled.div`
   z-index: 4;
 `;
 
-/**
- * Physics configuration - optimized for game performance
- */
-const PHYSICS_CONFIG = {
-  gravity: [0, -9.81, 0] as [number, number, number],
-  iterations: 5,
-  tolerance: 0.01,
-  allowSleep: true,
-  broadphase: 'SAP' as const,
-  defaultContactMaterial: {
-    friction: 0.1,
-    restitution: 0.7,
-  },
-};
+// Physics removed - no current consumers use cannon.js through Scene3D.
+// Game physics lives in the legacy ThreeSixty.tsx system.
 
 /**
  * Scene3D - The modern scene orchestrator
@@ -278,7 +265,7 @@ function SceneContent({
   const capabilities = useSceneCapabilities();
 
   return (
-    <Physics {...PHYSICS_CONFIG} isPaused={showCinematic}>
+    <>
       {/* Background (splat-first) */}
       <SceneBackground
         assets={worldConfig.assets}
@@ -302,17 +289,18 @@ function SceneContent({
         onCinematicProgress={onCinematicProgress}
       />
 
-      {/* Post-processing effects (DOF during cinematic, bloom/vignette always) */}
+      {/* Post-processing effects (DOF during cinematic on desktop, bloom/vignette always) */}
       <PostProcessingEffects
         quality={capabilities.qualityLevel}
         enabled={capabilities.qualityLevel !== 'low'}
         isCinematic={showCinematic}
         cinematicProgress={cinematicProgress}
+        isMobile={capabilities.isMobile}
       />
 
       {/* Scene children */}
       {children}
-    </Physics>
+    </>
   );
 }
 

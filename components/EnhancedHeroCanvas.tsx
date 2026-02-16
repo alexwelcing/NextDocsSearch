@@ -454,9 +454,13 @@ export default function EnhancedHeroCanvas({ className }: EnhancedHeroCanvasProp
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchmove', handleTouchMove);
       cancelAnimationFrame(rafRef.current);
+      gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
       gl.deleteShader(vs);
       gl.deleteShader(fs);
+      // Free the WebGL context slot to prevent context exhaustion on repeated toggling
+      const loseCtx = gl.getExtension('WEBGL_lose_context');
+      if (loseCtx) loseCtx.loseContext();
     };
   }, [handleMouseMove, handleTouchMove]);
 
