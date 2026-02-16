@@ -109,3 +109,15 @@ git push origin --delete \
 **Total Branches for Deletion:** 35
 - 33 merged AI-generated branches
 - 2 security patch branches (confirmed secure in production)
+
+## 2026-02 Snapshot & Recommended Direction (Rough Estimate)
+
+- Current remote inventory still shows a large long-tail of `claude/*`, `codex/*`, and `copilot/*` experiment branches plus a few long-lived roots (`main`, `develop`, `backup`, `improvements-overhaul`, etc.).
+- Roughly, branch history appears to cluster into:
+  - **Content/system iteration** (article pipelines, workshop, SEO, media tooling)
+  - **3D scene experiments** (Three.js upgrades, scene refactors, Gaussian splat integration)
+  - **Agent-assisted cleanup/fix streams** (many narrowly scoped PR branches)
+- Near-term direction estimate:
+  1. Stabilize one **default non-splat rendering path** first (reliability baseline).
+  2. Keep Gaussian splats as an **explicit opt-in performance track** until crash telemetry is clean.
+  3. Reduce branch sprawl by pruning merged/abandoned branches after each stabilization milestone.
