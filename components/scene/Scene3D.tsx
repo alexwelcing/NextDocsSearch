@@ -25,7 +25,6 @@ import SceneCamera from './SceneCamera';
 import PostProcessingEffects from '@/components/3d/atmosphere/PostProcessingEffects';
 import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
 import { loadWorld, preloadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
-import { IdeaExperience } from '@/components/ideas';
 
 // Re-export game types for convenience
 export type { GameState } from '@/components/3d/game/ClickingGame';
@@ -230,10 +229,8 @@ export default function Scene3D({
                 cameraMode={cameraMode}
                 showCinematic={showCinematic}
                 cinematicProgress={cinematicProgress}
-                articles={articles}
                 onCinematicComplete={handleCinematicComplete}
                 onCinematicProgress={handleCinematicProgress}
-                onGameStateChange={onGameStateChange}
               >
                 {children}
               </SceneContent>
@@ -245,10 +242,8 @@ export default function Scene3D({
             cameraMode={cameraMode}
             showCinematic={showCinematic}
             cinematicProgress={cinematicProgress}
-            articles={articles}
             onCinematicComplete={handleCinematicComplete}
             onCinematicProgress={handleCinematicProgress}
-            onGameStateChange={onGameStateChange}
           >
             {children}
           </SceneContent>
@@ -268,20 +263,16 @@ function SceneContent({
   cameraMode,
   showCinematic,
   cinematicProgress,
-  articles,
   onCinematicComplete,
   onCinematicProgress,
-  onGameStateChange,
   children,
 }: {
   worldConfig: WorldConfig;
   cameraMode: CameraMode;
   showCinematic: boolean;
   cinematicProgress: number;
-  articles?: any[];
   onCinematicComplete: () => void;
   onCinematicProgress: (progress: number) => void;
-  onGameStateChange?: (state: string) => void;
   children?: React.ReactNode;
 }) {
   const capabilities = useSceneCapabilities();
@@ -319,16 +310,7 @@ function SceneContent({
         cinematicProgress={cinematicProgress}
       />
 
-      {/* Idea Experience - The new spatial content system */}
-      {!showCinematic && (
-        <IdeaExperience
-          articles={articles}
-          onGameStateChange={onGameStateChange}
-          isActive={true}
-        />
-      )}
-
-      {/* Scene children (game, UI, etc.) */}
+      {/* Scene children */}
       {children}
     </Physics>
   );

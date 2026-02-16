@@ -5,9 +5,7 @@ import dynamic from 'next/dynamic'
 import StylishFallback from '@/components/StylishFallback'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import { JourneyProvider } from '@/components/contexts/JourneyContext'
-import CircleNav from '@/components/ui/CircleNav'
-import SearchDialog from '@/components/SearchDialog'
-import Footer from '@/components/ui/footer'
+import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
 
 // Dynamically import Scene3D, using StylishFallback as the loading component.
 const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
@@ -18,6 +16,8 @@ const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
 const Chat = () => {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [articles, setArticles] = useState<any[]>([])
+  const [cinematicComplete, setCinematicComplete] = useState(false)
+  const [gameState, setGameState] = useState<string>('idle')
 
   async function getRandomImage() {
     try {
@@ -50,10 +50,6 @@ const Chat = () => {
     getRandomImage()
     fetchArticles()
   }, [])
-
-  async function handleImageChange(): Promise<void> {
-    await getRandomImage()
-  }
 
   // Build world config from random image
   const worldConfig = React.useMemo(() => {
@@ -88,15 +84,21 @@ const Chat = () => {
 
       <SupabaseDataProvider>
         <JourneyProvider>
-          <CircleNav />
           <main className={`${styles.main} ${styles.gradientbg}`}>
             <Scene3D
               world={worldConfig}
-              articles={articles}
+              onCinematicComplete={() => setCinematicComplete(true)}
+              onGameStateChange={setGameState}
             />
           </main>
-          <SearchDialog />
-          <Footer onImageChange={handleImageChange} showChangeScenery={false} />
+
+          {/* InteractiveTablet — centered bottom menu, visible after intro */}
+          {cinematicComplete && gameState !== 'playing' && (
+            <InteractiveTablet
+              isGamePlaying={gameState === 'playing'}
+              articles={articles}
+            />
+          )}
         </JourneyProvider>
       </SupabaseDataProvider>
     </>
