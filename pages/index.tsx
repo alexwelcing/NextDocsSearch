@@ -10,7 +10,7 @@ import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
 import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
 import styles from '@/styles/Home.module.css'
-import SearchDialog from '@/components/SearchDialog'
+import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
 
 // Dynamically import the 3D environment, using the new Scene3D orchestrator
 const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
@@ -23,6 +23,7 @@ function HomeContent() {
   const [articles, setArticles] = useState<any[]>([])
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
   const [gameState, setGameState] = useState<string>('idle')
+  const [cinematicComplete, setCinematicComplete] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
 
   const { achievements } = useJourney()
@@ -161,22 +162,18 @@ function HomeContent() {
               world={worldConfig}
               articles={articles}
               onGameStateChange={setGameState}
+              onCinematicComplete={() => setCinematicComplete(true)}
             />
 
-            {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'playing' && <SearchDialog />}
+            {/* InteractiveTablet — centered bottom menu, visible after intro */}
+            {cinematicComplete && gameState !== 'playing' && (
+              <InteractiveTablet
+                isGamePlaying={gameState === 'playing'}
+                articles={articles}
+                onExitToLanding={handleToggle3D}
+              />
+            )}
 
-            {/* Button to go back to 2D home */}
-            <div className="absolute top-4 left-4 z-50">
-              <button
-                onClick={handleToggle3D}
-                className={styles.landingBtn}
-                style={{ padding: '0.5rem 1rem' }}
-              >
-                Return to 2D
-              </button>
-            </div>
-            
             <AchievementUnlock
               achievement={currentAchievement}
               onDismiss={() => setCurrentAchievement(null)}

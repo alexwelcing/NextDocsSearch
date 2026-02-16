@@ -24,7 +24,7 @@ export const DEFAULT_WORLD: WorldConfig = {
   camera: {
     initial: [0, 2, 8],
     target: [0, 1.5, 0],
-    fov: 60,
+    fov: 72,
     constraints: {
       minDistance: 3,
       maxDistance: 25,

@@ -22,8 +22,9 @@ import SceneEnvironment from './SceneEnvironment';
 import SceneBackground from './SceneBackground';
 import SceneCamera from './SceneCamera';
 
+import PostProcessingEffects from '@/components/3d/atmosphere/PostProcessingEffects';
 import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
-import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
+import { loadWorld, preloadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
 import { IdeaExperience } from '@/components/ideas';
 
 // Re-export game types for convenience
@@ -48,6 +49,8 @@ interface Scene3DProps {
   onCameraModeChange?: (mode: CameraMode) => void;
   /** Callback for game state changes */
   onGameStateChange?: (state: string) => void;
+  /** Callback when cinematic intro finishes (or was already watched) */
+  onCinematicComplete?: () => void;
 }
 
 export function mergeWorldConfig(world: Partial<WorldConfig>): WorldConfig {
@@ -114,6 +117,7 @@ export default function Scene3D({
   onReady,
   onCameraModeChange,
   onGameStateChange,
+  onCinematicComplete: onCinematicCompleteProp,
 }: Scene3DProps) {
   // Scene state
   const [worldConfig, setWorldConfig] = useState<WorldConfig>(DEFAULT_WORLD);
@@ -132,16 +136,24 @@ export default function Scene3D({
   // XR store
   const xrStore = useMemo(() => createXRStore(), []);
 
-  // Load world configuration
+  // Load world configuration and preload assets before cinematic
   useEffect(() => {
     async function load() {
       setIsLoading(true);
       try {
+        let config: WorldConfig;
         if (typeof worldProp === 'string') {
-          const config = await loadWorld(worldProp);
-          setWorldConfig(config);
+          config = await loadWorld(worldProp);
         } else if (worldProp) {
-          setWorldConfig(mergeWorldConfig(worldProp));
+          config = mergeWorldConfig(worldProp);
+        } else {
+          config = DEFAULT_WORLD;
+        }
+        setWorldConfig(config);
+
+        // Preload assets before cinematic starts to prevent stutter
+        if (showCinematic && config.id) {
+          await preloadWorld(config.id);
         }
       } catch (error) {
         console.error('Failed to load world:', error);
@@ -152,6 +164,7 @@ export default function Scene3D({
       }
     }
     load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worldProp, onReady]);
 
   // Handle camera mode changes
@@ -170,7 +183,8 @@ export default function Scene3D({
     if (typeof window !== 'undefined') {
       localStorage.setItem('hasWatchedIntro', 'true');
     }
-  }, [handleSetCameraMode]);
+    onCinematicCompleteProp?.();
+  }, [handleSetCameraMode, onCinematicCompleteProp]);
 
   // Handle cinematic progress
   const handleCinematicProgress = useCallback((progress: number) => {
@@ -186,6 +200,14 @@ export default function Scene3D({
       localStorage.removeItem('hasWatchedIntro');
     }
   }, [handleSetCameraMode]);
+
+  // Notify parent immediately if cinematic was already watched
+  useEffect(() => {
+    if (!showCinematic) {
+      onCinematicCompleteProp?.();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only on mount
 
   // Start cinematic if needed
   useEffect(() => {
@@ -265,7 +287,7 @@ function SceneContent({
   const capabilities = useSceneCapabilities();
 
   return (
-    <Physics {...PHYSICS_CONFIG}>
+    <Physics {...PHYSICS_CONFIG} isPaused={showCinematic}>
       {/* Background (splat-first) */}
       <SceneBackground
         assets={worldConfig.assets}
@@ -289,10 +311,18 @@ function SceneContent({
         onCinematicProgress={onCinematicProgress}
       />
 
+      {/* Post-processing effects (DOF during cinematic, bloom/vignette always) */}
+      <PostProcessingEffects
+        quality={capabilities.qualityLevel}
+        enabled={capabilities.qualityLevel !== 'low'}
+        isCinematic={showCinematic}
+        cinematicProgress={cinematicProgress}
+      />
+
       {/* Idea Experience - The new spatial content system */}
       {!showCinematic && (
-        <IdeaExperience 
-          articles={articles} 
+        <IdeaExperience
+          articles={articles}
           onGameStateChange={onGameStateChange}
           isActive={true}
         />

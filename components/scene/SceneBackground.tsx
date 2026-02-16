@@ -211,7 +211,7 @@ function PanoramaSphere({
   const isFadingRef = useRef(false);
 
   // Optimized sphere geometry
-  const geometry = useMemo(() => new THREE.SphereGeometry(50, 32, 16), []);
+  const geometry = useMemo(() => new THREE.SphereGeometry(200, 32, 16), []);
 
   // Load texture
   useEffect(() => {
@@ -298,7 +298,7 @@ function DefaultBackground() {
 
   return (
     <mesh>
-      <sphereGeometry args={[100, 16, 8]} />
+      <sphereGeometry args={[200, 16, 8]} />
       <meshBasicMaterial
         side={THREE.BackSide}
         color="#0a0a1a"

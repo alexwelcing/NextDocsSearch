@@ -155,7 +155,7 @@ export default function SceneCanvas({
   const cameraConfig = useMemo(
     () => ({
       position: [0, 2, 10] as [number, number, number],
-      fov: capabilities?.isMobile ? 70 : 60,
+      fov: capabilities?.isMobile ? 75 : 72,
       near: 0.1,
       far: 1000,
     }),
