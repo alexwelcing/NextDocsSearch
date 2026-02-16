@@ -13,6 +13,19 @@ const path = require('path');
 // Test configuration
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const SCREENSHOT_DIR = './test-screenshots';
+const CHROMIUM_PATH = process.env.CHROMIUM_PATH || undefined;
+
+// Helper: pre-set localStorage to skip cinematic intro
+async function skipCinematic(page) {
+  await page.evaluate(() => localStorage.setItem('hasWatchedIntro', 'true'));
+}
+
+// Helper: navigate to /chat with cinematic skipped, wait for MENU button
+async function goTo3DWithMenu(page, baseUrl) {
+  await skipCinematic(page);
+  await page.goto(`${baseUrl}/chat`, { waitUntil: 'networkidle', timeout: 30000 });
+  await page.waitForTimeout(5000); // WebGL init in SwiftShader is slow
+}
 
 // Comprehensive test scenarios
 const scenarios = [
@@ -47,84 +60,92 @@ const scenarios = [
   },
 
   // ============================================
-  // TERMINAL INTERFACE TESTS
+  // TABLET INTERFACE TESTS (via /chat with cinematic skipped)
   // ============================================
   {
-    name: 'terminal-closed',
-    description: 'Terminal interface - Closed state',
-    url: '/',
-    waitFor: 2000,
-    category: 'terminal'
-  },
-  {
-    name: 'terminal-opening-animation',
-    description: 'Terminal interface - Opening animation',
-    url: '/',
-    waitFor: 500,
-    category: 'terminal',
+    name: 'tablet-menu-button',
+    description: 'Tablet - MENU button visible after 3D load',
+    url: '/chat',
+    waitFor: 5000,
+    category: 'tablet',
     actions: async (page) => {
-      await page.click('text="NAVIGATE"', { timeout: 5000 }).catch(() => {});
-      await page.waitForTimeout(300);
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
     }
   },
   {
-    name: 'terminal-explore-tab',
-    description: 'Terminal - Explore tab active',
-    url: '/',
-    category: 'terminal',
+    name: 'tablet-raised',
+    description: 'Tablet - Raised with action buttons',
+    url: '/chat',
+    waitFor: 500,
+    category: 'tablet',
     actions: async (page) => {
-      await page.click('text="NAVIGATE"', { timeout: 5000 }).catch(() => {});
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
+      await page.waitForTimeout(500);
+    }
+  },
+  {
+    name: 'tablet-explore-tab',
+    description: 'Tablet - Explore tab opens terminal',
+    url: '/chat',
+    category: 'tablet',
+    actions: async (page) => {
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
       await page.click('text="EXPLORE"', { timeout: 5000 }).catch(() => {});
       await page.waitForTimeout(1000);
     }
   },
   {
-    name: 'terminal-chat-tab',
-    description: 'Terminal - Chat tab active',
-    url: '/',
-    category: 'terminal',
+    name: 'tablet-askai-tab',
+    description: 'Tablet - ASK AI tab opens terminal',
+    url: '/chat',
+    category: 'tablet',
     actions: async (page) => {
-      await page.click('text="NAVIGATE"', { timeout: 5000 }).catch(() => {});
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
-      await page.click('text="CHAT"', { timeout: 5000 }).catch(() => {});
+      await page.click('text="ASK AI"', { timeout: 5000 }).catch(() => {});
       await page.waitForTimeout(1000);
     }
   },
   {
-    name: 'terminal-game-tab',
-    description: 'Terminal - Game tab active',
-    url: '/',
-    category: 'terminal',
+    name: 'tablet-game-tab',
+    description: 'Tablet - Game tab',
+    url: '/chat',
+    category: 'tablet',
     actions: async (page) => {
-      await page.click('text="NAVIGATE"', { timeout: 5000 }).catch(() => {});
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
       await page.click('text="GAME"', { timeout: 5000 }).catch(() => {});
       await page.waitForTimeout(1000);
     }
   },
   {
-    name: 'terminal-scene-tab',
-    description: 'Terminal - Scene tab active',
-    url: '/',
-    category: 'terminal',
+    name: 'tablet-scene-tab',
+    description: 'Tablet - Scene tab opens terminal',
+    url: '/chat',
+    category: 'tablet',
     actions: async (page) => {
-      await page.click('text="NAVIGATE"', { timeout: 5000 }).catch(() => {});
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
       await page.click('text="SCENE"', { timeout: 5000 }).catch(() => {});
       await page.waitForTimeout(1000);
-    }
-  },
-  {
-    name: 'terminal-about-tab',
-    description: 'Terminal - About tab active',
-    url: '/',
-    category: 'terminal',
-    actions: async (page) => {
-      await page.click('text="NAVIGATE"', { timeout: 5000 }).catch(() => {});
-      await page.waitForTimeout(500);
-      await page.click('text="ABOUT"', { timeout: 5000 }).catch(() => {});
-      await page.waitForTimeout(500);
     }
   },
 
@@ -133,27 +154,39 @@ const scenarios = [
   // ============================================
   {
     name: '3d-experience-button',
-    description: '3D Experience - Button visible',
+    description: '3D Experience - Button visible on landing',
     url: '/',
     waitFor: 2000,
     category: '3d'
   },
   {
-    name: '3d-experience-active',
-    description: '3D Experience - Active state',
+    name: '3d-experience-entering',
+    description: '3D Experience - Entering from landing page',
     url: '/',
     category: '3d',
     actions: async (page) => {
-      await page.click('text="3D EXPERIENCE"', { timeout: 5000 }).catch(() => {});
-      await page.waitForTimeout(3000);
+      await page.click('button:has-text("3D Experience")', { timeout: 5000 }).catch(() => {});
+      await page.waitForTimeout(5000);
     }
   },
   {
-    name: '3d-background-sphere',
-    description: '3D Background - Sphere rendering',
-    url: '/',
-    waitFor: 3000,
+    name: '3d-cinematic-midway',
+    description: '3D Cinematic - Mid-flyby capture',
+    url: '/chat',
+    waitFor: 4000,
     category: '3d',
+    metrics: ['fps', '3d-render']
+  },
+  {
+    name: '3d-post-cinematic',
+    description: '3D Scene - After cinematic (skipped)',
+    url: '/chat',
+    category: '3d',
+    actions: async (page) => {
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(6000);
+    },
     metrics: ['texture-load', '3d-render']
   },
 
@@ -250,18 +283,63 @@ const scenarios = [
     category: 'responsive',
     viewportsOnly: [{ width: 812, height: 375, name: 'mobile-landscape' }]
   },
+  {
+    name: 'responsive-tablet-3d',
+    description: 'Tablet - 3D mode with MENU',
+    url: '/chat',
+    waitFor: 2000,
+    category: 'responsive',
+    viewportsOnly: [{ width: 768, height: 1024, name: 'tablet' }],
+    actions: async (page) => {
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+    }
+  },
+  {
+    name: 'responsive-mobile-3d-tablet-raised',
+    description: 'Mobile - 3D mode with tablet raised',
+    url: '/chat',
+    waitFor: 2000,
+    category: 'responsive',
+    viewportsOnly: [{ width: 375, height: 812, name: 'mobile' }],
+    actions: async (page) => {
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
+      await page.waitForTimeout(500);
+    }
+  },
 
   // ============================================
   // INTERACTION TESTS
   // ============================================
   {
-    name: 'interaction-hover-states',
-    description: 'Buttons - Hover states',
+    name: 'interaction-hover-3d-button',
+    description: 'Hover state - 3D Experience button',
     url: '/',
     waitFor: 2000,
     category: 'interaction',
     actions: async (page) => {
-      const button = await page.$('button:has-text("NAVIGATE")').catch(() => null);
+      const button = await page.$('button:has-text("3D Experience")').catch(() => null);
+      if (button) {
+        await button.hover();
+        await page.waitForTimeout(500);
+      }
+    }
+  },
+  {
+    name: 'interaction-hover-menu-button',
+    description: 'Hover state - MENU button',
+    url: '/chat',
+    waitFor: 2000,
+    category: 'interaction',
+    actions: async (page) => {
+      await skipCinematic(page);
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      const button = await page.$('button:has-text("MENU")').catch(() => null);
       if (button) {
         await button.hover();
         await page.waitForTimeout(500);
@@ -314,11 +392,19 @@ async function runTests() {
 
   console.log(`📁 Screenshots: ${outputDir}\n`);
 
-  // Launch browser
-  const browser = await chromium.launch({
+  // Launch browser with WebGL support
+  const launchOptions = {
     headless: true,
-    args: ['--disable-dev-shm-usage']
-  });
+    args: [
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      '--use-gl=swiftshader',
+      '--enable-webgl',
+      '--disable-gpu-sandbox',
+    ]
+  };
+  if (CHROMIUM_PATH) launchOptions.executablePath = CHROMIUM_PATH;
+  const browser = await chromium.launch(launchOptions);
 
   // Group scenarios by category
   const categories = [...new Set(scenarios.map(s => s.category))];

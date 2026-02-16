@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import { JourneyProvider, useJourney } from '@/components/contexts/JourneyContext'
 import AchievementUnlock from '@/components/AchievementUnlock'
-import CircleNav from '@/components/ui/CircleNav'
+// CircleNav removed - InteractiveTablet is now the sole navigation UI
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
 import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
@@ -165,13 +165,23 @@ function HomeContent() {
               onCinematicComplete={() => setCinematicComplete(true)}
             />
 
-            {/* InteractiveTablet — centered bottom menu, visible after intro */}
+            {/* InteractiveTablet — centered bottom menu, fades in after intro */}
             {cinematicComplete && gameState !== 'playing' && (
-              <InteractiveTablet
-                isGamePlaying={gameState === 'playing'}
-                articles={articles}
-                onExitToLanding={handleToggle3D}
-              />
+              <div style={{
+                animation: 'fadeInUp 0.6s ease-out both',
+              }}>
+                <style>{`
+                  @keyframes fadeInUp {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                  }
+                `}</style>
+                <InteractiveTablet
+                  isGamePlaying={gameState === 'playing'}
+                  articles={articles}
+                  onExitToLanding={handleToggle3D}
+                />
+              </div>
             )}
 
             <AchievementUnlock
@@ -187,7 +197,6 @@ function HomeContent() {
               transition: 'opacity 0.3s ease-out',
             }}
           >
-            <CircleNav isGamePlaying={false} />
             {/* Hero - Immersive, mysterious, minimal */}
             <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
               <EnhancedHeroCanvas />

@@ -14,40 +14,63 @@ const path = require('path');
 // Test configuration
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const SCREENSHOT_DIR = './test-screenshots';
+const CHROMIUM_PATH = process.env.CHROMIUM_PATH || undefined;
+
+// Helper: skip cinematic intro via localStorage
+async function skipCinematic(page) {
+  await page.evaluate(() => localStorage.setItem('hasWatchedIntro', 'true'));
+}
 
 // Test scenarios
 const scenarios = [
   {
     name: 'landing-page',
-    description: 'Main landing page with 3D background',
+    description: 'Main landing page with hero section',
     url: '/',
     waitFor: 3000
   },
   {
-    name: 'landing-terminal-open',
-    description: 'Landing page with terminal open',
-    url: '/',
-    waitFor: 1000,
-    actions: async (page) => {
-      try {
-        await page.click('text="NAVIGATE"', { timeout: 5000 });
-        await page.waitForTimeout(1000);
-      } catch (e) {
-        console.log('     Note: Could not open terminal');
-      }
-    }
-  },
-  {
     name: 'landing-3d-experience',
-    description: 'Landing page with 3D experience button',
+    description: 'Landing page - click 3D Experience',
     url: '/',
     waitFor: 2000,
     actions: async (page) => {
       try {
-        await page.click('text="3D EXPERIENCE"', { timeout: 5000 });
-        await page.waitForTimeout(2000);
+        await page.click('button:has-text("3D Experience")', { timeout: 5000 });
+        await page.waitForTimeout(5000);
       } catch (e) {
         console.log('     Note: 3D Experience button not found');
+      }
+    }
+  },
+  {
+    name: 'chat-3d-with-menu',
+    description: '3D scene with MENU button visible',
+    url: '/chat',
+    waitFor: 5000,
+    actions: async (page) => {
+      try {
+        await skipCinematic(page);
+        await page.reload({ waitUntil: 'networkidle' });
+        await page.waitForTimeout(5000);
+      } catch (e) {
+        console.log('     Note: Could not load 3D scene');
+      }
+    }
+  },
+  {
+    name: 'tablet-raised',
+    description: 'Tablet raised with action buttons',
+    url: '/chat',
+    actions: async (page) => {
+      try {
+        await skipCinematic(page);
+        await page.reload({ waitUntil: 'networkidle' });
+        await page.waitForTimeout(5000);
+        await page.click('text="MENU"', { timeout: 10000 });
+        await page.waitForTimeout(500);
+      } catch (e) {
+        console.log('     Note: Could not raise tablet');
       }
     }
   },
@@ -58,12 +81,15 @@ const scenarios = [
     waitFor: 2000
   },
   {
-    name: 'terminal-explore',
-    description: 'Terminal explore tab',
-    url: '/',
+    name: 'tablet-explore',
+    description: 'Tablet explore tab opens terminal',
+    url: '/chat',
     actions: async (page) => {
       try {
-        await page.click('text="NAVIGATE"', { timeout: 5000 });
+        await skipCinematic(page);
+        await page.reload({ waitUntil: 'networkidle' });
+        await page.waitForTimeout(5000);
+        await page.click('text="MENU"', { timeout: 10000 });
         await page.waitForTimeout(500);
         await page.click('text="EXPLORE"', { timeout: 5000 });
         await page.waitForTimeout(1000);
@@ -73,12 +99,15 @@ const scenarios = [
     }
   },
   {
-    name: 'terminal-game',
-    description: 'Terminal game tab',
-    url: '/',
+    name: 'tablet-game',
+    description: 'Tablet game tab',
+    url: '/chat',
     actions: async (page) => {
       try {
-        await page.click('text="NAVIGATE"', { timeout: 5000 });
+        await skipCinematic(page);
+        await page.reload({ waitUntil: 'networkidle' });
+        await page.waitForTimeout(5000);
+        await page.click('text="MENU"', { timeout: 10000 });
         await page.waitForTimeout(500);
         await page.click('text="GAME"', { timeout: 5000 });
         await page.waitForTimeout(1000);
@@ -112,11 +141,19 @@ async function runTests() {
 
   console.log(`📁 Screenshots: ${outputDir}\n`);
 
-  // Launch browser
-  const browser = await chromium.launch({
+  // Launch browser with WebGL support
+  const launchOptions = {
     headless: true,
-    args: ['--disable-dev-shm-usage']
-  });
+    args: [
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      '--use-gl=swiftshader',
+      '--enable-webgl',
+      '--disable-gpu-sandbox',
+    ]
+  };
+  if (CHROMIUM_PATH) launchOptions.executablePath = CHROMIUM_PATH;
+  const browser = await chromium.launch(launchOptions);
 
   try {
     for (const scenario of scenarios) {

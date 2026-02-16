@@ -109,8 +109,8 @@ const PHYSICS_CONFIG = {
 export default function Scene3D({
   world: worldProp,
   quality: qualityOverride,
-  enableXR = true,
-  showStats = process.env.NODE_ENV === 'development',
+  enableXR = false,
+  showStats = false,
   articles,
   children,
   onReady,

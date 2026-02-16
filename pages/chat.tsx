@@ -92,12 +92,22 @@ const Chat = () => {
             />
           </main>
 
-          {/* InteractiveTablet — centered bottom menu, visible after intro */}
+          {/* InteractiveTablet — centered bottom menu, fades in after intro */}
           {cinematicComplete && gameState !== 'playing' && (
-            <InteractiveTablet
-              isGamePlaying={gameState === 'playing'}
-              articles={articles}
-            />
+            <div style={{
+              animation: 'fadeInUp 0.6s ease-out both',
+            }}>
+              <style>{`
+                @keyframes fadeInUp {
+                  from { opacity: 0; transform: translateY(20px); }
+                  to { opacity: 1; transform: translateY(0); }
+                }
+              `}</style>
+              <InteractiveTablet
+                isGamePlaying={gameState === 'playing'}
+                articles={articles}
+              />
+            </div>
           )}
         </JourneyProvider>
       </SupabaseDataProvider>
