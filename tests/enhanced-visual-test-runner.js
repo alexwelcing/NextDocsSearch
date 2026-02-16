@@ -70,7 +70,7 @@ const scenarios = [
     category: 'tablet',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
     }
   },
@@ -82,7 +82,7 @@ const scenarios = [
     category: 'tablet',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
       await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
@@ -95,7 +95,7 @@ const scenarios = [
     category: 'tablet',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
       await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
@@ -110,7 +110,7 @@ const scenarios = [
     category: 'tablet',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
       await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
@@ -125,7 +125,7 @@ const scenarios = [
     category: 'tablet',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
       await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
@@ -140,7 +140,7 @@ const scenarios = [
     category: 'tablet',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
       await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
@@ -184,7 +184,7 @@ const scenarios = [
     category: '3d',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(6000);
     },
     metrics: ['texture-load', '3d-render']
@@ -292,7 +292,7 @@ const scenarios = [
     viewportsOnly: [{ width: 768, height: 1024, name: 'tablet' }],
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
     }
   },
@@ -305,7 +305,7 @@ const scenarios = [
     viewportsOnly: [{ width: 375, height: 812, name: 'mobile' }],
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
       await page.click('text="MENU"', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(500);
@@ -337,7 +337,7 @@ const scenarios = [
     category: 'interaction',
     actions: async (page) => {
       await skipCinematic(page);
-      await page.reload({ waitUntil: 'networkidle' });
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(5000);
       const button = await page.$('button:has-text("MENU")').catch(() => null);
       if (button) {
@@ -452,14 +452,16 @@ async function runTests() {
 
           console.log(`   → ${viewport.name} (${viewport.width}x${viewport.height})`);
 
-          // Navigate
+          // Navigate (use domcontentloaded instead of networkidle to avoid
+          // hanging on WebSocket HMR connections and long-running 3D asset loads)
           await page.goto(`${BASE_URL}${scenario.url}`, {
-            waitUntil: 'networkidle',
+            waitUntil: 'domcontentloaded',
             timeout: 30000
           });
 
-          // Initial wait
-          await page.waitForTimeout(2000);
+          // Wait for rendering to settle (longer for 3D pages)
+          const is3DPage = scenario.url === '/chat' || scenario.category === '3d-experience';
+          await page.waitForTimeout(is3DPage ? 6000 : 2000);
 
           // Collect performance metrics if specified
           if (scenario.metrics) {
