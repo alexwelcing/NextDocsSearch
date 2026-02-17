@@ -111,12 +111,10 @@ export default function Scene3D({
   const [cameraMode, setCameraMode] = useState<CameraMode>('orbit');
 
   // Cinematic state
-  const [showCinematic, setShowCinematic] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return !localStorage.getItem('hasWatchedIntro');
-    }
-    return false;
-  });
+  // Cinematic disabled — the fly-in animation had two bugs (config changes
+  // restarted it mid-playthrough, and per-frame Vector3 allocations caused GC
+  // stutter).  The infrastructure remains for future re-enablement.
+  const [showCinematic, setShowCinematic] = useState(false);
   const [cinematicProgress, setCinematicProgress] = useState(0);
 
   // XR store

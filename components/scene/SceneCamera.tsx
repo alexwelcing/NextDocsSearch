@@ -88,6 +88,16 @@ function getTotalDuration(keyframes: CameraKeyframe[]): number {
 }
 
 /**
+ * Reusable Vector3 instances to avoid per-frame GC pressure.
+ * getInterpolatedState is called every frame during cinematic — allocating
+ * 6 new Vector3s per frame caused visible stutter from garbage collection.
+ */
+const _interpPos = new THREE.Vector3();
+const _interpTgt = new THREE.Vector3();
+const _tmpA = new THREE.Vector3();
+const _tmpB = new THREE.Vector3();
+
+/**
  * Get interpolated camera state at a given progress (0-1)
  */
 function getInterpolatedState(
@@ -118,19 +128,15 @@ function getInterpolatedState(
   const easing = EASINGS[currentKeyframe.easing || 'easeInOut'];
   const easedProgress = easing(segmentProgress);
 
-  // Interpolate position
-  const position = new THREE.Vector3().lerpVectors(
-    new THREE.Vector3(...currentKeyframe.position),
-    new THREE.Vector3(...nextKeyframe.position),
-    easedProgress
-  );
+  // Interpolate position (reuse module-level vectors)
+  _tmpA.set(...currentKeyframe.position);
+  _tmpB.set(...nextKeyframe.position);
+  const position = _interpPos.lerpVectors(_tmpA, _tmpB, easedProgress);
 
   // Interpolate target
-  const target = new THREE.Vector3().lerpVectors(
-    new THREE.Vector3(...currentKeyframe.target),
-    new THREE.Vector3(...nextKeyframe.target),
-    easedProgress
-  );
+  _tmpA.set(...currentKeyframe.target);
+  _tmpB.set(...nextKeyframe.target);
+  const target = _interpTgt.lerpVectors(_tmpA, _tmpB, easedProgress);
 
   // Interpolate FOV
   const fov = THREE.MathUtils.lerp(
@@ -161,7 +167,8 @@ export default function SceneCamera({
   // Target for lookAt
   const targetRef = useRef(new THREE.Vector3(...config.target));
 
-  // Handle mode changes
+  // Handle cinematic mode transitions (only depends on `mode` to avoid
+  // config changes restarting the animation mid-playthrough)
   useEffect(() => {
     if (mode === 'cinematic') {
       setCinematicActive(true);
@@ -169,8 +176,10 @@ export default function SceneCamera({
     } else {
       setCinematicActive(false);
     }
+  }, [mode]);
 
-    // Set initial camera position and FOV for non-cinematic modes
+  // Set initial camera position and FOV for non-cinematic modes
+  useEffect(() => {
     if (mode !== 'cinematic') {
       camera.position.set(...config.initial);
       targetRef.current.set(...config.target);
