@@ -8,6 +8,7 @@ import AchievementUnlock from '@/components/AchievementUnlock'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
 import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
+import HeroDepthBackdrop from '@/components/HeroDepthBackdrop'
 import GameHUD from '@/components/overlays/GameHUD'
 import GameLeaderboard from '@/components/overlays/GameLeaderboard'
 import styles from '@/styles/Home.module.css'
@@ -301,6 +302,9 @@ function HomeContent() {
           >
             {/* Hero - Immersive, mysterious, minimal */}
             <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+              {/* Depth backdrop: curated art layers that fade in over time */}
+              <HeroDepthBackdrop />
+              {/* Interactive WebGL shader sits above the art layers */}
               <EnhancedHeroCanvas />
 
               {/* Content overlay */}
