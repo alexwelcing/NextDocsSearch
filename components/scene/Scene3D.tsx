@@ -22,11 +22,13 @@ import SceneBackground from './SceneBackground';
 import SceneCamera from './SceneCamera';
 
 import PostProcessingEffects from '@/components/3d/atmosphere/PostProcessingEffects';
+import ClickingGame from '@/components/3d/game/ClickingGame';
+import type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
 import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
 import { loadWorld, preloadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
 
 // Re-export game types for convenience
-export type { GameState } from '@/components/3d/game/ClickingGame';
+export type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
 
 interface Scene3DProps {
   /** World ID or configuration */
@@ -49,6 +51,13 @@ interface Scene3DProps {
   onGameStateChange?: (state: string) => void;
   /** Callback when cinematic intro finishes (or was already watched) */
   onCinematicComplete?: () => void;
+  /** Game props (for ClickingGame inside Canvas) */
+  gameState?: GameState | string;
+  onStartGame?: () => void;
+  onGameEnd?: (score: number, stats: GameStats) => void;
+  onScoreUpdate?: (score: number) => void;
+  onComboUpdate?: (combo: number) => void;
+  onTimeUpdate?: (timeRemaining: number) => void;
 }
 
 export function mergeWorldConfig(world: Partial<WorldConfig>): WorldConfig {
@@ -104,6 +113,12 @@ export default function Scene3D({
   onCameraModeChange,
   onGameStateChange,
   onCinematicComplete: onCinematicCompleteProp,
+  gameState: gameStateProp = 'IDLE',
+  onStartGame,
+  onGameEnd,
+  onScoreUpdate,
+  onComboUpdate,
+  onTimeUpdate,
 }: Scene3DProps) {
   // Scene state
   const [worldConfig, setWorldConfig] = useState<WorldConfig>(DEFAULT_WORLD);
@@ -229,6 +244,12 @@ export default function Scene3D({
             cinematicProgress={cinematicProgress}
             onCinematicComplete={handleCinematicComplete}
             onCinematicProgress={handleCinematicProgress}
+            gameState={gameStateProp as GameState}
+            onStartGame={onStartGame}
+            onGameEnd={onGameEnd}
+            onScoreUpdate={onScoreUpdate}
+            onComboUpdate={onComboUpdate}
+            onTimeUpdate={onTimeUpdate}
           >
             {children}
           </SceneContent>
@@ -250,6 +271,12 @@ function SceneContent({
   cinematicProgress,
   onCinematicComplete,
   onCinematicProgress,
+  gameState = 'IDLE',
+  onStartGame,
+  onGameEnd,
+  onScoreUpdate,
+  onComboUpdate,
+  onTimeUpdate,
   children,
 }: {
   worldConfig: WorldConfig;
@@ -258,6 +285,12 @@ function SceneContent({
   cinematicProgress: number;
   onCinematicComplete: () => void;
   onCinematicProgress: (progress: number) => void;
+  gameState?: GameState;
+  onStartGame?: () => void;
+  onGameEnd?: (score: number, stats: GameStats) => void;
+  onScoreUpdate?: (score: number) => void;
+  onComboUpdate?: (combo: number) => void;
+  onTimeUpdate?: (timeRemaining: number) => void;
   children?: React.ReactNode;
 }) {
   const capabilities = useSceneCapabilities();
@@ -287,7 +320,7 @@ function SceneContent({
         onCinematicProgress={onCinematicProgress}
       />
 
-      {/* Post-processing effects (DOF during cinematic on desktop, bloom/vignette always) */}
+      {/* Post-processing effects */}
       <PostProcessingEffects
         quality={capabilities.qualityLevel}
         enabled={capabilities.qualityLevel !== 'low'}
@@ -295,6 +328,18 @@ function SceneContent({
         cinematicProgress={cinematicProgress}
         isMobile={capabilities.isMobile}
       />
+
+      {/* Clicking Game (R3F component, renders inside Canvas) */}
+      {onStartGame && onGameEnd && (
+        <ClickingGame
+          gameState={gameState}
+          onGameStart={onStartGame}
+          onGameEnd={onGameEnd}
+          onScoreUpdate={onScoreUpdate}
+          onComboUpdate={onComboUpdate}
+          onTimeUpdate={onTimeUpdate}
+        />
+      )}
 
       {/* Scene children */}
       {children}

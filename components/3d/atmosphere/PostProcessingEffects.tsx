@@ -85,7 +85,7 @@ export default function PostProcessingEffects({
   // During cinematic: include DOF in the effect chain (desktop only - too expensive on mobile)
   if (isCinematic && !isMobile) {
     return (
-      <EffectComposer multisampling={quality === 'ultra' ? 8 : quality === 'high' ? 4 : 0}>
+      <EffectComposer multisampling={0}>
         <DepthOfField
           focusDistance={dofFocusDistance}
           focalLength={dofFocalLength}
@@ -129,7 +129,7 @@ export default function PostProcessingEffects({
 
   // Normal mode: bloom + vignette only
   return (
-    <EffectComposer multisampling={quality === 'ultra' ? 8 : quality === 'high' ? 4 : 0}>
+    <EffectComposer multisampling={0}>
       <Bloom
         intensity={config.bloomIntensity}
         luminanceThreshold={config.bloomThreshold}

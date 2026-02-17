@@ -7,7 +7,7 @@
 
 import React, { useMemo, useEffect, useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Preload } from '@react-three/drei';
+// Preload removed — forces eager GPU upload of all assets, causing multi-second stall
 import * as THREE from 'three';
 import type { QualityLevel, DeviceCapabilities } from '@/lib/worlds/types';
 
@@ -19,9 +19,11 @@ interface SceneCanvasProps {
 }
 
 /**
- * Detect device capabilities for adaptive quality
+ * Detect device capabilities for adaptive quality (cached at module level)
  */
+let _cachedCapabilities: DeviceCapabilities | null = null;
 function detectCapabilities(): DeviceCapabilities {
+  if (_cachedCapabilities) return _cachedCapabilities;
   if (typeof window === 'undefined') {
     return {
       qualityLevel: 'medium',
@@ -54,7 +56,7 @@ function detectCapabilities(): DeviceCapabilities {
     qualityLevel = 'high';
   }
 
-  return {
+  const result: DeviceCapabilities = {
     qualityLevel,
     supportsWebGPU: 'gpu' in navigator,
     supportsSplats: !isMobile || maxTextureSize >= 4096,
@@ -62,6 +64,8 @@ function detectCapabilities(): DeviceCapabilities {
     isMobile,
     pixelRatio: Math.min(window.devicePixelRatio, isMobile ? 2 : 3),
   };
+  _cachedCapabilities = result;
+  return result;
 }
 
 /**
@@ -92,16 +96,16 @@ const QUALITY_SETTINGS: Record<
     performance: { min: 0.3 },
   },
   high: {
-    dpr: [1, 2],
-    antialias: true,
-    shadows: true,
+    dpr: [1, 1.5],
+    antialias: false,
+    shadows: false,
     shadowMapSize: 2048,
     performance: { min: 0.5 },
   },
   ultra: {
-    dpr: [1.5, 2.5],
-    antialias: true,
-    shadows: true,
+    dpr: [1, 2],
+    antialias: false,
+    shadows: false,
     shadowMapSize: 4096,
     performance: { min: 0.7 },
   },
@@ -165,8 +169,8 @@ export default function SceneCanvas({
   // Handle canvas creation
   const handleCreated = useMemo(
     () =>
-      (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene }) => {
-        const { gl, scene } = state;
+      (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.Camera }) => {
+        const { gl, scene, camera } = state;
 
         // r182: Configure renderer
         gl.toneMapping = THREE.ACESFilmicToneMapping;
@@ -180,6 +184,13 @@ export default function SceneCanvas({
 
         // Scene defaults
         scene.background = new THREE.Color('#0a0a0f');
+
+        // Dev-mode scene inspector (three-inspect)
+        if (process.env.NODE_ENV === 'development') {
+          import('three-inspect/vanilla').then(({ createInspector }) => {
+            createInspector(gl.domElement.parentElement || document.body, { scene, camera: camera as any, renderer: gl });
+          }).catch(() => { /* three-inspect optional */ });
+        }
 
         // Callback
         onCreated?.(state);
@@ -224,7 +235,6 @@ export default function SceneCanvas({
     >
       <Suspense fallback={<LoadingFallback />}>
         {children}
-        <Preload all />
       </Suspense>
     </Canvas>
   );
@@ -234,18 +244,6 @@ export default function SceneCanvas({
  * Export capabilities hook for child components
  */
 export function useSceneCapabilities(): DeviceCapabilities {
-  const [capabilities, setCapabilities] = useState<DeviceCapabilities>({
-    qualityLevel: 'medium',
-    supportsWebGPU: false,
-    supportsSplats: true,
-    maxTextureSize: 4096,
-    isMobile: false,
-    pixelRatio: 1,
-  });
-
-  useEffect(() => {
-    setCapabilities(detectCapabilities());
-  }, []);
-
-  return capabilities;
+  // Uses module-level cache — no useState/useEffect needed
+  return detectCapabilities();
 }

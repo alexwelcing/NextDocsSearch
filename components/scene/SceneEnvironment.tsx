@@ -136,7 +136,7 @@ export default function SceneEnvironment({
         position={[8, 12, 6]}
         intensity={isCinematic ? 0.1 : config.directionalIntensity}
         color="#ffffff"
-        castShadow={config.shadowsEnabled}
+        castShadow={false}
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={0.5}

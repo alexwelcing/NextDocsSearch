@@ -237,7 +237,8 @@ function PanoramaSphere({
       undefined,
       (err) => console.error('Error loading panorama:', err)
     );
-  }, [imageUrl, texture, onLoad]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageUrl, onLoad]);
 
   // Crossfade animation
   useFrame((_, delta) => {
@@ -292,19 +293,10 @@ function DefaultBackground() {
   const { scene } = useThree();
 
   useEffect(() => {
-    // Dark gradient background
     scene.background = new THREE.Color('#0a0a1a');
   }, [scene]);
 
-  return (
-    <mesh>
-      <sphereGeometry args={[200, 16, 8]} />
-      <meshBasicMaterial
-        side={THREE.BackSide}
-        color="#0a0a1a"
-      />
-    </mesh>
-  );
+  return null;
 }
 
 /**
