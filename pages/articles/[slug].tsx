@@ -54,7 +54,7 @@ interface ArticleProps {
 const ArticleLayout = styled.div`
   min-height: 100vh;
   background: #030308;
-  overflow-x: hidden;
+  overflow-x: clip;  /* clip prevents horizontal scrollbar but doesn't create a clipping context for children */
 `;
 
 /** Opaque content section that slides over parallax bands */

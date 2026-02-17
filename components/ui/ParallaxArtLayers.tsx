@@ -62,23 +62,23 @@ const GlowLayer = styled.div<{
   $glowSpread: number;
 }>`
   position: absolute;
-  top: ${props => -props.$glowSpread * 0.3}px;
-  left: -15%;
-  right: -15%;
-  bottom: ${props => -props.$glowSpread * 0.3}px;
+  top: ${props => -props.$glowSpread * 0.5}px;
+  left: -20%;
+  right: -20%;
+  bottom: ${props => -props.$glowSpread * 0.5}px;
   background-image: url(${props => props.$bgImage});
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  filter: blur(90px) saturate(2.5) brightness(0.7);
+  filter: blur(70px) saturate(3) brightness(0.8);
   opacity: ${props => props.$intensity};
   animation: ${glowDrift} 12s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
 
   @media (max-width: 768px) {
-    filter: blur(60px) saturate(2) brightness(0.6);
-    opacity: ${props => props.$intensity * 0.7};
+    filter: blur(50px) saturate(2.5) brightness(0.7);
+    opacity: ${props => props.$intensity * 0.8};
   }
 `;
 
@@ -120,8 +120,8 @@ export function ParallaxBand({
   image,
   height = '400px',
   mobileHeight = '250px',
-  glowSpread = 120,
-  glowIntensity = 0.35,
+  glowSpread = 150,
+  glowIntensity = 0.45,
 }: ParallaxBandProps) {
   const modelName = image.model.replace(/-/g, ' ');
 
@@ -211,12 +211,12 @@ const EditorialImage = styled.div<{ $bgImage: string; $imagePos: 'left' | 'right
 /* Light-leak glow behind each editorial image */
 const EditorialGlow = styled.div<{ $bgImage: string; $imagePos: 'left' | 'right' }>`
   position: absolute;
-  inset: -30%;
+  inset: -40%;
   background-image: url(${props => props.$bgImage});
   background-size: cover;
   background-position: center;
-  filter: blur(80px) saturate(2.5) brightness(0.5);
-  opacity: 0.25;
+  filter: blur(60px) saturate(3) brightness(0.6);
+  opacity: 0.4;
   z-index: -1;
   pointer-events: none;
 `;
@@ -298,31 +298,31 @@ const ContentGlowLayer = styled.div<{
   $position: 'top' | 'bottom' | 'both';
 }>`
   position: absolute;
-  left: -10%;
-  right: -10%;
+  left: -15%;
+  right: -15%;
   pointer-events: none;
   z-index: 0;
   background-image: url(${props => props.$bgImage});
   background-size: cover;
   background-position: center;
-  filter: blur(100px) saturate(2) brightness(0.4);
-  opacity: 0.2;
+  filter: blur(80px) saturate(3) brightness(0.6);
+  opacity: 0.35;
 
   ${props => {
     if (props.$position === 'top') return css`
-      top: 0; height: 400px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+      top: 0; height: 500px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
     `;
     if (props.$position === 'bottom') return css`
-      bottom: 0; height: 400px;
-      mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+      bottom: 0; height: 500px;
+      mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
     `;
     return css`
       top: 0; bottom: 0;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.5) 100%);
-      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.5) 100%);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 25%, transparent 75%, rgba(0,0,0,0.7) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 25%, transparent 75%, rgba(0,0,0,0.7) 100%);
     `;
   }}
 `;
