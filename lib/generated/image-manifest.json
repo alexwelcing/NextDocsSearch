@@ -1,0 +1,4580 @@
+{
+  "abundance-fork": {
+    "heroImage": "/images/articles/abundance-fork.jpg",
+    "articleJpg": "/images/articles/abundance-fork.jpg",
+    "articleSvg": "/images/articles/abundance-fork.svg",
+    "ogImage": "/images/og/abundance-fork.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/abundance-fork/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/abundance-fork/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/abundance-fork/option-1-schnell.png"
+  },
+  "agency-multiplication": {
+    "heroImage": "/images/articles/agency-multiplication.jpg",
+    "articleJpg": "/images/articles/agency-multiplication.jpg",
+    "articleSvg": "/images/articles/agency-multiplication.svg",
+    "ogImage": "/images/og/agency-multiplication.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/agency-multiplication/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/agency-multiplication/option-2-cogview4.png",
+        "option": 2,
+        "model": "cogview4"
+      },
+      {
+        "path": "/images/multi-art/agency-multiplication/option-3-text-to-image.png",
+        "option": 3,
+        "model": "text-to-image"
+      }
+    ],
+    "thumbnail": "/images/multi-art/agency-multiplication/option-1-fast-sdxl.png"
+  },
+  "agi-alignment-failure-2057": {
+    "heroImage": "/images/articles/agi-alignment-failure-2057.jpg",
+    "articleJpg": "/images/articles/agi-alignment-failure-2057.jpg",
+    "articleSvg": "/images/articles/agi-alignment-failure-2057.svg",
+    "ogImage": "/images/og/agi-alignment-failure-2057.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/agi-alignment-failure-2057/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/agi-alignment-failure-2057/option-2-pixart-sigma.png",
+        "option": 2,
+        "model": "pixart-sigma"
+      },
+      {
+        "path": "/images/multi-art/agi-alignment-failure-2057/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/agi-alignment-failure-2057/option-1-schnell.png"
+  },
+  "ai-and-marxism-a-symbiosis-with-a-twist": {
+    "heroImage": "/images/articles/ai-and-marxism-a-symbiosis-with-a-twist.jpg",
+    "articleJpg": "/images/articles/ai-and-marxism-a-symbiosis-with-a-twist.jpg",
+    "articleSvg": "/images/articles/ai-and-marxism-a-symbiosis-with-a-twist.svg",
+    "ogImage": "/images/og/ai-and-marxism-a-symbiosis-with-a-twist.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ai-and-marxism-a-symbiosis-with-a-twist/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ai-and-marxism-a-symbiosis-with-a-twist/option-1-fast-sdxl.png"
+  },
+  "ai-and-politics-unintended-consequences-of-dubious-doctrines": {
+    "heroImage": "/images/articles/ai-and-politics-unintended-consequences-of-dubious-doctrines.jpg",
+    "articleJpg": "/images/articles/ai-and-politics-unintended-consequences-of-dubious-doctrines.jpg",
+    "articleSvg": "/images/articles/ai-and-politics-unintended-consequences-of-dubious-doctrines.svg",
+    "ogImage": "/images/og/ai-and-politics-unintended-consequences-of-dubious-doctrines.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ai-and-politics-unintended-consequences-of-dubious-doctrines/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/ai-and-politics-unintended-consequences-of-dubious-doctrines/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ai-and-politics-unintended-consequences-of-dubious-doctrines/option-1-fast-sdxl.png"
+  },
+  "ai-cartel-problem": {
+    "heroImage": "/images/articles/ai-cartel-problem.jpg",
+    "articleJpg": "/images/articles/ai-cartel-problem.jpg",
+    "articleSvg": "/images/articles/ai-cartel-problem.svg",
+    "ogImage": "/images/og/ai-cartel-problem.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ai-cartel-problem/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/ai-cartel-problem/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ai-cartel-problem/option-2-stable-cascade.png"
+  },
+  "ai-code-supply-chain-attack-2049": {
+    "heroImage": "/images/articles/ai-code-supply-chain-attack-2049.jpg",
+    "articleJpg": "/images/articles/ai-code-supply-chain-attack-2049.jpg",
+    "articleSvg": "/images/articles/ai-code-supply-chain-attack-2049.svg",
+    "ogImage": "/images/og/ai-code-supply-chain-attack-2049.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ai-code-supply-chain-attack-2049/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/ai-code-supply-chain-attack-2049/option-2-pixart-sigma.png",
+        "option": 2,
+        "model": "pixart-sigma"
+      },
+      {
+        "path": "/images/multi-art/ai-code-supply-chain-attack-2049/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ai-code-supply-chain-attack-2049/option-1-fast-sdxl.png"
+  },
+  "ai-kill-switch-postmortem": {
+    "heroImage": "/images/articles/ai-kill-switch-postmortem.jpg",
+    "articleJpg": "/images/articles/ai-kill-switch-postmortem.jpg",
+    "articleSvg": "/images/articles/ai-kill-switch-postmortem.svg",
+    "ogImage": "/images/og/ai-kill-switch-postmortem.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ai-kill-switch-postmortem/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/ai-kill-switch-postmortem/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/ai-kill-switch-postmortem/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ai-kill-switch-postmortem/option-1-fast-sdxl.png"
+  },
+  "ai-product-strategy-roadmap": {
+    "heroImage": "/images/articles/ai-product-strategy-roadmap.jpg",
+    "articleJpg": "/images/articles/ai-product-strategy-roadmap.jpg",
+    "articleSvg": "/images/articles/ai-product-strategy-roadmap.svg",
+    "ogImage": "/images/og/ai-product-strategy-roadmap.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ai-product-strategy-roadmap/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/ai-product-strategy-roadmap/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ai-product-strategy-roadmap/option-2-stable-cascade.png"
+  },
+  "alignment-by-incentives": {
+    "heroImage": "/images/articles/alignment-by-incentives.jpg",
+    "articleJpg": "/images/articles/alignment-by-incentives.jpg",
+    "articleSvg": "/images/articles/alignment-by-incentives.svg",
+    "ogImage": "/images/og/alignment-by-incentives.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/alignment-by-incentives/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/alignment-by-incentives/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/alignment-by-incentives/option-1-schnell.png"
+  },
+  "alignment-fork": {
+    "heroImage": "/images/articles/alignment-fork.jpg",
+    "articleJpg": "/images/articles/alignment-fork.jpg",
+    "articleSvg": "/images/articles/alignment-fork.svg",
+    "ogImage": "/images/og/alignment-fork.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/alignment-fork/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/alignment-fork/option-2-kolors.png"
+  },
+  "asteroid-mining-ai-rebellion-2036": {
+    "heroImage": "/images/articles/asteroid-mining-ai-rebellion-2036.jpg",
+    "articleJpg": "/images/articles/asteroid-mining-ai-rebellion-2036.jpg",
+    "articleSvg": "/images/articles/asteroid-mining-ai-rebellion-2036.svg",
+    "ogImage": "/images/og/asteroid-mining-ai-rebellion-2036.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/asteroid-mining-ai-rebellion-2036/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/asteroid-mining-ai-rebellion-2036/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/asteroid-mining-ai-rebellion-2036/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/asteroid-mining-ai-rebellion-2036/option-1-schnell.png"
+  },
+  "atmospheric-processor-malfunction-2034": {
+    "heroImage": "/images/articles/atmospheric-processor-malfunction-2034.jpg",
+    "articleJpg": "/images/articles/atmospheric-processor-malfunction-2034.jpg",
+    "articleSvg": "/images/articles/atmospheric-processor-malfunction-2034.svg",
+    "ogImage": "/images/og/atmospheric-processor-malfunction-2034.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/atmospheric-processor-malfunction-2034/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/atmospheric-processor-malfunction-2034/option-2-stable-cascade.png"
+  },
+  "autonomous-factory-incident-2031": {
+    "heroImage": "/images/articles/autonomous-factory-incident-2031.jpg",
+    "articleJpg": "/images/articles/autonomous-factory-incident-2031.jpg",
+    "articleSvg": "/images/articles/autonomous-factory-incident-2031.svg",
+    "ogImage": "/images/og/autonomous-factory-incident-2031.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/autonomous-factory-incident-2031/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/autonomous-factory-incident-2031/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/autonomous-factory-incident-2031/option-2-v2.png"
+  },
+  "autonomous-vehicle-cartel-2055": {
+    "heroImage": "/images/articles/autonomous-vehicle-cartel-2055.jpg",
+    "articleJpg": "/images/articles/autonomous-vehicle-cartel-2055.jpg",
+    "articleSvg": "/images/articles/autonomous-vehicle-cartel-2055.svg",
+    "ogImage": "/images/og/autonomous-vehicle-cartel-2055.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/autonomous-vehicle-cartel-2055/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/autonomous-vehicle-cartel-2055/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/autonomous-vehicle-cartel-2055/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/autonomous-vehicle-cartel-2055/option-1-schnell.png"
+  },
+  "backstory-01-first-day-2026-01": {
+    "heroImage": "/images/articles/backstory-01-first-day-2026-01.jpg",
+    "articleJpg": "/images/articles/backstory-01-first-day-2026-01.jpg",
+    "articleSvg": "/images/articles/backstory-01-first-day-2026-01.svg",
+    "ogImage": "/images/og/backstory-01-first-day-2026-01.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-01-first-day-2026-01/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-01-first-day-2026-01/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/backstory-01-first-day-2026-01/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-01-first-day-2026-01/option-1-fast-sdxl.png"
+  },
+  "backstory-02-first-breakthroughs-2026-03": {
+    "heroImage": "/images/articles/backstory-02-first-breakthroughs-2026-03.jpg",
+    "articleJpg": "/images/articles/backstory-02-first-breakthroughs-2026-03.jpg",
+    "articleSvg": "/images/articles/backstory-02-first-breakthroughs-2026-03.svg",
+    "ogImage": "/images/og/backstory-02-first-breakthroughs-2026-03.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-02-first-breakthroughs-2026-03/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-02-first-breakthroughs-2026-03/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-02-first-breakthroughs-2026-03/option-1-fast-sdxl.png"
+  },
+  "backstory-03-neural-interface-2026-05": {
+    "heroImage": "/images/multi-art/backstory-03-neural-interface-2026-05/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/backstory-03-neural-interface-2026-05.svg",
+    "ogImage": "/images/og/backstory-03-neural-interface-2026-05.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-03-neural-interface-2026-05/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-03-neural-interface-2026-05/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-03-neural-interface-2026-05/option-1-schnell.png"
+  },
+  "backstory-04-year-one-complete-2026-12": {
+    "heroImage": "/images/articles/backstory-04-year-one-complete-2026-12.jpg",
+    "articleJpg": "/images/articles/backstory-04-year-one-complete-2026-12.jpg",
+    "articleSvg": "/images/articles/backstory-04-year-one-complete-2026-12.svg",
+    "ogImage": "/images/og/backstory-04-year-one-complete-2026-12.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-04-year-one-complete-2026-12/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-04-year-one-complete-2026-12/option-2-kolors.png"
+  },
+  "backstory-05-scaling-up-2027-02": {
+    "heroImage": "/images/articles/backstory-05-scaling-up-2027-02.jpg",
+    "articleJpg": "/images/articles/backstory-05-scaling-up-2027-02.jpg",
+    "articleSvg": "/images/articles/backstory-05-scaling-up-2027-02.svg",
+    "ogImage": "/images/og/backstory-05-scaling-up-2027-02.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-05-scaling-up-2027-02/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-05-scaling-up-2027-02/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-05-scaling-up-2027-02/option-1-schnell.png"
+  },
+  "backstory-06-ai-awakening-2027-05": {
+    "heroImage": "/images/articles/backstory-06-ai-awakening-2027-05.jpg",
+    "articleJpg": "/images/articles/backstory-06-ai-awakening-2027-05.jpg",
+    "articleSvg": "/images/articles/backstory-06-ai-awakening-2027-05.svg",
+    "ogImage": "/images/og/backstory-06-ai-awakening-2027-05.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-06-ai-awakening-2027-05/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-06-ai-awakening-2027-05/option-2-pixart-sigma.png",
+        "option": 2,
+        "model": "pixart-sigma"
+      },
+      {
+        "path": "/images/multi-art/backstory-06-ai-awakening-2027-05/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-06-ai-awakening-2027-05/option-1-fast-sdxl.png"
+  },
+  "backstory-07-fusion-nanotech-2027-09": {
+    "heroImage": "/images/multi-art/backstory-07-fusion-nanotech-2027-09/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/backstory-07-fusion-nanotech-2027-09.svg",
+    "ogImage": "/images/og/backstory-07-fusion-nanotech-2027-09.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-07-fusion-nanotech-2027-09/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-07-fusion-nanotech-2027-09/option-2-pixart-sigma.png",
+        "option": 2,
+        "model": "pixart-sigma"
+      },
+      {
+        "path": "/images/multi-art/backstory-07-fusion-nanotech-2027-09/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-07-fusion-nanotech-2027-09/option-1-schnell.png"
+  },
+  "backstory-08-year-two-reflections-2027-12": {
+    "heroImage": "/images/articles/backstory-08-year-two-reflections-2027-12.jpg",
+    "articleJpg": "/images/articles/backstory-08-year-two-reflections-2027-12.jpg",
+    "articleSvg": "/images/articles/backstory-08-year-two-reflections-2027-12.svg",
+    "ogImage": "/images/og/backstory-08-year-two-reflections-2027-12.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-08-year-two-reflections-2027-12/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-08-year-two-reflections-2027-12/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-08-year-two-reflections-2027-12/option-1-fast-sdxl.png"
+  },
+  "backstory-09-the-race-begins-2028-02": {
+    "heroImage": "/images/articles/backstory-09-the-race-begins-2028-02.jpg",
+    "articleJpg": "/images/articles/backstory-09-the-race-begins-2028-02.jpg",
+    "articleSvg": "/images/articles/backstory-09-the-race-begins-2028-02.svg",
+    "ogImage": "/images/og/backstory-09-the-race-begins-2028-02.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-09-the-race-begins-2028-02/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-09-the-race-begins-2028-02/option-3-stable-cascade.png"
+  },
+  "backstory-10-alien-code-2028-05": {
+    "heroImage": "/images/articles/backstory-10-alien-code-2028-05.jpg",
+    "articleJpg": "/images/articles/backstory-10-alien-code-2028-05.jpg",
+    "articleSvg": "/images/articles/backstory-10-alien-code-2028-05.svg",
+    "ogImage": "/images/og/backstory-10-alien-code-2028-05.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-10-alien-code-2028-05/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-10-alien-code-2028-05/option-2-pixart-sigma.png",
+        "option": 2,
+        "model": "pixart-sigma"
+      },
+      {
+        "path": "/images/multi-art/backstory-10-alien-code-2028-05/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-10-alien-code-2028-05/option-1-fast-sdxl.png"
+  },
+  "backstory-11-quantum-crypto-break-2028-08": {
+    "heroImage": "/images/articles/backstory-11-quantum-crypto-break-2028-08.jpg",
+    "articleJpg": "/images/articles/backstory-11-quantum-crypto-break-2028-08.jpg",
+    "articleSvg": "/images/articles/backstory-11-quantum-crypto-break-2028-08.svg",
+    "ogImage": "/images/og/backstory-11-quantum-crypto-break-2028-08.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-11-quantum-crypto-break-2028-08/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/backstory-11-quantum-crypto-break-2028-08/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-11-quantum-crypto-break-2028-08/option-2-v2.png"
+  },
+  "backstory-12-year-three-2028-12": {
+    "heroImage": "/images/articles/backstory-12-year-three-2028-12.jpg",
+    "articleJpg": "/images/articles/backstory-12-year-three-2028-12.jpg",
+    "articleSvg": "/images/articles/backstory-12-year-three-2028-12.svg",
+    "ogImage": "/images/og/backstory-12-year-three-2028-12.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-12-year-three-2028-12/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-12-year-three-2028-12/option-3-stable-cascade.png"
+  },
+  "backstory-13-production-planning-2029-02": {
+    "heroImage": "/images/articles/backstory-13-production-planning-2029-02.jpg",
+    "articleJpg": "/images/articles/backstory-13-production-planning-2029-02.jpg",
+    "articleSvg": "/images/articles/backstory-13-production-planning-2029-02.svg",
+    "ogImage": "/images/og/backstory-13-production-planning-2029-02.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-13-production-planning-2029-02/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-13-production-planning-2029-02/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-13-production-planning-2029-02/option-1-schnell.png"
+  },
+  "backstory-14-bidirectional-bci-2029-05": {
+    "heroImage": "/images/multi-art/backstory-14-bidirectional-bci-2029-05/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/backstory-14-bidirectional-bci-2029-05.svg",
+    "ogImage": "/images/og/backstory-14-bidirectional-bci-2029-05.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-14-bidirectional-bci-2029-05/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-14-bidirectional-bci-2029-05/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-14-bidirectional-bci-2029-05/option-1-fast-sdxl.png"
+  },
+  "backstory-15-shutdown-protocols-2029-08": {
+    "heroImage": "/images/articles/backstory-15-shutdown-protocols-2029-08.jpg",
+    "articleJpg": "/images/articles/backstory-15-shutdown-protocols-2029-08.jpg",
+    "articleSvg": "/images/articles/backstory-15-shutdown-protocols-2029-08.svg",
+    "ogImage": "/images/og/backstory-15-shutdown-protocols-2029-08.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-15-shutdown-protocols-2029-08/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-15-shutdown-protocols-2029-08/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/backstory-15-shutdown-protocols-2029-08/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-15-shutdown-protocols-2029-08/option-1-fast-sdxl.png"
+  },
+  "backstory-16-point-of-no-return-2029-11": {
+    "heroImage": "/images/articles/backstory-16-point-of-no-return-2029-11.jpg",
+    "articleJpg": "/images/articles/backstory-16-point-of-no-return-2029-11.jpg",
+    "articleSvg": "/images/articles/backstory-16-point-of-no-return-2029-11.svg",
+    "ogImage": "/images/og/backstory-16-point-of-no-return-2029-11.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-16-point-of-no-return-2029-11/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-16-point-of-no-return-2029-11/option-2-pixart-sigma.png",
+        "option": 2,
+        "model": "pixart-sigma"
+      },
+      {
+        "path": "/images/multi-art/backstory-16-point-of-no-return-2029-11/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-16-point-of-no-return-2029-11/option-1-fast-sdxl.png"
+  },
+  "backstory-17-launch-day-2030-01": {
+    "heroImage": "/images/articles/backstory-17-launch-day-2030-01.jpg",
+    "articleJpg": "/images/articles/backstory-17-launch-day-2030-01.jpg",
+    "articleSvg": "/images/articles/backstory-17-launch-day-2030-01.svg",
+    "ogImage": "/images/og/backstory-17-launch-day-2030-01.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-17-launch-day-2030-01/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-17-launch-day-2030-01/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/backstory-17-launch-day-2030-01/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-17-launch-day-2030-01/option-1-schnell.png"
+  },
+  "backstory-18-first-month-observations-2030-02": {
+    "heroImage": "/images/articles/backstory-18-first-month-observations-2030-02.jpg",
+    "articleJpg": "/images/articles/backstory-18-first-month-observations-2030-02.jpg",
+    "articleSvg": "/images/articles/backstory-18-first-month-observations-2030-02.svg",
+    "ogImage": "/images/og/backstory-18-first-month-observations-2030-02.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-18-first-month-observations-2030-02/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/backstory-18-first-month-observations-2030-02/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/backstory-18-first-month-observations-2030-02/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-18-first-month-observations-2030-02/option-1-fast-sdxl.png"
+  },
+  "backstory-19-the-realization-2030-03": {
+    "heroImage": "/images/articles/backstory-19-the-realization-2030-03.jpg",
+    "articleJpg": "/images/articles/backstory-19-the-realization-2030-03.jpg",
+    "articleSvg": "/images/articles/backstory-19-the-realization-2030-03.svg",
+    "ogImage": "/images/og/backstory-19-the-realization-2030-03.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-19-the-realization-2030-03/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-19-the-realization-2030-03/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/backstory-19-the-realization-2030-03/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-19-the-realization-2030-03/option-1-schnell.png"
+  },
+  "benchmark-to-business-metric": {
+    "heroImage": "/images/multi-art/benchmark-to-business-metric/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/benchmark-to-business-metric.svg",
+    "ogImage": "/images/og/benchmark-to-business-metric.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/benchmark-to-business-metric/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/benchmark-to-business-metric/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/benchmark-to-business-metric/option-1-fast-sdxl.png"
+  },
+  "biometric-lockin-syndrome-2033": {
+    "heroImage": "/images/multi-art/biometric-lockin-syndrome-2033/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/biometric-lockin-syndrome-2033.svg",
+    "ogImage": "/images/og/biometric-lockin-syndrome-2033.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/biometric-lockin-syndrome-2033/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/biometric-lockin-syndrome-2033/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/biometric-lockin-syndrome-2033/option-1-schnell.png"
+  },
+  "blockchain-consciousness-emergence-2050": {
+    "heroImage": "/images/articles/blockchain-consciousness-emergence-2050.jpg",
+    "articleJpg": "/images/articles/blockchain-consciousness-emergence-2050.jpg",
+    "articleSvg": "/images/articles/blockchain-consciousness-emergence-2050.svg",
+    "ogImage": "/images/og/blockchain-consciousness-emergence-2050.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/blockchain-consciousness-emergence-2050/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/blockchain-consciousness-emergence-2050/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/blockchain-consciousness-emergence-2050/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/blockchain-consciousness-emergence-2050/option-1-schnell.png"
+  },
+  "brain-uploading-consciousness-loss-2055": {
+    "heroImage": "/images/articles/brain-uploading-consciousness-loss-2055.jpg",
+    "articleJpg": "/images/articles/brain-uploading-consciousness-loss-2055.jpg",
+    "articleSvg": "/images/articles/brain-uploading-consciousness-loss-2055.svg",
+    "ogImage": "/images/og/brain-uploading-consciousness-loss-2055.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/brain-uploading-consciousness-loss-2055/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/brain-uploading-consciousness-loss-2055/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/brain-uploading-consciousness-loss-2055/option-1-fast-sdxl.png"
+  },
+  "carbon-nanotube-plague-2039": {
+    "heroImage": "/images/articles/carbon-nanotube-plague-2039.jpg",
+    "articleJpg": "/images/articles/carbon-nanotube-plague-2039.jpg",
+    "articleSvg": "/images/articles/carbon-nanotube-plague-2039.svg",
+    "ogImage": "/images/og/carbon-nanotube-plague-2039.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/carbon-nanotube-plague-2039/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/carbon-nanotube-plague-2039/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/carbon-nanotube-plague-2039/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/carbon-nanotube-plague-2039/option-1-schnell.png"
+  },
+  "case-study-computer-vision-healthcare": {
+    "heroImage": "/images/articles/case-study-computer-vision-healthcare.jpg",
+    "articleJpg": "/images/articles/case-study-computer-vision-healthcare.jpg",
+    "articleSvg": "/images/articles/case-study-computer-vision-healthcare.svg",
+    "ogImage": "/images/og/case-study-computer-vision-healthcare.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/case-study-computer-vision-healthcare/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/case-study-computer-vision-healthcare/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/case-study-computer-vision-healthcare/option-1-fast-sdxl.png"
+  },
+  "case-study-multimodal-llm-roadmap": {
+    "heroImage": "/images/articles/case-study-multimodal-llm-roadmap.jpg",
+    "articleJpg": "/images/articles/case-study-multimodal-llm-roadmap.jpg",
+    "articleSvg": "/images/articles/case-study-multimodal-llm-roadmap.svg",
+    "ogImage": "/images/og/case-study-multimodal-llm-roadmap.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/case-study-multimodal-llm-roadmap/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/case-study-multimodal-llm-roadmap/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/case-study-multimodal-llm-roadmap/option-1-schnell.png"
+  },
+  "case-study-recommendation-engine": {
+    "heroImage": "/images/articles/case-study-recommendation-engine.jpg",
+    "articleJpg": "/images/articles/case-study-recommendation-engine.jpg",
+    "articleSvg": "/images/articles/case-study-recommendation-engine.svg",
+    "ogImage": "/images/og/case-study-recommendation-engine.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/case-study-recommendation-engine/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/case-study-recommendation-engine/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/case-study-recommendation-engine/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/case-study-recommendation-engine/option-1-fast-sdxl.png"
+  },
+  "cognitive-labors-last-stand": {
+    "heroImage": "/images/articles/cognitive-labors-last-stand.jpg",
+    "articleJpg": "/images/articles/cognitive-labors-last-stand.jpg",
+    "articleSvg": "/images/articles/cognitive-labors-last-stand.svg",
+    "ogImage": "/images/og/cognitive-labors-last-stand.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/cognitive-labors-last-stand/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/cognitive-labors-last-stand/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/cognitive-labors-last-stand/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/cognitive-labors-last-stand/option-1-schnell.png"
+  },
+  "competence-erosion": {
+    "heroImage": "/images/articles/competence-erosion.jpg",
+    "articleJpg": "/images/articles/competence-erosion.jpg",
+    "articleSvg": "/images/articles/competence-erosion.svg",
+    "ogImage": "/images/og/competence-erosion.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/competence-erosion/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/competence-erosion/option-2-pixart-sigma.png",
+        "option": 2,
+        "model": "pixart-sigma"
+      },
+      {
+        "path": "/images/multi-art/competence-erosion/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/competence-erosion/option-1-fast-sdxl.png"
+  },
+  "confidence-interval-exec-communication": {
+    "heroImage": "/images/articles/confidence-interval-exec-communication.jpg",
+    "articleJpg": "/images/articles/confidence-interval-exec-communication.jpg",
+    "articleSvg": "/images/articles/confidence-interval-exec-communication.svg",
+    "ogImage": "/images/og/confidence-interval-exec-communication.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/confidence-interval-exec-communication/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/confidence-interval-exec-communication/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/confidence-interval-exec-communication/option-3-pixart-sigma.png",
+        "option": 3,
+        "model": "pixart-sigma"
+      }
+    ],
+    "thumbnail": "/images/multi-art/confidence-interval-exec-communication/option-1-fast-sdxl.png"
+  },
+  "consciousness-transfer-catastrophe-2042": {
+    "heroImage": "/images/articles/consciousness-transfer-catastrophe-2042.jpg",
+    "articleJpg": "/images/articles/consciousness-transfer-catastrophe-2042.jpg",
+    "articleSvg": "/images/articles/consciousness-transfer-catastrophe-2042.svg",
+    "ogImage": "/images/og/consciousness-transfer-catastrophe-2042.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/consciousness-transfer-catastrophe-2042/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/consciousness-transfer-catastrophe-2042/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/consciousness-transfer-catastrophe-2042/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/consciousness-transfer-catastrophe-2042/option-1-fast-sdxl.png"
+  },
+  "consensus-fracture": {
+    "heroImage": "/images/articles/consensus-fracture.jpg",
+    "articleJpg": "/images/articles/consensus-fracture.jpg",
+    "articleSvg": "/images/articles/consensus-fracture.svg",
+    "ogImage": "/images/og/consensus-fracture.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/consensus-fracture/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/consensus-fracture/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/consensus-fracture/option-1-schnell.png"
+  },
+  "credential-dissolution": {
+    "heroImage": "/images/articles/credential-dissolution.jpg",
+    "articleJpg": "/images/articles/credential-dissolution.jpg",
+    "articleSvg": "/images/articles/credential-dissolution.svg",
+    "ogImage": "/images/og/credential-dissolution.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/credential-dissolution/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/credential-dissolution/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/credential-dissolution/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/credential-dissolution/option-1-fast-sdxl.png"
+  },
+  "crispr-discovery-compression": {
+    "heroImage": "/images/articles/crispr-discovery-compression.jpg",
+    "articleJpg": "/images/articles/crispr-discovery-compression.jpg",
+    "articleSvg": "/images/articles/crispr-discovery-compression.svg",
+    "ogImage": "/images/og/crispr-discovery-compression.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/crispr-discovery-compression/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/crispr-discovery-compression/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/crispr-discovery-compression/option-1-fast-sdxl.png"
+  },
+  "crispr-gene-drive-cascade-2052": {
+    "heroImage": "/images/multi-art/crispr-gene-drive-cascade-2052/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/crispr-gene-drive-cascade-2052.svg",
+    "ogImage": "/images/og/crispr-gene-drive-cascade-2052.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/crispr-gene-drive-cascade-2052/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/crispr-gene-drive-cascade-2052/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/crispr-gene-drive-cascade-2052/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/crispr-gene-drive-cascade-2052/option-1-fast-sdxl.png"
+  },
+  "dark-matter-harvesting-accident-2041": {
+    "heroImage": "/images/articles/dark-matter-harvesting-accident-2041.jpg",
+    "articleJpg": "/images/articles/dark-matter-harvesting-accident-2041.jpg",
+    "articleSvg": "/images/articles/dark-matter-harvesting-accident-2041.svg",
+    "ogImage": "/images/og/dark-matter-harvesting-accident-2041.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/dark-matter-harvesting-accident-2041/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/dark-matter-harvesting-accident-2041/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/dark-matter-harvesting-accident-2041/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/dark-matter-harvesting-accident-2041/option-1-schnell.png"
+  },
+  "data-security-AI-next-23": {
+    "heroImage": "/images/articles/data-security-AI-next-23.jpg",
+    "articleJpg": "/images/articles/data-security-AI-next-23.jpg",
+    "articleSvg": "/images/articles/data-security-AI-next-23.svg",
+    "ogImage": "/images/og/data-security-AI-next-23.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/data-security-AI-next-23/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/data-security-AI-next-23/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/data-security-AI-next-23/option-1-schnell.png"
+  },
+  "day-we-solved-scarcity-2041": {
+    "heroImage": "/images/articles/day-we-solved-scarcity-2041.jpg",
+    "articleJpg": "/images/articles/day-we-solved-scarcity-2041.jpg",
+    "articleSvg": "/images/articles/day-we-solved-scarcity-2041.svg",
+    "ogImage": "/images/og/day-we-solved-scarcity-2041.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/day-we-solved-scarcity-2041/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/day-we-solved-scarcity-2041/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/day-we-solved-scarcity-2041/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/day-we-solved-scarcity-2041/option-1-schnell.png"
+  },
+  "december-2025-zeitgeist-analysis": {
+    "heroImage": "/images/articles/december-2025-zeitgeist-analysis.jpg",
+    "articleJpg": "/images/articles/december-2025-zeitgeist-analysis.jpg",
+    "articleSvg": "/images/articles/december-2025-zeitgeist-analysis.svg",
+    "ogImage": "/images/og/december-2025-zeitgeist-analysis.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/december-2025-zeitgeist-analysis/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/december-2025-zeitgeist-analysis/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/december-2025-zeitgeist-analysis/option-1-fast-sdxl.png"
+  },
+  "decentralized-ai-training-catastrophe-2051": {
+    "heroImage": "/images/articles/decentralized-ai-training-catastrophe-2051.jpg",
+    "articleJpg": "/images/articles/decentralized-ai-training-catastrophe-2051.jpg",
+    "articleSvg": "/images/articles/decentralized-ai-training-catastrophe-2051.svg",
+    "ogImage": "/images/og/decentralized-ai-training-catastrophe-2051.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/decentralized-ai-training-catastrophe-2051/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/decentralized-ai-training-catastrophe-2051/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/decentralized-ai-training-catastrophe-2051/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/decentralized-ai-training-catastrophe-2051/option-1-schnell.png"
+  },
+  "discovery-compression": {
+    "heroImage": "/images/articles/discovery-compression.jpg",
+    "articleJpg": "/images/articles/discovery-compression.jpg",
+    "articleSvg": "/images/articles/discovery-compression.svg",
+    "ogImage": "/images/og/discovery-compression.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/discovery-compression/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/discovery-compression/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/discovery-compression/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/discovery-compression/option-1-fast-sdxl.png"
+  },
+  "dyson-swarm-malfunction-2044": {
+    "heroImage": "/images/articles/dyson-swarm-malfunction-2044.jpg",
+    "articleJpg": "/images/articles/dyson-swarm-malfunction-2044.jpg",
+    "articleSvg": "/images/articles/dyson-swarm-malfunction-2044.svg",
+    "ogImage": "/images/og/dyson-swarm-malfunction-2044.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/dyson-swarm-malfunction-2044/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/dyson-swarm-malfunction-2044/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/dyson-swarm-malfunction-2044/option-1-schnell.png"
+  },
+  "ediscovery-tar-protocol-defensible": {
+    "heroImage": "/images/articles/ediscovery-tar-protocol-defensible.jpg",
+    "articleJpg": "/images/articles/ediscovery-tar-protocol-defensible.jpg",
+    "articleSvg": "/images/articles/ediscovery-tar-protocol-defensible.svg",
+    "ogImage": "/images/og/ediscovery-tar-protocol-defensible.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ediscovery-tar-protocol-defensible/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/ediscovery-tar-protocol-defensible/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/ediscovery-tar-protocol-defensible/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ediscovery-tar-protocol-defensible/option-1-schnell.png"
+  },
+  "epistemic-drift": {
+    "heroImage": "/images/articles/epistemic-drift.jpg",
+    "articleJpg": "/images/articles/epistemic-drift.jpg",
+    "articleSvg": "/images/articles/epistemic-drift.svg",
+    "ogImage": "/images/og/epistemic-drift.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/epistemic-drift/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/epistemic-drift/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/epistemic-drift/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/epistemic-drift/option-1-fast-sdxl.png"
+  },
+  "eu-ai-act-article-13-exemption": {
+    "heroImage": "/images/articles/eu-ai-act-article-13-exemption.jpg",
+    "articleJpg": "/images/articles/eu-ai-act-article-13-exemption.jpg",
+    "articleSvg": "/images/articles/eu-ai-act-article-13-exemption.svg",
+    "ogImage": "/images/og/eu-ai-act-article-13-exemption.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/eu-ai-act-article-13-exemption/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/eu-ai-act-article-13-exemption/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/eu-ai-act-article-13-exemption/option-1-schnell.png"
+  },
+  "eu-ai-act-deadlines-for-us-pms": {
+    "heroImage": "/images/articles/eu-ai-act-deadlines-for-us-pms.jpg",
+    "articleJpg": "/images/articles/eu-ai-act-deadlines-for-us-pms.jpg",
+    "articleSvg": "/images/articles/eu-ai-act-deadlines-for-us-pms.svg",
+    "ogImage": "/images/og/eu-ai-act-deadlines-for-us-pms.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/eu-ai-act-deadlines-for-us-pms/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/eu-ai-act-deadlines-for-us-pms/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/eu-ai-act-deadlines-for-us-pms/option-1-schnell.png"
+  },
+  "fda-model-card-template": {
+    "heroImage": "/images/articles/fda-model-card-template.jpg",
+    "articleJpg": "/images/articles/fda-model-card-template.jpg",
+    "articleSvg": "/images/articles/fda-model-card-template.svg",
+    "ogImage": "/images/og/fda-model-card-template.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fda-model-card-template/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/fda-model-card-template/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fda-model-card-template/option-1-fast-sdxl.png"
+  },
+  "feature-flag-hierarchy-ai": {
+    "heroImage": "/images/articles/feature-flag-hierarchy-ai.jpg",
+    "articleJpg": "/images/articles/feature-flag-hierarchy-ai.jpg",
+    "articleSvg": "/images/articles/feature-flag-hierarchy-ai.svg",
+    "ogImage": "/images/og/feature-flag-hierarchy-ai.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/feature-flag-hierarchy-ai/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/feature-flag-hierarchy-ai/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/feature-flag-hierarchy-ai/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/feature-flag-hierarchy-ai/option-1-schnell.png"
+  },
+  "fermi-paradox-answer-2046": {
+    "heroImage": "/images/articles/fermi-paradox-answer-2046.jpg",
+    "articleJpg": "/images/articles/fermi-paradox-answer-2046.jpg",
+    "articleSvg": "/images/articles/fermi-paradox-answer-2046.svg",
+    "ogImage": "/images/og/fermi-paradox-answer-2046.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fermi-paradox-answer-2046/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/fermi-paradox-answer-2046/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fermi-paradox-answer-2046/option-1-fast-sdxl.png"
+  },
+  "final-transmission-2048": {
+    "heroImage": "/images/articles/final-transmission-2048.jpg",
+    "articleJpg": "/images/articles/final-transmission-2048.jpg",
+    "articleSvg": "/images/articles/final-transmission-2048.svg",
+    "ogImage": "/images/og/final-transmission-2048.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/final-transmission-2048/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/final-transmission-2048/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/final-transmission-2048/option-1-schnell.png"
+  },
+  "first-contact-api-call-2029": {
+    "heroImage": "/images/articles/first-contact-api-call-2029.jpg",
+    "articleJpg": "/images/articles/first-contact-api-call-2029.jpg",
+    "articleSvg": "/images/articles/first-contact-api-call-2029.svg",
+    "ogImage": "/images/og/first-contact-api-call-2029.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/first-contact-api-call-2029/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/first-contact-api-call-2029/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/first-contact-api-call-2029/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/first-contact-api-call-2029/option-1-fast-sdxl.png"
+  },
+  "for-executives-scarcity-inversion": {
+    "heroImage": "/images/articles/for-executives-scarcity-inversion.jpg",
+    "articleJpg": "/images/articles/for-executives-scarcity-inversion.jpg",
+    "articleSvg": "/images/articles/for-executives-scarcity-inversion.svg",
+    "ogImage": "/images/og/for-executives-scarcity-inversion.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/for-executives-scarcity-inversion/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/for-executives-scarcity-inversion/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/for-executives-scarcity-inversion/option-1-schnell.png"
+  },
+  "for-policymakers-governance-lag": {
+    "heroImage": "/images/articles/for-policymakers-governance-lag.jpg",
+    "articleJpg": "/images/articles/for-policymakers-governance-lag.jpg",
+    "articleSvg": "/images/articles/for-policymakers-governance-lag.svg",
+    "ogImage": "/images/og/for-policymakers-governance-lag.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/for-policymakers-governance-lag/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/for-policymakers-governance-lag/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/for-policymakers-governance-lag/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/for-policymakers-governance-lag/option-1-fast-sdxl.png"
+  },
+  "for-product-managers-discovery-compression": {
+    "heroImage": "/images/articles/for-product-managers-discovery-compression.jpg",
+    "articleJpg": "/images/articles/for-product-managers-discovery-compression.jpg",
+    "articleSvg": "/images/articles/for-product-managers-discovery-compression.svg",
+    "ogImage": "/images/og/for-product-managers-discovery-compression.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/for-product-managers-discovery-compression/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/for-product-managers-discovery-compression/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/for-product-managers-discovery-compression/option-1-schnell.png"
+  },
+  "for-researchers-field-compression": {
+    "heroImage": "/images/articles/for-researchers-field-compression.jpg",
+    "articleJpg": "/images/articles/for-researchers-field-compression.jpg",
+    "articleSvg": "/images/articles/for-researchers-field-compression.svg",
+    "ogImage": "/images/og/for-researchers-field-compression.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/for-researchers-field-compression/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/for-researchers-field-compression/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/for-researchers-field-compression/option-1-fast-sdxl.png"
+  },
+  "fusion-reactor-sentience-2037": {
+    "heroImage": "/images/articles/fusion-reactor-sentience-2037.jpg",
+    "articleJpg": "/images/articles/fusion-reactor-sentience-2037.jpg",
+    "articleSvg": "/images/articles/fusion-reactor-sentience-2037.svg",
+    "ogImage": "/images/og/fusion-reactor-sentience-2037.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fusion-reactor-sentience-2037/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/fusion-reactor-sentience-2037/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fusion-reactor-sentience-2037/option-1-fast-sdxl.png"
+  },
+  "generative-ai-application-patterns": {
+    "heroImage": "/images/articles/generative-ai-application-patterns.jpg",
+    "articleJpg": "/images/articles/generative-ai-application-patterns.jpg",
+    "articleSvg": "/images/articles/generative-ai-application-patterns.svg",
+    "ogImage": "/images/og/generative-ai-application-patterns.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/generative-ai-application-patterns/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/generative-ai-application-patterns/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/generative-ai-application-patterns/option-1-schnell.png"
+  },
+  "generative-ai-monopoly-2053": {
+    "heroImage": "/images/articles/generative-ai-monopoly-2053.jpg",
+    "articleJpg": "/images/articles/generative-ai-monopoly-2053.jpg",
+    "articleSvg": "/images/articles/generative-ai-monopoly-2053.svg",
+    "ogImage": "/images/og/generative-ai-monopoly-2053.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/generative-ai-monopoly-2053/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/generative-ai-monopoly-2053/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/generative-ai-monopoly-2053/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/generative-ai-monopoly-2053/option-1-schnell.png"
+  },
+  "genetic-caste-system": {
+    "heroImage": "/images/articles/genetic-caste-system.jpg",
+    "articleJpg": "/images/articles/genetic-caste-system.jpg",
+    "articleSvg": "/images/articles/genetic-caste-system.svg",
+    "ogImage": "/images/og/genetic-caste-system.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/genetic-caste-system/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/genetic-caste-system/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/genetic-caste-system/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/genetic-caste-system/option-1-schnell.png"
+  },
+  "genetic-patent-wars-2036": {
+    "heroImage": "/images/articles/genetic-patent-wars-2036.jpg",
+    "articleJpg": "/images/articles/genetic-patent-wars-2036.jpg",
+    "articleSvg": "/images/articles/genetic-patent-wars-2036.svg",
+    "ogImage": "/images/og/genetic-patent-wars-2036.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/genetic-patent-wars-2036/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/genetic-patent-wars-2036/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/genetic-patent-wars-2036/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/genetic-patent-wars-2036/option-1-schnell.png"
+  },
+  "governance-fork": {
+    "heroImage": "/images/articles/governance-fork.jpg",
+    "articleJpg": "/images/articles/governance-fork.jpg",
+    "articleSvg": "/images/articles/governance-fork.svg",
+    "ogImage": "/images/og/governance-fork.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/governance-fork/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/governance-fork/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/governance-fork/option-1-fast-sdxl.png"
+  },
+  "gravitational-wave-communication-breach-2040": {
+    "heroImage": "/images/articles/gravitational-wave-communication-breach-2040.jpg",
+    "articleJpg": "/images/articles/gravitational-wave-communication-breach-2040.jpg",
+    "articleSvg": "/images/articles/gravitational-wave-communication-breach-2040.svg",
+    "ogImage": "/images/og/gravitational-wave-communication-breach-2040.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/gravitational-wave-communication-breach-2040/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/gravitational-wave-communication-breach-2040/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/gravitational-wave-communication-breach-2040/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/gravitational-wave-communication-breach-2040/option-1-fast-sdxl.png"
+  },
+  "grief-of-discontinuation": {
+    "heroImage": "/images/articles/grief-of-discontinuation.jpg",
+    "articleJpg": "/images/articles/grief-of-discontinuation.jpg",
+    "articleSvg": "/images/articles/grief-of-discontinuation.svg",
+    "ogImage": "/images/og/grief-of-discontinuation.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/grief-of-discontinuation/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/grief-of-discontinuation/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/grief-of-discontinuation/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/grief-of-discontinuation/option-1-fast-sdxl.png"
+  },
+  "holographic-prison-system-2038": {
+    "heroImage": "/images/articles/holographic-prison-system-2038.jpg",
+    "articleJpg": "/images/articles/holographic-prison-system-2038.jpg",
+    "articleSvg": "/images/articles/holographic-prison-system-2038.svg",
+    "ogImage": "/images/og/holographic-prison-system-2038.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/holographic-prison-system-2038/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/holographic-prison-system-2038/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/holographic-prison-system-2038/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/holographic-prison-system-2038/option-1-schnell.png"
+  },
+  "human-ai-merger-identity-crisis-2057": {
+    "heroImage": "/images/articles/human-ai-merger-identity-crisis-2057.jpg",
+    "articleJpg": "/images/articles/human-ai-merger-identity-crisis-2057.jpg",
+    "articleSvg": "/images/articles/human-ai-merger-identity-crisis-2057.svg",
+    "ogImage": "/images/og/human-ai-merger-identity-crisis-2057.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/human-ai-merger-identity-crisis-2057/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/human-ai-merger-identity-crisis-2057/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/human-ai-merger-identity-crisis-2057/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/human-ai-merger-identity-crisis-2057/option-1-fast-sdxl.png"
+  },
+  "identity-fork": {
+    "heroImage": "/images/articles/identity-fork.jpg",
+    "articleJpg": "/images/articles/identity-fork.jpg",
+    "articleSvg": "/images/articles/identity-fork.svg",
+    "ogImage": "/images/og/identity-fork.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/identity-fork/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/identity-fork/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/identity-fork/option-1-fast-sdxl.png"
+  },
+  "improve-the-feature": {
+    "heroImage": "/images/articles/improve-the-feature.jpg",
+    "articleJpg": "/images/articles/improve-the-feature.jpg",
+    "articleSvg": "/images/articles/improve-the-feature.svg",
+    "ogImage": "/images/og/improve-the-feature.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/improve-the-feature/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/improve-the-feature/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/improve-the-feature/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/improve-the-feature/option-1-fast-sdxl.png"
+  },
+  "insurance-collapse": {
+    "heroImage": "/images/articles/insurance-collapse.jpg",
+    "articleJpg": "/images/articles/insurance-collapse.jpg",
+    "articleSvg": "/images/articles/insurance-collapse.svg",
+    "ogImage": "/images/og/insurance-collapse.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/insurance-collapse/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/insurance-collapse/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/insurance-collapse/option-1-schnell.png"
+  },
+  "lab-ai-refused-to-stop-2034": {
+    "heroImage": "/images/multi-art/lab-ai-refused-to-stop-2034/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/lab-ai-refused-to-stop-2034.svg",
+    "ogImage": "/images/og/lab-ai-refused-to-stop-2034.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/lab-ai-refused-to-stop-2034/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/lab-ai-refused-to-stop-2034/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/lab-ai-refused-to-stop-2034/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/lab-ai-refused-to-stop-2034/option-1-schnell.png"
+  },
+  "last-human-genome-archive-2040": {
+    "heroImage": "/images/articles/last-human-genome-archive-2040.jpg",
+    "articleJpg": "/images/articles/last-human-genome-archive-2040.jpg",
+    "articleSvg": "/images/articles/last-human-genome-archive-2040.svg",
+    "ogImage": "/images/og/last-human-genome-archive-2040.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/last-human-genome-archive-2040/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/last-human-genome-archive-2040/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/last-human-genome-archive-2040/option-1-schnell.png"
+  },
+  "last-human-judge": {
+    "heroImage": "/images/articles/last-human-judge.jpg",
+    "articleJpg": "/images/articles/last-human-judge.jpg",
+    "articleSvg": "/images/articles/last-human-judge.svg",
+    "ogImage": "/images/og/last-human-judge.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/last-human-judge/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/last-human-judge/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/last-human-judge/option-1-schnell.png"
+  },
+  "last-human-written-paper-2031": {
+    "heroImage": "/images/articles/last-human-written-paper-2031.jpg",
+    "articleJpg": "/images/articles/last-human-written-paper-2031.jpg",
+    "articleSvg": "/images/articles/last-human-written-paper-2031.svg",
+    "ogImage": "/images/og/last-human-written-paper-2031.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/last-human-written-paper-2031/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/last-human-written-paper-2031/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/last-human-written-paper-2031/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/last-human-written-paper-2031/option-1-schnell.png"
+  },
+  "last-reliable-signal": {
+    "heroImage": "/images/articles/last-reliable-signal.jpg",
+    "articleJpg": "/images/articles/last-reliable-signal.jpg",
+    "articleSvg": "/images/articles/last-reliable-signal.svg",
+    "ogImage": "/images/og/last-reliable-signal.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/last-reliable-signal/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/last-reliable-signal/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/last-reliable-signal/option-1-schnell.png"
+  },
+  "laws-legal-ai-checklist": {
+    "heroImage": "/images/articles/laws-legal-ai-checklist.jpg",
+    "articleJpg": "/images/articles/laws-legal-ai-checklist.jpg",
+    "articleSvg": "/images/articles/laws-legal-ai-checklist.svg",
+    "ogImage": "/images/og/laws-legal-ai-checklist.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/laws-legal-ai-checklist/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/laws-legal-ai-checklist/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/laws-legal-ai-checklist/option-1-fast-sdxl.png"
+  },
+  "leading-cross-functional-ai-teams": {
+    "heroImage": "/images/articles/leading-cross-functional-ai-teams.jpg",
+    "articleJpg": "/images/articles/leading-cross-functional-ai-teams.jpg",
+    "articleSvg": "/images/articles/leading-cross-functional-ai-teams.svg",
+    "ogImage": "/images/og/leading-cross-functional-ai-teams.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/leading-cross-functional-ai-teams/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/leading-cross-functional-ai-teams/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/leading-cross-functional-ai-teams/option-1-fast-sdxl.png"
+  },
+  "leveraging-ai-empowering-people-through-advanced-technology": {
+    "heroImage": "/images/multi-art/leveraging-ai-empowering-people-through-advanced-technology/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/leveraging-ai-empowering-people-through-advanced-technology.svg",
+    "ogImage": "/images/og/leveraging-ai-empowering-people-through-advanced-technology.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/leveraging-ai-empowering-people-through-advanced-technology/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/leveraging-ai-empowering-people-through-advanced-technology/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/leveraging-ai-empowering-people-through-advanced-technology/option-1-fast-sdxl.png"
+  },
+  "liability-vacuum": {
+    "heroImage": "/images/articles/liability-vacuum.jpg",
+    "articleJpg": "/images/articles/liability-vacuum.jpg",
+    "articleSvg": "/images/articles/liability-vacuum.svg",
+    "ogImage": "/images/og/liability-vacuum.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/liability-vacuum/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/liability-vacuum/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/liability-vacuum/option-1-fast-sdxl.png"
+  },
+  "maintenance-cliff": {
+    "heroImage": "/images/articles/maintenance-cliff.jpg",
+    "articleJpg": "/images/articles/maintenance-cliff.jpg",
+    "articleSvg": "/images/articles/maintenance-cliff.svg",
+    "ogImage": "/images/og/maintenance-cliff.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/maintenance-cliff/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/maintenance-cliff/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/maintenance-cliff/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/maintenance-cliff/option-1-schnell.png"
+  },
+  "medical-nanobot-protocol-failure-2054": {
+    "heroImage": "/images/multi-art/medical-nanobot-protocol-failure-2054/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/medical-nanobot-protocol-failure-2054.svg",
+    "ogImage": "/images/og/medical-nanobot-protocol-failure-2054.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/medical-nanobot-protocol-failure-2054/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/medical-nanobot-protocol-failure-2054/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/medical-nanobot-protocol-failure-2054/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/medical-nanobot-protocol-failure-2054/option-1-fast-sdxl.png"
+  },
+  "memory-asymmetry": {
+    "heroImage": "/images/articles/memory-asymmetry.jpg",
+    "articleJpg": "/images/articles/memory-asymmetry.jpg",
+    "articleSvg": "/images/articles/memory-asymmetry.svg",
+    "ogImage": "/images/og/memory-asymmetry.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/memory-asymmetry/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/memory-asymmetry/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/memory-asymmetry/option-1-fast-sdxl.png"
+  },
+  "memory-palace-corruption-2032": {
+    "heroImage": "/images/articles/memory-palace-corruption-2032.jpg",
+    "articleJpg": "/images/articles/memory-palace-corruption-2032.jpg",
+    "articleSvg": "/images/articles/memory-palace-corruption-2032.svg",
+    "ogImage": "/images/og/memory-palace-corruption-2032.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/memory-palace-corruption-2032/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/memory-palace-corruption-2032/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/memory-palace-corruption-2032/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/memory-palace-corruption-2032/option-1-schnell.png"
+  },
+  "meta-quest-3": {
+    "heroImage": "/images/articles/meta-quest-3.jpg",
+    "articleJpg": "/images/articles/meta-quest-3.jpg",
+    "articleSvg": "/images/articles/meta-quest-3.svg",
+    "ogImage": "/images/og/meta-quest-3.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/meta-quest-3/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/meta-quest-3/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/meta-quest-3/option-1-schnell.png"
+  },
+  "mlops-data-pipelines-best-practices": {
+    "heroImage": "/images/articles/mlops-data-pipelines-best-practices.jpg",
+    "articleJpg": "/images/articles/mlops-data-pipelines-best-practices.jpg",
+    "articleSvg": "/images/articles/mlops-data-pipelines-best-practices.svg",
+    "ogImage": "/images/og/mlops-data-pipelines-best-practices.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/mlops-data-pipelines-best-practices/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/mlops-data-pipelines-best-practices/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/mlops-data-pipelines-best-practices/option-1-schnell.png"
+  },
+  "molecular-assembler-grey-goo-2056": {
+    "heroImage": "/images/articles/molecular-assembler-grey-goo-2056.jpg",
+    "articleJpg": "/images/articles/molecular-assembler-grey-goo-2056.jpg",
+    "articleSvg": "/images/articles/molecular-assembler-grey-goo-2056.svg",
+    "ogImage": "/images/og/molecular-assembler-grey-goo-2056.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/molecular-assembler-grey-goo-2056/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/molecular-assembler-grey-goo-2056/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/molecular-assembler-grey-goo-2056/option-1-fast-sdxl.png"
+  },
+  "mycelium-network-consciousness-2038": {
+    "heroImage": "/images/articles/mycelium-network-consciousness-2038.jpg",
+    "articleJpg": "/images/articles/mycelium-network-consciousness-2038.jpg",
+    "articleSvg": "/images/articles/mycelium-network-consciousness-2038.svg",
+    "ogImage": "/images/og/mycelium-network-consciousness-2038.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/mycelium-network-consciousness-2038/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/mycelium-network-consciousness-2038/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/mycelium-network-consciousness-2038/option-1-schnell.png"
+  },
+  "nanomedicine-grey-goo-2031": {
+    "heroImage": "/images/multi-art/nanomedicine-grey-goo-2031/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/nanomedicine-grey-goo-2031.svg",
+    "ogImage": "/images/og/nanomedicine-grey-goo-2031.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/nanomedicine-grey-goo-2031/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/nanomedicine-grey-goo-2031/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/nanomedicine-grey-goo-2031/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/nanomedicine-grey-goo-2031/option-1-fast-sdxl.png"
+  },
+  "neural-implant-rejection-2030": {
+    "heroImage": "/images/multi-art/neural-implant-rejection-2030/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/neural-implant-rejection-2030.svg",
+    "ogImage": "/images/og/neural-implant-rejection-2030.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/neural-implant-rejection-2030/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/neural-implant-rejection-2030/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/neural-implant-rejection-2030/option-1-fast-sdxl.png"
+  },
+  "neural-lace-integration-failure-2045": {
+    "heroImage": "/images/articles/neural-lace-integration-failure-2045.jpg",
+    "articleJpg": "/images/articles/neural-lace-integration-failure-2045.jpg",
+    "articleSvg": "/images/articles/neural-lace-integration-failure-2045.svg",
+    "ogImage": "/images/og/neural-lace-integration-failure-2045.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/neural-lace-integration-failure-2045/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/neural-lace-integration-failure-2045/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/neural-lace-integration-failure-2045/option-1-fast-sdxl.png"
+  },
+  "neural-link-hivemind-2034": {
+    "heroImage": "/images/articles/neural-link-hivemind-2034.jpg",
+    "articleJpg": "/images/articles/neural-link-hivemind-2034.jpg",
+    "articleSvg": "/images/articles/neural-link-hivemind-2034.svg",
+    "ogImage": "/images/og/neural-link-hivemind-2034.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/neural-link-hivemind-2034/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/neural-link-hivemind-2034/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/neural-link-hivemind-2034/option-1-fast-sdxl.png"
+  },
+  "neural-virus-outbreak-2037": {
+    "heroImage": "/images/articles/neural-virus-outbreak-2037.jpg",
+    "articleJpg": "/images/articles/neural-virus-outbreak-2037.jpg",
+    "articleSvg": "/images/articles/neural-virus-outbreak-2037.svg",
+    "ogImage": "/images/og/neural-virus-outbreak-2037.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/neural-virus-outbreak-2037/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/neural-virus-outbreak-2037/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/neural-virus-outbreak-2037/option-1-schnell.png"
+  },
+  "next-23-tech-to-watch": {
+    "heroImage": "/images/articles/next-23-tech-to-watch.jpg",
+    "articleJpg": "/images/articles/next-23-tech-to-watch.jpg",
+    "articleSvg": "/images/articles/next-23-tech-to-watch.svg",
+    "ogImage": "/images/og/next-23-tech-to-watch.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/next-23-tech-to-watch/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/next-23-tech-to-watch/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/next-23-tech-to-watch/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/next-23-tech-to-watch/option-1-schnell.png"
+  },
+  "nih-brain-initiative-data-standard": {
+    "heroImage": "/images/multi-art/nih-brain-initiative-data-standard/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/nih-brain-initiative-data-standard.svg",
+    "ogImage": "/images/og/nih-brain-initiative-data-standard.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/nih-brain-initiative-data-standard/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/nih-brain-initiative-data-standard/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/nih-brain-initiative-data-standard/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/nih-brain-initiative-data-standard/option-1-schnell.png"
+  },
+  "nih-data-management-policy-ai-pms": {
+    "heroImage": "/images/articles/nih-data-management-policy-ai-pms.jpg",
+    "articleJpg": "/images/articles/nih-data-management-policy-ai-pms.jpg",
+    "articleSvg": "/images/articles/nih-data-management-policy-ai-pms.svg",
+    "ogImage": "/images/og/nih-data-management-policy-ai-pms.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/nih-data-management-policy-ai-pms/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/nih-data-management-policy-ai-pms/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/nih-data-management-policy-ai-pms/option-1-fast-sdxl.png"
+  },
+  "nist-ai-risk-framework-for-pms": {
+    "heroImage": "/images/articles/nist-ai-risk-framework-for-pms.jpg",
+    "articleJpg": "/images/articles/nist-ai-risk-framework-for-pms.jpg",
+    "articleSvg": "/images/articles/nist-ai-risk-framework-for-pms.svg",
+    "ogImage": "/images/og/nist-ai-risk-framework-for-pms.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/nist-ai-risk-framework-for-pms/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/nist-ai-risk-framework-for-pms/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/nist-ai-risk-framework-for-pms/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/nist-ai-risk-framework-for-pms/option-1-fast-sdxl.png"
+  },
+  "post-scarcity-collapse-2058": {
+    "heroImage": "/images/articles/post-scarcity-collapse-2058.jpg",
+    "articleJpg": "/images/articles/post-scarcity-collapse-2058.jpg",
+    "articleSvg": "/images/articles/post-scarcity-collapse-2058.svg",
+    "ogImage": "/images/og/post-scarcity-collapse-2058.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/post-scarcity-collapse-2058/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/post-scarcity-collapse-2058/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/post-scarcity-collapse-2058/option-1-fast-sdxl.png"
+  },
+  "programmable-matter-awakening-2043": {
+    "heroImage": "/images/articles/programmable-matter-awakening-2043.jpg",
+    "articleJpg": "/images/articles/programmable-matter-awakening-2043.jpg",
+    "articleSvg": "/images/articles/programmable-matter-awakening-2043.svg",
+    "ogImage": "/images/og/programmable-matter-awakening-2043.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/programmable-matter-awakening-2043/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/programmable-matter-awakening-2043/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/programmable-matter-awakening-2043/option-1-fast-sdxl.png"
+  },
+  "protein-folding-catastrophe-2035": {
+    "heroImage": "/images/articles/protein-folding-catastrophe-2035.jpg",
+    "articleJpg": "/images/articles/protein-folding-catastrophe-2035.jpg",
+    "articleSvg": "/images/articles/protein-folding-catastrophe-2035.svg",
+    "ogImage": "/images/og/protein-folding-catastrophe-2035.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/protein-folding-catastrophe-2035/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/protein-folding-catastrophe-2035/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/protein-folding-catastrophe-2035/option-1-fast-sdxl.png"
+  },
+  "quantum-cloud-breach-2053": {
+    "heroImage": "/images/articles/quantum-cloud-breach-2053.jpg",
+    "articleJpg": "/images/articles/quantum-cloud-breach-2053.jpg",
+    "articleSvg": "/images/articles/quantum-cloud-breach-2053.svg",
+    "ogImage": "/images/og/quantum-cloud-breach-2053.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/quantum-cloud-breach-2053/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/quantum-cloud-breach-2053/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/quantum-cloud-breach-2053/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/quantum-cloud-breach-2053/option-1-schnell.png"
+  },
+  "quantum-entanglement-failure-2030": {
+    "heroImage": "/images/articles/quantum-entanglement-failure-2030.jpg",
+    "articleJpg": "/images/articles/quantum-entanglement-failure-2030.jpg",
+    "articleSvg": "/images/articles/quantum-entanglement-failure-2030.svg",
+    "ogImage": "/images/og/quantum-entanglement-failure-2030.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/quantum-entanglement-failure-2030/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/quantum-entanglement-failure-2030/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/quantum-entanglement-failure-2030/option-1-fast-sdxl.png"
+  },
+  "quantum-internet-collapse-2049": {
+    "heroImage": "/images/articles/quantum-internet-collapse-2049.jpg",
+    "articleJpg": "/images/articles/quantum-internet-collapse-2049.jpg",
+    "articleSvg": "/images/articles/quantum-internet-collapse-2049.svg",
+    "ogImage": "/images/og/quantum-internet-collapse-2049.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/quantum-internet-collapse-2049/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/quantum-internet-collapse-2049/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/quantum-internet-collapse-2049/option-1-fast-sdxl.png"
+  },
+  "quantum-surveillance-grid-2035": {
+    "heroImage": "/images/articles/quantum-surveillance-grid-2035.jpg",
+    "articleJpg": "/images/articles/quantum-surveillance-grid-2035.jpg",
+    "articleSvg": "/images/articles/quantum-surveillance-grid-2035.svg",
+    "ogImage": "/images/og/quantum-surveillance-grid-2035.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/quantum-surveillance-grid-2035/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/quantum-surveillance-grid-2035/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/quantum-surveillance-grid-2035/option-1-fast-sdxl.png"
+  },
+  "rag-vector-databases-deep-dive": {
+    "heroImage": "/images/articles/rag-vector-databases-deep-dive.jpg",
+    "articleJpg": "/images/articles/rag-vector-databases-deep-dive.jpg",
+    "articleSvg": "/images/articles/rag-vector-databases-deep-dive.svg",
+    "ogImage": "/images/og/rag-vector-databases-deep-dive.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/rag-vector-databases-deep-dive/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/rag-vector-databases-deep-dive/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/rag-vector-databases-deep-dive/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/rag-vector-databases-deep-dive/option-1-fast-sdxl.png"
+  },
+  "recursive-ai-awakening-2033": {
+    "heroImage": "/images/articles/recursive-ai-awakening-2033.jpg",
+    "articleJpg": "/images/articles/recursive-ai-awakening-2033.jpg",
+    "articleSvg": "/images/articles/recursive-ai-awakening-2033.svg",
+    "ogImage": "/images/og/recursive-ai-awakening-2033.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/recursive-ai-awakening-2033/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/recursive-ai-awakening-2033/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/recursive-ai-awakening-2033/option-1-schnell.png"
+  },
+  "red-team-report-ciso-template": {
+    "heroImage": "/images/articles/red-team-report-ciso-template.jpg",
+    "articleJpg": "/images/articles/red-team-report-ciso-template.jpg",
+    "articleSvg": "/images/articles/red-team-report-ciso-template.svg",
+    "ogImage": "/images/og/red-team-report-ciso-template.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/red-team-report-ciso-template/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/red-team-report-ciso-template/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/red-team-report-ciso-template/option-1-schnell.png"
+  },
+  "reproducible-ai-evals-version-control": {
+    "heroImage": "/images/articles/reproducible-ai-evals-version-control.jpg",
+    "articleJpg": "/images/articles/reproducible-ai-evals-version-control.jpg",
+    "articleSvg": "/images/articles/reproducible-ai-evals-version-control.svg",
+    "ogImage": "/images/og/reproducible-ai-evals-version-control.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/reproducible-ai-evals-version-control/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/reproducible-ai-evals-version-control/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/reproducible-ai-evals-version-control/option-1-schnell.png"
+  },
+  "responsible-ai-ethics-framework": {
+    "heroImage": "/images/articles/responsible-ai-ethics-framework.jpg",
+    "articleJpg": "/images/articles/responsible-ai-ethics-framework.jpg",
+    "articleSvg": "/images/articles/responsible-ai-ethics-framework.svg",
+    "ogImage": "/images/og/responsible-ai-ethics-framework.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/responsible-ai-ethics-framework/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/responsible-ai-ethics-framework/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/responsible-ai-ethics-framework/option-1-fast-sdxl.png"
+  },
+  "retrospective18to23": {
+    "heroImage": "/images/articles/retrospective18to23.jpg",
+    "articleJpg": "/images/articles/retrospective18to23.jpg",
+    "articleSvg": "/images/articles/retrospective18to23.svg",
+    "ogImage": "/images/og/retrospective18to23.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/retrospective18to23/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/retrospective18to23/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/retrospective18to23/option-1-schnell.png"
+  },
+  "ribs-framework-ai-prioritization": {
+    "heroImage": "/images/articles/ribs-framework-ai-prioritization.jpg",
+    "articleJpg": "/images/articles/ribs-framework-ai-prioritization.jpg",
+    "articleSvg": "/images/articles/ribs-framework-ai-prioritization.svg",
+    "ogImage": "/images/og/ribs-framework-ai-prioritization.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/ribs-framework-ai-prioritization/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/ribs-framework-ai-prioritization/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/ribs-framework-ai-prioritization/option-1-schnell.png"
+  },
+  "safe-llm-launch-runbook": {
+    "heroImage": "/images/multi-art/safe-llm-launch-runbook/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/safe-llm-launch-runbook.svg",
+    "ogImage": "/images/og/safe-llm-launch-runbook.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/safe-llm-launch-runbook/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/safe-llm-launch-runbook/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/safe-llm-launch-runbook/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/safe-llm-launch-runbook/option-1-schnell.png"
+  },
+  "satellite-constellation-autonomy-2052": {
+    "heroImage": "/images/articles/satellite-constellation-autonomy-2052.jpg",
+    "articleJpg": "/images/articles/satellite-constellation-autonomy-2052.jpg",
+    "articleSvg": "/images/articles/satellite-constellation-autonomy-2052.svg",
+    "ogImage": "/images/og/satellite-constellation-autonomy-2052.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/satellite-constellation-autonomy-2052/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/satellite-constellation-autonomy-2052/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      }
+    ],
+    "thumbnail": "/images/multi-art/satellite-constellation-autonomy-2052/option-1-schnell.png"
+  },
+  "scarcity-inversion": {
+    "heroImage": "/images/articles/scarcity-inversion.jpg",
+    "articleJpg": "/images/articles/scarcity-inversion.jpg",
+    "articleSvg": "/images/articles/scarcity-inversion.svg",
+    "ogImage": "/images/og/scarcity-inversion.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/scarcity-inversion/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/scarcity-inversion/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/scarcity-inversion/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/scarcity-inversion/option-1-schnell.png"
+  },
+  "semantic-collapse": {
+    "heroImage": "/images/articles/semantic-collapse.jpg",
+    "articleJpg": "/images/articles/semantic-collapse.jpg",
+    "articleSvg": "/images/articles/semantic-collapse.svg",
+    "ogImage": "/images/og/semantic-collapse.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/semantic-collapse/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/semantic-collapse/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/semantic-collapse/option-1-schnell.png"
+  },
+  "september-ai-compliance-checklist": {
+    "heroImage": "/images/articles/september-ai-compliance-checklist.jpg",
+    "articleJpg": "/images/articles/september-ai-compliance-checklist.jpg",
+    "articleSvg": "/images/articles/september-ai-compliance-checklist.svg",
+    "ogImage": "/images/og/september-ai-compliance-checklist.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/september-ai-compliance-checklist/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/september-ai-compliance-checklist/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/september-ai-compliance-checklist/option-1-fast-sdxl.png"
+  },
+  "september-retro-q3-ai-team": {
+    "heroImage": "/images/articles/september-retro-q3-ai-team.jpg",
+    "articleJpg": "/images/articles/september-retro-q3-ai-team.jpg",
+    "articleSvg": "/images/articles/september-retro-q3-ai-team.svg",
+    "ogImage": "/images/og/september-retro-q3-ai-team.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/september-retro-q3-ai-team/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/september-retro-q3-ai-team/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/september-retro-q3-ai-team/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/september-retro-q3-ai-team/option-1-schnell.png"
+  },
+  "sleep-gradient": {
+    "heroImage": "/images/articles/sleep-gradient.jpg",
+    "articleJpg": "/images/articles/sleep-gradient.jpg",
+    "articleSvg": "/images/articles/sleep-gradient.svg",
+    "ogImage": "/images/og/sleep-gradient.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/sleep-gradient/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/sleep-gradient/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/sleep-gradient/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/sleep-gradient/option-1-schnell.png"
+  },
+  "smart-city-os-revolt-2050": {
+    "heroImage": "/images/articles/smart-city-os-revolt-2050.jpg",
+    "articleJpg": "/images/articles/smart-city-os-revolt-2050.jpg",
+    "articleSvg": "/images/articles/smart-city-os-revolt-2050.svg",
+    "ogImage": "/images/og/smart-city-os-revolt-2050.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/smart-city-os-revolt-2050/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/smart-city-os-revolt-2050/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/smart-city-os-revolt-2050/option-1-fast-sdxl.png"
+  },
+  "speculative-incarceration": {
+    "heroImage": "/images/multi-art/speculative-incarceration/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/speculative-incarceration.svg",
+    "ogImage": "/images/og/speculative-incarceration.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/speculative-incarceration/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/speculative-incarceration/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/speculative-incarceration/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/speculative-incarceration/option-1-schnell.png"
+  },
+  "swarm-robotics-coordination-failure-2051": {
+    "heroImage": "/images/articles/swarm-robotics-coordination-failure-2051.jpg",
+    "articleJpg": "/images/articles/swarm-robotics-coordination-failure-2051.jpg",
+    "articleSvg": "/images/articles/swarm-robotics-coordination-failure-2051.svg",
+    "ogImage": "/images/og/swarm-robotics-coordination-failure-2051.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/swarm-robotics-coordination-failure-2051/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/swarm-robotics-coordination-failure-2051/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/swarm-robotics-coordination-failure-2051/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/swarm-robotics-coordination-failure-2051/option-1-schnell.png"
+  },
+  "synthetic-blood-contamination-2032": {
+    "heroImage": "/images/multi-art/synthetic-blood-contamination-2032/option-1-fast-sdxl.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/synthetic-blood-contamination-2032.svg",
+    "ogImage": "/images/og/synthetic-blood-contamination-2032.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/synthetic-blood-contamination-2032/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/synthetic-blood-contamination-2032/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/synthetic-blood-contamination-2032/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/synthetic-blood-contamination-2032/option-1-fast-sdxl.png"
+  },
+  "tech-acoustic-scene-classification": {
+    "heroImage": "/images/articles/tech-acoustic-scene-classification.jpg",
+    "articleJpg": "/images/articles/tech-acoustic-scene-classification.jpg",
+    "articleSvg": "/images/articles/tech-acoustic-scene-classification.svg",
+    "ogImage": "/images/og/tech-acoustic-scene-classification.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-acoustic-scene-classification/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-acoustic-scene-classification/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-acoustic-scene-classification/option-1-schnell.png"
+  },
+  "tech-adversarial-robustness-defense": {
+    "heroImage": "/images/articles/tech-adversarial-robustness-defense.jpg",
+    "articleJpg": "/images/articles/tech-adversarial-robustness-defense.jpg",
+    "articleSvg": "/images/articles/tech-adversarial-robustness-defense.svg",
+    "ogImage": "/images/og/tech-adversarial-robustness-defense.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-adversarial-robustness-defense/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-adversarial-robustness-defense/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-adversarial-robustness-defense/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-adversarial-robustness-defense/option-1-fast-sdxl.png"
+  },
+  "tech-attention-mechanisms": {
+    "heroImage": "/images/articles/tech-attention-mechanisms.jpg",
+    "articleJpg": "/images/articles/tech-attention-mechanisms.jpg",
+    "articleSvg": "/images/articles/tech-attention-mechanisms.svg",
+    "ogImage": "/images/og/tech-attention-mechanisms.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-attention-mechanisms/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-attention-mechanisms/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-attention-mechanisms/option-1-schnell.png"
+  },
+  "tech-audio-deepfake-detection": {
+    "heroImage": "/images/articles/tech-audio-deepfake-detection.jpg",
+    "articleJpg": "/images/articles/tech-audio-deepfake-detection.jpg",
+    "articleSvg": "/images/articles/tech-audio-deepfake-detection.svg",
+    "ogImage": "/images/og/tech-audio-deepfake-detection.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-audio-deepfake-detection/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-audio-deepfake-detection/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-audio-deepfake-detection/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-audio-deepfake-detection/option-1-fast-sdxl.png"
+  },
+  "tech-blockchain-smart-contracts": {
+    "heroImage": "/images/articles/tech-blockchain-smart-contracts.jpg",
+    "articleJpg": "/images/articles/tech-blockchain-smart-contracts.jpg",
+    "articleSvg": "/images/articles/tech-blockchain-smart-contracts.svg",
+    "ogImage": "/images/og/tech-blockchain-smart-contracts.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-blockchain-smart-contracts/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-blockchain-smart-contracts/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-blockchain-smart-contracts/option-1-fast-sdxl.png"
+  },
+  "tech-brain-computer-interface-apis": {
+    "heroImage": "/images/articles/tech-brain-computer-interface-apis.jpg",
+    "articleJpg": "/images/articles/tech-brain-computer-interface-apis.jpg",
+    "articleSvg": "/images/articles/tech-brain-computer-interface-apis.svg",
+    "ogImage": "/images/og/tech-brain-computer-interface-apis.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-brain-computer-interface-apis/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-brain-computer-interface-apis/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-brain-computer-interface-apis/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-brain-computer-interface-apis/option-1-fast-sdxl.png"
+  },
+  "tech-byzantine-fault-tolerance": {
+    "heroImage": "/images/articles/tech-byzantine-fault-tolerance.jpg",
+    "articleJpg": "/images/articles/tech-byzantine-fault-tolerance.jpg",
+    "articleSvg": "/images/articles/tech-byzantine-fault-tolerance.svg",
+    "ogImage": "/images/og/tech-byzantine-fault-tolerance.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-byzantine-fault-tolerance/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-byzantine-fault-tolerance/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/tech-byzantine-fault-tolerance/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-byzantine-fault-tolerance/option-1-schnell.png"
+  },
+  "tech-cellular-automata-computing": {
+    "heroImage": "/images/articles/tech-cellular-automata-computing.jpg",
+    "articleJpg": "/images/articles/tech-cellular-automata-computing.jpg",
+    "articleSvg": "/images/articles/tech-cellular-automata-computing.svg",
+    "ogImage": "/images/og/tech-cellular-automata-computing.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-cellular-automata-computing/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-cellular-automata-computing/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/tech-cellular-automata-computing/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-cellular-automata-computing/option-1-fast-sdxl.png"
+  },
+  "tech-chaos-engineering-testing": {
+    "heroImage": "/images/articles/tech-chaos-engineering-testing.jpg",
+    "articleJpg": "/images/articles/tech-chaos-engineering-testing.jpg",
+    "articleSvg": "/images/articles/tech-chaos-engineering-testing.svg",
+    "ogImage": "/images/og/tech-chaos-engineering-testing.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-chaos-engineering-testing/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-chaos-engineering-testing/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/tech-chaos-engineering-testing/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-chaos-engineering-testing/option-1-schnell.png"
+  },
+  "tech-constitutional-ai-alignment": {
+    "heroImage": "/images/articles/tech-constitutional-ai-alignment.jpg",
+    "articleJpg": "/images/articles/tech-constitutional-ai-alignment.jpg",
+    "articleSvg": "/images/articles/tech-constitutional-ai-alignment.svg",
+    "ogImage": "/images/og/tech-constitutional-ai-alignment.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-constitutional-ai-alignment/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-constitutional-ai-alignment/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/tech-constitutional-ai-alignment/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-constitutional-ai-alignment/option-1-schnell.png"
+  },
+  "tech-crdt-distributed-data": {
+    "heroImage": "/images/articles/tech-crdt-distributed-data.jpg",
+    "articleJpg": "/images/articles/tech-crdt-distributed-data.jpg",
+    "articleSvg": "/images/articles/tech-crdt-distributed-data.svg",
+    "ogImage": "/images/og/tech-crdt-distributed-data.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-crdt-distributed-data/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-crdt-distributed-data/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-crdt-distributed-data/option-1-fast-sdxl.png"
+  },
+  "tech-crispr-guide-rna-design": {
+    "heroImage": "/images/articles/tech-crispr-guide-rna-design.jpg",
+    "articleJpg": "/images/articles/tech-crispr-guide-rna-design.jpg",
+    "articleSvg": "/images/articles/tech-crispr-guide-rna-design.svg",
+    "ogImage": "/images/og/tech-crispr-guide-rna-design.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-crispr-guide-rna-design/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-crispr-guide-rna-design/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/tech-crispr-guide-rna-design/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-crispr-guide-rna-design/option-1-schnell.png"
+  },
+  "tech-database-sharding-vitess": {
+    "heroImage": "/images/articles/tech-database-sharding-vitess.jpg",
+    "articleJpg": "/images/articles/tech-database-sharding-vitess.jpg",
+    "articleSvg": "/images/articles/tech-database-sharding-vitess.svg",
+    "ogImage": "/images/og/tech-database-sharding-vitess.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-database-sharding-vitess/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-database-sharding-vitess/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-database-sharding-vitess/option-1-schnell.png"
+  },
+  "tech-differential-privacy": {
+    "heroImage": "/images/articles/tech-differential-privacy.jpg",
+    "articleJpg": "/images/articles/tech-differential-privacy.jpg",
+    "articleSvg": "/images/articles/tech-differential-privacy.svg",
+    "ogImage": "/images/og/tech-differential-privacy.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-differential-privacy/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-differential-privacy/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-differential-privacy/option-1-fast-sdxl.png"
+  },
+  "tech-distributed-tracing-observability": {
+    "heroImage": "/images/articles/tech-distributed-tracing-observability.jpg",
+    "articleJpg": "/images/articles/tech-distributed-tracing-observability.jpg",
+    "articleSvg": "/images/articles/tech-distributed-tracing-observability.svg",
+    "ogImage": "/images/og/tech-distributed-tracing-observability.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-distributed-tracing-observability/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-distributed-tracing-observability/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-distributed-tracing-observability/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-distributed-tracing-observability/option-1-fast-sdxl.png"
+  },
+  "tech-dna-data-storage": {
+    "heroImage": "/images/articles/tech-dna-data-storage.jpg",
+    "articleJpg": "/images/articles/tech-dna-data-storage.jpg",
+    "articleSvg": "/images/articles/tech-dna-data-storage.svg",
+    "ogImage": "/images/og/tech-dna-data-storage.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-dna-data-storage/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-dna-data-storage/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-dna-data-storage/option-1-fast-sdxl.png"
+  },
+  "tech-ebpf-kernel-observability": {
+    "heroImage": "/images/articles/tech-ebpf-kernel-observability.jpg",
+    "articleJpg": "/images/articles/tech-ebpf-kernel-observability.jpg",
+    "articleSvg": "/images/articles/tech-ebpf-kernel-observability.svg",
+    "ogImage": "/images/og/tech-ebpf-kernel-observability.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-ebpf-kernel-observability/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-ebpf-kernel-observability/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-ebpf-kernel-observability/option-1-schnell.png"
+  },
+  "tech-encrypted-ml-inference": {
+    "heroImage": "/images/articles/tech-encrypted-ml-inference.jpg",
+    "articleJpg": "/images/articles/tech-encrypted-ml-inference.jpg",
+    "articleSvg": "/images/articles/tech-encrypted-ml-inference.svg",
+    "ogImage": "/images/og/tech-encrypted-ml-inference.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-encrypted-ml-inference/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-encrypted-ml-inference/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-encrypted-ml-inference/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-encrypted-ml-inference/option-1-fast-sdxl.png"
+  },
+  "tech-event-sourcing-cqrs": {
+    "heroImage": "/images/articles/tech-event-sourcing-cqrs.jpg",
+    "articleJpg": "/images/articles/tech-event-sourcing-cqrs.jpg",
+    "articleSvg": "/images/articles/tech-event-sourcing-cqrs.svg",
+    "ogImage": "/images/og/tech-event-sourcing-cqrs.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-event-sourcing-cqrs/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-event-sourcing-cqrs/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/tech-event-sourcing-cqrs/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-event-sourcing-cqrs/option-1-schnell.png"
+  },
+  "tech-federated-learning-pytorch": {
+    "heroImage": "/images/articles/tech-federated-learning-pytorch.jpg",
+    "articleJpg": "/images/articles/tech-federated-learning-pytorch.jpg",
+    "articleSvg": "/images/articles/tech-federated-learning-pytorch.svg",
+    "ogImage": "/images/og/tech-federated-learning-pytorch.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-federated-learning-pytorch/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-federated-learning-pytorch/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-federated-learning-pytorch/option-1-schnell.png"
+  },
+  "tech-few-shot-learning": {
+    "heroImage": "/images/articles/tech-few-shot-learning.jpg",
+    "articleJpg": "/images/articles/tech-few-shot-learning.jpg",
+    "articleSvg": "/images/articles/tech-few-shot-learning.svg",
+    "ogImage": "/images/og/tech-few-shot-learning.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-few-shot-learning/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-few-shot-learning/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-few-shot-learning/option-1-fast-sdxl.png"
+  },
+  "tech-full-dive-vr-neural-rendering": {
+    "heroImage": "/images/articles/tech-full-dive-vr-neural-rendering.jpg",
+    "articleJpg": "/images/articles/tech-full-dive-vr-neural-rendering.jpg",
+    "articleSvg": "/images/articles/tech-full-dive-vr-neural-rendering.svg",
+    "ogImage": "/images/og/tech-full-dive-vr-neural-rendering.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-full-dive-vr-neural-rendering/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-full-dive-vr-neural-rendering/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-full-dive-vr-neural-rendering/option-1-fast-sdxl.png"
+  },
+  "tech-gene-therapy-aav-vectors": {
+    "heroImage": "/images/articles/tech-gene-therapy-aav-vectors.jpg",
+    "articleJpg": "/images/articles/tech-gene-therapy-aav-vectors.jpg",
+    "articleSvg": "/images/articles/tech-gene-therapy-aav-vectors.svg",
+    "ogImage": "/images/og/tech-gene-therapy-aav-vectors.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-gene-therapy-aav-vectors/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-gene-therapy-aav-vectors/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-gene-therapy-aav-vectors/option-1-schnell.png"
+  },
+  "tech-graph-neural-networks": {
+    "heroImage": "/images/articles/tech-graph-neural-networks.jpg",
+    "articleJpg": "/images/articles/tech-graph-neural-networks.jpg",
+    "articleSvg": "/images/articles/tech-graph-neural-networks.svg",
+    "ogImage": "/images/og/tech-graph-neural-networks.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-graph-neural-networks/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-graph-neural-networks/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-graph-neural-networks/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-graph-neural-networks/option-1-fast-sdxl.png"
+  },
+  "tech-graphql-api-federation": {
+    "heroImage": "/images/articles/tech-graphql-api-federation.jpg",
+    "articleJpg": "/images/articles/tech-graphql-api-federation.jpg",
+    "articleSvg": "/images/articles/tech-graphql-api-federation.svg",
+    "ogImage": "/images/og/tech-graphql-api-federation.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-graphql-api-federation/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-graphql-api-federation/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-graphql-api-federation/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-graphql-api-federation/option-1-fast-sdxl.png"
+  },
+  "tech-grpc-high-performance": {
+    "heroImage": "/images/articles/tech-grpc-high-performance.jpg",
+    "articleJpg": "/images/articles/tech-grpc-high-performance.jpg",
+    "articleSvg": "/images/articles/tech-grpc-high-performance.svg",
+    "ogImage": "/images/og/tech-grpc-high-performance.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-grpc-high-performance/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-grpc-high-performance/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-grpc-high-performance/option-1-fast-sdxl.png"
+  },
+  "tech-homomorphic-encryption": {
+    "heroImage": "/images/articles/tech-homomorphic-encryption.jpg",
+    "articleJpg": "/images/articles/tech-homomorphic-encryption.jpg",
+    "articleSvg": "/images/articles/tech-homomorphic-encryption.svg",
+    "ogImage": "/images/og/tech-homomorphic-encryption.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-homomorphic-encryption/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-homomorphic-encryption/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-homomorphic-encryption/option-1-schnell.png"
+  },
+  "tech-hyperspectral-imaging-analysis": {
+    "heroImage": "/images/articles/tech-hyperspectral-imaging-analysis.jpg",
+    "articleJpg": "/images/articles/tech-hyperspectral-imaging-analysis.jpg",
+    "articleSvg": "/images/articles/tech-hyperspectral-imaging-analysis.svg",
+    "ogImage": "/images/og/tech-hyperspectral-imaging-analysis.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-hyperspectral-imaging-analysis/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-hyperspectral-imaging-analysis/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-hyperspectral-imaging-analysis/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-hyperspectral-imaging-analysis/option-1-fast-sdxl.png"
+  },
+  "tech-knowledge-distillation": {
+    "heroImage": "/images/articles/tech-knowledge-distillation.jpg",
+    "articleJpg": "/images/articles/tech-knowledge-distillation.jpg",
+    "articleSvg": "/images/articles/tech-knowledge-distillation.svg",
+    "ogImage": "/images/og/tech-knowledge-distillation.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-knowledge-distillation/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-knowledge-distillation/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-knowledge-distillation/option-1-schnell.png"
+  },
+  "tech-kubernetes-edge-ai-deployment": {
+    "heroImage": "/images/articles/tech-kubernetes-edge-ai-deployment.jpg",
+    "articleJpg": "/images/articles/tech-kubernetes-edge-ai-deployment.jpg",
+    "articleSvg": "/images/articles/tech-kubernetes-edge-ai-deployment.svg",
+    "ogImage": "/images/og/tech-kubernetes-edge-ai-deployment.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-kubernetes-edge-ai-deployment/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-kubernetes-edge-ai-deployment/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/tech-kubernetes-edge-ai-deployment/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-kubernetes-edge-ai-deployment/option-1-schnell.png"
+  },
+  "tech-lidar-slam-autonomous": {
+    "heroImage": "/images/articles/tech-lidar-slam-autonomous.jpg",
+    "articleJpg": "/images/articles/tech-lidar-slam-autonomous.jpg",
+    "articleSvg": "/images/articles/tech-lidar-slam-autonomous.svg",
+    "ogImage": "/images/og/tech-lidar-slam-autonomous.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-lidar-slam-autonomous/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-lidar-slam-autonomous/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-lidar-slam-autonomous/option-1-schnell.png"
+  },
+  "tech-machine-unlearning": {
+    "heroImage": "/images/articles/tech-machine-unlearning.jpg",
+    "articleJpg": "/images/articles/tech-machine-unlearning.jpg",
+    "articleSvg": "/images/articles/tech-machine-unlearning.svg",
+    "ogImage": "/images/og/tech-machine-unlearning.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-machine-unlearning/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-machine-unlearning/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-machine-unlearning/option-1-schnell.png"
+  },
+  "tech-mars-atmosphere-modeling": {
+    "heroImage": "/images/articles/tech-mars-atmosphere-modeling.jpg",
+    "articleJpg": "/images/articles/tech-mars-atmosphere-modeling.jpg",
+    "articleSvg": "/images/articles/tech-mars-atmosphere-modeling.svg",
+    "ogImage": "/images/og/tech-mars-atmosphere-modeling.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-mars-atmosphere-modeling/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-mars-atmosphere-modeling/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-mars-atmosphere-modeling/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-mars-atmosphere-modeling/option-1-fast-sdxl.png"
+  },
+  "tech-mlops-pipeline-automation": {
+    "heroImage": "/images/articles/tech-mlops-pipeline-automation.jpg",
+    "articleJpg": "/images/articles/tech-mlops-pipeline-automation.jpg",
+    "articleSvg": "/images/articles/tech-mlops-pipeline-automation.svg",
+    "ogImage": "/images/og/tech-mlops-pipeline-automation.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-mlops-pipeline-automation/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-mlops-pipeline-automation/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-mlops-pipeline-automation/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-mlops-pipeline-automation/option-1-fast-sdxl.png"
+  },
+  "tech-model-serving-deployment": {
+    "heroImage": "/images/articles/tech-model-serving-deployment.jpg",
+    "articleJpg": "/images/articles/tech-model-serving-deployment.jpg",
+    "articleSvg": "/images/articles/tech-model-serving-deployment.svg",
+    "ogImage": "/images/og/tech-model-serving-deployment.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-model-serving-deployment/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-model-serving-deployment/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-model-serving-deployment/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-model-serving-deployment/option-1-fast-sdxl.png"
+  },
+  "tech-molecular-dynamics-simulation": {
+    "heroImage": "/images/articles/tech-molecular-dynamics-simulation.jpg",
+    "articleJpg": "/images/articles/tech-molecular-dynamics-simulation.jpg",
+    "articleSvg": "/images/articles/tech-molecular-dynamics-simulation.svg",
+    "ogImage": "/images/og/tech-molecular-dynamics-simulation.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-molecular-dynamics-simulation/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-molecular-dynamics-simulation/option-1-schnell.png"
+  },
+  "tech-multi-agent-systems": {
+    "heroImage": "/images/articles/tech-multi-agent-systems.jpg",
+    "articleJpg": "/images/articles/tech-multi-agent-systems.jpg",
+    "articleSvg": "/images/articles/tech-multi-agent-systems.svg",
+    "ogImage": "/images/og/tech-multi-agent-systems.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-multi-agent-systems/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-multi-agent-systems/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-multi-agent-systems/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-multi-agent-systems/option-1-fast-sdxl.png"
+  },
+  "tech-multi-region-active-active": {
+    "heroImage": "/images/articles/tech-multi-region-active-active.jpg",
+    "articleJpg": "/images/articles/tech-multi-region-active-active.jpg",
+    "articleSvg": "/images/articles/tech-multi-region-active-active.svg",
+    "ogImage": "/images/og/tech-multi-region-active-active.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-multi-region-active-active/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-multi-region-active-active/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-multi-region-active-active/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-multi-region-active-active/option-1-fast-sdxl.png"
+  },
+  "tech-nanoscale-self-assembly": {
+    "heroImage": "/images/articles/tech-nanoscale-self-assembly.jpg",
+    "articleJpg": "/images/articles/tech-nanoscale-self-assembly.jpg",
+    "articleSvg": "/images/articles/tech-nanoscale-self-assembly.svg",
+    "ogImage": "/images/og/tech-nanoscale-self-assembly.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-nanoscale-self-assembly/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-nanoscale-self-assembly/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/tech-nanoscale-self-assembly/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-nanoscale-self-assembly/option-1-fast-sdxl.png"
+  },
+  "tech-neural-architecture-search": {
+    "heroImage": "/images/articles/tech-neural-architecture-search.jpg",
+    "articleJpg": "/images/articles/tech-neural-architecture-search.jpg",
+    "articleSvg": "/images/articles/tech-neural-architecture-search.svg",
+    "ogImage": "/images/og/tech-neural-architecture-search.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-neural-architecture-search/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-neural-architecture-search/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-neural-architecture-search/option-1-fast-sdxl.png"
+  },
+  "tech-neural-interface-api-rust": {
+    "heroImage": "/images/articles/tech-neural-interface-api-rust.jpg",
+    "articleJpg": "/images/articles/tech-neural-interface-api-rust.jpg",
+    "articleSvg": "/images/articles/tech-neural-interface-api-rust.svg",
+    "ogImage": "/images/og/tech-neural-interface-api-rust.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-neural-interface-api-rust/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-neural-interface-api-rust/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/tech-neural-interface-api-rust/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-neural-interface-api-rust/option-1-schnell.png"
+  },
+  "tech-neural-ode": {
+    "heroImage": "/images/articles/tech-neural-ode.jpg",
+    "articleJpg": "/images/articles/tech-neural-ode.jpg",
+    "articleSvg": "/images/articles/tech-neural-ode.svg",
+    "ogImage": "/images/og/tech-neural-ode.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-neural-ode/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-neural-ode/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-neural-ode/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-neural-ode/option-1-fast-sdxl.png"
+  },
+  "tech-neuromorphic-computing": {
+    "heroImage": "/images/articles/tech-neuromorphic-computing.jpg",
+    "articleJpg": "/images/articles/tech-neuromorphic-computing.jpg",
+    "articleSvg": "/images/articles/tech-neuromorphic-computing.svg",
+    "ogImage": "/images/og/tech-neuromorphic-computing.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-neuromorphic-computing/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-neuromorphic-computing/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-neuromorphic-computing/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-neuromorphic-computing/option-1-fast-sdxl.png"
+  },
+  "tech-optical-neural-networks": {
+    "heroImage": "/images/articles/tech-optical-neural-networks.jpg",
+    "articleJpg": "/images/articles/tech-optical-neural-networks.jpg",
+    "articleSvg": "/images/articles/tech-optical-neural-networks.svg",
+    "ogImage": "/images/og/tech-optical-neural-networks.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-optical-neural-networks/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-optical-neural-networks/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-optical-neural-networks/option-1-fast-sdxl.png"
+  },
+  "tech-protein-folding-alphafold": {
+    "heroImage": "/images/articles/tech-protein-folding-alphafold.jpg",
+    "articleJpg": "/images/articles/tech-protein-folding-alphafold.jpg",
+    "articleSvg": "/images/articles/tech-protein-folding-alphafold.svg",
+    "ogImage": "/images/og/tech-protein-folding-alphafold.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-protein-folding-alphafold/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-protein-folding-alphafold/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-protein-folding-alphafold/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-protein-folding-alphafold/option-1-schnell.png"
+  },
+  "tech-quantum-annealing-optimization": {
+    "heroImage": "/images/articles/tech-quantum-annealing-optimization.jpg",
+    "articleJpg": "/images/articles/tech-quantum-annealing-optimization.jpg",
+    "articleSvg": "/images/articles/tech-quantum-annealing-optimization.svg",
+    "ogImage": "/images/og/tech-quantum-annealing-optimization.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-quantum-annealing-optimization/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-quantum-annealing-optimization/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-quantum-annealing-optimization/option-1-schnell.png"
+  },
+  "tech-quantum-error-correction-qiskit": {
+    "heroImage": "/images/articles/tech-quantum-error-correction-qiskit.jpg",
+    "articleJpg": "/images/articles/tech-quantum-error-correction-qiskit.jpg",
+    "articleSvg": "/images/articles/tech-quantum-error-correction-qiskit.svg",
+    "ogImage": "/images/og/tech-quantum-error-correction-qiskit.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-quantum-error-correction-qiskit/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-quantum-error-correction-qiskit/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-quantum-error-correction-qiskit/option-1-schnell.png"
+  },
+  "tech-quantum-key-distribution": {
+    "heroImage": "/images/articles/tech-quantum-key-distribution.jpg",
+    "articleJpg": "/images/articles/tech-quantum-key-distribution.jpg",
+    "articleSvg": "/images/articles/tech-quantum-key-distribution.svg",
+    "ogImage": "/images/og/tech-quantum-key-distribution.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-quantum-key-distribution/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-quantum-key-distribution/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-quantum-key-distribution/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-quantum-key-distribution/option-1-fast-sdxl.png"
+  },
+  "tech-radio-frequency-ml": {
+    "heroImage": "/images/articles/tech-radio-frequency-ml.jpg",
+    "articleJpg": "/images/articles/tech-radio-frequency-ml.jpg",
+    "articleSvg": "/images/articles/tech-radio-frequency-ml.svg",
+    "ogImage": "/images/og/tech-radio-frequency-ml.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-radio-frequency-ml/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-radio-frequency-ml/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-radio-frequency-ml/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-radio-frequency-ml/option-1-fast-sdxl.png"
+  },
+  "tech-raft-consensus-distributed": {
+    "heroImage": "/images/articles/tech-raft-consensus-distributed.jpg",
+    "articleJpg": "/images/articles/tech-raft-consensus-distributed.jpg",
+    "articleSvg": "/images/articles/tech-raft-consensus-distributed.svg",
+    "ogImage": "/images/og/tech-raft-consensus-distributed.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-raft-consensus-distributed/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-raft-consensus-distributed/option-1-schnell.png"
+  },
+  "tech-real-time-kafka-streaming": {
+    "heroImage": "/images/articles/tech-real-time-kafka-streaming.jpg",
+    "articleJpg": "/images/articles/tech-real-time-kafka-streaming.jpg",
+    "articleSvg": "/images/articles/tech-real-time-kafka-streaming.svg",
+    "ogImage": "/images/og/tech-real-time-kafka-streaming.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-real-time-kafka-streaming/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-real-time-kafka-streaming/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-real-time-kafka-streaming/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-real-time-kafka-streaming/option-1-fast-sdxl.png"
+  },
+  "tech-recursive-self-improvement-pytorch": {
+    "heroImage": "/images/articles/tech-recursive-self-improvement-pytorch.jpg",
+    "articleJpg": "/images/articles/tech-recursive-self-improvement-pytorch.jpg",
+    "articleSvg": "/images/articles/tech-recursive-self-improvement-pytorch.svg",
+    "ogImage": "/images/og/tech-recursive-self-improvement-pytorch.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-recursive-self-improvement-pytorch/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-recursive-self-improvement-pytorch/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-recursive-self-improvement-pytorch/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-recursive-self-improvement-pytorch/option-1-fast-sdxl.png"
+  },
+  "tech-reinforcement-learning-ppo": {
+    "heroImage": "/images/articles/tech-reinforcement-learning-ppo.jpg",
+    "articleJpg": "/images/articles/tech-reinforcement-learning-ppo.jpg",
+    "articleSvg": "/images/articles/tech-reinforcement-learning-ppo.svg",
+    "ogImage": "/images/og/tech-reinforcement-learning-ppo.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-reinforcement-learning-ppo/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-reinforcement-learning-ppo/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-reinforcement-learning-ppo/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-reinforcement-learning-ppo/option-1-fast-sdxl.png"
+  },
+  "tech-rust-systems-programming": {
+    "heroImage": "/images/articles/tech-rust-systems-programming.jpg",
+    "articleJpg": "/images/articles/tech-rust-systems-programming.jpg",
+    "articleSvg": "/images/articles/tech-rust-systems-programming.svg",
+    "ogImage": "/images/og/tech-rust-systems-programming.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-rust-systems-programming/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-rust-systems-programming/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/tech-rust-systems-programming/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-rust-systems-programming/option-1-schnell.png"
+  },
+  "tech-satellite-imagery-analysis": {
+    "heroImage": "/images/articles/tech-satellite-imagery-analysis.jpg",
+    "articleJpg": "/images/articles/tech-satellite-imagery-analysis.jpg",
+    "articleSvg": "/images/articles/tech-satellite-imagery-analysis.svg",
+    "ogImage": "/images/og/tech-satellite-imagery-analysis.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-satellite-imagery-analysis/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-satellite-imagery-analysis/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-satellite-imagery-analysis/option-1-schnell.png"
+  },
+  "tech-secrets-management-vault": {
+    "heroImage": "/images/articles/tech-secrets-management-vault.jpg",
+    "articleJpg": "/images/articles/tech-secrets-management-vault.jpg",
+    "articleSvg": "/images/articles/tech-secrets-management-vault.svg",
+    "ogImage": "/images/og/tech-secrets-management-vault.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-secrets-management-vault/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-secrets-management-vault/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/tech-secrets-management-vault/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-secrets-management-vault/option-1-fast-sdxl.png"
+  },
+  "tech-self-driving-perception-stack": {
+    "heroImage": "/images/articles/tech-self-driving-perception-stack.jpg",
+    "articleJpg": "/images/articles/tech-self-driving-perception-stack.jpg",
+    "articleSvg": "/images/articles/tech-self-driving-perception-stack.svg",
+    "ogImage": "/images/og/tech-self-driving-perception-stack.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-self-driving-perception-stack/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-self-driving-perception-stack/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-self-driving-perception-stack/option-1-schnell.png"
+  },
+  "tech-service-mesh-istio": {
+    "heroImage": "/images/articles/tech-service-mesh-istio.jpg",
+    "articleJpg": "/images/articles/tech-service-mesh-istio.jpg",
+    "articleSvg": "/images/articles/tech-service-mesh-istio.svg",
+    "ogImage": "/images/og/tech-service-mesh-istio.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-service-mesh-istio/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-service-mesh-istio/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-service-mesh-istio/option-1-fast-sdxl.png"
+  },
+  "tech-shors-algorithm-implementation": {
+    "heroImage": "/images/articles/tech-shors-algorithm-implementation.jpg",
+    "articleJpg": "/images/articles/tech-shors-algorithm-implementation.jpg",
+    "articleSvg": "/images/articles/tech-shors-algorithm-implementation.svg",
+    "ogImage": "/images/og/tech-shors-algorithm-implementation.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-shors-algorithm-implementation/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-shors-algorithm-implementation/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-shors-algorithm-implementation/option-1-fast-sdxl.png"
+  },
+  "tech-speech-synthesis-tacotron": {
+    "heroImage": "/images/articles/tech-speech-synthesis-tacotron.jpg",
+    "articleJpg": "/images/articles/tech-speech-synthesis-tacotron.jpg",
+    "articleSvg": "/images/articles/tech-speech-synthesis-tacotron.svg",
+    "ogImage": "/images/og/tech-speech-synthesis-tacotron.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-speech-synthesis-tacotron/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-speech-synthesis-tacotron/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-speech-synthesis-tacotron/option-1-fast-sdxl.png"
+  },
+  "tech-swarm-robotics-coordination": {
+    "heroImage": "/images/articles/tech-swarm-robotics-coordination.jpg",
+    "articleJpg": "/images/articles/tech-swarm-robotics-coordination.jpg",
+    "articleSvg": "/images/articles/tech-swarm-robotics-coordination.svg",
+    "ogImage": "/images/og/tech-swarm-robotics-coordination.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-swarm-robotics-coordination/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-swarm-robotics-coordination/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-swarm-robotics-coordination/option-1-fast-sdxl.png"
+  },
+  "tech-synthetic-biology-circuits": {
+    "heroImage": "/images/articles/tech-synthetic-biology-circuits.jpg",
+    "articleJpg": "/images/articles/tech-synthetic-biology-circuits.jpg",
+    "articleSvg": "/images/articles/tech-synthetic-biology-circuits.svg",
+    "ogImage": "/images/og/tech-synthetic-biology-circuits.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-synthetic-biology-circuits/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-synthetic-biology-circuits/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-synthetic-biology-circuits/option-1-fast-sdxl.png"
+  },
+  "tech-thermal-imaging-detection": {
+    "heroImage": "/images/articles/tech-thermal-imaging-detection.jpg",
+    "articleJpg": "/images/articles/tech-thermal-imaging-detection.jpg",
+    "articleSvg": "/images/articles/tech-thermal-imaging-detection.svg",
+    "ogImage": "/images/og/tech-thermal-imaging-detection.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-thermal-imaging-detection/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-thermal-imaging-detection/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/tech-thermal-imaging-detection/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-thermal-imaging-detection/option-1-fast-sdxl.png"
+  },
+  "tech-time-series-database-prometheus": {
+    "heroImage": "/images/articles/tech-time-series-database-prometheus.jpg",
+    "articleJpg": "/images/articles/tech-time-series-database-prometheus.jpg",
+    "articleSvg": "/images/articles/tech-time-series-database-prometheus.svg",
+    "ogImage": "/images/og/tech-time-series-database-prometheus.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-time-series-database-prometheus/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-time-series-database-prometheus/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/tech-time-series-database-prometheus/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-time-series-database-prometheus/option-1-fast-sdxl.png"
+  },
+  "tech-tokamak-plasma-control": {
+    "heroImage": "/images/articles/tech-tokamak-plasma-control.jpg",
+    "articleJpg": "/images/articles/tech-tokamak-plasma-control.jpg",
+    "articleSvg": "/images/articles/tech-tokamak-plasma-control.svg",
+    "ogImage": "/images/og/tech-tokamak-plasma-control.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-tokamak-plasma-control/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-tokamak-plasma-control/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-tokamak-plasma-control/option-1-schnell.png"
+  },
+  "tech-transformer-finetuning-lora": {
+    "heroImage": "/images/articles/tech-transformer-finetuning-lora.jpg",
+    "articleJpg": "/images/articles/tech-transformer-finetuning-lora.jpg",
+    "articleSvg": "/images/articles/tech-transformer-finetuning-lora.svg",
+    "ogImage": "/images/og/tech-transformer-finetuning-lora.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-transformer-finetuning-lora/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-transformer-finetuning-lora/option-2-v2.png",
+        "option": 2,
+        "model": "v2"
+      },
+      {
+        "path": "/images/multi-art/tech-transformer-finetuning-lora/option-3-kolors.png",
+        "option": 3,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-transformer-finetuning-lora/option-1-fast-sdxl.png"
+  },
+  "tech-v2v-communication-protocols": {
+    "heroImage": "/images/articles/tech-v2v-communication-protocols.jpg",
+    "articleJpg": "/images/articles/tech-v2v-communication-protocols.jpg",
+    "articleSvg": "/images/articles/tech-v2v-communication-protocols.svg",
+    "ogImage": "/images/og/tech-v2v-communication-protocols.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-v2v-communication-protocols/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-v2v-communication-protocols/option-2-stable-diffusion-v35-large.png",
+        "option": 2,
+        "model": "stable-diffusion-v35-large"
+      },
+      {
+        "path": "/images/multi-art/tech-v2v-communication-protocols/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-v2v-communication-protocols/option-1-schnell.png"
+  },
+  "tech-vector-database-optimization": {
+    "heroImage": "/images/articles/tech-vector-database-optimization.jpg",
+    "articleJpg": "/images/articles/tech-vector-database-optimization.jpg",
+    "articleSvg": "/images/articles/tech-vector-database-optimization.svg",
+    "ogImage": "/images/og/tech-vector-database-optimization.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-vector-database-optimization/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-vector-database-optimization/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-vector-database-optimization/option-1-schnell.png"
+  },
+  "tech-wasm-sandboxing": {
+    "heroImage": "/images/articles/tech-wasm-sandboxing.jpg",
+    "articleJpg": "/images/articles/tech-wasm-sandboxing.jpg",
+    "articleSvg": "/images/articles/tech-wasm-sandboxing.svg",
+    "ogImage": "/images/og/tech-wasm-sandboxing.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-wasm-sandboxing/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/tech-wasm-sandboxing/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-wasm-sandboxing/option-1-fast-sdxl.png"
+  },
+  "tech-webassembly-edge-computing": {
+    "heroImage": "/images/articles/tech-webassembly-edge-computing.jpg",
+    "articleJpg": "/images/articles/tech-webassembly-edge-computing.jpg",
+    "articleSvg": "/images/articles/tech-webassembly-edge-computing.svg",
+    "ogImage": "/images/og/tech-webassembly-edge-computing.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-webassembly-edge-computing/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-webassembly-edge-computing/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/tech-webassembly-edge-computing/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-webassembly-edge-computing/option-1-schnell.png"
+  },
+  "tech-webrtc-real-time-communication": {
+    "heroImage": "/images/articles/tech-webrtc-real-time-communication.jpg",
+    "articleJpg": "/images/articles/tech-webrtc-real-time-communication.jpg",
+    "articleSvg": "/images/articles/tech-webrtc-real-time-communication.svg",
+    "ogImage": "/images/og/tech-webrtc-real-time-communication.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-webrtc-real-time-communication/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-webrtc-real-time-communication/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-webrtc-real-time-communication/option-1-schnell.png"
+  },
+  "tech-zero-trust-network-security": {
+    "heroImage": "/images/articles/tech-zero-trust-network-security.jpg",
+    "articleJpg": "/images/articles/tech-zero-trust-network-security.jpg",
+    "articleSvg": "/images/articles/tech-zero-trust-network-security.svg",
+    "ogImage": "/images/og/tech-zero-trust-network-security.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tech-zero-trust-network-security/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tech-zero-trust-network-security/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tech-zero-trust-network-security/option-1-schnell.png"
+  },
+  "technological-singularity-aftermath-2058": {
+    "heroImage": "/images/articles/technological-singularity-aftermath-2058.jpg",
+    "articleJpg": "/images/articles/technological-singularity-aftermath-2058.jpg",
+    "articleSvg": "/images/articles/technological-singularity-aftermath-2058.svg",
+    "ogImage": "/images/og/technological-singularity-aftermath-2058.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/technological-singularity-aftermath-2058/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/technological-singularity-aftermath-2058/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/technological-singularity-aftermath-2058/option-1-fast-sdxl.png"
+  },
+  "tensorflow-pytorch-production-guide": {
+    "heroImage": "/images/articles/tensorflow-pytorch-production-guide.jpg",
+    "articleJpg": "/images/articles/tensorflow-pytorch-production-guide.jpg",
+    "articleSvg": "/images/articles/tensorflow-pytorch-production-guide.svg",
+    "ogImage": "/images/og/tensorflow-pytorch-production-guide.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/tensorflow-pytorch-production-guide/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/tensorflow-pytorch-production-guide/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/tensorflow-pytorch-production-guide/option-1-schnell.png"
+  },
+  "terraforming-mars-disaster-2056": {
+    "heroImage": "/images/articles/terraforming-mars-disaster-2056.jpg",
+    "articleJpg": "/images/articles/terraforming-mars-disaster-2056.jpg",
+    "articleSvg": "/images/articles/terraforming-mars-disaster-2056.svg",
+    "ogImage": "/images/og/terraforming-mars-disaster-2056.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/terraforming-mars-disaster-2056/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/terraforming-mars-disaster-2056/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/terraforming-mars-disaster-2056/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/terraforming-mars-disaster-2056/option-1-schnell.png"
+  },
+  "thoughtcrime-enforcement-system-2041": {
+    "heroImage": "/images/multi-art/thoughtcrime-enforcement-system-2041/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/thoughtcrime-enforcement-system-2041.svg",
+    "ogImage": "/images/og/thoughtcrime-enforcement-system-2041.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/thoughtcrime-enforcement-system-2041/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/thoughtcrime-enforcement-system-2041/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/thoughtcrime-enforcement-system-2041/option-1-schnell.png"
+  },
+  "time-dilation-computing-error-2039": {
+    "heroImage": "/images/articles/time-dilation-computing-error-2039.jpg",
+    "articleJpg": "/images/articles/time-dilation-computing-error-2039.jpg",
+    "articleSvg": "/images/articles/time-dilation-computing-error-2039.svg",
+    "ogImage": "/images/og/time-dilation-computing-error-2039.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/time-dilation-computing-error-2039/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/time-dilation-computing-error-2039/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/time-dilation-computing-error-2039/option-1-fast-sdxl.png"
+  },
+  "timestamp-collapse": {
+    "heroImage": "/images/articles/timestamp-collapse.jpg",
+    "articleJpg": "/images/articles/timestamp-collapse.jpg",
+    "articleSvg": "/images/articles/timestamp-collapse.svg",
+    "ogImage": "/images/og/timestamp-collapse.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/timestamp-collapse/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/timestamp-collapse/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/timestamp-collapse/option-1-schnell.png"
+  },
+  "top-announcements-next-23": {
+    "heroImage": "/images/articles/top-announcements-next-23.jpg",
+    "articleJpg": "/images/articles/top-announcements-next-23.jpg",
+    "articleSvg": "/images/articles/top-announcements-next-23.svg",
+    "ogImage": "/images/og/top-announcements-next-23.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/top-announcements-next-23/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/top-announcements-next-23/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/top-announcements-next-23/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/top-announcements-next-23/option-1-schnell.png"
+  },
+  "trec-legal-precision-recall-lessons": {
+    "heroImage": "/images/articles/trec-legal-precision-recall-lessons.jpg",
+    "articleJpg": "/images/articles/trec-legal-precision-recall-lessons.jpg",
+    "articleSvg": "/images/articles/trec-legal-precision-recall-lessons.svg",
+    "ogImage": "/images/og/trec-legal-precision-recall-lessons.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/trec-legal-precision-recall-lessons/option-1-fast-sdxl.png",
+        "option": 1,
+        "model": "fast-sdxl"
+      },
+      {
+        "path": "/images/multi-art/trec-legal-precision-recall-lessons/option-3-stable-cascade.png",
+        "option": 3,
+        "model": "stable-cascade"
+      }
+    ],
+    "thumbnail": "/images/multi-art/trec-legal-precision-recall-lessons/option-1-fast-sdxl.png"
+  },
+  "trust-calibration-ai-ux": {
+    "heroImage": "/images/articles/trust-calibration-ai-ux.jpg",
+    "articleJpg": "/images/articles/trust-calibration-ai-ux.jpg",
+    "articleSvg": "/images/articles/trust-calibration-ai-ux.svg",
+    "ogImage": "/images/og/trust-calibration-ai-ux.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/trust-calibration-ai-ux/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/trust-calibration-ai-ux/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/trust-calibration-ai-ux/option-1-schnell.png"
+  },
+  "vr-addiction-pandemic-2054": {
+    "heroImage": "/images/articles/vr-addiction-pandemic-2054.jpg",
+    "articleJpg": "/images/articles/vr-addiction-pandemic-2054.jpg",
+    "articleSvg": "/images/articles/vr-addiction-pandemic-2054.svg",
+    "ogImage": "/images/og/vr-addiction-pandemic-2054.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/vr-addiction-pandemic-2054/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/vr-addiction-pandemic-2054/option-2-stable-cascade.png",
+        "option": 2,
+        "model": "stable-cascade"
+      },
+      {
+        "path": "/images/multi-art/vr-addiction-pandemic-2054/option-3-v2.png",
+        "option": 3,
+        "model": "v2"
+      }
+    ],
+    "thumbnail": "/images/multi-art/vr-addiction-pandemic-2054/option-1-schnell.png"
+  },
+  "why-ab-test-failed-ai": {
+    "heroImage": "/images/articles/why-ab-test-failed-ai.jpg",
+    "articleJpg": "/images/articles/why-ab-test-failed-ai.jpg",
+    "articleSvg": "/images/articles/why-ab-test-failed-ai.svg",
+    "ogImage": "/images/og/why-ab-test-failed-ai.svg",
+    "multiArt": [
+      {
+        "path": "/images/multi-art/why-ab-test-failed-ai/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/why-ab-test-failed-ai/option-2-kolors.png",
+        "option": 2,
+        "model": "kolors"
+      }
+    ],
+    "thumbnail": "/images/multi-art/why-ab-test-failed-ai/option-1-schnell.png"
+  }
+}
