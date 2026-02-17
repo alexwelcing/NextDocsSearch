@@ -11,16 +11,17 @@ import ArticleContainer from '@/components/ArticleContainer';
 import StructuredData from '../../components/StructuredData';
 import ArticleClassification, { inferClassificationFromSlug } from '@/components/ArticleClassification';
 import CircleNav from '@/components/ui/CircleNav';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { escapeMdxContent } from '@/lib/utils';
 import MarkdownImage from '@/components/ui/MarkdownImage';
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import DeskSurface from '@/components/ui/DeskSurface';
 import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
-import { ParallaxBand, EditorialSection, GlowingContentSection } from '@/components/ui/ParallaxArtLayers';
+import { ArtFrame, DepthSection, DepthDivider, EditorialSection } from '@/components/ui/ParallaxArtLayers';
+import type { DepthStage } from '@/components/ui/ParallaxArtLayers';
 import { discoverArticleImages } from '@/lib/article-images';
 import type { MultiArtOption } from '@/lib/article-images';
 import { useMemo } from 'react';
@@ -54,23 +55,33 @@ interface ArticleProps {
 const ArticleLayout = styled.div`
   min-height: 100vh;
   background: #030308;
-  overflow-x: clip;  /* clip prevents horizontal scrollbar but doesn't create a clipping context for children */
+  overflow-x: clip;
 `;
 
-/** Opaque content section that slides over parallax bands */
-const ContentSection = styled.div`
-  position: relative;
-  background: #030308;
-  z-index: 1;
-`;
-
-const ArticleWrapper = styled.article`
+const ArticleWrapper = styled.article<{ $depth?: DepthStage }>`
   position: relative;
   max-width: 860px;
   margin: 0 auto;
   padding: 60px 24px;
-  color: #e0e0e0;
-  border-left: 6px solid var(--color-cyan-accent, #00d4ff);
+  transition: border-color 0.8s ease, color 0.8s ease;
+
+  /* Depth-aware border + text color */
+  ${p => (p.$depth === undefined || p.$depth === 0) && css`
+    color: #a0a0a0;
+    border-left: 6px solid rgba(255, 255, 255, 0.08);
+  `}
+  ${p => p.$depth === 1 && css`
+    color: #c0c0c0;
+    border-left: 6px solid rgba(255, 255, 255, 0.15);
+  `}
+  ${p => p.$depth === 2 && css`
+    color: #d8d8d8;
+    border-left: 6px solid rgba(0, 212, 255, 0.35);
+  `}
+  ${p => p.$depth === 3 && css`
+    color: #e0e0e0;
+    border-left: 6px solid var(--color-cyan-accent, #00d4ff);
+  `}
 
   @media (min-width: 1024px) {
     margin-left: 8%;
@@ -83,7 +94,6 @@ const ArticleWrapper = styled.article`
   }
 `;
 
-/** Inner wrapper for footer sections (no <article> semantics) */
 const FooterWrapper = styled.div`
   max-width: 860px;
   margin: 0 auto;
@@ -102,14 +112,27 @@ const FooterWrapper = styled.div`
   }
 `;
 
-const HeroImageWrapper = styled.div`
+const HeroImageWrapper = styled.div<{ $depth?: DepthStage }>`
   position: relative;
   width: 100%;
   height: 500px;
   margin-bottom: 48px;
   border-radius: 0;
   overflow: hidden;
-  border: 4px solid var(--color-cyan-accent, #00d4ff);
+  transition: filter 0.8s ease, border-color 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    filter: grayscale(0.8) contrast(1.15);
+  `}
+  ${p => p.$depth === 2 && css`
+    border: 3px solid rgba(0, 212, 255, 0.3);
+    filter: grayscale(0.3) saturate(1.1);
+  `}
+  ${p => p.$depth === 3 && css`
+    border: 4px solid var(--color-cyan-accent, #00d4ff);
+    filter: none;
+  `}
 
   @media (min-width: 900px) {
     width: 140%;
@@ -118,17 +141,29 @@ const HeroImageWrapper = styled.div`
 
   @media (max-width: 768px) {
     height: 280px;
-    border-width: 3px;
   }
 `;
 
-const ArticleHero = styled.header`
+const ArticleHero = styled.header<{ $depth?: DepthStage }>`
   margin-bottom: 48px;
   padding-bottom: 32px;
-  border-bottom: 4px solid rgba(255, 255, 255, 0.15);
+  transition: border-color 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth === 0) && css`
+    border-bottom: 4px solid rgba(255, 255, 255, 0.06);
+  `}
+  ${p => p.$depth === 1 && css`
+    border-bottom: 4px solid rgba(255, 255, 255, 0.12);
+  `}
+  ${p => p.$depth === 2 && css`
+    border-bottom: 4px solid rgba(0, 212, 255, 0.2);
+  `}
+  ${p => p.$depth === 3 && css`
+    border-bottom: 4px solid rgba(255, 255, 255, 0.15);
+  `}
 `;
 
-const ArticleTitle = styled.h1`
+const ArticleTitle = styled.h1<{ $depth?: DepthStage }>`
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 900;
   color: #ffffff;
@@ -142,59 +177,124 @@ const ArticleTitle = styled.h1`
     display: block;
     width: 120px;
     height: 6px;
-    background: var(--color-gold-highlight, #ffd700);
     margin-top: 16px;
+    transition: background 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth === 0) && css`
+      background: rgba(255, 255, 255, 0.15);
+    `}
+    ${p => p.$depth === 1 && css`
+      background: rgba(255, 255, 255, 0.25);
+    `}
+    ${p => p.$depth === 2 && css`
+      background: rgba(0, 212, 255, 0.5);
+    `}
+    ${p => p.$depth === 3 && css`
+      background: var(--color-gold-highlight, #ffd700);
+    `}
   }
 `;
 
-const ArticleMeta = styled.div`
+const ArticleMeta = styled.div<{ $depth?: DepthStage }>`
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
-  color: var(--color-cyan-accent, #00d4ff);
   font-size: 0.8rem;
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-top: 24px;
+  transition: color 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    color: rgba(255, 255, 255, 0.4);
+  `}
+  ${p => p.$depth === 2 && css`
+    color: rgba(0, 212, 255, 0.7);
+  `}
+  ${p => p.$depth === 3 && css`
+    color: var(--color-cyan-accent, #00d4ff);
+  `}
 `;
 
-const MetaItem = styled.span`
+const MetaItem = styled.span<{ $depth?: DepthStage }>`
   display: flex;
   align-items: center;
   gap: 8px;
 
   &:before {
     content: '//';
-    color: var(--color-gold-highlight, #ffd700);
     font-weight: 700;
+    transition: color 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      color: rgba(255, 255, 255, 0.2);
+    `}
+    ${p => p.$depth === 2 && css`
+      color: rgba(255, 215, 0, 0.5);
+    `}
+    ${p => p.$depth === 3 && css`
+      color: var(--color-gold-highlight, #ffd700);
+    `}
   }
 `;
 
-const ArticleContent = styled.div`
+const ArticleContent = styled.div<{ $depth?: DepthStage }>`
   font-size: 1.15rem;
   line-height: 1.85;
-  color: #d4d4d4;
+
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    color: #a8a8a8;
+  `}
+  ${p => p.$depth === 2 && css`
+    color: #c8c8c8;
+  `}
+  ${p => p.$depth === 3 && css`
+    color: #d4d4d4;
+  `}
 
   h2 {
     font-size: clamp(1.75rem, 4vw, 2.5rem);
     color: #ffffff;
     margin: 72px 0 24px;
     padding: 12px 0 12px 20px;
-    border-left: 5px solid var(--color-gold-highlight, #ffd700);
     text-transform: uppercase;
     letter-spacing: -0.02em;
     font-weight: 800;
+    transition: border-color 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth === 0) && css`
+      border-left: 5px solid rgba(255, 255, 255, 0.1);
+    `}
+    ${p => p.$depth === 1 && css`
+      border-left: 5px solid rgba(255, 255, 255, 0.2);
+    `}
+    ${p => p.$depth === 2 && css`
+      border-left: 5px solid rgba(0, 212, 255, 0.4);
+    `}
+    ${p => p.$depth === 3 && css`
+      border-left: 5px solid var(--color-gold-highlight, #ffd700);
+    `}
   }
 
   h3 {
     font-size: 1.4rem;
-    color: var(--color-cyan-accent, #00d4ff);
     margin: 48px 0 16px;
     font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 600;
+    transition: color 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      color: rgba(255, 255, 255, 0.5);
+    `}
+    ${p => p.$depth === 2 && css`
+      color: rgba(0, 212, 255, 0.7);
+    `}
+    ${p => p.$depth === 3 && css`
+      color: var(--color-cyan-accent, #00d4ff);
+    `}
   }
 
   p {
@@ -202,14 +302,24 @@ const ArticleContent = styled.div`
   }
 
   a {
-    color: var(--color-cyan-accent, #00d4ff);
     text-decoration: none;
-    border-bottom: 2px solid var(--color-gold-highlight, #ffd700);
     transition: color 0.2s;
 
-    &:hover {
-      color: var(--color-gold-highlight, #ffd700);
-    }
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      color: rgba(255, 255, 255, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      &:hover { color: #ffffff; }
+    `}
+    ${p => p.$depth === 2 && css`
+      color: rgba(0, 212, 255, 0.8);
+      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+      &:hover { color: var(--color-cyan-accent, #00d4ff); }
+    `}
+    ${p => p.$depth === 3 && css`
+      color: var(--color-cyan-accent, #00d4ff);
+      border-bottom: 2px solid var(--color-gold-highlight, #ffd700);
+      &:hover { color: var(--color-gold-highlight, #ffd700); }
+    `}
   }
 
   ul, ol {
@@ -222,12 +332,23 @@ const ArticleContent = styled.div`
   }
 
   code {
-    background: rgba(0, 212, 255, 0.08);
     padding: 3px 8px;
     border-radius: 0;
-    border: 1px solid rgba(0, 212, 255, 0.2);
     font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
     font-size: 0.88em;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    `}
+    ${p => p.$depth === 2 && css`
+      background: rgba(0, 212, 255, 0.06);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+    `}
+    ${p => p.$depth === 3 && css`
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+    `}
   }
 
   pre:not([data-handwritten]) {
@@ -245,14 +366,28 @@ const ArticleContent = styled.div`
   }
 
   blockquote {
-    border-left: 5px solid var(--color-gold-highlight, #ffd700);
     padding: 16px 24px;
     margin: 2.5rem 0;
-    background: rgba(255, 215, 0, 0.04);
     font-style: normal;
     font-weight: 500;
-    color: #c8c8c8;
     border-radius: 0;
+    transition: border-color 0.8s ease, background 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      border-left: 5px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+      color: #999;
+    `}
+    ${p => p.$depth === 2 && css`
+      border-left: 5px solid rgba(0, 212, 255, 0.3);
+      background: rgba(0, 212, 255, 0.03);
+      color: #b8b8b8;
+    `}
+    ${p => p.$depth === 3 && css`
+      border-left: 5px solid var(--color-gold-highlight, #ffd700);
+      background: rgba(255, 215, 0, 0.04);
+      color: #c8c8c8;
+    `}
   }
 `;
 
@@ -356,32 +491,69 @@ const ShareButton = styled.a`
   }
 `;
 
-const InternalLinks = styled.nav`
+const InternalLinks = styled.nav<{ $depth?: DepthStage }>`
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 32px;
   padding: 16px 0;
-  border-bottom: 3px solid rgba(255, 255, 255, 0.1);
   font-size: 0.8rem;
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  transition: border-color 0.8s ease, opacity 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth === 0) && css`
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    opacity: 0.4;
+  `}
+  ${p => p.$depth === 1 && css`
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    opacity: 0.6;
+  `}
+  ${p => p.$depth === 2 && css`
+    border-bottom: 2px solid rgba(0, 212, 255, 0.15);
+    opacity: 0.8;
+  `}
+  ${p => p.$depth === 3 && css`
+    border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+    opacity: 1;
+  `}
 `;
 
-const InternalLink = styled(Link)`
-  color: var(--color-cyan-accent, #00d4ff);
+const InternalLink = styled(Link)<{ $depth?: DepthStage }>`
   text-decoration: none;
   padding: 6px 14px;
   border-radius: 0;
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  background: rgba(0, 212, 255, 0.05);
   transition: all 0.2s;
 
-  &:hover {
-    background: rgba(0, 212, 255, 0.15);
-    border-color: var(--color-cyan-accent, #00d4ff);
-  }
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    color: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    &:hover {
+      color: rgba(255, 255, 255, 0.6);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+  `}
+  ${p => p.$depth === 2 && css`
+    color: rgba(0, 212, 255, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    background: rgba(0, 212, 255, 0.03);
+    &:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: rgba(0, 212, 255, 0.4);
+    }
+  `}
+  ${p => p.$depth === 3 && css`
+    color: var(--color-cyan-accent, #00d4ff);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    background: rgba(0, 212, 255, 0.05);
+    &:hover {
+      background: rgba(0, 212, 255, 0.15);
+      border-color: var(--color-cyan-accent, #00d4ff);
+    }
+  `}
 `;
 
 // Discovery Section Styles
@@ -682,24 +854,17 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
       <CircleNav />
 
-      {/* ---- Opening parallax band: taller, higher, with light-leak ---- */}
-      {multiArtImages[0] && (
-        <ParallaxBand
-          image={multiArtImages[0]}
-          height="85vh"
-          mobileHeight="50vh"
-          glowSpread={160}
-          glowIntensity={0.4}
-        />
-      )}
-
-      {/* ---- Section 1: Hero + Intro content ---- */}
-      <GlowingContentSection image={multiArtImages[0]} glowPosition="top">
+      {/* ================================================================
+          DEPTH 0 — THE SURFACE
+          Pure brutalist. Black void. White text. No color. No decoration.
+          The article begins as a clinical document, a blank page.
+          ================================================================ */}
+      <DepthSection depth={0}>
         <DeskSurface articleSlug={slug} />
-        <ArticleWrapper>
-          <ArticleHero>
+        <ArticleWrapper $depth={0}>
+          <ArticleHero $depth={0}>
             {heroImage && (
-              <HeroImageWrapper>
+              <HeroImageWrapper $depth={0}>
                 <Image
                   src={heroImage}
                   alt={title}
@@ -710,19 +875,19 @@ const ArticlePage: NextPage<ArticleProps> = ({
                 />
               </HeroImageWrapper>
             )}
-            <ArticleTitle>{title}</ArticleTitle>
-            <ArticleMeta>
-              <MetaItem>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</MetaItem>
-              <MetaItem>{author.join(', ')}</MetaItem>
-              <MetaItem>{readingTime} min read</MetaItem>
+            <ArticleTitle $depth={0}>{title}</ArticleTitle>
+            <ArticleMeta $depth={0}>
+              <MetaItem $depth={0}>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</MetaItem>
+              <MetaItem $depth={0}>{author.join(', ')}</MetaItem>
+              <MetaItem $depth={0}>{readingTime} min read</MetaItem>
             </ArticleMeta>
           </ArticleHero>
 
-          <InternalLinks aria-label="Related navigation">
-            <InternalLink href="/speculative-ai">Speculative AI Hub</InternalLink>
-            <InternalLink href="/agent-futures">Agent Futures</InternalLink>
-            <InternalLink href="/emergent-intelligence">Emergent Intelligence</InternalLink>
-            <InternalLink href="/about">About</InternalLink>
+          <InternalLinks $depth={0} aria-label="Related navigation">
+            <InternalLink $depth={0} href="/speculative-ai">Speculative AI Hub</InternalLink>
+            <InternalLink $depth={0} href="/agent-futures">Agent Futures</InternalLink>
+            <InternalLink $depth={0} href="/emergent-intelligence">Emergent Intelligence</InternalLink>
+            <InternalLink $depth={0} href="/about">About</InternalLink>
           </InternalLinks>
 
           <ArticleClassification {...inferClassificationFromSlug(slug)} />
@@ -741,118 +906,127 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </div>
           )}
 
-          {/* Intro content chunk(s) */}
-          <ArticleContent>
+          <ArticleContent $depth={0}>
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
               {sections[0]?.chunks.join('\n\n') || content}
             </ReactMarkdown>
           </ArticleContent>
         </ArticleWrapper>
-      </GlowingContentSection>
+      </DepthSection>
 
-      {/* ---- Editorial break 1: parallax + left/right layout ---- */}
-      {sections.length > 1 && multiArtImages[1] && (
-        <>
-          <ParallaxBand
-            image={multiArtImages[1]}
+      {/* ================================================================
+          DEPTH 1 — FIRST CRACKS
+          The first artwork appears, desaturated. Faint hairlines emerge.
+          Something stirs beneath the surface.
+          ================================================================ */}
+      {multiArtImages[0] && (
+        <DepthSection depth={1}>
+          <DepthDivider depth={1} />
+          <ArtFrame
+            image={multiArtImages[0]}
+            depth={1}
             height="70vh"
             mobileHeight="40vh"
-            glowSpread={140}
-            glowIntensity={0.38}
+            priority
           />
-          <GlowingContentSection image={multiArtImages[1]} glowPosition="top">
+        </DepthSection>
+      )}
+
+      {sections.length > 1 && (
+        <DepthSection depth={1}>
+          {multiArtImages[1] ? (
             <EditorialSection
               image={multiArtImages[1]}
               imagePosition="left"
+              depth={1}
             >
-              <ArticleContent>
+              <ArticleContent $depth={1}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
                   {sections[1].chunks.join('\n\n')}
                 </ReactMarkdown>
               </ArticleContent>
             </EditorialSection>
-          </GlowingContentSection>
-        </>
+          ) : (
+            <ArticleWrapper $depth={1}>
+              <ArticleContent $depth={1}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[1].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </ArticleWrapper>
+          )}
+        </DepthSection>
       )}
 
-      {/* Fallback: if no second image, render section 1 chunks inline */}
-      {sections.length > 1 && !multiArtImages[1] && (
-        <GlowingContentSection image={multiArtImages[0]} glowPosition="both">
-          <ArticleWrapper>
-            <ArticleContent>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
-                {sections[1].chunks.join('\n\n')}
-              </ReactMarkdown>
-            </ArticleContent>
-          </ArticleWrapper>
-        </GlowingContentSection>
-      )}
-
-      {/* ---- Editorial break 2: parallax + right/left layout ---- */}
-      {sections.length > 2 && multiArtImages[2] && (
-        <>
-          <ParallaxBand
-            image={multiArtImages[2]}
+      {/* ================================================================
+          DEPTH 2 — AWAKENING
+          Color bleeds in. Cyan accents appear. The image gains saturation.
+          The world is no longer monochrome.
+          ================================================================ */}
+      {multiArtImages[1] && (
+        <DepthSection depth={2}>
+          <DepthDivider depth={2} />
+          <ArtFrame
+            image={multiArtImages[1]}
+            depth={2}
             height="60vh"
             mobileHeight="35vh"
-            glowSpread={120}
-            glowIntensity={0.35}
           />
-          <GlowingContentSection image={multiArtImages[2]} glowPosition="top">
+        </DepthSection>
+      )}
+
+      {sections.length > 2 && (
+        <DepthSection depth={2}>
+          {multiArtImages[2] ? (
             <EditorialSection
               image={multiArtImages[2]}
               imagePosition="right"
+              depth={2}
             >
-              <ArticleContent>
+              <ArticleContent $depth={2}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
                   {sections[2].chunks.join('\n\n')}
                 </ReactMarkdown>
               </ArticleContent>
             </EditorialSection>
-          </GlowingContentSection>
-        </>
+          ) : (
+            <ArticleWrapper $depth={2}>
+              <ArticleContent $depth={2}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[2].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </ArticleWrapper>
+          )}
+        </DepthSection>
       )}
 
-      {/* Fallback: if no third image, render section 2 chunks inline */}
-      {sections.length > 2 && !multiArtImages[2] && (
-        <GlowingContentSection image={multiArtImages[1] || multiArtImages[0]} glowPosition="both">
-          <ArticleWrapper>
-            <ArticleContent>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
-                {sections[2].chunks.join('\n\n')}
-              </ReactMarkdown>
-            </ArticleContent>
-          </ArticleWrapper>
-        </GlowingContentSection>
-      )}
-
-      {/* ---- Image gallery ---- */}
+      {/* ================================================================
+          DEPTH 3 — WONDERLAND
+          Full bloom. Gold highlights, saturated art, lush color. The
+          gallery, the discovery section, the full experience.
+          ================================================================ */}
       {multiArtImages.length > 0 && (
-        <GlowingContentSection
-          image={multiArtImages[multiArtImages.length - 1]}
-          glowPosition="both"
-        >
-          <ArticleWrapper>
+        <DepthSection depth={3}>
+          <DepthDivider depth={3} />
+          <ArtFrame
+            image={multiArtImages[Math.min(multiArtImages.length - 1, 2)]}
+            depth={3}
+            height="50vh"
+            mobileHeight="30vh"
+          />
+        </DepthSection>
+      )}
+
+      {multiArtImages.length > 0 && (
+        <DepthSection depth={3}>
+          <ArticleWrapper $depth={3}>
             <ArticleImageGallery images={multiArtImages} articleTitle={title} />
           </ArticleWrapper>
-        </GlowingContentSection>
+        </DepthSection>
       )}
 
-      {/* ---- Closing parallax + Footer ---- */}
-      {multiArtImages.length > 0 && (
-        <ParallaxBand
-          image={multiArtImages[Math.min(multiArtImages.length - 1, 2)]}
-          height="50vh"
-          mobileHeight="30vh"
-          glowSpread={100}
-          glowIntensity={0.3}
-        />
-      )}
-
-      <GlowingContentSection
-        image={multiArtImages[multiArtImages.length - 1]}
-        glowPosition="top"
-      >
+      <DepthSection depth={3}>
         <FooterWrapper>
           <ShareButtons>
             <ShareButton
@@ -923,7 +1097,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </RelatedArticles>
           )}
         </FooterWrapper>
-      </GlowingContentSection>
+      </DepthSection>
     </ArticleLayout>
   );
 };
