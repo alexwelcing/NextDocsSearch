@@ -476,7 +476,7 @@ export default function TerminalInterface({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {filteredEnhancedArticles.length > 0 ? (
                 filteredEnhancedArticles.map((article) => {
-                  const thumbSrc = article.ogImage || article.heroImage || article.thumbnail;
+                  const thumbSrc = article.heroImage || article.thumbnail || article.ogImage;
                   return (
                     <a
                       key={article.slug}
