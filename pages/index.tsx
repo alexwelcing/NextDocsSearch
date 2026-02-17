@@ -238,7 +238,6 @@ function HomeContent() {
               onTimeUpdate={setTimeRemaining}
             >
               <ArticleDisplayPanel
-                articles={articles}
                 isOpen={isArticleDisplayOpen}
                 onClose={() => setIsArticleDisplayOpen(false)}
               />

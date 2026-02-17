@@ -577,7 +577,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
               {/* Article Display Panel */}
               <ArticleDisplayPanel
-                articles={enhancedArticles}
                 isOpen={isArticleDisplayOpen}
                 onClose={() => setIsArticleDisplayOpen(false)}
               />

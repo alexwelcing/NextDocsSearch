@@ -1,324 +1,221 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import styled from 'styled-components';
-import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
-import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import * as THREE from 'three';
+import type { ArticleDisplay } from '@/pages/api/article-display';
 
-const PanelContainer = styled.div`
-  width: 800px;
-  height: 600px;
-  background: rgba(10, 10, 16, 0.95);
-  border: 1px solid rgba(100, 200, 255, 0.3);
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  color: #e0e0ff;
-  font-family: 'Courier New', monospace;
-  box-shadow: 0 0 30px rgba(0, 100, 255, 0.2);
-  backdrop-filter: blur(10px);
-  overflow: hidden;
-  pointer-events: auto;
+/**
+ * Self-contained 3D floating panel that displays article details.
+ * Fetches its own data from /api/article-display.
+ * Uses only inline styles — no styled-components, no next/image.
+ */
 
-  @keyframes shimmerAnimation {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid rgba(100, 200, 255, 0.2);
-  padding-bottom: 10px;
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  font-size: 24px;
-  color: #00ffff;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  color: #ff4444;
-  cursor: pointer;
-  font-size: 24px;
-  &:hover {
-    color: #ff8888;
-  }
-`;
-
-const Content = styled.div`
-  flex: 1;
-  display: flex;
-  gap: 20px;
-  overflow: hidden;
-`;
-
-const ImageContainer = styled.div`
-  flex: 1;
-  background: #000;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-`;
-
-const InfoContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;
-`;
-
-const Description = styled.p`
-  font-size: 16px;
-  line-height: 1.5;
-  color: #cccccc;
-`;
-
-const MetaData = styled.div`
-  font-size: 12px;
-  color: #8888aa;
-`;
-
-const ReadLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: auto;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 100, 200, 0.4));
-  border: 1px solid rgba(0, 200, 255, 0.6);
-  border-radius: 6px;
-  color: #00ffff;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.4), rgba(0, 100, 200, 0.6));
-    box-shadow: 0 0 16px rgba(0, 255, 255, 0.4);
-    transform: translateY(-1px);
-  }
-`;
-
-const Controls = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(100, 200, 255, 0.2);
-`;
-
-const NavButton = styled.button`
-  background: rgba(0, 50, 100, 0.5);
-  border: 1px solid rgba(0, 200, 255, 0.5);
-  color: #00ffff;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-
-  &:hover {
-    background: rgba(0, 100, 200, 0.5);
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const PageIndicator = styled.span`
-  font-size: 14px;
-  color: #8888aa;
-`;
-
-interface ArticleDisplayPanelProps {
-  articles: EnhancedArticleData[];
+interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function ArticleDisplayPanel({ articles, isOpen, onClose }: ArticleDisplayPanelProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+export default function ArticleDisplayPanel({ isOpen, onClose }: Props) {
+  const [articles, setArticles] = useState<ArticleDisplay[]>([]);
+  const [idx, setIdx] = useState(0);
+  const [imgOk, setImgOk] = useState(false);
+  const [status, setStatus] = useState('INITIALIZING...');
   const groupRef = useRef<THREE.Group>(null);
 
-  // Track when panel opens to prevent flicker
-  const [panelReady, setPanelReady] = useState(false);
-
-  // Floating animation parameters
-  const floatParams = useMemo(() => ({
-    baseX: 0,
-    baseY: 4,
-    baseZ: -6,
-    floatAmplitudeX: 0.3,
-    floatAmplitudeY: 0.15,
-    floatSpeedX: 0.4,
-    floatSpeedY: 0.6,
-    rotationAmplitude: 0.02,
-    rotationSpeed: 0.3,
-  }), []);
-
-  // Reset image loaded state when changing articles
+  // Fetch article data when panel opens
   useEffect(() => {
-    setImageLoaded(false);
-  }, [currentIndex]);
+    if (!isOpen) return;
 
-  // Handle panel visibility with delay to prevent flicker
-  useEffect(() => {
-    if (isOpen && articles.length > 0) {
-      // Small delay before showing to ensure state is ready
-      const timer = setTimeout(() => {
-        setPanelReady(true);
-        setIsVisible(true);
-      }, 50);
-      return () => clearTimeout(timer);
-    } else {
-      setIsVisible(false);
-      setPanelReady(false);
-    }
-  }, [isOpen, articles.length]);
+    let cancelled = false;
+    setStatus('FETCHING DATA...');
 
-  // Floating animation
+    fetch('/api/article-display')
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(body => {
+        if (cancelled) return;
+        const list = body?.articles;
+        if (Array.isArray(list) && list.length > 0) {
+          setArticles(list);
+          setStatus(`${list.length} RECORDS LOADED`);
+        } else {
+          setStatus(`NO DATA — API returned count=${body?.count ?? '?'}`);
+        }
+      })
+      .catch(err => {
+        if (!cancelled) setStatus(`ERROR: ${err.message}`);
+      });
+
+    return () => { cancelled = true; };
+  }, [isOpen]);
+
+  // Reset image state on article change
+  useEffect(() => { setImgOk(false); }, [idx]);
+
+  // Gentle floating animation
   useFrame(({ clock }) => {
-    if (!groupRef.current || !isVisible) return;
-
-    const time = clock.getElapsedTime();
-
-    // Smooth floating motion
-    const floatX = Math.sin(time * floatParams.floatSpeedX) * floatParams.floatAmplitudeX;
-    const floatY = Math.sin(time * floatParams.floatSpeedY) * floatParams.floatAmplitudeY;
-
-    // Apply floating position
-    groupRef.current.position.x = floatParams.baseX + floatX;
-    groupRef.current.position.y = floatParams.baseY + floatY;
-    groupRef.current.position.z = floatParams.baseZ;
-
-    // Subtle rotation
-    groupRef.current.rotation.y = Math.sin(time * floatParams.rotationSpeed) * floatParams.rotationAmplitude;
-    groupRef.current.rotation.x = Math.cos(time * floatParams.rotationSpeed * 0.7) * (floatParams.rotationAmplitude * 0.5);
+    if (!groupRef.current || !isOpen) return;
+    const t = clock.getElapsedTime();
+    groupRef.current.position.set(
+      Math.sin(t * 0.4) * 0.3,
+      4 + Math.sin(t * 0.6) * 0.15,
+      -6
+    );
+    groupRef.current.rotation.y = Math.sin(t * 0.3) * 0.02;
   });
 
-  // Don't render until panel is ready to prevent flicker
-  if (!panelReady || !isVisible || articles.length === 0) return null;
+  if (!isOpen) return null;
 
-  const article = articles[currentIndex] ?? {};
-  const imageSrc = article.heroImage || article.ogImage || article.thumbnail;
+  const article = articles[idx];
+  const total = articles.length;
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % articles.length);
+  const prev = () => setIdx(i => (i - 1 + total) % total);
+  const next = () => setIdx(i => (i + 1) % total);
+
+  // ─── All styles are inline objects ───
+
+  const panel: React.CSSProperties = {
+    width: 800, height: 600,
+    background: 'rgba(10,10,16,0.95)',
+    border: '1px solid rgba(100,200,255,0.3)',
+    borderRadius: 12, padding: 24,
+    display: 'flex', flexDirection: 'column',
+    color: '#e0e0ff',
+    fontFamily: "'Courier New', monospace",
+    boxShadow: '0 0 30px rgba(0,100,255,0.2)',
+    overflow: 'hidden', pointerEvents: 'auto',
   };
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + articles.length) % articles.length);
+  const header: React.CSSProperties = {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    marginBottom: 16, paddingBottom: 10,
+    borderBottom: '1px solid rgba(100,200,255,0.2)',
+  };
+
+  const heading: React.CSSProperties = {
+    margin: 0, fontSize: 20, color: '#00ffff',
+    textShadow: '0 0 10px rgba(0,255,255,0.5)',
+  };
+
+  const closeBtn: React.CSSProperties = {
+    background: 'none', border: 'none', color: '#ff4444',
+    cursor: 'pointer', fontSize: 22, fontWeight: 'bold',
+  };
+
+  const content: React.CSSProperties = {
+    flex: 1, display: 'flex', gap: 20, overflow: 'hidden',
+  };
+
+  const imgBox: React.CSSProperties = {
+    flex: 1, position: 'relative',
+    background: '#111', border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: 8, overflow: 'hidden',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+  };
+
+  const imgStyle: React.CSSProperties = {
+    position: 'absolute', top: 0, left: 0,
+    width: '100%', height: '100%', objectFit: 'cover',
+  };
+
+  const info: React.CSSProperties = {
+    flex: 1, display: 'flex', flexDirection: 'column', gap: 8,
+    overflowY: 'auto',
+  };
+
+  const meta: React.CSSProperties = { fontSize: 12, color: '#8888aa', lineHeight: 1.6 };
+
+  const linkBtn: React.CSSProperties = {
+    display: 'inline-block', marginTop: 'auto', padding: '10px 20px',
+    background: 'linear-gradient(135deg, rgba(0,212,255,0.25), rgba(0,100,200,0.4))',
+    border: '1px solid rgba(0,200,255,0.6)', borderRadius: 6,
+    color: '#00ffff', fontFamily: "'Courier New', monospace",
+    fontSize: 13, fontWeight: 600, textDecoration: 'none',
+    textTransform: 'uppercase', letterSpacing: '0.08em', cursor: 'pointer',
+  };
+
+  const nav: React.CSSProperties = {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    marginTop: 16, paddingTop: 10,
+    borderTop: '1px solid rgba(100,200,255,0.2)',
+  };
+
+  const navBtn: React.CSSProperties = {
+    background: 'rgba(0,50,100,0.5)', border: '1px solid rgba(0,200,255,0.5)',
+    color: '#00ffff', padding: '8px 16px', borderRadius: 4,
+    cursor: 'pointer', fontSize: 13,
+  };
+
+  const pageTxt: React.CSSProperties = { fontSize: 14, color: '#8888aa' };
+
+  const statusBox: React.CSSProperties = {
+    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: '#666', fontFamily: 'monospace', fontSize: 14,
   };
 
   return (
-    <group ref={groupRef} position={[floatParams.baseX, floatParams.baseY, floatParams.baseZ]}>
-      <Html transform occlude position={[0, 0, 0]} style={{ width: '800px', height: '600px' }}>
-        <PanelContainer>
-          <Header>
-            <Title>ARCHIVE_DISPLAY_MODE</Title>
-            <CloseButton onClick={onClose}>
-              <X size={24} />
-            </CloseButton>
-          </Header>
+    <group ref={groupRef} position={[0, 4, -6]}>
+      <Html transform occlude style={{ width: 800, height: 600 }}>
+        <div style={panel}>
+          {/* Header */}
+          <div style={header}>
+            <h2 style={heading}>ARCHIVE_DISPLAY</h2>
+            <button style={closeBtn} onClick={onClose}>X</button>
+          </div>
 
-          <Content>
-            <ImageContainer>
-              {imageSrc ? (
-                <>
-                  {/* Shimmer placeholder while image loads */}
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: `linear-gradient(90deg, #333 0%, #444 50%, #333 100%)`,
-                    backgroundSize: '200% 100%',
-                    animation: imageLoaded ? 'none' : 'shimmerAnimation 1.5s infinite linear',
-                    opacity: imageLoaded ? 0 : 1,
-                    transition: 'opacity 0.3s ease-in-out',
-                  }} />
-                  {/* Use plain <img> instead of next/image — the Next.js Image component
-                      uses IntersectionObserver for lazy loading, which doesn't fire inside
-                      drei's <Html> portal (3D CSS transforms confuse the observer). */}
-                  <img
-                    src={imageSrc}
-                    alt={article.title || 'Article image'}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      opacity: imageLoaded ? 1 : 0,
-                      transition: 'opacity 0.4s ease-in-out',
-                    }}
-                    onLoad={() => setImageLoaded(true)}
-                    onError={(e) => {
-                      // If the primary image fails, hide the shimmer
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </>
-              ) : (
-                <div style={{ color: '#666', fontFamily: 'monospace' }}>NO VISUAL DATA</div>
-              )}
-            </ImageContainer>
-            <InfoContainer>
-              <h3 style={{ margin: '0 0 10px 0', color: '#fff' }}>{article.title || 'Untitled'}</h3>
-              <Description>{article.description || 'No description available.'}</Description>
-              <MetaData>
-                <div>DATE: {article.date || 'Unknown'}</div>
-                <div>TYPE: {article.articleType?.toUpperCase() || 'UNCLASSIFIED'}</div>
-                {article.horizon && <div>HORIZON: {article.horizon}</div>}
-                {article.polarity && <div>POLARITY: {article.polarity}</div>}
-                <div>READ TIME: {article.readingTime ? `${article.readingTime} min` : 'N/A'}</div>
-              </MetaData>
-              {article.slug && (
-                <ReadLink href={`/articles/${article.slug}`}>
-                  Read Article →
-                </ReadLink>
-              )}
-            </InfoContainer>
-          </Content>
+          {article ? (
+            <>
+              <div style={content}>
+                {/* Image */}
+                <div style={imgBox}>
+                  {article.image ? (
+                    <img
+                      key={article.slug}
+                      src={article.image}
+                      alt={article.title}
+                      style={imgStyle}
+                      onLoad={() => setImgOk(true)}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <span style={{ color: '#555' }}>NO VISUAL DATA</span>
+                  )}
+                </div>
 
-          <Controls>
-            <NavButton onClick={handlePrev}>
-              <ArrowLeft size={16} /> PREV
-            </NavButton>
-            <PageIndicator>
-              {currentIndex + 1} / {articles.length}
-            </PageIndicator>
-            <NavButton onClick={handleNext}>
-              NEXT <ArrowRight size={16} />
-            </NavButton>
-          </Controls>
-        </PanelContainer>
+                {/* Info */}
+                <div style={info}>
+                  <h3 style={{ margin: 0, color: '#fff', fontSize: 18 }}>{article.title}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.5, color: '#ccc', margin: 0 }}>
+                    {article.description}
+                  </p>
+                  <div style={meta}>
+                    <div>DATE: {article.date}</div>
+                    <div>TYPE: {article.articleType.toUpperCase()}</div>
+                    {article.horizon && <div>HORIZON: {article.horizon}</div>}
+                    {article.polarity && <div>POLARITY: {article.polarity}</div>}
+                    <div>READ TIME: {article.readingTime} min</div>
+                  </div>
+                  <a href={`/articles/${article.slug}`} style={linkBtn}>
+                    Read Article &rarr;
+                  </a>
+                </div>
+              </div>
+
+              {/* Navigation */}
+              <div style={nav}>
+                <button style={navBtn} onClick={prev}>&larr; PREV</button>
+                <span style={pageTxt}>{idx + 1} / {total}</span>
+                <button style={navBtn} onClick={next}>NEXT &rarr;</button>
+              </div>
+            </>
+          ) : (
+            <div style={statusBox}>{status}</div>
+          )}
+        </div>
       </Html>
     </group>
   );
