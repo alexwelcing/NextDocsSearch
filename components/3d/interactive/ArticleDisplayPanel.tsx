@@ -1,30 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import Image from 'next/image';
 import { Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import styled from 'styled-components';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import * as THREE from 'three';
-
-const shimmer = (w: number, h: number) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#333" offset="20%" />
-      <stop stop-color="#222" offset="50%" />
-      <stop stop-color="#333" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#333" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
-</svg>`
-
-const toBase64 = (str: string) =>
-  typeof window === 'undefined'
-    ? Buffer.from(str).toString('base64')
-    : window.btoa(str)
 
 const PanelContainer = styled.div`
   width: 800px;
@@ -278,7 +258,7 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
             <ImageContainer>
               {(article.ogImage || article.heroImage || article.thumbnail) ? (
                 <>
-                  {/* Always show placeholder shimmer first */}
+                  {/* Shimmer placeholder */}
                   <div style={{
                     position: 'absolute',
                     inset: 0,
@@ -288,14 +268,18 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
                     opacity: imageLoaded ? 0 : 1,
                     transition: 'opacity 0.3s ease-in-out',
                   }} />
-                  <Image
-                    src={(article.ogImage || article.heroImage || article.thumbnail)!}
+                  {/* Plain <img> — Next Image doesn't work inside drei Html portal */}
+                  <img
+                    src={article.ogImage || article.heroImage || article.thumbnail}
                     alt={article.title}
-                    fill
                     style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'cover',
                       opacity: imageLoaded ? 1 : 0,
-                      transition: 'opacity 0.4s ease-in-out'
+                      transition: 'opacity 0.4s ease-in-out',
                     }}
                     onLoad={() => setImageLoaded(true)}
                   />
