@@ -17,23 +17,37 @@ interface WorldGalleryProps {
 
 // World display names and descriptions - mapped to actual panorama content
 // These names reflect what you actually see in each 360° scene
-const WORLD_METADATA: Record<string, { name: string; description: string; preview: string }> = {
-  'bg1': { name: 'Mountain Study', description: 'Cozy cabin workspace', preview: 'Wooden desk with mountain views' },
-  'bg2': { name: 'Beach Office', description: 'Coastal workspace', preview: 'Ocean breeze desk setup' },
-  'bg3': { name: 'Night Studio', description: 'Urban creative space', preview: 'City lights workstation' },
-  'bg4': { name: 'Teal Loft', description: 'Modern art studio', preview: 'Vibrant creative corner' },
-  'bg5': { name: 'Grand Library', description: 'Classic reading room', preview: 'Books and warm lighting' },
-  'bg6': { name: 'Corner Office', description: 'Executive workspace', preview: 'Sleek professional setup' },
-  'bg7': { name: 'Vinyl Lounge', description: 'Retro music room', preview: 'Records and warm wood' },
-  'bg8': { name: 'Sound Lab', description: 'Audio production suite', preview: 'Mixing desk and monitors' },
-  'bg9': { name: "Enchanter's Den", description: 'Mystical workshop', preview: 'Magical artifacts and tomes' },
-  'cave': { name: 'Hollow Haven', description: 'Fantasy treehouse', preview: 'Whimsical forest dwelling' },
-  'scifi1': { name: 'Neon Nexus', description: 'Cyberpunk command', preview: 'Holographic displays' },
-  'space': { name: 'Orbital Station', description: 'Space station view', preview: 'Earth from above' },
-  'start': { name: 'Command Deck', description: 'Starship bridge', preview: 'Sci-fi control panels' },
-  'train': { name: 'Sky Pavilion', description: 'Mountain platform', preview: 'Panoramic peaks' },
-  'splat4s': { name: '3D Reality', description: 'Immersive dimension', preview: 'Full 3D environment' },
+const WORLD_METADATA: Record<string, { name: string; description: string; preview: string; type: 'image' | 'splat'; ext: string }> = {
+  'bg1': { name: 'Mountain Study', description: 'Cozy cabin workspace', preview: 'Wooden desk with mountain views', type: 'image', ext: 'jpg' },
+  'bg2': { name: 'Beach Office', description: 'Coastal workspace', preview: 'Ocean breeze desk setup', type: 'image', ext: 'jpg' },
+  'bg3': { name: 'Night Studio', description: 'Urban creative space', preview: 'City lights workstation', type: 'image', ext: 'jpg' },
+  'bg4': { name: 'Teal Loft', description: 'Modern art studio', preview: 'Vibrant creative corner', type: 'image', ext: 'jpg' },
+  'bg5': { name: 'Grand Library', description: 'Classic reading room', preview: 'Books and warm lighting', type: 'image', ext: 'jpg' },
+  'bg6': { name: 'Corner Office', description: 'Executive workspace', preview: 'Sleek professional setup', type: 'image', ext: 'jpg' },
+  'bg7': { name: 'Vinyl Lounge', description: 'Retro music room', preview: 'Records and warm wood', type: 'image', ext: 'jpg' },
+  'bg8': { name: 'Sound Lab', description: 'Audio production suite', preview: 'Mixing desk and monitors', type: 'image', ext: 'jpg' },
+  'bg9': { name: "Enchanter's Den", description: 'Mystical workshop', preview: 'Magical artifacts and tomes', type: 'image', ext: 'jpg' },
+  'cave': { name: 'Hollow Haven', description: 'Fantasy treehouse', preview: 'Whimsical forest dwelling', type: 'image', ext: 'jpg' },
+  'scifi1': { name: 'Neon Nexus', description: 'Cyberpunk command', preview: 'Holographic displays', type: 'image', ext: 'jpg' },
+  'space': { name: 'Orbital Station', description: 'Space station view', preview: 'Earth from above', type: 'image', ext: 'jpg' },
+  'start': { name: 'Command Deck', description: 'Starship bridge', preview: 'Sci-fi control panels', type: 'image', ext: 'jpg' },
+  'train': { name: 'Sky Pavilion', description: 'Mountain platform', preview: 'Panoramic peaks', type: 'image', ext: 'jpg' },
+  'splat4s': { name: '3D Reality', description: 'Immersive dimension', preview: 'Full 3D environment', type: 'splat', ext: 'spz' },
 };
+
+// Build the worlds list at module level from the known metadata.
+// This avoids a runtime API call to scan the filesystem, which fails on
+// serverless hosts where public/ assets are excluded from function bundles.
+const STATIC_WORLDS: WorldInfo[] = Object.entries(WORLD_METADATA).map(([key, meta]) => {
+  const dir = meta.type === 'splat' ? 'splats' : 'background';
+  return {
+    id: `${meta.type === 'splat' ? 'splat' : 'bg'}-${key}.${meta.ext}`,
+    name: meta.name,
+    path: `/${dir}/${key}.${meta.ext}`,
+    type: meta.type,
+    thumbnail: meta.type === 'image' ? `/${dir}/${key}.${meta.ext}` : undefined,
+  };
+});
 
 // Special features that can be unlocked
 export interface UnlockableFeature {
@@ -50,11 +64,6 @@ const UNLOCKABLE_FEATURES: UnlockableFeature[] = [
   { id: 'speed', name: 'Hyper Transit', description: 'Instant world switching', requiredWorlds: 10, unlocked: false },
   { id: 'secret', name: '???', description: 'Complete your journey to discover', requiredWorlds: -1, unlocked: false },
 ];
-
-function getWorldNameFromPath(path: string): { name: string; description: string; preview?: string } {
-  const filename = path.split('/').pop()?.replace(/\.[^/.]+$/, '') || 'Unknown';
-  return WORLD_METADATA[filename] || { name: filename.charAt(0).toUpperCase() + filename.slice(1), description: 'Unexplored territory', preview: 'Unknown realm' };
-}
 
 // Transition messages for world switching
 const TRANSITION_MESSAGES = [
@@ -99,33 +108,10 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
     isVisited
   } = useWorldTracker(worlds);
 
-  // Fetch all available worlds
+  // Use the statically-defined worlds list (no runtime API call needed)
   useEffect(() => {
-    const fetchWorlds = async () => {
-      try {
-        const response = await fetch('/api/backgrounds');
-        const data = await response.json();
-        if (data.backgrounds) {
-          const worldList: WorldInfo[] = data.backgrounds.map((bg: { id: string; name: string; path: string; type: 'image' | 'splat' }) => {
-            const meta = getWorldNameFromPath(bg.path);
-            return {
-              id: bg.id,
-              name: meta.name,
-              path: bg.path,
-              type: bg.type,
-              thumbnail: bg.path,
-            };
-          });
-          setWorlds(worldList);
-        }
-      } catch (error) {
-        console.error('Failed to fetch worlds:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWorlds();
+    setWorlds(STATIC_WORLDS);
+    setLoading(false);
   }, []);
 
   // Check and unlock features based on visited count

@@ -117,7 +117,32 @@ const Description = styled.p`
 const MetaData = styled.div`
   font-size: 12px;
   color: #8888aa;
+`;
+
+const ReadLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin-top: auto;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 100, 200, 0.4));
+  border: 1px solid rgba(0, 200, 255, 0.6);
+  border-radius: 6px;
+  color: #00ffff;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.4), rgba(0, 100, 200, 0.6));
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.4);
+    transform: translateY(-1px);
+  }
 `;
 
 const Controls = styled.div`
@@ -251,7 +276,7 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
 
           <Content>
             <ImageContainer>
-              {article.ogImage ? (
+              {(article.ogImage || article.heroImage || article.thumbnail) ? (
                 <>
                   {/* Always show placeholder shimmer first */}
                   <div style={{
@@ -264,7 +289,7 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
                     transition: 'opacity 0.3s ease-in-out',
                   }} />
                   <Image
-                    src={article.ogImage}
+                    src={(article.ogImage || article.heroImage || article.thumbnail)!}
                     alt={article.title}
                     fill
                     style={{
@@ -285,9 +310,13 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
               <MetaData>
                 <div>DATE: {article.date}</div>
                 <div>TYPE: {article.articleType?.toUpperCase()}</div>
-                <div>HORIZON: {article.horizon}</div>
-                <div>POLARITY: {article.polarity}</div>
+                {article.horizon && <div>HORIZON: {article.horizon}</div>}
+                {article.polarity && <div>POLARITY: {article.polarity}</div>}
+                <div>READ TIME: {article.readingTime} min</div>
               </MetaData>
+              <ReadLink href={`/articles/${article.slug}`}>
+                Read Article →
+              </ReadLink>
             </InfoContainer>
           </Content>
 
