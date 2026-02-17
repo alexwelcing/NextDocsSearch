@@ -15,14 +15,15 @@ import styled, { keyframes } from 'styled-components';
 import { escapeMdxContent } from '@/lib/utils';
 import MarkdownImage from '@/components/ui/MarkdownImage';
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import DeskSurface from '@/components/ui/DeskSurface';
 import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
-import { ParallaxBand } from '@/components/ui/ParallaxArtLayers';
+import { ParallaxBand, EditorialSection, GlowingContentSection } from '@/components/ui/ParallaxArtLayers';
 import { discoverArticleImages } from '@/lib/article-images';
 import type { MultiArtOption } from '@/lib/article-images';
+import { useMemo } from 'react';
 
 interface ArticleProps {
   title: string;
@@ -560,6 +561,63 @@ const ArticlePage: NextPage<ArticleProps> = ({
     });
   }, [slug, title, date, author, description, keywords, ogImage, readingTime, content, setCurrentArticle]);
 
+  /* -------------------------------------------------------------------
+     Split markdown content at ## headings to interleave with parallax.
+     We get chunks like: [intro text, "## Heading\ntext", "## Heading\ntext", ...]
+     ------------------------------------------------------------------- */
+  const contentChunks = useMemo(() => {
+    // Split on lines that start with "## " (h2 headings)
+    const parts = content.split(/(?=^## )/m);
+    // Filter out empty parts
+    return parts.filter(p => p.trim().length > 0);
+  }, [content]);
+
+  // Distribute chunks across sections — we want at least 2 chunks in the
+  // opening section, then 1–2 chunks per editorial/parallax break
+  const sections = useMemo(() => {
+    if (contentChunks.length <= 2) {
+      // Short article: don't split, render as one block
+      return [{ chunks: contentChunks, type: 'full' as const }];
+    }
+
+    const result: Array<{
+      chunks: string[];
+      type: 'intro' | 'editorial-left' | 'editorial-right' | 'closing';
+    }> = [];
+
+    // First ~40% of chunks go in the intro section
+    const introEnd = Math.max(1, Math.ceil(contentChunks.length * 0.35));
+    result.push({ chunks: contentChunks.slice(0, introEnd), type: 'intro' });
+
+    // Distribute remaining chunks across editorial sections
+    const remaining = contentChunks.slice(introEnd);
+    const midpoint = Math.ceil(remaining.length / 2);
+
+    if (remaining.length > 0) {
+      result.push({
+        chunks: remaining.slice(0, midpoint),
+        type: 'editorial-left',
+      });
+    }
+    if (remaining.length > midpoint) {
+      result.push({
+        chunks: remaining.slice(midpoint),
+        type: 'editorial-right',
+      });
+    }
+
+    return result;
+  }, [contentChunks]);
+
+  const mdComponents = useMemo(() => ({
+    img: MarkdownImage as any,
+    pre: ({ children, ...props }: any) => (
+      <HandwrittenNote>
+        {children?.props?.children || children}
+      </HandwrittenNote>
+    ),
+  }), []);
+
   return (
     <ArticleLayout>
       <Head>
@@ -624,13 +682,19 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
       <CircleNav />
 
-      {/* ---- Opening parallax band: first AI art image ---- */}
+      {/* ---- Opening parallax band: taller, higher, with light-leak ---- */}
       {multiArtImages[0] && (
-        <ParallaxBand image={multiArtImages[0]} height="70vh" mobileHeight="40vh" />
+        <ParallaxBand
+          image={multiArtImages[0]}
+          height="85vh"
+          mobileHeight="50vh"
+          glowSpread={160}
+          glowIntensity={0.4}
+        />
       )}
 
-      {/* ---- Main content: opaque bg slides over the parallax ---- */}
-      <ContentSection>
+      {/* ---- Section 1: Hero + Intro content ---- */}
+      <GlowingContentSection image={multiArtImages[0]} glowPosition="top">
         <DeskSurface articleSlug={slug} />
         <ArticleWrapper>
           <ArticleHero>
@@ -677,37 +741,118 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </div>
           )}
 
+          {/* Intro content chunk(s) */}
           <ArticleContent>
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                img: MarkdownImage as any,
-                pre: ({ children, ...props }: any) => {
-                  return (
-                    <HandwrittenNote>
-                      {children?.props?.children || children}
-                    </HandwrittenNote>
-                  );
-                },
-              }}
-            >
-              {content}
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+              {sections[0]?.chunks.join('\n\n') || content}
             </ReactMarkdown>
           </ArticleContent>
-
-          {multiArtImages.length > 0 && (
-            <ArticleImageGallery images={multiArtImages} articleTitle={title} />
-          )}
         </ArticleWrapper>
-      </ContentSection>
+      </GlowingContentSection>
 
-      {/* ---- Mid parallax band: second AI art image ---- */}
-      {multiArtImages[1] && (
-        <ParallaxBand image={multiArtImages[1]} height="50vh" mobileHeight="30vh" />
+      {/* ---- Editorial break 1: parallax + left/right layout ---- */}
+      {sections.length > 1 && multiArtImages[1] && (
+        <>
+          <ParallaxBand
+            image={multiArtImages[1]}
+            height="70vh"
+            mobileHeight="40vh"
+            glowSpread={140}
+            glowIntensity={0.38}
+          />
+          <GlowingContentSection image={multiArtImages[1]} glowPosition="top">
+            <EditorialSection
+              image={multiArtImages[1]}
+              imagePosition="left"
+            >
+              <ArticleContent>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[1].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </EditorialSection>
+          </GlowingContentSection>
+        </>
       )}
 
-      {/* ---- Footer content: share, discover, related ---- */}
-      <ContentSection>
+      {/* Fallback: if no second image, render section 1 chunks inline */}
+      {sections.length > 1 && !multiArtImages[1] && (
+        <GlowingContentSection image={multiArtImages[0]} glowPosition="both">
+          <ArticleWrapper>
+            <ArticleContent>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                {sections[1].chunks.join('\n\n')}
+              </ReactMarkdown>
+            </ArticleContent>
+          </ArticleWrapper>
+        </GlowingContentSection>
+      )}
+
+      {/* ---- Editorial break 2: parallax + right/left layout ---- */}
+      {sections.length > 2 && multiArtImages[2] && (
+        <>
+          <ParallaxBand
+            image={multiArtImages[2]}
+            height="60vh"
+            mobileHeight="35vh"
+            glowSpread={120}
+            glowIntensity={0.35}
+          />
+          <GlowingContentSection image={multiArtImages[2]} glowPosition="top">
+            <EditorialSection
+              image={multiArtImages[2]}
+              imagePosition="right"
+            >
+              <ArticleContent>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[2].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </EditorialSection>
+          </GlowingContentSection>
+        </>
+      )}
+
+      {/* Fallback: if no third image, render section 2 chunks inline */}
+      {sections.length > 2 && !multiArtImages[2] && (
+        <GlowingContentSection image={multiArtImages[1] || multiArtImages[0]} glowPosition="both">
+          <ArticleWrapper>
+            <ArticleContent>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                {sections[2].chunks.join('\n\n')}
+              </ReactMarkdown>
+            </ArticleContent>
+          </ArticleWrapper>
+        </GlowingContentSection>
+      )}
+
+      {/* ---- Image gallery ---- */}
+      {multiArtImages.length > 0 && (
+        <GlowingContentSection
+          image={multiArtImages[multiArtImages.length - 1]}
+          glowPosition="both"
+        >
+          <ArticleWrapper>
+            <ArticleImageGallery images={multiArtImages} articleTitle={title} />
+          </ArticleWrapper>
+        </GlowingContentSection>
+      )}
+
+      {/* ---- Closing parallax + Footer ---- */}
+      {multiArtImages.length > 0 && (
+        <ParallaxBand
+          image={multiArtImages[Math.min(multiArtImages.length - 1, 2)]}
+          height="50vh"
+          mobileHeight="30vh"
+          glowSpread={100}
+          glowIntensity={0.3}
+        />
+      )}
+
+      <GlowingContentSection
+        image={multiArtImages[multiArtImages.length - 1]}
+        glowPosition="top"
+      >
         <FooterWrapper>
           <ShareButtons>
             <ShareButton
@@ -778,12 +923,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </RelatedArticles>
           )}
         </FooterWrapper>
-      </ContentSection>
-
-      {/* ---- Closing parallax band: third AI art image ---- */}
-      {multiArtImages[2] && (
-        <ParallaxBand image={multiArtImages[2]} height="40vh" mobileHeight="25vh" />
-      )}
+      </GlowingContentSection>
     </ArticleLayout>
   );
 };
