@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import TerminalInterface from '../../overlays/TerminalInterface';
 import TabletIcon, { TabletIconCosmic } from '../../TabletIcon';
 
@@ -104,6 +104,37 @@ export default function InteractiveTablet({
     setTerminalOpen(true);
   }, []);
 
+  // Swipe gesture support for mobile bottom-sheet UX
+  const touchStartY = useRef<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleSwipeUpEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartY.current === null || touchStartX.current === null) return;
+    const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+    const deltaX = Math.abs(e.changedTouches[0].clientX - touchStartX.current);
+    if (deltaY > 30 && deltaX < 50 && !isGamePlaying) {
+      setIsRaised(true);
+    }
+    touchStartY.current = null;
+    touchStartX.current = null;
+  }, [isGamePlaying]);
+
+  const handleSwipeDownEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartY.current === null || touchStartX.current === null) return;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    const deltaX = Math.abs(e.changedTouches[0].clientX - touchStartX.current);
+    if (deltaY > 30 && deltaX < 50) {
+      handleLower();
+    }
+    touchStartY.current = null;
+    touchStartX.current = null;
+  }, [handleLower]);
+
   if (isGamePlaying) return null;
 
   return (
@@ -112,6 +143,8 @@ export default function InteractiveTablet({
       {!isRaised && (
         <button
           onClick={handleRaise}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleSwipeUpEnd}
           style={{
             position: 'fixed',
             bottom: isMobile ? '16px' : '24px',
@@ -178,6 +211,8 @@ export default function InteractiveTablet({
           {/* Handle bar */}
           <div
             onClick={handleLower}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleSwipeDownEnd}
             style={{
               padding: isMobile ? '12px' : '8px',
               background: '#111',
@@ -308,7 +343,7 @@ export default function InteractiveTablet({
               fontSize: '10px',
               fontFamily: 'monospace',
             }}>
-              {isMobile ? 'tap handle to close' : 'ESC or tap handle to close'}
+              {isMobile ? 'swipe down or tap to close' : 'ESC or tap handle to close'}
             </div>
           </div>
         </div>

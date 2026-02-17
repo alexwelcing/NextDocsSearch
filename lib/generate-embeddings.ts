@@ -82,7 +82,7 @@ function extractMetaExport(mdxTree: Root) {
     return undefined
   }
 
-  return getObjectFromExpression(objectExpression)
+  return getObjectFromExpression(objectExpression as any)
 }
 
 /**

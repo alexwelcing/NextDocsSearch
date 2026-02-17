@@ -1,18 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import { JourneyProvider, useJourney } from '@/components/contexts/JourneyContext'
 import AchievementUnlock from '@/components/AchievementUnlock'
-import CircleNav from '@/components/ui/CircleNav'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
-import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
+import HeroMosaic from '@/components/HeroMosaic'
+import GameHUD from '@/components/overlays/GameHUD'
+import GameLeaderboard from '@/components/overlays/GameLeaderboard'
 import styles from '@/styles/Home.module.css'
-import SearchDialog from '@/components/SearchDialog'
+import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
+import ArticleDisplayPanel from '@/components/3d/interactive/ArticleDisplayPanel'
+import type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
 
-// Dynamically import the 3D environment, using the new Scene3D orchestrator
+// Dynamically import the 3D environment
 const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
   ssr: false,
   loading: () => <StylishFallback />,
@@ -22,10 +25,21 @@ function HomeContent() {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [articles, setArticles] = useState<any[]>([])
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
-  const [gameState, setGameState] = useState<string>('idle')
+  const [cinematicComplete, setCinematicComplete] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
+  const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false)
 
-  const { achievements } = useJourney()
+  // Game state (mirrors ThreeSixty's game management)
+  const [gameState, setGameState] = useState<GameState>('IDLE')
+  const [score, setScore] = useState(0)
+  const [timeRemaining, setTimeRemaining] = useState(30)
+  const [combo, setCombo] = useState(0)
+  const [countdown, setCountdown] = useState(3)
+  const [gameStats, setGameStats] = useState<GameStats>({
+    score: 0, comboMax: 0, accuracy: 0, totalClicks: 0, successfulClicks: 0,
+  })
+
+  const { achievements, completeQuest, updateStats, currentQuest } = useJourney()
   const [currentAchievement, setCurrentAchievement] = useState<typeof achievements[0] | null>(null)
 
   useEffect(() => {
@@ -74,6 +88,61 @@ function HomeContent() {
 
   const handleToggle3D = useCallback(() => {
     setIsIn3DMode(prev => !prev)
+  }, [])
+
+  // Game handlers (matching ThreeSixty's game flow)
+  const handleStartGame = useCallback(() => {
+    setGameState('COUNTDOWN')
+    setCountdown(3)
+    setScore(0)
+    setCombo(0)
+
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval)
+          setTimeout(() => {
+            setGameState('PLAYING')
+            setTimeRemaining(30)
+          }, 500)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }, [])
+
+  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
+    setScore(finalScore)
+    setGameStats(stats)
+    setGameState('GAME_OVER')
+    updateStats('highestGameScore', finalScore)
+    if (currentQuest?.id === 'play-game') completeQuest('play-game')
+    if (finalScore >= 5000) completeQuest('leaderboard-rank')
+  }, [updateStats, currentQuest, completeQuest])
+
+  const handlePlayAgain = useCallback(() => {
+    setGameState('IDLE')
+    setTimeout(() => handleStartGame(), 100)
+  }, [handleStartGame])
+
+  // Scenery switching
+  const handleChangeImage = useCallback((newImage: string) => {
+    setCurrentImage(newImage)
+  }, [])
+
+  const sceneryOptions = useMemo(() => {
+    const options: { id: string; name: string; type: 'image' | 'splat'; path: string }[] = []
+    if (currentImage) {
+      options.push({ id: 'current-panorama', name: 'Default Panorama', type: 'image', path: currentImage })
+    }
+    return options
+  }, [currentImage])
+
+  const handleSceneryChange = useCallback((scenery: { type: string; path: string }) => {
+    if (scenery.type === 'image') {
+      setCurrentImage(scenery.path)
+    }
   }, [])
 
   // Build world config from random image
@@ -156,27 +225,67 @@ function HomeContent() {
 
         {isIn3DMode ? (
           <main className={`${styles.main} ${styles.gradientbg}`}>
-            {/* Show the Scene3D modern environment */}
             <Scene3D
               world={worldConfig}
               articles={articles}
-              onGameStateChange={setGameState}
+              onGameStateChange={(state: string) => setGameState(state as GameState)}
+              onCinematicComplete={() => setCinematicComplete(true)}
+              gameState={gameState}
+              onStartGame={handleStartGame}
+              onGameEnd={handleGameEnd}
+              onScoreUpdate={setScore}
+              onComboUpdate={setCombo}
+              onTimeUpdate={setTimeRemaining}
+            >
+              <ArticleDisplayPanel
+                isOpen={isArticleDisplayOpen}
+                onClose={() => setIsArticleDisplayOpen(false)}
+              />
+            </Scene3D>
+
+            {/* InteractiveTablet — full-featured HUD (matches a1d8fbb ThreeSixty) */}
+            <InteractiveTablet
+              isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
+              articles={articles}
+              onStartGame={handleStartGame}
+              onChangeScenery={handleSceneryChange}
+              availableScenery={sceneryOptions}
+              currentScenery={currentImage ?? undefined}
+              onToggleArticleDisplay={() => setIsArticleDisplayOpen(prev => !prev)}
+              isArticleDisplayOpen={isArticleDisplayOpen}
+              onExitToLanding={handleToggle3D}
             />
 
-            {/* SearchDialog for AI chat - only show when NOT playing game */}
-            {gameState !== 'playing' && <SearchDialog />}
+            {/* Game countdown overlay */}
+            {gameState === 'COUNTDOWN' && (
+              <div style={{
+                position: 'fixed', inset: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(0, 0, 0, 0.7)', zIndex: 1000,
+              }}>
+                <div style={{
+                  fontSize: '120px', fontWeight: 'bold', color: '#0f0', fontFamily: 'monospace',
+                }}>
+                  {countdown || 'GO'}
+                </div>
+              </div>
+            )}
 
-            {/* Button to go back to 2D home */}
-            <div className="absolute top-4 left-4 z-50">
-              <button
-                onClick={handleToggle3D}
-                className={styles.landingBtn}
-                style={{ padding: '0.5rem 1rem' }}
-              >
-                Return to 2D
-              </button>
-            </div>
-            
+            {/* Game HUD */}
+            {gameState === 'PLAYING' && (
+              <GameHUD score={score} timeRemaining={timeRemaining} combo={combo} isPlaying={true} />
+            )}
+
+            {/* Game Over leaderboard */}
+            {gameState === 'GAME_OVER' && (
+              <GameLeaderboard
+                playerScore={score}
+                playerStats={gameStats}
+                onPlayAgain={handlePlayAgain}
+                onClose={() => setGameState('IDLE')}
+              />
+            )}
+
             <AchievementUnlock
               achievement={currentAchievement}
               onDismiss={() => setCurrentAchievement(null)}
@@ -190,10 +299,9 @@ function HomeContent() {
               transition: 'opacity 0.3s ease-out',
             }}
           >
-            <CircleNav isGamePlaying={false} />
-            {/* Hero - Immersive, mysterious, minimal */}
+            {/* Hero - Immersive mosaic wall */}
             <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-              <EnhancedHeroCanvas />
+              <HeroMosaic />
 
               {/* Content overlay */}
               <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">

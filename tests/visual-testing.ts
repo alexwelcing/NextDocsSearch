@@ -55,11 +55,19 @@ class VisualTestRunner {
 
     console.log(`📁 Screenshots will be saved to: ${this.screenshotDir}\n`);
 
-    // Launch browser
-    this.browser = await chromium.launch({
+    // Launch browser with WebGL support
+    const launchOptions: any = {
       headless: true,
-      args: ['--disable-dev-shm-usage']
-    });
+      args: [
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--use-gl=swiftshader',
+        '--enable-webgl',
+        '--disable-gpu-sandbox',
+      ]
+    };
+    if (process.env.CHROMIUM_PATH) launchOptions.executablePath = process.env.CHROMIUM_PATH;
+    this.browser = await chromium.launch(launchOptions);
   }
 
   /**
@@ -347,24 +355,24 @@ const testScenarios: TestScenario[] = [
     waitFor: 3000 // Wait for 3D scene to load
   },
   {
-    name: 'Landing Page - Terminal Open',
-    description: 'Landing page with terminal interface open',
-    url: '/',
-    waitFor: 2000,
+    name: 'Chat Page - 3D with MENU',
+    description: '3D scene with MENU button visible (cinematic skipped)',
+    url: '/chat',
+    waitFor: 5000,
     actions: async (page) => {
-      // Click to open terminal
-      await page.click('button:has-text("NAVIGATE")').catch(() => {});
-      await page.waitForTimeout(1000);
+      await page.evaluate(() => localStorage.setItem('hasWatchedIntro', 'true'));
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
     }
   },
   {
     name: 'Landing Page - 3D Experience',
-    description: 'Landing page with 3D experience active',
+    description: 'Landing page entering 3D mode',
     url: '/',
     waitFor: 2000,
     actions: async (page) => {
-      await page.click('button:has-text("3D EXPERIENCE")').catch(() => {});
-      await page.waitForTimeout(2000);
+      await page.click('button:has-text("3D Experience")').catch(() => {});
+      await page.waitForTimeout(5000);
     }
   },
   {
@@ -384,37 +392,43 @@ const testScenarios: TestScenario[] = [
     }
   },
   {
-    name: 'Game Interface',
-    description: 'Interactive clicking game',
-    url: '/',
+    name: 'Tablet - Raised',
+    description: 'Tablet raised with action buttons',
+    url: '/chat',
     actions: async (page) => {
-      // Open terminal and navigate to game
-      await page.click('button:has-text("NAVIGATE")').catch(() => {});
+      await page.evaluate(() => localStorage.setItem('hasWatchedIntro', 'true'));
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('button:has-text("MENU")').catch(() => {});
       await page.waitForTimeout(500);
-      await page.click('button:has-text("GAME")').catch(() => {});
-      await page.waitForTimeout(1000);
     }
   },
   {
-    name: 'Terminal - Explore Tab',
-    description: 'Terminal interface explore tab',
-    url: '/',
+    name: 'Tablet - Explore Tab',
+    description: 'Tablet explore tab opens terminal',
+    url: '/chat',
     actions: async (page) => {
-      await page.click('button:has-text("NAVIGATE")').catch(() => {});
+      await page.evaluate(() => localStorage.setItem('hasWatchedIntro', 'true'));
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('button:has-text("MENU")').catch(() => {});
       await page.waitForTimeout(500);
       await page.click('button:has-text("EXPLORE")').catch(() => {});
       await page.waitForTimeout(1000);
     }
   },
   {
-    name: 'Terminal - About Tab',
-    description: 'Terminal interface about tab',
-    url: '/',
+    name: 'Tablet - ASK AI Tab',
+    description: 'Tablet ASK AI tab opens terminal',
+    url: '/chat',
     actions: async (page) => {
-      await page.click('button:has-text("NAVIGATE")').catch(() => {});
+      await page.evaluate(() => localStorage.setItem('hasWatchedIntro', 'true'));
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(5000);
+      await page.click('button:has-text("MENU")').catch(() => {});
       await page.waitForTimeout(500);
-      await page.click('button:has-text("ABOUT")').catch(() => {});
-      await page.waitForTimeout(500);
+      await page.click('button:has-text("ASK AI")').catch(() => {});
+      await page.waitForTimeout(1000);
     }
   },
   {

@@ -330,20 +330,27 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     fetchArticles();
   }, []);
 
-  // Fetch enhanced articles for 3D exploration and archive display
+  // Fetch enhanced articles eagerly on mount so data is ready
+  // when the user opens the 3D explorer or article display panel
   useEffect(() => {
-    // Fetch articles when either 3D explore or archive display is active
-    if ((is3DExploreActive || isArticleDisplayOpen) && enhancedArticles.length === 0) {
-      fetch('/api/articles-enhanced')
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            setEnhancedArticles(data);
-          }
-        })
-        .catch(err => console.error('Failed to fetch enhanced articles:', err));
-    }
-  }, [is3DExploreActive, isArticleDisplayOpen, enhancedArticles.length]);
+    fetch('/api/articles-enhanced')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`API returned ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0 && data[0].slug) {
+          setEnhancedArticles(data);
+        } else {
+          console.error('Enhanced articles API returned unexpected data:',
+            Array.isArray(data) ? `array of ${data.length}, first entry keys: ${data[0] ? Object.keys(data[0]).join(',') : 'empty'}` : typeof data
+          );
+        }
+      })
+      .catch(err => console.error('Failed to fetch enhanced articles:', err));
+  }, []);
 
   // Auto-detect available splat files
   useEffect(() => {
@@ -570,7 +577,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
               {/* Article Display Panel */}
               <ArticleDisplayPanel
-                articles={enhancedArticles}
                 isOpen={isArticleDisplayOpen}
                 onClose={() => setIsArticleDisplayOpen(false)}
               />

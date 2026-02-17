@@ -12,7 +12,6 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Physics } from '@react-three/cannon';
 import { createXRStore, XR, XROrigin } from '@react-three/xr';
 import { Stats } from '@react-three/drei';
 import styled from 'styled-components';
@@ -22,12 +21,14 @@ import SceneEnvironment from './SceneEnvironment';
 import SceneBackground from './SceneBackground';
 import SceneCamera from './SceneCamera';
 
+import PostProcessingEffects from '@/components/3d/atmosphere/PostProcessingEffects';
+import ClickingGame from '@/components/3d/game/ClickingGame';
+import type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
 import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
-import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
-import { IdeaExperience } from '@/components/ideas';
+import { loadWorld, preloadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
 
 // Re-export game types for convenience
-export type { GameState } from '@/components/3d/game/ClickingGame';
+export type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
 
 interface Scene3DProps {
   /** World ID or configuration */
@@ -48,6 +49,15 @@ interface Scene3DProps {
   onCameraModeChange?: (mode: CameraMode) => void;
   /** Callback for game state changes */
   onGameStateChange?: (state: string) => void;
+  /** Callback when cinematic intro finishes (or was already watched) */
+  onCinematicComplete?: () => void;
+  /** Game props (for ClickingGame inside Canvas) */
+  gameState?: GameState | string;
+  onStartGame?: () => void;
+  onGameEnd?: (score: number, stats: GameStats) => void;
+  onScoreUpdate?: (score: number) => void;
+  onComboUpdate?: (combo: number) => void;
+  onTimeUpdate?: (timeRemaining: number) => void;
 }
 
 export function mergeWorldConfig(world: Partial<WorldConfig>): WorldConfig {
@@ -86,20 +96,8 @@ const Container = styled.div`
   z-index: 4;
 `;
 
-/**
- * Physics configuration - optimized for game performance
- */
-const PHYSICS_CONFIG = {
-  gravity: [0, -9.81, 0] as [number, number, number],
-  iterations: 5,
-  tolerance: 0.01,
-  allowSleep: true,
-  broadphase: 'SAP' as const,
-  defaultContactMaterial: {
-    friction: 0.1,
-    restitution: 0.7,
-  },
-};
+// Physics removed - no current consumers use cannon.js through Scene3D.
+// Game physics lives in the legacy ThreeSixty.tsx system.
 
 /**
  * Scene3D - The modern scene orchestrator
@@ -107,13 +105,20 @@ const PHYSICS_CONFIG = {
 export default function Scene3D({
   world: worldProp,
   quality: qualityOverride,
-  enableXR = true,
-  showStats = process.env.NODE_ENV === 'development',
+  enableXR = false,
+  showStats = false,
   articles,
   children,
   onReady,
   onCameraModeChange,
   onGameStateChange,
+  onCinematicComplete: onCinematicCompleteProp,
+  gameState: gameStateProp = 'IDLE',
+  onStartGame,
+  onGameEnd,
+  onScoreUpdate,
+  onComboUpdate,
+  onTimeUpdate,
 }: Scene3DProps) {
   // Scene state
   const [worldConfig, setWorldConfig] = useState<WorldConfig>(DEFAULT_WORLD);
@@ -121,27 +126,33 @@ export default function Scene3D({
   const [cameraMode, setCameraMode] = useState<CameraMode>('orbit');
 
   // Cinematic state
-  const [showCinematic, setShowCinematic] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return !localStorage.getItem('hasWatchedIntro');
-    }
-    return false;
-  });
+  // Cinematic disabled — the fly-in animation had two bugs (config changes
+  // restarted it mid-playthrough, and per-frame Vector3 allocations caused GC
+  // stutter).  The infrastructure remains for future re-enablement.
+  const [showCinematic, setShowCinematic] = useState(false);
   const [cinematicProgress, setCinematicProgress] = useState(0);
 
   // XR store
   const xrStore = useMemo(() => createXRStore(), []);
 
-  // Load world configuration
+  // Load world configuration and preload assets before cinematic
   useEffect(() => {
     async function load() {
       setIsLoading(true);
       try {
+        let config: WorldConfig;
         if (typeof worldProp === 'string') {
-          const config = await loadWorld(worldProp);
-          setWorldConfig(config);
+          config = await loadWorld(worldProp);
         } else if (worldProp) {
-          setWorldConfig(mergeWorldConfig(worldProp));
+          config = mergeWorldConfig(worldProp);
+        } else {
+          config = DEFAULT_WORLD;
+        }
+        setWorldConfig(config);
+
+        // Preload assets before cinematic starts to prevent stutter
+        if (showCinematic && config.id) {
+          await preloadWorld(config.id);
         }
       } catch (error) {
         console.error('Failed to load world:', error);
@@ -152,6 +163,7 @@ export default function Scene3D({
       }
     }
     load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worldProp, onReady]);
 
   // Handle camera mode changes
@@ -170,7 +182,8 @@ export default function Scene3D({
     if (typeof window !== 'undefined') {
       localStorage.setItem('hasWatchedIntro', 'true');
     }
-  }, [handleSetCameraMode]);
+    onCinematicCompleteProp?.();
+  }, [handleSetCameraMode, onCinematicCompleteProp]);
 
   // Handle cinematic progress
   const handleCinematicProgress = useCallback((progress: number) => {
@@ -186,6 +199,14 @@ export default function Scene3D({
       localStorage.removeItem('hasWatchedIntro');
     }
   }, [handleSetCameraMode]);
+
+  // Notify parent immediately if cinematic was already watched
+  useEffect(() => {
+    if (!showCinematic) {
+      onCinematicCompleteProp?.();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only on mount
 
   // Start cinematic if needed
   useEffect(() => {
@@ -208,10 +229,8 @@ export default function Scene3D({
                 cameraMode={cameraMode}
                 showCinematic={showCinematic}
                 cinematicProgress={cinematicProgress}
-                articles={articles}
                 onCinematicComplete={handleCinematicComplete}
                 onCinematicProgress={handleCinematicProgress}
-                onGameStateChange={onGameStateChange}
               >
                 {children}
               </SceneContent>
@@ -223,10 +242,14 @@ export default function Scene3D({
             cameraMode={cameraMode}
             showCinematic={showCinematic}
             cinematicProgress={cinematicProgress}
-            articles={articles}
             onCinematicComplete={handleCinematicComplete}
             onCinematicProgress={handleCinematicProgress}
-            onGameStateChange={onGameStateChange}
+            gameState={gameStateProp as GameState}
+            onStartGame={onStartGame}
+            onGameEnd={onGameEnd}
+            onScoreUpdate={onScoreUpdate}
+            onComboUpdate={onComboUpdate}
+            onTimeUpdate={onTimeUpdate}
           >
             {children}
           </SceneContent>
@@ -246,26 +269,34 @@ function SceneContent({
   cameraMode,
   showCinematic,
   cinematicProgress,
-  articles,
   onCinematicComplete,
   onCinematicProgress,
-  onGameStateChange,
+  gameState = 'IDLE',
+  onStartGame,
+  onGameEnd,
+  onScoreUpdate,
+  onComboUpdate,
+  onTimeUpdate,
   children,
 }: {
   worldConfig: WorldConfig;
   cameraMode: CameraMode;
   showCinematic: boolean;
   cinematicProgress: number;
-  articles?: any[];
   onCinematicComplete: () => void;
   onCinematicProgress: (progress: number) => void;
-  onGameStateChange?: (state: string) => void;
+  gameState?: GameState;
+  onStartGame?: () => void;
+  onGameEnd?: (score: number, stats: GameStats) => void;
+  onScoreUpdate?: (score: number) => void;
+  onComboUpdate?: (combo: number) => void;
+  onTimeUpdate?: (timeRemaining: number) => void;
   children?: React.ReactNode;
 }) {
   const capabilities = useSceneCapabilities();
 
   return (
-    <Physics {...PHYSICS_CONFIG}>
+    <>
       {/* Background (splat-first) */}
       <SceneBackground
         assets={worldConfig.assets}
@@ -289,18 +320,30 @@ function SceneContent({
         onCinematicProgress={onCinematicProgress}
       />
 
-      {/* Idea Experience - The new spatial content system */}
-      {!showCinematic && (
-        <IdeaExperience 
-          articles={articles} 
-          onGameStateChange={onGameStateChange}
-          isActive={true}
+      {/* Post-processing effects */}
+      <PostProcessingEffects
+        quality={capabilities.qualityLevel}
+        enabled={capabilities.qualityLevel !== 'low'}
+        isCinematic={showCinematic}
+        cinematicProgress={cinematicProgress}
+        isMobile={capabilities.isMobile}
+      />
+
+      {/* Clicking Game (R3F component, renders inside Canvas) */}
+      {onStartGame && onGameEnd && (
+        <ClickingGame
+          gameState={gameState}
+          onGameStart={onStartGame}
+          onGameEnd={onGameEnd}
+          onScoreUpdate={onScoreUpdate}
+          onComboUpdate={onComboUpdate}
+          onTimeUpdate={onTimeUpdate}
         />
       )}
 
-      {/* Scene children (game, UI, etc.) */}
+      {/* Scene children */}
       {children}
-    </Physics>
+    </>
   );
 }
 

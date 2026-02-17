@@ -34,6 +34,15 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'react-icons', '@react-three/fiber', '@react-three/drei'],
   },
 
+  // Prevent Vercel from bundling public/ assets into serverless functions
+  outputFileTracingExcludes: {
+    '*': [
+      'public/images/**',
+      'public/background/**',
+      'public/splats/**',
+    ],
+  },
+
   // Headers for caching and security
   async headers() {
     return [

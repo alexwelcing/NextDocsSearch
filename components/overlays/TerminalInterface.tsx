@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSupabaseData } from '../contexts/SupabaseDataContext';
 import { useJourney } from '../contexts/JourneyContext';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
@@ -474,54 +475,93 @@ export default function TerminalInterface({
             {/* Articles List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {filteredEnhancedArticles.length > 0 ? (
-                filteredEnhancedArticles.map((article) => (
-                  <a
-                    key={article.slug}
-                    href={`/articles/${article.slug}`}
-                    style={{
-                      padding: '14px 16px',
-                      background: '#111',
-                      borderRadius: '8px',
-                      color: '#fff',
-                      textDecoration: 'none',
-                      fontFamily: 'monospace',
-                      display: 'block',
-                      border: '1px solid #222',
-                      transition: 'all 0.15s',
-                    }}
-                  >
-                    <div style={{ fontSize: isMobile ? '14px' : '13px', marginBottom: '6px' }}>
-                      {article.title}
-                    </div>
-                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                      {article.horizon && (
-                        <span style={{
-                          padding: '2px 6px',
-                          background: 'rgba(0, 212, 255, 0.15)',
-                          color: '#00d4ff',
-                          borderRadius: '3px',
-                          fontSize: '10px',
+                filteredEnhancedArticles.map((article) => {
+                  const thumbSrc = article.heroImage || article.thumbnail || article.ogImage;
+                  return (
+                    <a
+                      key={article.slug}
+                      href={`/articles/${article.slug}`}
+                      style={{
+                        padding: '0',
+                        background: '#111',
+                        borderRadius: '8px',
+                        color: '#fff',
+                        textDecoration: 'none',
+                        fontFamily: 'monospace',
+                        display: 'flex',
+                        alignItems: 'stretch',
+                        border: '1px solid #222',
+                        transition: 'all 0.15s',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {/* Thumbnail */}
+                      {thumbSrc && (
+                        <div style={{
+                          position: 'relative',
+                          width: '72px',
+                          minHeight: '60px',
+                          flexShrink: 0,
+                          background: '#0a0a0a',
                         }}>
-                          {article.horizon}
-                        </span>
+                          <Image
+                            src={thumbSrc}
+                            alt=""
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            sizes="72px"
+                          />
+                        </div>
                       )}
-                      {article.polarity && article.polarity !== 'N0' && (
-                        <span style={{
-                          padding: '2px 6px',
-                          background: 'rgba(255, 215, 0, 0.15)',
-                          color: '#ffd700',
-                          borderRadius: '3px',
-                          fontSize: '10px',
-                        }}>
-                          {article.polarity}
-                        </span>
-                      )}
-                      <span style={{ color: '#555', fontSize: '10px' }}>
-                        {article.readingTime} min
-                      </span>
-                    </div>
-                  </a>
-                ))
+                      <div style={{ padding: '12px 14px', flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: isMobile ? '14px' : '13px', marginBottom: '6px' }}>
+                          {article.title}
+                        </div>
+                        {article.description && (
+                          <div style={{
+                            fontSize: '11px',
+                            color: '#888',
+                            marginBottom: '6px',
+                            lineHeight: 1.4,
+                            overflow: 'hidden',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                          }}>
+                            {article.description}
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                          {article.horizon && (
+                            <span style={{
+                              padding: '2px 6px',
+                              background: 'rgba(0, 212, 255, 0.15)',
+                              color: '#00d4ff',
+                              borderRadius: '3px',
+                              fontSize: '10px',
+                            }}>
+                              {article.horizon}
+                            </span>
+                          )}
+                          {article.polarity && article.polarity !== 'N0' && (
+                            <span style={{
+                              padding: '2px 6px',
+                              background: 'rgba(255, 215, 0, 0.15)',
+                              color: '#ffd700',
+                              borderRadius: '3px',
+                              fontSize: '10px',
+                            }}>
+                              {article.polarity}
+                            </span>
+                          )}
+                          <span style={{ color: '#555', fontSize: '10px' }}>
+                            {article.readingTime} min
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })
               ) : (
                 <div style={{ color: '#555', textAlign: 'center', padding: '20px', fontFamily: 'monospace' }}>
                   {enhancedArticles.length === 0 ? 'Loading articles...' : 'No matching articles'}

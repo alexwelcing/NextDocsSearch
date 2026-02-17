@@ -956,9 +956,9 @@ export default function ArticleRecommendationModal({
                           onClick={() => onClose()}
                         >
                           <CardImage>
-                            {article.ogImage && (
+                            {(article.heroImage || article.ogImage) && (
                               <Image
-                                src={article.ogImage}
+                                src={article.heroImage || article.ogImage!}
                                 alt={article.title}
                                 fill
                                 style={{ objectFit: 'cover' }}
@@ -1008,9 +1008,9 @@ export default function ArticleRecommendationModal({
                       onClick={() => onClose()}
                     >
                       <FeaturedImage>
-                        {featuredArticle.ogImage && (
+                        {(featuredArticle.heroImage || featuredArticle.ogImage) && (
                           <Image
-                            src={featuredArticle.ogImage}
+                            src={featuredArticle.heroImage || featuredArticle.ogImage!}
                             alt={featuredArticle.title}
                             fill
                             style={{ objectFit: 'cover' }}

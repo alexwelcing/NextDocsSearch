@@ -11,7 +11,7 @@ import ArticleContainer from '@/components/ArticleContainer';
 import StructuredData from '../../components/StructuredData';
 import ArticleClassification, { inferClassificationFromSlug } from '@/components/ArticleClassification';
 import CircleNav from '@/components/ui/CircleNav';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { escapeMdxContent } from '@/lib/utils';
 import MarkdownImage from '@/components/ui/MarkdownImage';
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
@@ -19,6 +19,12 @@ import { useEffect } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import DeskSurface from '@/components/ui/DeskSurface';
+import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
+import { ArtFrame, DepthSection, DepthDivider, EditorialSection } from '@/components/ui/ParallaxArtLayers';
+import type { DepthStage } from '@/components/ui/ParallaxArtLayers';
+import { discoverArticleImages } from '@/lib/article-images';
+import type { MultiArtOption } from '@/lib/article-images';
+import { useMemo } from 'react';
 
 interface ArticleProps {
   title: string;
@@ -28,6 +34,8 @@ interface ArticleProps {
   description?: string;
   keywords?: string[];
   ogImage?: string;
+  heroImage: string | null;
+  multiArtImages: MultiArtOption[];
   videoURL?: string;
   readingTime: number;
   relatedArticles: Array<{
@@ -35,115 +43,283 @@ interface ArticleProps {
     title: string;
     description: string;
     ogImage?: string;
+    heroImage: string | null;
   }>;
   slug: string;
 }
 
+// ---------------------------------------------------------------------------
+// Brutalist Styled Components
+// ---------------------------------------------------------------------------
+
 const ArticleLayout = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  background: #030308;
+  overflow-x: clip;
 `;
 
-const ArticleWrapper = styled.article`
+const ArticleWrapper = styled.article<{ $depth?: DepthStage }>`
   position: relative;
-  max-width: 800px;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 120px 20px 60px;
-  color: #e0e0e0;
-  z-index: 1;
+  padding: 60px 24px;
+  transition: border-color 0.8s ease, color 0.8s ease;
+
+  /* Depth-aware border + text color */
+  ${p => (p.$depth === undefined || p.$depth === 0) && css`
+    color: #a0a0a0;
+    border-left: 6px solid rgba(255, 255, 255, 0.08);
+  `}
+  ${p => p.$depth === 1 && css`
+    color: #c0c0c0;
+    border-left: 6px solid rgba(255, 255, 255, 0.15);
+  `}
+  ${p => p.$depth === 2 && css`
+    color: #d8d8d8;
+    border-left: 6px solid rgba(0, 212, 255, 0.35);
+  `}
+  ${p => p.$depth === 3 && css`
+    color: #e0e0e0;
+    border-left: 6px solid var(--color-cyan-accent, #00d4ff);
+  `}
+
+  @media (min-width: 1024px) {
+    margin-left: 8%;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    padding: 40px 16px;
+    border-left-width: 4px;
+  }
 `;
 
-const HeroImageWrapper = styled.div`
+const FooterWrapper = styled.div`
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+  color: #e0e0e0;
+  border-left: 6px solid var(--color-cyan-accent, #00d4ff);
+
+  @media (min-width: 1024px) {
+    margin-left: 8%;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    padding: 32px 16px 40px;
+    border-left-width: 4px;
+  }
+`;
+
+const HeroImageWrapper = styled.div<{ $depth?: DepthStage }>`
   position: relative;
   width: 100%;
-  height: 450px;
-  margin-bottom: 40px;
-  border-radius: 16px;
+  height: 500px;
+  margin-bottom: 48px;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  transition: filter 0.8s ease, border-color 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    filter: grayscale(0.8) contrast(1.15);
+  `}
+  ${p => p.$depth === 2 && css`
+    border: 3px solid rgba(0, 212, 255, 0.3);
+    filter: grayscale(0.3) saturate(1.1);
+  `}
+  ${p => p.$depth === 3 && css`
+    border: 4px solid var(--color-cyan-accent, #00d4ff);
+    filter: none;
+  `}
 
   @media (min-width: 900px) {
-    width: 120%;
-    margin-left: -10%;
+    width: 140%;
+    margin-left: -20%;
   }
 
   @media (max-width: 768px) {
-    height: 250px;
-    border-radius: 8px;
+    height: 280px;
   }
 `;
 
-const ArticleHero = styled.header`
-  margin-bottom: 60px;
-  padding-bottom: 40px;
-  border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+const ArticleHero = styled.header<{ $depth?: DepthStage }>`
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  transition: border-color 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth === 0) && css`
+    border-bottom: 4px solid rgba(255, 255, 255, 0.06);
+  `}
+  ${p => p.$depth === 1 && css`
+    border-bottom: 4px solid rgba(255, 255, 255, 0.12);
+  `}
+  ${p => p.$depth === 2 && css`
+    border-bottom: 4px solid rgba(0, 212, 255, 0.2);
+  `}
+  ${p => p.$depth === 3 && css`
+    border-bottom: 4px solid rgba(255, 255, 255, 0.15);
+  `}
 `;
 
-const ArticleTitle = styled.h1`
-  font-size: 3rem;
-  font-weight: 800;
+const ArticleTitle = styled.h1<{ $depth?: DepthStage }>`
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
   color: #ffffff;
-  margin-bottom: 20px;
-  line-height: 1.2;
+  margin-bottom: 16px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
 
-  @media (max-width: 768px) {
-    font-size: 2rem;
+  &::after {
+    content: '';
+    display: block;
+    width: 120px;
+    height: 6px;
+    margin-top: 16px;
+    transition: background 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth === 0) && css`
+      background: rgba(255, 255, 255, 0.15);
+    `}
+    ${p => p.$depth === 1 && css`
+      background: rgba(255, 255, 255, 0.25);
+    `}
+    ${p => p.$depth === 2 && css`
+      background: rgba(0, 212, 255, 0.5);
+    `}
+    ${p => p.$depth === 3 && css`
+      background: var(--color-gold-highlight, #ffd700);
+    `}
   }
 `;
 
-const ArticleMeta = styled.div`
+const ArticleMeta = styled.div<{ $depth?: DepthStage }>`
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  color: #00d4ff;
-  font-size: 0.95rem;
-  margin-top: 20px;
+  gap: 24px;
+  font-size: 0.8rem;
+  font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 24px;
+  transition: color 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    color: rgba(255, 255, 255, 0.4);
+  `}
+  ${p => p.$depth === 2 && css`
+    color: rgba(0, 212, 255, 0.7);
+  `}
+  ${p => p.$depth === 3 && css`
+    color: var(--color-cyan-accent, #00d4ff);
+  `}
 `;
 
-const MetaItem = styled.span`
+const MetaItem = styled.span<{ $depth?: DepthStage }>`
   display: flex;
   align-items: center;
   gap: 8px;
 
   &:before {
-    content: '●';
-    color: #00d4ff;
+    content: '//';
+    font-weight: 700;
+    transition: color 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      color: rgba(255, 255, 255, 0.2);
+    `}
+    ${p => p.$depth === 2 && css`
+      color: rgba(255, 215, 0, 0.5);
+    `}
+    ${p => p.$depth === 3 && css`
+      color: var(--color-gold-highlight, #ffd700);
+    `}
   }
 `;
 
-const ArticleContent = styled.div`
-  font-size: 1.125rem;
-  line-height: 1.8;
-  color: #e0e0e0;
+const ArticleContent = styled.div<{ $depth?: DepthStage }>`
+  font-size: 1.15rem;
+  line-height: 1.85;
+
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    color: #a8a8a8;
+  `}
+  ${p => p.$depth === 2 && css`
+    color: #c8c8c8;
+  `}
+  ${p => p.$depth === 3 && css`
+    color: #d4d4d4;
+  `}
 
   h2 {
-    font-size: 2rem;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
     color: #ffffff;
-    margin: 60px 0 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    margin: 72px 0 24px;
+    padding: 12px 0 12px 20px;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+    transition: border-color 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth === 0) && css`
+      border-left: 5px solid rgba(255, 255, 255, 0.1);
+    `}
+    ${p => p.$depth === 1 && css`
+      border-left: 5px solid rgba(255, 255, 255, 0.2);
+    `}
+    ${p => p.$depth === 2 && css`
+      border-left: 5px solid rgba(0, 212, 255, 0.4);
+    `}
+    ${p => p.$depth === 3 && css`
+      border-left: 5px solid var(--color-gold-highlight, #ffd700);
+    `}
   }
 
   h3 {
-    font-size: 1.5rem;
-    color: #00d4ff;
-    margin: 40px 0 15px;
+    font-size: 1.4rem;
+    margin: 48px 0 16px;
+    font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    transition: color 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      color: rgba(255, 255, 255, 0.5);
+    `}
+    ${p => p.$depth === 2 && css`
+      color: rgba(0, 212, 255, 0.7);
+    `}
+    ${p => p.$depth === 3 && css`
+      color: var(--color-cyan-accent, #00d4ff);
+    `}
   }
 
   p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.6rem;
   }
 
   a {
-    color: #00d4ff;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease;
+    transition: color 0.2s;
 
-    &:hover {
-      border-bottom-color: #00d4ff;
-    }
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      color: rgba(255, 255, 255, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      &:hover { color: #ffffff; }
+    `}
+    ${p => p.$depth === 2 && css`
+      color: rgba(0, 212, 255, 0.8);
+      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+      &:hover { color: var(--color-cyan-accent, #00d4ff); }
+    `}
+    ${p => p.$depth === 3 && css`
+      color: var(--color-cyan-accent, #00d4ff);
+      border-bottom: 2px solid var(--color-gold-highlight, #ffd700);
+      &:hover { color: var(--color-gold-highlight, #ffd700); }
+    `}
   }
 
   ul, ol {
@@ -156,15 +332,25 @@ const ArticleContent = styled.div`
   }
 
   code {
-    background: rgba(0, 212, 255, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Monaco', 'Courier New', monospace;
-    font-size: 0.9em;
+    padding: 3px 8px;
+    border-radius: 0;
+    font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+    font-size: 0.88em;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    `}
+    ${p => p.$depth === 2 && css`
+      background: rgba(0, 212, 255, 0.06);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+    `}
+    ${p => p.$depth === 3 && css`
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+    `}
   }
 
-  /* Pre blocks are now handled by HandwrittenNote component */
-  /* Legacy pre styling for non-code blocks */
   pre:not([data-handwritten]) {
     background: transparent;
     padding: 0;
@@ -175,30 +361,52 @@ const ArticleContent = styled.div`
     code {
       background: none;
       padding: 0;
+      border: none;
     }
   }
 
   blockquote {
-    border-left: 4px solid #00d4ff;
-    padding-left: 20px;
-    margin: 2rem 0;
-    font-style: italic;
-    color: #b8b8b8;
+    padding: 16px 24px;
+    margin: 2.5rem 0;
+    font-style: normal;
+    font-weight: 500;
+    border-radius: 0;
+    transition: border-color 0.8s ease, background 0.8s ease;
+
+    ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+      border-left: 5px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+      color: #999;
+    `}
+    ${p => p.$depth === 2 && css`
+      border-left: 5px solid rgba(0, 212, 255, 0.3);
+      background: rgba(0, 212, 255, 0.03);
+      color: #b8b8b8;
+    `}
+    ${p => p.$depth === 3 && css`
+      border-left: 5px solid var(--color-gold-highlight, #ffd700);
+      background: rgba(255, 215, 0, 0.04);
+      color: #c8c8c8;
+    `}
   }
 `;
 
 const RelatedArticles = styled.section`
-  margin-top: 80px;
+  margin-top: 40px;
   padding: 40px;
-  background: rgba(0, 212, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  background: rgba(0, 212, 255, 0.03);
+  border-radius: 0;
+  border: 3px solid rgba(0, 212, 255, 0.25);
+  border-top: 6px solid var(--color-cyan-accent, #00d4ff);
 `;
 
 const RelatedTitle = styled.h2`
   font-size: 1.75rem;
   color: #ffffff;
   margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 800;
 `;
 
 const RelatedGrid = styled.div`
@@ -212,15 +420,15 @@ const RelatedCard = styled(Link)`
   flex-direction: column;
   padding: 0;
   background: rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 0;
+  border: 2px solid rgba(0, 212, 255, 0.2);
   text-decoration: none;
   transition: all 0.3s ease;
   overflow: hidden;
 
   &:hover {
     transform: translateY(-4px);
-    border-color: #00d4ff;
+    border-color: var(--color-cyan-accent, #00d4ff);
     box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
   }
 `;
@@ -229,9 +437,12 @@ const CardContent = styled.div`
   padding: 20px;
 
   h3 {
-    color: #00d4ff;
+    color: var(--color-cyan-accent, #00d4ff);
     font-size: 1.125rem;
     margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.02em;
   }
 
   p {
@@ -245,7 +456,7 @@ const CardImageWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 150px;
-  background: #1a1a2e;
+  background: #0a0a1a;
 `;
 
 const ShareButtons = styled.div`
@@ -253,8 +464,8 @@ const ShareButtons = styled.div`
   gap: 15px;
   margin: 40px 0;
   padding: 20px 0;
-  border-top: 1px solid rgba(0, 212, 255, 0.2);
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  border-top: 3px solid rgba(0, 212, 255, 0.2);
+  border-bottom: 3px solid rgba(0, 212, 255, 0.2);
 `;
 
 const ShareButton = styled.a`
@@ -263,62 +474,102 @@ const ShareButton = styled.a`
   gap: 8px;
   padding: 10px 20px;
   background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 6px;
-  color: #00d4ff;
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 0;
+  color: var(--color-cyan-accent, #00d4ff);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   transition: all 0.3s ease;
 
   &:hover {
     background: rgba(0, 212, 255, 0.2);
     transform: translateY(-2px);
+    border-color: var(--color-cyan-accent, #00d4ff);
   }
 `;
 
-const InternalLinks = styled.nav`
+const InternalLinks = styled.nav<{ $depth?: DepthStage }>`
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 32px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: border-color 0.8s ease, opacity 0.8s ease;
+
+  ${p => (p.$depth === undefined || p.$depth === 0) && css`
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    opacity: 0.4;
+  `}
+  ${p => p.$depth === 1 && css`
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    opacity: 0.6;
+  `}
+  ${p => p.$depth === 2 && css`
+    border-bottom: 2px solid rgba(0, 212, 255, 0.15);
+    opacity: 0.8;
+  `}
+  ${p => p.$depth === 3 && css`
+    border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+    opacity: 1;
+  `}
 `;
 
-const InternalLink = styled(Link)`
-  color: #00d4ff;
+const InternalLink = styled(Link)<{ $depth?: DepthStage }>`
   text-decoration: none;
-  padding: 4px 12px;
-  border-radius: 4px;
-  background: rgba(0, 212, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 0;
   transition: all 0.2s;
 
-  &:hover {
-    background: rgba(0, 212, 255, 0.2);
-  }
+  ${p => (p.$depth === undefined || p.$depth <= 1) && css`
+    color: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    &:hover {
+      color: rgba(255, 255, 255, 0.6);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+  `}
+  ${p => p.$depth === 2 && css`
+    color: rgba(0, 212, 255, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    background: rgba(0, 212, 255, 0.03);
+    &:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: rgba(0, 212, 255, 0.4);
+    }
+  `}
+  ${p => p.$depth === 3 && css`
+    color: var(--color-cyan-accent, #00d4ff);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    background: rgba(0, 212, 255, 0.05);
+    &:hover {
+      background: rgba(0, 212, 255, 0.15);
+      border-color: var(--color-cyan-accent, #00d4ff);
+    }
+  `}
 `;
 
 // Discovery Section Styles
-const pulseGlow = keyframes`
-  0%, 100% { box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3); }
-  50% { box-shadow: 0 8px 48px rgba(0, 212, 255, 0.5); }
-`;
-
 const shimmerEffect = keyframes`
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 `;
 
 const DiscoverSection = styled.section`
-  margin: 60px 0;
+  margin: 40px 0;
   padding: 40px;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(255, 215, 0, 0.05) 100%);
-  border: 1px solid rgba(0, 212, 255, 0.25);
-  border-radius: 20px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 3px solid rgba(0, 212, 255, 0.25);
+  border-radius: 0;
   position: relative;
   overflow: hidden;
-  animation: ${pulseGlow} 4s ease-in-out infinite;
 
   &::before {
     content: '';
@@ -326,7 +577,7 @@ const DiscoverSection = styled.section`
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(90deg, #00d4ff, #ffd700, #00d4ff);
     background-size: 200% 100%;
     animation: ${shimmerEffect} 3s linear infinite;
@@ -358,7 +609,7 @@ const DiscoverLeft = styled.div`
 const DiscoverIcon = styled.div`
   width: 64px;
   height: 64px;
-  border-radius: 16px;
+  border-radius: 0;
   background: linear-gradient(135deg, #00d4ff 0%, #ffd700 100%);
   display: flex;
   align-items: center;
@@ -378,6 +629,8 @@ const DiscoverText = styled.div`
     font-weight: 700;
     color: #fff;
     margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
 
   p {
@@ -395,10 +648,12 @@ const DiscoverButton = styled.button`
   padding: 16px 32px;
   background: linear-gradient(135deg, #00d4ff 0%, #ffd700 100%);
   border: none;
-  border-radius: 14px;
+  border-radius: 0;
   color: #030308;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
@@ -436,6 +691,10 @@ const DiscoverButton = styled.button`
   }
 `;
 
+// ---------------------------------------------------------------------------
+// Page Component
+// ---------------------------------------------------------------------------
+
 const ArticlePage: NextPage<ArticleProps> = ({
   title,
   date,
@@ -444,6 +703,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
   description,
   keywords,
   ogImage,
+  heroImage,
+  multiArtImages,
   videoURL,
   readingTime,
   relatedArticles,
@@ -454,10 +715,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
   const defaultOgImage = `${siteUrl}/og-default.png`;
   const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : defaultOgImage;
 
-  // Discovery context integration
   const { openModal, setCurrentArticle } = useArticleDiscovery();
 
-  // Set the current article context for recommendations
   useEffect(() => {
     setCurrentArticle({
       slug,
@@ -470,24 +729,76 @@ const ArticlePage: NextPage<ArticleProps> = ({
       ogImage,
       readingTime,
       wordCount: content.split(/\s+/).length,
-      articleType: 'fiction', // Default, will be enhanced by API
+      articleType: 'fiction',
     });
   }, [slug, title, date, author, description, keywords, ogImage, readingTime, content, setCurrentArticle]);
 
+  /* -------------------------------------------------------------------
+     Split markdown content at ## headings to interleave with parallax.
+     We get chunks like: [intro text, "## Heading\ntext", "## Heading\ntext", ...]
+     ------------------------------------------------------------------- */
+  const contentChunks = useMemo(() => {
+    // Split on lines that start with "## " (h2 headings)
+    const parts = content.split(/(?=^## )/m);
+    // Filter out empty parts
+    return parts.filter(p => p.trim().length > 0);
+  }, [content]);
+
+  // Distribute chunks across sections — we want at least 2 chunks in the
+  // opening section, then 1–2 chunks per editorial/parallax break
+  const sections = useMemo(() => {
+    if (contentChunks.length <= 2) {
+      // Short article: don't split, render as one block
+      return [{ chunks: contentChunks, type: 'full' as const }];
+    }
+
+    const result: Array<{
+      chunks: string[];
+      type: 'intro' | 'editorial-left' | 'editorial-right' | 'closing';
+    }> = [];
+
+    // First ~40% of chunks go in the intro section
+    const introEnd = Math.max(1, Math.ceil(contentChunks.length * 0.35));
+    result.push({ chunks: contentChunks.slice(0, introEnd), type: 'intro' });
+
+    // Distribute remaining chunks across editorial sections
+    const remaining = contentChunks.slice(introEnd);
+    const midpoint = Math.ceil(remaining.length / 2);
+
+    if (remaining.length > 0) {
+      result.push({
+        chunks: remaining.slice(0, midpoint),
+        type: 'editorial-left',
+      });
+    }
+    if (remaining.length > midpoint) {
+      result.push({
+        chunks: remaining.slice(midpoint),
+        type: 'editorial-right',
+      });
+    }
+
+    return result;
+  }, [contentChunks]);
+
+  const mdComponents = useMemo(() => ({
+    img: MarkdownImage as any,
+    pre: ({ children, ...props }: any) => (
+      <HandwrittenNote>
+        {children?.props?.children || children}
+      </HandwrittenNote>
+    ),
+  }), []);
+
   return (
     <ArticleLayout>
-      {/* Desk Surface with interactive media background */}
-      <DeskSurface articleSlug={slug} />
-
       <Head>
-        {/* Primary Meta Tags */}
         <title>{title} | Alex Welcing</title>
         <meta name="title" content={title} />
         <meta name="description" content={description || `Read ${title} and more insights.`} />
         {keywords && <meta name="keywords" content={keywords.join(', ')} />}
         <meta name="author" content={author.join(', ')} />
 
-        {/* Open Graph / Facebook */}
         <meta property="og:type" content="article" />
         <meta property="og:url" content={articleUrl} />
         <meta property="og:title" content={title} />
@@ -498,7 +809,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="article:published_time" content={date} />
         <meta property="article:author" content={author.join(', ')} />
 
-        {/* X (Twitter) Card */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:site" content="@alexwelcing" />
         <meta property="twitter:url" content={articleUrl} />
@@ -506,11 +816,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="twitter:description" content={description || `Read ${title}`} />
         <meta property="twitter:image" content={fullOgImage} />
 
-        {/* Performance hints */}
-        <meta name="theme-color" content="#0a0a0a" />
-        {ogImage && <link rel="preload" as="image" href={ogImage} />}
-
-        {/* Canonical URL */}
+        <meta name="theme-color" content="#030308" />
+        {heroImage && <link rel="preload" as="image" href={heroImage} />}
         <link rel="canonical" href={articleUrl} />
       </Head>
 
@@ -547,142 +854,250 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
       <CircleNav />
 
-      <ArticleWrapper>
-        <ArticleHero>
-          {ogImage && (
-            <HeroImageWrapper>
-              <Image
-                src={ogImage}
-                alt={title}
-                fill
-                style={{ objectFit: 'cover' }}
-                priority
-                sizes="(max-width: 768px) 100vw, 800px"
+      {/* ================================================================
+          DEPTH 0 — THE SURFACE
+          Pure brutalist. Black void. White text. No color. No decoration.
+          The article begins as a clinical document, a blank page.
+          ================================================================ */}
+      <DepthSection depth={0}>
+        <DeskSurface articleSlug={slug} />
+        <ArticleWrapper $depth={0}>
+          <ArticleHero $depth={0}>
+            {heroImage && (
+              <HeroImageWrapper $depth={0}>
+                <Image
+                  src={heroImage}
+                  alt={title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                />
+              </HeroImageWrapper>
+            )}
+            <ArticleTitle $depth={0}>{title}</ArticleTitle>
+            <ArticleMeta $depth={0}>
+              <MetaItem $depth={0}>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</MetaItem>
+              <MetaItem $depth={0}>{author.join(', ')}</MetaItem>
+              <MetaItem $depth={0}>{readingTime} min read</MetaItem>
+            </ArticleMeta>
+          </ArticleHero>
+
+          <InternalLinks $depth={0} aria-label="Related navigation">
+            <InternalLink $depth={0} href="/speculative-ai">Speculative AI Hub</InternalLink>
+            <InternalLink $depth={0} href="/agent-futures">Agent Futures</InternalLink>
+            <InternalLink $depth={0} href="/emergent-intelligence">Emergent Intelligence</InternalLink>
+            <InternalLink $depth={0} href="/about">About</InternalLink>
+          </InternalLinks>
+
+          <ArticleClassification {...inferClassificationFromSlug(slug)} />
+
+          {videoURL && (
+            <div style={{ margin: '2rem 0' }}>
+              <iframe
+                width="100%"
+                height="450"
+                src={videoURL.replace('watch?v=', 'embed/')}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: '0' }}
               />
-            </HeroImageWrapper>
+            </div>
           )}
-          <ArticleTitle>{title}</ArticleTitle>
-          <ArticleMeta>
-            <MetaItem>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</MetaItem>
-            <MetaItem>{author.join(', ')}</MetaItem>
-            <MetaItem>{readingTime} min read</MetaItem>
-          </ArticleMeta>
-        </ArticleHero>
 
-        {/* Internal Links - Required for SEO authority flow */}
-        <InternalLinks aria-label="Related navigation">
-          <InternalLink href="/speculative-ai">Speculative AI Hub</InternalLink>
-          <InternalLink href="/agent-futures">Agent Futures</InternalLink>
-          <InternalLink href="/emergent-intelligence">Emergent Intelligence</InternalLink>
-          <InternalLink href="/about">About</InternalLink>
-        </InternalLinks>
+          <ArticleContent $depth={0}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+              {sections[0]?.chunks.join('\n\n') || content}
+            </ReactMarkdown>
+          </ArticleContent>
+        </ArticleWrapper>
+      </DepthSection>
 
-        {/* Classification Header - Shows article taxonomy */}
-        <ArticleClassification {...inferClassificationFromSlug(slug)} />
+      {/* ================================================================
+          DEPTH 1 — FIRST CRACKS
+          The first artwork appears, desaturated. Faint hairlines emerge.
+          Something stirs beneath the surface.
+          ================================================================ */}
+      {multiArtImages[0] && (
+        <DepthSection depth={1}>
+          <DepthDivider depth={1} />
+          <ArtFrame
+            image={multiArtImages[0]}
+            depth={1}
+            height="70vh"
+            mobileHeight="40vh"
+            priority
+          />
+        </DepthSection>
+      )}
 
-        {videoURL && (
-          <div style={{ margin: '2rem 0' }}>
-            <iframe
-              width="100%"
-              height="450"
-              src={videoURL.replace('watch?v=', 'embed/')}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{ borderRadius: '8px' }}
-            />
-          </div>
-        )}
+      {sections.length > 1 && (
+        <DepthSection depth={1}>
+          {multiArtImages[1] ? (
+            <EditorialSection
+              image={multiArtImages[1]}
+              imagePosition="left"
+              depth={1}
+            >
+              <ArticleContent $depth={1}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[1].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </EditorialSection>
+          ) : (
+            <ArticleWrapper $depth={1}>
+              <ArticleContent $depth={1}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[1].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </ArticleWrapper>
+          )}
+        </DepthSection>
+      )}
 
-        <ArticleContent>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              img: MarkdownImage as any,
-              pre: ({ children, ...props }: any) => {
-                // Wrap pre blocks in HandwrittenNote for interactive viewing
-                return (
-                  <HandwrittenNote>
-                    {children?.props?.children || children}
-                  </HandwrittenNote>
-                );
-              },
-            }}
-          >
-            {content}
-          </ReactMarkdown>
-        </ArticleContent>
+      {/* ================================================================
+          DEPTH 2 — AWAKENING
+          Color bleeds in. Cyan accents appear. The image gains saturation.
+          The world is no longer monochrome.
+          ================================================================ */}
+      {multiArtImages[1] && (
+        <DepthSection depth={2}>
+          <DepthDivider depth={2} />
+          <ArtFrame
+            image={multiArtImages[1]}
+            depth={2}
+            height="60vh"
+            mobileHeight="35vh"
+          />
+        </DepthSection>
+      )}
 
-        <ShareButtons>
-          <ShareButton
-            href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-            Share on X
-          </ShareButton>
-          <ShareButton
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-            Share on LinkedIn
-          </ShareButton>
-        </ShareButtons>
+      {sections.length > 2 && (
+        <DepthSection depth={2}>
+          {multiArtImages[2] ? (
+            <EditorialSection
+              image={multiArtImages[2]}
+              imagePosition="right"
+              depth={2}
+            >
+              <ArticleContent $depth={2}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[2].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </EditorialSection>
+          ) : (
+            <ArticleWrapper $depth={2}>
+              <ArticleContent $depth={2}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                  {sections[2].chunks.join('\n\n')}
+                </ReactMarkdown>
+              </ArticleContent>
+            </ArticleWrapper>
+          )}
+        </DepthSection>
+      )}
 
-        {/* Prominent Discovery Section */}
-        <DiscoverSection>
-          <DiscoverContent>
-            <DiscoverLeft>
-              <DiscoverIcon>
-                <Compass />
-              </DiscoverIcon>
-              <DiscoverText>
-                <h3>Discover Related Articles</h3>
-                <p>Explore more scenarios and research based on similar themes, timelines, and perspectives.</p>
-              </DiscoverText>
-            </DiscoverLeft>
-            <DiscoverButton onClick={() => openModal()}>
-              <Star />
-              Explore Recommendations
-              <ArrowRight />
-            </DiscoverButton>
-          </DiscoverContent>
-        </DiscoverSection>
+      {/* ================================================================
+          DEPTH 3 — WONDERLAND
+          Full bloom. Gold highlights, saturated art, lush color. The
+          gallery, the discovery section, the full experience.
+          ================================================================ */}
+      {multiArtImages.length > 0 && (
+        <DepthSection depth={3}>
+          <DepthDivider depth={3} />
+          <ArtFrame
+            image={multiArtImages[Math.min(multiArtImages.length - 1, 2)]}
+            depth={3}
+            height="50vh"
+            mobileHeight="30vh"
+          />
+        </DepthSection>
+      )}
 
-        {relatedArticles.length > 0 && (
-          <RelatedArticles>
-            <RelatedTitle>Related Articles</RelatedTitle>
-            <RelatedGrid>
-              {relatedArticles.map((article) => (
-                <RelatedCard key={article.slug} href={`/articles/${article.slug}`}>
-                  {article.ogImage && (
-                    <CardImageWrapper>
-                      <Image
-                        src={article.ogImage}
-                        alt={article.title}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        sizes="(max-width: 768px) 100vw, 300px"
-                      />
-                    </CardImageWrapper>
-                  )}
-                  <CardContent>
-                    <h3>{article.title}</h3>
-                    <p>{article.description}</p>
-                  </CardContent>
-                </RelatedCard>
-              ))}
-            </RelatedGrid>
-          </RelatedArticles>
-        )}
-      </ArticleWrapper>
+      {multiArtImages.length > 0 && (
+        <DepthSection depth={3}>
+          <ArticleWrapper $depth={3}>
+            <ArticleImageGallery images={multiArtImages} articleTitle={title} />
+          </ArticleWrapper>
+        </DepthSection>
+      )}
+
+      <DepthSection depth={3}>
+        <FooterWrapper>
+          <ShareButtons>
+            <ShareButton
+              href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              Share on X
+            </ShareButton>
+            <ShareButton
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              Share on LinkedIn
+            </ShareButton>
+          </ShareButtons>
+
+          <DiscoverSection>
+            <DiscoverContent>
+              <DiscoverLeft>
+                <DiscoverIcon>
+                  <Compass />
+                </DiscoverIcon>
+                <DiscoverText>
+                  <h3>Discover Related Articles</h3>
+                  <p>Explore more scenarios and research based on similar themes, timelines, and perspectives.</p>
+                </DiscoverText>
+              </DiscoverLeft>
+              <DiscoverButton onClick={() => openModal()}>
+                <Star />
+                Explore Recommendations
+                <ArrowRight />
+              </DiscoverButton>
+            </DiscoverContent>
+          </DiscoverSection>
+
+          {relatedArticles.length > 0 && (
+            <RelatedArticles>
+              <RelatedTitle>Related Articles</RelatedTitle>
+              <RelatedGrid>
+                {relatedArticles.map((article) => (
+                  <RelatedCard key={article.slug} href={`/articles/${article.slug}`}>
+                    {(article.heroImage || article.ogImage) && (
+                      <CardImageWrapper>
+                        <Image
+                          src={article.heroImage || article.ogImage!}
+                          alt={article.title}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          sizes="(max-width: 768px) 100vw, 300px"
+                        />
+                      </CardImageWrapper>
+                    )}
+                    <CardContent>
+                      <h3>{article.title}</h3>
+                      <p>{article.description}</p>
+                    </CardContent>
+                  </RelatedCard>
+                ))}
+              </RelatedGrid>
+            </RelatedArticles>
+          )}
+        </FooterWrapper>
+      </DepthSection>
     </ArticleLayout>
   );
 };
@@ -692,14 +1107,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles');
   const filenames = fs.readdirSync(articleFolderPath);
   const paths = filenames
-    .filter((filename) => filename.endsWith('.mdx')) // Only include .mdx files
+    .filter((filename) => filename.endsWith('.mdx'))
     .map((filename) => ({
       params: { slug: filename.replace('.mdx', '') },
     }));
   return { paths, fallback: false };
 };
 
-// Helper function to calculate reading time
 function calculateReadingTime(content: string): number {
   const wordsPerMinute = 200;
   const wordCount = content.split(/\s+/).length;
@@ -714,7 +1128,6 @@ interface ArticleSummary {
   ogImage?: string;
 }
 
-// Helper function to get related articles
 function getRelatedArticles(currentSlug: string, allArticles: ArticleSummary[], limit = 3) {
   return allArticles
     .filter(article => article.slug !== currentSlug)
@@ -735,7 +1148,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { data, content } = matter(fileContents);
   const escapedContent = escapeMdxContent(content);
 
-  // Get all articles for related articles section
   const filenames = fs.readdirSync(articleFolderPath);
   const allArticles = filenames
     .filter(filename => filename.endsWith('.mdx'))
@@ -754,7 +1166,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const readingTime = calculateReadingTime(content);
-  const relatedArticles = getRelatedArticles(slug, allArticles);
+  const baseRelated = getRelatedArticles(slug, allArticles);
+  const relatedArticles = baseRelated.map(article => ({
+    ...article,
+    heroImage: discoverArticleImages(article.slug).heroImage,
+  }));
+
+  const images = discoverArticleImages(slug);
 
   return {
     props: {
@@ -763,7 +1181,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       author: Array.isArray(data.author) ? (data.author as string[]) : ([data.author] as string[]),
       description: data.description || '',
       keywords: data.keywords || [],
-      ogImage: data.ogImage || '',
+      ogImage: data.ogImage || images.ogImage || '',
+      heroImage: images.heroImage,
+      multiArtImages: images.multiArt,
       videoURL: data.videoURL || '',
       content: escapedContent,
       readingTime,

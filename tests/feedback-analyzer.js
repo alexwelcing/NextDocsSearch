@@ -124,6 +124,7 @@ class FeedbackAnalyzer {
 
   getCategoryFromName(name) {
     if (name.startsWith('landing')) return 'landing';
+    if (name.startsWith('tablet')) return 'tablet';
     if (name.startsWith('terminal')) return 'terminal';
     if (name.startsWith('3d')) return '3d';
     if (name.startsWith('articles')) return 'articles';
@@ -135,7 +136,7 @@ class FeedbackAnalyzer {
   }
 
   checkCoverage(categories, viewports) {
-    const expectedCategories = ['landing', 'terminal', '3d', 'articles'];
+    const expectedCategories = ['landing', 'tablet', '3d', 'articles'];
     const missingCategories = expectedCategories.filter(cat => !categories[cat]);
 
     if (missingCategories.length > 0) {
@@ -275,27 +276,27 @@ class FeedbackAnalyzer {
       }
     }
 
-    // Terminal interface checks
-    if (categories.terminal) {
-      const terminalTests = categories.terminal.length;
-      const terminalStates = ['explore', 'chat', 'game', 'scene', 'about'];
+    // Tablet interface checks (formerly terminal)
+    const tabletCategory = categories.tablet || categories.terminal;
+    if (tabletCategory) {
+      const tabletStates = ['explore', 'askai', 'game', 'scene'];
 
-      const testedStates = terminalStates.filter(state =>
-        categories.terminal.some(t => t.name.includes(state))
+      const testedStates = tabletStates.filter(state =>
+        tabletCategory.some(t => t.name.includes(state))
       );
 
-      if (testedStates.length < terminalStates.length) {
-        const missing = terminalStates.filter(s => !testedStates.includes(s));
+      if (testedStates.length < tabletStates.length) {
+        const missing = tabletStates.filter(s => !testedStates.includes(s));
         this.feedback.warnings.push({
-          type: 'terminal-tabs',
+          type: 'tablet-tabs',
           severity: 'medium',
-          message: `Terminal tabs not fully tested: ${missing.join(', ')} missing`,
-          suggestion: 'Add tests for all terminal tab states'
+          message: `Tablet tabs not fully tested: ${missing.join(', ')} missing`,
+          suggestion: 'Add tests for all tablet action buttons (EXPLORE, ASK AI, GAME, SCENE)'
         });
       } else {
         this.feedback.passed.push({
-          type: 'terminal-coverage',
-          message: 'All terminal tabs tested'
+          type: 'tablet-coverage',
+          message: 'All tablet action buttons tested'
         });
       }
     }
