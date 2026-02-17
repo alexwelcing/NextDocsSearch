@@ -12,6 +12,7 @@ import GameHUD from '@/components/overlays/GameHUD'
 import GameLeaderboard from '@/components/overlays/GameLeaderboard'
 import styles from '@/styles/Home.module.css'
 import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
+import ArticleDisplayPanel from '@/components/3d/interactive/ArticleDisplayPanel'
 import type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
 
 // Dynamically import the 3D environment
@@ -26,6 +27,7 @@ function HomeContent() {
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
   const [cinematicComplete, setCinematicComplete] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
+  const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false)
 
   // Game state (mirrors ThreeSixty's game management)
   const [gameState, setGameState] = useState<GameState>('IDLE')
@@ -234,7 +236,13 @@ function HomeContent() {
               onScoreUpdate={setScore}
               onComboUpdate={setCombo}
               onTimeUpdate={setTimeRemaining}
-            />
+            >
+              <ArticleDisplayPanel
+                articles={articles}
+                isOpen={isArticleDisplayOpen}
+                onClose={() => setIsArticleDisplayOpen(false)}
+              />
+            </Scene3D>
 
             {/* InteractiveTablet — full-featured HUD (matches a1d8fbb ThreeSixty) */}
             <InteractiveTablet
@@ -244,6 +252,8 @@ function HomeContent() {
               onChangeScenery={handleSceneryChange}
               availableScenery={sceneryOptions}
               currentScenery={currentImage ?? undefined}
+              onToggleArticleDisplay={() => setIsArticleDisplayOpen(prev => !prev)}
+              isArticleDisplayOpen={isArticleDisplayOpen}
               onExitToLanding={handleToggle3D}
             />
 

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { discoverArticleImages } from '@/lib/article-images';
 
 // Time Horizon buckets
 type TimeHorizon = 'NQ' | 'NY' | 'N5' | 'N20' | 'N50' | 'N100';
@@ -34,6 +35,8 @@ export interface EnhancedArticleData {
   description?: string;
   keywords?: string[];
   ogImage?: string;
+  heroImage?: string;
+  thumbnail?: string;
   readingTime: number;
   wordCount: number;
   horizon?: TimeHorizon;
@@ -227,6 +230,7 @@ export default function handler(
       const readingTime = Math.ceil(wordCount / 200);
 
       const keywords = Array.isArray(data.keywords) ? data.keywords : [];
+      const images = discoverArticleImages(slug);
 
       return {
         slug,
@@ -237,6 +241,8 @@ export default function handler(
         description: data.description || content.substring(0, 200).replace(/[#*_`]/g, '').trim() + '...',
         keywords,
         ogImage: data.ogImage,
+        heroImage: images.heroImage || undefined,
+        thumbnail: images.thumbnail || undefined,
         readingTime,
         wordCount,
         horizon: inferHorizon(slug, content),

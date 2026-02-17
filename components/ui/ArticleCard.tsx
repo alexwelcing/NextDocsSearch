@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import styled from 'styled-components';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 
@@ -8,7 +9,6 @@ const Card = styled(Link)`
   background: rgba(10, 10, 26, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 8px;
-  padding: 20px;
   text-decoration: none;
   transition: all 0.25s ease;
   position: relative;
@@ -24,6 +24,7 @@ const Card = styled(Link)`
     background: linear-gradient(90deg, #00d4ff, #ffd700);
     opacity: 0;
     transition: opacity 0.25s ease;
+    z-index: 1;
   }
 
   &:hover {
@@ -35,6 +36,17 @@ const Card = styled(Link)`
       opacity: 1;
     }
   }
+`;
+
+const CardImage = styled.div`
+  position: relative;
+  width: 100%;
+  height: 160px;
+  background: #1a1a2e;
+`;
+
+const CardBody = styled.div`
+  padding: 20px;
 `;
 
 const Title = styled.h3`
@@ -184,51 +196,66 @@ export default function ArticleCard({ article, compact = false }: ArticleCardPro
       })
     : '';
 
+  const imageSrc = article.heroImage || article.thumbnail || article.ogImage;
+
   return (
     <Card href={`/articles/${article.slug}`}>
-      <Title>{article.title}</Title>
-
-      {!compact && article.description && (
-        <Description>{article.description}</Description>
+      {imageSrc && (
+        <CardImage>
+          <Image
+            src={imageSrc}
+            alt={article.title}
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="(max-width: 768px) 100vw, 400px"
+          />
+        </CardImage>
       )}
+      <CardBody>
+        <Title>{article.title}</Title>
 
-      <Meta>
-        {formattedDate && <MetaItem>{formattedDate}</MetaItem>}
-        {article.author?.[0] && (
-          <>
-            <span>•</span>
-            <MetaItem>{article.author[0]}</MetaItem>
-          </>
+        {!compact && article.description && (
+          <Description>{article.description}</Description>
         )}
-        {article.readingTime > 0 && (
-          <>
-            <span>•</span>
-            <MetaItem>{article.readingTime} min read</MetaItem>
-          </>
-        )}
-      </Meta>
 
-      <BadgeRow>
-        {article.articleType && (
-          <Badge $variant={article.articleType === 'research' ? 'research' : 'fiction'}>
-            {articleTypeLabels[article.articleType] || article.articleType}
-          </Badge>
-        )}
-        {article.horizon && (
-          <Badge $variant="horizon">{horizonLabels[article.horizon] || article.horizon}</Badge>
-        )}
-        {article.polarity && article.polarity !== 'N0' && (
-          <Badge $variant="polarity">{polarityLabels[article.polarity] || article.polarity}</Badge>
-        )}
-        {article.mechanics?.slice(0, 2).map((mechanic) => (
-          <Badge key={mechanic} $variant="mechanic">
-            {mechanicLabels[mechanic] || mechanic}
-          </Badge>
-        ))}
-        {!compact && article.domains?.slice(0, 2).map((domain) => (
-          <Badge key={domain} $variant="domain">{domain}</Badge>
-        ))}
-      </BadgeRow>
+        <Meta>
+          {formattedDate && <MetaItem>{formattedDate}</MetaItem>}
+          {article.author?.[0] && (
+            <>
+              <span>•</span>
+              <MetaItem>{article.author[0]}</MetaItem>
+            </>
+          )}
+          {article.readingTime > 0 && (
+            <>
+              <span>•</span>
+              <MetaItem>{article.readingTime} min read</MetaItem>
+            </>
+          )}
+        </Meta>
+
+        <BadgeRow>
+          {article.articleType && (
+            <Badge $variant={article.articleType === 'research' ? 'research' : 'fiction'}>
+              {articleTypeLabels[article.articleType] || article.articleType}
+            </Badge>
+          )}
+          {article.horizon && (
+            <Badge $variant="horizon">{horizonLabels[article.horizon] || article.horizon}</Badge>
+          )}
+          {article.polarity && article.polarity !== 'N0' && (
+            <Badge $variant="polarity">{polarityLabels[article.polarity] || article.polarity}</Badge>
+          )}
+          {article.mechanics?.slice(0, 2).map((mechanic) => (
+            <Badge key={mechanic} $variant="mechanic">
+              {mechanicLabels[mechanic] || mechanic}
+            </Badge>
+          ))}
+          {!compact && article.domains?.slice(0, 2).map((domain) => (
+            <Badge key={domain} $variant="domain">{domain}</Badge>
+          ))}
+        </BadgeRow>
+      </CardBody>
     </Card>
   );
 }

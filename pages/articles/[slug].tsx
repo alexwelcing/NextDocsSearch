@@ -19,6 +19,9 @@ import { useEffect } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import DeskSurface from '@/components/ui/DeskSurface';
+import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
+import { discoverArticleImages } from '@/lib/article-images';
+import type { MultiArtOption } from '@/lib/article-images';
 
 interface ArticleProps {
   title: string;
@@ -28,6 +31,8 @@ interface ArticleProps {
   description?: string;
   keywords?: string[];
   ogImage?: string;
+  heroImage: string | null;
+  multiArtImages: MultiArtOption[];
   videoURL?: string;
   readingTime: number;
   relatedArticles: Array<{
@@ -35,6 +40,7 @@ interface ArticleProps {
     title: string;
     description: string;
     ogImage?: string;
+    heroImage: string | null;
   }>;
   slug: string;
 }
@@ -444,6 +450,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
   description,
   keywords,
   ogImage,
+  heroImage,
+  multiArtImages,
   videoURL,
   readingTime,
   relatedArticles,
@@ -508,7 +516,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
         {/* Performance hints */}
         <meta name="theme-color" content="#0a0a0a" />
-        {ogImage && <link rel="preload" as="image" href={ogImage} />}
+        {heroImage && <link rel="preload" as="image" href={heroImage} />}
 
         {/* Canonical URL */}
         <link rel="canonical" href={articleUrl} />
@@ -549,15 +557,15 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
       <ArticleWrapper>
         <ArticleHero>
-          {ogImage && (
+          {heroImage && (
             <HeroImageWrapper>
               <Image
-                src={ogImage}
+                src={heroImage}
                 alt={title}
                 fill
                 style={{ objectFit: 'cover' }}
                 priority
-                sizes="(max-width: 768px) 100vw, 800px"
+                sizes="(max-width: 768px) 100vw, 960px"
               />
             </HeroImageWrapper>
           )}
@@ -613,6 +621,10 @@ const ArticlePage: NextPage<ArticleProps> = ({
           </ReactMarkdown>
         </ArticleContent>
 
+        {multiArtImages.length > 0 && (
+          <ArticleImageGallery images={multiArtImages} articleTitle={title} />
+        )}
+
         <ShareButtons>
           <ShareButton
             href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`}
@@ -662,10 +674,10 @@ const ArticlePage: NextPage<ArticleProps> = ({
             <RelatedGrid>
               {relatedArticles.map((article) => (
                 <RelatedCard key={article.slug} href={`/articles/${article.slug}`}>
-                  {article.ogImage && (
+                  {(article.heroImage || article.ogImage) && (
                     <CardImageWrapper>
                       <Image
-                        src={article.ogImage}
+                        src={article.heroImage || article.ogImage!}
                         alt={article.title}
                         fill
                         style={{ objectFit: 'cover' }}
@@ -754,7 +766,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const readingTime = calculateReadingTime(content);
-  const relatedArticles = getRelatedArticles(slug, allArticles);
+  const baseRelated = getRelatedArticles(slug, allArticles);
+  const relatedArticles = baseRelated.map(article => ({
+    ...article,
+    heroImage: discoverArticleImages(article.slug).heroImage,
+  }));
+
+  const images = discoverArticleImages(slug);
 
   return {
     props: {
@@ -763,7 +781,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       author: Array.isArray(data.author) ? (data.author as string[]) : ([data.author] as string[]),
       description: data.description || '',
       keywords: data.keywords || [],
-      ogImage: data.ogImage || '',
+      ogImage: data.ogImage || images.ogImage || '',
+      heroImage: images.heroImage,
+      multiArtImages: images.multiArt,
       videoURL: data.videoURL || '',
       content: escapedContent,
       readingTime,

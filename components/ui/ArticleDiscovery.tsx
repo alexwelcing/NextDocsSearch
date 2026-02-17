@@ -442,10 +442,10 @@ function ArticleCard({ article }: { article: EnhancedArticleData }) {
         overflow: 'hidden',
       }}
     >
-      {article.ogImage && (
+      {(article.heroImage || article.ogImage) && (
         <div style={{ position: 'relative', width: '100%', height: '180px', background: '#1a1a2e' }}>
           <Image
-            src={article.ogImage}
+            src={article.heroImage || article.ogImage!}
             alt={article.title}
             fill
             style={{ objectFit: 'cover' }}
@@ -528,7 +528,7 @@ function ArticleRow({ article, compact = false }: { article: EnhancedArticleData
       }}
     >
       <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-        {article.ogImage && !compact && (
+        {(article.heroImage || article.ogImage) && !compact && (
           <div style={{
             position: 'relative',
             width: '100px',
@@ -539,11 +539,8 @@ function ArticleRow({ article, compact = false }: { article: EnhancedArticleData
             background: '#1a1a2e',
             display: 'block'
           }} className="article-row-image">
-             {/* Since we can't use media queries in inline styles easily without a library or style tag,
-                 we'll just show it. Or we can use a simple conditional if we had window width.
-                 For now, let's just show it. It adds value. */}
             <Image
-              src={article.ogImage}
+              src={article.heroImage || article.ogImage!}
               alt={article.title}
               fill
               style={{ objectFit: 'cover' }}
