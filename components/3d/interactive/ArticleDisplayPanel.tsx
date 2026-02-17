@@ -256,37 +256,42 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
 
           <Content>
             <ImageContainer>
-              {(article.ogImage || article.heroImage || article.thumbnail) ? (
-                <>
-                  {/* Shimmer placeholder */}
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: `linear-gradient(90deg, #333 0%, #444 50%, #333 100%)`,
-                    backgroundSize: '200% 100%',
-                    animation: imageLoaded ? 'none' : 'shimmerAnimation 1.5s infinite linear',
-                    opacity: imageLoaded ? 0 : 1,
-                    transition: 'opacity 0.3s ease-in-out',
-                  }} />
-                  {/* Plain <img> — Next Image doesn't work inside drei Html portal */}
-                  <img
-                    src={article.ogImage || article.heroImage || article.thumbnail}
-                    alt={article.title}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      opacity: imageLoaded ? 1 : 0,
-                      transition: 'opacity 0.4s ease-in-out',
-                    }}
-                    onLoad={() => setImageLoaded(true)}
-                  />
-                </>
-              ) : (
-                <div style={{ color: '#666', fontFamily: 'monospace' }}>NO VISUAL DATA</div>
-              )}
+              {(() => {
+                // Prefer JPG/PNG over SVG — SVG ogImages don't render well as thumbnails
+                const imgSrc = article.heroImage || article.thumbnail || article.ogImage;
+                if (!imgSrc) {
+                  return <div style={{ color: '#666', fontFamily: 'monospace' }}>NO VISUAL DATA</div>;
+                }
+                return (
+                  <>
+                    {/* Shimmer placeholder */}
+                    {!imageLoaded && (
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: `linear-gradient(90deg, #333 0%, #444 50%, #333 100%)`,
+                        backgroundSize: '200% 100%',
+                        animation: 'shimmerAnimation 1.5s infinite linear',
+                      }} />
+                    )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imgSrc}
+                      alt={article.title}
+                      onLoad={() => setImageLoaded(true)}
+                      onError={(e) => {
+                        // If preferred image fails, try fallbacks
+                        const target = e.currentTarget;
+                        const fallbacks = [article.heroImage, article.thumbnail, article.ogImage].filter(Boolean);
+                        const nextSrc = fallbacks.find(f => f !== target.src);
+                        if (nextSrc) {
+                          target.src = nextSrc;
+                        }
+                      }}
+                    />
+                  </>
+                );
+              })()}
             </ImageContainer>
             <InfoContainer>
               <h3 style={{ margin: '0 0 10px 0', color: '#fff' }}>{article.title}</h3>

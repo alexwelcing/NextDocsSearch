@@ -330,20 +330,18 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     fetchArticles();
   }, []);
 
-  // Fetch enhanced articles for 3D exploration and archive display
+  // Fetch enhanced articles eagerly on mount so data is ready
+  // when the user opens the 3D explorer or article display panel
   useEffect(() => {
-    // Fetch articles when either 3D explore or archive display is active
-    if ((is3DExploreActive || isArticleDisplayOpen) && enhancedArticles.length === 0) {
-      fetch('/api/articles-enhanced')
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            setEnhancedArticles(data);
-          }
-        })
-        .catch(err => console.error('Failed to fetch enhanced articles:', err));
-    }
-  }, [is3DExploreActive, isArticleDisplayOpen, enhancedArticles.length]);
+    fetch('/api/articles-enhanced')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setEnhancedArticles(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch enhanced articles:', err));
+  }, []);
 
   // Auto-detect available splat files
   useEffect(() => {
