@@ -7,8 +7,7 @@ import { JourneyProvider, useJourney } from '@/components/contexts/JourneyContex
 import AchievementUnlock from '@/components/AchievementUnlock'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
-import EnhancedHeroCanvas from '@/components/EnhancedHeroCanvas'
-import HeroDepthBackdrop from '@/components/HeroDepthBackdrop'
+import HeroMosaic from '@/components/HeroMosaic'
 import GameHUD from '@/components/overlays/GameHUD'
 import GameLeaderboard from '@/components/overlays/GameLeaderboard'
 import styles from '@/styles/Home.module.css'
@@ -300,12 +299,9 @@ function HomeContent() {
               transition: 'opacity 0.3s ease-out',
             }}
           >
-            {/* Hero - Immersive, mysterious, minimal */}
+            {/* Hero - Immersive mosaic wall */}
             <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-              {/* Depth backdrop: curated art layers that fade in over time */}
-              <HeroDepthBackdrop />
-              {/* Interactive WebGL shader sits above the art layers */}
-              <EnhancedHeroCanvas />
+              <HeroMosaic />
 
               {/* Content overlay */}
               <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
