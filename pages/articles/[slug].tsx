@@ -20,7 +20,7 @@ import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import DeskSurface from '@/components/ui/DeskSurface';
 import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
-import ParallaxArtLayers from '@/components/ui/ParallaxArtLayers';
+import { ParallaxBand } from '@/components/ui/ParallaxArtLayers';
 import { discoverArticleImages } from '@/lib/article-images';
 import type { MultiArtOption } from '@/lib/article-images';
 
@@ -53,24 +53,22 @@ interface ArticleProps {
 const ArticleLayout = styled.div`
   min-height: 100vh;
   background: #030308;
-  position: relative;
   overflow-x: hidden;
 `;
 
-const ContentOverlay = styled.div`
+/** Opaque content section that slides over parallax bands */
+const ContentSection = styled.div`
   position: relative;
-  z-index: 10;
-  min-height: 100vh;
-  background: rgba(3, 3, 8, 0.82);
+  background: #030308;
+  z-index: 1;
 `;
 
 const ArticleWrapper = styled.article`
   position: relative;
   max-width: 860px;
   margin: 0 auto;
-  padding: 100px 24px 60px;
+  padding: 60px 24px;
   color: #e0e0e0;
-  z-index: 11;
   border-left: 6px solid var(--color-cyan-accent, #00d4ff);
 
   @media (min-width: 1024px) {
@@ -79,7 +77,26 @@ const ArticleWrapper = styled.article`
   }
 
   @media (max-width: 768px) {
-    padding: 80px 16px 40px;
+    padding: 40px 16px;
+    border-left-width: 4px;
+  }
+`;
+
+/** Inner wrapper for footer sections (no <article> semantics) */
+const FooterWrapper = styled.div`
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+  color: #e0e0e0;
+  border-left: 6px solid var(--color-cyan-accent, #00d4ff);
+
+  @media (min-width: 1024px) {
+    margin-left: 8%;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    padding: 32px 16px 40px;
     border-left-width: 4px;
   }
 `;
@@ -238,30 +255,8 @@ const ArticleContent = styled.div`
   }
 `;
 
-// Parallax reveal strip — full-width transparent band exposing the parallax
-const ParallaxRevealStrip = styled.div`
-  position: relative;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  height: 120px;
-  background: transparent;
-  border-top: 4px solid var(--color-gold-highlight, #ffd700);
-  border-bottom: 4px solid var(--color-gold-highlight, #ffd700);
-  margin-top: 60px;
-  margin-bottom: 60px;
-
-  @media (max-width: 1024px) {
-    height: 80px;
-  }
-
-  @media (max-width: 768px) {
-    height: 60px;
-    border-width: 3px;
-  }
-`;
-
 const RelatedArticles = styled.section`
-  margin-top: 80px;
+  margin-top: 40px;
   padding: 40px;
   background: rgba(0, 212, 255, 0.03);
   border-radius: 0;
@@ -395,7 +390,7 @@ const shimmerEffect = keyframes`
 `;
 
 const DiscoverSection = styled.section`
-  margin: 60px 0;
+  margin: 40px 0;
   padding: 40px;
   background: rgba(0, 212, 255, 0.05);
   border: 3px solid rgba(0, 212, 255, 0.25);
@@ -547,10 +542,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
   const defaultOgImage = `${siteUrl}/og-default.png`;
   const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : defaultOgImage;
 
-  // Discovery context integration
   const { openModal, setCurrentArticle } = useArticleDiscovery();
 
-  // Set the current article context for recommendations
   useEffect(() => {
     setCurrentArticle({
       slug,
@@ -569,14 +562,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
   return (
     <ArticleLayout>
-      {/* Parallax AI art layers behind everything */}
-      {multiArtImages.length > 0 && (
-        <ParallaxArtLayers images={multiArtImages} />
-      )}
-
-      {/* Desk Surface with interactive media background */}
-      <DeskSurface articleSlug={slug} />
-
       <Head>
         <title>{title} | Alex Welcing</title>
         <meta name="title" content={title} />
@@ -603,7 +588,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
         <meta name="theme-color" content="#030308" />
         {heroImage && <link rel="preload" as="image" href={heroImage} />}
-
         <link rel="canonical" href={articleUrl} />
       </Head>
 
@@ -640,7 +624,14 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
       <CircleNav />
 
-      <ContentOverlay>
+      {/* ---- Opening parallax band: first AI art image ---- */}
+      {multiArtImages[0] && (
+        <ParallaxBand image={multiArtImages[0]} height="70vh" mobileHeight="40vh" />
+      )}
+
+      {/* ---- Main content: opaque bg slides over the parallax ---- */}
+      <ContentSection>
+        <DeskSurface articleSlug={slug} />
         <ArticleWrapper>
           <ArticleHero>
             {heroImage && (
@@ -663,7 +654,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </ArticleMeta>
           </ArticleHero>
 
-          {/* Internal Links */}
           <InternalLinks aria-label="Related navigation">
             <InternalLink href="/speculative-ai">Speculative AI Hub</InternalLink>
             <InternalLink href="/agent-futures">Agent Futures</InternalLink>
@@ -708,10 +698,17 @@ const ArticlePage: NextPage<ArticleProps> = ({
           {multiArtImages.length > 0 && (
             <ArticleImageGallery images={multiArtImages} articleTitle={title} />
           )}
+        </ArticleWrapper>
+      </ContentSection>
 
-          {/* Reveal strip — transparent window into parallax layers */}
-          {multiArtImages.length > 0 && <ParallaxRevealStrip />}
+      {/* ---- Mid parallax band: second AI art image ---- */}
+      {multiArtImages[1] && (
+        <ParallaxBand image={multiArtImages[1]} height="50vh" mobileHeight="30vh" />
+      )}
 
+      {/* ---- Footer content: share, discover, related ---- */}
+      <ContentSection>
+        <FooterWrapper>
           <ShareButtons>
             <ShareButton
               href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`}
@@ -735,7 +732,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </ShareButton>
           </ShareButtons>
 
-          {/* Discovery Section */}
           <DiscoverSection>
             <DiscoverContent>
               <DiscoverLeft>
@@ -781,8 +777,13 @@ const ArticlePage: NextPage<ArticleProps> = ({
               </RelatedGrid>
             </RelatedArticles>
           )}
-        </ArticleWrapper>
-      </ContentOverlay>
+        </FooterWrapper>
+      </ContentSection>
+
+      {/* ---- Closing parallax band: third AI art image ---- */}
+      {multiArtImages[2] && (
+        <ParallaxBand image={multiArtImages[2]} height="40vh" mobileHeight="25vh" />
+      )}
     </ArticleLayout>
   );
 };

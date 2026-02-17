@@ -1,105 +1,59 @@
 import React from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
-import { useResponsive, usePrefersReducedMotion } from '@/hooks/useResponsive';
 import type { MultiArtOption } from '@/lib/article-images';
 
-interface ParallaxArtLayersProps {
-  images: MultiArtOption[];
+/**
+ * A single parallax image band using CSS background-attachment: fixed.
+ * Place these between opaque content sections — as the user scrolls,
+ * the fixed background is revealed through the band's "window" then
+ * hidden again when the next content section scrolls over it.
+ */
+
+interface ParallaxBandProps {
+  image: MultiArtOption;
+  height?: string;
+  mobileHeight?: string;
 }
 
-const LAYER_CONFIG = [
-  { speed: 150, opacity: 0.15, scale: 1.2, blur: 0, zIndex: 1 },
-  { speed: 300, opacity: 0.12, scale: 1.15, blur: 2, zIndex: 2 },
-  { speed: 500, opacity: 0.08, scale: 1.1, blur: 0, zIndex: 3 },
-];
+const Band = styled.div<{ $bgImage: string; $height: string; $mobileHeight: string }>`
+  position: relative;
+  min-height: ${props => props.$height};
+  background-image: url(${props => props.$bgImage});
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 
-const StaticBg = styled.div`
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.12;
+  @media (max-width: 768px) {
+    min-height: ${props => props.$mobileHeight};
+    /* fixed attachment is buggy on most mobile browsers */
+    background-attachment: scroll;
+  }
 `;
 
-interface LayerProps {
-  image: MultiArtOption;
-  config: typeof LAYER_CONFIG[number];
-  scrollY: MotionValue<number>;
-}
+const Caption = styled.div`
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--color-gold-highlight, #ffd700);
+  font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+  font-size: 0.7rem;
+  color: var(--color-gold-highlight, #ffd700);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+`;
 
-function ParallaxLayer({ image, config, scrollY }: LayerProps) {
-  const rawY = useTransform(scrollY, [0, 3000], [0, -config.speed]);
-  const y = useSpring(rawY, { stiffness: 50, damping: 30 });
+export function ParallaxBand({ image, height = '400px', mobileHeight = '250px' }: ParallaxBandProps) {
+  const modelName = image.model.replace(/-/g, ' ');
 
   return (
-    <motion.div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: config.zIndex,
-        y,
-        scale: config.scale,
-        opacity: config.opacity,
-        willChange: 'transform',
-        pointerEvents: 'none',
-        filter: config.blur > 0 ? `blur(${config.blur}px)` : undefined,
-      }}
-    >
-      <Image
-        src={image.path}
-        alt=""
-        fill
-        style={{ objectFit: 'cover' }}
-        sizes="100vw"
-        quality={60}
-        priority={config.zIndex === 1}
-      />
-    </motion.div>
+    <Band $bgImage={image.path} $height={height} $mobileHeight={mobileHeight}>
+      <Caption>{modelName}</Caption>
+    </Band>
   );
 }
 
-export default function ParallaxArtLayers({ images }: ParallaxArtLayersProps) {
-  const { scrollY } = useScroll();
-  const { isMobile, isTablet, performanceTier } = useResponsive();
-  const prefersReducedMotion = usePrefersReducedMotion();
-
-  if (images.length === 0) return null;
-
-  // Static fallback: mobile, reduced motion, or low-performance device
-  if (isMobile || prefersReducedMotion || performanceTier === 'low') {
-    return (
-      <StaticBg>
-        <Image
-          src={images[0].path}
-          alt=""
-          fill
-          style={{ objectFit: 'cover' }}
-          sizes="100vw"
-          quality={50}
-        />
-      </StaticBg>
-    );
-  }
-
-  // Tablet: max 2 layers with reduced speed
-  const maxLayers = isTablet ? 2 : 3;
-  const layerImages = images.slice(0, maxLayers);
-  const configs = isTablet
-    ? LAYER_CONFIG.map(c => ({ ...c, speed: Math.round(c.speed * 0.6) }))
-    : LAYER_CONFIG;
-
-  return (
-    <>
-      {layerImages.map((image, index) => (
-        <ParallaxLayer
-          key={image.path}
-          image={image}
-          config={configs[index]}
-          scrollY={scrollY}
-        />
-      ))}
-    </>
-  );
-}
+export default ParallaxBand;
