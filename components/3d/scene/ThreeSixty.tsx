@@ -334,10 +334,19 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   // when the user opens the 3D explorer or article display panel
   useEffect(() => {
     fetch('/api/articles-enhanced')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`API returned ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      })
       .then(data => {
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0 && data[0].slug) {
           setEnhancedArticles(data);
+        } else {
+          console.error('Enhanced articles API returned unexpected data:',
+            Array.isArray(data) ? `array of ${data.length}, first entry keys: ${data[0] ? Object.keys(data[0]).join(',') : 'empty'}` : typeof data
+          );
         }
       })
       .catch(err => console.error('Failed to fetch enhanced articles:', err));

@@ -53,7 +53,27 @@ export default function handler(
   res: NextApiResponse<EnhancedArticleData[] | { error: string }>
 ) {
   try {
-    const articlesData = articleManifest as EnhancedArticleData[];
+    // Handle both direct array import and potential default-wrapped module
+    const raw = articleManifest as unknown;
+    const articlesData: EnhancedArticleData[] = Array.isArray(raw)
+      ? raw
+      : Array.isArray((raw as { default?: unknown }).default)
+        ? (raw as { default: EnhancedArticleData[] }).default
+        : [];
+
+    if (articlesData.length === 0) {
+      console.error('Article manifest is empty or has unexpected shape:', typeof raw);
+      res.status(500).json({ error: 'Article manifest is empty' });
+      return;
+    }
+
+    // Validate first article has expected shape
+    const first = articlesData[0];
+    if (!first.slug || !first.title) {
+      console.error('Article manifest data has unexpected shape. First entry:', JSON.stringify(first).substring(0, 200));
+      res.status(500).json({ error: 'Article manifest has invalid data shape' });
+      return;
+    }
 
     // Cache for 5 minutes
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');

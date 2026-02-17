@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import Image from 'next/image';
 import { Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import styled from 'styled-components';
@@ -228,7 +227,7 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
   // Don't render until panel is ready to prevent flicker
   if (!panelReady || !isVisible || articles.length === 0) return null;
 
-  const article = articles[currentIndex];
+  const article = articles[currentIndex] ?? {};
   const imageSrc = article.heroImage || article.ogImage || article.thumbnail;
 
   const handleNext = () => {
@@ -264,16 +263,26 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
                     opacity: imageLoaded ? 0 : 1,
                     transition: 'opacity 0.3s ease-in-out',
                   }} />
-                  <Image
+                  {/* Use plain <img> instead of next/image — the Next.js Image component
+                      uses IntersectionObserver for lazy loading, which doesn't fire inside
+                      drei's <Html> portal (3D CSS transforms confuse the observer). */}
+                  <img
                     src={imageSrc}
-                    alt={article.title}
-                    fill
+                    alt={article.title || 'Article image'}
                     style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'cover',
                       opacity: imageLoaded ? 1 : 0,
-                      transition: 'opacity 0.4s ease-in-out'
+                      transition: 'opacity 0.4s ease-in-out',
                     }}
                     onLoad={() => setImageLoaded(true)}
+                    onError={(e) => {
+                      // If the primary image fails, hide the shimmer
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
                   />
                 </>
               ) : (
@@ -281,18 +290,20 @@ export default function ArticleDisplayPanel({ articles, isOpen, onClose }: Artic
               )}
             </ImageContainer>
             <InfoContainer>
-              <h3 style={{ margin: '0 0 10px 0', color: '#fff' }}>{article.title}</h3>
-              <Description>{article.description}</Description>
+              <h3 style={{ margin: '0 0 10px 0', color: '#fff' }}>{article.title || 'Untitled'}</h3>
+              <Description>{article.description || 'No description available.'}</Description>
               <MetaData>
-                <div>DATE: {article.date}</div>
-                <div>TYPE: {article.articleType?.toUpperCase()}</div>
+                <div>DATE: {article.date || 'Unknown'}</div>
+                <div>TYPE: {article.articleType?.toUpperCase() || 'UNCLASSIFIED'}</div>
                 {article.horizon && <div>HORIZON: {article.horizon}</div>}
                 {article.polarity && <div>POLARITY: {article.polarity}</div>}
-                <div>READ TIME: {article.readingTime} min</div>
+                <div>READ TIME: {article.readingTime ? `${article.readingTime} min` : 'N/A'}</div>
               </MetaData>
-              <ReadLink href={`/articles/${article.slug}`}>
-                Read Article →
-              </ReadLink>
+              {article.slug && (
+                <ReadLink href={`/articles/${article.slug}`}>
+                  Read Article →
+                </ReadLink>
+              )}
             </InfoContainer>
           </Content>
 
