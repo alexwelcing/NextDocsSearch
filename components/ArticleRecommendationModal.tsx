@@ -749,8 +749,8 @@ function diversifiedSelect(
 
 // Calculate keyword overlap between two articles
 function keywordOverlap(a: EnhancedArticleData, b: EnhancedArticleData): number {
-  const aKeywords = (a.keywords || []).map(k => k.toLowerCase());
-  const bKeywords = new Set((b.keywords || []).map(k => k.toLowerCase()));
+  const aKeywords = (a.keywords || []).filter(Boolean).map(k => k.toLowerCase());
+  const bKeywords = new Set((b.keywords || []).filter(Boolean).map(k => k.toLowerCase()));
   if (aKeywords.length === 0 || bKeywords.size === 0) return 0;
   let shared = 0;
   for (const k of aKeywords) {
