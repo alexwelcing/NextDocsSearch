@@ -667,122 +667,25 @@ interface ArticleRecommendationModalProps {
   allArticles?: EnhancedArticleData[];
 }
 
-// --- Recommendation diversity utilities ---
+// --- Precomputed recommendation index types ---
 
-// Calculate how similar a candidate is to already-selected articles
-function diversityPenalty(
-  candidate: EnhancedArticleData,
-  selected: EnhancedArticleData[]
-): number {
-  if (selected.length === 0) return 0;
-  let totalPenalty = 0;
-
-  for (const sel of selected) {
-    if (candidate.horizon && candidate.horizon === sel.horizon) totalPenalty += 3;
-    if (candidate.polarity && candidate.polarity === sel.polarity) totalPenalty += 2;
-    if (candidate.articleType === sel.articleType) totalPenalty += 1;
-    const sharedMechanics = candidate.mechanics?.filter(m =>
-      sel.mechanics?.includes(m)
-    ).length || 0;
-    totalPenalty += sharedMechanics * 2;
-    const sharedDomains = candidate.domains?.filter(d =>
-      sel.domains?.includes(d)
-    ).length || 0;
-    totalPenalty += sharedDomains * 1.5;
-  }
-
-  return totalPenalty / selected.length;
+interface ScoredRecommendation {
+  slug: string;
+  score: number;
 }
 
-// Greedy diversified selection: picks items balancing relevance score with diversity
-function diversifiedSelect(
-  scored: Array<{ article: EnhancedArticleData; score: number }>,
-  limit: number,
-  diversityWeight: number = 0.4
-): EnhancedArticleData[] {
-  if (scored.length === 0) return [];
-  if (scored.length <= limit) {
-    return scored.sort((a, b) => b.score - a.score).map(s => s.article);
-  }
-
-  // Normalize scores to 0-1 range for fair diversity weighting
-  const maxScore = Math.max(...scored.map(s => s.score));
-  const minScore = Math.min(...scored.map(s => s.score));
-  const scoreRange = maxScore - minScore || 1;
-  const normalized = scored.map(s => ({
-    article: s.article,
-    normalizedScore: (s.score - minScore) / scoreRange,
-  }));
-
-  normalized.sort((a, b) => b.normalizedScore - a.normalizedScore);
-
-  const selected: EnhancedArticleData[] = [];
-  const remaining = [...normalized];
-
-  // Always pick the top-scored item first
-  selected.push(remaining[0].article);
-  remaining.splice(0, 1);
-
-  // For subsequent picks, balance relevance with diversity
-  while (selected.length < limit && remaining.length > 0) {
-    let bestIdx = 0;
-    let bestAdjustedScore = -Infinity;
-
-    for (let i = 0; i < remaining.length; i++) {
-      const penalty = diversityPenalty(remaining[i].article, selected);
-      const normalizedPenalty = Math.min(1, penalty / 15);
-      const adjustedScore =
-        remaining[i].normalizedScore * (1 - diversityWeight) +
-        (1 - normalizedPenalty) * diversityWeight;
-      if (adjustedScore > bestAdjustedScore) {
-        bestAdjustedScore = adjustedScore;
-        bestIdx = i;
-      }
-    }
-
-    selected.push(remaining[bestIdx].article);
-    remaining.splice(bestIdx, 1);
-  }
-
-  return selected;
+interface PrecomputedRecommendations {
+  similar: ScoredRecommendation[];
+  horizon: ScoredRecommendation[];
+  polarity: ScoredRecommendation[];
+  mechanics: ScoredRecommendation[];
+  trending: ScoredRecommendation[];
 }
 
-// Calculate keyword overlap between two articles
-function keywordOverlap(a: EnhancedArticleData, b: EnhancedArticleData): number {
-  const aKeywords = (a.keywords || []).filter(Boolean).map(k => k.toLowerCase());
-  const bKeywords = new Set((b.keywords || []).filter(Boolean).map(k => k.toLowerCase()));
-  if (aKeywords.length === 0 || bKeywords.size === 0) return 0;
-  let shared = 0;
-  for (const k of aKeywords) {
-    if (bKeywords.has(k)) shared++;
-  }
-  return shared;
-}
+// Category keys that exist in the precomputed index (excludes 'all' which is derived)
+type IndexCategory = 'similar' | 'horizon' | 'polarity' | 'mechanics' | 'trending';
 
-// Round-robin pick from categorized buckets for even distribution
-function roundRobinPick<K extends string>(
-  bucketOrder: K[],
-  buckets: Map<K, EnhancedArticleData[]>,
-  limit: number
-): EnhancedArticleData[] {
-  const result: EnhancedArticleData[] = [];
-  let round = 0;
-  while (result.length < limit) {
-    let added = false;
-    for (const key of bucketOrder) {
-      const bucket = buckets.get(key);
-      if (bucket && round < bucket.length && result.length < limit) {
-        result.push(bucket[round]);
-        added = true;
-      }
-    }
-    if (!added) break;
-    round++;
-  }
-  return result;
-}
-
-// Stable empty array reference to avoid dependency loops
+// Stable empty references to avoid dependency loops
 const EMPTY_ARTICLES: EnhancedArticleData[] = [];
 
 export default function ArticleRecommendationModal({
@@ -791,215 +694,143 @@ export default function ArticleRecommendationModal({
   currentArticle,
   allArticles,
 }: ArticleRecommendationModalProps) {
-  // Use stable reference for articles prop
   const articlesFromProps = allArticles ?? EMPTY_ARTICLES;
   const [activeTab, setActiveTab] = useState<RecommendationType>('all');
   const [articles, setArticles] = useState<EnhancedArticleData[]>(articlesFromProps);
+  const [recIndex, setRecIndex] = useState<PrecomputedRecommendations | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Sync with props when they change
   useEffect(() => {
     if (articlesFromProps.length > 0) {
       setArticles(articlesFromProps);
-      setLoading(false);
     }
   }, [articlesFromProps]);
 
-  // Fetch articles only if not provided and modal is open
+  // Fetch articles + precomputed recommendation index when modal opens
   useEffect(() => {
-    if (isOpen && articles.length === 0 && !loading) {
-      setLoading(true);
-      fetch('/api/articles-enhanced')
-        .then(res => res.json())
-        .then(data => {
-          setArticles(data);
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
+    if (!isOpen || loading) return;
+
+    const needsArticles = articles.length === 0;
+    const needsIndex = !recIndex;
+
+    if (!needsArticles && !needsIndex) return;
+
+    setLoading(true);
+
+    const slug = currentArticle?.slug;
+    const recUrl = slug
+      ? `/api/articles/recommendations?slug=${encodeURIComponent(slug)}`
+      : '/api/articles/recommendations';
+
+    const fetches: Promise<void>[] = [];
+
+    if (needsArticles) {
+      fetches.push(
+        fetch('/api/articles-enhanced')
+          .then(res => res.json())
+          .then(data => setArticles(data))
+          .catch(() => {})
+      );
     }
-  }, [isOpen, articles.length, loading]);
 
-  // Recommendation algorithms — each category uses diversified selection
-  // to ensure variety across mechanics, horizons, polarities, and domains.
-  // When a currentArticle is provided, results are unique to that article's attributes.
+    if (needsIndex) {
+      fetches.push(
+        fetch(recUrl)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.similar) setRecIndex(data);
+          })
+          .catch(() => {})
+      );
+    }
+
+    Promise.all(fetches).then(() => setLoading(false));
+  }, [isOpen, loading, articles.length, recIndex, currentArticle?.slug]);
+
+  // Refetch index when current article changes
+  useEffect(() => {
+    if (!isOpen) return;
+    const slug = currentArticle?.slug;
+    const recUrl = slug
+      ? `/api/articles/recommendations?slug=${encodeURIComponent(slug)}`
+      : '/api/articles/recommendations';
+
+    fetch(recUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.similar) setRecIndex(data);
+      })
+      .catch(() => {});
+  }, [isOpen, currentArticle?.slug]);
+
+  // Build a slug → article lookup map
+  const articleMap = useMemo(() => {
+    const map = new Map<string, EnhancedArticleData>();
+    for (const a of articles) map.set(a.slug, a);
+    return map;
+  }, [articles]);
+
+  // Resolve precomputed slug+score list into full EnhancedArticleData[]
+  const resolveRecommendations = useCallback(
+    (recs: ScoredRecommendation[] | undefined): EnhancedArticleData[] => {
+      if (!recs) return [];
+      const result: EnhancedArticleData[] = [];
+      for (const rec of recs) {
+        const article = articleMap.get(rec.slug);
+        if (article) result.push(article);
+      }
+      return result;
+    },
+    [articleMap]
+  );
+
+  // Build a slug → score lookup for the current index
+  const scoreMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!recIndex) return map;
+    // Use the "similar" category scores as the primary match percentage
+    // since those use the full composite scoring (TF-IDF + Jaccard + all signals)
+    for (const rec of recIndex.similar) {
+      map.set(rec.slug, rec.score);
+    }
+    return map;
+  }, [recIndex]);
+
+  // Get recommendations for a given tab from the precomputed index
   const getRecommendations = useCallback((type: RecommendationType): EnhancedArticleData[] => {
-    const filtered = articles.filter(a => a.slug !== currentArticle?.slug);
-    if (filtered.length === 0) return [];
+    if (!recIndex) return [];
 
-    switch (type) {
-      case 'similar': {
-        if (currentArticle) {
-          const scored = filtered.map(article => {
-            let score = 0;
-            const sharedMechanics = article.mechanics?.filter(m =>
-              currentArticle.mechanics?.includes(m)
-            ).length || 0;
-            score += sharedMechanics * 4;
-
-            const sharedDomains = article.domains?.filter(d =>
-              currentArticle.domains?.includes(d)
-            ).length || 0;
-            score += sharedDomains * 3;
-
-            score += keywordOverlap(article, currentArticle) * 2;
-
-            if (article.articleType === currentArticle.articleType) score += 1;
-
-            // Small bonus for adjacent time horizon
-            if (article.horizon && currentArticle.horizon) {
-              const horizonOrder = ['NQ', 'NY', 'N5', 'N20', 'N50', 'N100'];
-              const dist = Math.abs(
-                horizonOrder.indexOf(article.horizon) - horizonOrder.indexOf(currentArticle.horizon)
-              );
-              if (dist <= 1) score += 1;
-            }
-
-            return { article, score };
-          }).filter(({ score }) => score > 0);
-
-          return diversifiedSelect(scored, 12, 0.35);
-        }
-        // No current article: diverse mix weighted by metadata richness
-        const scored = filtered.map(article => ({
-          article,
-          score: (article.mechanics?.length || 0) * 2 + (article.domains?.length || 0),
-        }));
-        return diversifiedSelect(scored, 12, 0.6);
-      }
-
-      case 'horizon': {
-        const horizonOrder = ['NQ', 'NY', 'N5', 'N20', 'N50', 'N100'];
-        if (currentArticle?.horizon) {
-          const currentIdx = horizonOrder.indexOf(currentArticle.horizon);
-          const withHorizon = filtered.filter(a => a.horizon);
-          const scored = withHorizon.map(article => {
-            const idx = horizonOrder.indexOf(article.horizon!);
-            const distance = Math.abs(idx - currentIdx);
-            const proximityScore = Math.max(0, 10 - distance * 2);
-            // Bonus for sharing attributes with current article
-            const sharedMechanics = article.mechanics?.filter(m =>
-              currentArticle.mechanics?.includes(m)
-            ).length || 0;
-            return { article, score: proximityScore + sharedMechanics };
-          });
-          // Higher diversity weight ensures we don't get 12 articles with identical horizon
-          return diversifiedSelect(scored, 12, 0.5);
-        }
-        // No current article: round-robin across all horizons for even distribution
-        const byHorizon = new Map<string, EnhancedArticleData[]>();
-        for (const h of horizonOrder) byHorizon.set(h, []);
-        for (const a of filtered) {
-          if (a.horizon && byHorizon.has(a.horizon)) {
-            byHorizon.get(a.horizon)!.push(a);
-          }
-        }
-        return roundRobinPick(horizonOrder, byHorizon, 12);
-      }
-
-      case 'polarity': {
-        const polarityOrder = ['C3', 'C2', 'C1', 'N0', 'P1', 'P2', 'P3'];
-        if (currentArticle?.polarity) {
-          const currentIdx = polarityOrder.indexOf(currentArticle.polarity);
-          const withPolarity = filtered.filter(a => a.polarity);
-          const scored = withPolarity.map(article => {
-            const idx = polarityOrder.indexOf(article.polarity!);
-            const distance = Math.abs(idx - currentIdx);
-            const proximityScore = Math.max(0, 12 - distance * 2);
-            // Bonus for shared domains so results relate to current topic
-            const sharedDomains = article.domains?.filter(d =>
-              currentArticle.domains?.includes(d)
-            ).length || 0;
-            return { article, score: proximityScore + sharedDomains };
-          });
-          return diversifiedSelect(scored, 12, 0.5);
-        }
-        // No current article: round-robin across polarity spectrum
-        const byPolarity = new Map<string, EnhancedArticleData[]>();
-        for (const p of polarityOrder) byPolarity.set(p, []);
-        for (const a of filtered) {
-          if (a.polarity && byPolarity.has(a.polarity)) {
-            byPolarity.get(a.polarity)!.push(a);
-          }
-        }
-        return roundRobinPick(polarityOrder, byPolarity, 12);
-      }
-
-      case 'mechanics': {
-        if (currentArticle?.mechanics?.length) {
-          const targetMechanics = new Set(currentArticle.mechanics);
-          const scored = filtered
-            .map(article => {
-              const shared = article.mechanics?.filter(m => targetMechanics.has(m)).length || 0;
-              // Small score for complementary mechanics (exploration)
-              const complementary = article.mechanics?.filter(m => !targetMechanics.has(m)).length || 0;
-              return { article, score: shared * 3 + complementary * 0.5 };
-            })
-            .filter(({ score }) => score > 0);
-          return diversifiedSelect(scored, 12, 0.45);
-        }
-        // No current article: diverse mechanics coverage
-        const scored = filtered
-          .filter(a => a.mechanics?.length)
-          .map(article => ({
-            article,
-            score: article.mechanics!.length,
-          }));
-        return diversifiedSelect(scored, 12, 0.6);
-      }
-
-      case 'trending': {
-        const now = Date.now();
-        const scored = filtered.map(article => {
-          const ageInDays = (now - new Date(article.date).getTime()) / (1000 * 60 * 60 * 24);
-          // Recency score decays over ~6 months
-          const recencyScore = Math.max(0, 20 - ageInDays / 9);
-          let contextBonus = 0;
-          if (currentArticle) {
-            const sharedMechanics = article.mechanics?.filter(m =>
-              currentArticle.mechanics?.includes(m)
-            ).length || 0;
-            const sharedDomains = article.domains?.filter(d =>
-              currentArticle.domains?.includes(d)
-            ).length || 0;
-            contextBonus = sharedMechanics * 1.5 + sharedDomains;
-          }
-          return { article, score: recencyScore + contextBonus };
-        });
-        return diversifiedSelect(scored, 12, 0.3);
-      }
-
-      case 'all':
-      default: {
-        // Interleave results from all 5 categories for maximum diversity
-        const sources = [
-          getRecommendations('similar'),
-          getRecommendations('mechanics'),
-          getRecommendations('horizon'),
-          getRecommendations('polarity'),
-          getRecommendations('trending'),
-        ];
-        const seen = new Set<string>();
-        const mixed: EnhancedArticleData[] = [];
-        let round = 0;
-        while (mixed.length < 12) {
-          let added = false;
-          for (const source of sources) {
-            if (round < source.length && mixed.length < 12) {
-              const article = source[round];
-              if (!seen.has(article.slug)) {
-                seen.add(article.slug);
+    if (type === 'all') {
+      // Interleave from all 5 categories for maximum diversity
+      const categories: IndexCategory[] = ['similar', 'mechanics', 'horizon', 'polarity', 'trending'];
+      const sources = categories.map(cat => recIndex[cat] || []);
+      const seen = new Set<string>();
+      const mixed: EnhancedArticleData[] = [];
+      let round = 0;
+      while (mixed.length < 15) {
+        let added = false;
+        for (const source of sources) {
+          if (round < source.length && mixed.length < 15) {
+            const rec = source[round];
+            if (!seen.has(rec.slug)) {
+              const article = articleMap.get(rec.slug);
+              if (article) {
+                seen.add(rec.slug);
                 mixed.push(article);
                 added = true;
               }
             }
           }
-          if (!added) break;
-          round++;
         }
-        return mixed;
+        if (!added) break;
+        round++;
       }
+      return mixed;
     }
-  }, [articles, currentArticle]);
+
+    return resolveRecommendations(recIndex[type]);
+  }, [recIndex, articleMap, resolveRecommendations]);
 
   const recommendations = useMemo(() =>
     getRecommendations(activeTab),
@@ -1007,11 +838,9 @@ export default function ArticleRecommendationModal({
   );
 
   const featuredArticle = useMemo(() => {
-    if (recommendations.length === 0) return null;
-    // Featured = highest match score from similar
-    const similar = getRecommendations('similar');
-    return similar[0] || recommendations[0];
-  }, [recommendations, getRecommendations]);
+    if (!recIndex || !recIndex.similar.length) return null;
+    return articleMap.get(recIndex.similar[0].slug) || null;
+  }, [recIndex, articleMap]);
 
   const recentArticles = useMemo(() =>
     [...articles]
@@ -1022,67 +851,17 @@ export default function ArticleRecommendationModal({
 
   const tabCounts = useMemo(() => ({
     all: getRecommendations('all').length,
-    similar: getRecommendations('similar').length,
-    horizon: getRecommendations('horizon').length,
-    polarity: getRecommendations('polarity').length,
-    mechanics: getRecommendations('mechanics').length,
-    trending: getRecommendations('trending').length,
-  }), [getRecommendations]);
+    similar: resolveRecommendations(recIndex?.similar).length,
+    horizon: resolveRecommendations(recIndex?.horizon).length,
+    polarity: resolveRecommendations(recIndex?.polarity).length,
+    mechanics: resolveRecommendations(recIndex?.mechanics).length,
+    trending: resolveRecommendations(recIndex?.trending).length,
+  }), [recIndex, getRecommendations, resolveRecommendations]);
 
-  const calculateMatchScore = useCallback((article: EnhancedArticleData): number => {
-    if (!currentArticle) return 0;
-    let score = 0;
-
-    // Mechanics match (max 25) — proportional to overlap ratio
-    const currentMechanics = currentArticle.mechanics?.length || 0;
-    const mechanicsMatch = article.mechanics?.filter(m =>
-      currentArticle.mechanics?.includes(m)
-    ).length || 0;
-    if (currentMechanics > 0) {
-      score += (mechanicsMatch / currentMechanics) * 25;
-    }
-
-    // Domain match (max 20) — proportional to overlap ratio
-    const currentDomains = currentArticle.domains?.length || 0;
-    const domainMatch = article.domains?.filter(d =>
-      currentArticle.domains?.includes(d)
-    ).length || 0;
-    if (currentDomains > 0) {
-      score += (domainMatch / currentDomains) * 20;
-    }
-
-    // Keyword match (max 15) — proportional to overlap ratio
-    const currentKeywords = (currentArticle.keywords || []).filter(Boolean);
-    const articleKeywords = (article.keywords || []).filter(Boolean);
-    if (currentKeywords.length > 0) {
-      const kwSet = new Set(currentKeywords.map(k => k.toLowerCase()));
-      const kwMatch = articleKeywords.filter(k => kwSet.has(k.toLowerCase())).length;
-      score += (kwMatch / currentKeywords.length) * 15;
-    }
-
-    // Horizon proximity (max 20) — same horizon = full, adjacent = partial
-    if (article.horizon && currentArticle.horizon) {
-      const horizonOrder = ['NQ', 'NY', 'N5', 'N20', 'N50', 'N100'];
-      const distance = Math.abs(
-        horizonOrder.indexOf(article.horizon) - horizonOrder.indexOf(currentArticle.horizon)
-      );
-      score += Math.max(0, 20 - distance * 4);
-    }
-
-    // Polarity proximity (max 10) — same polarity = full, adjacent = partial
-    if (article.polarity && currentArticle.polarity) {
-      const polarityOrder = ['C3', 'C2', 'C1', 'N0', 'P1', 'P2', 'P3'];
-      const distance = Math.abs(
-        polarityOrder.indexOf(article.polarity) - polarityOrder.indexOf(currentArticle.polarity)
-      );
-      score += Math.max(0, 10 - distance * 2);
-    }
-
-    // Type match (10)
-    if (article.articleType === currentArticle.articleType) score += 10;
-
-    return Math.min(100, Math.round(score));
-  }, [currentArticle]);
+  // Match score comes directly from the precomputed index
+  const getMatchScore = useCallback((article: EnhancedArticleData): number => {
+    return scoreMap.get(article.slug) || 0;
+  }, [scoreMap]);
 
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={open => !open && onClose()}>
@@ -1162,10 +941,10 @@ export default function ArticleRecommendationModal({
                                 style={{ objectFit: 'cover' }}
                               />
                             )}
-                            {currentArticle && (
+                            {currentArticle && getMatchScore(article) > 0 && (
                               <MatchScore>
                                 <Target size={12} />
-                                {calculateMatchScore(article)}% match
+                                {getMatchScore(article)}% match
                               </MatchScore>
                             )}
                           </CardImage>
