@@ -392,6 +392,23 @@ function main() {
   }
 
   // ── Step 3: Build ranked lists per category for each article ──
+  //
+  // After computing raw scores, we curve them per-article so the best
+  // match always lands in the A range (~95%) and others scale down.
+  // This gives users an intuitive grade-like distribution (A, B, C)
+  // instead of raw composite numbers that cluster around 30-50%.
+
+  /** Curve raw scores so the top item maps to `ceiling` and others scale proportionally */
+  function curveScores(recs: ScoredRecommendation[], ceiling: number = 95): ScoredRecommendation[] {
+    if (recs.length === 0) return recs;
+    const maxScore = Math.max(...recs.map(r => r.score));
+    if (maxScore === 0) return recs;
+    return recs.map(r => ({
+      slug: r.slug,
+      score: Math.round((r.score / maxScore) * ceiling),
+    }));
+  }
+
   console.log('  Generating per-article ranked recommendations...');
   const index: RecommendationIndex = {};
   const LIMIT = 15; // Store top 15 per category for client-side flexibility
@@ -487,11 +504,11 @@ function main() {
     const trending = diversifiedTopN(article.slug, trendingScored, articleMap, LIMIT, 0.3);
 
     index[article.slug] = {
-      similar,
-      horizon,
-      polarity,
-      mechanics,
-      trending,
+      similar: curveScores(similar),
+      horizon: curveScores(horizon),
+      polarity: curveScores(polarity),
+      mechanics: curveScores(mechanics),
+      trending: curveScores(trending),
     };
   }
 
@@ -568,11 +585,11 @@ function main() {
     .map((a, i) => ({ slug: a.slug, score: Math.max(30, 95 - i * 4) }));
 
   index['__global__'] = {
-    similar: globalSimilar,
-    horizon: globalHorizon,
-    polarity: globalPolarity,
-    mechanics: globalMechanics,
-    trending: globalTrending,
+    similar: curveScores(globalSimilar),
+    horizon: curveScores(globalHorizon),
+    polarity: curveScores(globalPolarity),
+    mechanics: curveScores(globalMechanics),
+    trending: curveScores(globalTrending),
   };
 
   // ── Write output ──
