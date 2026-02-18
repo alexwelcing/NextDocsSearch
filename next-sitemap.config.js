@@ -9,8 +9,6 @@ module.exports = {
   exclude: [
     '/api/*',
     '/404',
-    '/character-studio',
-    '/story-studio',
     '/chat',
   ],
   transform: async (config, path) => {
@@ -64,7 +62,7 @@ module.exports = {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/drafts/', '/experiments/', '/_next/', '/character-studio', '/story-studio'],
+        disallow: ['/api/', '/drafts/', '/experiments/', '/_next/'],
       },
     ],
     additionalSitemaps: [

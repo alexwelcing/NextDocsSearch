@@ -43,12 +43,6 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
           <Link className={styles.menuLink} href="/about">
             About
           </Link>
-          <Link className={styles.menuLink} href="/character-studio">
-            Character Studio
-          </Link>
-          <Link className={styles.menuLink} href="/story-studio">
-            Story Studio
-          </Link>
           <button
             className={styles.menuLink}
             onClick={() => setShelfOpen(!shelfOpen)}

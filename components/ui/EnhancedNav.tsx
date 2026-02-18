@@ -31,8 +31,6 @@ const EnhancedNav: React.FC<EnhancedNavProps> = ({ isGamePlaying = false, limit 
     { href: '/', label: 'Home' },
     { href: '/chat', label: 'Explore' },
     { href: '/about', label: 'About' },
-    { href: '/character-studio', label: 'Character Studio' },
-    { href: '/story-studio', label: 'Story Studio' },
   ];
 
   if (isGamePlaying) {
