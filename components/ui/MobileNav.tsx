@@ -22,8 +22,6 @@ import {
   BookOpen,
   MessageCircle,
   Compass,
-  Gamepad2,
-  Users,
   Info,
 } from 'lucide-react';
 
@@ -228,8 +226,6 @@ const mainNavItems: NavItem[] = [
 
 const exploreNavItems: NavItem[] = [
   { href: '/?mode=3d', label: '3D Experience', icon: <Compass /> },
-  { href: '/character-studio', label: 'Character Studio', icon: <Users /> },
-  { href: '/story-studio', label: 'Story Studio', icon: <Gamepad2 /> },
 ];
 
 const otherNavItems: NavItem[] = [

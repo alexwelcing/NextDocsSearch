@@ -16,10 +16,6 @@ Disallow: /*page=
 Disallow: /*sort=
 Disallow: /*filter=
 
-# Block character/story studio (interactive apps, not content)
-Disallow: /character-studio
-Disallow: /story-studio
-
 # Host
 Host: https://alexwelcing.com
 
