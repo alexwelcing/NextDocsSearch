@@ -13,9 +13,10 @@ interface CircleNavProps {
   isGamePlaying?: boolean;
 }
 
+const RECENT_ARTICLE_COUNT = 3;
+
 const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [shelfOpen, setShelfOpen] = useState(false);
   const [articles, setArticles] = useState<ArticleData[]>([]);
 
   useEffect(() => {
@@ -23,6 +24,8 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
       .then(response => response.json())
       .then(data => setArticles(data));
   }, []);
+
+  const recentArticles = articles.slice(0, RECENT_ARTICLE_COUNT);
 
   return (
     <div
@@ -43,32 +46,29 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
           <Link className={styles.menuLink} href="/about">
             About
           </Link>
-          <button
-            className={styles.menuLink}
-            onClick={() => setShelfOpen(!shelfOpen)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left' }}
-          >
-            Articles {shelfOpen ? '▲' : '▼'}
-          </button>
-          {shelfOpen && articles.map((article) => (
-            <Link
-              key={article.filename}
-              className={styles.menuLink}
-              href={`/articles/${article.filename.replace('.mdx', '')}`}
-            >
-              <div style={{ maxWidth: '80%' }}>
-                {article.title.length > 30 ? article.title.slice(0, 30) + '..' : article.title}
-              </div>
+          <div className={styles.articleSection}>
+            <span className={styles.sectionLabel}>Recent Articles</span>
+            {recentArticles.map((article) => (
+              <Link
+                key={article.filename}
+                className={styles.menuLink}
+                href={`/articles/${article.filename.replace('.mdx', '')}`}
+              >
+                {article.title}
+              </Link>
+            ))}
+            <Link className={styles.viewAllLink} href="/articles">
+              View all articles →
             </Link>
-          ))}
+          </div>
         </div>
       ) : (
-        <div className={isOpen ? styles.menu : styles.circle} onClick={() => setIsOpen(!isOpen)}>
-          {!isOpen && <span className="material-icons-outlined">explore</span>}
+        <div className={styles.circle} onClick={() => setIsOpen(true)}>
+          <span className="material-icons-outlined">explore</span>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default CircleNav;

@@ -40,7 +40,7 @@
   opacity: 90%;
 }
 
-.menu button {
+.closeBtn {
   align-self: flex-start;
   background-color: transparent;
   border: none;
@@ -48,17 +48,19 @@
   cursor: pointer;
   color: var(--link-color);
   transition: color 0.3s;
+  padding: 0;
+  line-height: 1;
 }
 
-.menu button:hover {
+.closeBtn:hover {
   color: var(--btn-hover);
 }
 
-.menu button:focus {
+.closeBtn:focus {
   outline: none;
 }
 
-.menu a {
+.menuLink {
   text-decoration: none;
   align-self: flex-start;
   color: #ddd;
@@ -68,10 +70,46 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
   font-family: var(--font-mono);
 }
 
-.menu a:hover {
+.menuLink:hover {
   background-color: var(--btn-hover);
+  color: #fff;
+}
+
+.articleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.sectionLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  padding: 0 0.5rem 0.15rem;
+  font-family: var(--font-mono);
+}
+
+.viewAllLink {
+  text-decoration: none;
+  align-self: flex-start;
+  color: #aaa;
+  padding: 0.2rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  transition: color 0.3s;
+  margin-top: 0.15rem;
+}
+
+.viewAllLink:hover {
   color: #fff;
 }
