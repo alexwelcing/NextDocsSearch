@@ -1021,31 +1021,46 @@ export default function ArticleRecommendationModal({
   );
 
   const tabCounts = useMemo(() => ({
-    all: Math.min(12, articles.filter(a => a.slug !== currentArticle?.slug).length),
+    all: getRecommendations('all').length,
     similar: getRecommendations('similar').length,
     horizon: getRecommendations('horizon').length,
     polarity: getRecommendations('polarity').length,
     mechanics: getRecommendations('mechanics').length,
-    trending: Math.min(12, articles.length),
-  }), [articles, currentArticle, getRecommendations]);
+    trending: getRecommendations('trending').length,
+  }), [getRecommendations]);
 
   const calculateMatchScore = useCallback((article: EnhancedArticleData): number => {
     if (!currentArticle) return 0;
     let score = 0;
 
-    // Mechanics match (max 30)
+    // Mechanics match (max 25) — proportional to overlap ratio
+    const currentMechanics = currentArticle.mechanics?.length || 0;
     const mechanicsMatch = article.mechanics?.filter(m =>
       currentArticle.mechanics?.includes(m)
     ).length || 0;
-    score += mechanicsMatch * 10;
+    if (currentMechanics > 0) {
+      score += (mechanicsMatch / currentMechanics) * 25;
+    }
 
-    // Domain match (max 20)
+    // Domain match (max 20) — proportional to overlap ratio
+    const currentDomains = currentArticle.domains?.length || 0;
     const domainMatch = article.domains?.filter(d =>
       currentArticle.domains?.includes(d)
     ).length || 0;
-    score += domainMatch * 5;
+    if (currentDomains > 0) {
+      score += (domainMatch / currentDomains) * 20;
+    }
 
-    // Horizon proximity (max 20)
+    // Keyword match (max 15) — proportional to overlap ratio
+    const currentKeywords = (currentArticle.keywords || []).filter(Boolean);
+    const articleKeywords = (article.keywords || []).filter(Boolean);
+    if (currentKeywords.length > 0) {
+      const kwSet = new Set(currentKeywords.map(k => k.toLowerCase()));
+      const kwMatch = articleKeywords.filter(k => kwSet.has(k.toLowerCase())).length;
+      score += (kwMatch / currentKeywords.length) * 15;
+    }
+
+    // Horizon proximity (max 20) — same horizon = full, adjacent = partial
     if (article.horizon && currentArticle.horizon) {
       const horizonOrder = ['NQ', 'NY', 'N5', 'N20', 'N50', 'N100'];
       const distance = Math.abs(
@@ -1054,19 +1069,19 @@ export default function ArticleRecommendationModal({
       score += Math.max(0, 20 - distance * 4);
     }
 
-    // Polarity proximity (max 20)
+    // Polarity proximity (max 10) — same polarity = full, adjacent = partial
     if (article.polarity && currentArticle.polarity) {
       const polarityOrder = ['C3', 'C2', 'C1', 'N0', 'P1', 'P2', 'P3'];
       const distance = Math.abs(
         polarityOrder.indexOf(article.polarity) - polarityOrder.indexOf(currentArticle.polarity)
       );
-      score += Math.max(0, 20 - distance * 3);
+      score += Math.max(0, 10 - distance * 2);
     }
 
     // Type match (10)
     if (article.articleType === currentArticle.articleType) score += 10;
 
-    return Math.min(100, score);
+    return Math.min(100, Math.round(score));
   }, [currentArticle]);
 
   return (
