@@ -57,8 +57,6 @@
     "@react-three/xr": "^6.6.28",
     "@supabase/ssr": "^0.0.9",
     "@supabase/supabase-js": "^2.45.1",
-    "@types/node": "^22.10.2",
-    "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
     "ai": "^2.2.37",
     "axios": "^1.7.4",
@@ -97,7 +95,6 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.182.0",
     "three-inspect": "^0.7.2",
-    "typescript": "^5.5.4",
     "unist-builder": "^3.0.1",
     "unist-util-filter": "^4.0.1",
     "yargs": "^17.7.2"
@@ -109,6 +106,8 @@
     "@types/common-tags": "^1.8.4",
     "@types/estree": "^1.0.5",
     "@types/mdast": "^3.0.15",
+    "@types/node": "^22.18.12",
+    "@types/react": "^19.2.2",
     "@types/three": "^0.182.0",
     "@types/yargs": "^17.0.33",
     "@vitejs/plugin-react": "^5.1.2",
@@ -121,6 +120,7 @@
     "prettier": "^2.8.8",
     "tailwindcss": "^3.4.10",
     "tsx": "^4.17.0",
+    "typescript": "^5.5.4",
     "vitest": "^4.0.16"
   },
   "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"

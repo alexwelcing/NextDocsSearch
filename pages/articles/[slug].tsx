@@ -18,6 +18,7 @@ import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
 import { useEffect } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
+import { TopRecommendation, MidRecommendation, BottomCarousel } from '@/components/ArticleRecommendations';
 import DeskSurface from '@/components/ui/DeskSurface';
 import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
 import { ArtFrame, DepthSection, DepthDivider, EditorialSection } from '@/components/ui/ParallaxArtLayers';
@@ -391,73 +392,6 @@ const ArticleContent = styled.div<{ $depth?: DepthStage }>`
   }
 `;
 
-const RelatedArticles = styled.section`
-  margin-top: 40px;
-  padding: 40px;
-  background: rgba(0, 212, 255, 0.03);
-  border-radius: 0;
-  border: 3px solid rgba(0, 212, 255, 0.25);
-  border-top: 6px solid var(--color-cyan-accent, #00d4ff);
-`;
-
-const RelatedTitle = styled.h2`
-  font-size: 1.75rem;
-  color: #ffffff;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 800;
-`;
-
-const RelatedGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-`;
-
-const RelatedCard = styled(Link)`
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 0;
-  border: 2px solid rgba(0, 212, 255, 0.2);
-  text-decoration: none;
-  transition: all 0.3s ease;
-  overflow: hidden;
-
-  &:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-cyan-accent, #00d4ff);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
-  }
-`;
-
-const CardContent = styled.div`
-  padding: 20px;
-
-  h3 {
-    color: var(--color-cyan-accent, #00d4ff);
-    font-size: 1.125rem;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-  }
-
-  p {
-    color: #b8b8b8;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-`;
-
-const CardImageWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 150px;
-  background: #0a0a1a;
-`;
 
 const ShareButtons = styled.div`
   display: flex;
@@ -892,6 +826,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
           <ArticleClassification {...inferClassificationFromSlug(slug)} />
 
+          <TopRecommendation slug={slug} />
+
           {videoURL && (
             <div style={{ margin: '2rem 0' }}>
               <iframe
@@ -955,6 +891,13 @@ const ArticlePage: NextPage<ArticleProps> = ({
               </ArticleContent>
             </ArticleWrapper>
           )}
+        </DepthSection>
+      )}
+
+      {/* Mid-article recommendation — editorial break between sections */}
+      {sections.length > 2 && (
+        <DepthSection depth={1}>
+          <MidRecommendation slug={slug} />
         </DepthSection>
       )}
 
@@ -1070,32 +1013,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </DiscoverContent>
           </DiscoverSection>
 
-          {relatedArticles.length > 0 && (
-            <RelatedArticles>
-              <RelatedTitle>Related Articles</RelatedTitle>
-              <RelatedGrid>
-                {relatedArticles.map((article) => (
-                  <RelatedCard key={article.slug} href={`/articles/${article.slug}`}>
-                    {(article.heroImage || article.ogImage) && (
-                      <CardImageWrapper>
-                        <Image
-                          src={article.heroImage || article.ogImage!}
-                          alt={article.title}
-                          fill
-                          style={{ objectFit: 'cover' }}
-                          sizes="(max-width: 768px) 100vw, 300px"
-                        />
-                      </CardImageWrapper>
-                    )}
-                    <CardContent>
-                      <h3>{article.title}</h3>
-                      <p>{article.description}</p>
-                    </CardContent>
-                  </RelatedCard>
-                ))}
-              </RelatedGrid>
-            </RelatedArticles>
-          )}
+          <BottomCarousel slug={slug} />
         </FooterWrapper>
       </DepthSection>
     </ArticleLayout>
