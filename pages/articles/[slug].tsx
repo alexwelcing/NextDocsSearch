@@ -37,6 +37,7 @@ interface ArticleProps {
   heroImage: string | null;
   multiArtImages: MultiArtOption[];
   videoURL?: string;
+  localVideoPath?: string;
   readingTime: number;
   relatedArticles: Array<{
     slug: string;
@@ -459,6 +460,56 @@ const CardImageWrapper = styled.div`
   background: #0a0a1a;
 `;
 
+// ---------------------------------------------------------------------------
+// Depth 3 Video Player — Wonderland section
+// ---------------------------------------------------------------------------
+
+const VideoSection = styled.div`
+  margin: 0;
+  padding: 0;
+  position: relative;
+`;
+
+const VideoLabel = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-gold-highlight, #ffd700);
+  background: rgba(0, 0, 0, 0.6);
+  border-bottom: 2px solid rgba(255, 215, 0, 0.25);
+
+  &::before {
+    content: '▶';
+    font-size: 0.65rem;
+    color: var(--color-cyan-accent, #00d4ff);
+  }
+`;
+
+const VideoFrame = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-left: 4px solid var(--color-gold-highlight, #ffd700);
+  border-right: 4px solid var(--color-cyan-accent, #00d4ff);
+  overflow: hidden;
+
+  iframe,
+  video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+`;
+
 const ShareButtons = styled.div`
   display: flex;
   gap: 15px;
@@ -706,6 +757,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   heroImage,
   multiArtImages,
   videoURL,
+  localVideoPath,
   readingTime,
   relatedArticles,
   slug
@@ -892,20 +944,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
           <ArticleClassification {...inferClassificationFromSlug(slug)} />
 
-          {videoURL && (
-            <div style={{ margin: '2rem 0' }}>
-              <iframe
-                width="100%"
-                height="450"
-                src={videoURL.replace('watch?v=', 'embed/')}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ borderRadius: '0' }}
-              />
-            </div>
-          )}
-
           <ArticleContent $depth={0}>
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
               {sections[0]?.chunks.join('\n\n') || content}
@@ -1023,6 +1061,37 @@ const ArticlePage: NextPage<ArticleProps> = ({
           <ArticleWrapper $depth={3}>
             <ArticleImageGallery images={multiArtImages} articleTitle={title} />
           </ArticleWrapper>
+        </DepthSection>
+      )}
+
+      {/* ================================================================
+          DEPTH 3 — VIDEO PLAYER
+          Local mp4 or YouTube embed rendered at full-bleed in Wonderland.
+          ================================================================ */}
+      {(localVideoPath || videoURL) && (
+        <DepthSection depth={3}>
+          <DepthDivider depth={3} />
+          <VideoSection>
+            <VideoLabel>Archive Footage — {title}</VideoLabel>
+            <VideoFrame>
+              {localVideoPath ? (
+                <video
+                  src={localVideoPath}
+                  controls
+                  playsInline
+                  preload="metadata"
+                />
+              ) : videoURL ? (
+                <iframe
+                  src={videoURL.includes('youtube.com') || videoURL.includes('youtu.be')
+                    ? videoURL.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')
+                    : videoURL}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : null}
+            </VideoFrame>
+          </VideoSection>
         </DepthSection>
       )}
 
@@ -1174,6 +1243,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const images = discoverArticleImages(slug);
 
+  // Check for a local video file in public/images/article-videos/
+  const localVideoFile = path.join(process.cwd(), 'public', 'images', 'article-videos', `${slug}.mp4`);
+  const localVideoPath = fs.existsSync(localVideoFile) ? `/images/article-videos/${slug}.mp4` : null;
+
   return {
     props: {
       title: data.title as string,
@@ -1185,6 +1258,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       heroImage: images.heroImage,
       multiArtImages: images.multiArt,
       videoURL: data.videoURL || '',
+      localVideoPath: localVideoPath || '',
       content: escapedContent,
       readingTime,
       relatedArticles,

@@ -152,6 +152,7 @@ const DeskMediaItem: React.FC<DeskMediaItemProps> = ({
 }) => {
   const controls = useAnimation();
   const [isDragging, setIsDragging] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   // Convert percentage position to pixels
   const initialX = (media.position_x / 100) * containerWidth;
@@ -173,6 +174,11 @@ const DeskMediaItem: React.FC<DeskMediaItemProps> = ({
       transition: { type: 'spring', stiffness: 300, damping: 20 },
     });
   }, [media.id, media.scale, containerWidth, containerHeight, onDragEnd, controls]);
+
+  // Hide the entire item when the video source fails to load
+  if (media.media_type === 'video' && videoError) {
+    return null;
+  }
 
   return (
     <MediaItem
@@ -207,7 +213,7 @@ const DeskMediaItem: React.FC<DeskMediaItemProps> = ({
           loading="lazy"
           draggable={false}
         />
-      ) : (
+      ) : !videoError ? (
         <MediaVideo
           src={media.public_url}
           poster={media.thumbnail_url}
@@ -216,8 +222,9 @@ const DeskMediaItem: React.FC<DeskMediaItemProps> = ({
           playsInline
           autoPlay={false}
           draggable={false}
+          onError={() => setVideoError(true)}
         />
-      )}
+      ) : null}
 
       {(media.caption || media.title) && (
         <MediaCaption>
