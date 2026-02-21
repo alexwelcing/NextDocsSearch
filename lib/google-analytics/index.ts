@@ -1,18 +1,13 @@
-// Ensure the env variable is always a string (or throw an error if not defined)
-if (!process.env.GOOGLE_ANALYTICS_ID) {
-  throw new Error('The GOOGLE_ANALYTICS_ID env variable is not set.')
-}
-
-const GOOGLE_ANALYTICS_ID = process.env.GOOGLE_ANALYTICS_ID as string
+const GOOGLE_ANALYTICS_ID = process.env.GOOGLE_ANALYTICS_ID || ''
 
 export const pageview = (url: string) => {
+  if (!GOOGLE_ANALYTICS_ID || typeof window === 'undefined' || !window.gtag) return
   window.gtag('config', GOOGLE_ANALYTICS_ID, {
     page_path: url,
   })
 }
 
-// New function to handle custom events
-export const trackEvent = (eventName: string, params: object = {}) => {
+export const trackEvent = (eventName: string, params: Record<string, string | number | boolean> = {}) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', eventName, params)
   }

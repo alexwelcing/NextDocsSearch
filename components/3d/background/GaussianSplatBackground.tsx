@@ -46,7 +46,6 @@ const GaussianSplatBackground: React.FC<GaussianSplatBackgroundProps> = ({
         scale: [scale, scale, scale],
       })
       .then(() => {
-        console.log('Gaussian Splat loaded successfully')
         viewer.start()
       })
       .catch((error: Error) => {

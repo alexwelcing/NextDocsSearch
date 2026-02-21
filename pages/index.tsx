@@ -160,12 +160,12 @@ function HomeContent() {
   return (
     <>
       <Head>
-        <title>Alex Welcing | Speculative AI Futures</title>
+        <title>Alex Welcing | AI Strategy & Product Leadership</title>
         <meta
           name="description"
-          content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems."
+          content="AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization. Research on speculative AI futures and emergent intelligence."
         />
-        <meta name="keywords" content="speculative AI, emergent intelligence, AI futures, Alex Welcing" />
+        <meta name="keywords" content="Alex Welcing, AI product manager, AI strategy, product leadership, LLM, AI agents, speculative AI, emergent intelligence, technical product manager, AI portfolio" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com" />
@@ -174,11 +174,11 @@ function HomeContent() {
         {/* Open Graph Meta Tags */}
         <meta
           property="og:title"
-          content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing"
+          content="Alex Welcing | AI Strategy & Product Leadership"
         />
         <meta
           property="og:description"
-          content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant."
+          content="AI product leader building intelligent systems and frameworks for emergent AI futures. Research on agent architectures, LLMs, and speculative intelligence."
         />
         <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
@@ -189,8 +189,8 @@ function HomeContent() {
         {/* X (Twitter) Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Speculative AI Futures & Emergent Intelligence Systems | Alex Welcing" />
-        <meta name="twitter:description" content="Exploring speculative AI futures, agent civilizations, and emergent intelligence systems. Original frameworks for understanding worlds where intelligence is abundant." />
+        <meta name="twitter:title" content="Alex Welcing | AI Strategy & Product Leadership" />
+        <meta name="twitter:description" content="AI product leader building intelligent systems and frameworks for emergent AI futures. Research on agent architectures, LLMs, and speculative intelligence." />
         <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
 
         {/* Performance and PWA hints */}
@@ -201,9 +201,9 @@ function HomeContent() {
       <StructuredData
         type="Website"
         data={{
-          name: "Alex Welcing - Speculative AI Futures",
+          name: "Alex Welcing - AI Strategy & Product Leadership",
           url: "https://alexwelcing.com",
-          description: "Exploring speculative AI futures, agent civilizations, and emergent intelligence systems.",
+          description: "AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization.",
           author: { "@type": "Person", name: "Alex Welcing", url: "https://alexwelcing.com/about" }
         }}
       />
@@ -213,12 +213,26 @@ function HomeContent() {
         data={{
           name: "Alex Welcing",
           url: "https://alexwelcing.com",
-          jobTitle: "AI Futures Researcher",
-          description: "Exploring speculative AI futures, agent civilizations, and emergent intelligence systems.",
+          jobTitle: "AI Product Leader",
+          description: "AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization. Research on speculative AI futures and emergent intelligence.",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
             "https://x.com/alexwelcing"
+          ],
+          knowsAbout: [
+            "Large Language Models",
+            "AI Agent Systems",
+            "Retrieval-Augmented Generation",
+            "Vector Databases",
+            "AI Product Management",
+            "Prompt Engineering",
+            "AI Safety & Alignment",
+            "3D Visualization",
+            "System Architecture",
+            "TypeScript",
+            "React",
+            "Next.js"
           ]
         }}
       />

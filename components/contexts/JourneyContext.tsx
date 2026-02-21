@@ -9,7 +9,7 @@ interface JourneyContextType {
   completeQuest: (questId: string) => void;
   unlockFeature: (featureId: string) => void;
   isFeatureUnlocked: (featureId: string) => boolean;
-  updateStats: (stat: keyof JourneyProgress['stats'], value: any) => void;
+  updateStats: (stat: keyof JourneyProgress['stats'], value: number | string[]) => void;
   achievements: Achievement[];
   unlockAchievement: (achievementId: string) => void;
   resetJourney: () => void;
@@ -143,7 +143,7 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     return progress.unlockedFeatures.includes(featureId);
   }, [progress.unlockedFeatures]);
 
-  const updateStats = useCallback((stat: keyof JourneyProgress['stats'], value: any) => {
+  const updateStats = useCallback((stat: keyof JourneyProgress['stats'], value: number | string[]) => {
     setProgress(prev => {
       const newStats = { ...prev.stats };
 
@@ -161,14 +161,14 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
         if (newStats.questionsAsked >= 10) {
           unlockAchievement('curious-mind');
         }
-      } else if (stat === 'highestQuizScore') {
+      } else if (stat === 'highestQuizScore' && typeof value === 'number') {
         newStats.highestQuizScore = Math.max(newStats.highestQuizScore || 0, value);
 
         // Check scholar achievement
         if (value === 100) {
           unlockAchievement('scholar');
         }
-      } else if (stat === 'highestGameScore') {
+      } else if (stat === 'highestGameScore' && typeof value === 'number') {
         newStats.highestGameScore = Math.max(newStats.highestGameScore || 0, value);
 
         // Check game master achievement
@@ -176,7 +176,7 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
           unlockAchievement('game-master');
         }
       } else {
-        (newStats as any)[stat] = value;
+        (newStats as Record<string, number | string[]>)[stat] = value;
       }
 
       return {

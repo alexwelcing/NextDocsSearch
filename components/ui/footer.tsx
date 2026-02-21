@@ -40,7 +40,7 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
             height="24"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="#B2E03D"
+            stroke="currentColor"
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -54,7 +54,7 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
             height="24"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="#DE7EA2"
+            stroke="currentColor"
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -67,7 +67,7 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
       </div>
       {isAboutModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 overflow-auto">
+          <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 overflow-auto">
             <button onClick={() => setAboutModalOpen(false)} className="float-right">
               Close
             </button>
@@ -99,40 +99,26 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
                     <Image src={'/icons/indexs.svg'} width="35" height="35" alt="Home icon" />
                   </div>
                 </Link>
-                <Link href="https://github.com/alexwelcing">
+                <a href="https://github.com/alexwelcing" target="_blank" rel="noopener noreferrer">
                   <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/github.svg'} width="35" height="35" alt="GitHub logo" />
                   </div>
-                </Link>
-                <Link href="https://linkedin.com/in/alexwelcing">
+                </a>
+                <a href="https://linkedin.com/in/alexwelcing" target="_blank" rel="noopener noreferrer">
                   <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/LI-In-Bug.png'} width="35" height="35" alt="LinkedIn logo" />
                   </div>
-                </Link>
-                <Link href="https://supabase.com">
+                </a>
+                <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">
                   <div className="opacity-40 hover:opacity-100 transition">
                     <Image src={'/supabase.svg'} width="35" height="35" alt="Supabase logo" />
                   </div>
-                </Link>
+                </a>
               </div>
             </div>
           )}
         </div>
       </section>
-      {isAboutModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 overflow-auto">
-            <button onClick={() => setAboutModalOpen(false)} className="float-right">
-              Close
-            </button>
-            <AboutModal isAboutModalOpen={false} onClose={() => setAboutModalOpen(false)} />
-          </div>
-          <div
-            className="fixed inset-0 bg-black opacity-50"
-            onClick={() => setAboutModalOpen(false)}
-          ></div>
-        </div>
-      )}
     </footer>
   )
 }

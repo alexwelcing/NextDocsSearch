@@ -25,6 +25,15 @@ const EnhancedNav: React.FC<EnhancedNavProps> = ({ isGamePlaying = false, limit 
       .catch((err) => console.error('Failed to fetch articles:', err));
   }, []);
 
+  useEffect(() => {
+    if (!isExpanded) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsExpanded(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isExpanded]);
+
   const displayArticles = limit ? articles.slice(0, limit) : articles;
 
   const navItems = [

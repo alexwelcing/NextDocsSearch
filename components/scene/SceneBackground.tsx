@@ -168,7 +168,6 @@ function GaussianSplatRenderer({
           scale: [1, 1, 1],
         })
         .then(() => {
-          console.log('Gaussian Splat loaded:', splatUrl);
           viewer.start();
           onLoad();
         })

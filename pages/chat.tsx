@@ -71,15 +71,23 @@ const Chat = () => {
           name="description"
           content="Explore Alex Welcing's interactive portfolio. Chat with AI, play games, and discover his work in product leadership and generative AI."
         />
+        <meta name="keywords" content="Alex Welcing, interactive portfolio, AI chat, 3D visualization, product manager" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/chat" />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Alex Welcing - Interactive Portfolio" />
         <meta property="og:description" content="Explore Alex Welcing's interactive portfolio with AI chat and immersive 3D environments." />
-        <meta property="og:image" content="/social-preview.png" />
+        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com/chat" />
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="Alex Welcing - Interactive Portfolio" />
+        <meta name="twitter:description" content="Explore Alex Welcing's interactive portfolio with AI chat and immersive 3D environments." />
+        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
       </Head>
 
       <SupabaseDataProvider>

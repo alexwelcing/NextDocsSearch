@@ -24,7 +24,12 @@ export interface SplatsResponse {
 export interface VectorSearchRequest {
   prompt: string;
   history?: { question: string; response: string }[];
-  questContext?: any; // Define stricter type if possible
+  questContext?: {
+    currentQuest?: string;
+    currentPhase?: number;
+    completedQuests?: string[];
+    missionBrief?: string;
+  };
 }
 
 export interface GameLeaderboardEntry {

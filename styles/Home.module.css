@@ -329,7 +329,7 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   text-align: center;
   margin-bottom: 20px;
-  font-mono: 'Oxygen Mono';
+  font-family: 'Oxygen Mono', monospace;
   padding: 1rem;
 }
 

@@ -32,11 +32,22 @@ export default function EmergentIntelligenceHub({ articles }: EmergentIntelligen
           name="keywords"
           content="emergent intelligence, AI consciousness, neural networks, recursive AI, machine consciousness, emergent behavior"
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/emergent-intelligence" />
+        <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Emergent Intelligence Systems | Alex Welcing" />
         <meta property="og:description" content="Research on emergent intelligence, consciousness in AI systems, and the boundary between computation and awareness." />
+        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com/emergent-intelligence" />
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="Emergent Intelligence Systems | Alex Welcing" />
+        <meta name="twitter:description" content="Research on emergent intelligence, consciousness in AI systems, and the boundary between computation and awareness." />
+        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
       </Head>
 
       <StructuredData

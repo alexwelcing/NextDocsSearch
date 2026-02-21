@@ -9,6 +9,7 @@ import {
   getFeaturedTemplates,
   getRandomTemplate,
 } from '../lib/creation-templates';
+import { CreationTemplate } from '../lib/generators/types';
 import { useJourney } from './contexts/JourneyContext';
 
 interface CreationStudioProps {
@@ -71,7 +72,7 @@ export default function CreationStudio({ onClose }: CreationStudioProps) {
     }
   };
 
-  const handleTemplateSelect = (template: any) => {
+  const handleTemplateSelect = (template: CreationTemplate) => {
     setGeneratedConfig(template.baseConfig as ParsedPrompt);
     setPrompt(template.suggestedPrompts?.[0] || template.description);
     setShowTemplates(false);

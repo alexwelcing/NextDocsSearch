@@ -26,7 +26,7 @@ export default async function handler(
   }
 
   try {
-    let body: any = {
+    let body: { prompt?: string; image_size?: string; enable_safety_checker?: boolean; safety_tolerance?: string; image_url?: string } = {
         enable_safety_checker: true,
         safety_tolerance: "2",
     };

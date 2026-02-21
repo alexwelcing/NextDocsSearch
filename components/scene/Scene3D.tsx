@@ -15,6 +15,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { createXRStore, XR, XROrigin } from '@react-three/xr';
 import { Stats } from '@react-three/drei';
 import styled from 'styled-components';
+import { ArticleData } from '@/types/api';
 
 import SceneCanvas, { useSceneCapabilities } from './SceneCanvas';
 import SceneEnvironment from './SceneEnvironment';
@@ -40,7 +41,7 @@ interface Scene3DProps {
   /** Show performance stats (dev mode) */
   showStats?: boolean;
   /** Articles data for the idea experience */
-  articles?: any[];
+  articles?: ArticleData[];
   /** Children to render in the scene */
   children?: React.ReactNode;
   /** Callback when scene is ready */

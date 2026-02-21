@@ -32,11 +32,22 @@ export default function AgentFuturesHub({ articles }: AgentFuturesHubProps) {
           name="keywords"
           content="AI agents, autonomous agents, swarm intelligence, multi-agent systems, agent civilization, AI coordination"
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/agent-futures" />
+        <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Agent Futures | Alex Welcing" />
-        <meta property="og:description" content="Research on autonomous AI agents, swarm intelligence, and multi-agent systems." />
+        <meta property="og:description" content="Research on autonomous AI agents, swarm intelligence, and multi-agent systems. Exploring how agent civilizations emerge and coordinate." />
+        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com/agent-futures" />
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="Agent Futures | Alex Welcing" />
+        <meta name="twitter:description" content="Research on autonomous AI agents, swarm intelligence, and multi-agent systems." />
+        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
       </Head>
 
       <StructuredData

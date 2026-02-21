@@ -29,9 +29,10 @@ export default async function handler(
     // Check for required environment variables
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Missing Supabase credentials');
-      return res.status(200).json({
-        success: true,
-        leaderboard: [], // Return empty array instead of error
+      return res.status(503).json({
+        success: false,
+        leaderboard: [],
+        error: 'Leaderboard not configured',
       });
     }
 
@@ -53,10 +54,10 @@ export default async function handler(
 
     if (error) {
       console.error('Supabase error:', error);
-      // Return empty array instead of error to avoid breaking the game
-      return res.status(200).json({
-        success: true,
+      return res.status(500).json({
+        success: false,
         leaderboard: [],
+        error: 'Failed to fetch leaderboard',
       });
     }
 
@@ -65,13 +66,13 @@ export default async function handler(
       success: true,
       leaderboard: data || [],
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching leaderboard:', error);
     // Always return valid JSON, even on error
-    return res.status(200).json({
+    return res.status(500).json({
       success: false,
       leaderboard: [],
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Internal server error',
     });
   }
 }

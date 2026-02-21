@@ -11,7 +11,11 @@ import { getCurrentSeason, getSeasonalTheme } from '../../lib/theme/seasonalThem
 type ResponseData = {
   images: string[];
   season: string;
-  theme: any;
+  theme: {
+    colors: string[];
+    effectType: string;
+    backgroundColor: string;
+  };
 };
 
 type ErrorData = {

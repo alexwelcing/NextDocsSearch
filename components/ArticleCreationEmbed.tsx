@@ -4,6 +4,7 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import Generated3DObject from './Generated3DObject';
 import { parsePrompt } from '../lib/generators/promptParser';
 import { findBestTemplate } from '../lib/creation-templates';
+import { SavedCreation } from '../lib/generators/types';
 
 interface ArticleCreationEmbedProps {
   prompt: string;
@@ -141,16 +142,16 @@ export function CreationGallery({
   theme = 'dark',
   userSubmissions = false,
 }: CreationGalleryProps) {
-  const [creations, setCreations] = useState<any[]>([]);
+  const [creations, setCreations] = useState<SavedCreation[]>([]);
 
   React.useEffect(() => {
     // Load saved creations from localStorage
     const saved = localStorage.getItem('saved-creations');
     if (saved) {
-      const allCreations = JSON.parse(saved);
+      const allCreations: SavedCreation[] = JSON.parse(saved);
       // Filter by article if specified
       const filtered = articleId
-        ? allCreations.filter((c: any) => c.articleId === articleId)
+        ? allCreations.filter((c) => c.articleId === articleId)
         : allCreations;
       setCreations(filtered.slice(0, 6)); // Show max 6
     }

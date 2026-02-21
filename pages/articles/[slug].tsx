@@ -15,7 +15,7 @@ import styled, { keyframes, css } from 'styled-components';
 import { escapeMdxContent } from '@/lib/utils';
 import MarkdownImage from '@/components/ui/MarkdownImage';
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
-import { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import { TopRecommendation, MidRecommendation, BottomCarousel } from '@/components/ArticleRecommendations';
@@ -25,7 +25,6 @@ import { ArtFrame, DepthSection, DepthDivider, EditorialSection } from '@/compon
 import type { DepthStage } from '@/components/ui/ParallaxArtLayers';
 import { discoverArticleImages } from '@/lib/article-images';
 import type { MultiArtOption } from '@/lib/article-images';
-import { useMemo } from 'react';
 
 interface ArticleProps {
   title: string;
@@ -717,9 +716,11 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
   const mdComponents = useMemo(() => ({
     img: MarkdownImage as any,
-    pre: ({ children, ...props }: any) => (
+    pre: ({ children }: React.HTMLAttributes<HTMLPreElement> & { children?: React.ReactNode }) => (
       <HandwrittenNote>
-        {children?.props?.children || children}
+        {React.isValidElement(children)
+          ? (children.props as { children?: React.ReactNode }).children
+          : children}
       </HandwrittenNote>
     ),
   }), []);

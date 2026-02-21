@@ -17,7 +17,7 @@ export default async function handler(
     // Check for required environment variables
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Missing Supabase credentials');
-      return res.status(200).json({
+      return res.status(503).json({
         success: false,
         error: 'Leaderboard not configured',
       });
@@ -73,8 +73,8 @@ export default async function handler(
 
     if (error) {
       console.error('Supabase error:', error);
-      return res.status(200).json({ 
-        success: false, 
+      return res.status(500).json({
+        success: false,
         error: 'Failed to save score',
       });
     }
@@ -84,10 +84,10 @@ export default async function handler(
       success: true,
       entry: data,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error submitting score:', error);
-    return res.status(200).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       error: 'Internal server error',
     });
   }

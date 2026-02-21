@@ -17,23 +17,23 @@ declare module 'three/addons/controls/OrbitControls.js' {
     // ... You can continue to add other methods or properties you plan to use
   }
 }
-interface Window {
-  OptanonWrapper?: () => void
-  OneTrust?: {
-    OnConsentChanged: (callback: () => void) => void
+
+declare global {
+  interface Window {
+    OptanonWrapper?: () => void
+    OneTrust?: {
+      OnConsentChanged: (callback: () => void) => void
+    }
+    OptanonActiveGroups?: string
+    gtag: (
+      command: 'config' | 'event',
+      targetId: string,
+      params?: Record<string, string | number | boolean>
+    ) => void
   }
-  OptanonActiveGroups?: string
-  gtag: (command: 'config' | 'event', targetId: string, params?: any) => void
 }
 
 export interface SearchBarProps {
   currentImage: string
   onImageChange: (newImage: string) => void
-}
-
-// global.d.ts
-declare global {
-  interface Window {
-    gtag: any
-  }
 }

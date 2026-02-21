@@ -17,27 +17,29 @@ const About: React.FC = () => {
   return (
     <div className={styles.pageWrapper}>
       <Head>
-        <title>Alex Welcing | Technical Product Manager</title>
+        <title>Alex Welcing | AI Product Leader</title>
         <meta
           name="description"
-          content="Results-driven product leader with expertise in AI, analytics, and platform technologies. 10+ years building SaaS products for legal, healthcare, and technology sectors."
+          content="AI product leader with 10+ years building intelligent systems. Expertise in LLMs, agent architectures, RAG pipelines, and platform technologies across SaaS, legal, and healthcare."
         />
-        <meta name="keywords" content="Alex Welcing, Technical Product Manager, AI, SaaS, Product Leader, New York" />
+        <meta name="keywords" content="Alex Welcing, AI product manager, AI product leader, LLM, AI agents, technical product manager, RAG, vector search, New York" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/about" />
         <link rel="icon" href="/favicon.ico" />
 
-        <meta property="og:title" content="Alex Welcing | Technical Product Manager" />
-        <meta property="og:description" content="Results-driven product leader building platform technologies for SaaS, information and professional services." />
+        <meta property="og:title" content="Alex Welcing | AI Product Leader" />
+        <meta property="og:description" content="AI product leader with 10+ years building intelligent systems. Expertise in LLMs, agent architectures, and platform technologies." />
         <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com/about" />
         <meta property="og:type" content="profile" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Alex Welcing | Technical Product Manager" />
-        <meta name="twitter:description" content="Results-driven product leader building platform technologies for SaaS, information and professional services." />
+        <meta name="twitter:title" content="Alex Welcing | AI Product Leader" />
+        <meta name="twitter:description" content="AI product leader with 10+ years building intelligent systems. Expertise in LLMs, agent architectures, and platform technologies." />
         <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
       </Head>
 
@@ -45,20 +47,27 @@ const About: React.FC = () => {
         type="Person"
         data={{
           name: "Alex Welcing",
-          jobTitle: "Technical Product Manager",
+          jobTitle: "AI Product Leader",
           url: "https://alexwelcing.com",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
             "https://x.com/alexwelcing"
           ],
-          description: "Results-driven product leader with expertise in AI, analytics, and platform technologies for SaaS and professional services.",
+          description: "AI product leader with 10+ years building intelligent systems at the intersection of LLMs, agent architectures, and platform technologies.",
           knowsAbout: [
-            "Product Management",
-            "AI & Machine Learning",
-            "SaaS Platforms",
+            "Large Language Models",
+            "AI Agent Systems",
+            "Retrieval-Augmented Generation",
+            "Vector Databases & Embeddings",
+            "AI Product Management",
+            "Prompt Engineering",
+            "AI Safety & Alignment",
             "System Architecture",
-            "API Design"
+            "API Design",
+            "TypeScript & React",
+            "Next.js",
+            "Three.js & WebGL"
           ]
         }}
       />

@@ -125,11 +125,12 @@ export default function SuperStudio() {
         }
       }
 
-    } catch (err: any) {
-      if (err.message && err.message.includes('out of energy')) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Something went wrong';
+      if (message.includes('out of energy')) {
         setError("Our creative spirits are resting. Please try again later! (API Quota Exceeded)");
       } else {
-        setError(err.message || 'Something went wrong');
+        setError(message);
       }
     } finally {
       setIsGenerating(false);

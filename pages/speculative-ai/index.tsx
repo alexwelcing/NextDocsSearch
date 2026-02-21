@@ -33,11 +33,22 @@ export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
           name="keywords"
           content="speculative AI, AI systems research, AI failure modes, emergent AI behavior, AI civilization, future AI scenarios"
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://alexwelcing.com/speculative-ai" />
+        <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Speculative AI Systems | Alex Welcing" />
-        <meta property="og:description" content="Exploring speculative AI systems, failure modes, and emergent behaviors." />
+        <meta property="og:description" content="Exploring speculative AI systems, failure modes, and emergent behaviors. Original research on how AI reshapes civilization, governance, and human agency." />
+        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://alexwelcing.com/speculative-ai" />
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="Speculative AI Systems | Alex Welcing" />
+        <meta name="twitter:description" content="Exploring speculative AI systems, failure modes, and emergent behaviors. Original research on how AI reshapes civilization." />
+        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
       </Head>
 
       <StructuredData

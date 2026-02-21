@@ -25,6 +25,15 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
       .then(data => setArticles(data));
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const recentArticles = articles.slice(0, RECENT_ARTICLE_COUNT);
 
   return (
@@ -34,7 +43,7 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
     >
       {isOpen ? (
         <div className={styles.menu}>
-          <button onClick={() => setIsOpen(false)} className={styles.closeBtn}>
+          <button onClick={() => setIsOpen(false)} className={styles.closeBtn} aria-label="Close navigation menu">
             ×
           </button>
           <Link className={styles.menuLink} href="/">
@@ -63,9 +72,9 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
           </div>
         </div>
       ) : (
-        <div className={styles.circle} onClick={() => setIsOpen(true)}>
+        <button className={styles.circle} onClick={() => setIsOpen(true)} aria-label="Open navigation menu">
           <span className="material-icons-outlined">explore</span>
-        </div>
+        </button>
       )}
     </div>
   );
