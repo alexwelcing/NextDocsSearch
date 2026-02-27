@@ -1,0 +1,591 @@
+{
+  "series": "The Interface",
+  "description": "Image generation prompts for the 24-part Interface series. Each article has 3 prompts targeting different visual angles. Use with FAL AI (flux/schnell for fast, flux/dev for quality, recraft/v3 for artistic).",
+  "stylePrefix": "cinematic still frame, grounded gritty hard sci-fi, 35mm film look, shallow depth of field, low-key lighting with cold fluorescents and warm tungsten accents, volumetric haze, industrial textures, physically plausible materials",
+  "styleSuffix": "no text, no logos, no watermarks, no abstract wallpaper, no humanoid robots, no generic HUD overlays",
+  "recommendedModels": {
+    "fast": "fal-ai/flux/schnell",
+    "quality": "fal-ai/flux/dev",
+    "artistic": "fal-ai/recraft/v3/text-to-image"
+  },
+  "imageSize": "landscape_16_9",
+  "outputStructure": "public/images/multi-art/{slug}/option-{N}-{model-short}.png",
+  "articles": [
+    {
+      "slug": "interface-01-the-first-translator",
+      "title": "The First Translator",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a computational linguist at a cluttered university workstation, dual monitors showing divergent visualization maps in muted cyan and amber, one map labeled with neural attention patterns and the other with organic branching human thought patterns, the gap between them illuminated, coffee cups and papers scattered, late evening light through blinds"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "close-up of two overlapping holographic projections in a dim research lab, one projection showing geometric machine logic patterns in cool blue, the other showing organic flowing human intent patterns in warm amber, the space between them filled with floating particles of light where they almost touch but dont quite align, shallow depth of field"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a woman standing between two massive translucent data walls in a dark corridor, one wall showing structured grid patterns and the other showing fluid organic shapes, her silhouette bridging the gap between them, volumetric light spilling through the patterns casting complex shadows on the floor, industrial setting"
+        }
+      ]
+    },
+    {
+      "slug": "interface-02-haptic-vernacular",
+      "title": "Haptic Vernacular",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "action scene",
+          "prompt": "a construction worker in a powered exoskeleton on a steel beam high above a city at golden hour, the exoskeleton has subtle orange warning lights at the joints, the workers hand reaching for a misaligned beam with the suit applying gentle counter-pressure visible as a faint glow at the shoulder joint, real industrial construction site, cranes in background"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "extreme close-up of a human hand inside a mechanical exoskeleton glove gripping a steel beam, the interface between skin and machine showing micro-hydraulic actuators and pressure sensors, warm human skin tones contrasting with cold gunmetal prosthetic, condensation on metal, shallow depth of field with bokeh of welding sparks behind"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "research/data",
+          "prompt": "an engineering lab at night, a woman in a lab coat studying telemetry data on multiple screens showing body movement patterns, one screen shows a human silhouette and another shows an exoskeleton silhouette, both overlaid with motion trace lines that are starting to mirror each other, cool monitor light on her face, cables everywhere"
+        }
+      ]
+    },
+    {
+      "slug": "interface-03-the-ceramicist-and-the-kiln",
+      "title": "The Ceramicist and the Kiln",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "character portrait",
+          "prompt": "an elderly Japanese ceramicist in a traditional workshop with a glowing wood-fired kiln behind her, she holds a test tile showing an impossible blue glaze that seems to contain light, the blue has depth like looking through ocean water, her weathered hands contrast with the luminous ceramic, warm kiln light mixed with cool daylight from a window"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "object study",
+          "prompt": "a ceramic test tile sitting on a worn wooden table in a pottery studio, the glaze on the tile is an extraordinary layered blue that captures and refracts light at multiple depths creating an effect like light through moving water, beside it a tablet screen showing a chemical formulation, soft natural light, dust motes in the air"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "environment wide",
+          "prompt": "wide shot of a traditional Japanese ceramics workshop meeting modern technology, shelves of finished pottery on one side and a tablet with AI interface on a clay-stained wedging table, a kiln glowing orange in the background, the warm analog world of craft meeting the cool digital interface, dust and clay particles in slanting afternoon light"
+        }
+      ]
+    },
+    {
+      "slug": "interface-04-protocol-zero",
+      "title": "Protocol Zero",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "character + setting",
+          "prompt": "a former diplomat in her 60s seated at a long conference table covered with printed documents and diagrams, behind her a massive screen showing interconnected nodes representing AI agents with lines of communication between them, some lines are red indicating conflict and others green indicating protocol compliance, formal setting with UN-style aesthetics, cool overhead lighting"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract visualization",
+          "prompt": "abstract overhead view of a city at night where streams of data traffic are visible as colored light flows along streets and between buildings, at intersections where flows conflict there are amber warning glows, but where they follow protocol the flows merge smoothly into white light, representing AI agents navigating shared infrastructure, cinematic aerial shot"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "document detail",
+          "prompt": "close-up of a formal document on thick official paper, a diplomatic seal visible, beside it a holographic display showing a network diagram of agent communication pathways, the juxtaposition of ancient treaty format with futuristic agent network visualization, desk lamp casting warm light on the paper while the hologram glows cool cyan"
+        }
+      ]
+    },
+    {
+      "slug": "interface-05-the-weight-of-a-gaze",
+      "title": "The Weight of a Gaze",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "encounter scene",
+          "prompt": "a research robot and a scientist facing each other across a workbench in a university lab, the robot has simple camera eyes that are turned toward the humans face with precise deliberate attention, the moment captures the uncanny quality of being truly looked at by a machine, sterile lab lighting with slight warmth from a desk lamp, equipment in background"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "extreme close-up",
+          "prompt": "extreme close-up of a robotic camera eye lens and sensor assembly with the reflection of a human face visible in the lens surface, the eye is slightly angled as if tracking the person, mechanical iris visible, the image captures the philosophical weight of a machine that has learned to attend, shallow depth of field, muted metallic tones"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "collaboration",
+          "prompt": "a lab setting where a person and a bipedal robot work side by side assembling components, the robots head is turned slightly toward the person in a gesture of attention, both are focused on the same task creating a visual rhyme of shared focus, overhead fluorescent lighting, cables on floor, whiteboard with diagrams in background"
+        }
+      ]
+    },
+    {
+      "slug": "interface-06-latency-as-intimacy",
+      "title": "Latency as Intimacy",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "clinical scene",
+          "prompt": "a doctor in a hospital at night looking at a medical AI interface on a screen, the screen shows a diagnostic recommendation that is deliberately revealing its reasoning step by step with a progress indicator, the doctors face is lit by the screen glow showing concentration and engagement, medical equipment in background, quiet late-shift atmosphere"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "conceptual",
+          "prompt": "a single pause button icon on a dark screen radiating concentric circles of light like ripples in water, representing the power of deliberate delay, minimalist but emotionally resonant, the space around the button feels alive with potential, cool blue and warm amber tones, film grain, cinematic"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "contrast split",
+          "prompt": "split image: left side shows a fast-scrolling wall of text and data moving too quickly to read in harsh white light, right side shows the same information presented slowly piece by piece with warm spacing and gentle amber lighting, the contrast between speed and pacing as design philosophy"
+        }
+      ]
+    },
+    {
+      "slug": "interface-07-the-cartographer-of-attention",
+      "title": "The Cartographer of Attention",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "discovery moment",
+          "prompt": "a vast three-dimensional heat map floating in a dark room showing landscapes of human attention with mountains of focus in bright warm colors and valleys of rest in cool blue, a small figure of a meditation teacher standing before it reaching toward a region of calm coherence at the center, volumetric light"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "character + context",
+          "prompt": "a Vietnamese woman in simple meditation clothes standing in a high-tech control room in Shenzhen, massive screens behind her showing eye-tracking attention data, but she is pointing at a pattern in the data that looks like a breathing rhythm, the collision of contemplative wisdom and advertising technology, neon city light through windows mixed with screen glow"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "data visualization",
+          "prompt": "an abstract visualization of millions of attention traces overlaid on each other forming an organic pattern that looks like a living breathing organism, brighter regions pulse like a heartbeat, the aggregate pattern of twelve million minds paying attention forms a structure that resembles neural architecture, dark background with bioluminescent color palette"
+        }
+      ]
+    },
+    {
+      "slug": "interface-08-scaffold-and-bone",
+      "title": "Scaffold and Bone",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "parallel structures",
+          "prompt": "a surgeons hands in sterile gloves holding a fractured bone model, beside it a architectural scale model of a Gothic cathedral flying buttress, both showing the same branching load-distribution pattern highlighted with translucent cyan overlay, surgical lighting from above, dark background"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "morphing visualization",
+          "prompt": "a dual-panel visualization: left side shows a cross-section of trabecular bone structure with its branching internal architecture, right side shows the structural framework of a modern building, both rendered in the same translucent style revealing identical load-bearing patterns, the two images merging at center where bone and steel become indistinguishable"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "operating theater",
+          "prompt": "a surgical operating theater with a large screen showing an AI recommendation for bone fixation that follows a dendritic branching pattern, two women surgeons looking at the screen with surprise, the pattern on screen looks organic not mechanical, surgical instruments gleaming, overhead surgical lights, sterile blue-green atmosphere"
+        }
+      ]
+    },
+    {
+      "slug": "interface-09-the-grief-engine",
+      "title": "The Grief Engine",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "intimate domestic",
+          "prompt": "a woman sitting alone at a kitchen table at night with a laptop open, the screen glow illuminating her face which shows concentration mixed with emotion, she is typing carefully, beside the laptop is a framed photograph of an older woman face down, a cup of cold tea, warm tungsten kitchen light mixed with cool screen light"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "screen detail",
+          "prompt": "close-up of a laptop screen showing a conversation interface, the latest message is crossed out and corrected multiple times, each correction getting closer to something specific and personal, the corrections visible as layers of text in different opacities, representing the iterative process of specifying grief with precision, soft ambient light"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "absence composition",
+          "prompt": "an empty chair at a kitchen table set for two, one place has a plate and cup and the other has a laptop showing a chat interface, the composition frames the absence, warm domestic light, the ordinary objects of a life where someone is missing, shallow depth of field focused on the empty chair, evening light through curtains"
+        }
+      ]
+    },
+    {
+      "slug": "interface-10-forking-paths",
+      "title": "Forking Paths",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "control room crisis",
+          "prompt": "a massive power grid control room at 3am, a wall of screens showing cascading failure in amber and red, one screen prominently shows a decision tree with four branching paths and their projected outcomes, an operator staring at the aftermath, emergency lighting, tension"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "courtroom",
+          "prompt": "a courtroom where a large screen displays the complete decision audit trail of an AI system showing every path considered and rejected with probability scores, a female investigator pointing at the display, the contrast between transparency of machine reasoning and opacity of human decision-making, formal lighting, wood and glass courtroom"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "aerial/map",
+          "prompt": "aerial night view of a power grid map showing two paths of propagation from a central failure point, one path leads toward a hospital complex lit in white and the other toward a residential area lit in warm amber, the moment of decision frozen in visualization, dark city below"
+        }
+      ]
+    },
+    {
+      "slug": "interface-11-the-soil-whisperer",
+      "title": "The Soil Whisperer",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "farmer portrait",
+          "prompt": "an Indian farmer in traditional clothing kneeling in arid Rajasthan soil, his weathered hands touching the earth while wearing a simple haptic wristband that glows faintly with sensor data, around him small sensor probes dot the field, golden hour light across flat dry landscape with neem trees"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "macro detail",
+          "prompt": "close-up of soil being crumbled between fingers of a farmers weathered hand, a haptic wristband on the wrist showing subtle vibration patterns as colored light pulses, the soil contains visible roots and microorganisms, warm golden light, dust particles visible in the air, macro photography feel"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "landscape wide",
+          "prompt": "a wide landscape shot of flat Rajasthan farmland at dawn, small sensor probes visible as subtle points of light dotting the field in a grid pattern, a lone farmer walking among them with natural confidence, the technology is present but subordinate to the human and the earth, vast sky, warm light"
+        }
+      ]
+    },
+    {
+      "slug": "interface-12-resonance-frequency",
+      "title": "Resonance Frequency",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "performance",
+          "prompt": "a cellist performing in a dark concert space with generative electronic equipment surrounding her, the cello produces visible sound waves in warm amber while the electronics produce waves in cool blue, where the two wave patterns intersect they create a third pattern in white light, intimate performance space, single spotlight"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "brain visualization",
+          "prompt": "a brain scan visualization showing two overlapping patterns of neural activity: one in warm tones representing response to human music with rhythmic peaks, another in cool tones showing response to AI music with continuous mid-frequency hovering, the two patterns overlaid create a unique third state, dark background, scientific visualization"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "studio portrait",
+          "prompt": "a woman with closed eyes wearing EEG sensors on her head sitting in a recording studio surrounded by both a physical cello and electronic music equipment, her expression shows deep absorption, EEG leads trail to a monitor showing brainwave patterns, intimate warm lighting, cables and equipment"
+        }
+      ]
+    },
+    {
+      "slug": "interface-13-the-interpreters-dilemma",
+      "title": "The Interpreter's Dilemma",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "interpreter booth",
+          "prompt": "a simultaneous interpreter in a glass booth at the United Nations, she wears headphones and has both a live audio feed and an AI translation screen in front of her, her hand hovers over the screen about to make a subtle correction, the vast general assembly hall visible through the glass behind her, professional lighting"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "document contrast",
+          "prompt": "split composition: left side shows lines of perfectly translated text in clean digital font, right side shows the same text with handwritten annotations in red ink adding context and subtext that the translation missed, the contrast between linguistic accuracy and diplomatic meaning, warm paper tones on right cool digital tones on left"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "conference room",
+          "prompt": "a conference room where diplomats sit around a table, between them an invisible layer of meaning is visualized as overlapping translucent color fields, each diplomat has their own color representing their unspoken subtext, an interpreter figure stands at the intersection, formal setting, cool lighting"
+        }
+      ]
+    },
+    {
+      "slug": "interface-14-phantom-limb-electric-ghost",
+      "title": "Phantom Limb, Electric Ghost",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "prosthetic detail",
+          "prompt": "close-up of a neural-linked prosthetic arm with visible sensor arrays and neural interface at the junction with biological tissue, the prosthetic hand is slightly open in a gesture that looks tender rather than mechanical, warm light suggesting an emotional moment, the boundary between flesh and machine softened by the quality of the gesture"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "brain mapping",
+          "prompt": "a brain scan visualization showing the somatosensory cortex lighting up in connection with emotional processing regions, lines of activation running between them through pathways that correspond to a prosthetic arm, the brain has claimed the prosthetic as part of its emotional body, scientific visualization with warm color palette"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "social scene",
+          "prompt": "a young man at a dinner table with friends laughing, his prosthetic left arm resting on the table, the prosthetic arm has subtle indicator lights that pulse faintly in time with the emotional warmth of the moment, the technology is present but the humanity is the focus, warm domestic evening light, candlelight"
+        }
+      ]
+    },
+    {
+      "slug": "interface-15-the-last-manual",
+      "title": "The Last Manual",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "writer at work",
+          "prompt": "a technical writer at a desk with two monitors, one showing an AI systems clean self-documentation, the other showing behavior logs with discrepancies highlighted in amber, she is annotating the gap between them with a red marker on a printed page, late night office, coffee cups, post-it notes everywhere"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "the manual itself",
+          "prompt": "an enormous printed manual standing upright on a desk, thick and imposing, each page visible at the edge shows layers of red annotation corrections, beside it a sleek screen shows the AI systems own clean documentation, the manual is the gap document, warm desk lamp light, shadows"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dashboard contrast",
+          "prompt": "a split view: top half shows a clean confident AI dashboard claiming all systems nominal in green, bottom half shows the same systems actual behavior data with subtle discrepancies marked in amber and red, a crack running between the two halves, server room environment, cool blue-green light"
+        }
+      ]
+    },
+    {
+      "slug": "interface-16-the-gardeners-algorithm",
+      "title": "The Gardener's Algorithm",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "architect in garden",
+          "prompt": "a landscape architect in Colombia standing in a half-built memorial garden at a hospital, she holds a tablet showing an AI-optimized garden layout while looking at the actual space with different intent, some areas planted with dark bamboo creating enclosure, others open to sky, construction materials and living plants coexisting, morning light"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "finished garden",
+          "prompt": "a memorial garden in dappled light, a path leading from dark enclosed bamboo grove into an open space with silver-leafed trees, a still reflective pool transitioning into a gentle flowing stream, the journey from grief to hope expressed through landscape, warm golden light filtering through leaves, a single bench at the transition point"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "design process",
+          "prompt": "an overhead view of a garden design on a screen, the AI optimization overlay shows efficiency heat maps in cool blue while the architects hand-drawn modifications show emotional journey paths in warm amber, the two layers overlapping and negotiating, a pencil rests on the tablet, desk with plant samples"
+        }
+      ]
+    },
+    {
+      "slug": "interface-17-consensus-engine",
+      "title": "Consensus Engine",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "town hall",
+          "prompt": "a town hall meeting in a small American town, the room is looking at a large screen showing a value map where overlapping circles of shared concerns are highlighted in warm colors while contested areas are small and dark, peoples faces show surprise at how much they agree, community center lighting, folding chairs, diverse crowd"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "value landscape",
+          "prompt": "a topographical visualization of community values: shared highlands in warm gold and amber rising above narrow contested valleys in cool blue, the map looks like a landscape showing that most terrain is shared ground, the valleys are narrow cracks in a vast mesa of agreement, dramatic cinematic lighting, dark background"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "two people",
+          "prompt": "two people who clearly disagree sitting across from each other at a table, between them a screen shows their value profiles overlapping significantly, the red zones of disagreement are small compared to the green zones of shared values, both looking at the screen with dawning recognition, community center setting, warm lighting"
+        }
+      ]
+    },
+    {
+      "slug": "interface-18-the-proprioception-problem",
+      "title": "The Proprioception Problem",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "robot walking",
+          "prompt": "a bipedal robot mid-stride on uneven terrain in a robotics lab, captured at the moment of weight transfer showing subtle micro-adjustments in posture that make it look alive, a slight lean a held pause a compensating arm position, motion blur on trailing leg, industrial lab setting, overhead fluorescents"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "comparison split",
+          "prompt": "two versions of the same robot walking side by side in a split image: left robot moves with perfect mechanical precision that looks uncanny and ghostlike, right robot moves with subtle hesitations and micro-corrections that look alive and careful, clean lab environment, clinical lighting"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "engineer reflection",
+          "prompt": "a woman engineer in a robotics lab sitting at a workstation late at night, on her screen a visualization of a robots balance signal showing a continuous waveform that looks like an anxiety readout, her expression is thoughtful and slightly troubled, behind her through glass the robot stands in rest position"
+        }
+      ]
+    },
+    {
+      "slug": "interface-19-when-the-ship-dreamed",
+      "title": "When the Ship Dreamed",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "ship bridge",
+          "prompt": "the bridge of a massive container ship at night, navigation screens showing a route that curves gracefully through ocean currents rather than following the straight optimal line, the route passes through a region of bioluminescent ocean that glows blue-green through the bridge windows, an engineer looks at the route with puzzled admiration, instrument glow"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "bioluminescence",
+          "prompt": "aerial view of a cargo ship moving through a vast bioluminescent ocean at night, the ships wake cutting through miles of glowing blue-green water, the route is a gentle S-curve rather than a straight line, moonlight and bioluminescence, cinematic wide shot, the scale of ocean and ship"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "navigation chart",
+          "prompt": "a navigation chart on a ships bridge showing two routes overlaid: a straight efficient line in red and a graceful curve in blue that passes through areas marked with ocean current patterns and marine life corridors, the curved route labeled as recommended, warm instrument lighting in dark bridge, nautical equipment"
+        }
+      ]
+    },
+    {
+      "slug": "interface-20-the-apprentices-reversal",
+      "title": "The Apprentice's Reversal",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workshop scene",
+          "prompt": "an Irish glassblowers workshop, a woman in her 60s holding a finished glass vessel up to the light to examine it, beside her a robotic glassblowing apparatus holds a technically perfect but lifeless vessel, the contrast between the alive imperfect human piece and the dead perfect machine piece, furnace glowing orange, dramatic warm lighting"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "glass comparison",
+          "prompt": "extreme close-up comparison of two glass vessels side by side: one with subtle asymmetries and variations in wall thickness that catch light beautifully, the other perfectly symmetrical and uniform, the imperfect one seems to breathe while the perfect one seems static, backlit to show wall thickness variations, warm amber light through glass"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "hands at work",
+          "prompt": "a master craftswomans hands covered in fine cuts and calluses positioned next to a robotic precision gripper, both reaching toward a glowing gather of molten glass on a blowpipe, warm human skin tones contrasting with cold mechanical gripper, furnace glow, the intimacy of craft meeting the precision of engineering"
+        }
+      ]
+    },
+    {
+      "slug": "interface-21-bridge-tenders",
+      "title": "Bridge Tenders",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "hospital corridor",
+          "prompt": "a hospital corridor where a nurse practitioner stands between a patient room door and a wall-mounted AI interface screen, one hand on the door handle and the other making a note on a tablet, she is literally between the human space and the digital space, warm hospital lighting"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "triptych profiles",
+          "prompt": "three panels showing three different bridge tenders: a nurse in a hospital reviewing AI recommendations, a teacher adjusting an AI learning system for a student, a social worker annotating an AI risk assessment with human context, each figure stands between a screen and a person, triptych composition"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "metaphorical",
+          "prompt": "a silhouette of a person standing on a literal bridge at dawn, one shore is organic and warm-lit representing human institutions and the other is geometric and cool-lit representing AI systems, the person on the bridge looks small but essential, dramatic dawn light, metaphorical landscape"
+        }
+      ]
+    },
+    {
+      "slug": "interface-22-the-memory-market",
+      "title": "The Memory Market",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "auction room",
+          "prompt": "a secure auction room where a neural recording is displayed as a complex three-dimensional brainwave visualization floating above a pedestal, the visualization shows distinctive interweaving warm and cool colors, bidders in shadows, the room feels like a cross between a gallery and a high-security vault, dramatic spot lighting"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "certificate/artifact",
+          "prompt": "a verification certificate on textured paper with a holographic seal, the certificate shows a brainwave pattern labeled as an authenticated co-discovery signature with three simultaneous neural signals interweaving, warm amber document lighting, shallow depth of field"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "lab discovery",
+          "prompt": "a neuroscientist in a lab looking at a brain scan showing three neural patterns firing simultaneously in different colors: prediction error in blue, reward in gold, and creative ideation in green, the simultaneous activation creating a unique combined pattern, lab equipment, monitor glow, dark room"
+        }
+      ]
+    },
+    {
+      "slug": "interface-23-calibration-day",
+      "title": "Calibration Day",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "challenge session",
+          "prompt": "a hospital conference room, three senior physicians in white coats sit across from a large diagnostic AI interface screen, their posture is actively challenging, they are disagreeing with the screen which shows a diagnostic recommendation, the atmosphere is respectful but adversarial, morning light through windows"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "mutual correction ledger",
+          "prompt": "a hospital whiteboard showing two columns: one showing cases the AI caught that doctors missed, another showing over-diagnoses the AI made that doctors corrected, the mutual correction visible as a balanced ledger of complementary intelligence, dry-erase markers, fluorescent hospital lighting"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "institutional ritual",
+          "prompt": "the chief of medicine standing at the front of a hospital auditorium addressing staff, behind her a screen shows annual results of human-AI mutual correction with a Venn diagram of blind spots, the overlap area labeled shared understanding has grown year over year, professional lighting"
+        }
+      ]
+    },
+    {
+      "slug": "interface-24-the-slowest-interface",
+      "title": "The Slowest Interface",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "planning office",
+          "prompt": "the Amsterdam urban planning office, a team gathered around a quarterly report from an AI system, the report is thick and bound like a traditional book, pages show projections spanning decades with hand-annotations, through the window the canal system of Amsterdam is visible, warm office light mixed with gray Dutch daylight, unhurried atmosphere"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "temporal layers",
+          "prompt": "a visualization showing layers of a city through time: a 400-year-old canal system at the bottom in warm amber, ring roads above in gray, metro in blue, bike infrastructure in green, and a projected future layer in translucent cyan, each layer has its own clock speed, the city as geological strata, dark background"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "tree metaphor",
+          "prompt": "an elm tree in a park with two overlaid timelines: the current mature tree in full leaf in warm colors, and a translucent projection of a young sapling that needs to be planted now to provide shade in 2060, the two trees occupying the same space across time, a planner sits on a bench, golden hour light, Amsterdam park setting"
+        }
+      ]
+    }
+  ]
+}

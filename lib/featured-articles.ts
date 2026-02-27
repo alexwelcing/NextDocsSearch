@@ -184,6 +184,38 @@ export const ARTICLE_COLLECTIONS = {
       'tech-graph-neural-networks',
     ],
   },
+  theInterface: {
+    title: 'The Interface',
+    description:
+      'A 24-part series exploring bridge events between human and artificial intelligence — the tools, moments, and cultural shifts that define the boundary where two kinds of mind meet.',
+    slugPattern: /^interface-\d{2}-/,
+    articles: [
+      'interface-01-the-first-translator',
+      'interface-02-haptic-vernacular',
+      'interface-03-the-ceramicist-and-the-kiln',
+      'interface-04-protocol-zero',
+      'interface-05-the-weight-of-a-gaze',
+      'interface-06-latency-as-intimacy',
+      'interface-07-the-cartographer-of-attention',
+      'interface-08-scaffold-and-bone',
+      'interface-09-the-grief-engine',
+      'interface-10-forking-paths',
+      'interface-11-the-soil-whisperer',
+      'interface-12-resonance-frequency',
+      'interface-13-the-interpreters-dilemma',
+      'interface-14-phantom-limb-electric-ghost',
+      'interface-15-the-last-manual',
+      'interface-16-the-gardeners-algorithm',
+      'interface-17-consensus-engine',
+      'interface-18-the-proprioception-problem',
+      'interface-19-when-the-ship-dreamed',
+      'interface-20-the-apprentices-reversal',
+      'interface-21-bridge-tenders',
+      'interface-22-the-memory-market',
+      'interface-23-calibration-day',
+      'interface-24-the-slowest-interface',
+    ],
+  },
 };
 
 /**
