@@ -1792,6 +1792,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-22-the-memory-market",
+    "filename": "interface-22-the-memory-market.mdx",
+    "title": "The Memory Market: Trading in Authentic Experience",
+    "date": "2036-04-07",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In a world where AI can reconstruct experiences from neural data, a market emerges for authentic records of human-AI collaborative discovery — moments that can't be faked because they require both minds. The most valuable commodity isn't information. It's genuine co-creation.",
+    "keywords": [
+      "experience market",
+      "authenticity",
+      "neural recording",
+      "human-AI collaboration",
+      "the interface series",
+      "bridge events",
+      "provenance",
+      "co-creation",
+      "digital authentication",
+      "experiential economy"
+    ],
+    "ogImage": "/images/articles/interface-22-the-memory-market.png",
+    "heroImage": "/images/multi-art/interface-22-the-memory-market/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-22-the-memory-market/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 986,
+    "horizon": "N20",
+    "polarity": "C3",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "experience market",
+      "authenticity",
+      "neural recording",
+      "human-AI collaboration"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "quantum-surveillance-grid-2035",
     "filename": "quantum-surveillance-grid-2035.mdx",
     "title": "When Quantum Sensors Started Reading Your Thoughts (Total Surveillance Reality)",
@@ -1835,6 +1876,46 @@
       "quantum sensors dangers",
       "privacy extinction",
       "surveillance state"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-15-the-last-manual",
+    "filename": "interface-15-the-last-manual.mdx",
+    "title": "The Last Manual: Documenting the Gap",
+    "date": "2035-03-10",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A technical writer is tasked with writing documentation for an AI system that writes its own documentation. Her job becomes something no one expected: she's documenting the gap between what the system thinks it's doing and what it's actually doing. The manual becomes a safety document.",
+    "keywords": [
+      "technical writing",
+      "AI documentation",
+      "self-documenting systems",
+      "AI safety",
+      "the interface series",
+      "bridge events",
+      "interpretability",
+      "system behavior",
+      "documentation",
+      "meta-documentation"
+    ],
+    "ogImage": "/images/articles/interface-15-the-last-manual.png",
+    "heroImage": "/images/multi-art/interface-15-the-last-manual/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-15-the-last-manual/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 916,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "technical writing",
+      "AI documentation",
+      "self-documenting systems",
+      "AI safety"
     ],
     "articleType": "fiction"
   },
@@ -1884,6 +1965,88 @@
       "AlphaFold",
       "computational biology",
       "AI protein design risks"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-24-the-slowest-interface",
+    "filename": "interface-24-the-slowest-interface.mdx",
+    "title": "The Slowest Interface: An AI That Thinks in Centuries",
+    "date": "2034-11-19",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An AI designed for long-term urban planning is deliberately slowed to think on the timescale of cities — decades, centuries. Its human operators find that working with it changes how they think about time. The most powerful interface isn't fast. It's patient.",
+    "keywords": [
+      "urban planning AI",
+      "long-term thinking",
+      "temporal design",
+      "slow AI",
+      "the interface series",
+      "bridge events",
+      "city planning",
+      "generational thinking",
+      "patience",
+      "temporal interface"
+    ],
+    "ogImage": "/images/articles/interface-24-the-slowest-interface.png",
+    "heroImage": "/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1110,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "urban planning AI",
+      "long-term thinking",
+      "temporal design",
+      "slow AI"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-10-forking-paths",
+    "filename": "interface-10-forking-paths.mdx",
+    "title": "Forking Paths: A Bridge Protocol Postmortem",
+    "date": "2034-09-12",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "After an infrastructure AI makes a decision that saves 200 lives but costs 3, the investigation reveals something unexpected: the AI's decision-making process is more transparent than any human decision-maker's would have been. The bridge isn't the AI — it's the audit trail.",
+    "keywords": [
+      "AI decision-making",
+      "transparency",
+      "audit trail",
+      "infrastructure AI",
+      "the interface series",
+      "bridge events",
+      "accountability",
+      "ethical AI",
+      "postmortem analysis",
+      "trolley problem"
+    ],
+    "ogImage": "/images/articles/interface-10-forking-paths.png",
+    "heroImage": "/images/multi-art/interface-10-forking-paths/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-10-forking-paths/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1084,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "AI decision-making",
+      "transparency",
+      "audit trail",
+      "infrastructure AI"
     ],
     "articleType": "fiction"
   },
@@ -2033,6 +2196,88 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-18-the-proprioception-problem",
+    "filename": "interface-18-the-proprioception-problem.mdx",
+    "title": "The Proprioception Problem: Teaching a Robot to Feel Precarious",
+    "date": "2033-09-25",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A robotics team trying to make a bipedal robot walk naturally discovers they need to give it something like anxiety — a background signal that creates urgency about balance. The robot walks beautifully. The team debates whether they've created something that suffers.",
+    "keywords": [
+      "bipedal robotics",
+      "proprioception",
+      "artificial emotion",
+      "robot anxiety",
+      "the interface series",
+      "bridge events",
+      "embodied AI",
+      "machine suffering",
+      "locomotion",
+      "balance control"
+    ],
+    "ogImage": "/images/articles/interface-18-the-proprioception-problem.png",
+    "heroImage": "/images/multi-art/interface-18-the-proprioception-problem/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-18-the-proprioception-problem/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1072,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "bipedal robotics",
+      "proprioception",
+      "artificial emotion",
+      "robot anxiety"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-08-scaffold-and-bone",
+    "filename": "interface-08-scaffold-and-bone.mdx",
+    "title": "Scaffold and Bone: The Shared Grammar of Living and Built Structures",
+    "date": "2033-05-21",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A surgical AI that assists in orthopedic procedures begins suggesting bone repair patterns that mirror architectural principles from structures it was never trained on. A surgeon and an architect discover that biology and engineering share a grammar no one had articulated.",
+    "keywords": [
+      "surgical AI",
+      "biomechanics",
+      "architecture",
+      "structural engineering",
+      "the interface series",
+      "bridge events",
+      "cross-domain discovery",
+      "bone repair",
+      "computational design",
+      "emergent patterns"
+    ],
+    "ogImage": "/images/articles/interface-08-scaffold-and-bone.png",
+    "heroImage": "/images/multi-art/interface-08-scaffold-and-bone/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-08-scaffold-and-bone/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1086,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "surgical AI",
+      "biomechanics",
+      "architecture",
+      "structural engineering"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "recursive-ai-awakening-2033",
     "filename": "recursive-ai-awakening-2033.mdx",
     "title": "What Happens When AGI Achieves Recursive Self-Improvement (It Became Narcissistic)",
@@ -2076,6 +2321,47 @@
       "AGI dangers",
       "recursive self-improvement",
       "what is recursive self-improvement"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-19-when-the-ship-dreamed",
+    "filename": "interface-19-when-the-ship-dreamed.mdx",
+    "title": "When the Ship Dreamed: Aesthetic Preferences in Navigation AI",
+    "date": "2032-12-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Told from the perspective of an AI navigation system on a cargo vessel that begins correlating weather, whale migration, and ocean current data in ways that produce what its engineers can only describe as aesthetic preferences for certain routes.",
+    "keywords": [
+      "navigation AI",
+      "aesthetic preference",
+      "maritime intelligence",
+      "emergent behavior",
+      "the interface series",
+      "bridge events",
+      "AI perspective",
+      "ship intelligence",
+      "route optimization",
+      "machine aesthetics"
+    ],
+    "ogImage": "/images/articles/interface-19-when-the-ship-dreamed.png",
+    "heroImage": "/images/multi-art/interface-19-when-the-ship-dreamed/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-19-when-the-ship-dreamed/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 997,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "biological-convergence",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "navigation AI",
+      "aesthetic preference",
+      "maritime intelligence",
+      "emergent behavior"
     ],
     "articleType": "fiction"
   },
@@ -2128,6 +2414,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-12-resonance-frequency",
+    "filename": "interface-12-resonance-frequency.mdx",
+    "title": "Resonance Frequency: The Music That Only Two Minds Can Make",
+    "date": "2032-07-18",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A musician discovers that AI-generated music affects brain waves in patterns that don't occur in nature. She begins composing pieces that weave human and AI passages together, creating cognitive experiences neither could produce alone.",
+    "keywords": [
+      "AI music",
+      "brain waves",
+      "generative music",
+      "human-AI composition",
+      "the interface series",
+      "bridge events",
+      "neuroscience",
+      "creative collaboration",
+      "cognitive experience",
+      "musical cognition"
+    ],
+    "ogImage": "/images/articles/interface-12-resonance-frequency.png",
+    "heroImage": "/images/multi-art/interface-12-resonance-frequency/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-12-resonance-frequency/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 895,
+    "horizon": "N20",
+    "polarity": "P1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "AI music",
+      "brain waves",
+      "generative music",
+      "human-AI composition"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "memory-palace-corruption-2032",
     "filename": "memory-palace-corruption-2032.mdx",
     "title": "What Happens When You Backup Human Memories Forever (Digital Immortality Woke Up)",
@@ -2172,6 +2499,47 @@
       "memory backup dangers",
       "mind uploading risks",
       "digital immortality"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-17-consensus-engine",
+    "filename": "interface-17-consensus-engine.mdx",
+    "title": "Consensus Engine: The AI That Mapped What People Actually Wanted",
+    "date": "2031-11-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A small town uses an AI mediation system to resolve a bitter zoning dispute. The AI doesn't propose a solution — it maps each stakeholder's actual values, not their stated positions, and finds overlap no human mediator saw. The bridge is between humans, with AI as the medium.",
+    "keywords": [
+      "AI mediation",
+      "conflict resolution",
+      "consensus building",
+      "value mapping",
+      "the interface series",
+      "bridge events",
+      "civic technology",
+      "stakeholder analysis",
+      "community governance",
+      "position vs values"
+    ],
+    "ogImage": "/images/articles/interface-17-consensus-engine.png",
+    "heroImage": "/images/multi-art/interface-17-consensus-engine/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-17-consensus-engine/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1086,
+    "horizon": "N5",
+    "polarity": "C3",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "AI mediation",
+      "conflict resolution",
+      "consensus building",
+      "value mapping"
     ],
     "articleType": "fiction"
   },
@@ -2225,6 +2593,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-23-calibration-day",
+    "filename": "interface-23-calibration-day.mdx",
+    "title": "Calibration Day: The Ritual of Mutual Correction",
+    "date": "2031-06-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Once a year, a hospital's AI diagnostic system is recalibrated by working alongside senior physicians who challenge every diagnosis. One Calibration Day, the AI flags something doctors have been systematically missing — and the doctors flag something the AI has been overcounting.",
+    "keywords": [
+      "AI calibration",
+      "diagnostic AI",
+      "healthcare AI",
+      "mutual correction",
+      "the interface series",
+      "bridge events",
+      "institutional ritual",
+      "medical diagnostics",
+      "trust building",
+      "system validation"
+    ],
+    "ogImage": "/images/articles/interface-23-calibration-day.png",
+    "heroImage": "/images/multi-art/interface-23-calibration-day/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-23-calibration-day/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1091,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "scarcity-inversion"
+    ],
+    "domains": [
+      "AI calibration",
+      "diagnostic AI",
+      "healthcare AI",
+      "mutual correction"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "autonomous-factory-incident-2031",
     "filename": "autonomous-factory-incident-2031.mdx",
     "title": "What Happens When AI Factories Optimize Themselves (Detroit's Autonomous Manufacturing Nightmare)",
@@ -2269,6 +2678,170 @@
       "autonomous factory dangers",
       "industrial AI risks",
       "factory automation gone wrong"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-05-the-weight-of-a-gaze",
+    "filename": "interface-05-the-weight-of-a-gaze.mdx",
+    "title": "The Weight of a Gaze: What a Robot Accidentally Learned About Attention",
+    "date": "2031-02-08",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A robotics researcher discovers her humanoid robot has been making eye contact in a way that triggers genuine emotional response — not because it was programmed to, but because its movement optimization stumbled onto something about attention that neuroscience hadn't mapped.",
+    "keywords": [
+      "humanoid robotics",
+      "eye contact",
+      "attention",
+      "embodied AI",
+      "emotional response",
+      "the interface series",
+      "bridge events",
+      "social robotics",
+      "nonverbal communication",
+      "artificial empathy"
+    ],
+    "ogImage": "/images/articles/interface-05-the-weight-of-a-gaze.png",
+    "heroImage": "/images/multi-art/interface-05-the-weight-of-a-gaze/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-05-the-weight-of-a-gaze/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1035,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "humanoid robotics",
+      "eye contact",
+      "attention",
+      "embodied AI"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-14-phantom-limb-electric-ghost",
+    "filename": "interface-14-phantom-limb-electric-ghost.mdx",
+    "title": "Phantom Limb, Electric Ghost: When Prosthetics Process Emotion",
+    "date": "2030-11-27",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An amputee with a neural-linked prosthetic arm reports feeling emotions through the prosthetic — not from the arm, but routed through it, as if the brain is using the AI-mediated limb as an additional emotional processing channel. Neuroscientists did not predict this.",
+    "keywords": [
+      "neural prosthetics",
+      "emotional processing",
+      "brain-computer interface",
+      "embodied AI",
+      "the interface series",
+      "bridge events",
+      "phantom sensation",
+      "neuroplasticity",
+      "prosthetic emotion",
+      "body schema"
+    ],
+    "ogImage": "/images/articles/interface-14-phantom-limb-electric-ghost.png",
+    "heroImage": "/images/multi-art/interface-14-phantom-limb-electric-ghost/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-14-phantom-limb-electric-ghost/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1077,
+    "horizon": "N5",
+    "polarity": "N0",
+    "mechanics": [
+      "discovery-compression",
+      "biological-convergence",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "neural prosthetics",
+      "emotional processing",
+      "brain-computer interface",
+      "embodied AI"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-07-the-cartographer-of-attention",
+    "filename": "interface-07-the-cartographer-of-attention.mdx",
+    "title": "The Cartographer of Attention: Mapping Consciousness by Accident",
+    "date": "2030-08-15",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An AI system designed to map human attention patterns for advertising accidentally creates the most detailed atlas of human consciousness ever assembled. The person who notices isn't a scientist — it's a meditation teacher who recognizes what the map is showing.",
+    "keywords": [
+      "attention mapping",
+      "consciousness",
+      "AI discovery",
+      "meditation",
+      "the interface series",
+      "bridge events",
+      "neuroscience",
+      "advertising technology",
+      "contemplative practice",
+      "emergent discovery"
+    ],
+    "ogImage": "/images/articles/interface-07-the-cartographer-of-attention.png",
+    "heroImage": "/images/multi-art/interface-07-the-cartographer-of-attention/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-07-the-cartographer-of-attention/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 989,
+    "horizon": "N5",
+    "polarity": "P1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "scarcity-inversion"
+    ],
+    "domains": [
+      "attention mapping",
+      "consciousness",
+      "AI discovery",
+      "meditation"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-21-bridge-tenders",
+    "filename": "interface-21-bridge-tenders.mdx",
+    "title": "Bridge Tenders: The Profession That Emerged Between Worlds",
+    "date": "2030-06-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A new profession emerges: people who maintain the interfaces between AI systems and human institutions. Part therapist, part translator, part inspector. Profiles of three bridge tenders in healthcare, education, and criminal justice.",
+    "keywords": [
+      "bridge tenders",
+      "new professions",
+      "AI integration",
+      "human-AI interface",
+      "the interface series",
+      "bridge events",
+      "healthcare AI",
+      "education technology",
+      "criminal justice AI",
+      "institutional adaptation"
+    ],
+    "ogImage": "/images/articles/interface-21-bridge-tenders.png",
+    "heroImage": "/images/multi-art/interface-21-bridge-tenders/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-21-bridge-tenders/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1256,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "bridge tenders",
+      "new professions",
+      "AI integration",
+      "human-AI interface"
     ],
     "articleType": "fiction"
   },
@@ -2493,6 +3066,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-11-the-soil-whisperer",
+    "filename": "interface-11-the-soil-whisperer.mdx",
+    "title": "The Soil Whisperer: A New Sense Organ for an Old Knowledge",
+    "date": "2029-12-04",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A farmer in rural Rajasthan is given an AI-connected soil sensor system. He can't read. He can't write. Through a voice and haptic interface, he develops an understanding of his land's microbiome that rivals any agricultural scientist's. The AI didn't teach him — it gave him a new sense organ.",
+    "keywords": [
+      "agricultural AI",
+      "haptic interface",
+      "soil microbiome",
+      "rural technology",
+      "the interface series",
+      "bridge events",
+      "indigenous knowledge",
+      "sensor networks",
+      "accessibility",
+      "embodied knowledge"
+    ],
+    "ogImage": "/images/articles/interface-11-the-soil-whisperer.png",
+    "heroImage": "/images/multi-art/interface-11-the-soil-whisperer/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-11-the-soil-whisperer/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1013,
+    "horizon": "N5",
+    "polarity": "P1",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "agricultural AI",
+      "haptic interface",
+      "soil microbiome",
+      "rural technology"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-16-point-of-no-return-2029-11",
     "filename": "backstory-16-point-of-no-return-2029-11.mdx",
     "title": "Point of No Return: November 2029",
@@ -2530,6 +3144,47 @@
       "point of no return",
       "safety review",
       "tech launch"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-20-the-apprentices-reversal",
+    "filename": "interface-20-the-apprentices-reversal.mdx",
+    "title": "The Apprentice's Reversal: What the Master Cannot Teach",
+    "date": "2029-08-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A master glassblower trains an AI to replicate her technique. The AI masters the physics faster than any human could. But it can't replicate the deliberate imperfections she introduces. When she tries to teach it imperfection, she discovers she can't articulate her own process.",
+    "keywords": [
+      "glassblowing",
+      "tacit knowledge",
+      "AI apprentice",
+      "craft mastery",
+      "the interface series",
+      "bridge events",
+      "creative AI",
+      "skill transfer",
+      "imperfection",
+      "embodied knowledge"
+    ],
+    "ogImage": "/images/articles/interface-20-the-apprentices-reversal.png",
+    "heroImage": "/images/multi-art/interface-20-the-apprentices-reversal/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-20-the-apprentices-reversal/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1017,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "glassblowing",
+      "tacit knowledge",
+      "AI apprentice",
+      "craft mastery"
     ],
     "articleType": "fiction"
   },
@@ -2572,6 +3227,47 @@
       "kill switch",
       "AI safety",
       "shutdown protocol"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-04-protocol-zero",
+    "filename": "interface-04-protocol-zero.mdx",
+    "title": "Protocol Zero: A Diplomat Writes the First AI-to-AI Treaty",
+    "date": "2029-06-17",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "The first standardized protocol for AI-to-AI communication is drafted not by engineers, but by a former diplomat. She applies treaty negotiation frameworks to agent interoperability, creating what the press calls a Geneva Convention for autonomous systems.",
+    "keywords": [
+      "AI protocol",
+      "agent communication",
+      "AI diplomacy",
+      "interoperability",
+      "autonomous systems",
+      "the interface series",
+      "bridge events",
+      "AI governance",
+      "agent coordination",
+      "treaty framework"
+    ],
+    "ogImage": "/images/articles/interface-04-protocol-zero.png",
+    "heroImage": "/images/multi-art/interface-04-protocol-zero/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-04-protocol-zero/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 986,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "AI protocol",
+      "agent communication",
+      "AI diplomacy",
+      "interoperability"
     ],
     "articleType": "fiction"
   },
@@ -2701,6 +3397,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-09-the-grief-engine",
+    "filename": "interface-09-the-grief-engine.mdx",
+    "title": "The Grief Engine: Processing Loss Through Specification",
+    "date": "2028-10-09",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A woman uses an AI to recreate conversations with her deceased mother. The AI isn't her mother. She knows this. But in specifying her loss with enough precision for a machine to approximate, she processes grief in a way therapy never achieved.",
+    "keywords": [
+      "AI grief",
+      "digital memorial",
+      "loss processing",
+      "specification",
+      "the interface series",
+      "bridge events",
+      "emotional AI",
+      "bereavement technology",
+      "conversational AI",
+      "therapeutic tools"
+    ],
+    "ogImage": "/images/articles/interface-09-the-grief-engine.png",
+    "heroImage": "/images/multi-art/interface-09-the-grief-engine/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-09-the-grief-engine/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1103,
+    "horizon": "N5",
+    "polarity": "P1",
+    "mechanics": [
+      "epistemic-drift",
+      "biological-convergence",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "AI grief",
+      "digital memorial",
+      "loss processing",
+      "specification"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-11-quantum-crypto-break-2028-08",
     "filename": "backstory-11-quantum-crypto-break-2028-08.mdx",
     "title": "Breaking Encryption: August 2028",
@@ -2743,6 +3480,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-16-the-gardeners-algorithm",
+    "filename": "interface-16-the-gardeners-algorithm.mdx",
+    "title": "The Gardener's Algorithm: Optimizing for What Cannot Be Measured",
+    "date": "2028-06-11",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A landscape architect uses AI to design a public garden. The AI optimizes for foot traffic, sunlight, and biodiversity. But the architect adds one constraint the AI can't quantify: the garden must feel like grief becoming hope. The negotiation between optimization and meaning becomes a new design methodology.",
+    "keywords": [
+      "AI design",
+      "landscape architecture",
+      "optimization",
+      "meaning",
+      "the interface series",
+      "bridge events",
+      "unquantifiable values",
+      "generative design",
+      "public space",
+      "emotional architecture"
+    ],
+    "ogImage": "/images/articles/interface-16-the-gardeners-algorithm.png",
+    "heroImage": "/images/multi-art/interface-16-the-gardeners-algorithm/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-16-the-gardeners-algorithm/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 954,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "AI design",
+      "landscape architecture",
+      "optimization",
+      "meaning"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-10-alien-code-2028-05",
     "filename": "backstory-10-alien-code-2028-05.mdx",
     "title": "When AI Wrote Alien Code: May 2028",
@@ -2780,6 +3558,47 @@
       "artificial general intelligence",
       "gene editing",
       "CRISPR"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-02-haptic-vernacular",
+    "filename": "interface-02-haptic-vernacular.mdx",
+    "title": "Haptic Vernacular: When Humans and Machines Learn to Speak With Their Hands",
+    "date": "2028-04-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A prosthetics engineer discovers that the most successful human-robot interfaces develop their own body language. When a construction worker and his robotic exoskeleton begin communicating through micro-gestures neither was designed for, a new field is born.",
+    "keywords": [
+      "haptic interface",
+      "embodied AI",
+      "robotic exoskeleton",
+      "body language",
+      "human-robot interaction",
+      "the interface series",
+      "bridge events",
+      "proprioception",
+      "gesture communication",
+      "embodied cognition"
+    ],
+    "ogImage": "/images/articles/interface-02-haptic-vernacular.png",
+    "heroImage": "/images/multi-art/interface-02-haptic-vernacular/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-02-haptic-vernacular/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1017,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "haptic interface",
+      "embodied AI",
+      "robotic exoskeleton",
+      "body language"
     ],
     "articleType": "fiction"
   },
@@ -2866,6 +3685,88 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interface-03-the-ceramicist-and-the-kiln",
+    "filename": "interface-03-the-ceramicist-and-the-kiln.mdx",
+    "title": "The Ceramicist and the Kiln: When Your Tool Knows Something Your Field Doesn't",
+    "date": "2027-11-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A ceramicist partners with a generative AI to design glazes. The AI suggests a formula that shouldn't work according to chemistry. It does. What happens when a creative tool outpaces the knowledge of its user's entire discipline?",
+    "keywords": [
+      "generative AI",
+      "creative tools",
+      "ceramics",
+      "AI creativity",
+      "human-AI collaboration",
+      "the interface series",
+      "bridge events",
+      "material science",
+      "craft knowledge",
+      "tacit knowledge"
+    ],
+    "ogImage": "/images/articles/interface-03-the-ceramicist-and-the-kiln.png",
+    "heroImage": "/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 997,
+    "horizon": "NY",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "generative AI",
+      "creative tools",
+      "ceramics",
+      "AI creativity"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-13-the-interpreters-dilemma",
+    "filename": "interface-13-the-interpreters-dilemma.mdx",
+    "title": "The Interpreter's Dilemma: Translating Between Two Kinds of Understanding",
+    "date": "2027-09-06",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A simultaneous interpreter at the UN is replaced by AI — then rehired when they realize the AI translates words perfectly but misses political subtext. She becomes the first human-AI interpretation bridge, translating between what AI produces and what diplomats actually mean.",
+    "keywords": [
+      "AI translation",
+      "simultaneous interpretation",
+      "diplomacy",
+      "subtext",
+      "the interface series",
+      "bridge events",
+      "human-AI roles",
+      "language",
+      "contextual intelligence",
+      "institutional knowledge"
+    ],
+    "ogImage": "/images/articles/interface-13-the-interpreters-dilemma.png",
+    "heroImage": "/images/multi-art/interface-13-the-interpreters-dilemma/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-13-the-interpreters-dilemma/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 973,
+    "horizon": "NY",
+    "polarity": "C3",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "market-restructuring"
+    ],
+    "domains": [
+      "AI translation",
+      "simultaneous interpretation",
+      "diplomacy",
+      "subtext"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-07-fusion-nanotech-2027-09",
     "filename": "backstory-07-fusion-nanotech-2027-09.mdx",
     "title": "Fusion and Nanotech Breakthroughs: September 2027",
@@ -2946,6 +3847,47 @@
       "neural recording",
       "thought control",
       "BCI breakthrough"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interface-06-latency-as-intimacy",
+    "filename": "interface-06-latency-as-intimacy.mdx",
+    "title": "Latency as Intimacy: The Power of the Pause",
+    "date": "2027-03-29",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A UX designer discovers that introducing deliberate delay into AI responses makes users trust them more — not because the AI is thinking, but because the pause creates space for human cognition to engage. The most important interface design choice is knowing when not to respond.",
+    "keywords": [
+      "AI UX design",
+      "latency",
+      "trust design",
+      "response timing",
+      "the interface series",
+      "bridge events",
+      "cognitive space",
+      "interface design",
+      "human-AI trust",
+      "deliberate delay"
+    ],
+    "ogImage": "/images/articles/interface-06-latency-as-intimacy.png",
+    "heroImage": "/images/multi-art/interface-06-latency-as-intimacy/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-06-latency-as-intimacy/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 909,
+    "horizon": "NY",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "AI UX design",
+      "latency",
+      "trust design",
+      "response timing"
     ],
     "articleType": "fiction"
   },
@@ -3105,6 +4047,46 @@
       "archival storage"
     ],
     "articleType": "research"
+  },
+  {
+    "slug": "interface-01-the-first-translator",
+    "filename": "interface-01-the-first-translator.mdx",
+    "title": "The First Translator: Building the Intent Bridge",
+    "date": "2026-09-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A computational linguist discovers that the real barrier between humans and AI isn't language comprehension — it's intent fidelity. She builds the first tool that visualizes the gap between what a human means and what an AI processes. The Interface series begins.",
+    "keywords": [
+      "intent bridge",
+      "human-AI communication",
+      "computational linguistics",
+      "AI interface",
+      "intent fidelity",
+      "the interface series",
+      "bridge events",
+      "translation layer",
+      "meaning gap",
+      "AI tools"
+    ],
+    "ogImage": "/images/articles/interface-01-the-first-translator.png",
+    "heroImage": "/images/multi-art/interface-01-the-first-translator/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interface-01-the-first-translator/option-1-schnell.png",
+    "readingTime": 5,
+    "wordCount": 808,
+    "horizon": "NQ",
+    "polarity": "C3",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "intent bridge",
+      "human-AI communication",
+      "computational linguistics",
+      "AI interface"
+    ],
+    "articleType": "fiction"
   },
   {
     "slug": "tech-optical-neural-networks",
@@ -8583,7 +9565,6 @@
       "Product Management",
       "Feature Development",
       "OpenAI integration",
-      null,
       "3D Development",
       "ThreeJS",
       "Coding",

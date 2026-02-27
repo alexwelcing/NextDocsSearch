@@ -224,7 +224,9 @@ function main() {
     const wordCount = content.split(/\s+/).filter(Boolean).length;
     const readingTime = Math.ceil(wordCount / 200);
 
-    const keywords = Array.isArray(data.keywords) ? data.keywords : [];
+    const keywords = Array.isArray(data.keywords)
+      ? data.keywords.filter((k: unknown): k is string => typeof k === 'string')
+      : [];
     const images = imageManifest[slug] || { heroImage: null, ogImage: null, thumbnail: null };
 
     return {
