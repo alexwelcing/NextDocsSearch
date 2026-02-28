@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { useWorldTracker, WorldInfo } from '@/lib/hooks/useWorldTracker';
+import { MARBLE_WORLD } from '@/lib/worlds/marbleWorld';
 
 interface SceneryOption {
   id: string;
@@ -62,8 +63,17 @@ const UNLOCKABLE_FEATURES: UnlockableFeature[] = [
   { id: 'warp', name: 'Reality Warp', description: 'Invert the universe', requiredWorlds: -1, unlocked: false }, // -1 means all worlds
   { id: 'random', name: 'Random Jump', description: 'Teleport to a random world', requiredWorlds: 5, unlocked: false },
   { id: 'speed', name: 'Hyper Transit', description: 'Instant world switching', requiredWorlds: 10, unlocked: false },
-  { id: 'secret', name: '???', description: 'Complete your journey to discover', requiredWorlds: -1, unlocked: false },
+  { id: 'secret', name: 'Ornate Dimension', description: 'A fully navigable 3D world', requiredWorlds: -1, unlocked: false },
 ];
+
+// The marble world from Supabase — unlocked as the secret reward after visiting all worlds
+const MARBLE_WORLD_ENTRY: WorldInfo = {
+  id: `splat-${MARBLE_WORLD.id}.spz`,
+  name: 'Ornate Dimension',
+  path: MARBLE_WORLD.splatUrl,
+  type: 'splat',
+  thumbnail: undefined,
+};
 
 // Transition messages for world switching
 const TRANSITION_MESSAGES = [
@@ -109,10 +119,18 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
   } = useWorldTracker(worlds);
 
   // Use the statically-defined worlds list (no runtime API call needed)
+  // When all base worlds have been visited, append the secret marble world
   useEffect(() => {
     setWorlds(STATIC_WORLDS);
     setLoading(false);
   }, []);
+
+  // Append the secret marble world once all base worlds are visited
+  useEffect(() => {
+    if (cosmicPowerUnlocked && !worlds.some(w => w.id === MARBLE_WORLD_ENTRY.id)) {
+      setWorlds(prev => [...prev, MARBLE_WORLD_ENTRY]);
+    }
+  }, [cosmicPowerUnlocked, worlds]);
 
   // Check and unlock features based on visited count
   useEffect(() => {
@@ -358,8 +376,18 @@ export default function WorldGallery({ onSelectWorld, currentWorld, isMobile = f
             fontSize: '0.9rem',
             fontFamily: 'monospace',
             textAlign: 'center',
+            marginBottom: '6px',
           }}>
-            Special features unlocked
+            Secret world unlocked
+          </div>
+          <div style={{
+            color: '#0ff',
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            fontFamily: 'monospace',
+            textAlign: 'center',
+          }}>
+            Ornate Dimension
           </div>
         </div>
       )}

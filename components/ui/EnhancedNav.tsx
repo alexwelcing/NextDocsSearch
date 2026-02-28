@@ -38,7 +38,6 @@ const EnhancedNav: React.FC<EnhancedNavProps> = ({ isGamePlaying = false, limit 
 
   const navItems = [
     { href: '/', label: 'Home' },
-    { href: '/chat', label: 'Explore' },
     { href: '/about', label: 'About' },
   ];
 

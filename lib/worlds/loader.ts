@@ -9,10 +9,10 @@ import type { WorldConfig } from './types';
 import { MARBLE_WORLD } from './marbleWorld';
 
 /**
- * Default world configuration
- * Used when no world is specified or as fallback
+ * The marble world configuration — unlocked as a reward after visiting all worlds.
+ * Exported so WorldGallery can reference it as the secret end-game scene.
  */
-export const DEFAULT_WORLD: WorldConfig = {
+export const MARBLE_WORLD_CONFIG: WorldConfig = {
   id: MARBLE_WORLD.id,
   name: MARBLE_WORLD.name,
   description: 'The immersive marble world from Supabase',
@@ -42,6 +42,59 @@ export const DEFAULT_WORLD: WorldConfig = {
   },
   atmosphere: {
     fog: { enabled: true, color: '#a0a0b0', near: 10, far: 50 },
+    particles: { type: 'none' },
+  },
+};
+
+/**
+ * The panorama image keys matching the 14 image backgrounds in WORLD_METADATA.
+ * Used to pick a random starting background.
+ */
+const PANORAMA_KEYS = [
+  'bg1', 'bg2', 'bg3', 'bg4', 'bg5', 'bg6', 'bg7', 'bg8', 'bg9',
+  'cave', 'scifi1', 'space', 'start', 'train',
+];
+
+/** Pick a random panorama path from the available 14 image backgrounds */
+function getRandomPanorama(): string {
+  const key = PANORAMA_KEYS[Math.floor(Math.random() * PANORAMA_KEYS.length)];
+  return `/background/${key}.jpg`;
+}
+
+/**
+ * Default world configuration
+ * Starts with a random panorama background. The marble world splat
+ * is reserved as the reward for exploring all other worlds.
+ */
+export const DEFAULT_WORLD: WorldConfig = {
+  id: 'default-panorama',
+  name: 'Random Panorama',
+  description: 'A random 360° panorama from the gallery',
+  assets: {
+    // No environment splat — uses fallbackPanorama directly
+    fallbackPanorama: getRandomPanorama(),
+  },
+  camera: {
+    initial: [0, 2, 10],
+    target: [0, 0, 0],
+    fov: 60,
+    constraints: {
+      minDistance: 5,
+      maxDistance: 50,
+      minPolarAngle: 0.1,
+      maxPolarAngle: Math.PI / 2,
+      enablePan: false,
+    },
+  },
+  lighting: {
+    preset: 'day',
+    ambient: 0.5,
+    directionalIntensity: 0.8,
+    shadowsEnabled: false,
+    envMapIntensity: 1,
+  },
+  atmosphere: {
+    fog: { enabled: false },
     particles: { type: 'none' },
   },
 };

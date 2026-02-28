@@ -49,9 +49,6 @@ const CircleNav: React.FC<CircleNavProps> = ({ isGamePlaying = false }) => {
           <Link className={styles.menuLink} href="/">
             Home
           </Link>
-          <Link className={styles.menuLink} href="/chat">
-            Explore
-          </Link>
           <Link className={styles.menuLink} href="/about">
             About
           </Link>

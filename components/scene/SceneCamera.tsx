@@ -14,6 +14,7 @@ import { useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import type { CameraMode, CameraKeyframe, WorldCamera, CameraConstraints } from '@/lib/worlds/types';
+import WASDControls from '@/components/3d/controls/WASDControls';
 
 interface SceneCameraProps {
   mode: CameraMode;
@@ -249,23 +250,30 @@ export default function SceneCamera({
   const constraints: Partial<CameraConstraints> = config.constraints || {};
 
   return (
-    <OrbitControls
-      ref={controlsRef}
-      target={targetRef.current}
-      enableDamping
-      dampingFactor={0.1}
-      rotateSpeed={0.5}
-      zoomSpeed={0.8}
-      panSpeed={0.5}
-      minDistance={constraints.minDistance ?? 5}
-      maxDistance={constraints.maxDistance ?? 50}
-      minPolarAngle={constraints.minPolarAngle ?? 0.1}
-      maxPolarAngle={constraints.maxPolarAngle ?? Math.PI / 2}
-      minAzimuthAngle={constraints.minAzimuthAngle}
-      maxAzimuthAngle={constraints.maxAzimuthAngle}
-      enablePan={constraints.enablePan ?? false}
-      enabled={mode === 'orbit'}
-    />
+    <>
+      <OrbitControls
+        ref={controlsRef}
+        target={targetRef.current}
+        enableDamping
+        dampingFactor={0.1}
+        rotateSpeed={0.5}
+        zoomSpeed={0.8}
+        panSpeed={0.5}
+        minDistance={constraints.minDistance ?? 5}
+        maxDistance={constraints.maxDistance ?? 50}
+        minPolarAngle={constraints.minPolarAngle ?? 0.1}
+        maxPolarAngle={constraints.maxPolarAngle ?? Math.PI / 2}
+        minAzimuthAngle={constraints.minAzimuthAngle}
+        maxAzimuthAngle={constraints.maxAzimuthAngle}
+        enablePan={constraints.enablePan ?? false}
+        enabled={mode === 'orbit'}
+      />
+      <WASDControls
+        enabled={mode === 'orbit'}
+        moveSpeed={5}
+        orbitTarget={targetRef}
+      />
+    </>
   );
 }
 

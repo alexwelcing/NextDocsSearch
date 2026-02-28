@@ -25,6 +25,7 @@ import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
 import HelpButton from '../../ui/HelpButton';
+import WASDControls from '../controls/WASDControls';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -515,19 +516,25 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               {/* Camera controller for smooth game transitions */}
               {cinematicComplete && <CameraController gameState={gameState} />}
 
-              {/* OrbitControls - disabled during cinematic intro */}
+              {/* OrbitControls + WASD keyboard navigation - disabled during cinematic intro */}
               {cinematicComplete && (
-                <OrbitControls
-                  enableDamping
-                  dampingFactor={0.1}
-                  rotateSpeed={0.5}
-                  zoomSpeed={0.8}
-                  panSpeed={0.5}
-                  minDistance={5}
-                  maxDistance={50}
-                  maxPolarAngle={Math.PI / 2}
-                  enablePan={false}
-                />
+                <>
+                  <OrbitControls
+                    enableDamping
+                    dampingFactor={0.1}
+                    rotateSpeed={0.5}
+                    zoomSpeed={0.8}
+                    panSpeed={0.5}
+                    minDistance={5}
+                    maxDistance={50}
+                    maxPolarAngle={Math.PI / 2}
+                    enablePan={false}
+                  />
+                  <WASDControls
+                    enabled={gameState === 'IDLE' || gameState === 'GAME_OVER'}
+                    moveSpeed={5}
+                  />
+                </>
               )}
 
               {/* Sphere Hunter Game */}
