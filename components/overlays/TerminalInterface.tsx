@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSupabaseData } from '../contexts/SupabaseDataContext';
@@ -73,10 +73,6 @@ export default function TerminalInterface({
   // Floating window state (desktop)
   const [windowPos, setWindowPos] = useState({ x: -1, y: -1 });
   const [windowSize, setWindowSize] = useState({ width: 600, height: 520 });
-  const isDraggingRef = useRef(false);
-  const isResizingRef = useRef(false);
-  const dragOffsetRef = useRef({ x: 0, y: 0 });
-  const resizeStartRef = useRef({ x: 0, y: 0, w: 0, h: 0 });
 
   const { chatData, sendMessage, chatHistory } = useSupabaseData();
   const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
@@ -116,38 +112,6 @@ export default function TerminalInterface({
       });
     }
   }, [isOpen, isMobile]);
-
-  // Global pointer handlers for drag and resize
-  useEffect(() => {
-    const handlePointerMove = (e: PointerEvent) => {
-      if (isDraggingRef.current) {
-        e.preventDefault();
-        const newX = Math.max(-100, Math.min(window.innerWidth - 100, e.clientX - dragOffsetRef.current.x));
-        const newY = Math.max(0, Math.min(window.innerHeight - 50, e.clientY - dragOffsetRef.current.y));
-        setWindowPos({ x: newX, y: newY });
-      }
-      if (isResizingRef.current) {
-        e.preventDefault();
-        const dw = e.clientX - resizeStartRef.current.x;
-        const dh = e.clientY - resizeStartRef.current.y;
-        setWindowSize({
-          width: Math.max(320, Math.min(window.innerWidth - 20, resizeStartRef.current.w + dw)),
-          height: Math.max(250, Math.min(window.innerHeight - 20, resizeStartRef.current.h + dh)),
-        });
-      }
-    };
-    const handlePointerUp = () => {
-      isDraggingRef.current = false;
-      isResizingRef.current = false;
-      document.body.style.userSelect = '';
-    };
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-    };
-  }, []);
 
   const fetchLeaderboard = useCallback(async () => {
     setLoadingLeaderboard(true);
@@ -298,26 +262,50 @@ export default function TerminalInterface({
     }
   }, [progress, chatHistory, missionBriefs]);
 
+  // On-demand drag: listeners only registered during active drag
   const handleHeaderPointerDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest('button')) return;
     if (isMobile) return;
-    isDraggingRef.current = true;
-    dragOffsetRef.current = {
-      x: e.clientX - windowPos.x,
-      y: e.clientY - windowPos.y,
-    };
+    const offsetX = e.clientX - windowPos.x;
+    const offsetY = e.clientY - windowPos.y;
     document.body.style.userSelect = 'none';
+    const onMove = (ev: PointerEvent) => {
+      ev.preventDefault();
+      setWindowPos({
+        x: Math.max(-100, Math.min(window.innerWidth - 100, ev.clientX - offsetX)),
+        y: Math.max(0, Math.min(window.innerHeight - 50, ev.clientY - offsetY)),
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
   };
 
+  // On-demand resize: listeners only registered during active resize
   const handleResizePointerDown = (e: React.PointerEvent) => {
-    isResizingRef.current = true;
-    resizeStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      w: windowSize.width,
-      h: windowSize.height,
-    };
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startW = windowSize.width;
+    const startH = windowSize.height;
     document.body.style.userSelect = 'none';
+    const onMove = (ev: PointerEvent) => {
+      ev.preventDefault();
+      setWindowSize({
+        width: Math.max(320, Math.min(window.innerWidth - 20, startW + ev.clientX - startX)),
+        height: Math.max(250, Math.min(window.innerHeight - 20, startH + ev.clientY - startY)),
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
     e.preventDefault();
     e.stopPropagation();
   };
@@ -364,8 +352,9 @@ export default function TerminalInterface({
             borderRadius: '20px 20px 0 0',
             borderBottom: 'none',
           } : {
-            left: `${windowPos.x}px`,
-            top: `${windowPos.y}px`,
+            left: 0,
+            top: 0,
+            transform: `translate(${windowPos.x}px, ${windowPos.y}px)`,
             width: `${windowSize.width}px`,
             height: `${windowSize.height}px`,
             borderRadius: '12px',
