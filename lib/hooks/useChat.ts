@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useJourney } from '@/components/contexts/JourneyContext';
-import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
+import {
+  extractShipSignals,
+  extractGamificationSignals,
+  shipPersona,
+} from '@/lib/ai/shipPersona';
 
 export interface ChatData {
   question: string;
@@ -15,7 +19,7 @@ export interface ChatTurn {
 export function useChat() {
   const [chatData, setChatData] = useState<ChatData>({ 
     question: '', 
-    response: '✨ Hi! I\'m Ship AI - ready to chat whenever you are!' 
+    response: 'Ship AI online. What do you need?' 
   });
   
   const [chatHistory, setChatHistory] = useState<ChatTurn[]>(() => {
@@ -47,7 +51,7 @@ export function useChat() {
 
     try {
       // Set initial state for new message
-      setChatData({ question, response: '💭 Ooh, great question! Let me dive into that for you...' });
+      setChatData({ question, response: 'Processing...' });
       
       const historyPayload = chatHistory
         .slice(-shipPersona.memory.maxInteractions)
@@ -102,7 +106,8 @@ export function useChat() {
 
       const { cleanMessage, signals } = extractShipSignals(fullResponse);
       setChatData({ question, response: cleanMessage });
-      applyAiSignals(signals);
+      // Only pass gamification signals to the journey context
+      applyAiSignals(extractGamificationSignals(signals));
       
       setChatHistory(prev => {
         const updated = [...prev, { question, response: cleanMessage }];
@@ -110,9 +115,9 @@ export function useChat() {
       });
     } catch (error) {
       console.error('Failed to fetch response:', error);
-      setChatData(prev => ({ 
-        ...prev, 
-        response: '😅 Oops! My circuits got a bit tangled there. Mind giving that another shot? I promise I\'ll do better!' 
+      setChatData(prev => ({
+        ...prev,
+        response: 'System error. Try again.',
       }));
     } finally {
       isProcessingRef.current = false;
