@@ -9,7 +9,6 @@ module.exports = {
   exclude: [
     '/api/*',
     '/404',
-    '/chat',
   ],
   transform: async (config, path) => {
     // Custom priority for important pages based on SEO strategy

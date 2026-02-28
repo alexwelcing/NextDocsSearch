@@ -20,7 +20,6 @@ import {
   X,
   Home,
   BookOpen,
-  MessageCircle,
   Compass,
   Info,
 } from 'lucide-react';
@@ -221,7 +220,6 @@ interface NavItem {
 const mainNavItems: NavItem[] = [
   { href: '/', label: 'Home', icon: <Home /> },
   { href: '/articles', label: 'Articles', icon: <BookOpen /> },
-  { href: '/chat', label: 'Chat', icon: <MessageCircle /> },
 ];
 
 const exploreNavItems: NavItem[] = [
