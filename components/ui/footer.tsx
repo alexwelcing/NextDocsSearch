@@ -5,6 +5,7 @@ import styles from '../../styles/Home.module.css';
 import { Button } from './button';
 import AboutModal from '../AboutModal';
 import { useRouter } from 'next/router';
+import { getRandomBackgroundImage } from '@/lib/backgroundImages';
 
 interface FooterProps {
   onImageChange: (newImage: string) => void;
@@ -16,11 +17,7 @@ const Footer: React.FC<FooterProps> = ({ onImageChange, showChangeScenery = true
   const [isAboutModalOpen, setAboutModalOpen] = useState(false);
 
   const handleChangeImage = () => {
-    fetch('/api/backgroundImages')
-      .then((response) => response.json())
-      .then((data) => {
-        onImageChange(data.image);
-      });
+    onImageChange(getRandomBackgroundImage());
   };
 
   const router = useRouter();

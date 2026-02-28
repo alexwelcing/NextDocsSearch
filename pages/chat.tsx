@@ -3,6 +3,7 @@ import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import dynamic from 'next/dynamic'
 import StylishFallback from '@/components/StylishFallback'
+import { getRandomBackgroundImage } from '@/lib/backgroundImages'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import { JourneyProvider } from '@/components/contexts/JourneyContext'
 import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
@@ -19,17 +20,8 @@ const Chat = () => {
   const [cinematicComplete, setCinematicComplete] = useState(false)
   const [gameState, setGameState] = useState<string>('idle')
 
-  async function getRandomImage() {
-    try {
-      const response = await fetch('/api/backgroundImages')
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      const data = await response.json()
-      setCurrentImage(data.image)
-    } catch (error) {
-      console.error('There was a problem fetching the background image:', error)
-    }
+  function getRandomImage() {
+    setCurrentImage(getRandomBackgroundImage())
   }
 
   async function fetchArticles() {
