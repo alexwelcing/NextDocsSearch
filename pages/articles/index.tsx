@@ -297,18 +297,49 @@ export default function ArticlesIndex({
 
         {/* Full Article Discovery */}
         <section>
-          <h2
+          <div
             style={{
-              fontFamily: 'monospace',
-              fontSize: '0.7rem',
-              color: '#555',
-              textTransform: 'uppercase',
-              letterSpacing: '0.15em',
-              marginBottom: '16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+              marginBottom: '8px',
             }}
           >
-            All Articles
-          </h2>
+            <h2
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.7rem',
+                color: '#555',
+                textTransform: 'uppercase',
+                letterSpacing: '0.15em',
+                margin: 0,
+              }}
+            >
+              Publications Index
+            </h2>
+            <span
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.6rem',
+                color: '#333',
+                letterSpacing: '0.1em',
+              }}
+            >
+              Research &amp; Fiction
+            </span>
+          </div>
+          <p
+            style={{
+              fontSize: '0.8rem',
+              color: '#555',
+              margin: '0 0 20px 0',
+              lineHeight: 1.6,
+              maxWidth: '500px',
+            }}
+          >
+            Browse the full catalog of research papers, speculative fiction, and
+            original frameworks.
+          </p>
           <ArticleDiscovery />
         </section>
 

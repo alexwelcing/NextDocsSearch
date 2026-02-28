@@ -255,7 +255,7 @@ export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
           </div>
         </section>
 
-        {/* Article list with images */}
+        {/* Article list — magazine layout */}
         <section>
           <h2
             style={{
@@ -269,97 +269,130 @@ export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
           >
             Research &amp; Analysis &middot; {articles.length} articles
           </h2>
+
+          {/* Hero article */}
+          {articles[0] && (
+            <Link
+              href={`/articles/${articles[0].slug}`}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: articles[0].heroImage ? '1fr 1fr' : '1fr',
+                gap: '0',
+                textDecoration: 'none',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                background: '#0a0a14',
+                border: '1px solid rgba(255,255,255,0.06)',
+                marginBottom: '20px',
+                transition: 'all 0.3s ease',
+                minHeight: '260px',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(244,114,182,0.2)'
+                e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.3)'
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
+            >
+              {articles[0].heroImage && (
+                <div
+                  style={{
+                    position: 'relative',
+                    background: '#111',
+                    minHeight: '260px',
+                  }}
+                >
+                  <Image
+                    src={articles[0].heroImage}
+                    alt={articles[0].title}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="(max-width: 768px) 100vw, 550px"
+                    priority
+                  />
+                </div>
+              )}
+              <div
+                style={{
+                  padding: '32px 28px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '0.6rem',
+                    color: '#f472b6',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.15em',
+                    marginBottom: '12px',
+                  }}
+                >
+                  Latest &middot;{' '}
+                  {new Date(articles[0].date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                  })}
+                </div>
+                <h3
+                  style={{
+                    fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)',
+                    fontWeight: 700,
+                    color: '#fff',
+                    margin: '0 0 12px 0',
+                    lineHeight: 1.3,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {articles[0].title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: '0.85rem',
+                    color: '#888',
+                    margin: '0 0 16px 0',
+                    lineHeight: 1.7,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {articles[0].description}
+                </p>
+                <span
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '0.7rem',
+                    color: '#f472b6',
+                    opacity: 0.7,
+                    marginTop: 'auto',
+                  }}
+                >
+                  Read &rarr;
+                </span>
+              </div>
+            </Link>
+          )}
+
+          {/* Remaining articles grid */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
               gap: '16px',
             }}
           >
-            {articles.map((article) => (
-              <Link
+            {articles.slice(1).map((article) => (
+              <HubArticleCard
                 key={article.slug}
-                href={`/articles/${article.slug}`}
-                style={{
-                  display: 'block',
-                  textDecoration: 'none',
-                  borderRadius: '10px',
-                  overflow: 'hidden',
-                  background: '#0a0a14',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  transition: 'all 0.25s ease',
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(244,114,182,0.3)'
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)'
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
-                  e.currentTarget.style.transform = 'none'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              >
-                {article.heroImage && (
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      height: '160px',
-                      background: '#111',
-                    }}
-                  >
-                    <Image
-                      src={article.heroImage}
-                      alt={article.title}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      sizes="(max-width: 768px) 100vw, 400px"
-                    />
-                  </div>
-                )}
-                <div style={{ padding: '18px 20px 20px' }}>
-                  <h3
-                    style={{
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      color: '#fff',
-                      margin: '0 0 6px 0',
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {article.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: 'monospace',
-                      fontSize: '0.7rem',
-                      color: '#555',
-                      margin: '0 0 8px 0',
-                    }}
-                  >
-                    {new Date(article.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: '0.8rem',
-                      color: '#777',
-                      margin: 0,
-                      lineHeight: 1.6,
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {article.description}
-                  </p>
-                </div>
-              </Link>
+                article={article}
+                accentHover="rgba(244,114,182,0.3)"
+              />
             ))}
           </div>
         </section>
@@ -399,6 +432,116 @@ export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
         </footer>
       </main>
     </div>
+  )
+}
+
+function HubArticleCard({
+  article,
+  accentHover,
+}: {
+  article: Article
+  accentHover: string
+}) {
+  return (
+    <Link
+      href={`/articles/${article.slug}`}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        textDecoration: 'none',
+        borderRadius: '10px',
+        overflow: 'hidden',
+        background: '#0a0a14',
+        border: '1px solid rgba(255,255,255,0.06)',
+        transition: 'all 0.25s ease',
+      }}
+      onMouseOver={(e) => {
+        e.currentTarget.style.borderColor = accentHover
+        e.currentTarget.style.transform = 'translateY(-3px)'
+        e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.35)'
+      }}
+      onMouseOut={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
+        e.currentTarget.style.transform = 'none'
+        e.currentTarget.style.boxShadow = 'none'
+      }}
+    >
+      {article.heroImage && (
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            aspectRatio: '16 / 9',
+            background: '#111',
+            overflow: 'hidden',
+          }}
+        >
+          <Image
+            src={article.heroImage}
+            alt={article.title}
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+          />
+        </div>
+      )}
+      <div
+        style={{
+          padding: '18px 20px 20px',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'center',
+            marginBottom: '8px',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'monospace',
+              fontSize: '0.6rem',
+              color: '#444',
+            }}
+          >
+            {new Date(article.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+            })}
+          </span>
+        </div>
+        <h3
+          style={{
+            fontSize: '1rem',
+            fontWeight: 600,
+            color: '#fff',
+            margin: '0 0 8px 0',
+            lineHeight: 1.4,
+            letterSpacing: '-0.01em',
+          }}
+        >
+          {article.title}
+        </h3>
+        <p
+          style={{
+            fontSize: '0.8rem',
+            color: '#777',
+            margin: 0,
+            lineHeight: 1.6,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
+          {article.description}
+        </p>
+      </div>
+    </Link>
   )
 }
 
