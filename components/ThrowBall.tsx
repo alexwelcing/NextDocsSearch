@@ -3,7 +3,7 @@
  * THROW BALL — Draggable projectile with 3D arc trajectory
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * A glass ball sitting in the bottom-right corner that:
+ * A glass ball sitting in the bottom-left corner that:
  * 1. Can be grabbed (mouse or touch) and dragged
  * 2. Shows a trajectory arc while dragging (slingshot style)
  * 3. When released, flies along a 3D parabolic arc toward the tiles
@@ -25,9 +25,9 @@ interface ThrowBallProps {
 
 // ─── Physics constants ───────────────────────────────────────────────────
 
-const BALL_SIZE = 48;
-const BALL_REST_BOTTOM = 28;
-const BALL_REST_RIGHT = 28;
+const BALL_SIZE = 56;
+const BALL_REST_BOTTOM = 32;
+const BALL_REST_LEFT = 32;
 const FLIGHT_DURATION = 500; // ms
 const GRAVITY_ARC = 0.4; // arc height multiplier
 const MIN_DRAG_DISTANCE = 30; // px minimum to register a throw
@@ -44,13 +44,13 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
   const ballRef = useRef<HTMLDivElement>(null);
   const flyAnimRef = useRef<number>(0);
 
-  // Rest position (bottom-right corner of container)
+  // Rest position (bottom-left corner of container)
   const getRestPos = useCallback(() => {
     const container = containerRef.current;
-    if (!container) return { x: window.innerWidth - BALL_REST_RIGHT - BALL_SIZE / 2, y: window.innerHeight - BALL_REST_BOTTOM - BALL_SIZE / 2 };
+    if (!container) return { x: BALL_REST_LEFT + BALL_SIZE / 2, y: window.innerHeight - BALL_REST_BOTTOM - BALL_SIZE / 2 };
     const rect = container.getBoundingClientRect();
     return {
-      x: rect.right - BALL_REST_RIGHT - BALL_SIZE / 2,
+      x: rect.left + BALL_REST_LEFT + BALL_SIZE / 2,
       y: rect.bottom - BALL_REST_BOTTOM - BALL_SIZE / 2,
     };
   }, [containerRef]);
@@ -357,7 +357,7 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
         <div
           style={{
             position: 'fixed',
-            right: BALL_REST_RIGHT - 4,
+            left: BALL_REST_LEFT - 4,
             bottom: BALL_REST_BOTTOM + BALL_SIZE + 8,
             zIndex: 9999,
             color: 'rgba(0, 212, 255, 0.6)',
@@ -367,7 +367,7 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
             textTransform: 'uppercase',
             pointerEvents: 'none',
             animation: 'ballHintPulse 2s ease-in-out infinite',
-            textAlign: 'right',
+            textAlign: 'left',
             whiteSpace: 'nowrap',
           }}
         >
