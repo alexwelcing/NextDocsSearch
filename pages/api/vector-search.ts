@@ -1,34 +1,31 @@
-import type { NextRequest } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { codeBlock, oneLine } from 'common-tags';
-import GPT3Tokenizer from 'gpt3-tokenizer';
-import {
-  Configuration,
-  OpenAIApi,
-  CreateModerationResponse,
-  CreateEmbeddingResponse,
-  ChatCompletionRequestMessage,
-} from 'openai-edge';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
-import { ApplicationError, UserError } from '@/lib/errors';
-import { shipPersona } from '@/lib/ai/shipPersona';
+import type { NextRequest } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+import { codeBlock, oneLine } from 'common-tags'
+import GPT3Tokenizer from 'gpt3-tokenizer'
+import { OpenAIStream, StreamingTextResponse } from 'ai'
+import { ApplicationError, UserError } from '@/lib/errors'
+import { shipPersona, extractShipSignals, extractCorpusSignals } from '@/lib/ai/shipPersona'
+import { createLLMProvider, type ChatMessage } from '@/lib/ai/llm-provider'
+import { processCorpusSignals } from '@/lib/ai/corpus-manager'
 
-const openAiKey = process.env.OPENAI_KEY;
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+export const runtime = 'edge'
 
-const config = new Configuration({
-  apiKey: openAiKey,
-});
-const openai = new OpenAIApi(config);
-
-export const runtime = 'edge';
+interface HybridResult {
+  id: number
+  page_id: number | null
+  slug: string | null
+  heading: string | null
+  content: string
+  source_type: string
+  fts_rank: number
+  vector_rank: number
+  rrf_score: number
+}
 
 export default async function handler(req: NextRequest) {
   try {
-    if (!openAiKey) {
-      throw new ApplicationError('Missing environment variable OPENAI_KEY')
-    }
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
     if (!supabaseUrl) {
       throw new ApplicationError('Missing environment variable SUPABASE_URL')
@@ -37,6 +34,8 @@ export default async function handler(req: NextRequest) {
     if (!supabaseServiceKey) {
       throw new ApplicationError('Missing environment variable SUPABASE_SERVICE_ROLE_KEY')
     }
+
+    const llm = createLLMProvider()
 
     const requestData = await req.json()
 
@@ -52,76 +51,126 @@ export default async function handler(req: NextRequest) {
 
     const supabaseClient = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Moderate the content to comply with OpenAI T&C
+    // Moderate the content
     const sanitizedQuery = query.trim()
-    const moderationResponse: CreateModerationResponse = await openai
-      .createModeration({ input: sanitizedQuery })
-      .then((res) => res.json())
+    const moderation = await llm.createModeration(sanitizedQuery)
 
-    const [results] = moderationResponse.results
-
-    if (results.flagged) {
+    if (moderation.flagged) {
       throw new UserError('Flagged content', {
         flagged: true,
-        categories: results.categories,
+        categories: moderation.categories,
       })
     }
 
     // Create embedding from query
-    const embeddingResponse = await openai.createEmbedding({
-      model: 'text-embedding-ada-002',
-      input: sanitizedQuery.replaceAll('\n', ' '),
-    })
+    const { embedding } = await llm.createEmbedding(sanitizedQuery)
 
-    if (embeddingResponse.status !== 200) {
-      throw new ApplicationError('Failed to create embedding for question', { status: embeddingResponse.status, statusText: embeddingResponse.statusText })
-    }
+    // ═══════════════════════════════════════════════════════════
+    // QMD-STYLE HYBRID SEARCH
+    // BM25 full-text + vector semantic with RRF merging
+    // ═══════════════════════════════════════════════════════════
 
-    const {
-      data: [{ embedding }],
-    }: CreateEmbeddingResponse = await embeddingResponse.json()
-
-    const { error: matchError, data: pageSections } = await supabaseClient.rpc(
-      'match_page_sections',
+    const { error: searchError, data: hybridResults } = await supabaseClient.rpc(
+      'hybrid_search',
       {
-        embedding,
-        match_threshold: 0.78,
-        match_count: 10,
+        query_text: sanitizedQuery,
+        query_embedding: embedding,
+        match_count: 15,
+        rrf_k: 60,
+        fts_weight: 1.0,
+        vector_weight: 1.0,
         min_content_length: 50,
       }
     )
 
-    if (matchError) {
-      throw new ApplicationError('Failed to match page sections', matchError as unknown as Record<string, unknown>)
+    if (searchError) {
+      throw new ApplicationError(
+        'Hybrid search failed',
+        searchError as unknown as Record<string, unknown>
+      )
     }
+
+    const results: HybridResult[] = hybridResults ?? []
+
+    // ═══════════════════════════════════════════════════════════
+    // LLM RE-RANKING
+    // Score top candidates for relevance, blend with retrieval
+    // ═══════════════════════════════════════════════════════════
+
+    let rankedResults = results
+
+    if (results.length > 3) {
+      const documents = results.map(
+        (r) => `${r.heading ? `${r.heading}: ` : ''}${r.content.slice(0, 300)}`
+      )
+
+      try {
+        const rerankScores = await llm.rerank(sanitizedQuery, documents)
+
+        rankedResults = results.map((result, idx) => {
+          const rerankEntry = rerankScores.find((s) => s.index === idx)
+          const rerankScore = rerankEntry?.score ?? 3
+
+          // Position-aware blending: top positions trust retrieval more
+          const retrievalWeight = idx < 3 ? 0.75 : 0.4
+          const rerankWeight = 1 - retrievalWeight
+          const normalizedRerank = rerankScore / 5
+
+          return {
+            ...result,
+            rrf_score:
+              result.rrf_score * retrievalWeight + normalizedRerank * rerankWeight,
+          }
+        })
+
+        rankedResults.sort((a, b) => b.rrf_score - a.rrf_score)
+      } catch (err) {
+        // Re-ranking is non-critical; fall back to RRF order
+        console.error('Re-ranking failed, using RRF order:', err)
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ASSEMBLE CONTEXT
+    // Build attributed context up to token budget
+    // ═══════════════════════════════════════════════════════════
 
     const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })
     let tokenCount = 0
     let contextText = ''
+    const TOKEN_BUDGET = 2500
 
-    for (let i = 0; i < pageSections.length; i++) {
-      const pageSection = pageSections[i]
-      const content = pageSection.content
-      const encoded = tokenizer.encode(content)
+    for (const section of rankedResults) {
+      const label =
+        section.source_type === 'article'
+          ? `[Article${section.heading ? `: "${section.heading}"` : ''}]`
+          : `[Corpus: "${section.heading ?? 'untitled'}" — ${section.source_type}]`
+
+      const block = `${label}\n${section.content.trim()}\n---\n`
+      const encoded = tokenizer.encode(block)
       tokenCount += encoded.text.length
 
-      if (tokenCount >= 1500) {
-        break
-      }
+      if (tokenCount >= TOKEN_BUDGET) break
 
-      contextText += `${content.trim()}\n---\n`
+      contextText += block
     }
+
+    // ═══════════════════════════════════════════════════════════
+    // BUILD PROMPT
+    // ═══════════════════════════════════════════════════════════
 
     const questDetails = questContext?.currentQuest
       ? `${questContext.currentQuest.title}: ${questContext.currentQuest.objective}`
-      : 'No active mission';
-    const missionBrief = questContext?.missionBrief ? `Current mission brief: ${questContext.missionBrief}` : 'Current mission brief: none (generate one if missing)';
+      : 'No active mission'
+    const missionBrief = questContext?.missionBrief
+      ? `Current mission brief: ${questContext.missionBrief}`
+      : 'Current mission brief: none (generate one if missing)'
 
     const prompt = codeBlock`
       ${oneLine`
       You are answering questions about Alex Welcing while staying in character as Ship AI.
-      Make your responses warm, engaging, and genuinely exciting. Draw the user in with your enthusiasm!
-      Use natural, conversational language that makes them feel valued and curious to learn more.`}
+      Draw from the provided context sections. Cite which sources you reference.
+      Answer directly and substantively.`}
 
       Mission status:
       ${questDetails}
@@ -129,33 +178,38 @@ export default async function handler(req: NextRequest) {
       ${missionBrief}
 
       Context sections:
-      ${contextText}
+      ${contextText || 'No relevant context found.'}
 
       Question: """
       ${sanitizedQuery}
       """
 
-      Answer in a warm, engaging way that makes this conversation memorable. Be enthusiastic and make them excited about what they're discovering!
+      Answer directly, citing sources where applicable. If the context is insufficient, say so.
     `
 
-    const historyMessages: ChatCompletionRequestMessage[] = Array.isArray(history)
+    const historyMessages: ChatMessage[] = Array.isArray(history)
       ? history
-        .slice(-shipPersona.memory.maxInteractions)
-        .flatMap((entry: { question?: string; response?: string }) => ([
-          entry.question ? { role: 'user', content: entry.question } : null,
-          entry.response ? { role: 'assistant', content: entry.response } : null,
-        ].filter(Boolean) as ChatCompletionRequestMessage[]))
-      : [];
+          .slice(-shipPersona.memory.maxInteractions)
+          .flatMap((entry: { question?: string; response?: string }) =>
+            [
+              entry.question
+                ? ({ role: 'user', content: entry.question } as ChatMessage)
+                : null,
+              entry.response
+                ? ({ role: 'assistant', content: entry.response } as ChatMessage)
+                : null,
+            ].filter(Boolean) as ChatMessage[]
+          )
+      : []
 
-    const response = await openai.createChatCompletion({
-      model: 'gpt-4-turbo-preview',
+    const response = await llm.createChatCompletion({
       messages: [
         { role: 'system', content: shipPersona.systemPrompt },
         ...historyMessages,
         { role: 'user', content: prompt },
       ],
-      max_tokens: 1024,
-      temperature: 0.3,
+      maxTokens: 1024,
+      temperature: 0.4,
       stream: true,
     })
 
@@ -164,10 +218,31 @@ export default async function handler(req: NextRequest) {
       throw new ApplicationError('Failed to generate completion', error)
     }
 
-    // Transform the response into a readable stream
-    const stream = OpenAIStream(response)
+    // ═══════════════════════════════════════════════════════════
+    // STREAM WITH CORPUS SIGNAL EXTRACTION
+    // Intercept streamed response, extract CORPUS_ENTRY signals,
+    // process them async after streaming completes.
+    // ═══════════════════════════════════════════════════════════
 
-    // Return a StreamingTextResponse, which can be consumed by the client
+    const stream = OpenAIStream(response, {
+      async onFinal(fullText: string) {
+        // Fire-and-forget: extract and store corpus signals
+        try {
+          const { signals } = extractShipSignals(fullText)
+          const corpusSignals = extractCorpusSignals(signals)
+
+          if (corpusSignals.length > 0) {
+            const corpusProvider = createLLMProvider()
+            processCorpusSignals(corpusSignals, sanitizedQuery, corpusProvider).catch(
+              (err) => console.error('Background corpus processing failed:', err)
+            )
+          }
+        } catch (err) {
+          console.error('Corpus signal extraction failed:', err)
+        }
+      },
+    })
+
     return new StreamingTextResponse(stream)
   } catch (err: unknown) {
     if (err instanceof UserError) {
@@ -182,10 +257,8 @@ export default async function handler(req: NextRequest) {
         }
       )
     } else if (err instanceof ApplicationError) {
-      // Print out application errors with their additional data
       console.error(`${err.message}: ${JSON.stringify(err.data)}`)
     } else {
-      // Print out unexpected errors as is to help with debugging
       console.error(err)
     }
 
