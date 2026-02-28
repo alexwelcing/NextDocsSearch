@@ -92,13 +92,45 @@ export default function TerminalInterface({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Keyboard hotkeys: ESC to close, 1-5 to switch tabs, / to focus search
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) onClose();
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't capture keys when typing in an input
+      const tag = (e.target as HTMLElement).tagName;
+      const isInput = tag === 'INPUT' || tag === 'TEXTAREA';
+
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Skip hotkeys when typing
+      if (isInput) return;
+
+      const tabKeys: Record<string, ViewMode> = {
+        '1': 'explore',
+        '2': 'chat',
+        '3': 'game',
+        '4': 'scenery',
+        '5': 'about',
+      };
+      if (tabKeys[e.key]) {
+        e.preventDefault();
+        setViewMode(tabKeys[e.key]);
+        return;
+      }
+
+      // / to focus search in explore mode
+      if (e.key === '/' && viewMode === 'explore') {
+        e.preventDefault();
+        const searchInput = document.querySelector<HTMLInputElement>('[data-terminal-search]');
+        searchInput?.focus();
+      }
     };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose, viewMode]);
 
   // Initialize window position to center when opened
   useEffect(() => {
@@ -313,11 +345,11 @@ export default function TerminalInterface({
   if (!isOpen) return null;
 
   const tabs = [
-    { id: 'explore', label: 'EXPLORE' },
-    { id: 'chat', label: 'CHAT' },
-    { id: 'game', label: 'GAME' },
-    { id: 'scenery', label: 'SCENE' },
-    { id: 'about', label: 'ABOUT' },
+    { id: 'explore', label: 'EXPLORE', key: '1' },
+    { id: 'chat', label: 'CHAT', key: '2' },
+    { id: 'game', label: 'GAME', key: '3' },
+    { id: 'scenery', label: 'SCENE', key: '4' },
+    { id: 'about', label: 'ABOUT', key: '5' },
   ] as const;
 
   return (
@@ -326,20 +358,10 @@ export default function TerminalInterface({
         .terminal-no-scrollbar::-webkit-scrollbar { display: none; }
         .terminal-no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
       `}</style>
-      {/* Backdrop */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 999,
-          background: 'rgba(0, 0, 0, 0.15)',
-        }}
-        onClick={onClose}
-      />
+      {/* No backdrop - mouse passes through to 3D scene */}
       {/* Floating terminal window */}
       <div
         role="dialog"
-        aria-modal="true"
         aria-label="Terminal Interface"
         style={{
           position: 'fixed',
@@ -392,6 +414,11 @@ export default function TerminalInterface({
           <span style={{ color: '#0f0', fontFamily: 'monospace', fontSize: '13px' }}>
             {'>_'} terminal
           </span>
+          {!isMobile && (
+            <span style={{ color: '#333', fontFamily: 'monospace', fontSize: '9px', marginLeft: '4px' }}>
+              TAB·ESC
+            </span>
+          )}
         </div>
         <button
           onClick={onClose}
@@ -427,7 +454,7 @@ export default function TerminalInterface({
             onClick={() => setViewMode(tab.id as ViewMode)}
             style={{
               flex: 1,
-              padding: isMobile ? '14px 8px' : '12px 16px',
+              padding: isMobile ? '14px 8px' : '10px 8px',
               background: viewMode === tab.id ? '#1a1a1a' : 'transparent',
               border: 'none',
               borderBottom: viewMode === tab.id ? '2px solid #0f0' : '2px solid transparent',
@@ -436,8 +463,19 @@ export default function TerminalInterface({
               fontSize: isMobile ? '12px' : '11px',
               cursor: 'pointer',
               transition: 'all 0.15s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
             }}
           >
+            {!isMobile && (
+              <span style={{
+                fontSize: '9px',
+                color: viewMode === tab.id ? '#0a0' : '#333',
+                fontWeight: 400,
+              }}>{tab.key}</span>
+            )}
             {tab.label}
           </button>
         ))}
@@ -515,9 +553,10 @@ export default function TerminalInterface({
             <div style={{ marginBottom: '12px' }}>
               <input
                 type="text"
+                data-terminal-search
                 value={articleSearch}
                 onChange={(e) => setArticleSearch(e.target.value)}
-                placeholder="Search articles..."
+                placeholder="Search articles... (press /)"
                 style={{
                   width: '100%',
                   padding: isMobile ? '14px' : '12px',
