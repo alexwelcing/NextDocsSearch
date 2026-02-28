@@ -212,22 +212,14 @@
   color: rgba(0, 212, 255, 0.95);
 }
 
-/* Custom scrollbar for the expanded panel */
+/* Hide scrollbar for the expanded panel */
 .expandedPanel::-webkit-scrollbar {
-  width: 6px;
+  display: none;
 }
 
-.expandedPanel::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.expandedPanel::-webkit-scrollbar-thumb {
-  background: rgba(0, 212, 255, 0.3);
-  border-radius: 3px;
-}
-
-.expandedPanel::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 212, 255, 0.5);
+.expandedPanel {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 @media (max-width: 768px) {
