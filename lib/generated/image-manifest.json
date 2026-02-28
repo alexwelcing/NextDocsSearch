@@ -1751,6 +1751,582 @@
     ],
     "thumbnail": "/images/multi-art/insurance-collapse/option-1-schnell.png"
   },
+  "interface-01-the-first-translator": {
+    "heroImage": "/images/multi-art/interface-01-the-first-translator/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-01-the-first-translator/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-01-the-first-translator/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-01-the-first-translator/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-01-the-first-translator/option-1-schnell.png"
+  },
+  "interface-02-haptic-vernacular": {
+    "heroImage": "/images/multi-art/interface-02-haptic-vernacular/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-02-haptic-vernacular/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-02-haptic-vernacular/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-02-haptic-vernacular/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-02-haptic-vernacular/option-1-schnell.png"
+  },
+  "interface-03-the-ceramicist-and-the-kiln": {
+    "heroImage": "/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-1-schnell.png"
+  },
+  "interface-04-protocol-zero": {
+    "heroImage": "/images/multi-art/interface-04-protocol-zero/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-04-protocol-zero/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-04-protocol-zero/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-04-protocol-zero/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-04-protocol-zero/option-1-schnell.png"
+  },
+  "interface-05-the-weight-of-a-gaze": {
+    "heroImage": "/images/multi-art/interface-05-the-weight-of-a-gaze/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-05-the-weight-of-a-gaze/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-05-the-weight-of-a-gaze/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-05-the-weight-of-a-gaze/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-05-the-weight-of-a-gaze/option-1-schnell.png"
+  },
+  "interface-06-latency-as-intimacy": {
+    "heroImage": "/images/multi-art/interface-06-latency-as-intimacy/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-06-latency-as-intimacy/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-06-latency-as-intimacy/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-06-latency-as-intimacy/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-06-latency-as-intimacy/option-1-schnell.png"
+  },
+  "interface-07-the-cartographer-of-attention": {
+    "heroImage": "/images/multi-art/interface-07-the-cartographer-of-attention/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-07-the-cartographer-of-attention/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-07-the-cartographer-of-attention/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-07-the-cartographer-of-attention/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-07-the-cartographer-of-attention/option-1-schnell.png"
+  },
+  "interface-08-scaffold-and-bone": {
+    "heroImage": "/images/multi-art/interface-08-scaffold-and-bone/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-08-scaffold-and-bone/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-08-scaffold-and-bone/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-08-scaffold-and-bone/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-08-scaffold-and-bone/option-1-schnell.png"
+  },
+  "interface-09-the-grief-engine": {
+    "heroImage": "/images/multi-art/interface-09-the-grief-engine/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-09-the-grief-engine/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-09-the-grief-engine/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-09-the-grief-engine/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-09-the-grief-engine/option-1-schnell.png"
+  },
+  "interface-10-forking-paths": {
+    "heroImage": "/images/multi-art/interface-10-forking-paths/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-10-forking-paths/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-10-forking-paths/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-10-forking-paths/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-10-forking-paths/option-1-schnell.png"
+  },
+  "interface-11-the-soil-whisperer": {
+    "heroImage": "/images/multi-art/interface-11-the-soil-whisperer/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-11-the-soil-whisperer/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-11-the-soil-whisperer/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-11-the-soil-whisperer/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-11-the-soil-whisperer/option-1-schnell.png"
+  },
+  "interface-12-resonance-frequency": {
+    "heroImage": "/images/multi-art/interface-12-resonance-frequency/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-12-resonance-frequency/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-12-resonance-frequency/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-12-resonance-frequency/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-12-resonance-frequency/option-1-schnell.png"
+  },
+  "interface-13-the-interpreters-dilemma": {
+    "heroImage": "/images/multi-art/interface-13-the-interpreters-dilemma/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-13-the-interpreters-dilemma/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-13-the-interpreters-dilemma/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-13-the-interpreters-dilemma/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-13-the-interpreters-dilemma/option-1-schnell.png"
+  },
+  "interface-14-phantom-limb-electric-ghost": {
+    "heroImage": "/images/multi-art/interface-14-phantom-limb-electric-ghost/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-14-phantom-limb-electric-ghost/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-14-phantom-limb-electric-ghost/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-14-phantom-limb-electric-ghost/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-14-phantom-limb-electric-ghost/option-1-schnell.png"
+  },
+  "interface-15-the-last-manual": {
+    "heroImage": "/images/multi-art/interface-15-the-last-manual/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-15-the-last-manual/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-15-the-last-manual/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-15-the-last-manual/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-15-the-last-manual/option-1-schnell.png"
+  },
+  "interface-16-the-gardeners-algorithm": {
+    "heroImage": "/images/multi-art/interface-16-the-gardeners-algorithm/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-16-the-gardeners-algorithm/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-16-the-gardeners-algorithm/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-16-the-gardeners-algorithm/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-16-the-gardeners-algorithm/option-1-schnell.png"
+  },
+  "interface-17-consensus-engine": {
+    "heroImage": "/images/multi-art/interface-17-consensus-engine/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-17-consensus-engine/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-17-consensus-engine/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-17-consensus-engine/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-17-consensus-engine/option-1-schnell.png"
+  },
+  "interface-18-the-proprioception-problem": {
+    "heroImage": "/images/multi-art/interface-18-the-proprioception-problem/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-18-the-proprioception-problem/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-18-the-proprioception-problem/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-18-the-proprioception-problem/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-18-the-proprioception-problem/option-1-schnell.png"
+  },
+  "interface-19-when-the-ship-dreamed": {
+    "heroImage": "/images/multi-art/interface-19-when-the-ship-dreamed/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-19-when-the-ship-dreamed/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-19-when-the-ship-dreamed/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-19-when-the-ship-dreamed/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-19-when-the-ship-dreamed/option-1-schnell.png"
+  },
+  "interface-20-the-apprentices-reversal": {
+    "heroImage": "/images/multi-art/interface-20-the-apprentices-reversal/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-20-the-apprentices-reversal/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-20-the-apprentices-reversal/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-20-the-apprentices-reversal/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-20-the-apprentices-reversal/option-1-schnell.png"
+  },
+  "interface-21-bridge-tenders": {
+    "heroImage": "/images/multi-art/interface-21-bridge-tenders/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-21-bridge-tenders/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-21-bridge-tenders/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-21-bridge-tenders/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-21-bridge-tenders/option-1-schnell.png"
+  },
+  "interface-22-the-memory-market": {
+    "heroImage": "/images/multi-art/interface-22-the-memory-market/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-22-the-memory-market/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-22-the-memory-market/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-22-the-memory-market/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-22-the-memory-market/option-1-schnell.png"
+  },
+  "interface-23-calibration-day": {
+    "heroImage": "/images/multi-art/interface-23-calibration-day/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-23-calibration-day/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-23-calibration-day/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-23-calibration-day/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-23-calibration-day/option-1-schnell.png"
+  },
+  "interface-24-the-slowest-interface": {
+    "heroImage": "/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interface-24-the-slowest-interface/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interface-24-the-slowest-interface/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png"
+  },
   "lab-ai-refused-to-stop-2034": {
     "heroImage": "/images/multi-art/lab-ai-refused-to-stop-2034/option-1-schnell.png",
     "articleJpg": null,

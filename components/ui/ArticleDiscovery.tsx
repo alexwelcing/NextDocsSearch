@@ -72,9 +72,9 @@ export default function ArticleDiscovery({ initialArticles }: ArticleDiscoveryPr
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(article =>
-        article.title.toLowerCase().includes(query) ||
+        article.title?.toLowerCase().includes(query) ||
         article.description?.toLowerCase().includes(query) ||
-        article.keywords?.some(k => k.toLowerCase().includes(query))
+        article.keywords?.some(k => typeof k === 'string' && k.toLowerCase().includes(query))
       );
     }
 
