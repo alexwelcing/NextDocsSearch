@@ -76,23 +76,36 @@ export default function InteractiveTablet({
       if (e.key === 'Tab' && !e.ctrlKey && !e.altKey && !e.metaKey) {
         e.preventDefault();
         if (!isGamePlaying) {
-          setIsRaised(prev => !prev);
+          if (isMobile) {
+            setIsRaised(prev => !prev);
+          } else {
+            // Desktop: toggle terminal directly
+            setTerminalOpen(prev => !prev);
+          }
         }
       }
-      if (e.key === 'Escape' && isRaised) {
-        setIsRaised(false);
-        setTerminalOpen(false);
+      if (e.key === 'Escape') {
+        if (terminalOpen) {
+          setTerminalOpen(false);
+        } else if (isRaised) {
+          setIsRaised(false);
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isGamePlaying, isRaised]);
+  }, [isGamePlaying, isRaised, isMobile, terminalOpen]);
 
   const handleRaise = useCallback(() => {
     if (!isGamePlaying) {
-      setIsRaised(true);
+      if (isMobile) {
+        setIsRaised(true);
+      } else {
+        // Desktop: skip quick menu, open terminal directly
+        setTerminalOpen(true);
+      }
     }
-  }, [isGamePlaying]);
+  }, [isGamePlaying, isMobile]);
 
   const handleLower = useCallback(() => {
     setIsRaised(false);
@@ -102,6 +115,7 @@ export default function InteractiveTablet({
   const handleOpenTerminal = useCallback((view: 'chat' | 'game' | 'scenery' | 'about' | 'explore' = 'explore') => {
     setTerminalView(view);
     setTerminalOpen(true);
+    setIsRaised(false); // Hide quick menu when terminal opens
   }, []);
 
   // Swipe gesture support for mobile bottom-sheet UX
@@ -139,8 +153,8 @@ export default function InteractiveTablet({
 
   return (
     <>
-      {/* Pip-Boy raise button */}
-      {!isRaised && (
+      {/* Pip-Boy raise button - hidden when quick menu or terminal is open */}
+      {!isRaised && !terminalOpen && (
         <button
           onClick={handleRaise}
           onTouchStart={handleTouchStart}

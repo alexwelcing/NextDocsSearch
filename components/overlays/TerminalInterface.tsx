@@ -70,6 +70,10 @@ export default function TerminalInterface({
   const [articleSearch, setArticleSearch] = useState('');
   const [articleFilter, setArticleFilter] = useState<string>('all');
 
+  // Floating window state (desktop)
+  const [windowPos, setWindowPos] = useState({ x: -1, y: -1 });
+  const [windowSize, setWindowSize] = useState({ width: 600, height: 520 });
+
   const { chatData, sendMessage, chatHistory } = useSupabaseData();
   const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
   const currentMissionBrief = currentQuest ? missionBriefs[currentQuest.id] : undefined;
@@ -95,6 +99,19 @@ export default function TerminalInterface({
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
+
+  // Initialize window position to center when opened
+  useEffect(() => {
+    if (isOpen && !isMobile && typeof window !== 'undefined') {
+      const w = Math.min(window.innerWidth * 0.95, 600);
+      const h = Math.min(window.innerHeight * 0.7, 520);
+      setWindowSize({ width: w, height: h });
+      setWindowPos({
+        x: Math.round((window.innerWidth - w) / 2),
+        y: Math.round((window.innerHeight - h) / 2),
+      });
+    }
+  }, [isOpen, isMobile]);
 
   const fetchLeaderboard = useCallback(async () => {
     setLoadingLeaderboard(true);
@@ -245,6 +262,54 @@ export default function TerminalInterface({
     }
   }, [progress, chatHistory, missionBriefs]);
 
+  // On-demand drag: listeners only registered during active drag
+  const handleHeaderPointerDown = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    if (isMobile) return;
+    const offsetX = e.clientX - windowPos.x;
+    const offsetY = e.clientY - windowPos.y;
+    document.body.style.userSelect = 'none';
+    const onMove = (ev: PointerEvent) => {
+      ev.preventDefault();
+      setWindowPos({
+        x: Math.max(-100, Math.min(window.innerWidth - 100, ev.clientX - offsetX)),
+        y: Math.max(0, Math.min(window.innerHeight - 50, ev.clientY - offsetY)),
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  };
+
+  // On-demand resize: listeners only registered during active resize
+  const handleResizePointerDown = (e: React.PointerEvent) => {
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startW = windowSize.width;
+    const startH = windowSize.height;
+    document.body.style.userSelect = 'none';
+    const onMove = (ev: PointerEvent) => {
+      ev.preventDefault();
+      setWindowSize({
+        width: Math.max(320, Math.min(window.innerWidth - 20, startW + ev.clientX - startX)),
+        height: Math.max(250, Math.min(window.innerHeight - 20, startH + ev.clientY - startY)),
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   if (!isOpen) return null;
 
   const tabs = [
@@ -256,52 +321,77 @@ export default function TerminalInterface({
   ] as const;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 1000,
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        background: 'rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(2px)',
-      }}
-      onClick={(e) => {
-        // Close when clicking the backdrop
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <>
+      <style>{`
+        .terminal-no-scrollbar::-webkit-scrollbar { display: none; }
+        .terminal-no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+      `}</style>
+      {/* Backdrop */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 999,
+          background: 'rgba(0, 0, 0, 0.15)',
+        }}
+        onClick={onClose}
+      />
+      {/* Floating terminal window */}
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Terminal Interface"
         style={{
-          width: isMobile ? '100%' : 'min(95vw, 600px)',
-          maxHeight: isMobile ? '70vh' : '65vh',
+          position: 'fixed',
+          zIndex: 1000,
+          ...(isMobile ? {
+            left: 0,
+            bottom: 0,
+            width: '100%',
+            height: '70vh',
+            borderRadius: '20px 20px 0 0',
+            borderBottom: 'none',
+          } : {
+            left: 0,
+            top: 0,
+            transform: `translate(${windowPos.x}px, ${windowPos.y}px)`,
+            width: `${windowSize.width}px`,
+            height: `${windowSize.height}px`,
+            borderRadius: '12px',
+          }),
           background: 'rgba(10, 10, 10, 0.95)',
-          borderRadius: isMobile ? '20px 20px 0 0' : '16px 16px 0 0',
-          border: '1px solid #222',
-          borderBottom: 'none',
+          border: '1px solid #333',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.5)',
+          boxShadow: '0 8px 40px rgba(0, 0, 0, 0.6), 0 0 1px rgba(0, 255, 0, 0.1)',
         }}
       >
-      {/* Header */}
-      <div style={{
-        height: isMobile ? '50px' : '44px',
-        background: 'rgba(17, 17, 17, 0.9)',
-        borderBottom: '1px solid #222',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 16px',
-        justifyContent: 'space-between',
-        flexShrink: 0,
-      }}>
-        <div style={{ color: '#0f0', fontFamily: 'monospace', fontSize: '14px' }}>
-          {'>_'} terminal
+      {/* Draggable header */}
+      <div
+        onPointerDown={handleHeaderPointerDown}
+        style={{
+          height: isMobile ? '50px' : '40px',
+          background: 'rgba(17, 17, 17, 0.95)',
+          borderBottom: '1px solid #222',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 12px 0 16px',
+          justifyContent: 'space-between',
+          flexShrink: 0,
+          cursor: isMobile ? 'default' : 'grab',
+          userSelect: 'none',
+          touchAction: 'none',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Drag grip indicator (desktop) */}
+          {!isMobile && (
+            <span style={{ color: '#333', fontSize: '11px', letterSpacing: '2px', lineHeight: 1 }}>⠿</span>
+          )}
+          <span style={{ color: '#0f0', fontFamily: 'monospace', fontSize: '13px' }}>
+            {'>_'} terminal
+          </span>
         </div>
         <button
           onClick={onClose}
@@ -309,12 +399,16 @@ export default function TerminalInterface({
           style={{
             background: 'none',
             border: 'none',
-            color: '#666',
-            fontSize: '24px',
+            color: '#555',
+            fontSize: '20px',
             cursor: 'pointer',
-            padding: '8px',
+            padding: '4px 6px',
             lineHeight: 1,
+            borderRadius: '4px',
+            transition: 'background 0.15s',
           }}
+          onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'rgba(255,0,0,0.15)'; (e.target as HTMLElement).style.color = '#f55'; }}
+          onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; (e.target as HTMLElement).style.color = '#555'; }}
         >
           ×
         </button>
@@ -350,7 +444,7 @@ export default function TerminalInterface({
       </div>
 
       {/* Content */}
-      <div style={{
+      <div className="terminal-no-scrollbar" style={{
         flex: 1,
         overflow: 'auto',
         padding: isMobile ? '16px' : '20px 24px',
@@ -611,7 +705,7 @@ export default function TerminalInterface({
                 </div>
               </div>
             )}
-            <div style={{
+            <div className="terminal-no-scrollbar" style={{
               flex: 1,
               background: '#111',
               borderRadius: '8px',
@@ -904,7 +998,30 @@ export default function TerminalInterface({
           </div>
         )}
       </div>
+
+      {/* Resize handle - desktop only */}
+      {!isMobile && (
+        <div
+          onPointerDown={handleResizePointerDown}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '18px',
+            height: '18px',
+            cursor: 'nwse-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            touchAction: 'none',
+          }}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" style={{ opacity: 0.25 }}>
+            <path d="M 10 12 L 12 10 M 6 12 L 12 6 M 2 12 L 12 2" stroke="#0f0" strokeWidth="1.5" fill="none" />
+          </svg>
+        </div>
+      )}
       </div>
-    </div>
+    </>
   );
 }
