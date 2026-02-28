@@ -75,7 +75,7 @@ export function extractShipSignals(message: string): ShipSignalSet {
         type: 'CORPUS_ENTRY',
         title,
         summary,
-        url: url && url !== 'url-if-known' ? url : undefined,
+        url: url && url !== 'url-if-known' && /^https?:\/\//.test(url) ? url : undefined,
       })
     }
     return ''

@@ -68,7 +68,7 @@ export async function processCorpusSignals(
         {
           url: signal.url,
           title: signal.title,
-          content: signal.summary ?? signal.title,
+          content: signal.summary ?? `${signal.title}. External reference discovered during conversation.`,
           summary: signal.summary,
           sourceType: 'discovered',
           discoveredFromQuery: query,
