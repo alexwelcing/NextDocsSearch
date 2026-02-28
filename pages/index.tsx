@@ -25,9 +25,9 @@ const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
 function HomeContent() {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [articles, setArticles] = useState<any[]>([])
-  const [isIn3DMode, setIsIn3DMode] = useState<boolean>(false)
-  const [cinematicComplete, setCinematicComplete] = useState(false)
-  const [isEntering, setIsEntering] = useState(false)
+  const [isIn3DMode, setIsIn3DMode] = useState<boolean>(true)
+  const [cinematicComplete] = useState(true)
+  const [isEntering] = useState(false)
   const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false)
 
   // Game state (mirrors ThreeSixty's game management)
@@ -75,9 +75,7 @@ function HomeContent() {
   }, [getRandomImage])
 
   const handleEnter3D = useCallback(() => {
-    setIsEntering(true)
-    // Small delay for transition effect
-    setTimeout(() => setIsIn3DMode(true), 300)
+    setIsIn3DMode(true)
   }, [])
 
   const handleToggle3D = useCallback(() => {
@@ -237,7 +235,6 @@ function HomeContent() {
               world={worldConfig}
               articles={articles}
               onGameStateChange={(state: string) => setGameState(state as GameState)}
-              onCinematicComplete={() => setCinematicComplete(true)}
               gameState={gameState}
               onStartGame={handleStartGame}
               onGameEnd={handleGameEnd}

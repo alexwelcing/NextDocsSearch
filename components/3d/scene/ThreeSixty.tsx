@@ -14,8 +14,6 @@ import GameHUD from '../../overlays/GameHUD';
 import GameLeaderboard from '../../overlays/GameLeaderboard';
 import PerformanceMonitor from '../../PerformanceMonitor';
 import CameraController from '../camera/CameraController';
-import CinematicCamera from '../camera/CinematicCamera';
-import DirectorsIntro from '../../overlays/DirectorsIntro';
 import SceneLighting from './SceneLighting';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
@@ -148,10 +146,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     forceLowPower: false,
   });
 
-  // Cinematic intro state - always show intro for consistent experience
-  const [showCinematicIntro, setShowCinematicIntro] = useState(false); // Disabled for now
-  const [cinematicComplete, setCinematicComplete] = useState(true); // Always start ready
-  const [cinematicProgress, setCinematicProgress] = useState(0);
 
   // Game state
   const [gameState, setGameState] = useState<GameState>('IDLE');
@@ -381,29 +375,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
   };
 
-  // Cinematic intro handlers
-  const handleCinematicComplete = useCallback(() => {
-    setCinematicComplete(true);
-    setShowCinematicIntro(false);
-    setCinematicProgress(1);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('hasWatchedIntro', 'true');
-    }
-  }, []);
-
-  const handleCinematicSkip = useCallback(() => {
-    setCinematicComplete(true);
-    setShowCinematicIntro(false);
-    setCinematicProgress(1);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('hasWatchedIntro', 'true');
-    }
-  }, []);
-
-  const handleCinematicProgress = useCallback((progress: number) => {
-    setCinematicProgress(progress);
-  }, []);
-
   const dprRange = useMemo<[number, number]>(() => {
     if (isMobile || isLowEndDevice || performanceFlags.forceLowPower) {
       return [0.3, 0.8];
@@ -505,19 +476,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
             <PhysicsEnvironment>
               <PhysicsGround />
 
-              {/* Cinematic camera for intro sequence */}
-              {showCinematicIntro && !cinematicComplete && (
-                <CinematicCamera
-                  isPlaying={true}
-                  onComplete={handleCinematicComplete}
-                />
-              )}
-
               {/* Camera controller for smooth game transitions */}
-              {cinematicComplete && <CameraController gameState={gameState} />}
+              <CameraController gameState={gameState} />
 
-              {/* OrbitControls + WASD keyboard navigation - disabled during cinematic intro */}
-              {cinematicComplete && (
+              {/* OrbitControls + WASD keyboard navigation */}
+              {(
                 <>
                   <OrbitControls
                     enableDamping
@@ -589,10 +552,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               />
 
               {/* Dynamic Scene Lighting */}
-              <SceneLighting
-                isCinematic={showCinematicIntro && !cinematicComplete}
-                cinematicProgress={cinematicProgress}
-              />
+              <SceneLighting />
             </PhysicsEnvironment>
           </XROrigin>
         </XR>
@@ -671,15 +631,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           article={selectedArticle}
           onClose={() => setSelectedArticle(null)}
           onNavigate={handleNavigateToArticle}
-        />
-      )}
-
-      {/* Director's Intro - GLSL shader experience */}
-      {showCinematicIntro && !cinematicComplete && (
-        <DirectorsIntro
-          onComplete={handleCinematicComplete}
-          onSkip={handleCinematicSkip}
-          onProgressUpdate={handleCinematicProgress}
         />
       )}
 

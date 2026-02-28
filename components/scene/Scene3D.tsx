@@ -26,7 +26,7 @@ import PostProcessingEffects from '@/components/3d/atmosphere/PostProcessingEffe
 import ClickingGame from '@/components/3d/game/ClickingGame';
 import type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
 import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
-import { loadWorld, preloadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
+import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
 
 // Re-export game types for convenience
 export type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
@@ -50,8 +50,6 @@ interface Scene3DProps {
   onCameraModeChange?: (mode: CameraMode) => void;
   /** Callback for game state changes */
   onGameStateChange?: (state: string) => void;
-  /** Callback when cinematic intro finishes (or was already watched) */
-  onCinematicComplete?: () => void;
   /** Game props (for ClickingGame inside Canvas) */
   gameState?: GameState | string;
   onStartGame?: () => void;
@@ -113,7 +111,6 @@ export default function Scene3D({
   onReady,
   onCameraModeChange,
   onGameStateChange,
-  onCinematicComplete: onCinematicCompleteProp,
   gameState: gameStateProp = 'IDLE',
   onStartGame,
   onGameEnd,
@@ -123,23 +120,14 @@ export default function Scene3D({
 }: Scene3DProps) {
   // Scene state
   const [worldConfig, setWorldConfig] = useState<WorldConfig>(DEFAULT_WORLD);
-  const [isLoading, setIsLoading] = useState(true);
   const [cameraMode, setCameraMode] = useState<CameraMode>('orbit');
-
-  // Cinematic state
-  // Cinematic disabled — the fly-in animation had two bugs (config changes
-  // restarted it mid-playthrough, and per-frame Vector3 allocations caused GC
-  // stutter).  The infrastructure remains for future re-enablement.
-  const [showCinematic, setShowCinematic] = useState(false);
-  const [cinematicProgress, setCinematicProgress] = useState(0);
 
   // XR store
   const xrStore = useMemo(() => createXRStore(), []);
 
-  // Load world configuration and preload assets before cinematic
+  // Load world configuration
   useEffect(() => {
     async function load() {
-      setIsLoading(true);
       try {
         let config: WorldConfig;
         if (typeof worldProp === 'string') {
@@ -150,16 +138,10 @@ export default function Scene3D({
           config = DEFAULT_WORLD;
         }
         setWorldConfig(config);
-
-        // Preload assets before cinematic starts to prevent stutter
-        if (showCinematic && config.id) {
-          await preloadWorld(config.id);
-        }
       } catch (error) {
         console.error('Failed to load world:', error);
         setWorldConfig(DEFAULT_WORLD);
       } finally {
-        setIsLoading(false);
         onReady?.();
       }
     }
@@ -176,46 +158,6 @@ export default function Scene3D({
     [onCameraModeChange]
   );
 
-  // Handle cinematic completion
-  const handleCinematicComplete = useCallback(() => {
-    setShowCinematic(false);
-    handleSetCameraMode('orbit');
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('hasWatchedIntro', 'true');
-    }
-    onCinematicCompleteProp?.();
-  }, [handleSetCameraMode, onCinematicCompleteProp]);
-
-  // Handle cinematic progress
-  const handleCinematicProgress = useCallback((progress: number) => {
-    setCinematicProgress(progress);
-  }, []);
-
-  // Replay intro
-  const replayIntro = useCallback(() => {
-    setShowCinematic(true);
-    handleSetCameraMode('cinematic');
-    setCinematicProgress(0);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('hasWatchedIntro');
-    }
-  }, [handleSetCameraMode]);
-
-  // Notify parent immediately if cinematic was already watched
-  useEffect(() => {
-    if (!showCinematic) {
-      onCinematicCompleteProp?.();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only on mount
-
-  // Start cinematic if needed
-  useEffect(() => {
-    if (showCinematic && !isLoading) {
-      handleSetCameraMode('cinematic');
-    }
-  }, [showCinematic, isLoading, handleSetCameraMode]);
-
   return (
     <Container>
       <SceneCanvas
@@ -228,10 +170,6 @@ export default function Scene3D({
               <SceneContent
                 worldConfig={worldConfig}
                 cameraMode={cameraMode}
-                showCinematic={showCinematic}
-                cinematicProgress={cinematicProgress}
-                onCinematicComplete={handleCinematicComplete}
-                onCinematicProgress={handleCinematicProgress}
               >
                 {children}
               </SceneContent>
@@ -241,10 +179,6 @@ export default function Scene3D({
           <SceneContent
             worldConfig={worldConfig}
             cameraMode={cameraMode}
-            showCinematic={showCinematic}
-            cinematicProgress={cinematicProgress}
-            onCinematicComplete={handleCinematicComplete}
-            onCinematicProgress={handleCinematicProgress}
             gameState={gameStateProp as GameState}
             onStartGame={onStartGame}
             onGameEnd={onGameEnd}
@@ -268,10 +202,6 @@ export default function Scene3D({
 function SceneContent({
   worldConfig,
   cameraMode,
-  showCinematic,
-  cinematicProgress,
-  onCinematicComplete,
-  onCinematicProgress,
   gameState = 'IDLE',
   onStartGame,
   onGameEnd,
@@ -282,10 +212,6 @@ function SceneContent({
 }: {
   worldConfig: WorldConfig;
   cameraMode: CameraMode;
-  showCinematic: boolean;
-  cinematicProgress: number;
-  onCinematicComplete: () => void;
-  onCinematicProgress: (progress: number) => void;
   gameState?: GameState;
   onStartGame?: () => void;
   onGameEnd?: (score: number, stats: GameStats) => void;
@@ -309,24 +235,18 @@ function SceneContent({
       <SceneEnvironment
         lighting={worldConfig.lighting}
         envMapPath={worldConfig.assets.skybox}
-        isCinematic={showCinematic}
-        cinematicProgress={cinematicProgress}
       />
 
       {/* Camera system */}
       <SceneCamera
-        mode={showCinematic ? 'cinematic' : cameraMode}
+        mode={cameraMode}
         config={worldConfig.camera}
-        onCinematicComplete={onCinematicComplete}
-        onCinematicProgress={onCinematicProgress}
       />
 
       {/* Post-processing effects */}
       <PostProcessingEffects
         quality={capabilities.qualityLevel}
         enabled={capabilities.qualityLevel !== 'low'}
-        isCinematic={showCinematic}
-        cinematicProgress={cinematicProgress}
         isMobile={capabilities.isMobile}
       />
 
@@ -355,8 +275,6 @@ export interface SceneContextValue {
   worldConfig: WorldConfig;
   cameraMode: CameraMode;
   setCameraMode: (mode: CameraMode) => void;
-  cinematicProgress: number;
-  replayIntro: () => void;
   capabilities: ReturnType<typeof useSceneCapabilities>;
 }
 

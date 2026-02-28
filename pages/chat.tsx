@@ -17,7 +17,7 @@ const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
 const Chat = () => {
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [articles, setArticles] = useState<any[]>([])
-  const [cinematicComplete, setCinematicComplete] = useState(false)
+  const [cinematicComplete] = useState(true)
   const [gameState, setGameState] = useState<string>('idle')
 
   function getRandomImage() {
@@ -87,7 +87,6 @@ const Chat = () => {
           <main className={`${styles.main} ${styles.gradientbg}`}>
             <Scene3D
               world={worldConfig}
-              onCinematicComplete={() => setCinematicComplete(true)}
               onGameStateChange={setGameState}
             />
           </main>
