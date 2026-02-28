@@ -11,6 +11,7 @@ import HeroMosaic from '@/components/HeroMosaic'
 import GameHUD from '@/components/overlays/GameHUD'
 import GameLeaderboard from '@/components/overlays/GameLeaderboard'
 import styles from '@/styles/Home.module.css'
+import { getRandomBackgroundImage } from '@/lib/backgroundImages'
 import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
 import ArticleDisplayPanel from '@/components/3d/interactive/ArticleDisplayPanel'
 import type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
@@ -50,15 +51,8 @@ function HomeContent() {
     }
   }, [achievements])
 
-  const getRandomImage = useCallback(async () => {
-    try {
-      const response = await fetch('/api/backgroundImages')
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
-      const data = await response.json()
-      setCurrentImage(data.image)
-    } catch (error) {
-      console.error('Failed fetching background image:', error)
-    }
+  const getRandomImage = useCallback(() => {
+    setCurrentImage(getRandomBackgroundImage())
   }, [])
 
   async function fetchArticles() {
