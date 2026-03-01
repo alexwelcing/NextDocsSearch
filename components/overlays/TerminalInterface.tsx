@@ -50,7 +50,7 @@ interface TerminalInterfaceProps {
   onToggleVectorMode?: () => void;
 }
 
-type ViewMode = 'chat' | 'game' | 'scenery' | 'about' | 'explore';
+type ViewMode = 'chat' | 'game' | 'scenery' | 'about' | 'explore' | 'vectors';
 
 export default function TerminalInterface({
   isOpen,
@@ -120,10 +120,11 @@ export default function TerminalInterface({
 
       const tabKeys: Record<string, ViewMode> = {
         '1': 'explore',
-        '2': 'chat',
-        '3': 'game',
-        '4': 'scenery',
-        '5': 'about',
+        '2': 'vectors',
+        '3': 'chat',
+        '4': 'game',
+        '5': 'scenery',
+        '6': 'about',
       };
       if (tabKeys[e.key]) {
         e.preventDefault();
@@ -356,10 +357,11 @@ export default function TerminalInterface({
 
   const tabs = [
     { id: 'explore', label: 'EXPLORE', key: '1' },
-    { id: 'chat', label: 'CHAT', key: '2' },
-    { id: 'game', label: 'GAME', key: '3' },
-    { id: 'scenery', label: 'SCENE', key: '4' },
-    { id: 'about', label: 'ABOUT', key: '5' },
+    { id: 'vectors', label: 'VECTORS', key: '2' },
+    { id: 'chat', label: 'CHAT', key: '3' },
+    { id: 'game', label: 'GAME', key: '4' },
+    { id: 'scenery', label: 'SCENE', key: '5' },
+    { id: 'about', label: 'ABOUT', key: '6' },
   ] as const;
 
   return (
@@ -734,271 +736,224 @@ export default function TerminalInterface({
           </div>
         )}
 
-        {/* CHAT — Vector Space Exploration + AI Chat */}
-        {viewMode === 'chat' && (
+        {/* VECTORS — 3D Vector Space Exploration */}
+        {viewMode === 'vectors' && (
           <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            {/* Mode toggle: Vector Explore vs AI Chat */}
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
-              {onToggleVectorMode && (
-                <>
-                  <button
-                    onClick={() => { if (!vectorExploreMode) onToggleVectorMode(); }}
-                    style={{
-                      flex: 1,
-                      padding: '8px',
-                      background: vectorExploreMode ? 'rgba(0, 255, 204, 0.1)' : '#111',
-                      border: vectorExploreMode ? '1px solid #00ffcc' : '1px solid #333',
-                      borderRadius: '6px 0 0 6px',
-                      color: vectorExploreMode ? '#00ffcc' : '#666',
-                      fontSize: '11px',
-                      fontFamily: 'monospace',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    ◈ VECTOR SPACE
-                  </button>
-                  <button
-                    onClick={() => { if (vectorExploreMode) onToggleVectorMode(); }}
-                    style={{
-                      flex: 1,
-                      padding: '8px',
-                      background: !vectorExploreMode ? 'rgba(0, 255, 0, 0.1)' : '#111',
-                      border: !vectorExploreMode ? '1px solid #0f0' : '1px solid #333',
-                      borderRadius: '0 6px 6px 0',
-                      color: !vectorExploreMode ? '#0f0' : '#666',
-                      fontSize: '11px',
-                      fontFamily: 'monospace',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    AI CHAT
-                  </button>
-                </>
+            <div className="terminal-no-scrollbar" style={{
+              flex: 1,
+              background: '#111',
+              borderRadius: '8px',
+              padding: isMobile ? '12px' : '16px',
+              marginBottom: '12px',
+              overflow: 'auto',
+              fontFamily: 'monospace',
+              fontSize: isMobile ? '13px' : '12px',
+              lineHeight: 1.6,
+            }}>
+              {isVectorSearching ? (
+                <div style={{ color: '#00ffcc' }}>
+                  Scanning vector space...
+                </div>
+              ) : vectorSearchResults.length > 0 ? (
+                <div>
+                  <div style={{ color: '#555', fontSize: '10px', marginBottom: '8px', letterSpacing: '1px' }}>
+                    {vectorSearchResults.length} VECTORS MATCHED — CAMERA LOCKED ON CLUSTER
+                  </div>
+                  {vectorSearchResults.slice(0, 10).map((result, i) => (
+                    <div
+                      key={result.slug || i}
+                      style={{
+                        padding: '6px 8px',
+                        marginBottom: '4px',
+                        background: i === 0 ? 'rgba(0, 255, 204, 0.08)' : 'transparent',
+                        borderLeft: `2px solid ${i < 3 ? '#00ffcc' : '#333'}`,
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        if (result.slug) {
+                          window.location.href = `/articles/${result.slug}`;
+                        }
+                      }}
+                    >
+                      <div style={{ color: i < 3 ? '#00ffcc' : '#888', fontSize: '12px' }}>
+                        {result.heading || result.slug}
+                      </div>
+                      <div style={{ color: '#444', fontSize: '10px' }}>
+                        score: {(result.score * 100).toFixed(1)}%
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ color: '#555', lineHeight: 1.8 }}>
+                  <div style={{ color: '#00ffcc', marginBottom: '8px' }}>VECTOR SPACE EXPLORER</div>
+                  Type a query below to fly through the knowledge space.
+                  <br />
+                  Articles are positioned by polarity, horizon, and topic.
+                  <br />
+                  <span style={{ color: '#333' }}>The camera will fly to matching clusters.</span>
+                </div>
               )}
             </div>
 
-            {vectorExploreMode ? (
-              /* ═══ VECTOR EXPLORE MODE ═══ */
-              <>
-                <div className="terminal-no-scrollbar" style={{
+            {/* Search input */}
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && onVectorSearch && chatInput.trim()) {
+                    onVectorSearch(chatInput.trim());
+                  }
+                }}
+                placeholder="Navigate vector space..."
+                aria-label="Vector search input"
+                autoFocus={!isMobile}
+                style={{
                   flex: 1,
                   background: '#111',
-                  borderRadius: '8px',
-                  padding: isMobile ? '12px' : '16px',
-                  marginBottom: '12px',
-                  overflow: 'auto',
+                  border: '1px solid #333',
+                  borderRadius: '6px',
+                  padding: isMobile ? '14px' : '12px',
+                  color: '#fff',
+                  fontSize: isMobile ? '16px' : '14px',
                   fontFamily: 'monospace',
-                  fontSize: isMobile ? '13px' : '12px',
-                  lineHeight: 1.6,
-                }}>
-                  {isVectorSearching ? (
-                    <div style={{ color: '#00ffcc' }}>
-                      Scanning vector space...
-                    </div>
-                  ) : vectorSearchResults.length > 0 ? (
-                    <div>
-                      <div style={{ color: '#555', fontSize: '10px', marginBottom: '8px', letterSpacing: '1px' }}>
-                        {vectorSearchResults.length} VECTORS MATCHED — CAMERA LOCKED ON CLUSTER
-                      </div>
-                      {vectorSearchResults.slice(0, 10).map((result, i) => (
-                        <div
-                          key={result.slug || i}
-                          style={{
-                            padding: '6px 8px',
-                            marginBottom: '4px',
-                            background: i === 0 ? 'rgba(0, 255, 204, 0.08)' : 'transparent',
-                            borderLeft: `2px solid ${i < 3 ? '#00ffcc' : '#333'}`,
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => {
-                            if (result.slug) {
-                              window.location.href = `/articles/${result.slug}`;
-                            }
-                          }}
-                        >
-                          <div style={{ color: i < 3 ? '#00ffcc' : '#888', fontSize: '12px' }}>
-                            {result.heading || result.slug}
-                          </div>
-                          <div style={{ color: '#444', fontSize: '10px' }}>
-                            score: {(result.score * 100).toFixed(1)}%
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div style={{ color: '#555', lineHeight: 1.8 }}>
-                      <div style={{ color: '#00ffcc', marginBottom: '8px' }}>VECTOR SPACE EXPLORER</div>
-                      Type a query to navigate the knowledge space.
-                      <br />
-                      Articles are positioned by polarity, horizon, and topic.
-                      <br />
-                      <span style={{ color: '#333' }}>The camera will fly to matching clusters.</span>
-                    </div>
-                  )}
-                </div>
+                  outline: 'none',
+                }}
+              />
+              <button
+                onClick={() => {
+                  if (onVectorSearch && chatInput.trim()) {
+                    onVectorSearch(chatInput.trim());
+                  }
+                }}
+                aria-label="Search vectors"
+                disabled={isVectorSearching}
+                style={{
+                  background: isVectorSearching ? '#333' : '#00ffcc',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: isMobile ? '14px 16px' : '12px 16px',
+                  color: '#000',
+                  fontWeight: 'bold',
+                  fontSize: '13px',
+                  cursor: isVectorSearching ? 'wait' : 'pointer',
+                  fontFamily: 'monospace',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                FLY
+              </button>
+            </div>
+          </div>
+        )}
 
-                {/* Search input */}
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' && onVectorSearch && chatInput.trim()) {
-                        onVectorSearch(chatInput.trim());
-                      }
-                    }}
-                    placeholder="Navigate vector space..."
-                    aria-label="Vector search input"
-                    autoFocus={!isMobile}
-                    style={{
-                      flex: 1,
-                      background: '#111',
-                      border: '1px solid #333',
-                      borderRadius: '6px',
-                      padding: isMobile ? '14px' : '12px',
-                      color: '#fff',
-                      fontSize: isMobile ? '16px' : '14px',
-                      fontFamily: 'monospace',
-                      outline: 'none',
-                    }}
-                  />
-                  <button
-                    onClick={() => {
-                      if (onVectorSearch && chatInput.trim()) {
-                        onVectorSearch(chatInput.trim());
-                      }
-                    }}
-                    aria-label="Search vectors"
-                    disabled={isVectorSearching}
-                    style={{
-                      background: isVectorSearching ? '#333' : '#00ffcc',
-                      border: 'none',
-                      borderRadius: '6px',
-                      padding: isMobile ? '14px 16px' : '12px 16px',
-                      color: '#000',
-                      fontWeight: 'bold',
-                      fontSize: '13px',
-                      cursor: isVectorSearching ? 'wait' : 'pointer',
-                      fontFamily: 'monospace',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    FLY
-                  </button>
+        {/* CHAT — AI Chat */}
+        {viewMode === 'chat' && (
+          <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {currentQuest && (
+              <div style={{
+                background: '#0f1410',
+                borderRadius: '8px',
+                padding: isMobile ? '12px' : '14px 16px',
+                marginBottom: '12px',
+                border: '1px solid #1c2b1c',
+                fontFamily: 'monospace',
+              }}>
+                <div style={{ color: '#8f8', fontSize: '11px', marginBottom: '6px' }}>
+                  MISSION BRIEF — {currentQuest.title.toUpperCase()}
                 </div>
-              </>
-            ) : (
-              /* ═══ AI CHAT MODE ═══ */
-              <>
-                {currentQuest && (
-                  <div style={{
-                    background: '#0f1410',
-                    borderRadius: '8px',
-                    padding: isMobile ? '12px' : '14px 16px',
-                    marginBottom: '12px',
-                    border: '1px solid #1c2b1c',
-                    fontFamily: 'monospace',
-                  }}>
-                    <div style={{ color: '#8f8', fontSize: '11px', marginBottom: '6px' }}>
-                      MISSION BRIEF — {currentQuest.title.toUpperCase()}
-                    </div>
-                    <div style={{ color: '#cfc', fontSize: isMobile ? '13px' : '12px', lineHeight: 1.6 }}>
-                      {currentMissionBrief || 'Awaiting mission parameters.'}
-                    </div>
+                <div style={{ color: '#cfc', fontSize: isMobile ? '13px' : '12px', lineHeight: 1.6 }}>
+                  {currentMissionBrief || 'Awaiting mission parameters.'}
+                </div>
+              </div>
+            )}
+            <div className="terminal-no-scrollbar" style={{
+              flex: 1,
+              background: '#111',
+              borderRadius: '8px',
+              padding: isMobile ? '12px' : '16px',
+              marginBottom: '12px',
+              overflow: 'auto',
+              fontFamily: 'monospace',
+              fontSize: isMobile ? '14px' : '13px',
+              lineHeight: 1.6,
+            }}>
+              {chatData.response && !chatData.response.includes('Ship AI online') ? (
+                <>
+                  <div style={{ color: '#0f0', marginBottom: '12px' }}>
+                    <span style={{ color: '#555' }}>you:</span> {chatData.question}
                   </div>
-                )}
-                <div className="terminal-no-scrollbar" style={{
+                  <div style={{ color: '#ccc', whiteSpace: 'pre-wrap' }}>
+                    <span style={{ color: '#555' }}>ai:</span> {chatData.response}
+                  </div>
+                </>
+              ) : (
+                <div style={{ color: '#8f8', lineHeight: 1.6 }}>
+                  Ship AI active. Query the knowledge base or ask about Alex&apos;s work.
+                </div>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
+                placeholder="Enter query..."
+                aria-label="Chat input"
+                autoFocus={!isMobile}
+                style={{
                   flex: 1,
                   background: '#111',
-                  borderRadius: '8px',
-                  padding: isMobile ? '12px' : '16px',
-                  marginBottom: '12px',
-                  overflow: 'auto',
+                  border: '1px solid #333',
+                  borderRadius: '6px',
+                  padding: isMobile ? '14px' : '12px',
+                  color: '#fff',
+                  fontSize: isMobile ? '16px' : '14px',
                   fontFamily: 'monospace',
-                  fontSize: isMobile ? '14px' : '13px',
-                  lineHeight: 1.6,
-                }}>
-                  {chatData.response && !chatData.response.includes('Ship AI online') ? (
-                    <>
-                      <div style={{ color: '#0f0', marginBottom: '12px' }}>
-                        <span style={{ color: '#555' }}>you:</span> {chatData.question}
-                      </div>
-                      <div style={{ color: '#ccc', whiteSpace: 'pre-wrap' }}>
-                        <span style={{ color: '#555' }}>ai:</span> {chatData.response}
-                      </div>
-                    </>
-                  ) : (
-                    <div style={{ color: '#8f8', lineHeight: 1.6 }}>
-                      Ship AI active. Query the knowledge base or ask about Alex&apos;s work.
-                    </div>
-                  )}
-                </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
-                    placeholder="Enter query..."
-                    aria-label="Chat input"
-                    autoFocus={!isMobile}
-                    style={{
-                      flex: 1,
-                      background: '#111',
-                      border: '1px solid #333',
-                      borderRadius: '6px',
-                      padding: isMobile ? '14px' : '12px',
-                      color: '#fff',
-                      fontSize: isMobile ? '16px' : '14px',
-                      fontFamily: 'monospace',
-                      outline: 'none',
-                    }}
-                  />
-                  <button
-                    onClick={handleChatSubmit}
-                    aria-label="Send message"
-                    style={{
-                      background: '#0f0',
-                      border: 'none',
-                      borderRadius: '6px',
-                      padding: isMobile ? '14px 20px' : '12px 20px',
-                      color: '#000',
-                      fontWeight: 'bold',
-                      fontSize: '14px',
-                      cursor: 'pointer',
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    SEND
-                  </button>
-                </div>
-                <div style={{ marginTop: '12px' }}>
-                  <button
-                    onClick={handleDownloadMissionLog}
-                    style={{
-                      width: '100%',
-                      padding: isMobile ? '12px' : '10px',
-                      background: '#111',
-                      border: '1px solid #333',
-                      borderRadius: '6px',
-                      color: '#8f8',
-                      fontWeight: 600,
-                      fontSize: '12px',
-                      cursor: 'pointer',
-                      fontFamily: 'monospace',
-                      letterSpacing: '0.4px',
-                    }}
-                  >
-                    DOWNLOAD MISSION LOG
-                  </button>
-                </div>
-              </>
-            )}
+                  outline: 'none',
+                }}
+              />
+              <button
+                onClick={handleChatSubmit}
+                aria-label="Send message"
+                style={{
+                  background: '#0f0',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: isMobile ? '14px 20px' : '12px 20px',
+                  color: '#000',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  fontFamily: 'monospace',
+                }}
+              >
+                SEND
+              </button>
+            </div>
+            <div style={{ marginTop: '12px' }}>
+              <button
+                onClick={handleDownloadMissionLog}
+                style={{
+                  width: '100%',
+                  padding: isMobile ? '12px' : '10px',
+                  background: '#111',
+                  border: '1px solid #333',
+                  borderRadius: '6px',
+                  color: '#8f8',
+                  fontWeight: 600,
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  fontFamily: 'monospace',
+                  letterSpacing: '0.4px',
+                }}
+              >
+                DOWNLOAD MISSION LOG
+              </button>
+            </div>
           </div>
         )}
 

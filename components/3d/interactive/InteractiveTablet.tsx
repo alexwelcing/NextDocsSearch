@@ -58,7 +58,7 @@ export default function InteractiveTablet({
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const [terminalView, setTerminalView] = useState<'chat' | 'game' | 'scenery' | 'about' | 'explore'>('explore');
+  const [terminalView, setTerminalView] = useState<'chat' | 'game' | 'scenery' | 'about' | 'explore' | 'vectors'>('explore');
   const [isMobile, setIsMobile] = useState(false);
   const [cosmicPowerUnlocked, setCosmicPowerUnlocked] = useState(false);
 
@@ -109,10 +109,14 @@ export default function InteractiveTablet({
     setTerminalOpen(false);
   }, []);
 
-  const handleOpenTerminal = useCallback((view: 'chat' | 'game' | 'scenery' | 'about' | 'explore' = 'explore') => {
+  const handleOpenTerminal = useCallback((view: 'chat' | 'game' | 'scenery' | 'about' | 'explore' | 'vectors' = 'explore') => {
     setTerminalView(view);
     setTerminalOpen(true);
-  }, []);
+    // Auto-activate vector explore mode when entering vectors tab
+    if (view === 'vectors' && !vectorExploreMode && onToggleVectorMode) {
+      onToggleVectorMode();
+    }
+  }, [vectorExploreMode, onToggleVectorMode]);
 
   // Swipe gesture support for mobile bottom-sheet UX
   const touchStartY = useRef<number | null>(null);
@@ -258,9 +262,9 @@ export default function InteractiveTablet({
             }}>
               {[
                 { label: 'EXPLORE', icon: '◈', action: () => handleOpenTerminal('explore'), highlight: true },
+                { label: 'VECTORS', icon: '◇', action: () => handleOpenTerminal('vectors'), accent: true },
                 { label: 'ASK AI', icon: '>', action: () => handleOpenTerminal('chat') },
                 { label: 'GAME', icon: '#', action: () => { onStartGame?.(); handleLower(); } },
-                { label: 'SCENE', icon: '*', action: () => handleOpenTerminal('scenery') },
               ].map((item) => (
                 <button
                   key={item.label}
@@ -269,12 +273,20 @@ export default function InteractiveTablet({
                     padding: isMobile ? '16px' : '14px',
                     background: (item as { highlight?: boolean }).highlight
                       ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%)'
-                      : '#111',
+                      : (item as { accent?: boolean }).accent
+                        ? 'rgba(0, 255, 204, 0.08)'
+                        : '#111',
                     border: (item as { highlight?: boolean }).highlight
                       ? '1px solid rgba(0, 212, 255, 0.5)'
-                      : '1px solid #222',
+                      : (item as { accent?: boolean }).accent
+                        ? '1px solid rgba(0, 255, 204, 0.4)'
+                        : '1px solid #222',
                     borderRadius: '8px',
-                    color: (item as { highlight?: boolean }).highlight ? '#00d4ff' : '#0f0',
+                    color: (item as { highlight?: boolean }).highlight
+                      ? '#00d4ff'
+                      : (item as { accent?: boolean }).accent
+                        ? '#00ffcc'
+                        : '#0f0',
                     fontFamily: 'monospace',
                     fontSize: isMobile ? '13px' : '12px',
                     cursor: 'pointer',
@@ -285,7 +297,13 @@ export default function InteractiveTablet({
                     touchAction: 'manipulation',
                   }}
                 >
-                  <span style={{ color: (item as { highlight?: boolean }).highlight ? '#ffd700' : '#0a0' }}>{item.icon}</span>
+                  <span style={{
+                    color: (item as { highlight?: boolean }).highlight
+                      ? '#ffd700'
+                      : (item as { accent?: boolean }).accent
+                        ? '#00ffcc'
+                        : '#0a0',
+                  }}>{item.icon}</span>
                   {item.label}
                 </button>
               ))}
