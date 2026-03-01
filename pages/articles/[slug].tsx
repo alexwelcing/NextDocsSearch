@@ -1015,10 +1015,12 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </DiscoverContent>
           </DiscoverSection>
 
-          <ArticleFooterPanels articleTitle={title} />
-
           <BottomCarousel slug={slug} />
         </FooterWrapper>
+      </DepthSection>
+
+      <DepthSection depth={3}>
+        <ArticleFooterPanels articleTitle={title} />
       </DepthSection>
     </ArticleLayout>
   );

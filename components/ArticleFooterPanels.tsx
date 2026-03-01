@@ -36,8 +36,9 @@ const typeFlicker = keyframes`
 // ---------------------------------------------------------------------------
 
 const PanelsWrapper = styled.section`
-  margin: 48px 0 0;
-  padding-top: 48px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 48px clamp(24px, 5vw, 80px) 56px;
   position: relative;
 
   &::before {
@@ -68,7 +69,7 @@ const SectionLabel = styled.span`
 
 const PanelGrid = styled.div<{ $expanded: ExpandedPanel }>`
   display: grid;
-  gap: 16px;
+  gap: 20px;
   transition: grid-template-columns 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
   ${(p) =>
@@ -102,6 +103,7 @@ const PanelCard = styled.div<{ $hidden?: boolean; $active?: boolean }>`
   border: 2px solid rgba(255, 255, 255, 0.06);
   overflow: hidden;
   cursor: pointer;
+  min-height: 220px;
   transition: border-color 0.3s, transform 0.3s, opacity 0.4s, min-width 0.5s;
   animation: ${fadeIn} 0.4s ease both;
 
@@ -111,6 +113,7 @@ const PanelCard = styled.div<{ $hidden?: boolean; $active?: boolean }>`
       opacity: 0;
       pointer-events: none;
       min-width: 0;
+      min-height: 0;
       padding: 0;
       border-width: 0;
       overflow: hidden;
@@ -128,6 +131,8 @@ const PanelCard = styled.div<{ $hidden?: boolean; $active?: boolean }>`
   }
 
   @media (max-width: 768px) {
+    min-height: unset;
+
     ${(p) =>
       p.$hidden &&
       css`
@@ -137,10 +142,10 @@ const PanelCard = styled.div<{ $hidden?: boolean; $active?: boolean }>`
 `
 
 const PanelPreview = styled.div`
-  padding: 28px 24px;
+  padding: 36px 32px;
 
   @media (max-width: 768px) {
-    padding: 20px 16px;
+    padding: 24px 16px;
   }
 `
 
@@ -203,11 +208,11 @@ const PanelCta = styled.span<{ $color: string }>`
 // ---------------------------------------------------------------------------
 
 const ExpandedContent = styled.div`
-  padding: 28px 24px;
+  padding: 36px 40px;
   animation: ${fadeIn} 0.35s ease both;
 
   @media (max-width: 768px) {
-    padding: 20px 16px;
+    padding: 24px 16px;
   }
 `
 
