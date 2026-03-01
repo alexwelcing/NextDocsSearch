@@ -74,6 +74,10 @@ export default function TerminalInterface({
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [chatInput, setChatInput] = useState('');
   const [vectorInput, setVectorInput] = useState('');
+  const [vectorSearching, setVectorSearching] = useState(false);
+  const [vectorResults, setVectorResults] = useState<{ slug: string; score: number; heading?: string | null }[]>([]);
+  const [vectorError, setVectorError] = useState<string | null>(null);
+  const [vectorHasSearched, setVectorHasSearched] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -259,6 +263,48 @@ export default function TerminalInterface({
 
     return filtered.slice(0, 20);
   })();
+
+  const handleVectorFly = useCallback(async () => {
+    const query = vectorInput.trim();
+    if (!query || vectorSearching) return;
+
+    setVectorSearching(true);
+    setVectorError(null);
+    setVectorHasSearched(true);
+
+    try {
+      const response = await fetch('/api/vector-explore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || `Server returned ${response.status}`);
+      }
+
+      const data = await response.json();
+      const hits = (data.results ?? []).map(
+        (r: { slug?: string; rrf_score?: number; heading?: string }) => ({
+          slug: r.slug ?? '',
+          score: r.rrf_score ?? 0,
+          heading: r.heading,
+        })
+      );
+      setVectorResults(hits);
+
+      // Also notify parent if the prop exists (for 3D camera flyto)
+      if (onVectorSearch) {
+        onVectorSearch(query);
+      }
+    } catch (err) {
+      setVectorError(err instanceof Error ? err.message : 'Search failed');
+      setVectorResults([]);
+    } finally {
+      setVectorSearching(false);
+    }
+  }, [vectorInput, vectorSearching, onVectorSearch]);
 
   const handleChatSubmit = useCallback(async () => {
     if (chatInput.trim()) {
@@ -751,16 +797,21 @@ export default function TerminalInterface({
               fontSize: isMobile ? '13px' : '12px',
               lineHeight: 1.6,
             }}>
-              {isVectorSearching ? (
+              {vectorSearching ? (
                 <div style={{ color: '#00ffcc' }}>
                   Scanning vector space...
                 </div>
-              ) : vectorSearchResults.length > 0 ? (
+              ) : vectorError ? (
+                <div style={{ color: '#ff6b6b', lineHeight: 1.8 }}>
+                  <div style={{ marginBottom: '8px' }}>SEARCH ERROR</div>
+                  {vectorError}
+                </div>
+              ) : vectorResults.length > 0 ? (
                 <div>
                   <div style={{ color: '#555', fontSize: '10px', marginBottom: '8px', letterSpacing: '1px' }}>
-                    {vectorSearchResults.length} VECTORS MATCHED — CAMERA LOCKED ON CLUSTER
+                    {vectorResults.length} VECTORS MATCHED
                   </div>
-                  {vectorSearchResults.slice(0, 10).map((result, i) => (
+                  {vectorResults.slice(0, 10).map((result, i) => (
                     <div
                       key={result.slug || i}
                       style={{
@@ -785,14 +836,17 @@ export default function TerminalInterface({
                     </div>
                   ))}
                 </div>
+              ) : vectorHasSearched ? (
+                <div style={{ color: '#888', lineHeight: 1.8 }}>
+                  <div style={{ color: '#ffcc00', marginBottom: '8px' }}>NO MATCHES FOUND</div>
+                  Try a different query — broader terms work better.
+                </div>
               ) : (
                 <div style={{ color: '#555', lineHeight: 1.8 }}>
                   <div style={{ color: '#00ffcc', marginBottom: '8px' }}>VECTOR SPACE EXPLORER</div>
-                  Type a query below to fly through the knowledge space.
+                  Type a query below to search the knowledge space.
                   <br />
-                  Articles are positioned by polarity, horizon, and topic.
-                  <br />
-                  <span style={{ color: '#333' }}>The camera will fly to matching clusters.</span>
+                  Results are ranked by semantic similarity.
                 </div>
               )}
             </div>
@@ -804,9 +858,9 @@ export default function TerminalInterface({
                 value={vectorInput}
                 onChange={(e) => setVectorInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && onVectorSearch && vectorInput.trim()) {
+                  if (e.key === 'Enter' && vectorInput.trim() && !vectorSearching) {
                     e.preventDefault();
-                    onVectorSearch(vectorInput.trim());
+                    handleVectorFly();
                   }
                 }}
                 placeholder="Navigate vector space..."
@@ -825,27 +879,23 @@ export default function TerminalInterface({
                 }}
               />
               <button
-                onClick={() => {
-                  if (onVectorSearch && vectorInput.trim()) {
-                    onVectorSearch(vectorInput.trim());
-                  }
-                }}
+                onClick={handleVectorFly}
                 aria-label="Search vectors"
-                disabled={isVectorSearching}
+                disabled={vectorSearching || !vectorInput.trim()}
                 style={{
-                  background: isVectorSearching ? '#333' : '#00ffcc',
+                  background: vectorSearching || !vectorInput.trim() ? '#333' : '#00ffcc',
                   border: 'none',
                   borderRadius: '6px',
                   padding: isMobile ? '14px 16px' : '12px 16px',
                   color: '#000',
                   fontWeight: 'bold',
                   fontSize: '13px',
-                  cursor: isVectorSearching ? 'wait' : 'pointer',
+                  cursor: vectorSearching || !vectorInput.trim() ? 'default' : 'pointer',
                   fontFamily: 'monospace',
                   letterSpacing: '0.5px',
                 }}
               >
-                FLY
+                {vectorSearching ? '...' : 'FLY'}
               </button>
             </div>
           </div>
