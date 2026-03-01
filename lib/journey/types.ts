@@ -183,13 +183,6 @@ export interface Achievement {
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
-    id: 'first-steps',
-    title: 'First Steps',
-    description: 'Completed your first quest',
-    icon: '👣',
-    unlocked: false,
-  },
-  {
     id: 'curious-mind',
     title: 'Curious Mind',
     description: 'Asked 10 questions',

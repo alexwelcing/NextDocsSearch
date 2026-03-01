@@ -114,11 +114,6 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
           : prev.unlockedFeatures,
       };
 
-      // Check for phase completion achievements
-      if (quest.phase === 2 && prev.completedQuests.length === 0) {
-        unlockAchievement('first-steps');
-      }
-
       // Check for perfectionist achievement
       if (newProgress.completedQuests.length === QUESTS.length) {
         unlockAchievement('perfectionist');
