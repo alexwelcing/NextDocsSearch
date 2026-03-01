@@ -19,6 +19,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import { TopRecommendation, MidRecommendation, BottomCarousel } from '@/components/ArticleRecommendations';
+import ArticleFooterPanels from '@/components/ArticleFooterPanels';
 import DeskSurface from '@/components/ui/DeskSurface';
 import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
 import { ArtFrame, DepthSection, DepthDivider, EditorialSection } from '@/components/ui/ParallaxArtLayers';
@@ -1013,6 +1014,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
               </DiscoverButton>
             </DiscoverContent>
           </DiscoverSection>
+
+          <ArticleFooterPanels articleTitle={title} />
 
           <BottomCarousel slug={slug} />
         </FooterWrapper>
