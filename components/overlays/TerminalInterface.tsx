@@ -1,10 +1,16 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { useSupabaseData } from '../contexts/SupabaseDataContext';
 import { useJourney } from '../contexts/JourneyContext';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import WorldGallery from '../WorldGallery';
+
+const VectorResultsGraph = dynamic(
+  () => import('../3d/vector-space/VectorResultsGraph'),
+  { ssr: false }
+);
 
 interface ArticleData {
   title: string;
@@ -78,6 +84,7 @@ export default function TerminalInterface({
   const [vectorResults, setVectorResults] = useState<{ slug: string; score: number; heading?: string | null }[]>([]);
   const [vectorError, setVectorError] = useState<string | null>(null);
   const [vectorHasSearched, setVectorHasSearched] = useState(false);
+  const [vectorQuery, setVectorQuery] = useState('');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -271,6 +278,7 @@ export default function TerminalInterface({
     setVectorSearching(true);
     setVectorError(null);
     setVectorHasSearched(true);
+    setVectorQuery(query);
 
     try {
       const response = await fetch('/api/vector-explore', {
@@ -786,73 +794,115 @@ export default function TerminalInterface({
         {/* VECTORS — 3D Vector Space Exploration */}
         {viewMode === 'vectors' && (
           <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <div className="terminal-no-scrollbar" style={{
+            {/* 3D Graph area */}
+            <div style={{
               flex: 1,
-              background: '#111',
               borderRadius: '8px',
-              padding: isMobile ? '12px' : '16px',
-              marginBottom: '12px',
-              overflow: 'auto',
-              fontFamily: 'monospace',
-              fontSize: isMobile ? '13px' : '12px',
-              lineHeight: 1.6,
+              overflow: 'hidden',
+              marginBottom: '8px',
+              position: 'relative',
+              minHeight: isMobile ? '200px' : '280px',
+              background: '#050510',
             }}>
-              {vectorSearching ? (
-                <div style={{ color: '#00ffcc' }}>
-                  Scanning vector space...
+              {vectorError ? (
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'monospace',
+                  fontSize: '12px',
+                  color: '#ff6b6b',
+                  padding: '20px',
+                  textAlign: 'center',
+                  lineHeight: 1.8,
+                }}>
+                  SEARCH ERROR — {vectorError}
                 </div>
-              ) : vectorError ? (
-                <div style={{ color: '#ff6b6b', lineHeight: 1.8 }}>
-                  <div style={{ marginBottom: '8px' }}>SEARCH ERROR</div>
-                  {vectorError}
-                </div>
-              ) : vectorResults.length > 0 ? (
-                <div>
-                  <div style={{ color: '#555', fontSize: '10px', marginBottom: '8px', letterSpacing: '1px' }}>
-                    {vectorResults.length} VECTORS MATCHED
+              ) : !vectorHasSearched ? (
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'monospace',
+                  fontSize: '12px',
+                  color: '#555',
+                  padding: '20px',
+                  textAlign: 'center',
+                  lineHeight: 1.8,
+                }}>
+                  <div>
+                    <div style={{ color: '#00ffcc', fontSize: '14px', marginBottom: '12px' }}>VECTOR SPACE</div>
+                    Enter a query and hit FLY to visualize
+                    <br />
+                    matching articles as a 3D constellation.
                   </div>
-                  {vectorResults.slice(0, 10).map((result, i) => (
-                    <div
-                      key={result.slug || i}
-                      style={{
-                        padding: '6px 8px',
-                        marginBottom: '4px',
-                        background: i === 0 ? 'rgba(0, 255, 204, 0.08)' : 'transparent',
-                        borderLeft: `2px solid ${i < 3 ? '#00ffcc' : '#333'}`,
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => {
-                        if (result.slug) {
-                          window.location.href = `/articles/${result.slug}`;
-                        }
-                      }}
-                    >
-                      <div style={{ color: i < 3 ? '#00ffcc' : '#888', fontSize: '12px' }}>
-                        {result.heading || result.slug}
-                      </div>
-                      <div style={{ color: '#444', fontSize: '10px' }}>
-                        score: {(result.score * 100).toFixed(1)}%
-                      </div>
-                    </div>
-                  ))}
                 </div>
-              ) : vectorHasSearched ? (
-                <div style={{ color: '#888', lineHeight: 1.8 }}>
-                  <div style={{ color: '#ffcc00', marginBottom: '8px' }}>NO MATCHES FOUND</div>
-                  Try a different query — broader terms work better.
+              ) : vectorHasSearched && !vectorSearching && vectorResults.length === 0 ? (
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'monospace',
+                  fontSize: '12px',
+                  color: '#888',
+                  padding: '20px',
+                  textAlign: 'center',
+                  lineHeight: 1.8,
+                }}>
+                  <div>
+                    <div style={{ color: '#ffcc00', marginBottom: '8px' }}>NO MATCHES</div>
+                    Try a broader query.
+                  </div>
                 </div>
               ) : (
-                <div style={{ color: '#555', lineHeight: 1.8 }}>
-                  <div style={{ color: '#00ffcc', marginBottom: '8px' }}>VECTOR SPACE EXPLORER</div>
-                  Type a query below to search the knowledge space.
-                  <br />
-                  Results are ranked by semantic similarity.
+                <VectorResultsGraph
+                  results={vectorResults}
+                  query={vectorQuery}
+                  isSearching={vectorSearching}
+                />
+              )}
+
+              {/* Result count overlay */}
+              {vectorResults.length > 0 && !vectorSearching && (
+                <div style={{
+                  position: 'absolute',
+                  top: '8px',
+                  left: '10px',
+                  fontFamily: 'monospace',
+                  fontSize: '10px',
+                  color: '#555',
+                  letterSpacing: '1px',
+                  pointerEvents: 'none',
+                }}>
+                  {vectorResults.length} MATCHED — CLICK NODE TO READ
+                </div>
+              )}
+
+              {/* Searching overlay */}
+              {vectorSearching && (
+                <div style={{
+                  position: 'absolute',
+                  top: '8px',
+                  left: '10px',
+                  fontFamily: 'monospace',
+                  fontSize: '10px',
+                  color: '#00ffcc',
+                  letterSpacing: '1px',
+                  pointerEvents: 'none',
+                }}>
+                  SCANNING VECTOR SPACE...
                 </div>
               )}
             </div>
 
             {/* Search input */}
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
               <input
                 type="text"
                 value={vectorInput}
