@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://alexwelcing.com',
+  siteUrl: process.env.SITE_URL || 'https://www.alexwelcing.com',
   generateRobotsTxt: false, // We have a manual robots.txt in public/
   generateIndexSitemap: true,
   changefreq: 'daily',
@@ -65,8 +65,8 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      'https://alexwelcing.com/sitemap-core.xml',
-      'https://alexwelcing.com/sitemap-articles.xml',
+      'https://www.alexwelcing.com/sitemap-core.xml',
+      'https://www.alexwelcing.com/sitemap-articles.xml',
     ],
   },
 }

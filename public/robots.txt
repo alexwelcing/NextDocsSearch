@@ -1,5 +1,5 @@
-# Robots.txt for alexwelcing.com
-# Updated: 2024
+# Robots.txt for www.alexwelcing.com
+# Updated: 2026
 
 User-agent: *
 Allow: /
@@ -17,9 +17,9 @@ Disallow: /*sort=
 Disallow: /*filter=
 
 # Host
-Host: https://alexwelcing.com
+Host: https://www.alexwelcing.com
 
-# Sitemaps - Segmented for crawl understanding
-Sitemap: https://alexwelcing.com/sitemap.xml
-Sitemap: https://alexwelcing.com/sitemap-core.xml
-Sitemap: https://alexwelcing.com/sitemap-articles.xml
+# Sitemaps
+Sitemap: https://www.alexwelcing.com/sitemap.xml
+Sitemap: https://www.alexwelcing.com/sitemap-core.xml
+Sitemap: https://www.alexwelcing.com/sitemap-articles.xml

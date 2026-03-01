@@ -536,23 +536,23 @@ export default function WorkshopPage() {
         <meta name="keywords" content="AI development landscape, 3D mind map, AI tools, frameworks, Alex Welcing" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://alexwelcing.com/workshop" />
+        <link rel="canonical" href="https://www.alexwelcing.com/workshop" />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Modern Workshop | AI Development Landscape" />
         <meta
           property="og:description"
           content="Interactive 3D visualization of AI coding assistants, infrastructure, hardware, and development frameworks."
         />
-        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://alexwelcing.com/workshop" />
+        <meta property="og:url" content="https://www.alexwelcing.com/workshop" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Modern Workshop | AI Development Landscape" />
         <meta name="twitter:description" content="Interactive 3D visualization of AI coding assistants, infrastructure, hardware, and development frameworks." />
-        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
       </Head>
 
       <PageContainer>

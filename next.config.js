@@ -43,6 +43,24 @@ const nextConfig = {
     ],
   },
 
+  // Redirects for SEO: fix broken /docs/articles/ URLs and normalize domain
+  async redirects() {
+    return [
+      // Root Cause #3: Redirect old /docs/articles/ URLs to /articles/
+      {
+        source: '/docs/articles/:slug',
+        destination: '/articles/:slug',
+        permanent: true,
+      },
+      // Catch /docs/articles without a slug too
+      {
+        source: '/docs/articles',
+        destination: '/articles',
+        permanent: true,
+      },
+    ];
+  },
+
   // Headers for caching and security
   async headers() {
     return [

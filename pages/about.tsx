@@ -25,22 +25,22 @@ const About: React.FC = () => {
         <meta name="keywords" content="Alex Welcing, AI product manager, AI product leader, LLM, AI agents, technical product manager, RAG, vector search, New York" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://alexwelcing.com/about" />
+        <link rel="canonical" href="https://www.alexwelcing.com/about" />
         <link rel="icon" href="/favicon.ico" />
 
         <meta property="og:title" content="Alex Welcing | AI Product Leader" />
         <meta property="og:description" content="AI product leader with 10+ years building intelligent systems. Expertise in LLMs, agent architectures, and platform technologies." />
-        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://alexwelcing.com/about" />
+        <meta property="og:url" content="https://www.alexwelcing.com/about" />
         <meta property="og:type" content="profile" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Alex Welcing | AI Product Leader" />
         <meta name="twitter:description" content="AI product leader with 10+ years building intelligent systems. Expertise in LLMs, agent architectures, and platform technologies." />
-        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
       </Head>
 
       <StructuredData
@@ -48,7 +48,7 @@ const About: React.FC = () => {
         data={{
           name: "Alex Welcing",
           jobTitle: "AI Product Leader",
-          url: "https://alexwelcing.com",
+          url: "https://www.alexwelcing.com",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
