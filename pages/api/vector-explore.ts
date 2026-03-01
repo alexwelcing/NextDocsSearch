@@ -1,6 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from '@supabase/supabase-js'
 import { createLLMProvider } from '@/lib/ai/llm-provider'
+import articleManifest from '@/lib/generated/article-manifest.json'
+
+// Build a set of valid slugs from the article manifest at module load
+const validSlugs = new Set(
+  (articleManifest as { slug: string }[]).map((a) => a.slug)
+)
 
 export interface VectorExploreResult {
   id: number
@@ -55,16 +61,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: error.message })
     }
 
-    const results: VectorExploreResult[] = (data ?? []).map(
-      (r: Record<string, unknown>) => ({
+    const results: VectorExploreResult[] = (data ?? [])
+      .filter((r: Record<string, unknown>) => typeof r.slug === 'string' && validSlugs.has(r.slug))
+      .map((r: Record<string, unknown>) => ({
         id: r.id,
         slug: r.slug,
         heading: r.heading,
         content: String(r.content).slice(0, 200),
         source_type: r.source_type,
         rrf_score: r.rrf_score,
-      })
-    )
+      }))
 
     return res.status(200).json({
       results,
