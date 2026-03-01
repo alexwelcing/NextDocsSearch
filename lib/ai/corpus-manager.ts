@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { LLMProvider } from './llm-provider'
+import { ingestDocument } from './corpus-ingest'
 
 export interface CorpusEntry {
   url?: string
@@ -55,6 +56,15 @@ export async function saveCorpusEntry(
   return data as number
 }
 
+/**
+ * Process corpus signals from Ship AI responses.
+ *
+ * For signals WITH a URL: trigger deep ingestion (fetch → parse → chunk → embed).
+ * For signals WITHOUT a URL: save the stub entry with title/summary only.
+ *
+ * Deep ingestion runs in the background and is non-blocking — if it fails,
+ * the stub entry is still saved so the reference isn't lost.
+ */
 export async function processCorpusSignals(
   signals: { title?: string; summary?: string; url?: string }[],
   query: string,
@@ -64,11 +74,14 @@ export async function processCorpusSignals(
     if (!signal.title) continue
 
     try {
+      // Always save the stub entry first (fast, ensures reference is captured)
       await saveCorpusEntry(
         {
           url: signal.url,
           title: signal.title,
-          content: signal.summary ?? `${signal.title}. External reference discovered during conversation.`,
+          content:
+            signal.summary ??
+            `${signal.title}. External reference discovered during conversation.`,
           summary: signal.summary,
           sourceType: 'discovered',
           discoveredFromQuery: query,
@@ -76,6 +89,37 @@ export async function processCorpusSignals(
         },
         llmProvider
       )
+
+      // If URL is present, trigger deep ingestion in the background.
+      // This fetches the actual content, chunks it, and creates
+      // additional corpus entries with full text + embeddings.
+      if (signal.url) {
+        ingestDocument(
+          {
+            url: signal.url,
+            title: signal.title,
+            sourceType: 'discovered',
+            discoveredFromQuery: query,
+            metadata: {
+              autoDiscovered: true,
+              triggerSignal: 'CORPUS_ENTRY',
+            },
+          },
+          llmProvider
+        )
+          .then((result) => {
+            if (result.skipped) {
+              console.log(`[corpus] Skipped ${signal.url}: ${result.reason}`)
+            } else {
+              console.log(
+                `[corpus] Ingested ${signal.url}: ${result.chunks} chunks, ${result.entriesCreated} entries`
+              )
+            }
+          })
+          .catch((err) => {
+            console.error(`[corpus] Deep ingestion failed for ${signal.url}:`, err)
+          })
+      }
     } catch (err) {
       // Non-blocking: log but don't fail the response
       console.error('Corpus signal processing failed:', err)
