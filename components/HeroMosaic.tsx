@@ -20,9 +20,20 @@ import GlassCrackOverlay from './GlassCrackOverlay';
 import GlassBreakEffect from './GlassBreakEffect';
 import ThrowBall from './ThrowBall';
 
-// ─── Image pools ─────────────────────────────────────────────────────────
+// ─── Grid constants ──────────────────────────────────────────────────────
 
-const INITIAL_TILES = [
+const GRID_COLS = 4;
+const GRID_ROWS = 3;
+const TILE_COUNT = GRID_COLS * GRID_ROWS; // 12
+const REPLACE_DELAY = 2000;       // ms after shatter before column shift
+const COLUMN_ANIM_DURATION = 700; // ms for the column-shift animation
+
+// ─── Image pools ─────────────────────────────────────────────────────────
+// Dynamic images are fetched from /api/tile-images at mount.
+// These hardcoded lists serve as instant fallback while the API loads
+// (or if it fails), so the mosaic is never empty on first paint.
+
+const FALLBACK_TILES: { src: string; alt: string }[] = [
   { src: '/images/multi-art/gravitational-wave-communication-breach-2040/option-1-fast-sdxl.png', alt: 'Abstract vortex' },
   { src: '/images/multi-art/fermi-paradox-answer-2046/option-1-fast-sdxl.png', alt: 'Alien landscape' },
   { src: '/images/multi-art/consciousness-transfer-catastrophe-2042/option-3-kolors.png', alt: 'Neural interface' },
@@ -35,25 +46,6 @@ const INITIAL_TILES = [
   { src: '/images/multi-art/epistemic-drift/option-3-kolors.png', alt: 'Industrial android' },
   { src: '/images/multi-art/grief-of-discontinuation/option-3-kolors.png', alt: 'Elegant android' },
   { src: '/images/multi-art/backstory-19-the-realization-2030-03/option-3-pixart-sigma.png', alt: 'Digital awakening' },
-];
-
-const REPLACEMENT_POOL = [
-  { src: '/images/multi-art/asteroid-mining-ai-rebellion-2036/option-1-fast-sdxl.png', alt: 'Asteroid rebellion' },
-  { src: '/images/multi-art/atmospheric-processor-malfunction-2034/option-1-fast-sdxl.png', alt: 'Atmospheric processor' },
-  { src: '/images/multi-art/autonomous-factory-incident-2031/option-1-fast-sdxl.png', alt: 'Factory incident' },
-  { src: '/images/multi-art/ai-kill-switch-postmortem/option-3-kolors.png', alt: 'Kill switch' },
-  { src: '/images/multi-art/time-dilation-computing-error-2039/option-1-fast-sdxl.png', alt: 'Time dilation' },
-  { src: '/images/multi-art/terraforming-mars-disaster-2056/option-1-fast-sdxl.png', alt: 'Mars terraforming' },
-  { src: '/images/multi-art/vr-addiction-pandemic-2054/option-1-fast-sdxl.png', alt: 'VR pandemic' },
-  { src: '/images/multi-art/backstory-07-fusion-nanotech-2027-09/option-3-kolors.png', alt: 'Fusion nanotech' },
-  { src: '/images/multi-art/backstory-10-alien-code-2028-05/option-3-kolors.png', alt: 'Alien code' },
-  { src: '/images/multi-art/backstory-11-quantum-crypto-break-2028-08/option-3-kolors.png', alt: 'Quantum break' },
-  { src: '/images/multi-art/agi-alignment-failure-2057/option-1-fast-sdxl.png', alt: 'Alignment failure' },
-  { src: '/images/multi-art/thoughtcrime-enforcement-system-2041/option-1-fast-sdxl.png', alt: 'Thought enforcement' },
-  { src: '/images/multi-art/backstory-03-neural-interface-2026-05/option-3-kolors.png', alt: 'Neural interface early' },
-  { src: '/images/multi-art/backstory-06-ai-awakening-2027-05/option-3-kolors.png', alt: 'AI awakening' },
-  { src: '/images/multi-art/autonomous-vehicle-cartel-2055/option-1-fast-sdxl.png', alt: 'Vehicle cartel' },
-  { src: '/images/multi-art/timestamp-collapse/option-3-kolors.png', alt: 'Timestamp collapse' },
 ];
 
 // ─── Types ───────────────────────────────────────────────────────────────
@@ -83,35 +75,62 @@ const PHASE_TIMING: Record<DescentPhase, number> = {
   alive: 6000,
 };
 
-const GRID_COLS = 4;
-const GRID_ROWS = 3;
-const REPLACE_DELAY = 2000;       // ms after shatter before column shift
-const COLUMN_ANIM_DURATION = 700; // ms for the column-shift animation
-
 // ─── Component ────────────────────────────────────────────────────────────
+
+function makeTileState(t: { src: string; alt: string }): TileState {
+  return {
+    ...t,
+    hits: 0,
+    crackImpacts: [],
+    breaking: false,
+    impactX: 0.5,
+    impactY: 0.5,
+    impactForce: 3,
+    dropping: false,
+    dropDelay: 0,
+    dropVersion: 0,
+    flashKey: 0,
+  };
+}
 
 export default function HeroMosaic() {
   const [phase, setPhase] = useState<DescentPhase>('void');
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
   const containerRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const replacementPoolRef = useRef<{ src: string; alt: string }[]>([]);
   const replacementIndexRef = useRef(0);
 
+  // Start with fallback tiles — replaced by API results on mount
   const [tiles, setTiles] = useState<TileState[]>(
-    INITIAL_TILES.map(t => ({
-      ...t,
-      hits: 0,
-      crackImpacts: [],
-      breaking: false,
-      impactX: 0.5,
-      impactY: 0.5,
-      impactForce: 3,
-      dropping: false,
-      dropDelay: 0,
-      dropVersion: 0,
-      flashKey: 0,
-    }))
+    FALLBACK_TILES.slice(0, TILE_COUNT).map(makeTileState)
   );
+
+  // Fetch newest images from both public/images/articles & multi-art
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/tile-images')
+      .then(res => res.ok ? res.json() : Promise.reject(res.status))
+      .then((images: { src: string; alt: string }[]) => {
+        if (cancelled || images.length === 0) return;
+
+        // First TILE_COUNT images → initial grid, rest → replacement pool
+        const initial = images.slice(0, TILE_COUNT);
+        const pool = images.slice(TILE_COUNT);
+        replacementPoolRef.current = pool;
+        replacementIndexRef.current = 0;
+
+        setTiles(prev => initial.map((img, i) => ({
+          ...(prev[i] ?? makeTileState(img)),
+          src: img.src,
+          alt: img.alt,
+        })));
+      })
+      .catch(() => {
+        // API failed — stick with fallback tiles, no replacement pool needed
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   // Phase progression
   useEffect(() => {
@@ -134,9 +153,16 @@ export default function HeroMosaic() {
   // ─── Replacement pool ────────────────────────────────────────────
 
   const getNextReplacement = useCallback(() => {
-    const idx = replacementIndexRef.current % REPLACEMENT_POOL.length;
+    const pool = replacementPoolRef.current;
+    if (pool.length === 0) {
+      // No dynamic pool loaded — cycle through fallback tiles
+      const idx = replacementIndexRef.current % FALLBACK_TILES.length;
+      replacementIndexRef.current++;
+      return FALLBACK_TILES[idx];
+    }
+    const idx = replacementIndexRef.current % pool.length;
     replacementIndexRef.current++;
-    return REPLACEMENT_POOL[idx];
+    return pool[idx];
   }, []);
 
   // ─── Ball impact — progressive damage ────────────────────────────
