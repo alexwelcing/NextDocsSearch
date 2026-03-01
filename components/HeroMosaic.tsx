@@ -286,7 +286,9 @@ export default function HeroMosaic() {
     'grayscale(0) brightness(0.55) saturate(1.3)';
 
   const isAlive = phase === 'alive';
-  const isBusy = tiles.some(t => t.breaking || t.dropping);
+  // Ball is never globally disabled — handleBallImpact skips
+  // tiles that are already breaking/dropping, so the user can
+  // rapid-fire throws at different tiles without waiting.
 
   return (
     <div
@@ -481,7 +483,7 @@ export default function HeroMosaic() {
       {isAlive && (
         <ThrowBall
           onImpact={handleBallImpact}
-          disabled={isBusy}
+          disabled={false}
           containerRef={containerRef}
         />
       )}

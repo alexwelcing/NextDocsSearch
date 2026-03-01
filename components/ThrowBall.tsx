@@ -28,7 +28,7 @@ interface ThrowBallProps {
 const BALL_SIZE = 56;
 const BALL_REST_BOTTOM = 32;
 const BALL_REST_LEFT = 32;
-const FLIGHT_DURATION = 500; // ms
+const FLIGHT_DURATION = 350; // ms — snappy flight for fast throws
 const GRAVITY_ARC = 0.4; // arc height multiplier
 const MIN_DRAG_DISTANCE = 30; // px minimum to register a throw
 
@@ -133,9 +133,9 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
         setFlyProgress(0);
         onImpact(clampedX, clampedY, force);
 
-        // Respawn ball after a moment
+        // Quick respawn for fast interactivity
         setIsRespawning(true);
-        setTimeout(() => setIsRespawning(false), 800);
+        setTimeout(() => setIsRespawning(false), 250);
       }
     };
 
