@@ -31,6 +31,11 @@ interface InteractiveTabletProps {
   onToggleArticleDisplay?: () => void;
   isArticleDisplayOpen?: boolean;
   onExitToLanding?: () => void;
+  onVectorSearch?: (query: string) => Promise<void>;
+  vectorSearchResults?: { slug: string; score: number; heading?: string | null }[];
+  isVectorSearching?: boolean;
+  vectorExploreMode?: boolean;
+  onToggleVectorMode?: () => void;
 }
 
 export default function InteractiveTablet({
@@ -45,6 +50,11 @@ export default function InteractiveTablet({
   onToggleArticleDisplay,
   isArticleDisplayOpen = false,
   onExitToLanding,
+  onVectorSearch,
+  vectorSearchResults,
+  isVectorSearching,
+  vectorExploreMode,
+  onToggleVectorMode,
 }: InteractiveTabletProps) {
   const [isRaised, setIsRaised] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
@@ -363,6 +373,11 @@ export default function InteractiveTablet({
         is3DExploreActive={is3DExploreActive}
         onToggleArticleDisplay={onToggleArticleDisplay}
         isArticleDisplayOpen={isArticleDisplayOpen}
+        onVectorSearch={onVectorSearch}
+        vectorSearchResults={vectorSearchResults}
+        isVectorSearching={isVectorSearching}
+        vectorExploreMode={vectorExploreMode}
+        onToggleVectorMode={onToggleVectorMode}
       />
     </>
   );

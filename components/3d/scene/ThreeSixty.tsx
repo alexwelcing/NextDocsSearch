@@ -20,6 +20,7 @@ import SceneLighting from './SceneLighting';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
 import InfiniteLibrary, { COSMIC_LIBRARY, DIGITAL_GARDEN } from '../experiences/InfiniteLibrary';
+import VectorSpaceExplorer, { type SearchHit, type VectorArticle } from '../interactive/VectorSpaceExplorer';
 import { useJourney } from '../../contexts/JourneyContext';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
@@ -39,6 +40,25 @@ const polarityToNumber = (polarity?: string): number => {
   };
   return polarity ? (map[polarity] ?? 0) : 0;
 };
+
+// Map EnhancedArticleData to VectorSpaceExplorer's VectorArticle interface
+const polarityToFullScale = (polarity?: string): number => {
+  const map: Record<string, number> = {
+    'C3': -3, 'C2': -2, 'C1': -1,
+    'N0': 0,
+    'P1': 1, 'P2': 2, 'P3': 3,
+  };
+  return polarity ? (map[polarity] ?? 0) : 0;
+};
+
+const mapToVectorArticle = (article: EnhancedArticleData): VectorArticle => ({
+  id: article.slug,
+  title: article.title,
+  polarity: polarityToFullScale(article.polarity),
+  horizon: article.horizon,
+  category: article.domains?.[0] ?? article.articleType,
+  mechanics: article.mechanics,
+});
 
 // Map EnhancedArticleData to InfiniteLibrary's Article interface
 const mapToLibraryArticle = (article: EnhancedArticleData) => ({
@@ -172,6 +192,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false);
   const [enhancedArticles, setEnhancedArticles] = useState<EnhancedArticleData[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<EnhancedArticleData | null>(null);
+
+  // Vector space exploration state
+  const [vectorSearchResults, setVectorSearchResults] = useState<SearchHit[]>([]);
+  const [isVectorSearching, setIsVectorSearching] = useState(false);
+  const [vectorExploreMode, setVectorExploreMode] = useState(false);
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
@@ -476,6 +501,51 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     }
   }, [selectedArticle]);
 
+  // Vector space search handler — called from terminal input
+  const handleVectorSearch = useCallback(async (query: string) => {
+    if (!query.trim()) return;
+    setIsVectorSearching(true);
+
+    // Auto-activate vector explore mode on first search
+    if (!is3DExploreActive) {
+      setIs3DExploreActive(true);
+      setVectorExploreMode(true);
+    }
+
+    try {
+      const response = await fetch('/api/vector-explore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: query.trim() }),
+      });
+
+      if (!response.ok) throw new Error('Search failed');
+
+      const data = await response.json();
+      const hits: SearchHit[] = (data.results ?? []).map(
+        (r: { slug?: string; rrf_score?: number; heading?: string }) => ({
+          slug: r.slug ?? '',
+          score: r.rrf_score ?? 0,
+          heading: r.heading,
+        })
+      );
+      setVectorSearchResults(hits);
+    } catch (err) {
+      console.error('Vector search failed:', err);
+      setVectorSearchResults([]);
+    } finally {
+      setIsVectorSearching(false);
+    }
+  }, [is3DExploreActive]);
+
+  // Toggle between InfiniteLibrary and VectorSpaceExplorer
+  const handleToggleVectorMode = useCallback(() => {
+    setVectorExploreMode(prev => !prev);
+    if (!is3DExploreActive) {
+      setIs3DExploreActive(true);
+    }
+  }, [is3DExploreActive]);
+
   return (
     <ThreeSixtyContainer>
       {/* Only show VR button if device supports VR */}
@@ -566,20 +636,33 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                 </>
               )}
 
-              {/* 3D Article Explorer - Immersive InfiniteLibrary Experience */}
+              {/* 3D Article Explorer */}
               {is3DExploreActive && enhancedArticles.length > 0 && (
-                <InfiniteLibrary
-                  articles={enhancedArticles.map(mapToLibraryArticle)}
-                  theme={COSMIC_LIBRARY}
-                  quality={isMobile || isLowEndDevice ? 'low' : 'high'}
-                  layout="constellation"
-                  radius={25}
-                  onArticleSelect={(article) => {
-                    const enhanced = enhancedArticles.find(a => a.slug === article.id);
-                    if (enhanced) handleSelectArticle(enhanced);
-                  }}
-                  selectedArticleId={selectedArticle?.slug}
-                />
+                vectorExploreMode ? (
+                  <VectorSpaceExplorer
+                    articles={enhancedArticles.map(mapToVectorArticle)}
+                    searchResults={vectorSearchResults}
+                    onArticleSelect={(article) => {
+                      const enhanced = enhancedArticles.find(a => a.slug === article.id);
+                      if (enhanced) handleSelectArticle(enhanced);
+                    }}
+                    selectedArticleId={selectedArticle?.slug}
+                    isSearching={isVectorSearching}
+                  />
+                ) : (
+                  <InfiniteLibrary
+                    articles={enhancedArticles.map(mapToLibraryArticle)}
+                    theme={COSMIC_LIBRARY}
+                    quality={isMobile || isLowEndDevice ? 'low' : 'high'}
+                    layout="constellation"
+                    radius={25}
+                    onArticleSelect={(article) => {
+                      const enhanced = enhancedArticles.find(a => a.slug === article.id);
+                      if (enhanced) handleSelectArticle(enhanced);
+                    }}
+                    selectedArticleId={selectedArticle?.slug}
+                  />
+                )
               )}
 
               {/* Article Display Panel */}
@@ -662,6 +745,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           onToggleArticleDisplay={() => setIsArticleDisplayOpen(!isArticleDisplayOpen)}
           isArticleDisplayOpen={isArticleDisplayOpen}
           onExitToLanding={onExit}
+          onVectorSearch={handleVectorSearch}
+          vectorSearchResults={vectorSearchResults}
+          isVectorSearching={isVectorSearching}
+          vectorExploreMode={vectorExploreMode}
+          onToggleVectorMode={handleToggleVectorMode}
         />
       )}
 

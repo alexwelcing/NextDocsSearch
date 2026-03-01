@@ -43,6 +43,11 @@ interface TerminalInterfaceProps {
   is3DExploreActive?: boolean;
   onToggleArticleDisplay?: () => void;
   isArticleDisplayOpen?: boolean;
+  onVectorSearch?: (query: string) => Promise<void>;
+  vectorSearchResults?: { slug: string; score: number; heading?: string | null }[];
+  isVectorSearching?: boolean;
+  vectorExploreMode?: boolean;
+  onToggleVectorMode?: () => void;
 }
 
 type ViewMode = 'chat' | 'game' | 'scenery' | 'about' | 'explore';
@@ -60,6 +65,11 @@ export default function TerminalInterface({
   is3DExploreActive = false,
   onToggleArticleDisplay,
   isArticleDisplayOpen = false,
+  onVectorSearch,
+  vectorSearchResults = [],
+  isVectorSearching = false,
+  vectorExploreMode = false,
+  onToggleVectorMode,
 }: TerminalInterfaceProps) {
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [chatInput, setChatInput] = useState('');
@@ -69,6 +79,10 @@ export default function TerminalInterface({
   const [enhancedArticles, setEnhancedArticles] = useState<EnhancedArticleData[]>([]);
   const [articleSearch, setArticleSearch] = useState('');
   const [articleFilter, setArticleFilter] = useState<string>('all');
+
+  // Floating window state (desktop)
+  const [windowPos, setWindowPos] = useState({ x: -1, y: -1 });
+  const [windowSize, setWindowSize] = useState({ width: 600, height: 520 });
 
   const { chatData, sendMessage, chatHistory } = useSupabaseData();
   const { updateStats, currentQuest, completeQuest, missionBriefs, progress } = useJourney();
@@ -88,13 +102,58 @@ export default function TerminalInterface({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Keyboard hotkeys: ESC to close, 1-5 to switch tabs, / to focus search
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) onClose();
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't capture keys when typing in an input
+      const tag = (e.target as HTMLElement).tagName;
+      const isInput = tag === 'INPUT' || tag === 'TEXTAREA';
+
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Skip hotkeys when typing
+      if (isInput) return;
+
+      const tabKeys: Record<string, ViewMode> = {
+        '1': 'explore',
+        '2': 'chat',
+        '3': 'game',
+        '4': 'scenery',
+        '5': 'about',
+      };
+      if (tabKeys[e.key]) {
+        e.preventDefault();
+        setViewMode(tabKeys[e.key]);
+        return;
+      }
+
+      // / to focus search in explore mode
+      if (e.key === '/' && viewMode === 'explore') {
+        e.preventDefault();
+        const searchInput = document.querySelector<HTMLInputElement>('[data-terminal-search]');
+        searchInput?.focus();
+      }
     };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose, viewMode]);
+
+  // Initialize window position to center when opened
+  useEffect(() => {
+    if (isOpen && !isMobile && typeof window !== 'undefined') {
+      const w = Math.min(window.innerWidth * 0.95, 600);
+      const h = Math.min(window.innerHeight * 0.7, 520);
+      setWindowSize({ width: w, height: h });
+      setWindowPos({
+        x: Math.round((window.innerWidth - w) / 2),
+        y: Math.round((window.innerHeight - h) / 2),
+      });
+    }
+  }, [isOpen, isMobile]);
 
   const fetchLeaderboard = useCallback(async () => {
     setLoadingLeaderboard(true);
@@ -245,63 +304,131 @@ export default function TerminalInterface({
     }
   }, [progress, chatHistory, missionBriefs]);
 
+  // On-demand drag: listeners only registered during active drag
+  const handleHeaderPointerDown = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    if (isMobile) return;
+    const offsetX = e.clientX - windowPos.x;
+    const offsetY = e.clientY - windowPos.y;
+    document.body.style.userSelect = 'none';
+    const onMove = (ev: PointerEvent) => {
+      ev.preventDefault();
+      setWindowPos({
+        x: Math.max(-100, Math.min(window.innerWidth - 100, ev.clientX - offsetX)),
+        y: Math.max(0, Math.min(window.innerHeight - 50, ev.clientY - offsetY)),
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  };
+
+  // On-demand resize: listeners only registered during active resize
+  const handleResizePointerDown = (e: React.PointerEvent) => {
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startW = windowSize.width;
+    const startH = windowSize.height;
+    document.body.style.userSelect = 'none';
+    const onMove = (ev: PointerEvent) => {
+      ev.preventDefault();
+      setWindowSize({
+        width: Math.max(320, Math.min(window.innerWidth - 20, startW + ev.clientX - startX)),
+        height: Math.max(250, Math.min(window.innerHeight - 20, startH + ev.clientY - startY)),
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   if (!isOpen) return null;
 
   const tabs = [
-    { id: 'explore', label: 'EXPLORE' },
-    { id: 'chat', label: 'CHAT' },
-    { id: 'game', label: 'GAME' },
-    { id: 'scenery', label: 'SCENE' },
-    { id: 'about', label: 'ABOUT' },
+    { id: 'explore', label: 'EXPLORE', key: '1' },
+    { id: 'chat', label: 'CHAT', key: '2' },
+    { id: 'game', label: 'GAME', key: '3' },
+    { id: 'scenery', label: 'SCENE', key: '4' },
+    { id: 'about', label: 'ABOUT', key: '5' },
   ] as const;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 1000,
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        background: 'rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(2px)',
-      }}
-      onClick={(e) => {
-        // Close when clicking the backdrop
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <>
+      <style>{`
+        .terminal-no-scrollbar::-webkit-scrollbar { display: none; }
+        .terminal-no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+      `}</style>
+      {/* No backdrop - mouse passes through to 3D scene */}
+      {/* Floating terminal window */}
       <div
         role="dialog"
-        aria-modal="true"
         aria-label="Terminal Interface"
         style={{
-          width: isMobile ? '100%' : 'min(95vw, 600px)',
-          maxHeight: isMobile ? '70vh' : '65vh',
+          position: 'fixed',
+          zIndex: 1000,
+          ...(isMobile ? {
+            left: 0,
+            bottom: 0,
+            width: '100%',
+            height: '70vh',
+            borderRadius: '20px 20px 0 0',
+            borderBottom: 'none',
+          } : {
+            left: 0,
+            top: 0,
+            transform: `translate(${windowPos.x}px, ${windowPos.y}px)`,
+            width: `${windowSize.width}px`,
+            height: `${windowSize.height}px`,
+            borderRadius: '12px',
+          }),
           background: 'rgba(10, 10, 10, 0.95)',
-          borderRadius: isMobile ? '20px 20px 0 0' : '16px 16px 0 0',
-          border: '1px solid #222',
-          borderBottom: 'none',
+          border: '1px solid #333',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.5)',
+          boxShadow: '0 8px 40px rgba(0, 0, 0, 0.6), 0 0 1px rgba(0, 255, 0, 0.1)',
         }}
       >
-      {/* Header */}
-      <div style={{
-        height: isMobile ? '50px' : '44px',
-        background: 'rgba(17, 17, 17, 0.9)',
-        borderBottom: '1px solid #222',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 16px',
-        justifyContent: 'space-between',
-        flexShrink: 0,
-      }}>
-        <div style={{ color: '#0f0', fontFamily: 'monospace', fontSize: '14px' }}>
-          {'>_'} terminal
+      {/* Draggable header */}
+      <div
+        onPointerDown={handleHeaderPointerDown}
+        style={{
+          height: isMobile ? '50px' : '40px',
+          background: 'rgba(17, 17, 17, 0.95)',
+          borderBottom: '1px solid #222',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 12px 0 16px',
+          justifyContent: 'space-between',
+          flexShrink: 0,
+          cursor: isMobile ? 'default' : 'grab',
+          userSelect: 'none',
+          touchAction: 'none',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Drag grip indicator (desktop) */}
+          {!isMobile && (
+            <span style={{ color: '#333', fontSize: '11px', letterSpacing: '2px', lineHeight: 1 }}>⠿</span>
+          )}
+          <span style={{ color: '#0f0', fontFamily: 'monospace', fontSize: '13px' }}>
+            {'>_'} terminal
+          </span>
+          {!isMobile && (
+            <span style={{ color: '#333', fontFamily: 'monospace', fontSize: '9px', marginLeft: '4px' }}>
+              TAB·ESC
+            </span>
+          )}
         </div>
         <button
           onClick={onClose}
@@ -309,12 +436,16 @@ export default function TerminalInterface({
           style={{
             background: 'none',
             border: 'none',
-            color: '#666',
-            fontSize: '24px',
+            color: '#555',
+            fontSize: '20px',
             cursor: 'pointer',
-            padding: '8px',
+            padding: '4px 6px',
             lineHeight: 1,
+            borderRadius: '4px',
+            transition: 'background 0.15s',
           }}
+          onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'rgba(255,0,0,0.15)'; (e.target as HTMLElement).style.color = '#f55'; }}
+          onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; (e.target as HTMLElement).style.color = '#555'; }}
         >
           ×
         </button>
@@ -333,7 +464,7 @@ export default function TerminalInterface({
             onClick={() => setViewMode(tab.id as ViewMode)}
             style={{
               flex: 1,
-              padding: isMobile ? '14px 8px' : '12px 16px',
+              padding: isMobile ? '14px 8px' : '10px 8px',
               background: viewMode === tab.id ? '#1a1a1a' : 'transparent',
               border: 'none',
               borderBottom: viewMode === tab.id ? '2px solid #0f0' : '2px solid transparent',
@@ -342,15 +473,26 @@ export default function TerminalInterface({
               fontSize: isMobile ? '12px' : '11px',
               cursor: 'pointer',
               transition: 'all 0.15s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
             }}
           >
+            {!isMobile && (
+              <span style={{
+                fontSize: '9px',
+                color: viewMode === tab.id ? '#0a0' : '#333',
+                fontWeight: 400,
+              }}>{tab.key}</span>
+            )}
             {tab.label}
           </button>
         ))}
       </div>
 
       {/* Content */}
-      <div style={{
+      <div className="terminal-no-scrollbar" style={{
         flex: 1,
         overflow: 'auto',
         padding: isMobile ? '16px' : '20px 24px',
@@ -421,9 +563,10 @@ export default function TerminalInterface({
             <div style={{ marginBottom: '12px' }}>
               <input
                 type="text"
+                data-terminal-search
                 value={articleSearch}
                 onChange={(e) => setArticleSearch(e.target.value)}
-                placeholder="Search articles..."
+                placeholder="Search articles... (press /)"
                 style={{
                   width: '100%',
                   padding: isMobile ? '14px' : '12px',
@@ -591,111 +734,271 @@ export default function TerminalInterface({
           </div>
         )}
 
-        {/* CHAT */}
+        {/* CHAT — Vector Space Exploration + AI Chat */}
         {viewMode === 'chat' && (
           <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            {currentQuest && (
-              <div style={{
-                background: '#0f1410',
-                borderRadius: '8px',
-                padding: isMobile ? '12px' : '14px 16px',
-                marginBottom: '12px',
-                border: '1px solid #1c2b1c',
-                fontFamily: 'monospace',
-              }}>
-                <div style={{ color: '#8f8', fontSize: '11px', marginBottom: '6px' }}>
-                  MISSION BRIEF — {currentQuest.title.toUpperCase()}
-                </div>
-                <div style={{ color: '#cfc', fontSize: isMobile ? '13px' : '12px', lineHeight: 1.6 }}>
-                  {currentMissionBrief || 'Awaiting mission parameters.'}
-                </div>
-              </div>
-            )}
-            <div style={{
-              flex: 1,
-              background: '#111',
-              borderRadius: '8px',
-              padding: isMobile ? '12px' : '16px',
-              marginBottom: '12px',
-              overflow: 'auto',
-              fontFamily: 'monospace',
-              fontSize: isMobile ? '14px' : '13px',
-              lineHeight: 1.6,
-            }}>
-              {chatData.response && !chatData.response.includes('Ship AI online') ? (
+            {/* Mode toggle: Vector Explore vs AI Chat */}
+            <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+              {onToggleVectorMode && (
                 <>
-                  <div style={{ color: '#0f0', marginBottom: '12px' }}>
-                    <span style={{ color: '#555' }}>you:</span> {chatData.question}
-                  </div>
-                  <div style={{ color: '#ccc', whiteSpace: 'pre-wrap' }}>
-                    <span style={{ color: '#555' }}>ai:</span> {chatData.response}
-                  </div>
+                  <button
+                    onClick={() => { if (!vectorExploreMode) onToggleVectorMode(); }}
+                    style={{
+                      flex: 1,
+                      padding: '8px',
+                      background: vectorExploreMode ? 'rgba(0, 255, 204, 0.1)' : '#111',
+                      border: vectorExploreMode ? '1px solid #00ffcc' : '1px solid #333',
+                      borderRadius: '6px 0 0 6px',
+                      color: vectorExploreMode ? '#00ffcc' : '#666',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    ◈ VECTOR SPACE
+                  </button>
+                  <button
+                    onClick={() => { if (vectorExploreMode) onToggleVectorMode(); }}
+                    style={{
+                      flex: 1,
+                      padding: '8px',
+                      background: !vectorExploreMode ? 'rgba(0, 255, 0, 0.1)' : '#111',
+                      border: !vectorExploreMode ? '1px solid #0f0' : '1px solid #333',
+                      borderRadius: '0 6px 6px 0',
+                      color: !vectorExploreMode ? '#0f0' : '#666',
+                      fontSize: '11px',
+                      fontFamily: 'monospace',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    AI CHAT
+                  </button>
                 </>
-              ) : (
-                <div style={{ color: '#8f8', lineHeight: 1.6 }}>
-                  Ship AI active. Query the knowledge base or ask about Alex&apos;s work.
-                </div>
               )}
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
-                placeholder="Enter query..."
-                aria-label="Chat input"
-                autoFocus={!isMobile}
-                style={{
+
+            {vectorExploreMode ? (
+              /* ═══ VECTOR EXPLORE MODE ═══ */
+              <>
+                <div className="terminal-no-scrollbar" style={{
                   flex: 1,
                   background: '#111',
-                  border: '1px solid #333',
-                  borderRadius: '6px',
-                  padding: isMobile ? '14px' : '12px',
-                  color: '#fff',
-                  fontSize: isMobile ? '16px' : '14px',
+                  borderRadius: '8px',
+                  padding: isMobile ? '12px' : '16px',
+                  marginBottom: '12px',
+                  overflow: 'auto',
                   fontFamily: 'monospace',
-                  outline: 'none',
-                }}
-              />
-              <button
-                onClick={handleChatSubmit}
-                aria-label="Send message"
-                style={{
-                  background: '#0f0',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: isMobile ? '14px 20px' : '12px 20px',
-                  color: '#000',
-                  fontWeight: 'bold',
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  fontFamily: 'monospace',
-                }}
-              >
-                SEND
-              </button>
-            </div>
-            <div style={{ marginTop: '12px' }}>
-              <button
-                onClick={handleDownloadMissionLog}
-                style={{
-                  width: '100%',
-                  padding: isMobile ? '12px' : '10px',
+                  fontSize: isMobile ? '13px' : '12px',
+                  lineHeight: 1.6,
+                }}>
+                  {isVectorSearching ? (
+                    <div style={{ color: '#00ffcc' }}>
+                      Scanning vector space...
+                    </div>
+                  ) : vectorSearchResults.length > 0 ? (
+                    <div>
+                      <div style={{ color: '#555', fontSize: '10px', marginBottom: '8px', letterSpacing: '1px' }}>
+                        {vectorSearchResults.length} VECTORS MATCHED — CAMERA LOCKED ON CLUSTER
+                      </div>
+                      {vectorSearchResults.slice(0, 10).map((result, i) => (
+                        <div
+                          key={result.slug || i}
+                          style={{
+                            padding: '6px 8px',
+                            marginBottom: '4px',
+                            background: i === 0 ? 'rgba(0, 255, 204, 0.08)' : 'transparent',
+                            borderLeft: `2px solid ${i < 3 ? '#00ffcc' : '#333'}`,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => {
+                            if (result.slug) {
+                              window.location.href = `/articles/${result.slug}`;
+                            }
+                          }}
+                        >
+                          <div style={{ color: i < 3 ? '#00ffcc' : '#888', fontSize: '12px' }}>
+                            {result.heading || result.slug}
+                          </div>
+                          <div style={{ color: '#444', fontSize: '10px' }}>
+                            score: {(result.score * 100).toFixed(1)}%
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ color: '#555', lineHeight: 1.8 }}>
+                      <div style={{ color: '#00ffcc', marginBottom: '8px' }}>VECTOR SPACE EXPLORER</div>
+                      Type a query to navigate the knowledge space.
+                      <br />
+                      Articles are positioned by polarity, horizon, and topic.
+                      <br />
+                      <span style={{ color: '#333' }}>The camera will fly to matching clusters.</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Search input */}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && onVectorSearch && chatInput.trim()) {
+                        onVectorSearch(chatInput.trim());
+                      }
+                    }}
+                    placeholder="Navigate vector space..."
+                    aria-label="Vector search input"
+                    autoFocus={!isMobile}
+                    style={{
+                      flex: 1,
+                      background: '#111',
+                      border: '1px solid #333',
+                      borderRadius: '6px',
+                      padding: isMobile ? '14px' : '12px',
+                      color: '#fff',
+                      fontSize: isMobile ? '16px' : '14px',
+                      fontFamily: 'monospace',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      if (onVectorSearch && chatInput.trim()) {
+                        onVectorSearch(chatInput.trim());
+                      }
+                    }}
+                    aria-label="Search vectors"
+                    disabled={isVectorSearching}
+                    style={{
+                      background: isVectorSearching ? '#333' : '#00ffcc',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: isMobile ? '14px 16px' : '12px 16px',
+                      color: '#000',
+                      fontWeight: 'bold',
+                      fontSize: '13px',
+                      cursor: isVectorSearching ? 'wait' : 'pointer',
+                      fontFamily: 'monospace',
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    FLY
+                  </button>
+                </div>
+              </>
+            ) : (
+              /* ═══ AI CHAT MODE ═══ */
+              <>
+                {currentQuest && (
+                  <div style={{
+                    background: '#0f1410',
+                    borderRadius: '8px',
+                    padding: isMobile ? '12px' : '14px 16px',
+                    marginBottom: '12px',
+                    border: '1px solid #1c2b1c',
+                    fontFamily: 'monospace',
+                  }}>
+                    <div style={{ color: '#8f8', fontSize: '11px', marginBottom: '6px' }}>
+                      MISSION BRIEF — {currentQuest.title.toUpperCase()}
+                    </div>
+                    <div style={{ color: '#cfc', fontSize: isMobile ? '13px' : '12px', lineHeight: 1.6 }}>
+                      {currentMissionBrief || 'Awaiting mission parameters.'}
+                    </div>
+                  </div>
+                )}
+                <div className="terminal-no-scrollbar" style={{
+                  flex: 1,
                   background: '#111',
-                  border: '1px solid #333',
-                  borderRadius: '6px',
-                  color: '#8f8',
-                  fontWeight: 600,
-                  fontSize: '12px',
-                  cursor: 'pointer',
+                  borderRadius: '8px',
+                  padding: isMobile ? '12px' : '16px',
+                  marginBottom: '12px',
+                  overflow: 'auto',
                   fontFamily: 'monospace',
-                  letterSpacing: '0.4px',
-                }}
-              >
-                DOWNLOAD MISSION LOG
-              </button>
-            </div>
+                  fontSize: isMobile ? '14px' : '13px',
+                  lineHeight: 1.6,
+                }}>
+                  {chatData.response && !chatData.response.includes('Ship AI online') ? (
+                    <>
+                      <div style={{ color: '#0f0', marginBottom: '12px' }}>
+                        <span style={{ color: '#555' }}>you:</span> {chatData.question}
+                      </div>
+                      <div style={{ color: '#ccc', whiteSpace: 'pre-wrap' }}>
+                        <span style={{ color: '#555' }}>ai:</span> {chatData.response}
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{ color: '#8f8', lineHeight: 1.6 }}>
+                      Ship AI active. Query the knowledge base or ask about Alex&apos;s work.
+                    </div>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
+                    placeholder="Enter query..."
+                    aria-label="Chat input"
+                    autoFocus={!isMobile}
+                    style={{
+                      flex: 1,
+                      background: '#111',
+                      border: '1px solid #333',
+                      borderRadius: '6px',
+                      padding: isMobile ? '14px' : '12px',
+                      color: '#fff',
+                      fontSize: isMobile ? '16px' : '14px',
+                      fontFamily: 'monospace',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    onClick={handleChatSubmit}
+                    aria-label="Send message"
+                    style={{
+                      background: '#0f0',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: isMobile ? '14px 20px' : '12px 20px',
+                      color: '#000',
+                      fontWeight: 'bold',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    SEND
+                  </button>
+                </div>
+                <div style={{ marginTop: '12px' }}>
+                  <button
+                    onClick={handleDownloadMissionLog}
+                    style={{
+                      width: '100%',
+                      padding: isMobile ? '12px' : '10px',
+                      background: '#111',
+                      border: '1px solid #333',
+                      borderRadius: '6px',
+                      color: '#8f8',
+                      fontWeight: 600,
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      fontFamily: 'monospace',
+                      letterSpacing: '0.4px',
+                    }}
+                  >
+                    DOWNLOAD MISSION LOG
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -901,7 +1204,30 @@ export default function TerminalInterface({
           </div>
         )}
       </div>
+
+      {/* Resize handle - desktop only */}
+      {!isMobile && (
+        <div
+          onPointerDown={handleResizePointerDown}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '18px',
+            height: '18px',
+            cursor: 'nwse-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            touchAction: 'none',
+          }}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" style={{ opacity: 0.25 }}>
+            <path d="M 10 12 L 12 10 M 6 12 L 12 6 M 2 12 L 12 2" stroke="#0f0" strokeWidth="1.5" fill="none" />
+          </svg>
+        </div>
+      )}
       </div>
-    </div>
+    </>
   );
 }
