@@ -108,7 +108,7 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
     const startX = ballPos.x;
     const startY = ballPos.y;
     const midX = (startX + clampedX) / 2;
-    const arcHeight = Math.abs(startY - clampedY) * GRAVITY_ARC + 80;
+    const arcHeight = Math.abs(startY - clampedY) * GRAVITY_ARC + 140;
 
     const animateFlight = (now: number) => {
       const t = Math.min(1, (now - startTime) / FLIGHT_DURATION);
@@ -191,18 +191,19 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
   const currentX = ballPos?.x ?? rest.x;
   const currentY = ballPos?.y ?? rest.y;
 
-  // 3D scale effect during flight — ball gets "closer" at mid-arc then shrinks at impact
+  // 3D scale effect — ball swells BIG at mid-arc like it's flying toward the viewer
+  const arcSin = Math.sin(flyProgress * Math.PI);
   const flyScale = isFlying
-    ? 1 + Math.sin(flyProgress * Math.PI) * 0.6
+    ? 1 + arcSin * 1.1
     : isDragging ? 1.15 : 1;
 
-  // Shadow grows during flight to sell the 3D effect
+  // Shadow stretches dramatically during flight to sell the depth
   const shadowBlur = isFlying
-    ? 10 + Math.sin(flyProgress * Math.PI) * 30
+    ? 10 + arcSin * 50
     : isDragging ? 15 : 8;
 
   const shadowOpacity = isFlying
-    ? 0.3 + Math.sin(flyProgress * Math.PI) * 0.3
+    ? 0.3 + arcSin * 0.5
     : isDragging ? 0.4 : 0.3;
 
   // ─── Trajectory line (while dragging) ──────────────────────────────
