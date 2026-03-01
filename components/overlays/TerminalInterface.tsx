@@ -73,6 +73,7 @@ export default function TerminalInterface({
 }: TerminalInterfaceProps) {
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [chatInput, setChatInput] = useState('');
+  const [vectorInput, setVectorInput] = useState('');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -800,11 +801,12 @@ export default function TerminalInterface({
             <div style={{ display: 'flex', gap: '8px' }}>
               <input
                 type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && onVectorSearch && chatInput.trim()) {
-                    onVectorSearch(chatInput.trim());
+                value={vectorInput}
+                onChange={(e) => setVectorInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && onVectorSearch && vectorInput.trim()) {
+                    e.preventDefault();
+                    onVectorSearch(vectorInput.trim());
                   }
                 }}
                 placeholder="Navigate vector space..."
@@ -824,8 +826,8 @@ export default function TerminalInterface({
               />
               <button
                 onClick={() => {
-                  if (onVectorSearch && chatInput.trim()) {
-                    onVectorSearch(chatInput.trim());
+                  if (onVectorSearch && vectorInput.trim()) {
+                    onVectorSearch(vectorInput.trim());
                   }
                 }}
                 aria-label="Search vectors"
@@ -900,7 +902,7 @@ export default function TerminalInterface({
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleChatSubmit(); }}
                 placeholder="Enter query..."
                 aria-label="Chat input"
                 autoFocus={!isMobile}
