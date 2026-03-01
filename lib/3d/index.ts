@@ -62,3 +62,23 @@ export {
   type LODLevel,
   type PerformanceMetrics,
 } from './performanceUtils';
+
+// Layout algorithms
+export {
+  computePositions,
+  polarityColor,
+  semanticAxesLayout,
+  sphereLayout,
+  galaxyLayout,
+  timelineLayout,
+  clusterLayout,
+  helixLayout,
+  LAYOUT_REGISTRY,
+  HORIZON_SCALE,
+  MECHANIC_ANGLES,
+  POLARITY_COLORS,
+  type LayoutArticle,
+  type LayoutContext,
+  type LayoutFunction,
+  type LayoutName,
+} from './layoutAlgorithms';

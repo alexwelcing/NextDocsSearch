@@ -20,7 +20,7 @@ import SceneLighting from './SceneLighting';
 import ArticleExplorer3D, { ArticleDetailPanel } from '../interactive/ArticleExplorer3D';
 import ArticleDisplayPanel from '../interactive/ArticleDisplayPanel';
 import InfiniteLibrary, { COSMIC_LIBRARY, DIGITAL_GARDEN } from '../experiences/InfiniteLibrary';
-import VectorSpaceExplorer, { type SearchHit, type VectorArticle } from '../interactive/VectorSpaceExplorer';
+import { VectorSpaceExplorer, type SearchHit, type VectorArticle } from '../vector-space';
 import { useJourney } from '../../contexts/JourneyContext';
 import { perfLogger } from '@/lib/performance-logger';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
