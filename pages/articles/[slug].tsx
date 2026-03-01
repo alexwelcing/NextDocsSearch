@@ -644,7 +644,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   relatedArticles,
   slug
 }) => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alexwelcing.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.alexwelcing.com';
   const articleUrl = `${siteUrl}/articles/${slug}`;
   const defaultOgImage = `${siteUrl}/og-default.png`;
   const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : defaultOgImage;

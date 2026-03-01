@@ -54,7 +54,7 @@ export const createArticleSchema = ({
 }) => ({
   headline: title,
   description,
-  image: image || 'https://alexwelcing.com/social-preview.png',
+  image: image || 'https://www.alexwelcing.com/social-preview.png',
   datePublished,
   dateModified: dateModified || datePublished,
   url,
@@ -63,20 +63,20 @@ export const createArticleSchema = ({
     ? author.map((name) => ({
         '@type': 'Person',
         name,
-        url: 'https://alexwelcing.com/about',
+        url: 'https://www.alexwelcing.com/about',
       }))
     : {
         '@type': 'Person',
         name: author,
-        url: 'https://alexwelcing.com/about',
+        url: 'https://www.alexwelcing.com/about',
       },
   publisher: {
     '@type': 'Organization',
     name: 'Alex Welcing',
-    url: 'https://alexwelcing.com',
+    url: 'https://www.alexwelcing.com',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://alexwelcing.com/logo.png',
+      url: 'https://www.alexwelcing.com/logo.png',
     },
   },
   mainEntityOfPage: {
@@ -101,7 +101,7 @@ export const createPersonSchema = ({
 }) => ({
   name,
   jobTitle,
-  url: 'https://alexwelcing.com',
+  url: 'https://www.alexwelcing.com',
   description,
   sameAs: sameAs || [
     'https://www.linkedin.com/in/alexwelcing',

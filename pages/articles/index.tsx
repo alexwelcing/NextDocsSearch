@@ -54,17 +54,17 @@ export default function ArticlesIndex({
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://alexwelcing.com/articles" />
+        <link rel="canonical" href="https://www.alexwelcing.com/articles" />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Research & Analysis | Alex Welcing" />
         <meta
           property="og:description"
           content="Research on speculative AI futures, emergent intelligence, and systemic consequences of abundant cognition."
         />
-        <meta property="og:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://alexwelcing.com/articles" />
+        <meta property="og:url" content="https://www.alexwelcing.com/articles" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
@@ -73,14 +73,14 @@ export default function ArticlesIndex({
           name="twitter:description"
           content="Research on speculative AI futures, emergent intelligence, and systemic consequences of abundant cognition."
         />
-        <meta name="twitter:image" content="https://alexwelcing.com/social-preview.png" />
+        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
       </Head>
 
       <StructuredData
         type="Website"
         data={{
           name: 'Speculative AI Research - Alex Welcing',
-          url: 'https://alexwelcing.com/articles',
+          url: 'https://www.alexwelcing.com/articles',
           description:
             'Research on speculative AI futures, emergent intelligence, and systemic consequences.',
           author: {
