@@ -415,7 +415,6 @@ interface ThreeSixtyProps {
 - `leaderboard`: Unlocked via quest
 
 **Achievements:**
-- `first-steps`: Complete first quest
 - `bookworm`: Read 5+ articles
 - `curious-mind`: Ask 10+ questions
 - `scholar`: 100% quiz score
