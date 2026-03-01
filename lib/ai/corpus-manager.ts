@@ -1,6 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { LLMProvider } from './llm-provider'
-import { ingestDocument } from './corpus-ingest'
 
 export interface CorpusEntry {
   url?: string
@@ -94,19 +93,25 @@ export async function processCorpusSignals(
       // This fetches the actual content, chunks it, and creates
       // additional corpus entries with full text + embeddings.
       if (signal.url) {
-        ingestDocument(
-          {
-            url: signal.url,
-            title: signal.title,
-            sourceType: 'discovered',
-            discoveredFromQuery: query,
-            metadata: {
-              autoDiscovered: true,
-              triggerSignal: 'CORPUS_ENTRY',
-            },
-          },
-          llmProvider
-        )
+        // Dynamic import to avoid pulling pdf-parse into the Edge Runtime bundle.
+        // The static import chain vector-search → corpus-manager → corpus-ingest → pdf-parse
+        // would fail webpack's Edge Runtime eval check if imported at the top level.
+        import('./corpus-ingest')
+          .then(({ ingestDocument }) =>
+            ingestDocument(
+              {
+                url: signal.url!,
+                title: signal.title,
+                sourceType: 'discovered',
+                discoveredFromQuery: query,
+                metadata: {
+                  autoDiscovered: true,
+                  triggerSignal: 'CORPUS_ENTRY',
+                },
+              },
+              llmProvider
+            )
+          )
           .then((result) => {
             if (result.skipped) {
               console.log(`[corpus] Skipped ${signal.url}: ${result.reason}`)
