@@ -28,8 +28,8 @@ export const MARBLE_WORLD_CONFIG: WorldConfig = {
     constraints: {
       minDistance: 3,
       maxDistance: 25,
-      minPolarAngle: 0.1,
-      maxPolarAngle: Math.PI / 1.5,
+      minPolarAngle: Math.PI * 0.25,
+      maxPolarAngle: Math.PI * 0.75,
       enablePan: false,
     },
   },
@@ -81,8 +81,8 @@ export const DEFAULT_WORLD: WorldConfig = {
     constraints: {
       minDistance: 5,
       maxDistance: 50,
-      minPolarAngle: 0.1,
-      maxPolarAngle: Math.PI / 2,
+      minPolarAngle: Math.PI * 0.25,
+      maxPolarAngle: Math.PI * 0.75,
       enablePan: false,
     },
   },

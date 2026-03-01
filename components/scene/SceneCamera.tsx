@@ -261,8 +261,8 @@ export default function SceneCamera({
         panSpeed={0.5}
         minDistance={constraints.minDistance ?? 5}
         maxDistance={constraints.maxDistance ?? 50}
-        minPolarAngle={constraints.minPolarAngle ?? 0.1}
-        maxPolarAngle={constraints.maxPolarAngle ?? Math.PI / 2}
+        minPolarAngle={constraints.minPolarAngle ?? Math.PI * 0.25}
+        maxPolarAngle={constraints.maxPolarAngle ?? Math.PI * 0.75}
         minAzimuthAngle={constraints.minAzimuthAngle}
         maxAzimuthAngle={constraints.maxAzimuthAngle}
         enablePan={constraints.enablePan ?? false}

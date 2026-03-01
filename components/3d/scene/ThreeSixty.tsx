@@ -490,7 +490,8 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                     panSpeed={0.5}
                     minDistance={5}
                     maxDistance={50}
-                    maxPolarAngle={Math.PI / 2}
+                    minPolarAngle={Math.PI * 0.25}
+                    maxPolarAngle={Math.PI * 0.75}
                     enablePan={false}
                   />
                   <WASDControls
