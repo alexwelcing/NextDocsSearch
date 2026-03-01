@@ -85,6 +85,7 @@ export default function TerminalInterface({
   const [vectorError, setVectorError] = useState<string | null>(null);
   const [vectorHasSearched, setVectorHasSearched] = useState(false);
   const [vectorQuery, setVectorQuery] = useState('');
+  const [vectorFullscreen, setVectorFullscreen] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -123,6 +124,10 @@ export default function TerminalInterface({
       const isInput = tag === 'INPUT' || tag === 'TEXTAREA';
 
       if (e.key === 'Escape') {
+        if (vectorFullscreen) {
+          setVectorFullscreen(false);
+          return;
+        }
         onClose();
         return;
       }
@@ -153,7 +158,7 @@ export default function TerminalInterface({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, viewMode]);
+  }, [isOpen, onClose, viewMode, vectorFullscreen]);
 
   // Initialize window position to center when opened
   useEffect(() => {
@@ -868,37 +873,49 @@ export default function TerminalInterface({
                 />
               )}
 
-              {/* Result count overlay */}
-              {vectorResults.length > 0 && !vectorSearching && (
+              {/* HUD overlays */}
+              <div style={{
+                position: 'absolute',
+                top: '8px',
+                left: '10px',
+                right: '10px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                pointerEvents: 'none',
+              }}>
                 <div style={{
-                  position: 'absolute',
-                  top: '8px',
-                  left: '10px',
                   fontFamily: 'monospace',
                   fontSize: '10px',
-                  color: '#555',
                   letterSpacing: '1px',
-                  pointerEvents: 'none',
+                  color: vectorSearching ? '#00ffcc' : '#555',
                 }}>
-                  {vectorResults.length} MATCHED — CLICK NODE TO READ
+                  {vectorSearching
+                    ? 'SCANNING VECTOR SPACE...'
+                    : vectorResults.length > 0
+                      ? `${vectorResults.length} MATCHED — CLICK NODE TO READ`
+                      : ''}
                 </div>
-              )}
-
-              {/* Searching overlay */}
-              {vectorSearching && (
-                <div style={{
-                  position: 'absolute',
-                  top: '8px',
-                  left: '10px',
-                  fontFamily: 'monospace',
-                  fontSize: '10px',
-                  color: '#00ffcc',
-                  letterSpacing: '1px',
-                  pointerEvents: 'none',
-                }}>
-                  SCANNING VECTOR SPACE...
-                </div>
-              )}
+                {vectorResults.length > 0 && !vectorSearching && (
+                  <button
+                    onClick={() => setVectorFullscreen(true)}
+                    style={{
+                      pointerEvents: 'auto',
+                      background: 'rgba(0, 255, 204, 0.1)',
+                      border: '1px solid rgba(0, 255, 204, 0.3)',
+                      borderRadius: '4px',
+                      padding: '3px 8px',
+                      color: '#00ffcc',
+                      fontFamily: 'monospace',
+                      fontSize: '9px',
+                      letterSpacing: '1px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    EXPAND
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Search input */}
@@ -1285,6 +1302,132 @@ export default function TerminalInterface({
         </div>
       )}
       </div>
+
+      {/* ── Fullscreen Vector Space Portal ─────────────────── */}
+      {vectorFullscreen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: '#050510',
+          }}
+        >
+          <VectorResultsGraph
+            results={vectorResults}
+            query={vectorQuery}
+            isSearching={vectorSearching}
+          />
+
+          {/* Fullscreen HUD */}
+          <div style={{
+            position: 'absolute',
+            top: '16px',
+            left: '20px',
+            right: '20px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            pointerEvents: 'none',
+            fontFamily: 'monospace',
+          }}>
+            <div>
+              <div style={{
+                color: '#00ffcc',
+                fontSize: '14px',
+                letterSpacing: '2px',
+                marginBottom: '4px',
+              }}>
+                VECTOR SPACE
+              </div>
+              <div style={{
+                color: '#555',
+                fontSize: '10px',
+                letterSpacing: '1px',
+              }}>
+                {vectorResults.length} NODES — DRAG TO ORBIT — SCROLL TO ZOOM
+              </div>
+            </div>
+            <button
+              onClick={() => setVectorFullscreen(false)}
+              style={{
+                pointerEvents: 'auto',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '6px',
+                padding: '6px 14px',
+                color: '#fff',
+                fontFamily: 'monospace',
+                fontSize: '11px',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+              }}
+            >
+              ESC
+            </button>
+          </div>
+
+          {/* Fullscreen search bar */}
+          <div style={{
+            position: 'absolute',
+            bottom: '24px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '8px',
+            width: 'min(500px, calc(100% - 40px))',
+          }}>
+            <input
+              type="text"
+              value={vectorInput}
+              onChange={(e) => setVectorInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && vectorInput.trim() && !vectorSearching) {
+                  e.preventDefault();
+                  handleVectorFly();
+                }
+                if (e.key === 'Escape') {
+                  setVectorFullscreen(false);
+                }
+              }}
+              placeholder="Search vector space..."
+              autoFocus
+              style={{
+                flex: 1,
+                background: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(0, 255, 204, 0.2)',
+                borderRadius: '8px',
+                padding: '14px 16px',
+                color: '#fff',
+                fontSize: '14px',
+                fontFamily: 'monospace',
+                outline: 'none',
+              }}
+            />
+            <button
+              onClick={handleVectorFly}
+              disabled={vectorSearching || !vectorInput.trim()}
+              style={{
+                background: vectorSearching || !vectorInput.trim()
+                  ? 'rgba(255,255,255,0.05)'
+                  : '#00ffcc',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '14px 20px',
+                color: vectorSearching || !vectorInput.trim() ? '#555' : '#000',
+                fontWeight: 'bold',
+                fontSize: '13px',
+                cursor: vectorSearching || !vectorInput.trim() ? 'default' : 'pointer',
+                fontFamily: 'monospace',
+                letterSpacing: '1px',
+              }}
+            >
+              {vectorSearching ? '...' : 'FLY'}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
