@@ -1,12 +1,15 @@
 /**
  * POST /api/corpus/ingest — Deep ingestion endpoint
  *
- * Accepts a URL (PDF, web page, or plain text), fetches the content,
- * parses it, chunks it semantically, evaluates relevance, and stores
- * each chunk with embeddings in the corpus_entry table.
+ * Accepts a URL (web page or plain text) and fetches + parses it,
+ * or accepts pre-parsed content directly (e.g. PDF text extracted externally).
+ * Chunks semantically, evaluates relevance, and stores each chunk
+ * with embeddings in the corpus_entry table.
  *
- * Requires admin API key via x-admin-api-key header, OR can be called
- * internally by processCorpusSignals (which runs server-side).
+ * Pre-parsed content example:
+ *   { "url": "https://example.com/paper.pdf", "title": "Paper Title", "content": "extracted text..." }
+ *
+ * Requires admin API key via x-admin-api-key header.
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -41,6 +44,7 @@ export default withAdminAuth<IngestResponse>(async (req, res) => {
           {
             url: body.url,
             title: body.title,
+            content: body.content,
             sourceType: body.sourceType,
             discoveredFromQuery: body.discoveredFromQuery,
             metadata: body.metadata,

@@ -2,10 +2,10 @@
  * Corpus Ingestion Pipeline
  *
  * Fetches, parses, chunks, embeds, and stores external knowledge sources.
- * Supports PDF documents and web pages. Called automatically when Ship AI
- * discovers a source worth absorbing, or manually via the ingest API.
+ * Supports web pages and plain text. Pre-parsed content (e.g. from PDFs
+ * processed externally) can be passed directly via the `content` field.
  *
- * Pipeline: URL → fetch → parse → chunk → summarize → embed → store
+ * Pipeline: URL/content → fetch (if needed) → parse → chunk → summarize → embed → store
  */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
@@ -17,6 +17,8 @@ import type { LLMProvider } from './llm-provider'
 export interface IngestRequest {
   url: string
   title?: string
+  /** Pre-parsed content — if provided, skips fetching and parsing the URL */
+  content?: string
   sourceType?: 'discovered' | 'curated' | 'research'
   discoveredFromQuery?: string
   discoveredInChatId?: string
@@ -35,7 +37,7 @@ export interface IngestResult {
 interface ParsedDocument {
   title: string
   content: string
-  contentType: 'pdf' | 'html' | 'text'
+  contentType: 'html' | 'text' | 'pre-parsed'
   byteLength: number
 }
 
@@ -74,7 +76,7 @@ async function fetchDocument(url: string): Promise<{ buffer: Buffer; contentType
       signal: controller.signal,
       headers: {
         'User-Agent': 'ShipAI-Corpus-Ingest/1.0',
-        Accept: 'application/pdf, text/html, text/plain, */*',
+        Accept: 'text/html, text/plain, */*',
       },
     })
 
@@ -105,22 +107,6 @@ async function fetchDocument(url: string): Promise<{ buffer: Buffer; contentType
 
 // ── Parse ─────────────────────────────────────────────────────
 
-async function parsePDF(buffer: Buffer, fallbackTitle: string): Promise<ParsedDocument> {
-  // Dynamic import to avoid bundling pdf-parse in client code
-  const { PDFParse } = await import('pdf-parse')
-  const parser = new PDFParse({ data: new Uint8Array(buffer) })
-  const textResult = await parser.getText()
-  const info = await parser.getInfo().catch(() => null)
-  await parser.destroy()
-
-  return {
-    title: info?.info?.Title || fallbackTitle,
-    content: textResult.text,
-    contentType: 'pdf',
-    byteLength: buffer.byteLength,
-  }
-}
-
 function parseHTML(buffer: Buffer, fallbackTitle: string): ParsedDocument {
   const html = buffer.toString('utf-8')
 
@@ -129,7 +115,7 @@ function parseHTML(buffer: Buffer, fallbackTitle: string): ParsedDocument {
   const title = titleMatch?.[1]?.trim() || fallbackTitle
 
   // Strip HTML to plain text — progressive reduction
-  let text = html
+  const text = html
     // Remove scripts, styles, nav, footer
     .replace(/<(script|style|nav|footer|header|aside)[^>]*>[\s\S]*?<\/\1>/gi, '')
     // Remove HTML comments
@@ -173,14 +159,11 @@ function parsePlainText(buffer: Buffer, fallbackTitle: string): ParsedDocument {
   }
 }
 
-async function parseDocument(
+function parseDocument(
   buffer: Buffer,
   contentType: string,
   fallbackTitle: string
-): Promise<ParsedDocument> {
-  if (contentType.includes('pdf')) {
-    return parsePDF(buffer, fallbackTitle)
-  }
+): ParsedDocument {
   if (contentType.includes('html')) {
     return parseHTML(buffer, fallbackTitle)
   }
@@ -198,7 +181,6 @@ function estimateTokens(text: string): number {
  * Semantic chunking — splits on natural document boundaries:
  * 1. First try splitting on headings (markdown-style or newline patterns)
  * 2. Then split long sections on paragraph boundaries
- * 3. Finally, hard-split on sentence boundaries if still too long
  */
 export function chunkDocument(content: string): Chunk[] {
   const chunks: Chunk[] = []
@@ -319,11 +301,7 @@ Respond ONLY with JSON: {"score": N, "rationale": "one sentence"}`
 
 // ── Summarize ─────────────────────────────────────────────────
 
-async function summarizeChunk(
-  chunk: string,
-  docTitle: string,
-  llm: LLMProvider
-): Promise<string> {
+async function summarizeChunk(chunk: string, docTitle: string, llm: LLMProvider): Promise<string> {
   try {
     const response = await llm.createChatCompletion({
       messages: [
@@ -360,29 +338,28 @@ export async function ingestDocument(
   const supabase = getSupabase()
 
   // 1. Check for duplicate URL
-  const checksum = createHash('sha256').update(request.url).digest('hex')
   const { data: existing } = await supabase
     .from('corpus_entry')
     .select('id, checksum')
     .eq('url', request.url)
     .maybeSingle()
 
-  if (existing?.checksum === checksum) {
-    return {
-      entriesCreated: 0,
-      url: request.url,
+  // 2. Get content — either pre-parsed or fetched
+  let doc: ParsedDocument
+
+  if (request.content) {
+    // Pre-parsed content (e.g. PDF text extracted externally)
+    doc = {
       title: request.title ?? request.url,
-      chunks: 0,
-      skipped: true,
-      reason: 'Document already ingested (checksum match)',
+      content: request.content,
+      contentType: 'pre-parsed',
+      byteLength: Buffer.byteLength(request.content, 'utf-8'),
     }
+  } else {
+    const { buffer, contentType } = await fetchDocument(request.url)
+    doc = parseDocument(buffer, contentType, request.title ?? request.url)
   }
 
-  // 2. Fetch
-  const { buffer, contentType } = await fetchDocument(request.url)
-
-  // 3. Parse
-  const doc = await parseDocument(buffer, contentType, request.title ?? request.url)
   const contentChecksum = createHash('sha256').update(doc.content).digest('hex')
 
   // Skip if content hasn't changed
@@ -397,7 +374,7 @@ export async function ingestDocument(
     }
   }
 
-  // 4. Relevance gate — skip low-quality sources
+  // 3. Relevance gate — skip low-quality sources
   const relevance = await evaluateRelevance(
     doc.title,
     doc.content,
@@ -416,7 +393,7 @@ export async function ingestDocument(
     }
   }
 
-  // 5. Chunk
+  // 4. Chunk
   const chunks = chunkDocument(doc.content)
 
   if (chunks.length === 0) {
@@ -430,7 +407,7 @@ export async function ingestDocument(
     }
   }
 
-  // 6. Embed and store each chunk
+  // 5. Embed and store each chunk
   let entriesCreated = 0
 
   // Store parent entry (full document summary)
@@ -463,9 +440,10 @@ export async function ingestDocument(
   // Store individual chunks with unique URLs
   for (const chunk of chunks) {
     try {
-      const summary = chunks.length > 3
-        ? await summarizeChunk(chunk.content, doc.title, llm)
-        : chunk.content.slice(0, 200)
+      const summary =
+        chunks.length > 3
+          ? await summarizeChunk(chunk.content, doc.title, llm)
+          : chunk.content.slice(0, 200)
 
       const embeddingText = `${chunk.heading ?? doc.title}. ${summary}`
       const { embedding } = await llm.createEmbedding(embeddingText)
@@ -497,10 +475,7 @@ export async function ingestDocument(
 
   // Update parent checksum now that all chunks are stored
   if (parentId) {
-    await supabase
-      .from('corpus_entry')
-      .update({ checksum: contentChecksum })
-      .eq('id', parentId)
+    await supabase.from('corpus_entry').update({ checksum: contentChecksum }).eq('id', parentId)
   }
 
   return {
