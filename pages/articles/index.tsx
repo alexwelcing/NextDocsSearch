@@ -28,11 +28,13 @@ interface CollectionData {
 interface ArticlesIndexProps {
   interfaceCollection: CollectionData
   collections: CollectionData[]
+  featureHighlightsArticle: CollectionData['articles'][number] | null
 }
 
 export default function ArticlesIndex({
   interfaceCollection,
   collections,
+  featureHighlightsArticle,
 }: ArticlesIndexProps) {
   return (
     <div
@@ -132,6 +134,81 @@ export default function ArticlesIndex({
             Exploring how reality reorganizes when intelligence becomes abundant.
           </p>
         </header>
+
+        {featureHighlightsArticle && (
+          <section
+            style={{
+              marginBottom: '36px',
+              border: '1px solid rgba(0,212,255,0.22)',
+              background: 'linear-gradient(135deg, #0c1020 0%, #09090f 100%)',
+              borderRadius: '12px',
+              padding: '20px',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.65rem',
+                color: '#00d4ff',
+                textTransform: 'uppercase',
+                letterSpacing: '0.14em',
+                marginBottom: '10px',
+              }}
+            >
+              Recently Written Feature Highlights
+            </div>
+            <h2
+              style={{
+                fontSize: '1.35rem',
+                margin: '0 0 10px 0',
+                color: '#fff',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {featureHighlightsArticle.title}
+            </h2>
+            <p
+              style={{
+                margin: '0 0 14px 0',
+                color: '#9ca3af',
+                lineHeight: 1.6,
+                maxWidth: '760px',
+                fontSize: '0.9rem',
+              }}
+            >
+              {featureHighlightsArticle.description ||
+                'A practical write-up on iterating product features by testing multiple implementation paths before committing.'}
+            </p>
+
+            <ul
+              style={{
+                margin: '0 0 16px 0',
+                paddingLeft: '20px',
+                color: '#d1d5db',
+                lineHeight: 1.8,
+                fontSize: '0.85rem',
+              }}
+            >
+              <li>Prototype multiple feature variations before selecting a direction.</li>
+              <li>Compare preview versions to evaluate UX, performance, and viability.</li>
+              <li>Use findings to make launch decisions with less implementation risk.</li>
+            </ul>
+
+            <Link
+              href={`/articles/${featureHighlightsArticle.slug}`}
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.72rem',
+                color: '#00d4ff',
+                textDecoration: 'none',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Read the feature article &rarr;
+            </Link>
+          </section>
+        )}
 
         {/* Featured Collection: The Interface — hero treatment */}
         {interfaceCollection.articles.length > 0 && (
@@ -431,6 +508,8 @@ export const getStaticProps: GetStaticProps = async () => {
     articles: interfaceArticles,
   }
 
+  const featureHighlightsArticle = getArticleData('improve-the-feature')
+
   // Build other collection hub data
   const hubConfigs = [
     {
@@ -481,6 +560,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       interfaceCollection,
       collections,
+      featureHighlightsArticle,
     },
   }
 }
