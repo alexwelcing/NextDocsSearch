@@ -6,6 +6,7 @@ const ImageWrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
+  max-height: 80vh;
   margin: 2rem 0;
   border-radius: 8px;
   overflow: hidden;
@@ -19,7 +20,8 @@ const ImageWrapper = styled.div`
     object-fit: contain;
     width: 100% !important;
     position: relative !important;
-    height: unset !important;
+    height: auto !important;
+    max-height: 80vh;
   }
 `;
 

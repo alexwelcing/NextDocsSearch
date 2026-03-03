@@ -60,6 +60,8 @@ At the core of the experience is a real-time 3D environment rendered with React-
 
 This makes content exploration feel like entering a world, not scrolling a feed.
 
+![The 3D scene rendered with React Three Fiber, featuring interactive objects, dynamic lighting, and particle effects](/images/screenshots/nextdocssearch/01-3d-scene.svg)
+
 ## 2) Cinematic Intro + Camera Choreography
 
 The platform starts with a cinematic camera sequence that gradually introduces the space. Once complete, camera control transitions into interactive navigation.
@@ -72,6 +74,8 @@ You get:
 
 This helps first-time visitors understand the scene before they begin interacting.
 
+![Camera choreography path showing the intro, transition, and interactive phases](/images/screenshots/nextdocssearch/02-cinematic-intro.svg)
+
 ## 3) Dynamic Background Systems
 
 NextDocsSearch supports two visual modes for scene backdrops:
@@ -80,6 +84,8 @@ NextDocsSearch supports two visual modes for scene backdrops:
 - **Gaussian splat backgrounds** for higher-fidelity volumetric environments.
 
 When available and performant, splats create a photoreal, spatial atmosphere; otherwise, the image system keeps things fast and stable.
+
+![Side-by-side comparison of image sphere and Gaussian splat background modes](/images/screenshots/nextdocssearch/03-dynamic-backgrounds.svg)
 
 ## 4) Seasonal Effects Engine
 
@@ -93,6 +99,8 @@ The scene can render themed atmospheric effects based on season selection or aut
 
 Effects are performance-aware and can be reduced/disabled on constrained devices.
 
+![Seasonal effects including winter snow, spring petals, summer fireflies, and autumn leaves](/images/screenshots/nextdocssearch/04-seasonal-effects.svg)
+
 ## 5) Interactive Tablet + Terminal Overlay
 
 A floating tablet in the 3D scene opens a terminal-style 2D overlay where users can:
@@ -104,11 +112,15 @@ A floating tablet in the 3D scene opens a terminal-style 2D overlay where users 
 
 This is a key design decision: 3D for discovery and immersion, 2D for productivity and readability.
 
+![The 3D tablet opens a terminal overlay for AI chat, articles, quizzes, and leaderboard](/images/screenshots/nextdocssearch/05-interactive-tablet.svg)
+
 ## 6) AI-Powered Search and Discovery
 
 The platform uses embedding-based retrieval to support semantic article discovery. Instead of exact keyword matching only, users can ask concept-level questions and surface relevant content.
 
 This is especially useful for large knowledge bases with overlapping terminology.
+
+![Semantic search using OpenAI embeddings and Supabase pgvector for concept-level article discovery](/images/screenshots/nextdocssearch/06-ai-search.svg)
 
 ## 7) MDX Article Publishing Pipeline
 
@@ -121,6 +133,8 @@ Articles are written in MDX and live in the repository. Build-time scripts gener
 
 This gives authors a Git-native workflow while still enabling dynamic discovery features at runtime.
 
+![The MDX publishing pipeline from writing to build scripts to generated data to deployment](/images/screenshots/nextdocssearch/07-mdx-pipeline.svg)
+
 ## 8) Gamified Experience (Sphere Hunter)
 
 The built-in game loop introduces a timed orb-clicking challenge with:
@@ -131,6 +145,8 @@ The built-in game loop introduces a timed orb-clicking challenge with:
 - HUD and leaderboard overlays.
 
 Gamification keeps users engaged and integrates with progress tracking.
+
+![Sphere Hunter game with HUD showing score, timer, combo multiplier, and game state flow](/images/screenshots/nextdocssearch/08-sphere-hunter.svg)
 
 ## 9) Journey System (Quests + Achievements)
 
@@ -143,6 +159,8 @@ User progression is tracked with quests and unlocks:
 
 Features can unlock progressively, and achievements reward deeper platform use.
 
+![Quest progress tracking and achievement badges with localStorage persistence](/images/screenshots/nextdocssearch/09-journey-system.svg)
+
 ## 10) Full-Stack Data Layer (Supabase)
 
 Supabase supports key backend workflows such as:
@@ -152,6 +170,8 @@ Supabase supports key backend workflows such as:
 - storage + migrations for structured project data.
 
 This gives the project production-ready patterns without heavy backend overhead.
+
+![Supabase data layer with PostgreSQL, pgvector, storage, and migrations](/images/screenshots/nextdocssearch/10-supabase-backend.svg)
 
 ---
 

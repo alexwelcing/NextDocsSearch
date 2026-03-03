@@ -506,50 +506,60 @@ function HeroCard({ article }: { article: EnhancedArticleData }) {
       })
     : ''
 
+  const hasImage = article.heroImage || article.ogImage
+
   return (
-    <Link
-      href={`/articles/${article.slug}`}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: (article.heroImage || article.ogImage) ? '1fr 1fr' : '1fr',
-        gap: '0',
-        textDecoration: 'none',
-        borderRadius: '12px',
-        overflow: 'hidden',
-        background: '#0a0a14',
-        border: '1px solid rgba(255,255,255,0.06)',
-        marginBottom: '20px',
-        transition: 'all 0.3s ease',
-        minHeight: '280px',
-      }}
-      onMouseOver={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(0,212,255,0.15)'
-        e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.3)'
-      }}
-      onMouseOut={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
-        e.currentTarget.style.boxShadow = 'none'
-      }}
-    >
-      {/* Image side */}
-      {(article.heroImage || article.ogImage) && (
-        <div
-          style={{
-            position: 'relative',
-            background: '#111',
-            minHeight: '280px',
-          }}
-        >
-          <Image
-            src={article.heroImage || article.ogImage!}
-            alt={article.title}
-            fill
-            style={{ objectFit: 'cover' }}
-            sizes="(max-width: 768px) 100vw, 600px"
-            priority
-          />
-        </div>
-      )}
+    <>
+      <style>{`
+        .hero-card-grid {
+          display: grid;
+          grid-template-columns: ${hasImage ? '1fr 1fr' : '1fr'};
+          gap: 0;
+          text-decoration: none;
+          border-radius: 12px;
+          overflow: hidden;
+          background: #0a0a14;
+          border: 1px solid rgba(255,255,255,0.06);
+          margin-bottom: 20px;
+          transition: all 0.3s ease;
+          min-height: 280px;
+        }
+        .hero-card-grid:hover {
+          border-color: rgba(0,212,255,0.15);
+          box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+        }
+        @media (max-width: 768px) {
+          .hero-card-grid {
+            grid-template-columns: 1fr;
+            min-height: auto;
+          }
+        }
+      `}</style>
+      <Link
+        href={`/articles/${article.slug}`}
+        className="hero-card-grid"
+        style={{ textDecoration: 'none' }}
+      >
+        {/* Image side */}
+        {hasImage && (
+          <div
+            style={{
+              position: 'relative',
+              background: '#111',
+              minHeight: '240px',
+              maxHeight: '400px',
+            }}
+          >
+            <Image
+              src={(article.heroImage || article.ogImage)!}
+              alt={article.title}
+              fill
+              style={{ objectFit: 'cover' }}
+              sizes="(max-width: 768px) 100vw, 600px"
+              priority
+            />
+          </div>
+        )}
 
       {/* Content side */}
       <div
@@ -676,6 +686,7 @@ function HeroCard({ article }: { article: EnhancedArticleData }) {
         </div>
       </div>
     </Link>
+    </>
   )
 }
 

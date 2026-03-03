@@ -1,0 +1,86 @@
+<svg width="800" height="450" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sceneBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0a1a" />
+      <stop offset="100%" stop-color="#030308" />
+    </linearGradient>
+    <radialGradient id="sceneGlow" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="hsl(190, 60%, 25%)" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="transparent" />
+    </radialGradient>
+    <filter id="glow1">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#sceneBg)" />
+  <rect width="800" height="450" fill="url(#sceneGlow)" />
+  <!-- Browser chrome -->
+  <rect x="40" y="20" width="720" height="410" rx="8" fill="#111118" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+  <rect x="40" y="20" width="720" height="32" rx="8" fill="#1a1a24" />
+  <circle cx="62" cy="36" r="5" fill="#ff5f57" opacity="0.8" />
+  <circle cx="80" cy="36" r="5" fill="#febc2e" opacity="0.8" />
+  <circle cx="98" cy="36" r="5" fill="#28c840" opacity="0.8" />
+  <rect x="200" y="28" width="280" height="16" rx="4" fill="rgba(255,255,255,0.06)" />
+  <text x="260" y="40" font-family="monospace" font-size="9" fill="rgba(255,255,255,0.3)">localhost:3000</text>
+  <!-- 3D viewport area -->
+  <rect x="50" y="60" width="700" height="360" fill="#050510" />
+  <!-- Ground plane grid -->
+  <g opacity="0.15" stroke="hsl(190, 60%, 50%)" stroke-width="0.5">
+    <line x1="100" y1="380" x2="400" y2="260" />
+    <line x1="200" y1="380" x2="430" y2="280" />
+    <line x1="300" y1="380" x2="460" y2="300" />
+    <line x1="400" y1="380" x2="490" y2="320" />
+    <line x1="500" y1="380" x2="520" y2="340" />
+    <line x1="600" y1="380" x2="550" y2="360" />
+    <line x1="700" y1="380" x2="580" y2="380" />
+    <line x1="100" y1="350" x2="700" y2="350" />
+    <line x1="100" y1="320" x2="700" y2="320" />
+    <line x1="150" y1="290" x2="650" y2="290" />
+  </g>
+  <!-- 3D objects - floating cubes -->
+  <g transform="translate(300, 160)" filter="url(#glow1)">
+    <polygon points="0,-40 35,-20 35,20 0,40 -35,20 -35,-20" fill="rgba(0,212,255,0.15)" stroke="hsl(190, 80%, 50%)" stroke-width="1.5" />
+    <line x1="0" y1="-40" x2="0" y2="0" stroke="hsl(190, 80%, 50%)" stroke-width="1" opacity="0.5" />
+    <line x1="-35" y1="-20" x2="0" y2="0" stroke="hsl(190, 80%, 50%)" stroke-width="1" opacity="0.5" />
+    <line x1="35" y1="-20" x2="0" y2="0" stroke="hsl(190, 80%, 50%)" stroke-width="1" opacity="0.5" />
+  </g>
+  <!-- Floating tablet -->
+  <g transform="translate(480, 140)">
+    <rect x="0" y="0" width="100" height="140" rx="6" fill="#0d0d1a" stroke="hsl(190, 60%, 40%)" stroke-width="1.5" />
+    <rect x="8" y="12" width="84" height="110" rx="2" fill="#111" />
+    <text x="20" y="45" font-family="monospace" font-size="7" fill="hsl(190, 60%, 50%)">Articles</text>
+    <text x="20" y="58" font-family="monospace" font-size="7" fill="rgba(255,255,255,0.3)">AI Chat</text>
+    <text x="20" y="71" font-family="monospace" font-size="7" fill="rgba(255,255,255,0.3)">Quizzes</text>
+    <rect x="16" y="85" width="68" height="20" rx="2" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.3)" stroke-width="0.5" />
+    <text x="26" y="98" font-family="monospace" font-size="7" fill="hsl(190, 70%, 55%)">Search...</text>
+  </g>
+  <!-- Particle effects (snow/fireflies) -->
+  <g opacity="0.6">
+    <circle cx="150" cy="100" r="1.5" fill="white" opacity="0.8" />
+    <circle cx="250" cy="130" r="1" fill="white" opacity="0.5" />
+    <circle cx="180" cy="180" r="1.5" fill="white" opacity="0.7" />
+    <circle cx="350" cy="90" r="1" fill="white" opacity="0.4" />
+    <circle cx="420" cy="200" r="1.5" fill="white" opacity="0.6" />
+    <circle cx="600" cy="120" r="1" fill="white" opacity="0.5" />
+    <circle cx="650" cy="220" r="1.5" fill="white" opacity="0.7" />
+    <circle cx="550" cy="170" r="1" fill="white" opacity="0.4" />
+    <circle cx="200" cy="250" r="1" fill="hsl(50, 80%, 60%)" opacity="0.6" />
+    <circle cx="620" cy="280" r="1.5" fill="hsl(50, 80%, 60%)" opacity="0.5" />
+  </g>
+  <!-- Lighting rays -->
+  <g opacity="0.06">
+    <polygon points="400,60 350,380 450,380" fill="hsl(190, 70%, 60%)" />
+    <polygon points="400,60 300,380 400,380" fill="hsl(45, 70%, 60%)" />
+  </g>
+  <!-- Floating orbs (game elements) -->
+  <circle cx="200" cy="200" r="12" fill="rgba(0,212,255,0.2)" stroke="hsl(190, 80%, 55%)" stroke-width="1" filter="url(#glow1)" />
+  <circle cx="650" cy="160" r="10" fill="rgba(255,215,0,0.2)" stroke="hsl(45, 80%, 55%)" stroke-width="1" filter="url(#glow1)" />
+  <circle cx="380" cy="300" r="8" fill="rgba(168,85,247,0.2)" stroke="hsl(270, 70%, 60%)" stroke-width="1" filter="url(#glow1)" />
+  <!-- Label -->
+  <rect x="50" y="385" width="200" height="28" fill="rgba(0,0,0,0.7)" />
+  <text x="60" y="404" font-family="monospace" font-size="11" fill="hsl(190, 70%, 55%)" letter-spacing="1">REACT THREE FIBER SCENE</text>
+</svg>
