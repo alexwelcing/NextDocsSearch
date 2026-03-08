@@ -20,7 +20,8 @@ export type ModelCategory =
   | 'text-rendering'
   | 'photorealistic'
   | 'editing'
-  | 'lora';
+  | 'lora'
+  | 'video';
 
 export type SpeedTier = 'instant' | 'fast' | 'medium' | 'slow';
 export type QualityTier = 1 | 2 | 3 | 4 | 5;
@@ -1073,6 +1074,51 @@ export const OTHER_MODELS: FalImageModel[] = [
 ];
 
 // ═══════════════════════════════════════════════════════════════
+// VIDEO MODELS - LTX Video for article-to-video pipeline
+// ═══════════════════════════════════════════════════════════════
+
+export const VIDEO_MODELS: FalImageModel[] = [
+  {
+    id: 'fal-ai/ltx-video',
+    name: 'LTX Video (T2V)',
+    description: 'LTX-2.3 text-to-video generation. Produces 5-10s cinematic clips. Width/height must be divisible by 32, frames must be 8k+1.',
+    category: ['video'],
+    speedTier: 'slow',
+    qualityTier: 4,
+    costTier: 'high',
+    supportsNegativePrompt: false,
+    supportsImageToImage: false,
+    maxResolution: { width: 1280, height: 1280 },
+    estimatedTime: '~30-90s',
+    defaultParams: {
+      num_frames: 121,
+      width: 768,
+      height: 512,
+      fps: 24,
+    },
+  },
+  {
+    id: 'fal-ai/ltx-video/image-to-video',
+    name: 'LTX Video (I2V)',
+    description: 'LTX-2.3 image-to-video. Animates a still image into a 5-10s clip. Requires image_url input.',
+    category: ['video'],
+    speedTier: 'slow',
+    qualityTier: 4,
+    costTier: 'high',
+    supportsNegativePrompt: false,
+    supportsImageToImage: true,
+    maxResolution: { width: 1280, height: 1280 },
+    estimatedTime: '~30-90s',
+    defaultParams: {
+      num_frames: 121,
+      width: 768,
+      height: 512,
+      fps: 24,
+    },
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
 // COMBINED CATALOG
 // ═══════════════════════════════════════════════════════════════
 
@@ -1086,6 +1132,7 @@ export const FAL_IMAGE_MODELS: FalImageModel[] = [
   ...ASIAN_MODELS,
   ...LORA_MODELS,
   ...OTHER_MODELS,
+  ...VIDEO_MODELS,
 ];
 
 // ═══════════════════════════════════════════════════════════════
@@ -1236,3 +1283,9 @@ export const DEFAULT_PHOTO_MODEL = 'fal-ai/imagen4/preview';
 
 /** Cheapest model for prototyping */
 export const CHEAPEST_MODEL = 'fal-ai/fast-lightning-sdxl';
+
+/** Default model for text-to-video */
+export const DEFAULT_T2V_MODEL = 'fal-ai/ltx-video';
+
+/** Default model for image-to-video */
+export const DEFAULT_I2V_MODEL = 'fal-ai/ltx-video/image-to-video';
