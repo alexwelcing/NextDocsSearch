@@ -108,7 +108,9 @@ const ImageStrip = styled.div`
   }
 `
 
-const ImageStripItem = styled(Link)`
+const ImageStripItem = styled(Link).attrs({
+  style: { position: 'relative' as const, overflow: 'hidden' as const },
+})`
   position: relative;
   flex: 0 0 180px;
   height: 120px;
@@ -230,7 +232,9 @@ const CompactMosaic = styled.div`
   }
 `
 
-const MosaicTile = styled.div`
+const MosaicTile = styled.div.attrs({
+  style: { position: 'relative' as const, overflow: 'hidden' as const },
+})`
   position: relative;
   overflow: hidden;
   background: #111;
