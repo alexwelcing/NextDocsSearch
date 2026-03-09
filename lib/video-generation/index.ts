@@ -83,3 +83,7 @@ export {
   buildLogEntry,
   serializeLog,
 } from './asset-logger'
+
+// Hugging Face direct client
+export { generateVideoViaHf } from './hf-client'
+export type { HfVideoRequest, HfVideoResult } from './hf-client'
