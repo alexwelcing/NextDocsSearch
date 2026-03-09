@@ -42,6 +42,9 @@ export default function ArticlesIndex({
         minHeight: '100vh',
         background: '#0a0a0a',
         color: '#e5e5e5',
+        position: 'relative',
+        zIndex: 10,
+        isolation: 'isolate',
       }}
     >
       <Head>
