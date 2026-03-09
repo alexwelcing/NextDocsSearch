@@ -1,0 +1,109 @@
+{
+  "generatedAt": "2026-03-09T04:26:28.279Z",
+  "config": {
+    "backend": "hf-gradio",
+    "model": "LTX-Video Distilled",
+    "mode": "I2V",
+    "width": 768,
+    "height": 512,
+    "durationS": 6
+  },
+  "results": [
+    {
+      "slug": "interface-01-the-first-translator",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-02-haptic-vernacular",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-03-the-ceramicist-and-the-kiln",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-04-protocol-zero",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-05-the-weight-of-a-gaze",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-06-latency-as-intimacy",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-07-the-cartographer-of-attention",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-08-scaffold-and-bone",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-09-the-grief-engine",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-10-forking-paths",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-11-the-soil-whisperer",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-12-resonance-frequency",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-13-the-interpreters-dilemma",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-14-phantom-limb-electric-ghost",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-15-the-last-manual",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-16-the-gardeners-algorithm",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-17-consensus-engine",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-18-the-proprioception-problem",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-19-when-the-ship-dreamed",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-20-the-apprentices-reversal",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-21-bridge-tenders",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-22-the-memory-market",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-23-calibration-day",
+      "status": "dry-run"
+    },
+    {
+      "slug": "interface-24-the-slowest-interface",
+      "status": "dry-run"
+    }
+  ]
+}
