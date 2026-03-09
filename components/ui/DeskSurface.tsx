@@ -42,8 +42,26 @@ const DeskSurfaceContainer = styled.div`
   pointer-events: none;
   z-index: 0;
 
-  /* Transparent background — media items float over the page without blocking content */
-  background: transparent;
+  /* Desk surface with subtle texture */
+  background: linear-gradient(
+      135deg,
+      rgba(30, 30, 35, 0.97) 0%,
+      rgba(20, 20, 25, 0.97) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      transparent 1px,
+      transparent 40px,
+      rgba(255, 255, 255, 0.02) 41px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      transparent 1px,
+      transparent 40px,
+      rgba(255, 255, 255, 0.02) 41px
+    );
 
   /* Perspective for 3D effect */
   perspective: 1200px;
@@ -295,14 +313,14 @@ export const DeskSurface: React.FC<DeskSurfaceProps> = ({
     );
   }, [editable, onPositionUpdate, media]);
 
-  // Don't render the fixed overlay unless we actually have media to show
-  if (loading || error || media.length === 0) {
+  // Don't render if no media
+  if (!loading && media.length === 0) {
     return null;
   }
 
   return (
     <DeskSurfaceContainer ref={containerRef} className={className}>
-      {dimensions.width > 0 && media.map(mediaItem => (
+      {!loading && !error && dimensions.width > 0 && media.map(mediaItem => (
         <DeskMediaItem
           key={mediaItem.id}
           media={mediaItem}
