@@ -167,6 +167,24 @@ export async function generateVideoViaHf(
     if (lastResult.success) return lastResult
     if (!isRetryable(lastResult.error || '')) return lastResult
   }
+
+  // If I2V keeps failing with 404 (replica routing issue), fall back to T2V
+  if (request.mode === 'I2V' && lastResult && !lastResult.success) {
+    const err = lastResult.error || ''
+    if (err.includes('404') || err.includes('null')) {
+      console.log(`   ⚡ Falling back to T2V mode (I2V upload routing failed)`)
+      const t2vRequest = { ...request, mode: 'T2V' as const, imagePath: undefined, imageUrl: undefined }
+      for (let attempt = 0; attempt <= 1; attempt++) {
+        if (attempt > 0) {
+          await new Promise((r) => setTimeout(r, INITIAL_BACKOFF_MS))
+        }
+        lastResult = await generateVideoViaHfCore(t2vRequest, token, outputPath)
+        if (lastResult.success) return lastResult
+        if (!isRetryable(lastResult.error || '')) return lastResult
+      }
+    }
+  }
+
   return lastResult!
 }
 
@@ -225,6 +243,9 @@ async function generateVideoViaHfCore(
       }
     }
 
+    // Generate a session hash to help pin to the same replica
+    const sessionHash = Math.random().toString(36).slice(2, 12)
+
     // Build Gradio API call payload
     const gradioPayload = {
       data: [
@@ -243,11 +264,12 @@ async function generateVideoViaHfCore(
         request.guidanceScale ?? 1.0, // ui_guidance_scale
         request.improveTexture ?? true, // improve_texture_flag
       ],
+      session_hash: sessionHash,
     }
 
     if (process.env.DEBUG_HF) {
       console.log('   [DEBUG] Payload data (image redacted):', JSON.stringify(gradioPayload.data.map((d, i) => {
-        if (i === 2 && d && typeof d === 'object') return { ...d, url: (d as Record<string, string>).url?.slice(0, 60) + '...' }
+        if (i === 2 && d && typeof d === 'object') return { ...d, url: ((d as { url?: string }).url || '').slice(0, 60) + '...' }
         return d
       })))
     }
