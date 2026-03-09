@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "tsx scripts/generate-image-manifest.ts && tsx scripts/generate-article-manifest.ts && tsx scripts/generate-recommendation-index.ts && pnpm run embeddings && next build",
-    "postbuild": "next-sitemap",
+    "postbuild": "tsx scripts/generate-video-sitemap.ts && next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",

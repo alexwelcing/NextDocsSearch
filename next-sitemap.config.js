@@ -53,8 +53,7 @@ module.exports = {
     }
   },
   additionalSitemaps: [
-    // Generate separate sitemaps for better crawl understanding
-    // These will be referenced in robots.txt
+    `${process.env.SITE_URL || 'https://www.alexwelcing.com'}/video-sitemap.xml`,
   ],
   robotsTxtOptions: {
     policies: [
@@ -67,6 +66,7 @@ module.exports = {
     additionalSitemaps: [
       'https://www.alexwelcing.com/sitemap-core.xml',
       'https://www.alexwelcing.com/sitemap-articles.xml',
+      'https://www.alexwelcing.com/video-sitemap.xml',
     ],
   },
 }
