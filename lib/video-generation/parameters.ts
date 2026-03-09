@@ -33,6 +33,9 @@ export const MAX_DURATION_S = 10.0
 /** Minimum clip duration in seconds */
 export const MIN_DURATION_S = 1.0
 
+/** Default clip duration in seconds */
+export const DEFAULT_DURATION_S = 6.0
+
 // ═══════════════════════════════════════════════════════════════
 // RESOLUTION PRESETS (all divisible by 32)
 // ═══════════════════════════════════════════════════════════════
@@ -231,7 +234,7 @@ export function buildLtxParameters(partial: {
   checkpoint?: 'ltx-2.3-22b-distilled' | 'ltx-2.3-22b-dev'
 }): LtxParameters {
   const fps = partial.fps || DEFAULT_FPS
-  const durationS = Math.min(partial.durationS || 6.0, MAX_DURATION_S)
+  const durationS = Math.min(partial.durationS || DEFAULT_DURATION_S, MAX_DURATION_S)
   const width = partial.width ? roundDimensionNearest(partial.width) : 768
   const height = partial.height ? roundDimensionNearest(partial.height) : 512
   const frames = calculateFrames(durationS, fps)

@@ -19,6 +19,19 @@ import type {
 } from './types'
 
 // ═══════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════
+
+const HOOK_CLIP_DURATION_S = 6
+const CTA_CLIP_DURATION_S = 8
+const DEFAULT_CLIP_DURATION_S = 7
+const MAX_CAPTION_LENGTH = 120
+const MAX_VOICEOVER_LENGTH = 200
+const MAX_SOURCE_SPAN_LENGTH = 100
+const MIN_SENTENCE_LENGTH = 20
+const MAX_SENTENCE_LENGTH = 200
+
+// ═══════════════════════════════════════════════════════════════
 // HOOK / CLOSE SCORING
 // ═══════════════════════════════════════════════════════════════
 
@@ -98,7 +111,7 @@ export function selectHook(article: ArticleIntermediate): ScoredLine {
 
   for (const section of article.sections) {
     for (const para of section.paragraphs) {
-      const sentences = para.split(/(?<=[.!?])\s+/).filter((s) => s.length > 20 && s.length < 200)
+      const sentences = para.split(/(?<=[.!?])\s+/).filter((s) => s.length > MIN_SENTENCE_LENGTH && s.length < MAX_SENTENCE_LENGTH)
       for (const sentence of sentences) {
         const { score, reasons } = scoreHook(sentence)
         if (score > best.score) {
@@ -138,7 +151,7 @@ export function selectClose(article: ArticleIntermediate): ScoredLine {
 
   for (const section of article.sections) {
     for (const para of section.paragraphs) {
-      const sentences = para.split(/(?<=[.!?])\s+/).filter((s) => s.length > 20 && s.length < 200)
+      const sentences = para.split(/(?<=[.!?])\s+/).filter((s) => s.length > MIN_SENTENCE_LENGTH && s.length < MAX_SENTENCE_LENGTH)
       for (const sentence of sentences) {
         const { score, reasons } = scoreClose(sentence, section.heading)
         if (score > best.score) {
@@ -289,7 +302,7 @@ export function generateScenePlan(
 ): ScenePlan {
   const articleType = detectArticleType(article)
   const clipPattern = CLIP_PATTERNS[articleType]
-  const clipDurationS = options?.clipDurationS || 7
+  const clipDurationS = options?.clipDurationS || DEFAULT_CLIP_DURATION_S
   const totalClips = clipPattern.length
 
   const hookLine = selectHook(article)
@@ -300,7 +313,7 @@ export function generateScenePlan(
     const section = article.sections[sectionIdx]
     const isFirst = index === 0
     const isLast = index === clipPattern.length - 1
-    const duration = isFirst ? 6 : isLast ? 8 : clipDurationS
+    const duration = isFirst ? HOOK_CLIP_DURATION_S : isLast ? CTA_CLIP_DURATION_S : clipDurationS
 
     // Caption text: use hook for first, close for last, section summary otherwise
     let captionText: string
@@ -309,7 +322,7 @@ export function generateScenePlan(
     } else if (isLast) {
       captionText = `Read the full article at alexwelcing.com/articles/${article.slug}`
     } else {
-      captionText = section?.paragraphs[0]?.slice(0, 120) || section?.heading || ''
+      captionText = section?.paragraphs[0]?.slice(0, MAX_CAPTION_LENGTH) || section?.heading || ''
     }
 
     // Voiceover: brief narration
@@ -319,7 +332,7 @@ export function generateScenePlan(
     } else if (isLast) {
       voiceoverText = closeLine.text
     } else {
-      voiceoverText = section?.paragraphs[0]?.slice(0, 200) || ''
+      voiceoverText = section?.paragraphs[0]?.slice(0, MAX_VOICEOVER_LENGTH) || ''
     }
 
     // Decide LTX mode: use I2V if article has images, T2V for B-roll
@@ -337,7 +350,7 @@ export function generateScenePlan(
       captionText,
       voiceoverText,
       sourceSection: section?.heading,
-      sourceTextSpan: section?.paragraphs[0]?.slice(0, 100),
+      sourceTextSpan: section?.paragraphs[0]?.slice(0, MAX_SOURCE_SPAN_LENGTH),
       ltxMode,
       promptTemplate: role,
       imageAnchor: imageAnchor || undefined,

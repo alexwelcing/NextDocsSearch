@@ -149,7 +149,7 @@ function extractQuotes(sections: ArticleSection[]): ArticleQuote[] {
       }
     }
 
-    // Sentences with strong claims become pull quotes
+    // Sentences with strong claims become pull quotes (slightly longer minimum than hook scoring)
     for (const para of section.paragraphs) {
       const sentences = para.split(/(?<=[.!?])\s+/)
       for (const sentence of sentences) {

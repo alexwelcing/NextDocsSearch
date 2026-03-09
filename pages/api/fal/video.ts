@@ -13,6 +13,9 @@ const LTX_VIDEO_MODELS = {
   'i2v': 'fal-ai/ltx-video/image-to-video',
 } as const
 
+/** Timeout for video generation requests (3 minutes) */
+const VIDEO_GENERATION_TIMEOUT_MS = 180_000
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<VideoGenerationResponse | { message: string; code?: string }>
@@ -99,7 +102,7 @@ export default async function handler(
     const startTime = Date.now()
 
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 180000) // 3 min timeout for video
+    const timeoutId = setTimeout(() => controller.abort(), VIDEO_GENERATION_TIMEOUT_MS)
 
     const response = await fetch(`https://fal.run/${modelId}`, {
       method: 'POST',
@@ -161,7 +164,7 @@ export default async function handler(
       console.error('Video generation timed out')
       return res.status(504).json({
         success: false,
-        error: 'Video generation timed out after 3 minutes',
+        error: `Video generation timed out after ${VIDEO_GENERATION_TIMEOUT_MS / 1000} seconds`,
       })
     }
     console.error('Video generation failed:', error)
