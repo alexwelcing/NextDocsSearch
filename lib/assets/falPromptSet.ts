@@ -1,4 +1,4 @@
-export type AssetCategory = 'audio' | 'image' | 'model'
+export type AssetCategory = 'audio' | 'image' | 'model' | 'video'
 
 export interface AssetPrompt {
   id: string
