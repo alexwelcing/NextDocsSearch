@@ -15,7 +15,8 @@
  */
 
 import dotenv from 'dotenv'
-dotenv.config()
+dotenv.config({ path: '.env.local' })
+dotenv.config() // also load .env if it exists
 
 import fs from 'fs'
 import path from 'path'
