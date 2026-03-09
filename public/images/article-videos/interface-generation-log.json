@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-03-09T06:38:43.027Z",
+  "config": {
+    "backend": "hf-gradio",
+    "model": "LTX-Video Distilled",
+    "mode": "I2V",
+    "width": 768,
+    "height": 448,
+    "durationS": 4
+  },
+  "results": [
+    {
+      "slug": "interface-21-bridge-tenders",
+      "status": "success",
+      "timeMs": 13950
+    }
+  ]
+}

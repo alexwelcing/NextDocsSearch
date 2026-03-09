@@ -13,6 +13,7 @@ package-lock.json
 /coverage
 /test-screenshots
 /baseline-screenshots
+/test-output
 
 # next.js
 /.next/

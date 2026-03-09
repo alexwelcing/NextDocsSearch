@@ -15,8 +15,11 @@ import styled, { keyframes, css } from 'styled-components';
 import { escapeMdxContent } from '@/lib/utils';
 import MarkdownImage from '@/components/ui/MarkdownImage';
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Compass, Star, ArrowRight } from 'lucide-react';
+import type { ArticleMediaWithUrl } from '@/types/article-media';
+import VideoComponent from '@/components/VideoComponent';
+import { createVideoSchema } from '@/components/StructuredData';
 import HandwrittenNote from '@/components/ui/HandwrittenNote';
 import { TopRecommendation, MidRecommendation, BottomCarousel } from '@/components/ArticleRecommendations';
 import ArticleFooterPanels from '@/components/ArticleFooterPanels';
@@ -667,6 +670,27 @@ const ArticlePage: NextPage<ArticleProps> = ({
     });
   }, [slug, title, date, author, description, keywords, ogImage, readingTime, content, setCurrentArticle]);
 
+  // Fetch article videos from Supabase media storage
+  const [articleVideos, setArticleVideos] = useState<ArticleMediaWithUrl[]>([]);
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const res = await fetch(`/api/media/${encodeURIComponent(slug)}`);
+        const data = await res.json();
+        if (data.success && data.media) {
+          setArticleVideos(
+            data.media.filter((m: ArticleMediaWithUrl) => m.media_type === 'video' && m.status === 'ready')
+          );
+        }
+      } catch {
+        // Videos are optional — fail silently
+      }
+    };
+    fetchVideos();
+  }, [slug]);
+
+  const primaryVideo = articleVideos[0] || null;
+
   /* -------------------------------------------------------------------
      Split markdown content at ## headings to interleave with parallax.
      We get chunks like: [intro text, "## Heading\ntext", "## Heading\ntext", ...]
@@ -745,12 +769,37 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="article:published_time" content={date} />
         <meta property="article:author" content={author.join(', ')} />
 
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:site" content="@alexwelcing" />
-        <meta property="twitter:url" content={articleUrl} />
-        <meta property="twitter:title" content={title} />
-        <meta property="twitter:description" content={description || `Read ${title}`} />
-        <meta property="twitter:image" content={fullOgImage} />
+        {/* Video meta tags for social sharing */}
+        {primaryVideo && (
+          <>
+            <meta property="og:video" content={primaryVideo.public_url} />
+            <meta property="og:video:type" content={primaryVideo.mime_type || 'video/mp4'} />
+            {primaryVideo.width && <meta property="og:video:width" content={String(primaryVideo.width)} />}
+            {primaryVideo.height && <meta property="og:video:height" content={String(primaryVideo.height)} />}
+          </>
+        )}
+
+        {primaryVideo ? (
+          <>
+            <meta name="twitter:card" content="player" />
+            <meta name="twitter:site" content="@alexwelcing" />
+            <meta name="twitter:title" content={title} />
+            <meta name="twitter:description" content={description || `Read ${title}`} />
+            <meta name="twitter:player" content={articleUrl} />
+            {primaryVideo.width && <meta name="twitter:player:width" content={String(primaryVideo.width)} />}
+            {primaryVideo.height && <meta name="twitter:player:height" content={String(primaryVideo.height)} />}
+            <meta name="twitter:image" content={primaryVideo.thumbnail_url || fullOgImage} />
+          </>
+        ) : (
+          <>
+            <meta property="twitter:card" content="summary_large_image" />
+            <meta property="twitter:site" content="@alexwelcing" />
+            <meta property="twitter:url" content={articleUrl} />
+            <meta property="twitter:title" content={title} />
+            <meta property="twitter:description" content={description || `Read ${title}`} />
+            <meta property="twitter:image" content={fullOgImage} />
+          </>
+        )}
 
         <meta name="theme-color" content="#030308" />
         {heroImage && <link rel="preload" as="image" href={heroImage} />}
@@ -787,6 +836,22 @@ const ArticlePage: NextPage<ArticleProps> = ({
           }
         }}
       />
+
+      {/* VideoObject structured data for Google Video indexing */}
+      {primaryVideo && (
+        <StructuredData
+          type="VideoObject"
+          data={createVideoSchema({
+            name: primaryVideo.title || `${title} — Video`,
+            description: primaryVideo.caption || description || title,
+            thumbnailUrl: primaryVideo.thumbnail_url || fullOgImage,
+            contentUrl: primaryVideo.public_url,
+            uploadDate: primaryVideo.created_at || date,
+            duration: primaryVideo.duration_seconds,
+            articleUrl,
+          })}
+        />
+      )}
 
       <CircleNav />
 
@@ -830,6 +895,32 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
           <TopRecommendation slug={slug} />
 
+          {/* Generated article video (from Supabase media storage) */}
+          {primaryVideo && (
+            <VideoComponent
+              videoSrc={primaryVideo.public_url}
+              poster={primaryVideo.thumbnail_url}
+              title={primaryVideo.title || `${title} — Video`}
+              description={primaryVideo.caption}
+              width={primaryVideo.width}
+              height={primaryVideo.height}
+            />
+          )}
+
+          {/* Additional article videos */}
+          {articleVideos.slice(1).map((video) => (
+            <VideoComponent
+              key={video.id}
+              videoSrc={video.public_url}
+              poster={video.thumbnail_url}
+              title={video.title}
+              description={video.caption}
+              width={video.width}
+              height={video.height}
+            />
+          ))}
+
+          {/* YouTube embed (legacy frontmatter videoURL) */}
           {videoURL && (
             <div style={{ margin: '2rem 0' }}>
               <iframe
@@ -839,6 +930,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                title={`${title} — YouTube video`}
                 style={{ borderRadius: '0' }}
               />
             </div>

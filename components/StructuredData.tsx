@@ -8,7 +8,8 @@ export type StructuredDataType =
   | 'Organization'
   | 'BreadcrumbList'
   | 'WebPage'
-  | 'CollectionPage';
+  | 'CollectionPage'
+  | 'VideoObject';
 
 interface StructuredDataProps {
   type: StructuredDataType;
@@ -114,5 +115,46 @@ export const createPersonSchema = ({
     'AI Product Management',
   ],
 });
+
+// Helper to create VideoObject schema for Google Video indexing
+export const createVideoSchema = ({
+  name,
+  description,
+  thumbnailUrl,
+  contentUrl,
+  uploadDate,
+  duration,
+  articleUrl,
+}: {
+  name: string
+  description: string
+  thumbnailUrl: string
+  contentUrl: string
+  uploadDate: string
+  duration?: number // seconds
+  articleUrl: string
+}) => ({
+  name,
+  description,
+  thumbnailUrl: [thumbnailUrl],
+  contentUrl,
+  uploadDate,
+  ...(duration && { duration: `PT${Math.floor(duration / 60)}M${duration % 60}S` }),
+  publisher: {
+    '@type': 'Organization',
+    name: 'Alex Welcing',
+    url: 'https://www.alexwelcing.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://www.alexwelcing.com/logo.png',
+    },
+  },
+  embedUrl: articleUrl,
+  interactionStatistic: {
+    '@type': 'InteractionCounter',
+    interactionType: { '@type': 'WatchAction' },
+    userInteractionCount: 0,
+  },
+})
 
 export default StructuredData;
