@@ -246,11 +246,18 @@ async function main() {
 
     console.log(`[${i + 1}/${targetSlugs.length}] ${slug}`)
 
-    // Check for existing video
+    // Check for existing video (local file or Supabase)
     if (!FORCE) {
+      const localVideoPath = path.join(OUTPUT_DIR, `${slug}.mp4`)
+      if (fs.existsSync(localVideoPath) && fs.statSync(localVideoPath).size > 1000) {
+        console.log(`   ⏭️  Local video exists (${(fs.statSync(localVideoPath).size / 1024).toFixed(0)}KB) — skipping`)
+        skipCount++
+        results.push({ slug, status: 'skipped' })
+        continue
+      }
       const exists = await hasExistingVideo(slug)
       if (exists) {
-        console.log(`   ⏭️  Video already exists — skipping`)
+        console.log(`   ⏭️  Video already exists in Supabase — skipping`)
         skipCount++
         results.push({ slug, status: 'skipped' })
         continue
