@@ -25,6 +25,7 @@ import { TopRecommendation, MidRecommendation, BottomCarousel } from '@/componen
 import ArticleFooterPanels from '@/components/ArticleFooterPanels';
 import DeskSurface from '@/components/ui/DeskSurface';
 import ArticleImageGallery from '@/components/ui/ArticleImageGallery';
+import ArticleVideoPlayer from '@/components/ArticleVideoPlayer';
 import { ArtFrame, DepthSection, DepthDivider, EditorialSection } from '@/components/ui/ParallaxArtLayers';
 import type { DepthStage } from '@/components/ui/ParallaxArtLayers';
 import { discoverArticleImages } from '@/lib/article-images';
@@ -41,6 +42,7 @@ interface ArticleProps {
   heroImage: string | null;
   multiArtImages: MultiArtOption[];
   videoURL?: string;
+  articleVideo?: string;
   readingTime: number;
   relatedArticles: Array<{
     slug: string;
@@ -643,6 +645,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   heroImage,
   multiArtImages,
   videoURL,
+  articleVideo,
   readingTime,
   relatedArticles,
   slug
@@ -883,6 +886,10 @@ const ArticlePage: NextPage<ArticleProps> = ({
               <MetaItem $depth={0}>{readingTime} min read</MetaItem>
             </ArticleMeta>
           </ArticleHero>
+
+          {articleVideo && (
+            <ArticleVideoPlayer src={articleVideo} title={title} />
+          )}
 
           <InternalLinks $depth={0} aria-label="Related navigation">
             <InternalLink $depth={0} href="/speculative-ai">Speculative AI Hub</InternalLink>
@@ -1190,6 +1197,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const images = discoverArticleImages(slug);
 
+  const videoPath = `/images/article-videos/${slug}.mp4`;
+  const videoExists = fs.existsSync(path.join(process.cwd(), 'public', videoPath));
+
   return {
     props: {
       title: data.title as string,
@@ -1201,6 +1211,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       heroImage: images.heroImage,
       multiArtImages: images.multiArt,
       videoURL: data.videoURL || '',
+      articleVideo: videoExists ? videoPath : '',
       content: escapedContent,
       readingTime,
       relatedArticles,
