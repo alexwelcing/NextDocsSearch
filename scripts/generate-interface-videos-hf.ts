@@ -41,7 +41,7 @@ const PROMPTS_FILE = path.join(
 /** LTX generation settings — 768x512, 6s, distilled checkpoint via HF */
 const LTX_WIDTH = 768
 const LTX_HEIGHT = 512
-const LTX_DURATION_S = 6
+const LTX_DURATION_S = 4
 const STYLE_SUFFIX =
   'cinematic slow camera drift, shallow depth of field, volumetric haze, subtle particle movement, 35mm film grain, no text overlays'
 
@@ -284,16 +284,12 @@ async function main() {
       continue
     }
 
-    // We need to serve the image to HF. Use the public URL if available,
-    // otherwise we need to base64 encode. HF Gradio expects a URL.
-    const imageUrl = `${siteUrl}/images/multi-art/${slug}/option-2-dev.png`
-
     try {
       const result = await generateVideoViaHf(
         {
           prompt: motionPrompt,
           mode: 'I2V',
-          imageUrl,
+          imagePath: imagePath,
           durationS: LTX_DURATION_S,
           width: LTX_WIDTH,
           height: LTX_HEIGHT,

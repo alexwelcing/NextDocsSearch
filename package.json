@@ -46,6 +46,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@gradio/client": "^2.1.0",
     "@mkkellogg/gaussian-splats-3d": "^0.4.7",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
@@ -95,6 +96,7 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.182.0",
     "three-inspect": "^0.7.2",
+    "undici": "^7.22.0",
     "unist-builder": "^3.0.1",
     "unist-util-filter": "^4.0.1",
     "yargs": "^17.7.2"

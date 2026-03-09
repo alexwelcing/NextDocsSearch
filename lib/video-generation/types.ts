@@ -121,6 +121,7 @@ export interface LtxParameters {
   mode: LtxMode
   prompt: string
   imageUrl?: string
+  imagePath?: string
   checkpoint: LtxCheckpoint
   width: number
   height: number

@@ -210,8 +210,8 @@ export function validateLtxParameters(params: LtxParameters): string[] {
     errors.push('Prompt is required.')
   }
 
-  if (params.mode === 'I2V' && !params.imageUrl) {
-    errors.push('Image URL is required for image-to-video (I2V) mode.')
+  if (params.mode === 'I2V' && !params.imageUrl && !params.imagePath) {
+    errors.push('Image URL or local image path is required for image-to-video (I2V) mode.')
   }
 
   return errors
@@ -224,6 +224,7 @@ export function buildLtxParameters(partial: {
   prompt: string
   mode?: 'T2V' | 'I2V'
   imageUrl?: string
+  imagePath?: string
   durationS?: number
   width?: number
   height?: number
@@ -243,6 +244,7 @@ export function buildLtxParameters(partial: {
     mode: partial.mode || 'T2V',
     prompt: partial.prompt,
     imageUrl: partial.imageUrl,
+    imagePath: partial.imagePath,
     checkpoint: partial.checkpoint || 'ltx-2.3-22b-distilled',
     width,
     height,
