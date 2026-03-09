@@ -31,16 +31,46 @@ function getProxyFetch(): typeof globalThis.fetch {
 const proxyFetch = getProxyFetch()
 
 /**
- * Upload a local image to the HF Gradio Space.
- * Returns { remotePath, remoteUrl } that can be used in Gradio API calls.
+ * Detect actual MIME type from file magic bytes (not extension).
+ * These multi-art images are often JPEG with .png extension.
  */
-async function uploadImageToSpace(
+function detectMimeType(buffer: Buffer): string {
+  if (buffer[0] === 0xff && buffer[1] === 0xd8) return 'image/jpeg'
+  if (buffer[0] === 0x89 && buffer[1] === 0x50) return 'image/png'
+  if (buffer[0] === 0x47 && buffer[1] === 0x49) return 'image/gif'
+  if (buffer[0] === 0x52 && buffer[1] === 0x49) return 'image/webp'
+  return 'image/png'
+}
+
+function mimeToExt(mime: string): string {
+  if (mime === 'image/jpeg') return '.jpg'
+  if (mime === 'image/gif') return '.gif'
+  if (mime === 'image/webp') return '.webp'
+  return '.png'
+}
+
+interface GradioFileData {
+  url: string
+  path: string
+  meta: { _type: string }
+}
+
+/**
+ * Upload a local image to the HF Gradio Space and register it for I2V.
+ *
+ * Two-step process required for multi-replica Spaces:
+ * 1. Upload via /gradio_api/upload
+ * 2. "Register" via /handle_image_upload_for_dims (makes file available to processing node)
+ */
+async function uploadAndRegisterImage(
   localPath: string,
-  token: string
-): Promise<{ remotePath: string; remoteUrl: string }> {
+  token: string,
+  currentHeight: number,
+  currentWidth: number
+): Promise<{ fileData: GradioFileData; recHeight: number; recWidth: number }> {
   const imageBuffer = fs.readFileSync(localPath)
-  const ext = pathLib.extname(localPath) || '.png'
-  const mimeType = ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : 'image/png'
+  const mimeType = detectMimeType(imageBuffer)
+  const ext = mimeToExt(mimeType)
   const boundary = '----FormBoundary' + Math.random().toString(36).slice(2)
   const body = Buffer.concat([
     Buffer.from(
@@ -50,7 +80,8 @@ async function uploadImageToSpace(
     Buffer.from(`\r\n--${boundary}--\r\n`),
   ])
 
-  const res = await proxyFetch(`${HF_SPACE_BASE}/gradio_api/upload`, {
+  // Step 1: Upload
+  const uploadRes = await proxyFetch(`${HF_SPACE_BASE}/gradio_api/upload`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -59,27 +90,49 @@ async function uploadImageToSpace(
     body,
   })
 
-  if (!res.ok) {
-    throw new Error(`Image upload failed (${res.status}): ${await res.text()}`)
+  if (!uploadRes.ok) {
+    throw new Error(`Image upload failed (${uploadRes.status}): ${await uploadRes.text()}`)
   }
 
-  const paths = (await res.json()) as string[]
+  const paths = (await uploadRes.json()) as string[]
   const remotePath = paths[0]
-  return {
-    remotePath,
-    remoteUrl: `${HF_SPACE_BASE}/gradio_api/file=${remotePath}`,
-  }
-}
+  const remoteUrl = `${HF_SPACE_BASE}/gradio_api/file=${remotePath}`
+  const fileData: GradioFileData = { url: remoteUrl, path: remotePath, meta: { _type: 'gradio.FileData' } }
 
-/**
- * Convert a local image to a base64 data URI.
- * This is more reliable than upload for multi-replica Spaces.
- */
-function imageToBase64DataUri(localPath: string): string {
-  const imageBuffer = fs.readFileSync(localPath)
-  const ext = pathLib.extname(localPath).toLowerCase()
-  const mimeType = ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : 'image/png'
-  return `data:${mimeType};base64,${imageBuffer.toString('base64')}`
+  // Step 2: Register via handle_image_upload_for_dims
+  // This ensures the file is accessible on the processing replica
+  const dimsSubmitRes = await proxyFetch(
+    `${HF_SPACE_BASE}/gradio_api/call/handle_image_upload_for_dims`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data: [fileData, currentHeight, currentWidth] }),
+    }
+  )
+
+  const dimsSubmit = (await dimsSubmitRes.json()) as { event_id: string }
+
+  // Wait briefly then fetch the dims result
+  await new Promise((r) => setTimeout(r, 1500))
+  const dimsResultRes = await proxyFetch(
+    `${HF_SPACE_BASE}/gradio_api/call/handle_image_upload_for_dims/${dimsSubmit.event_id}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  )
+  const dimsText = await dimsResultRes.text()
+
+  // Parse recommended dimensions from SSE response
+  let recHeight = currentHeight
+  let recWidth = currentWidth
+  const valueMatches = dimsText.match(/"value":\s*(\d+)/g)
+  if (valueMatches && valueMatches.length >= 2) {
+    recHeight = parseInt(valueMatches[0].match(/\d+/)![0])
+    recWidth = parseInt(valueMatches[1].match(/\d+/)![0])
+  }
+
+  return { fileData, recHeight, recWidth }
 }
 
 /** Gradio Space base URL */
@@ -223,17 +276,18 @@ async function generateVideoViaHfCore(
     // Select Gradio endpoint based on mode
     const endpoint = params.mode === 'I2V' ? '/image_to_video' : '/text_to_video'
 
-    // For I2V mode: upload the source image to the Space
-    let imageFileData: { url: string; path: string; meta: { _type: string } } | null = null
+    // For I2V mode: upload and register the source image on the Space
+    let imageFileData: GradioFileData | null = null
     if (params.mode === 'I2V') {
       if (request.imagePath && fs.existsSync(request.imagePath)) {
-        // Upload to Space then use both url+path for Gradio FileData
-        const { remotePath, remoteUrl } = await uploadImageToSpace(request.imagePath, token)
-        imageFileData = {
-          url: remoteUrl,
-          path: remotePath,
-          meta: { _type: 'gradio.FileData' },
-        }
+        // Upload + register (two-step for multi-replica Spaces)
+        const uploaded = await uploadAndRegisterImage(
+          request.imagePath,
+          token,
+          params.height,
+          params.width
+        )
+        imageFileData = uploaded.fileData
       } else if (params.imageUrl) {
         imageFileData = {
           url: params.imageUrl,
@@ -242,9 +296,6 @@ async function generateVideoViaHfCore(
         }
       }
     }
-
-    // Generate a session hash to help pin to the same replica
-    const sessionHash = Math.random().toString(36).slice(2, 12)
 
     // Build Gradio API call payload
     const gradioPayload = {
@@ -262,9 +313,8 @@ async function generateVideoViaHfCore(
         params.seed ?? 42, // seed_ui
         params.seed === undefined, // randomize_seed
         request.guidanceScale ?? 1.0, // ui_guidance_scale
-        request.improveTexture ?? true, // improve_texture_flag
+        request.improveTexture !== undefined ? request.improveTexture : false, // improve_texture_flag
       ],
-      session_hash: sessionHash,
     }
 
     if (process.env.DEBUG_HF) {

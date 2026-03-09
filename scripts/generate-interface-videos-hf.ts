@@ -38,9 +38,9 @@ const PROMPTS_FILE = path.join(
   'interface-series-prompts.json'
 )
 
-/** LTX generation settings — 768x512, 6s, distilled checkpoint via HF */
+/** LTX generation settings — 768x448 (16:9 matching source images), 4s */
 const LTX_WIDTH = 768
-const LTX_HEIGHT = 512
+const LTX_HEIGHT = 448
 const LTX_DURATION_S = 4
 const STYLE_SUFFIX =
   'cinematic slow camera drift, shallow depth of field, volumetric haze, subtle particle movement, 35mm film grain, no text overlays'
