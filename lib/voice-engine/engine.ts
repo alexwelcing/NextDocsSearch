@@ -14,7 +14,7 @@
  * and qualitative LLM judgment (does it sound like Sebald? Is the body present?).
  */
 
-// @ts-expect-error — openai-edge has no type declarations
+// @ts-ignore — openai-edge may lack type declarations
 import { Configuration, OpenAIApi } from 'openai-edge'
 import { computeMetrics } from './metrics'
 import type {
