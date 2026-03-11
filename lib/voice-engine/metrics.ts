@@ -99,6 +99,10 @@ export function detectMetaphorDomains(text: string): string[] {
     body: [
       'breathe', 'pulse', 'heartbeat', 'nerve', 'muscle', 'bone', 'skin',
       'hand', 'eye', 'finger', 'stomach', 'spine', 'shoulder', 'throat',
+      'thumb', 'palm', 'wrist', 'callus', 'posture', 'inhale', 'exhale',
+      'mouth', 'nose', 'tongue', 'swallow', 'jaw', 'knuckle', 'elbow',
+      'chest', 'rib', 'knee', 'ankle', 'heel', 'forehead', 'temple',
+      'cardigan', 'wool', 'cotton', 'sleeve', 'collar',
     ],
     geology: [
       'sediment', 'stratum', 'strata', 'erosion', 'tectonic', 'fossil',
@@ -123,10 +127,13 @@ export function detectMetaphorDomains(text: string): string[] {
     workshop: [
       'forge', 'anvil', 'hammer', 'chisel', 'lathe', 'grain',
       'temper', 'weld', 'polish', 'calibrat', 'instrument', 'tool',
+      'bench', 'cork', 'glass', 'decant', 'pour', 'blade',
+      'wheel', 'spindle', 'needle', 'thread', 'stitch', 'loom',
     ],
     clinic: [
       'diagnos', 'symptom', 'patient', 'treatment', 'scan', 'prognos',
       'chronic', 'acute', 'patholog', 'clinical', 'surgical', 'dose',
+      'tast', 'palate', 'aroma', 'volatile', 'acidity', 'evaluat',
     ],
     ocean: [
       'ocean', 'sea', 'wave', 'tide', 'depth', 'surface', 'shore',

@@ -1,0 +1,29 @@
+The documentary editing suite smelled like takeout pad thai and electrical warmth — the particular scent of monitors that have been on for fourteen hours, a smell that Rina Osei-Mensah associated with the final stages of a cut, when she was too deep in the footage to notice hunger and her body had started metabolizing its own adrenaline. She'd been cutting a film about glacial retreat in Svalbard for nine months, and the footage had become as familiar as her own apartment — she knew every frame the way you know the creak of your own stairs.
+
+The AI assembly tool had produced its rough cut in forty minutes. Rina's rough cut had taken three weeks.
+
+She watched them side by side on split monitors, her left hand resting on the shuttle dial she'd used since film school — a Contour Design ShuttlePRO with a rubberized ring that had worn smooth under her thumb over eleven years of daily use. The shuttle was unnecessary; the AI tool had its own interface, sleek and gestural. She kept the shuttle the way a carpenter keeps a favourite chisel after buying a CNC machine: not for efficiency, but because her hand thought with it.
+
+The AI's cut was structurally competent and emotionally deaf. It had matched shots to narration beats, maintained visual continuity, and produced transitions that were technically invisible — the kind of clean, professional editing that would pass muster on any broadcast channel. What it had not done was linger. It had not held on the glaciologist's face for the three extra seconds where she stopped talking and looked at the ice and you could see her deciding whether to cry. It had not cut to the wide shot of the empty fjord at the moment in the narration where the scientist mentioned her daughter, because the AI did not know that the empty fjord was a visual metaphor for absence — it saw a landscape; Rina saw a feeling.
+
+She made notes on a yellow legal pad. Physical paper, physical pen, the scratch of ballpoint on cellulose — a deliberate friction she maintained against the frictionless digital workspace because she'd found that writing by hand slowed her thinking to the speed of judgment, whereas typing matched the speed of reaction, and editing required judgment. Each note was a timestamp and a word or two: *04:23 — hold. 07:14 — wrong shot. 11:38 — breathing room.*
+
+The phrase "breathing room" appeared seven times in her notes. The AI never left breathing room because breathing room was empty space, and the AI's training data rewarded density — every frame doing something, every cut motivated by information rather than silence. Rina's best work lived in the silences: the two-second gap between a question and an answer, the held shot where nothing happens except light moving across ice, the beat of black between scenes that let the audience feel the weight of what they'd just watched.
+
+She sat back. The chair creaked — an old Herman Miller Aeron with a broken lumbar adjustment that she'd been meaning to fix for two years. Her lower back ached. Her eyes felt granular, the way eyes feel when they've been tracking motion on a screen past the point where blinking becomes voluntary.
+
+On the left monitor, the AI's cut played clean and professional and entirely forgettable. On the right, her own cut played rough and unfinished and alive in a way she could feel in her sternum — a physical response to the assembled images that she'd spent twenty years learning to trust as the only reliable indicator of whether a sequence worked.
+
+She pulled the shuttle dial toward her. Rewind. Play. The glaciologist's face filled the screen, and Rina watched the three seconds that the AI had cut — the seconds where the woman's composure shifted, where her mouth did something that wasn't quite speech and wasn't quite silence — and knew those three seconds were the film. Everything else was scaffolding for those three seconds of a face deciding what to feel.
+
+---
+
+*March 29, 2027 — Rina's editing log*
+
+*Finished comparing the cuts. The AI's version is broadcastable. Mine isn't yet — another two weeks at least, maybe three. The gap between broadcastable and good is where I live, professionally, and I've been thinking about whether that gap is wide enough to justify the cost of me.*
+
+*The three seconds. The face. I keep coming back to those three seconds because the AI cut around them and I cut toward them and the difference between cutting around and cutting toward is the whole of what I know about editing, which I learned not from a textbook but from watching my own body — when I lean forward, hold that shot; when I look away, cut.*
+
+*The AI doesn't have a body. It doesn't lean forward. It doesn't*
+
+*It's late. My back hurts. The pad thai is cold. I'm going to watch those three seconds one more time and then I'm going to go home and sleep and tomorrow I'll come back and the footage will be the same footage and my body will tell me what to do with it, the way it always*
