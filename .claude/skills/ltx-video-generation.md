@@ -22,8 +22,44 @@ The project has a complete I2V (image-to-video) pipeline that generates cinemati
 
 ## Running the Generator
 
+### Unified Series Video Generator (all series)
+
 ```bash
-# Generate all Interface series videos
+# Generate videos for a specific series
+pnpm generate:series-videos -- --series threshold
+pnpm generate:series-videos -- --series residue
+pnpm generate:series-videos -- --series cartography
+
+# Generate for all series
+pnpm generate:series-videos -- --all
+
+# Dry run (preview without generating)
+pnpm generate:series-videos:dry-run
+
+# Text-to-video only (no source images needed)
+pnpm generate:series-videos:t2v
+
+# Single article
+pnpm generate:series-videos -- --article threshold-01-the-last-diagnosis
+
+# Limit + force
+pnpm generate:series-videos -- --all --limit 3 --force
+```
+
+### Series Image Generator (FAL Flux — creates I2V source images)
+
+```bash
+# Generate source images for a series (required before I2V video generation)
+pnpm generate:series-images -- --series threshold
+pnpm generate:series-images -- --all --option 2  # quality images only
+pnpm generate:series-images:missing               # only generate missing images
+pnpm generate:series-images:dry-run                # preview
+```
+
+### Legacy Interface-only Generator
+
+```bash
+# Generate all Interface series videos (original script)
 pnpm tsx scripts/generate-interface-videos-hf.ts
 
 # Dry run (no actual generation)
@@ -37,6 +73,19 @@ pnpm tsx scripts/generate-interface-videos-hf.ts --limit 5
 
 # Force regeneration (skip existing check)
 pnpm tsx scripts/generate-interface-videos-hf.ts --force
+```
+
+### Full Pipeline (images → videos)
+
+```bash
+# Step 1: Generate source images (option 2 = quality, for I2V anchors)
+pnpm generate:series-images -- --series threshold --option 2
+
+# Step 2: Generate videos from those images
+pnpm generate:series-videos -- --series threshold
+
+# Or skip images and go straight to T2V
+pnpm generate:series-videos -- --series threshold --t2v-only
 ```
 
 ## Required Environment Variables
@@ -275,12 +324,24 @@ Source images in `public/images/multi-art/` are often JPEG files with `.png` ext
 
 ## Extending to New Article Collections
 
-To generate videos for a different article collection:
+To generate videos for a new article collection:
 
-1. Add source images to `public/images/multi-art/{slug}/` (option-2-dev.png preferred)
-2. Add prompts to `interface-series-prompts.json` or create a new prompts file
-3. Update the script to read from the new collection in `ARTICLE_COLLECTIONS`
-4. Run with `--dry-run` first to verify source images and prompts are found
+1. Create a `{series-name}-series-prompts.json` in `public/images/concepts/` with the standard schema (see existing files for reference)
+2. Register the series in `ARTICLE_COLLECTIONS` in `lib/featured-articles.ts`
+3. Add a `SeriesRegistration` entry in `scripts/generate-series-videos.ts` `SERIES_REGISTRY`
+4. Add the series prompts file to `SERIES_FILES` in `scripts/generate-series-images.ts`
+5. Run `pnpm generate:series-images:dry-run` to verify prompts load correctly
+6. Generate source images: `pnpm generate:series-images -- --series <name> --option 2`
+7. Generate videos: `pnpm generate:series-videos -- --series <name>`
+
+### Narrative Architecture
+
+Cross-series connections are defined in `lib/narrative-arc.ts`:
+- `TEMPORAL_ERAS` — era definitions with visual identity, emotional arc, year range
+- `THEMATIC_BRIDGES` — specific article-to-article connections across eras
+- `RECURRING_MOTIFS` — visual/thematic threads that transform across all three eras
+- `READING_PATHS` — curated paths through the 15 articles (chronological, thematic, etc.)
+- Utility functions for cross-series recommendations and visual transitions
 
 ## Using the Client Programmatically
 
