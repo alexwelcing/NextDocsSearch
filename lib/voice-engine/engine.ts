@@ -14,6 +14,7 @@
  * and qualitative LLM judgment (does it sound like Sebald? Is the body present?).
  */
 
+// @ts-expect-error — openai-edge has no type declarations
 import { Configuration, OpenAIApi } from 'openai-edge'
 import { computeMetrics } from './metrics'
 import type {
@@ -391,14 +392,14 @@ export async function mutateProfile(
   // Apply parameter mutations via dot-path
   const paramChanges = (mutations.parameterChanges || {}) as Record<string, unknown>
   for (const [path, value] of Object.entries(paramChanges)) {
-    setNestedValue(newProfile.parameters, path, value)
+    setNestedValue(newProfile.parameters as unknown as Record<string, unknown>, path, value)
   }
 
   // Apply prompt fragment changes
   const fragmentChanges = (mutations.promptFragmentChanges || {}) as Record<string, string | null>
   for (const [key, value] of Object.entries(fragmentChanges)) {
     if (value && key in newProfile.promptFragments) {
-      ;(newProfile.promptFragments as Record<string, string>)[key] = value
+      ;(newProfile.promptFragments as unknown as Record<string, string>)[key] = value
     }
   }
 
