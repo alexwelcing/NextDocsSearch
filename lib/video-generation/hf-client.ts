@@ -302,7 +302,7 @@ async function generateVideoViaHfCore(
       data: [
         params.prompt, // prompt
         request.negativePrompt ||
-          'worst quality, inconsistent motion, blurry, jittery, distorted', // negative_prompt
+          'worst quality, inconsistent motion, blurry, jittery, distorted, morphing, warping, flicker, stutter, temporal artifacts, frame blending, text, watermark, logo, title, caption, subtitle, label, sign, lettering, words, numbers', // negative_prompt
         imageFileData, // input_image_filepath
         null, // input_video_filepath
         params.height, // height_ui
