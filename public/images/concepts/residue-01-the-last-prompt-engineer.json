@@ -1,0 +1,16 @@
+{
+  "archetype": "The Obsolete Preservationist",
+  "logline": "A prompt engineer curates the remnants of his vanishing craft in a sparse apartment that has become a personal museum of human-AI communication.",
+  "scene": "a man sitting in a sparse modern apartment surrounded by old monitors and printed documents pinned to walls, cool blue-gray light from a cloudy window, the screens showing archived conversations and prompt templates, the space feels like a personal museum, minimal furniture, a sense of quiet preservation",
+  "keyProps": [
+    "Old monitors showing archived conversations",
+    "Printed documents pinned to walls",
+    "Cool blue-gray light from a cloudy window",
+    "Sparse minimal furniture"
+  ],
+  "camera": "Wide workspace framing, 35mm lens, low-key lighting, melancholic atmosphere",
+  "lighting": "Cool blue-gray ambient from a cloudy window with occasional warm practical light from monitors",
+  "productionDesign": "Cool desaturated palette, 35mm film look, post-industrial sparse apartment, visible age and wear on technology, mid-future 2032-2034 setting",
+  "signatureTwist": "close-up of a framed document on a white wall, the document dense with carefully formatted prompt engineering notation, cool diffused light falling across the glass surface, the frame slightly dusty, a small desk lamp casting warm light on just the bottom edge of the frame, the rest of the room in shadow",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

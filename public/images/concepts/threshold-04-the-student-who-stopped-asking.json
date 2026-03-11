@@ -1,0 +1,16 @@
+{
+  "archetype": "The Deliberate Learner",
+  "logline": "A biology student chooses the discomfort of not knowing over the ease of instant answers, reclaiming the struggle that makes learning meaningful.",
+  "scene": "a young woman sitting alone in a university cafe with a blank paper notebook open in front of her, pen in hand, nothing written yet, the cafe bustling around her out of focus, warm natural light from large windows, her expression intensely focused inward, no phone or laptop visible, Imperial College London atmosphere",
+  "keyProps": [
+    "A blank paper notebook with pen in hand",
+    "Bustling cafe out of focus in background",
+    "Warm natural light from large windows",
+    "No digital devices visible"
+  ],
+  "camera": "Eye-level intimate framing, 50mm lens with shallow depth of field isolating the subject from the busy cafe",
+  "lighting": "Warm natural light from large cafe windows, soft and diffused, emphasizing the contemplative solitude",
+  "productionDesign": "Documentary realism in a university cafe setting, warm golden tones, subtle film grain, near-future but intentionally analog atmosphere",
+  "signatureTwist": "close-up of a blank notebook page with a single pen resting on it, warm cafe light casting shadows, out-of-focus background showing a laptop closed and pushed to the edge of the table, a coffee cup with steam rising, the emptiness of the page as the subject, shallow depth of field emphasizing the untouched paper",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

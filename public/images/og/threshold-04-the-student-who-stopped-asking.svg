@@ -1,0 +1,38 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="hsl(30, 40%, 10%)" />
+      <stop offset="100%" stop-color="hsl(35, 50%, 16%)" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.21" cy="0.19" r="0.8">
+      <stop offset="0%" stop-color="hsl(40, 80%, 55%)" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="hsl(40, 80%, 55%)" stop-opacity="0" />
+    </radialGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="30" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <rect width="100%" height="100%" fill="url(#glow)" />
+  <g filter="url(#blur)">
+<circle cx="806" cy="346" r="230" fill="hsl(35, 60%, 45%)" opacity="0.27" />
+<circle cx="1046" cy="624" r="303" fill="hsl(40, 60%, 45%)" opacity="0.22" />
+<circle cx="763" cy="332" r="197" fill="hsl(45, 60%, 45%)" opacity="0.23" />
+<circle cx="545" cy="363" r="322" fill="hsl(30, 60%, 45%)" opacity="0.28" />
+  </g>
+  <g>
+<ellipse cx="204" cy="629" rx="207" ry="202" transform="rotate(75 204 629)" fill="hsl(48, 65%, 50%)" opacity="0.14" />
+<ellipse cx="911" cy="473" rx="177" ry="177" transform="rotate(9 911 473)" fill="hsl(38, 65%, 50%)" opacity="0.21" />
+<ellipse cx="543" cy="322" rx="206" ry="141" transform="rotate(258 543 322)" fill="hsl(38, 65%, 50%)" opacity="0.09" />
+<ellipse cx="498" cy="286" rx="202" ry="188" transform="rotate(314 498 286)" fill="hsl(41, 65%, 50%)" opacity="0.10" />
+<ellipse cx="803" cy="102" rx="141" ry="76" transform="rotate(78 803 102)" fill="hsl(40, 65%, 50%)" opacity="0.23" />
+<ellipse cx="677" cy="493" rx="201" ry="130" transform="rotate(23 677 493)" fill="hsl(42, 65%, 50%)" opacity="0.24" />
+  </g>
+  <g>
+<line x1="622" y1="104" x2="472" y2="580" stroke="hsl(35, 70%, 55%)" stroke-width="2" opacity="0.20" />
+<line x1="481" y1="488" x2="775" y2="196" stroke="hsl(35, 70%, 55%)" stroke-width="2" opacity="0.24" />
+<line x1="235" y1="104" x2="1118" y2="236" stroke="hsl(35, 70%, 55%)" stroke-width="2" opacity="0.25" />
+<line x1="1172" y1="480" x2="530" y2="146" stroke="hsl(35, 70%, 55%)" stroke-width="2" opacity="0.29" />
+  </g>
+  <rect x="964" y="208" width="204" height="91" rx="20" fill="hsl(40, 80%, 55%)" opacity="0.15" />
+</svg>

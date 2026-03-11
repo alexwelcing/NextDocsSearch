@@ -1,0 +1,16 @@
+{
+  "archetype": "The Embodied Craftsman",
+  "logline": "A blacksmith discovers that the imperfections in his hand-forged steel carry a value that perfection cannot replicate.",
+  "scene": "a blacksmith mid-strike at a traditional forge, sparks flying from hot steel on an anvil, the forge fire casting warm orange light across the workshop, hand tools hanging on stone walls, a small modern sensor array mounted discreetly on the anvil catching firelight, converted stable workshop in Czech countryside",
+  "keyProps": [
+    "Hot steel on an anvil with flying sparks",
+    "Forge fire casting warm orange light",
+    "Hand tools on stone walls",
+    "A discreet modern sensor array on the anvil"
+  ],
+  "camera": "Action framing mid-strike, 50mm lens with shallow depth of field, documentary handheld energy",
+  "lighting": "Warm orange forge fire as primary light source, natural ambient from the workshop, sparks providing dynamic highlights",
+  "productionDesign": "Documentary realism in a converted Czech stable workshop, stone walls and iron tools, warm golden palette with film grain, near-future grounded setting",
+  "signatureTwist": "extreme close-up of two Damascus steel knife blades side by side on a leather apron, one with perfectly symmetrical patterns and one with subtle organic irregularities, warm forge light making the steel glow, the irregular blade catching more light because of its surface variation, macro detail of the pattern welding",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

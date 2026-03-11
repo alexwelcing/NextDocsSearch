@@ -1,0 +1,16 @@
+{
+  "archetype": "The Intentional Refusenik",
+  "logline": "A community of craftspeople and educators deliberately chooses analog methods, finding that imperfection carries a meaning that optimization erases.",
+  "scene": "a woodworking workshop in rural Mexico, natural light pouring through open barn doors, a woman in a work apron hand-planing a piece of wood, sawdust floating in the light beams, traditional hand tools organized on a pegboard wall, a half-finished wooden chair on a workbench, no screens or digital devices visible, warm but desaturated",
+  "keyProps": [
+    "Hand plane shaping wood with floating sawdust",
+    "Natural light pouring through open barn doors",
+    "Traditional hand tools on a pegboard wall",
+    "A half-finished wooden chair on a workbench"
+  ],
+  "camera": "Wide workspace framing, 35mm lens, natural light emphasis, documentary style",
+  "lighting": "Natural light pouring through open barn doors creating visible light beams with floating sawdust, warm but desaturated overall tone",
+  "productionDesign": "Warm but desaturated palette, 35mm film look, rural Mexican woodworking workshop, intentionally analog environment with no digital technology visible",
+  "signatureTwist": "close-up of a hand-made wooden chair with a slightly crooked leg, the wood grain visible and beautiful, cool window light falling across the chair casting shadows that reveal the imperfections, a perfectly manufactured chair of similar design visible out of focus in the background for contrast, the handmade chair in sharp focus",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

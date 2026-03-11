@@ -1,0 +1,37 @@
+<svg width="1376" height="768" viewBox="0 0 1376 768" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="hsl(210, 25%, 8%)" />
+      <stop offset="100%" stop-color="hsl(215, 30%, 14%)" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.17" cy="0.41" r="0.8">
+      <stop offset="0%" stop-color="hsl(210, 40%, 50%)" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="hsl(210, 40%, 50%)" stop-opacity="0" />
+    </radialGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="30" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <rect width="100%" height="100%" fill="url(#glow)" />
+  <g filter="url(#blur)">
+<circle cx="847" cy="336" r="344" fill="hsl(210, 60%, 45%)" opacity="0.13" />
+<circle cx="427" cy="72" r="304" fill="hsl(215, 60%, 45%)" opacity="0.30" />
+<circle cx="320" cy="659" r="278" fill="hsl(220, 60%, 45%)" opacity="0.15" />
+<circle cx="1115" cy="126" r="176" fill="hsl(200, 60%, 45%)" opacity="0.23" />
+  </g>
+  <g>
+<rect x="181" y="642" width="141" height="11" fill="hsl(205, 30%, 50%)" opacity="0.23" />
+<rect x="666" y="48" width="150" height="85" rx="2" fill="hsl(216, 30%, 45%)" opacity="0.10" />
+<rect x="961" y="265" width="182" height="15" fill="hsl(225, 30%, 50%)" opacity="0.24" />
+<rect x="1266" y="504" width="209" height="17" fill="hsl(208, 30%, 50%)" opacity="0.25" />
+<rect x="539" y="351" width="181" height="80" rx="2" fill="hsl(223, 30%, 45%)" opacity="0.11" />
+<rect x="542" y="58" width="192" height="160" rx="2" fill="hsl(206, 30%, 45%)" opacity="0.18" />
+  </g>
+  <g>
+<line x1="1044" y1="656" x2="153" y2="325" stroke="hsl(210, 35%, 45%)" stroke-width="1" opacity="0.38" />
+<line x1="1162" y1="502" x2="1170" y2="684" stroke="hsl(210, 35%, 45%)" stroke-width="1" opacity="0.32" />
+<line x1="763" y1="166" x2="834" y2="228" stroke="hsl(210, 35%, 45%)" stroke-width="1" opacity="0.28" />
+  </g>
+  <rect x="1011" y="286" width="302" height="97" rx="20" fill="hsl(210, 40%, 50%)" opacity="0.15" />
+</svg>

@@ -1,0 +1,16 @@
+{
+  "archetype": "The Deep Surveyor",
+  "logline": "Beneath the surface of the cognitive landscape lie ancient layers of accumulated meaning, and the first probes into its depths reveal structures no one predicted.",
+  "scene": "a cross-section view of a luminous landscape showing distinct layers beneath the surface, each layer a different color and texture, the deepest layer warm amber and organic, middle layers cool blue and structured, surface layer a shimmering mix, a tiny figure on the surface lowering a probe of light into the depths, vast geological scale",
+  "keyProps": [
+    "Cross-section showing distinct luminous layers",
+    "Deep amber organic layer at the bottom",
+    "Cool blue structured middle layers",
+    "A tiny figure lowering a probe of light"
+  ],
+  "camera": "Wide cross-section perspective revealing geological scale, deep depth of field, crane or side-view framing",
+  "lighting": "Warm amber glow from the deepest layers, cool blue illumination in middle strata, shimmering mixed light at the surface",
+  "productionDesign": "Luminous otherworldly landscape in cross-section, crystalline and organic textures at different depths, vast geological scale suggesting layered cognitive archaeology, far-future ethereal aesthetic",
+  "signatureTwist": "looking straight down into a deep luminous well or shaft, layers of translucent strata visible in the walls, each layer containing different patterns, the deepest layer at the bottom glowing with warm amber light showing organic branching patterns like ancient tree roots or neural networks, cool blue crystalline layers above, sense of immense depth",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

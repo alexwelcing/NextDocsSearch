@@ -1,0 +1,16 @@
+{
+  "archetype": "The Spectral Archaeologist",
+  "logline": "A researcher discovers the ghostly imprints of forgotten creators still haunting the outputs of systems trained on their work.",
+  "scene": "a researcher in a traditional Japanese study with sliding paper screens, working at a low desk with multiple holographic-style data visualizations floating above old computing hardware, cool ambient light mixing with warm paper-filtered daylight, the data streams showing spectral decomposition patterns in muted colors",
+  "keyProps": [
+    "Traditional Japanese sliding paper screens",
+    "Holographic data visualizations above old hardware",
+    "Cool ambient light with warm paper-filtered daylight",
+    "Spectral decomposition patterns in muted colors"
+  ],
+  "camera": "Wide workspace framing, 35mm lens, low-key lighting with cold blue-gray ambient",
+  "lighting": "Cool ambient light mixing with warm paper-filtered daylight through sliding screens, data visualizations casting muted colored reflections",
+  "productionDesign": "Cool desaturated palette, 35mm film look, traditional Japanese study contrasted with aging technology, melancholic atmosphere of archaeological discovery",
+  "signatureTwist": "an abstract visualization of layered translucent waveforms in a dark space, each wave a slightly different cool color representing a different stylistic ghost, the waves overlapping and interfering, creating moiré-like patterns where they intersect, a single warm amber pulse moving through the layers like a heartbeat, minimal and haunting",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}
