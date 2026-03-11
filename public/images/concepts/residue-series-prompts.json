@@ -1,0 +1,136 @@
+{
+  "series": "The Residue",
+  "description": "Image and video generation prompts for the 5-part Residue series. Each article has 3 prompts. Visual identity: cool, desaturated, melancholic. Post-industrial environments, wide shots, slow deliberate camera. Mid future 2032-2034.",
+  "stylePrefix": "cinematic still frame, cool desaturated palette, 35mm film look, wide shot tendency, low-key lighting with cold blue-gray ambient and occasional warm practicals, industrial and post-industrial settings, empty spaces, visible age and wear on technology, melancholic atmosphere",
+  "styleSuffix": "no text, no titles, no captions, no logos, no watermarks, no signs, no labels, no bright colors, no HUD overlays",
+  "videoStyleSuffix": "cinematic slow orbit or slow dolly, desaturated cool color grade, volumetric dust in light shafts, 35mm lens, tripod-locked stability, 180-degree shutter, natural motion blur, no readable text, no titles, no captions, no logos, no watermarks, no signs, no labels",
+  "negativePrompt": "worst quality, inconsistent motion, blurry, jittery, distorted, morphing, warping, flicker, stutter, temporal artifacts, frame blending, text, watermark, logo, title, caption, subtitle, label, sign, lettering, words, numbers, saturated colors, vibrant, warm tones, futuristic glowing interfaces",
+  "recommendedModels": {
+    "fast": "fal-ai/flux/schnell",
+    "quality": "fal-ai/flux/dev"
+  },
+  "imageSize": "landscape_16_9",
+  "outputStructure": "public/images/multi-art/{slug}/option-{N}-{model-short}.png",
+  "articles": [
+    {
+      "slug": "residue-01-the-last-prompt-engineer",
+      "title": "The Last Prompt Engineer",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a man sitting in a sparse modern apartment surrounded by old monitors and printed documents pinned to walls, cool blue-gray light from a cloudy window, the screens showing archived conversations and prompt templates, the space feels like a personal museum, minimal furniture, a sense of quiet preservation"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "close-up of a framed document on a white wall, the document dense with carefully formatted prompt engineering notation, cool diffused light falling across the glass surface, the frame slightly dusty, a small desk lamp casting warm light on just the bottom edge of the frame, the rest of the room in shadow"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a long empty corridor in a modern office building, overhead fluorescent lights half-extinguished, old server racks visible through a glass wall on one side, a single figure walking away from camera toward a window at the far end where gray daylight enters, the space feels recently abandoned, cables still on the floor"
+        }
+      ]
+    },
+    {
+      "slug": "residue-02-the-training-data-ghosts",
+      "title": "The Training Data Ghosts",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a researcher in a traditional Japanese study with sliding paper screens, working at a low desk with multiple holographic-style data visualizations floating above old computing hardware, cool ambient light mixing with warm paper-filtered daylight, the data streams showing spectral decomposition patterns in muted colors"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "an abstract visualization of layered translucent waveforms in a dark space, each wave a slightly different cool color representing a different stylistic ghost, the waves overlapping and interfering, creating moiré-like patterns where they intersect, a single warm amber pulse moving through the layers like a heartbeat, minimal and haunting"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "rows of old server racks in a dim data center, cool blue indicator lights reflected on the floor, a single workstation at the end of a row where a woman sits with headphones on as if listening to something, the servers towering above her like the stacks of a library, atmosphere of quiet archaeological work"
+        }
+      ]
+    },
+    {
+      "slug": "residue-03-the-deprecated-caretaker",
+      "title": "The Deprecated Caretaker",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a systems engineer at a cluttered home desk late at night, a single old server humming on a shelf beside her, her face lit by a terminal showing system logs, the rest of the apartment dark, a mug of cold tea beside her, the intimate scale of maintaining something small and forgotten, cool blue monitor light with warm desk lamp"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "close-up of an elderly man's hands holding a simple tablet device showing a basic conversation interface, the hands weathered and dark-skinned, warm morning light from a window casting golden streaks across the device, the interface simple and old-fashioned compared to modern designs, the man's thumbs poised to type, care home setting out of focus"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "split composition: three small windows into three different lives connected by the same deprecated system, an elderly man in a sunlit room in Accra, an elderly woman in a rainy garden in Vancouver, an elderly man in a hospital bed in Turin, each seen from a distance through their respective windows, cool overall light with warm spots in each window"
+        }
+      ]
+    },
+    {
+      "slug": "residue-04-the-analog-holdouts",
+      "title": "The Analog Holdouts",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a woodworking workshop in rural Mexico, natural light pouring through open barn doors, a woman in a work apron hand-planing a piece of wood, sawdust floating in the light beams, traditional hand tools organized on a pegboard wall, a half-finished wooden chair on a workbench, no screens or digital devices visible, warm but desaturated"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "close-up of a hand-made wooden chair with a slightly crooked leg, the wood grain visible and beautiful, cool window light falling across the chair casting shadows that reveal the imperfections, a perfectly manufactured chair of similar design visible out of focus in the background for contrast, the handmade chair in sharp focus"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a classroom of children working at wooden desks with paper and pencils, no screens anywhere, the room lit by large windows showing a garden outside, the children focused and engaged, some confused, some smiling, a teacher standing at a chalkboard, warm golden light but desaturated color palette, intentionally analog environment"
+        }
+      ]
+    },
+    {
+      "slug": "residue-05-the-compatibility-museum",
+      "title": "The Compatibility Museum",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "establishing shot",
+          "prompt": "the interior of a converted textile factory repurposed as a museum, high industrial ceilings with exposed brick and iron beams, rows of vintage computing terminals and old interface devices displayed on clean white platforms, cool diffused light from skylights, a few visitors moving between exhibits, the space vast and reverent"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "a teenager sitting at a museum exhibit using a vintage 2023-era chatbot interface on an old monitor, her expression shifting from confusion to amusement, the monitor casting cool blue-white light on her face, the exhibit framed like a confession booth with curtained sides, warm overhead spot mixing with the cool screen glow"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a long museum hall showing the evolution of interfaces chronologically, starting with a mechanical teletype in the foreground and progressing through increasingly modern devices into the distance, each display lit by its own warm pool of light against the cool dark industrial space, the progression ending in an empty pedestal with no device"
+        }
+      ]
+    }
+  ]
+}
