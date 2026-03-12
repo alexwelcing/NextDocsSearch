@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-12T05:23:58.802Z",
+  "config": {
+    "backend": "hf-gradio",
+    "model": "LTX-Video Distilled",
+    "dryRun": false,
+    "t2vOnly": false
+  },
+  "seriesProcessed": [
+    "threshold"
+  ],
+  "results": [
+    {
+      "slug": "threshold-01-the-last-diagnosis",
+      "series": "threshold",
+      "status": "failed",
+      "mode": "I2V",
+      "timeMs": 17933
+    },
+    {
+      "slug": "threshold-02-the-closing-window",
+      "series": "threshold",
+      "status": "failed",
+      "mode": "I2V",
+      "timeMs": 17371
+    },
+    {
+      "slug": "threshold-03-the-weight-of-the-hammer",
+      "series": "threshold",
+      "status": "failed",
+      "mode": "I2V",
+      "timeMs": 16219
+    },
+    {
+      "slug": "threshold-04-the-student-who-stopped-asking",
+      "series": "threshold",
+      "status": "failed",
+      "mode": "I2V",
+      "timeMs": 15743
+    },
+    {
+      "slug": "threshold-05-the-beautiful-redundancy",
+      "series": "threshold",
+      "status": "failed",
+      "mode": "I2V",
+      "timeMs": 180
+    }
+  ]
+}
