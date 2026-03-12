@@ -135,8 +135,24 @@ async function uploadAndRegisterImage(
   return { fileData, recHeight, recWidth }
 }
 
+/**
+ * Supported HF Space backends.
+ * ltx-2-distilled has a simpler 8-param API and is the newer model.
+ * The original ltx-video-distilled has a 13-param API.
+ */
+type SpaceBackend = 'ltx2' | 'original'
+
+/** Active backend — set via HF_SPACE_BACKEND env var, defaults to ltx2 */
+const PREFERRED_BACKEND: SpaceBackend =
+  (process.env.HF_SPACE_BACKEND as SpaceBackend) || 'ltx2'
+
+const SPACE_URLS: Record<SpaceBackend, string> = {
+  ltx2: 'https://lightricks-ltx-2-distilled.hf.space',
+  original: 'https://lightricks-ltx-video-distilled.hf.space',
+}
+
 /** Gradio Space base URL */
-const HF_SPACE_BASE = 'https://lightricks-ltx-video-distilled.hf.space'
+const HF_SPACE_BASE = SPACE_URLS[PREFERRED_BACKEND]
 
 /** Timeout for video generation (5 minutes — ZeroGPU cold starts can be slow) */
 const HF_TIMEOUT_MS = 300_000
@@ -271,16 +287,13 @@ async function generateVideoViaHfCore(
   }
 
   const startTime = Date.now()
+  const spaceBase = HF_SPACE_BASE
 
   try {
-    // Select Gradio endpoint based on mode
-    const endpoint = params.mode === 'I2V' ? '/image_to_video' : '/text_to_video'
-
     // For I2V mode: upload and register the source image on the Space
     let imageFileData: GradioFileData | null = null
     if (params.mode === 'I2V') {
       if (request.imagePath && fs.existsSync(request.imagePath)) {
-        // Upload + register (two-step for multi-replica Spaces)
         const uploaded = await uploadAndRegisterImage(
           request.imagePath,
           token,
@@ -297,29 +310,54 @@ async function generateVideoViaHfCore(
       }
     }
 
-    // Build Gradio API call payload
-    const gradioPayload = {
-      data: [
-        params.prompt, // prompt
-        request.negativePrompt ||
-          'worst quality, inconsistent motion, blurry, jittery, distorted, morphing, warping, flicker, stutter, temporal artifacts, frame blending, text, watermark, logo, title, caption, subtitle, label, sign, lettering, words, numbers', // negative_prompt
-        imageFileData, // input_image_filepath
-        null, // input_video_filepath
-        params.height, // height_ui
-        params.width, // width_ui
-        params.mode === 'I2V' ? 'image-to-video' : 'text-to-video', // mode
-        params.durationS, // duration_ui
-        params.frames, // ui_frames_to_use
-        params.seed ?? 42, // seed_ui
-        params.seed === undefined, // randomize_seed
-        request.guidanceScale ?? 1.0, // ui_guidance_scale
-        request.improveTexture !== undefined ? request.improveTexture : false, // improve_texture_flag
-      ],
+    // Build endpoint and payload based on backend
+    let endpoint: string
+    let gradioPayload: { data: unknown[] }
+
+    if (PREFERRED_BACKEND === 'ltx2') {
+      // ltx-2-distilled: simpler 8-param API with single /generate_video endpoint
+      endpoint = '/generate_video'
+      gradioPayload = {
+        data: [
+          imageFileData,              // input_image (null for T2V)
+          params.prompt,              // prompt
+          params.durationS,           // duration (seconds)
+          true,                       // enhance_prompt
+          params.seed ?? 42,          // seed
+          params.seed === undefined,  // randomize_seed
+          params.height,              // height
+          params.width,               // width
+        ],
+      }
+    } else {
+      // Original ltx-video-distilled: 13-param API with separate endpoints
+      endpoint = params.mode === 'I2V' ? '/image_to_video' : '/text_to_video'
+      gradioPayload = {
+        data: [
+          params.prompt,
+          request.negativePrompt ||
+            'worst quality, inconsistent motion, blurry, jittery, distorted, morphing, warping, flicker, stutter, temporal artifacts, frame blending, text, watermark, logo, title, caption, subtitle, label, sign, lettering, words, numbers',
+          imageFileData,
+          null,
+          params.height,
+          params.width,
+          params.mode === 'I2V' ? 'image-to-video' : 'text-to-video',
+          params.durationS,
+          params.frames,
+          params.seed ?? 42,
+          params.seed === undefined,
+          request.guidanceScale ?? 1.0,
+          request.improveTexture !== undefined ? request.improveTexture : true,
+        ],
+      }
     }
 
     if (process.env.DEBUG_HF) {
+      console.log(`   [DEBUG] Backend: ${PREFERRED_BACKEND}, Endpoint: ${endpoint}`)
       console.log('   [DEBUG] Payload data (image redacted):', JSON.stringify(gradioPayload.data.map((d, i) => {
-        if (i === 2 && d && typeof d === 'object') return { ...d, url: ((d as { url?: string }).url || '').slice(0, 60) + '...' }
+        if (d && typeof d === 'object' && 'url' in (d as Record<string, unknown>)) {
+          return { ...d as Record<string, unknown>, url: ((d as { url?: string }).url || '').slice(0, 60) + '...' }
+        }
         return d
       })))
     }
@@ -328,7 +366,7 @@ async function generateVideoViaHfCore(
     const timeoutId = setTimeout(() => controller.abort(), HF_TIMEOUT_MS)
 
     // Submit job to Gradio queue
-    const submitResponse = await proxyFetch(`${HF_SPACE_BASE}/gradio_api/call${endpoint}`, {
+    const submitResponse = await proxyFetch(`${spaceBase}/gradio_api/call${endpoint}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -371,7 +409,7 @@ async function generateVideoViaHfCore(
 
     // Poll for result via SSE stream
     const resultResponse = await proxyFetch(
-      `${HF_SPACE_BASE}/gradio_api/call${endpoint}/${eventId}`,
+      `${spaceBase}/gradio_api/call${endpoint}/${eventId}`,
       {
         method: 'GET',
         headers: {
@@ -435,7 +473,7 @@ async function generateVideoViaHfCore(
         : videoData?.url
           ? videoData.url
           : videoData?.path
-            ? `${HF_SPACE_BASE}/gradio_api/file=${videoData.path}`
+            ? `${spaceBase}/gradio_api/file=${videoData.path}`
             : undefined
 
     const returnedSeed = result.data?.[1]

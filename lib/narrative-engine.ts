@@ -367,10 +367,14 @@ function findStrongestEcho(
 ): { slug: string; connection: string } | undefined {
   const bridges = getBridgesForArticle(slug)
   const strongBridge = bridges.find((b) => b.strength === 'strong')
-  if (!strongBridge) return bridges[0] ? {
-    slug: strongBridge?.from.slug === slug ? strongBridge?.to.slug : strongBridge?.from.slug || bridges[0].to.slug,
-    connection: bridges[0].readerBridge,
-  } : undefined
+  if (!strongBridge) {
+    if (!bridges[0]) return undefined
+    const b = bridges[0]
+    return {
+      slug: b.from.slug === slug ? b.to.slug : b.from.slug,
+      connection: b.readerBridge,
+    }
+  }
 
   return {
     slug: strongBridge.from.slug === slug ? strongBridge.to.slug : strongBridge.from.slug,

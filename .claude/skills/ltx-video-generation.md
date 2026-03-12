@@ -4,7 +4,7 @@ Use this skill when generating videos for articles using the LTX-Video model on 
 
 ## Overview
 
-The project has a complete I2V (image-to-video) pipeline that generates cinematic videos from article images using the Lightricks/ltx-video-distilled HuggingFace Space. Videos are stored locally and optionally uploaded to Supabase.
+The project has a complete I2V (image-to-video) pipeline that generates cinematic videos from article images using HuggingFace Gradio Spaces (Lightricks LTX-Video). Supports two Space backends: `ltx-2-distilled` (preferred, simpler 8-param API) and the original `ltx-video-distilled` (13-param API). Videos are stored locally and optionally uploaded to Supabase.
 
 ## Key Files
 
@@ -94,6 +94,8 @@ pnpm generate:series-videos -- --series threshold --t2v-only
 - `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` — For Supabase upload (optional)
 - `HTTP_PROXY` / `HTTPS_PROXY` — Proxy URL if behind a proxy (auto-detected)
 - `DEBUG_HF=1` — Enable debug logging of Gradio payloads and SSE responses
+- `HF_SPACE_BACKEND=ltx2|original` — Which HF Space to use (default: `ltx2`)
+- `FAL_KEY` — FAL AI API key (for image generation via `generate-series-images.ts`)
 
 Must be set in `.env.local` (loaded via `dotenv.config({ path: '.env.local' })`).
 
@@ -103,8 +105,8 @@ Must be set in `.env.local` (loaded via `dotenv.config({ path: '.env.local' })`)
 - **Duration**: 6 seconds default (145 frames at 24fps), max 10 seconds (257 frames)
 - **Mode**: I2V (image-to-video) preferred, T2V fallback
 - **Style suffix**: `cinematic slow camera drift, shallow depth of field, volumetric haze, subtle particle movement, 35mm film grain`
-- **improve_texture**: `false` (more reliable on ZeroGPU)
-- **CFG**: 3.0–3.5 (above 4.0 causes contrast burn and flicker)
+- **improve_texture**: `true` (Space default; was `false` in earlier builds but the Space now defaults to `true`)
+- **CFG**: 1.0 (Space default for distilled model; use 3.0–3.5 for non-distilled)
 - **Steps**: 30–40 recommended (20 is fast but lacks texture)
 - **FPS**: 24fps (aligns with model's native training)
 
