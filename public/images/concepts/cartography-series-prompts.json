@@ -1,0 +1,136 @@
+{
+  "series": "The Cartography",
+  "description": "Image and video generation prompts for the 5-part Cartography series. Each article has 3 prompts. Visual identity: luminous, otherworldly, expansive. Vast abstract environments, crane/orbit camera, volumetric light. Far future 2045-2050.",
+  "stylePrefix": "cinematic still frame, luminous ethereal atmosphere, wide expansive framing, volumetric light rays, bioluminescent and crystalline textures, cool blue-violet base with warm amber accents, vast scale, deep depth of field, crane or overhead perspective tendency, abstract landscapes that suggest cognitive spaces",
+  "styleSuffix": "no text, no titles, no captions, no logos, no watermarks, no signs, no labels, no HUD overlays, no conventional architecture, no recognizable technology",
+  "videoStyleSuffix": "slow crane reveal or slow orbit, luminous volumetric light, bioluminescent particle drift, vast scale with tiny human figures, cool blue-violet palette with warm amber highlights, stabilized footage, 35mm lens, 180-degree shutter, natural motion blur, no readable text, no titles, no captions, no logos, no watermarks, no signs, no labels",
+  "negativePrompt": "worst quality, inconsistent motion, blurry, jittery, distorted, morphing, warping, flicker, stutter, temporal artifacts, frame blending, text, watermark, logo, title, caption, subtitle, label, sign, lettering, words, numbers, realistic buildings, modern technology, screens, monitors, conventional office settings",
+  "recommendedModels": {
+    "fast": "fal-ai/flux/schnell",
+    "quality": "fal-ai/flux/dev"
+  },
+  "imageSize": "landscape_16_9",
+  "outputStructure": "public/images/multi-art/{slug}/option-{N}-{model-short}.png",
+  "articles": [
+    {
+      "slug": "cartography-01-the-unnamed-continent",
+      "title": "The Unnamed Continent",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "landscape scene",
+          "prompt": "a vast luminous landscape seen from above, terrain made of flowing translucent layers in cool blue and violet, with amber veins of light running through it like rivers, a tiny human figure standing at the edge of a crystalline cliff looking out over the expanse, volumetric light rays descending from above, the landscape suggesting neural pathways at planetary scale"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "two massive translucent landmasses seen from a great height, one warm amber and organic in texture, the other cool blue and geometric, between them a luminous sea filled with swirling bioluminescent particles and emerging structures that belong to neither shore, the space between teeming with light and activity, vast scale, ethereal atmosphere"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a woman standing in a vast dark space that extends infinitely, around her a three-dimensional luminous map materializing from particles of light, showing terrain features in translucent layers of blue and amber, her silhouette small against the scale of the emerging geography, volumetric light rays cutting through the dark, sense of discovery"
+        }
+      ]
+    },
+    {
+      "slug": "cartography-02-the-isthmus-of-intent",
+      "title": "The Isthmus of Intent",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "landscape scene",
+          "prompt": "a narrow luminous bridge of land connecting two vast continents of different colors, seen from above at an angle, the isthmus glowing with concentrated amber light while the continents on either side are cool blue and violet, streams of light flowing through the narrow passage like traffic, vast scale with atmospheric haze"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "extreme close-up of a narrow channel where two types of luminous fluid meet and transform, warm amber flowing from the left and cool blue from the right, at the point of contact they become pure white light briefly before separating into new colors on the other side, the transformation process visible as intricate patterns, shallow depth of field"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a researcher standing at the edge of a vast luminous chasm, looking down into a narrow passage where streams of light converge from two directions, the passage glowing intensely with compressed energy, the walls of the chasm showing layered crystalline strata in blue and amber, the sense of immense forces flowing through a tiny space"
+        }
+      ]
+    },
+    {
+      "slug": "cartography-03-the-depth-soundings",
+      "title": "The Depth Soundings",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "landscape scene",
+          "prompt": "a cross-section view of a luminous landscape showing distinct layers beneath the surface, each layer a different color and texture, the deepest layer warm amber and organic, middle layers cool blue and structured, surface layer a shimmering mix, a tiny figure on the surface lowering a probe of light into the depths, vast geological scale"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "looking straight down into a deep luminous well or shaft, layers of translucent strata visible in the walls, each layer containing different patterns, the deepest layer at the bottom glowing with warm amber light showing organic branching patterns like ancient tree roots or neural networks, cool blue crystalline layers above, sense of immense depth"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "an underwater perspective looking up toward a distant luminous surface, a human figure descending through layers of translucent cognitive terrain, each layer a different color from cool violet at the top through blue in the middle to warm amber at the bottom, particles of light drifting like deep-sea bioluminescence, vast depth"
+        }
+      ]
+    },
+    {
+      "slug": "cartography-04-the-tidal-zone",
+      "title": "The Tidal Zone",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "landscape scene",
+          "prompt": "a luminous shoreline where a glowing ocean of cool blue light meets warm amber land, the tideline constantly shifting, leaving pools of mixed light in depressions along the shore, small human figures visible in the tidal zone walking between the pools, the sky a deep violet with volumetric light rays, the sense of rhythmic breathing"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "close-up of a luminous tidepool left behind by a retreating cognitive tide, the pool containing swirling hybrid patterns of warm and cool light, small structures growing in the pool like crystal formations or coral, a human hand reaching toward the pool surface, the reflection showing something different from what is above, ethereal intimate moment"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a group of people standing in a vast luminous landscape at the boundary between two types of light, the boundary visibly shifting around them like a slow tide, some figures standing in cool blue territory and others in warm amber, the boundary line flowing between them, their silhouettes connected by threads of hybrid light, expansive and communal"
+        }
+      ]
+    },
+    {
+      "slug": "cartography-05-the-atlas-of-disappearances",
+      "title": "The Atlas of Disappearances",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "landscape scene",
+          "prompt": "an aerial view of the luminous continent from earlier in the series, but now large regions have become transparent and invisible, only faint outlines remaining where features once were, the remaining visible territory glowing intensely surrounded by expanding areas of seamless integration, a map dissolving into the territory it described"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "a woman holding a luminous translucent map that is slowly becoming transparent, the features on the map fading into pure light, her face lit by the glow of the disappearing geography, behind her a vast unified luminous landscape with no boundaries or features, the map the last evidence of structure that has become invisible, melancholic beauty"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a vast luminous space that was once a detailed landscape now becoming a single unified glow, the last visible features dissolving like morning frost, a solitary figure in the center watching the final boundaries fade, the light becoming warmer and more unified as the distinctions disappear, sense of completion and loss simultaneously, expansive and still"
+        }
+      ]
+    }
+  ]
+}

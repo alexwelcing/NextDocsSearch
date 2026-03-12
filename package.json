@@ -32,7 +32,18 @@
     "test:visual:analyze": "node tests/feedback-analyzer.js",
     "test:visual:full": "npm run test:visual:enhanced && npm run test:visual:analyze",
     "test:visual:install": "pnpm add -D playwright && npx playwright install chromium",
-    "setup:media-storage": "tsx scripts/setup-media-storage.ts"
+    "setup:media-storage": "tsx scripts/setup-media-storage.ts",
+    "generate:series-images": "tsx scripts/generate-series-images.ts",
+    "generate:series-images:dry-run": "tsx scripts/generate-series-images.ts --all --dry-run",
+    "generate:series-images:missing": "tsx scripts/generate-series-images.ts --all --option 2 --only-missing",
+    "generate:series-videos": "tsx scripts/generate-series-videos.ts",
+    "generate:series-videos:dry-run": "tsx scripts/generate-series-videos.ts --all --dry-run",
+    "generate:series-videos:t2v": "tsx scripts/generate-series-videos.ts --all --t2v-only",
+    "narrative": "tsx scripts/narrative-compose.ts",
+    "narrative:graph": "tsx scripts/narrative-compose.ts graph",
+    "narrative:arc": "tsx scripts/narrative-compose.ts arc",
+    "narrative:bridges": "tsx scripts/narrative-compose.ts bridges",
+    "narrative:paths": "tsx scripts/narrative-compose.ts paths"
   },
   "prettier": {
     "trailingComma": "es5",

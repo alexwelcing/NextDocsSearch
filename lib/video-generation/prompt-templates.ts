@@ -5,7 +5,7 @@
  * - Single cohesive paragraph per prompt
  * - Present tense, sequential action
  * - Camera language and audio cues included
- * - No readable text/logos in-frame
+ * - No readable text/logos/signs/labels/watermarks in-frame (critical for quality)
  *
  * @see https://huggingface.co/Lightricks/LTX-Video
  */
@@ -53,7 +53,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Opening hook concept scene (text-to-video)',
     template:
-      'Cinematic opening shot that visually represents: {HOOK_IDEA}. Environment: {SETTING}. Lighting: {LIGHT}. Action: {SIMPLE_ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Mood: {TONE}. No readable text. Clean composition.',
+      'Cinematic opening shot that visually represents: {HOOK_IDEA}. Environment: {SETTING}. Lighting: {LIGHT}. Action: {SIMPLE_ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Mood: {TONE}. 180-degree shutter, natural motion blur. Clean composition. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       SETTING: 'a sleek modern tech environment with cool blue ambient light',
       LIGHT: 'dramatic low-key lighting with volumetric haze',
@@ -67,7 +67,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'I2V',
     description: 'Opening hook animate hero still (image-to-video)',
     template:
-      'Make this image come alive with subtle cinematic motion. {MICRO_MOTION_LIST}. Camera: slow push-in. Keep subject identity consistent. No added text or logos.',
+      'Make this image come alive with subtle cinematic motion. {MICRO_MOTION_LIST}. Camera: slow push-in, 50mm f/1.4. Keep subject identity consistent. 180-degree shutter, natural motion blur. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       MICRO_MOTION_LIST:
         'Gentle ambient particles drifting, soft light flicker from background elements, subtle depth-of-field shift',
@@ -80,7 +80,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Section explanation metaphor B-roll',
     template:
-      'A clear visual metaphor for {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Add ambient audio only, no speech. No readable text or logos.',
+      'A clear visual metaphor for {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. 180-degree shutter, natural motion blur. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'an intricate mechanism being assembled in a workshop',
       ACTION_SEQUENCE: 'pieces click into place one by one, revealing the larger structure',
@@ -92,7 +92,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'I2V',
     description: 'Section explanation anchored concept art',
     template:
-      'Animate the provided concept image: {SECTION_CONCEPT}. Motion: {SUBJECT_MOTION}. Secondary motion: {ENVIRONMENT_MOTION}. Camera: {CAMERA_MOVE}. Keep details stable; avoid chaotic motion. No readable text.',
+      'Animate the provided concept image: {SECTION_CONCEPT}. Motion: {SUBJECT_MOTION}. Secondary motion: {ENVIRONMENT_MOTION}. Camera: {CAMERA_MOVE}. Keep details stable; avoid chaotic motion. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       SUBJECT_MOTION: 'gentle pulsing glow on the central element',
       ENVIRONMENT_MOTION: 'slow particle drift in the background',
@@ -104,7 +104,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Key concept B-roll (no anchor image)',
     template:
-      'A clear visual metaphor for {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Ambient electronic hum, no speech. No readable text or logos.',
+      'A clear visual metaphor for {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. 180-degree shutter, natural motion blur. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'a network of glowing nodes on a dark surface',
       ACTION_SEQUENCE: 'nodes light up in sequence, forming a pattern that reveals the concept',
@@ -118,7 +118,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Technical mechanism visualization',
     template:
-      'A clear technical visualization: {SECTION_CONCEPT}. Scene: {METAPHOR_SCENE}. The mechanism activates step by step: {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Clean, technical atmosphere. No readable text.',
+      'A clear technical visualization: {SECTION_CONCEPT}. Scene: {METAPHOR_SCENE}. The mechanism activates step by step: {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Clean, technical atmosphere. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'a cross-section view of a complex system in a controlled lab',
       ACTION_SEQUENCE: 'components activate sequentially, energy flows through connectors',
@@ -130,7 +130,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Concrete example scene',
     template:
-      'A specific scenario showing {SECTION_CONCEPT} in practice: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Grounded, realistic setting. No readable text.',
+      'A specific scenario showing {SECTION_CONCEPT} in practice: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Grounded, realistic setting. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'a real-world application of the concept in a professional setting',
       ACTION_SEQUENCE: 'the system responds to input and produces a visible result',
@@ -144,7 +144,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Warning/risk segment',
     template:
-      'High-stakes tone: {RISK_METAPHOR}. Scene: {SETTING}. Action: {TENSION_ACTION}. Camera: handheld micro-shake or slow orbit. Lighting: high contrast. No gore, no logos, no readable text.',
+      'High-stakes tone: {RISK_METAPHOR}. Scene: {SETTING}. Action: {TENSION_ACTION}. Camera: handheld micro-shake or slow orbit. Lighting: high contrast. No gore. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       RISK_METAPHOR: 'a critical system approaching failure threshold',
       SETTING: 'a dim control room with emergency indicators',
@@ -156,7 +156,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Risk metaphor visualization',
     template:
-      'High-stakes tone: {RISK_METAPHOR}. Scene: {SETTING}. Action: {TENSION_ACTION}. Camera: slow orbit with increasing tension. Lighting: dramatic high contrast, cold blue with warm warning amber. No readable text or logos.',
+      'High-stakes tone: {RISK_METAPHOR}. Scene: {SETTING}. Action: {TENSION_ACTION}. Camera: slow orbit with increasing tension. Lighting: dramatic high contrast, cold blue with warm warning amber. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       RISK_METAPHOR: 'a fracture spreading through a protective barrier',
       SETTING: 'a secure facility with layers of defense',
@@ -170,7 +170,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Tradeoff comparison scene',
     template:
-      'A visual comparison showing two alternatives for {SECTION_CONCEPT}: {METAPHOR_SCENE}. The scene reveals the tension between both paths. Camera: {CAMERA_MOVE}. Balanced, analytical mood. No readable text.',
+      'A visual comparison showing two alternatives for {SECTION_CONCEPT}: {METAPHOR_SCENE}. The scene reveals the tension between both paths. Camera: {CAMERA_MOVE}. Balanced, analytical mood. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'two diverging pathways lit with contrasting colors',
       CAMERA_MOVE: 'slow pan from one option to the other',
@@ -181,7 +181,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Framework/structure visualization',
     template:
-      'A structured visualization of {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Clean, organized composition. No readable text or logos.',
+      'A structured visualization of {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Clean, organized composition. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'an architectural blueprint coming to life as a 3D model',
       ACTION_SEQUENCE: 'layers build up systematically, each component finding its place',
@@ -195,7 +195,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Narrative escalation',
     template:
-      'An escalating scene: {SECTION_CONCEPT}. {METAPHOR_SCENE}. The intensity builds: {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Tension increasing. No readable text.',
+      'An escalating scene: {SECTION_CONCEPT}. {METAPHOR_SCENE}. The intensity builds: {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Tension increasing. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       ACTION_SEQUENCE: 'speed increases, elements multiply, complexity grows visibly',
       CAMERA_MOVE: 'accelerating push-in toward the focal point',
@@ -206,7 +206,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Plot twist / revelation',
     template:
-      'A revealing moment: {SECTION_CONCEPT}. {METAPHOR_SCENE}. Sudden shift: {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Dramatic lighting change. No readable text.',
+      'A revealing moment: {SECTION_CONCEPT}. {METAPHOR_SCENE}. Sudden shift: {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Dramatic lighting change. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       ACTION_SEQUENCE: 'the scene transforms as the hidden truth becomes visible',
       CAMERA_MOVE: 'quick rack focus to reveal the key detail',
@@ -217,7 +217,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Consequence / aftermath',
     template:
-      'The aftermath of {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Reflective, weighty mood. No readable text.',
+      'The aftermath of {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Reflective, weighty mood. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       ACTION_SEQUENCE: 'the environment settles into its new state, dust particles drift',
       CAMERA_MOVE: 'slow crane up revealing the full scope',
@@ -230,7 +230,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Limitations / boundaries',
     template:
-      'A scene showing the boundaries of {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Honest, measured tone. No readable text.',
+      'A scene showing the boundaries of {SECTION_CONCEPT}: {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Honest, measured tone. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'a system reaching its operational ceiling',
       ACTION_SEQUENCE: 'performance indicators plateau, the system stabilizes at capacity',
@@ -242,7 +242,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Mitigation / solution',
     template:
-      'A calming resolution: {SECTION_CONCEPT}. {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Relieved, forward-looking mood. No readable text or logos.',
+      'A calming resolution: {SECTION_CONCEPT}. {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Relieved, forward-looking mood. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'protective measures activating and containing the threat',
       ACTION_SEQUENCE: 'barriers form, systems stabilize, the environment calms',
@@ -254,7 +254,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'Recommendation / action item',
     template:
-      'A decisive moment: {SECTION_CONCEPT}. {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Confident, forward-looking. No readable text.',
+      'A decisive moment: {SECTION_CONCEPT}. {METAPHOR_SCENE}. {ACTION_SEQUENCE}. Camera: {CAMERA_MOVE}. Confident, forward-looking. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       METAPHOR_SCENE: 'a clear path forward illuminated among alternatives',
       ACTION_SEQUENCE: 'the chosen path lights up, progress begins along it',
@@ -268,7 +268,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'I2V',
     description: 'Closing thought (anchored)',
     template:
-      'Resolve into a calm, hopeful closing shot illustrating: {TAKEAWAY}. Minimal motion. Camera: slow pull-back. Soft ambient sound. Leave clean space for captions. No readable text.',
+      'Resolve into a calm, hopeful closing shot illustrating: {TAKEAWAY}. Minimal motion. Camera: slow pull-back, 35mm. Stabilized footage. Leave clean open space. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       TAKEAWAY: 'a sense of accomplishment and clarity',
     },
@@ -278,7 +278,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'I2V',
     description: 'CTA closing (calm, image-anchored)',
     template:
-      'Resolve into a calm, hopeful closing shot illustrating: {TAKEAWAY}. Minimal motion. Camera: slow pull-back. Soft ambient sound. Leave clean space for captions. No readable text or logos.',
+      'Resolve into a calm, hopeful closing shot illustrating: {TAKEAWAY}. Minimal motion. Camera: slow pull-back, 35mm. Stabilized footage. Leave clean open space. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {
       TAKEAWAY: 'an invitation to explore further',
     },
@@ -288,7 +288,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     mode: 'T2V',
     description: 'CTA closing (text-to-video)',
     template:
-      'A serene closing scene: calm environment, soft ambient light, minimal motion. Camera: slow pull-back. Soft ambient sound. Clean composition with open space for overlay captions. No readable text or logos.',
+      'A serene closing scene: calm environment, soft ambient light, minimal motion. Camera: slow pull-back, 35mm. Stabilized footage. Clean composition with open space. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.',
     defaultVariables: {},
   },
 ]
@@ -335,7 +335,7 @@ export function buildPrompt(
     // Fall back to T2V general template
     const fallback = getTemplatesForRole(role)
     if (fallback.length === 0) {
-      return `Cinematic scene related to: ${variables.SECTION_CONCEPT || variables.HOOK_IDEA || 'the topic'}. Camera: slow cinematic movement. No readable text or logos.`
+      return `Cinematic scene related to: ${variables.SECTION_CONCEPT || variables.HOOK_IDEA || 'the topic'}. Camera: slow cinematic movement, 35mm. 180-degree shutter, natural motion blur. No readable text, no titles, no captions, no logos, no watermarks, no signs, no labels.`
     }
     const t = fallback[0]
     const merged = { ...t.defaultVariables, ...variables }

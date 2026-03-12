@@ -1,0 +1,16 @@
+{
+  "archetype": "The Resilient Builder",
+  "logline": "An architect in coastal West Africa designs buildings with beautiful structural redundancies that encode community wisdom no algorithm would preserve.",
+  "scene": "an architect standing in an unfinished house frame in coastal West Africa, golden hour light streaming through the skeleton of the building, she holds rolled blueprints while looking at a partially raised concrete pylon foundation, local workers visible in the background, red laterite soil, palm trees, ocean visible on the horizon",
+  "keyProps": [
+    "Unfinished house frame with golden hour light streaming through",
+    "Rolled blueprints in the architect's hands",
+    "Red laterite soil with palm trees",
+    "Ocean visible on the horizon"
+  ],
+  "camera": "Wide action framing at golden hour, 50mm lens with deep depth of field, documentary style",
+  "lighting": "Golden hour sunlight streaming through the building skeleton, warm long shadows on red laterite soil",
+  "productionDesign": "Documentary realism in coastal West African setting, warm golden palette, architectural construction site with natural materials, near-future grounded community scene",
+  "signatureTwist": "close-up of an elderly West African woman's hands gesturing toward a building model on a table, pointing to where something is missing, warm interior light, architectural drawings and a laptop visible out of focus behind the model, the hands weathered and expressive, the model simple but detailed, intimate human moment",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

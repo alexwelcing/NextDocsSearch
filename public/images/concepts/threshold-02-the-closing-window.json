@@ -1,0 +1,16 @@
+{
+  "archetype": "The Fading Artisan",
+  "logline": "A literary translator realizes the window for her craft is closing as machine translation captures the nuances she once thought untranslatable.",
+  "scene": "a literary translator at a wooden desk covered in manuscript pages and open books in two languages, warm desk lamp casting golden light, a laptop showing side-by-side text columns, her pen hovering over a page with sparse red annotations, rain visible through a window behind, Bergen Norway atmosphere",
+  "keyProps": [
+    "Manuscript pages and open books in two languages",
+    "Warm desk lamp casting golden light",
+    "A pen hovering over sparse red annotations",
+    "Rain visible through a window"
+  ],
+  "camera": "Eye-level workspace framing, 50mm lens with shallow depth of field, intimate documentary style",
+  "lighting": "Warm golden desk lamp light with cool rain-filtered daylight from the window behind",
+  "productionDesign": "Documentary realism with warm golden palette, subtle film grain, cozy Bergen Norway study filled with books and manuscripts",
+  "signatureTwist": "close-up of two open books side by side on a weathered wooden desk, one in Norwegian and one in English, a human hand resting between them with a pen that has barely been used, warm lamplight casting shadows across the pages, a glass of aquavit catching the light, shallow depth of field, the small gap between the books as visual metaphor",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

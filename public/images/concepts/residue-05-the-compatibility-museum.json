@@ -1,0 +1,16 @@
+{
+  "archetype": "The Living Archive",
+  "logline": "A museum preserves obsolete human-AI interfaces so future generations can understand the strange intimacy of early interaction paradigms.",
+  "scene": "the interior of a converted textile factory repurposed as a museum, high industrial ceilings with exposed brick and iron beams, rows of vintage computing terminals and old interface devices displayed on clean white platforms, cool diffused light from skylights, a few visitors moving between exhibits, the space vast and reverent",
+  "keyProps": [
+    "Converted textile factory with exposed brick and iron beams",
+    "Vintage computing terminals on clean white platforms",
+    "Cool diffused light from skylights",
+    "Visitors moving between exhibits"
+  ],
+  "camera": "Wide establishing shot, 35mm lens, deep depth of field, reverent institutional atmosphere",
+  "lighting": "Cool diffused light from industrial skylights, clean and even with subtle warm pools around individual exhibits",
+  "productionDesign": "Cool desaturated palette, 35mm film look, converted industrial space repurposed as museum, post-industrial reverence for obsolete technology, vast and contemplative",
+  "signatureTwist": "a teenager sitting at a museum exhibit using a vintage 2023-era chatbot interface on an old monitor, her expression shifting from confusion to amusement, the monitor casting cool blue-white light on her face, the exhibit framed like a confession booth with curtained sides, warm overhead spot mixing with the cool screen glow",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

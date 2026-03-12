@@ -1,0 +1,16 @@
+{
+  "archetype": "The Faithful Maintainer",
+  "logline": "A systems engineer keeps a deprecated AI companion alive for the elderly users who still depend on it, long after the world has moved on.",
+  "scene": "a systems engineer at a cluttered home desk late at night, a single old server humming on a shelf beside her, her face lit by a terminal showing system logs, the rest of the apartment dark, a mug of cold tea beside her, the intimate scale of maintaining something small and forgotten, cool blue monitor light with warm desk lamp",
+  "keyProps": [
+    "A single old server humming on a shelf",
+    "Terminal showing system logs",
+    "A mug of cold tea",
+    "Dark apartment with isolated pools of light"
+  ],
+  "camera": "Intimate workspace framing, 35mm lens, low-key lighting emphasizing isolation",
+  "lighting": "Cool blue monitor light as primary illumination with a warm desk lamp creating a small bubble of light, the rest of the apartment in darkness",
+  "productionDesign": "Cool desaturated palette, 35mm film look, cluttered home workspace with aging technology, melancholic atmosphere of quiet dedication to something forgotten",
+  "signatureTwist": "close-up of an elderly man's hands holding a simple tablet device showing a basic conversation interface, the hands weathered and dark-skinned, warm morning light from a window casting golden streaks across the device, the interface simple and old-fashioned compared to modern designs, the man's thumbs poised to type, care home setting out of focus",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

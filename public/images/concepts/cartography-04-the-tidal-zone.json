@@ -1,0 +1,16 @@
+{
+  "archetype": "The Boundary Walker",
+  "logline": "At the shifting shoreline between human and machine cognition, a tidal zone of hybrid thought ebbs and flows, leaving behind pools of meaning that belong to neither domain.",
+  "scene": "a luminous shoreline where a glowing ocean of cool blue light meets warm amber land, the tideline constantly shifting, leaving pools of mixed light in depressions along the shore, small human figures visible in the tidal zone walking between the pools, the sky a deep violet with volumetric light rays, the sense of rhythmic breathing",
+  "keyProps": [
+    "Glowing ocean of cool blue light meeting warm amber land",
+    "Pools of mixed light in tidal depressions",
+    "Small human figures walking the tidal zone",
+    "Deep violet sky with volumetric light rays"
+  ],
+  "camera": "Wide expansive framing from elevated perspective, deep depth of field, vast scale with tiny figures",
+  "lighting": "Cool blue oceanic glow meeting warm amber land light, deep violet sky with volumetric light rays, rhythmic luminous quality",
+  "productionDesign": "Luminous otherworldly shoreline landscape, bioluminescent tidal pools, vast scale suggesting the boundary between cognitive domains, far-future ethereal aesthetic with sense of organic rhythm",
+  "signatureTwist": "close-up of a luminous tidepool left behind by a retreating cognitive tide, the pool containing swirling hybrid patterns of warm and cool light, small structures growing in the pool like crystal formations or coral, a human hand reaching toward the pool surface, the reflection showing something different from what is above, ethereal intimate moment",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

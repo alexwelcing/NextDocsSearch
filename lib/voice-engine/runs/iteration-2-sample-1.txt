@@ -1,0 +1,29 @@
+The operating theatre had a smell that Dr. Kenji Murakami could have bottled and sold as an argument against romanticism — the sharp antiseptic overlay of chlorhexidine failing to entirely mask the organic, metallic warmth of a body opened and held open by retractors whose steel caught the surgical light and threw small bright rectangles onto the ceiling. Eighteen years of cardiothoracic surgery had taught Kenji's nose to read the room before his eyes did: the sweet aldehyde note meant the cautery had been busy, the faint copper meant the bleeding was managed but not trivial, and the absence of any bowel scent meant the thoracic cavity was intact and they were exactly where they should be.
+
+His hands were inside a man's chest.
+
+The patient was sixty-three, a retired postman named Ishikawa-san, and his mitral valve had been deteriorating for two years in a way that medication could slow but not reverse. Kenji was replacing it — a procedure he had performed four hundred and eleven times, each time with the same pre-operative ritual: twenty minutes of silence in the scrub room, the water running hot over his forearms while his mind rehearsed the sequence of cuts and sutures the way a pianist might rehearse a sonata before walking onstage.
+
+Today the rehearsal had been interrupted. The surgical AI — a system called MIRA that the hospital had deployed six months ago — had flagged a variant anatomy in Ishikawa-san's pre-operative imaging. The left atrial appendage was positioned three millimeters posterior to the statistical norm, which shifted the optimal approach angle for the annuloplasty ring by roughly seven degrees. Kenji had studied the imaging himself and seen the variant; what he had not calculated, because it would have taken him forty minutes with calipers and reference tables, was the precise angular correction. MIRA had computed it in nine seconds and displayed it as a holographic overlay in his surgical field, a faint green line showing the adjusted trajectory like a flight path painted on the air.
+
+He followed the line.
+
+His hands knew the work. The sutures went in at the angle MIRA suggested and the ring seated with a satisfaction that Kenji could feel through the needle driver — that particular resistance, then give, then snug, that meant the tissue was accepting the prosthetic the way a riverbed accepts a stone. He had felt this four hundred and eleven times. He had never felt it from an angle that wasn't his own.
+
+The operation took three hours and fourteen minutes, which was twenty-two minutes faster than his average for this procedure, and Ishikawa-san's post-operative echocardiogram showed a valve function in the ninety-third percentile — better than Kenji's career mean of eighty-seventh. The numbers were the kind of numbers that administration would highlight in a quarterly report and that Kenji would not argue with because they were correct and because arguing with correct numbers was a particular kind of professional vanity he had trained himself out of.
+
+In the changing room afterward, still in his scrub shirt with the sweat drying cold along his spine, he sat on the bench and looked at his hands. They were fifty-one years old, these hands. The left one had a small tremor at rest that disappeared under load — an essential tremor that his neurologist monitored annually and that his colleagues did not know about because it did not affect his surgical performance, though Kenji himself could feel it in the quiet moments, a faint oscillation like a plucked string still ringing after the note has passed.
+
+MIRA did not have hands. MIRA had data, and imaging, and seven-degree angular corrections computed in nine seconds. What MIRA did not have was the feeling of a suture going in right — the haptic knowledge, accumulated across four hundred procedures, of how tissue behaves when it is being asked to accept something foreign. MIRA could tell you the optimal angle. It could not tell you that Ishikawa-san's tissue was unusually friable and that you needed to reduce your suture tension by a fraction that had no numerical value, only a feeling in the fingertips.
+
+Kenji flexed his hands. The tremor was there, barely visible, a vibration at the frequency of uncertainty.
+
+---
+
+*March 22, 2027 — Kenji's dictation, post-op notes, personal addendum*
+
+*Ishikawa-san is stable. Valve function excellent. MIRA's angular correction was — I want to say "helpful" and that's not dishonest but it's not complete either. It was correct in a way that my own calculation would have been approximately correct, the difference being that MIRA was precisely correct in nine seconds and I would have been roughly correct in forty minutes, and Ishikawa-san's valve doesn't care about the distinction between precise and rough, it only cares about whether the ring sits well, and the ring sat well.*
+
+*The question I keep turning over, sitting here with my shirt damp and my hands doing their small private shaking: MIRA showed me a better angle. I followed it. The outcome was better. This is — it should be simple. It should feel like progress. It does feel like progress. It also feels like the first time another surgeon stood in my operating theatre and told me where to put my hands, except that surgeon had never held a scalpel and never would, and knew things about the inside of Ishikawa-san's chest that I*
+
+*I need to shower. The point is somewhere between the green line and my fingertips and I can't find it tonight.*

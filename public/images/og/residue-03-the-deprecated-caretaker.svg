@@ -1,0 +1,36 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="hsl(210, 25%, 8%)" />
+      <stop offset="100%" stop-color="hsl(215, 30%, 14%)" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.36" cy="0.25" r="0.8">
+      <stop offset="0%" stop-color="hsl(210, 40%, 50%)" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="hsl(210, 40%, 50%)" stop-opacity="0" />
+    </radialGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="30" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <rect width="100%" height="100%" fill="url(#glow)" />
+  <g filter="url(#blur)">
+<circle cx="1006" cy="328" r="199" fill="hsl(210, 60%, 45%)" opacity="0.17" />
+<circle cx="101" cy="296" r="310" fill="hsl(215, 60%, 45%)" opacity="0.27" />
+<circle cx="1019" cy="197" r="216" fill="hsl(220, 60%, 45%)" opacity="0.20" />
+<circle cx="253" cy="74" r="214" fill="hsl(200, 60%, 45%)" opacity="0.13" />
+  </g>
+  <g>
+<rect x="380" y="329" width="179" height="162" rx="2" fill="hsl(204, 30%, 45%)" opacity="0.20" />
+<rect x="647" y="278" width="152" height="12" fill="hsl(213, 30%, 50%)" opacity="0.14" />
+<rect x="841" y="481" width="102" height="47" rx="2" fill="hsl(219, 30%, 45%)" opacity="0.13" />
+<rect x="453" y="58" width="105" height="8" fill="hsl(210, 30%, 50%)" opacity="0.15" />
+<rect x="49" y="275" width="198" height="16" fill="hsl(209, 30%, 50%)" opacity="0.14" />
+  </g>
+  <g>
+<line x1="687" y1="12" x2="916" y2="525" stroke="hsl(210, 35%, 45%)" stroke-width="1" opacity="0.38" />
+<line x1="409" y1="541" x2="279" y2="264" stroke="hsl(210, 35%, 45%)" stroke-width="1" opacity="0.31" />
+<line x1="1077" y1="138" x2="167" y2="591" stroke="hsl(210, 35%, 45%)" stroke-width="1" opacity="0.38" />
+  </g>
+  <rect x="777" y="247" width="153" height="62" rx="20" fill="hsl(210, 40%, 50%)" opacity="0.15" />
+</svg>

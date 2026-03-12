@@ -1,0 +1,16 @@
+{
+  "archetype": "The First Explorer",
+  "logline": "A cartographer discovers a vast unmapped territory that exists in the space between human and machine cognition, a continent no one has named.",
+  "scene": "a vast luminous landscape seen from above, terrain made of flowing translucent layers in cool blue and violet, with amber veins of light running through it like rivers, a tiny human figure standing at the edge of a crystalline cliff looking out over the expanse, volumetric light rays descending from above, the landscape suggesting neural pathways at planetary scale",
+  "keyProps": [
+    "Translucent terrain layers in cool blue and violet",
+    "Amber veins of light like rivers",
+    "A tiny human figure at a crystalline cliff edge",
+    "Volumetric light rays descending from above"
+  ],
+  "camera": "High aerial perspective looking down at vast scale, wide expansive framing with deep depth of field",
+  "lighting": "Luminous ethereal atmosphere with volumetric light rays, cool blue-violet base illumination with warm amber accent veins",
+  "productionDesign": "Luminous otherworldly landscape, bioluminescent and crystalline textures, vast scale suggesting cognitive spaces at planetary dimensions, far-future 2045-2050 aesthetic",
+  "signatureTwist": "two massive translucent landmasses seen from a great height, one warm amber and organic in texture, the other cool blue and geometric, between them a luminous sea filled with swirling bioluminescent particles and emerging structures that belong to neither shore, the space between teeming with light and activity, vast scale, ethereal atmosphere",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

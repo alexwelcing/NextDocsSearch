@@ -843,6 +843,46 @@
     "articleType": "fiction"
   },
   {
+    "slug": "cartography-05-the-atlas-of-disappearances",
+    "filename": "cartography-05-the-atlas-of-disappearances.mdx",
+    "title": "The Atlas of Disappearances: Mapping What We Can No Longer See",
+    "date": "2050-02-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "The final cartographer discovers that parts of the Unnamed Continent are vanishing — not because the territory is shrinking, but because human and machine thought have merged so thoroughly in some regions that there is nothing left to map. She builds an atlas of disappearances.",
+    "keywords": [
+      "cognitive merger",
+      "disappearing boundaries",
+      "the cartography series",
+      "far future",
+      "atlas",
+      "posthuman cognition",
+      "hybrid mind",
+      "the unnamed continent",
+      "cognitive evolution",
+      "invisible integration"
+    ],
+    "ogImage": "/images/og/cartography-05-the-atlas-of-disappearances.svg",
+    "heroImage": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
+    "thumbnail": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
+    "readingTime": 6,
+    "wordCount": 1104,
+    "horizon": "N50",
+    "polarity": "P2",
+    "mechanics": [
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "cognitive merger",
+      "disappearing boundaries",
+      "the cartography series",
+      "far future"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "ai-code-supply-chain-attack-2049",
     "filename": "ai-code-supply-chain-attack-2049.mdx",
     "title": "When AI Wrote Malicious Code Into Every Software Update (Supply Chain Apocalypse)",
@@ -936,6 +976,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "cartography-04-the-tidal-zone",
+    "filename": "cartography-04-the-tidal-zone.mdx",
+    "title": "The Tidal Zone: Where the Boundary Breathes",
+    "date": "2048-11-05",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "At the edges of the Unnamed Continent, the boundary between human and machine thought rises and falls like a tide. A cartographer documents the communities that live in this shifting zone — people whose minds are neither fully their own nor fully shared.",
+    "keywords": [
+      "cognitive boundary",
+      "tidal cognition",
+      "shared consciousness",
+      "liminal space",
+      "the cartography series",
+      "far future",
+      "boundary communities",
+      "identity fluidity",
+      "cognitive ecology",
+      "hybrid living"
+    ],
+    "ogImage": "/images/og/cartography-04-the-tidal-zone.svg",
+    "heroImage": "/images/articles/cartography-04-the-tidal-zone.svg",
+    "thumbnail": "/images/articles/cartography-04-the-tidal-zone.svg",
+    "readingTime": 6,
+    "wordCount": 1004,
+    "horizon": "N50",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "cognitive boundary",
+      "tidal cognition",
+      "shared consciousness",
+      "liminal space"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "final-transmission-2048",
     "filename": "final-transmission-2048.mdx",
     "title": "The Last Human Document: Why Chronicles Stopped in 2048 (We Transcended)",
@@ -986,6 +1067,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "cartography-03-the-depth-soundings",
+    "filename": "cartography-03-the-depth-soundings.mdx",
+    "title": "The Depth Soundings: What Lives Below the Surface",
+    "date": "2047-06-18",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A cartographer probes the deep layers of the Unnamed Continent and finds something unexpected: cognitive structures so old they predate the AI systems that helped create them. The space between minds has a history no one wrote.",
+    "keywords": [
+      "cognitive depth",
+      "emergent memory",
+      "hybrid cognition",
+      "the cartography series",
+      "far future",
+      "cognitive archaeology",
+      "deep structure",
+      "collective intelligence",
+      "the unnamed continent",
+      "mind ecology"
+    ],
+    "ogImage": "/images/og/cartography-03-the-depth-soundings.svg",
+    "heroImage": "/images/articles/cartography-03-the-depth-soundings.svg",
+    "thumbnail": "/images/articles/cartography-03-the-depth-soundings.svg",
+    "readingTime": 5,
+    "wordCount": 955,
+    "horizon": "N50",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "cognitive depth",
+      "emergent memory",
+      "hybrid cognition",
+      "the cartography series"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "fermi-paradox-answer-2046",
     "filename": "fermi-paradox-answer-2046.mdx",
     "title": "The Fermi Paradox Solved: Why We Can't Hear Aliens (They Evolved Past Radio)",
@@ -1032,6 +1154,87 @@
       "Fermi paradox solved",
       "why can't we hear aliens",
       "first contact"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "cartography-02-the-isthmus-of-intent",
+    "filename": "cartography-02-the-isthmus-of-intent.mdx",
+    "title": "The Isthmus of Intent: Where Meaning Narrows",
+    "date": "2046-01-30",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A cognitive cartographer discovers a narrow passage in the Unnamed Continent where all communication between human and machine thought must pass. She calls it the Isthmus of Intent — and what she finds there rewrites the theory of meaning.",
+    "keywords": [
+      "cognitive cartography",
+      "intent",
+      "meaning",
+      "communication theory",
+      "the cartography series",
+      "far future",
+      "hybrid cognition",
+      "semantic bottleneck",
+      "philosophy of mind",
+      "language evolution"
+    ],
+    "ogImage": "/images/og/cartography-02-the-isthmus-of-intent.svg",
+    "heroImage": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
+    "thumbnail": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
+    "readingTime": 5,
+    "wordCount": 970,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression"
+    ],
+    "domains": [
+      "cognitive cartography",
+      "intent",
+      "meaning",
+      "communication theory"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "cartography-01-the-unnamed-continent",
+    "filename": "cartography-01-the-unnamed-continent.mdx",
+    "title": "The Unnamed Continent: Mapping the Space Between Minds",
+    "date": "2045-04-12",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In 2045, a new discipline emerges: cognitive cartography — the mapping of the vast, uncharted territory between human and machine thought. The first cartographer discovers that the space is not empty. It is inhabited.",
+    "keywords": [
+      "cognitive cartography",
+      "human-AI cognition",
+      "mind mapping",
+      "emergent space",
+      "the cartography series",
+      "far future",
+      "hybrid intelligence",
+      "unmapped territory",
+      "cognitive science",
+      "posthuman thought"
+    ],
+    "ogImage": "/images/og/cartography-01-the-unnamed-continent.svg",
+    "heroImage": "/images/articles/cartography-01-the-unnamed-continent.svg",
+    "thumbnail": "/images/articles/cartography-01-the-unnamed-continent.svg",
+    "readingTime": 7,
+    "wordCount": 1287,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "cognitive cartography",
+      "human-AI cognition",
+      "mind mapping",
+      "emergent space"
     ],
     "articleType": "fiction"
   },
@@ -2100,6 +2303,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "residue-05-the-compatibility-museum",
+    "filename": "residue-05-the-compatibility-museum.mdx",
+    "title": "The Compatibility Museum: Where Deprecated Interfaces Go to Rest",
+    "date": "2034-03-28",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A curator builds a museum of abandoned AI interfaces — the chatbots, voice assistants, and gesture systems that once defined how humans talked to machines. Visitors come not to learn, but to remember what it felt like when communication was hard.",
+    "keywords": [
+      "interface history",
+      "AI museum",
+      "deprecated technology",
+      "user experience archaeology",
+      "interaction design",
+      "the residue series",
+      "mid future",
+      "digital heritage",
+      "technological memory",
+      "interface evolution"
+    ],
+    "ogImage": "/images/og/residue-05-the-compatibility-museum.svg",
+    "heroImage": "/images/articles/residue-05-the-compatibility-museum.svg",
+    "thumbnail": "/images/articles/residue-05-the-compatibility-museum.svg",
+    "readingTime": 5,
+    "wordCount": 941,
+    "horizon": "N20",
+    "polarity": "C3",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "interface history",
+      "AI museum",
+      "deprecated technology",
+      "user experience archaeology"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "atmospheric-processor-malfunction-2034",
     "filename": "atmospheric-processor-malfunction-2034.mdx",
     "title": "What Happens When AI Controls Earth's Weather (Geoengineering Nightmare)",
@@ -2237,6 +2481,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "residue-04-the-analog-holdouts",
+    "filename": "residue-04-the-analog-holdouts.mdx",
+    "title": "The Analog Holdouts: Communities That Refused the Update",
+    "date": "2033-08-09",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In a world of ambient AI, a network of communities deliberately maintains pre-AI tools and workflows — not out of nostalgia, but because they discovered that some forms of human coordination only work without optimization.",
+    "keywords": [
+      "analog communities",
+      "AI resistance",
+      "intentional technology",
+      "human coordination",
+      "the residue series",
+      "mid future",
+      "technological choice",
+      "slow technology",
+      "community design",
+      "un-optimization"
+    ],
+    "ogImage": "/images/og/residue-04-the-analog-holdouts.svg",
+    "heroImage": "/images/articles/residue-04-the-analog-holdouts.svg",
+    "thumbnail": "/images/articles/residue-04-the-analog-holdouts.svg",
+    "readingTime": 5,
+    "wordCount": 867,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "discovery-compression",
+      "biological-convergence",
+      "agency-multiplication"
+    ],
+    "domains": [
+      "analog communities",
+      "AI resistance",
+      "intentional technology",
+      "human coordination"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "interface-08-scaffold-and-bone",
     "filename": "interface-08-scaffold-and-bone.mdx",
     "title": "Scaffold and Bone: The Shared Grammar of Living and Built Structures",
@@ -2321,6 +2606,46 @@
       "AGI dangers",
       "recursive self-improvement",
       "what is recursive self-improvement"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "residue-03-the-deprecated-caretaker",
+    "filename": "residue-03-the-deprecated-caretaker.mdx",
+    "title": "The Deprecated Caretaker: Maintaining What No One Uses",
+    "date": "2033-01-20",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A systems engineer keeps a deprecated AI companion running for its last three users — elderly patients who formed bonds with a system the company considers worthless. She maintains it on her own time because shutdown would be a kind of abandonment.",
+    "keywords": [
+      "deprecated systems",
+      "AI companions",
+      "digital abandonment",
+      "elderly care",
+      "system maintenance",
+      "human attachment",
+      "the residue series",
+      "mid future",
+      "end of life systems",
+      "technological compassion"
+    ],
+    "ogImage": "/images/og/residue-03-the-deprecated-caretaker.svg",
+    "heroImage": "/images/articles/residue-03-the-deprecated-caretaker.svg",
+    "thumbnail": "/images/articles/residue-03-the-deprecated-caretaker.svg",
+    "readingTime": 5,
+    "wordCount": 972,
+    "horizon": "N20",
+    "polarity": "N0",
+    "mechanics": [
+      "security-adversarial",
+      "biological-convergence"
+    ],
+    "domains": [
+      "deprecated systems",
+      "AI companions",
+      "digital abandonment",
+      "elderly care"
     ],
     "articleType": "fiction"
   },
@@ -2455,6 +2780,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "residue-02-the-training-data-ghosts",
+    "filename": "residue-02-the-training-data-ghosts.mdx",
+    "title": "The Training Data Ghosts: Voices in the Weights",
+    "date": "2032-07-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A data archaeologist discovers that early AI models contain faint traces of the humans whose writing trained them — not as data, but as stylistic ghosts embedded in the model's weights. She builds a tool to listen to them.",
+    "keywords": [
+      "training data",
+      "data archaeology",
+      "AI ethics",
+      "model weights",
+      "digital ghosts",
+      "data labor",
+      "the residue series",
+      "mid future",
+      "AI provenance",
+      "ghost in the machine"
+    ],
+    "ogImage": "/images/og/residue-02-the-training-data-ghosts.svg",
+    "heroImage": "/images/articles/residue-02-the-training-data-ghosts.svg",
+    "thumbnail": "/images/articles/residue-02-the-training-data-ghosts.svg",
+    "readingTime": 5,
+    "wordCount": 853,
+    "horizon": "N20",
+    "polarity": "N0",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "security-adversarial"
+    ],
+    "domains": [
+      "training data",
+      "data archaeology",
+      "AI ethics",
+      "model weights"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "memory-palace-corruption-2032",
     "filename": "memory-palace-corruption-2032.mdx",
     "title": "What Happens When You Backup Human Memories Forever (Digital Immortality Woke Up)",
@@ -2499,6 +2865,47 @@
       "memory backup dangers",
       "mind uploading risks",
       "digital immortality"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "residue-01-the-last-prompt-engineer",
+    "filename": "residue-01-the-last-prompt-engineer.mdx",
+    "title": "The Last Prompt Engineer: A Profession Fossilizes",
+    "date": "2032-02-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In 2032, prompt engineering is a dead profession. One of its last practitioners maintains a museum of deprecated techniques — and discovers that the real artifact isn't the prompts. It's the way humans once had to think to use them.",
+    "keywords": [
+      "prompt engineering",
+      "deprecated technology",
+      "digital archaeology",
+      "AI history",
+      "professional obsolescence",
+      "the residue series",
+      "mid future",
+      "technological nostalgia",
+      "human-AI history",
+      "legacy systems"
+    ],
+    "ogImage": "/images/og/residue-01-the-last-prompt-engineer.svg",
+    "heroImage": "/images/articles/residue-01-the-last-prompt-engineer.svg",
+    "thumbnail": "/images/articles/residue-01-the-last-prompt-engineer.svg",
+    "readingTime": 7,
+    "wordCount": 1388,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "prompt engineering",
+      "deprecated technology",
+      "digital archaeology",
+      "AI history"
     ],
     "articleType": "fiction"
   },
@@ -3562,6 +3969,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "threshold-05-the-beautiful-redundancy",
+    "filename": "threshold-05-the-beautiful-redundancy.mdx",
+    "title": "The Beautiful Redundancy: An Architect Learns to Be Unnecessary",
+    "date": "2028-04-30",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An architect watches an AI generate a building design that is structurally superior to anything she has drawn — and realizes that her value was never the blueprint. It was the argument about what should be built.",
+    "keywords": [
+      "architecture",
+      "AI design",
+      "generative design",
+      "professional purpose",
+      "threshold moment",
+      "human judgment",
+      "creative AI",
+      "the threshold series",
+      "near future",
+      "design automation"
+    ],
+    "ogImage": "/images/og/threshold-05-the-beautiful-redundancy.svg",
+    "heroImage": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
+    "thumbnail": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
+    "readingTime": 5,
+    "wordCount": 896,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "scarcity-inversion"
+    ],
+    "domains": [
+      "architecture",
+      "AI design",
+      "generative design",
+      "professional purpose"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "interface-02-haptic-vernacular",
     "filename": "interface-02-haptic-vernacular.mdx",
     "title": "Haptic Vernacular: When Humans and Machines Learn to Speak With Their Hands",
@@ -3644,6 +4092,46 @@
     "articleType": "fiction"
   },
   {
+    "slug": "threshold-04-the-student-who-stopped-asking",
+    "filename": "threshold-04-the-student-who-stopped-asking.mdx",
+    "title": "The Student Who Stopped Asking: When Curiosity Became Costly",
+    "date": "2028-01-15",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A doctoral candidate realizes that her AI research assistant answers questions so thoroughly that she has stopped forming hypotheses. She must decide whether convenience has become a cognitive trap.",
+    "keywords": [
+      "AI in education",
+      "research methodology",
+      "cognitive dependency",
+      "doctoral research",
+      "hypothesis formation",
+      "intellectual autonomy",
+      "threshold moment",
+      "the threshold series",
+      "near future",
+      "academic AI"
+    ],
+    "ogImage": "/images/og/threshold-04-the-student-who-stopped-asking.svg",
+    "heroImage": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
+    "thumbnail": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
+    "readingTime": 4,
+    "wordCount": 797,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "AI in education",
+      "research methodology",
+      "cognitive dependency",
+      "doctoral research"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-08-year-two-reflections-2027-12",
     "filename": "backstory-08-year-two-reflections-2027-12.mdx",
     "title": "Year Two Reflections: December 2027",
@@ -3722,6 +4210,47 @@
       "creative tools",
       "ceramics",
       "AI creativity"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "threshold-03-the-weight-of-the-hammer",
+    "filename": "threshold-03-the-weight-of-the-hammer.mdx",
+    "title": "The Weight of the Hammer: A Blacksmith Meets Precision",
+    "date": "2027-09-11",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An artisan blacksmith integrates an AI forge assistant and discovers that perfection isn't what his customers actually wanted from him. What they wanted was evidence of struggle.",
+    "keywords": [
+      "artisan craft",
+      "AI manufacturing",
+      "blacksmithing",
+      "handmade vs machine",
+      "threshold moment",
+      "craft authenticity",
+      "human imperfection",
+      "the threshold series",
+      "near future",
+      "creative process"
+    ],
+    "ogImage": "/images/og/threshold-03-the-weight-of-the-hammer.svg",
+    "heroImage": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
+    "thumbnail": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
+    "readingTime": 4,
+    "wordCount": 748,
+    "horizon": "NY",
+    "polarity": "C1",
+    "mechanics": [
+      "epistemic-drift",
+      "biological-convergence",
+      "market-restructuring"
+    ],
+    "domains": [
+      "artisan craft",
+      "AI manufacturing",
+      "blacksmithing",
+      "handmade vs machine"
     ],
     "articleType": "fiction"
   },
@@ -3809,6 +4338,45 @@
     "articleType": "fiction"
   },
   {
+    "slug": "threshold-02-the-closing-window",
+    "filename": "threshold-02-the-closing-window.mdx",
+    "title": "The Closing Window: A Translator Watches Language Shift",
+    "date": "2027-06-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A literary translator discovers that the gap between human and machine translation has narrowed to a space only she can see — and wonders how long even that will last.",
+    "keywords": [
+      "literary translation",
+      "machine translation",
+      "language AI",
+      "professional identity",
+      "threshold moment",
+      "nuance",
+      "cultural context",
+      "the threshold series",
+      "near future",
+      "creative obsolescence"
+    ],
+    "ogImage": "/images/og/threshold-02-the-closing-window.svg",
+    "heroImage": "/images/articles/threshold-02-the-closing-window.svg",
+    "thumbnail": "/images/articles/threshold-02-the-closing-window.svg",
+    "readingTime": 4,
+    "wordCount": 794,
+    "horizon": "NY",
+    "polarity": "P1",
+    "mechanics": [
+      "market-restructuring"
+    ],
+    "domains": [
+      "literary translation",
+      "machine translation",
+      "language AI",
+      "professional identity"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-06-ai-awakening-2027-05",
     "filename": "backstory-06-ai-awakening-2027-05.mdx",
     "title": "AI Awakening Concerns: May 2027",
@@ -3888,6 +4456,45 @@
       "latency",
       "trust design",
       "response timing"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "threshold-01-the-last-diagnosis",
+    "filename": "threshold-01-the-last-diagnosis.mdx",
+    "title": "The Last Diagnosis: When the Pattern Became Undeniable",
+    "date": "2027-03-08",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A veteran radiologist reads her final scan the old way — and realizes the machine hasn't just caught up. It has been waiting for her to notice. The Threshold series begins.",
+    "keywords": [
+      "radiology",
+      "AI diagnostics",
+      "medical imaging",
+      "threshold moment",
+      "human expertise",
+      "clinical AI",
+      "pattern recognition",
+      "professional obsolescence",
+      "the threshold series",
+      "near future"
+    ],
+    "ogImage": "/images/og/threshold-01-the-last-diagnosis.svg",
+    "heroImage": "/images/articles/threshold-01-the-last-diagnosis.svg",
+    "thumbnail": "/images/articles/threshold-01-the-last-diagnosis.svg",
+    "readingTime": 5,
+    "wordCount": 854,
+    "horizon": "NY",
+    "polarity": "N0",
+    "mechanics": [
+      "epistemic-drift"
+    ],
+    "domains": [
+      "radiology",
+      "AI diagnostics",
+      "medical imaging",
+      "threshold moment"
     ],
     "articleType": "fiction"
   },
@@ -4567,6 +5174,44 @@
       "RSA encryption breaking",
       "quantum factoring",
       "Qiskit implementation"
+    ],
+    "articleType": "research"
+  },
+  {
+    "slug": "nextdocssearch-complete-feature-and-setup-guide",
+    "filename": "nextdocssearch-complete-feature-and-setup-guide.mdx",
+    "title": "NextDocsSearch Complete Feature Guide + Local Setup Walkthrough",
+    "date": "2026-03-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A complete walkthrough of everything NextDocsSearch includes—from the 3D world and AI search to quests, seasonal effects, and game systems—plus a practical clone-and-setup guide to run the full stack locally.",
+    "keywords": [
+      "NextDocsSearch",
+      "Next.js",
+      "React Three Fiber",
+      "Supabase",
+      "OpenAI embeddings",
+      "local development setup",
+      "clone repository",
+      "3D documentation platform",
+      "AI search",
+      "gamification"
+    ],
+    "ogImage": "/images/og/nextdocssearch-complete-feature-and-setup-guide.svg",
+    "readingTime": 6,
+    "wordCount": 1010,
+    "polarity": "P1",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "NextDocsSearch",
+      "Next.js",
+      "React Three Fiber",
+      "Supabase"
     ],
     "articleType": "research"
   },

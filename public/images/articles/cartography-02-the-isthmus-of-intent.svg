@@ -1,0 +1,38 @@
+<svg width="1376" height="768" viewBox="0 0 1376 768" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="hsl(260, 45%, 10%)" />
+      <stop offset="100%" stop-color="hsl(270, 50%, 16%)" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.16" cy="0.17" r="0.8">
+      <stop offset="0%" stop-color="hsl(265, 70%, 60%)" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="hsl(265, 70%, 60%)" stop-opacity="0" />
+    </radialGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="30" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <rect width="100%" height="100%" fill="url(#glow)" />
+  <g filter="url(#blur)">
+<circle cx="1148" cy="415" r="296" fill="hsl(260, 60%, 45%)" opacity="0.26" />
+<circle cx="612" cy="102" r="336" fill="hsl(265, 60%, 45%)" opacity="0.24" />
+<circle cx="914" cy="517" r="286" fill="hsl(270, 60%, 45%)" opacity="0.14" />
+<circle cx="1352" cy="259" r="164" fill="hsl(40, 60%, 45%)" opacity="0.21" />
+  </g>
+  <g>
+<polygon points="134,521 93,530 42,564 2,530 -27,463 9,409 67,415 108,434" fill="hsl(262, 60%, 55%)" opacity="0.10" />
+<polygon points="110,267 76,312 2,328 -22,319 -23,238 15,208 76,188 83,220" fill="hsl(269, 60%, 55%)" opacity="0.19" />
+<polygon points="863,108 844,195 718,178 682,135 686,32 787,19 839,37" fill="hsl(47, 75%, 55%)" opacity="0.17" />
+<polygon points="372,412 263,511 205,503 139,433 92,310 148,260 225,255 330,324" fill="hsl(272, 60%, 55%)" opacity="0.22" />
+<polygon points="1220,735 1088,818 954,788 998,610 1122,622" fill="hsl(273, 60%, 55%)" opacity="0.13" />
+<polygon points="1073,616 1034,664 994,660 958,601 969,565 1007,529 1060,557" fill="hsl(36, 75%, 55%)" opacity="0.13" />
+  </g>
+  <g>
+<line x1="696" y1="366" x2="1281" y2="222" stroke="hsl(45, 80%, 60%)" stroke-width="2" opacity="0.31" />
+<line x1="987" y1="604" x2="1177" y2="620" stroke="hsl(45, 80%, 60%)" stroke-width="2" opacity="0.39" />
+<line x1="858" y1="468" x2="111" y2="402" stroke="hsl(45, 80%, 60%)" stroke-width="2" opacity="0.36" />
+<line x1="980" y1="461" x2="1338" y2="4" stroke="hsl(45, 80%, 60%)" stroke-width="2" opacity="0.34" />
+  </g>
+  <rect x="964" y="293" width="152" height="98" rx="20" fill="hsl(265, 70%, 60%)" opacity="0.15" />
+</svg>

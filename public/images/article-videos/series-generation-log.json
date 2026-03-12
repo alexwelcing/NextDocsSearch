@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-12T06:42:52.645Z",
+  "config": {
+    "backend": "hf-gradio",
+    "model": "LTX-Video Distilled",
+    "dryRun": false,
+    "t2vOnly": true
+  },
+  "seriesProcessed": [
+    "residue"
+  ],
+  "results": [
+    {
+      "slug": "residue-01-the-last-prompt-engineer",
+      "series": "residue",
+      "status": "success",
+      "mode": "T2V",
+      "timeMs": 82908
+    },
+    {
+      "slug": "residue-02-the-training-data-ghosts",
+      "series": "residue",
+      "status": "success",
+      "mode": "T2V",
+      "timeMs": 79665
+    },
+    {
+      "slug": "residue-03-the-deprecated-caretaker",
+      "series": "residue",
+      "status": "failed",
+      "mode": "T2V",
+      "timeMs": 472
+    },
+    {
+      "slug": "residue-04-the-analog-holdouts",
+      "series": "residue",
+      "status": "failed",
+      "mode": "T2V",
+      "timeMs": 1020
+    },
+    {
+      "slug": "residue-05-the-compatibility-museum",
+      "series": "residue",
+      "status": "failed",
+      "mode": "T2V",
+      "timeMs": 357
+    }
+  ]
+}

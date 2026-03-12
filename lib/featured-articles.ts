@@ -184,6 +184,45 @@ export const ARTICLE_COLLECTIONS = {
       'tech-graph-neural-networks',
     ],
   },
+  theThreshold: {
+    title: 'The Threshold',
+    description:
+      'A 5-part series about the last moment before irreversible professional change — when abstract knowledge that AI has surpassed you becomes a specific, embodied experience you cannot undo.',
+    slugPattern: /^threshold-\d{2}-/,
+    articles: [
+      'threshold-01-the-last-diagnosis',
+      'threshold-02-the-closing-window',
+      'threshold-03-the-weight-of-the-hammer',
+      'threshold-04-the-student-who-stopped-asking',
+      'threshold-05-the-beautiful-redundancy',
+    ],
+  },
+  theResidue: {
+    title: 'The Residue',
+    description:
+      'A 5-part series about what AI left behind after it moved on — deprecated tools, abandoned interfaces, and the humans who still find meaning in what the world has forgotten.',
+    slugPattern: /^residue-\d{2}-/,
+    articles: [
+      'residue-01-the-last-prompt-engineer',
+      'residue-02-the-training-data-ghosts',
+      'residue-03-the-deprecated-caretaker',
+      'residue-04-the-analog-holdouts',
+      'residue-05-the-compatibility-museum',
+    ],
+  },
+  theCartography: {
+    title: 'The Cartography',
+    description:
+      'A 5-part series about mapping the vast, uncharted territory between human and machine thought — cognitive cartographers who discover that the space between minds is not empty but teeming with new forms of meaning.',
+    slugPattern: /^cartography-\d{2}-/,
+    articles: [
+      'cartography-01-the-unnamed-continent',
+      'cartography-02-the-isthmus-of-intent',
+      'cartography-03-the-depth-soundings',
+      'cartography-04-the-tidal-zone',
+      'cartography-05-the-atlas-of-disappearances',
+    ],
+  },
   theInterface: {
     title: 'The Interface',
     description:

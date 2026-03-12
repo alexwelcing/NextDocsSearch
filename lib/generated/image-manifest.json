@@ -795,6 +795,46 @@
     ],
     "thumbnail": "/images/multi-art/carbon-nanotube-plague-2039/option-1-schnell.png"
   },
+  "cartography-01-the-unnamed-continent": {
+    "heroImage": "/images/articles/cartography-01-the-unnamed-continent.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/cartography-01-the-unnamed-continent.svg",
+    "ogImage": "/images/og/cartography-01-the-unnamed-continent.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/cartography-01-the-unnamed-continent.svg"
+  },
+  "cartography-02-the-isthmus-of-intent": {
+    "heroImage": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
+    "ogImage": "/images/og/cartography-02-the-isthmus-of-intent.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/cartography-02-the-isthmus-of-intent.svg"
+  },
+  "cartography-03-the-depth-soundings": {
+    "heroImage": "/images/articles/cartography-03-the-depth-soundings.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/cartography-03-the-depth-soundings.svg",
+    "ogImage": "/images/og/cartography-03-the-depth-soundings.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/cartography-03-the-depth-soundings.svg"
+  },
+  "cartography-04-the-tidal-zone": {
+    "heroImage": "/images/articles/cartography-04-the-tidal-zone.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/cartography-04-the-tidal-zone.svg",
+    "ogImage": "/images/og/cartography-04-the-tidal-zone.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/cartography-04-the-tidal-zone.svg"
+  },
+  "cartography-05-the-atlas-of-disappearances": {
+    "heroImage": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
+    "ogImage": "/images/og/cartography-05-the-atlas-of-disappearances.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/cartography-05-the-atlas-of-disappearances.svg"
+  },
   "case-study-computer-vision-healthcare": {
     "heroImage": "/images/articles/case-study-computer-vision-healthcare.jpg",
     "articleJpg": "/images/articles/case-study-computer-vision-healthcare.jpg",
@@ -3085,6 +3125,46 @@
     ],
     "thumbnail": "/images/multi-art/reproducible-ai-evals-version-control/option-1-schnell.png"
   },
+  "residue-01-the-last-prompt-engineer": {
+    "heroImage": "/images/articles/residue-01-the-last-prompt-engineer.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/residue-01-the-last-prompt-engineer.svg",
+    "ogImage": "/images/og/residue-01-the-last-prompt-engineer.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/residue-01-the-last-prompt-engineer.svg"
+  },
+  "residue-02-the-training-data-ghosts": {
+    "heroImage": "/images/articles/residue-02-the-training-data-ghosts.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/residue-02-the-training-data-ghosts.svg",
+    "ogImage": "/images/og/residue-02-the-training-data-ghosts.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/residue-02-the-training-data-ghosts.svg"
+  },
+  "residue-03-the-deprecated-caretaker": {
+    "heroImage": "/images/articles/residue-03-the-deprecated-caretaker.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/residue-03-the-deprecated-caretaker.svg",
+    "ogImage": "/images/og/residue-03-the-deprecated-caretaker.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/residue-03-the-deprecated-caretaker.svg"
+  },
+  "residue-04-the-analog-holdouts": {
+    "heroImage": "/images/articles/residue-04-the-analog-holdouts.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/residue-04-the-analog-holdouts.svg",
+    "ogImage": "/images/og/residue-04-the-analog-holdouts.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/residue-04-the-analog-holdouts.svg"
+  },
+  "residue-05-the-compatibility-museum": {
+    "heroImage": "/images/articles/residue-05-the-compatibility-museum.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/residue-05-the-compatibility-museum.svg",
+    "ogImage": "/images/og/residue-05-the-compatibility-museum.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/residue-05-the-compatibility-museum.svg"
+  },
   "responsible-ai-ethics-framework": {
     "heroImage": "/images/articles/responsible-ai-ethics-framework.jpg",
     "articleJpg": "/images/articles/responsible-ai-ethics-framework.jpg",
@@ -5009,6 +5089,46 @@
       }
     ],
     "thumbnail": "/images/multi-art/thoughtcrime-enforcement-system-2041/option-1-schnell.png"
+  },
+  "threshold-01-the-last-diagnosis": {
+    "heroImage": "/images/articles/threshold-01-the-last-diagnosis.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/threshold-01-the-last-diagnosis.svg",
+    "ogImage": "/images/og/threshold-01-the-last-diagnosis.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/threshold-01-the-last-diagnosis.svg"
+  },
+  "threshold-02-the-closing-window": {
+    "heroImage": "/images/articles/threshold-02-the-closing-window.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/threshold-02-the-closing-window.svg",
+    "ogImage": "/images/og/threshold-02-the-closing-window.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/threshold-02-the-closing-window.svg"
+  },
+  "threshold-03-the-weight-of-the-hammer": {
+    "heroImage": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
+    "ogImage": "/images/og/threshold-03-the-weight-of-the-hammer.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/threshold-03-the-weight-of-the-hammer.svg"
+  },
+  "threshold-04-the-student-who-stopped-asking": {
+    "heroImage": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
+    "ogImage": "/images/og/threshold-04-the-student-who-stopped-asking.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/threshold-04-the-student-who-stopped-asking.svg"
+  },
+  "threshold-05-the-beautiful-redundancy": {
+    "heroImage": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
+    "articleJpg": null,
+    "articleSvg": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
+    "ogImage": "/images/og/threshold-05-the-beautiful-redundancy.svg",
+    "multiArt": [],
+    "thumbnail": "/images/articles/threshold-05-the-beautiful-redundancy.svg"
   },
   "time-dilation-computing-error-2039": {
     "heroImage": "/images/articles/time-dilation-computing-error-2039.jpg",

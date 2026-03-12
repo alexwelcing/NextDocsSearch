@@ -1,0 +1,16 @@
+{
+  "archetype": "The Narrow Passage",
+  "logline": "At the narrowest point between two cognitive continents, intent must compress itself to cross, transforming in the passage from one kind of meaning to another.",
+  "scene": "a narrow luminous bridge of land connecting two vast continents of different colors, seen from above at an angle, the isthmus glowing with concentrated amber light while the continents on either side are cool blue and violet, streams of light flowing through the narrow passage like traffic, vast scale with atmospheric haze",
+  "keyProps": [
+    "Narrow luminous land bridge glowing with amber light",
+    "Two vast continents in cool blue and violet",
+    "Streams of light flowing through the passage",
+    "Atmospheric haze at vast scale"
+  ],
+  "camera": "Elevated angled perspective, wide expansive framing with deep depth of field, crane-like overview",
+  "lighting": "Concentrated amber light at the isthmus contrasted with cool blue-violet continental masses, volumetric atmospheric haze",
+  "productionDesign": "Luminous otherworldly landscape, vast scale abstract geography suggesting cognitive spaces, bioluminescent textures, far-future ethereal aesthetic",
+  "signatureTwist": "extreme close-up of a narrow channel where two types of luminous fluid meet and transform, warm amber flowing from the left and cool blue from the right, at the point of contact they become pure white light briefly before separating into new colors on the other side, the transformation process visible as intricate patterns, shallow depth of field",
+  "avoid": ["No text", "No logos", "No watermarks"]
+}

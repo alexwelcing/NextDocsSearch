@@ -1,0 +1,136 @@
+{
+  "series": "The Threshold",
+  "description": "Image and video generation prompts for the 5-part Threshold series. Each article has 3 prompts. Visual identity: warm, golden, documentary feel. Intimate scale, handheld energy, natural light. Near future 2027-2028.",
+  "stylePrefix": "cinematic still frame, documentary realism, warm golden light, shallow depth of field, 50mm lens, natural ambient lighting, subtle film grain, intimate framing, eye-level perspective, physically grounded setting",
+  "styleSuffix": "no text, no titles, no captions, no logos, no watermarks, no signs, no labels, no HUD overlays, no abstract effects",
+  "videoStyleSuffix": "cinematic slow camera drift, shallow depth of field, warm ambient light, subtle dust particles in light beams, 50mm f/1.4 lens, 180-degree shutter, natural motion blur, no readable text, no titles, no captions, no logos, no watermarks, no signs, no labels",
+  "negativePrompt": "worst quality, inconsistent motion, blurry, jittery, distorted, morphing, warping, flicker, stutter, temporal artifacts, frame blending, text, watermark, logo, title, caption, subtitle, label, sign, lettering, words, numbers, cold lighting, blue tones, sci-fi, futuristic",
+  "recommendedModels": {
+    "fast": "fal-ai/flux/schnell",
+    "quality": "fal-ai/flux/dev"
+  },
+  "imageSize": "landscape_16_9",
+  "outputStructure": "public/images/multi-art/{slug}/option-{N}-{model-short}.png",
+  "articles": [
+    {
+      "slug": "threshold-01-the-last-diagnosis",
+      "title": "The Last Diagnosis",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a radiologist sitting alone in a dimly lit reading room, face illuminated by the cool glow of medical imaging monitors showing chest CT scans, her hand paused mid-gesture over the lightboard, golden late-afternoon sun filtering through partially closed blinds behind her, coffee cup casting a long shadow, intimate contemplative moment"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "extreme close-up of a human eye reflecting the glow of a medical scan, the iris catching warm amber light from a window while the pupil mirrors cool blue-white CT imagery, shallow depth of field with soft bokeh of a clinical setting behind, the moment of recognition captured in the tension between two light sources"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a medical imaging workstation seen from behind, a woman's silhouette between two large monitors, one showing a standard chest scan and the other showing the same scan with an AI overlay highlighting a tiny region in warm amber, the difference between the two screens telling the story, late afternoon light, clinical but intimate"
+        }
+      ]
+    },
+    {
+      "slug": "threshold-02-the-closing-window",
+      "title": "The Closing Window",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a literary translator at a wooden desk covered in manuscript pages and open books in two languages, warm desk lamp casting golden light, a laptop showing side-by-side text columns, her pen hovering over a page with sparse red annotations, rain visible through a window behind, Bergen Norway atmosphere"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "close-up of two open books side by side on a weathered wooden desk, one in Norwegian and one in English, a human hand resting between them with a pen that has barely been used, warm lamplight casting shadows across the pages, a glass of aquavit catching the light, shallow depth of field, the small gap between the books as visual metaphor"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a woman on an airplane looking out a rain-streaked window at clouds below, holding a small poetry book open in her lap, the warm cabin reading light creating an intimate bubble around her, her expression distant and contemplative, golden hour light mixing with the cool blue of altitude"
+        }
+      ]
+    },
+    {
+      "slug": "threshold-03-the-weight-of-the-hammer",
+      "title": "The Weight of the Hammer",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "action scene",
+          "prompt": "a blacksmith mid-strike at a traditional forge, sparks flying from hot steel on an anvil, the forge fire casting warm orange light across the workshop, hand tools hanging on stone walls, a small modern sensor array mounted discreetly on the anvil catching firelight, converted stable workshop in Czech countryside"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "extreme close-up of two Damascus steel knife blades side by side on a leather apron, one with perfectly symmetrical patterns and one with subtle organic irregularities, warm forge light making the steel glow, the irregular blade catching more light because of its surface variation, macro detail of the pattern welding"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a blacksmith's weathered hands holding a hammer, slight visible tremor in the fingers, warm forge light illuminating the calluses and soot, an anvil with subtle embedded sensors glowing faintly beneath the surface, traditional workshop with stone walls and iron tools, intimate documentary framing"
+        }
+      ]
+    },
+    {
+      "slug": "threshold-04-the-student-who-stopped-asking",
+      "title": "The Student Who Stopped Asking",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "workspace scene",
+          "prompt": "a young woman sitting alone in a university cafe with a blank paper notebook open in front of her, pen in hand, nothing written yet, the cafe bustling around her out of focus, warm natural light from large windows, her expression intensely focused inward, no phone or laptop visible, Imperial College London atmosphere"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "abstract concept",
+          "prompt": "close-up of a blank notebook page with a single pen resting on it, warm cafe light casting shadows, out-of-focus background showing a laptop closed and pushed to the edge of the table, a coffee cup with steam rising, the emptiness of the page as the subject, shallow depth of field emphasizing the untouched paper"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a biology lab at night seen through a window from outside, a lone researcher visible among dark microscopes and glassware, warm overhead lights creating pools of light, she is reading a printed paper instead of looking at screens, stacks of physical journals beside her, contemplative solitary atmosphere"
+        }
+      ]
+    },
+    {
+      "slug": "threshold-05-the-beautiful-redundancy",
+      "title": "The Beautiful Redundancy",
+      "prompts": [
+        {
+          "option": 1,
+          "model": "fast",
+          "angle": "action scene",
+          "prompt": "an architect standing in an unfinished house frame in coastal West Africa, golden hour light streaming through the skeleton of the building, she holds rolled blueprints while looking at a partially raised concrete pylon foundation, local workers visible in the background, red laterite soil, palm trees, ocean visible on the horizon"
+        },
+        {
+          "option": 2,
+          "model": "quality",
+          "angle": "intimate detail",
+          "prompt": "close-up of an elderly West African woman's hands gesturing toward a building model on a table, pointing to where something is missing, warm interior light, architectural drawings and a laptop visible out of focus behind the model, the hands weathered and expressive, the model simple but detailed, intimate human moment"
+        },
+        {
+          "option": 3,
+          "model": "fast",
+          "angle": "dramatic composition",
+          "prompt": "a completed house in a coastal village at golden hour, elevated on branching pylon foundations, a covered exterior space where people are gathered for a ceremony, warm light and long shadows, the architecture clearly designed for both engineering and community, children playing in the foreground, ocean in the distance"
+        }
+      ]
+    }
+  ]
+}
