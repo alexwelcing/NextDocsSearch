@@ -23,6 +23,30 @@ dotenv.config()
 
 import fs from 'fs'
 import path from 'path'
+import { ProxyAgent, fetch as undiciFetch } from 'undici'
+
+// ═══════════════════════════════════════════════════════════════
+// PROXY-AWARE FETCH
+// ═══════════════════════════════════════════════════════════════
+
+function getProxyFetch(): typeof globalThis.fetch {
+  const proxyUrl =
+    process.env.HTTPS_PROXY ||
+    process.env.HTTP_PROXY ||
+    process.env.https_proxy ||
+    process.env.http_proxy
+  if (proxyUrl) {
+    const agent = new ProxyAgent(proxyUrl)
+    return ((url: string | URL | Request, init?: RequestInit) =>
+      undiciFetch(url as string, {
+        ...init,
+        dispatcher: agent,
+      } as never)) as unknown as typeof globalThis.fetch
+  }
+  return globalThis.fetch
+}
+
+const proxyFetch = getProxyFetch()
 
 // ═══════════════════════════════════════════════════════════════
 // SERIES CONFIG
@@ -99,7 +123,7 @@ async function generateImage(
   if (!falKey) return { success: false, error: 'No FAL_KEY' }
 
   try {
-    const response = await fetch(`https://queue.fal.run/${modelId}`, {
+    const response = await proxyFetch(`https://fal.run/${modelId}`, {
       method: 'POST',
       headers: {
         Authorization: `Key ${falKey}`,
@@ -156,14 +180,14 @@ async function pollFalResult(
     await new Promise((r) => setTimeout(r, pollInterval))
 
     try {
-      const statusRes = await fetch(`https://queue.fal.run/${modelId}/requests/${requestId}/status`, {
+      const statusRes = await proxyFetch(`https://queue.fal.run/${modelId}/requests/${requestId}/status`, {
         headers: { Authorization: `Key ${falKey}` },
       })
 
       const statusData = (await statusRes.json()) as { status: string }
 
       if (statusData.status === 'COMPLETED') {
-        const resultRes = await fetch(`https://queue.fal.run/${modelId}/requests/${requestId}`, {
+        const resultRes = await proxyFetch(`https://queue.fal.run/${modelId}/requests/${requestId}`, {
           headers: { Authorization: `Key ${falKey}` },
         })
         const resultData = (await resultRes.json()) as { images?: Array<{ url: string }> }
@@ -186,7 +210,7 @@ async function pollFalResult(
 
 async function downloadImage(url: string, outputPath: string): Promise<boolean> {
   try {
-    const response = await fetch(url)
+    const response = await proxyFetch(url)
     if (!response.ok) return false
     const buffer = Buffer.from(await response.arrayBuffer())
     const dir = path.dirname(outputPath)
