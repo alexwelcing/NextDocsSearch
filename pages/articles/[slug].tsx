@@ -20,6 +20,7 @@ interface ArticleProps {
   description?: string;
   keywords?: string[];
   ogImage?: string;
+  heroImage?: string;
   videoURL?: string;
   readingTime: number;
   relatedArticles: Array<{
@@ -58,6 +59,13 @@ const ArticleTitle = styled.h1`
   @media (max-width: 768px) {
     font-size: 2rem;
   }
+`;
+
+const ArticleHeroImage = styled.img`
+  width: 100%;
+  border-radius: 12px;
+  margin: 24px 0 0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 `;
 
 const ArticleMeta = styled.div`
@@ -269,6 +277,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   description,
   keywords,
   ogImage,
+  heroImage,
   videoURL,
   readingTime,
   relatedArticles,
@@ -344,6 +353,9 @@ const ArticlePage: NextPage<ArticleProps> = ({
       <ArticleWrapper>
         <ArticleHero>
           <ArticleTitle>{title}</ArticleTitle>
+          {heroImage && (
+            <ArticleHeroImage src={heroImage} alt={title} loading="eager" />
+          )}
           <ArticleMeta>
             <MetaItem>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</MetaItem>
             <MetaItem>{author.join(', ')}</MetaItem>
@@ -483,6 +495,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       description: data.description || '',
       keywords: data.keywords || [],
       ogImage: data.ogImage || '',
+      heroImage: `/images/articles/${slug}.jpg`,
       videoURL: data.videoURL || '',
       content,
       readingTime,
