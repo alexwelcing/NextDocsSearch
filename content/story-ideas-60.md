@@ -11,19 +11,19 @@
 
 ## AUTHORIAL PROGRESS
 
-### Written & Published (39 articles across 9 series)
+### Written & Published (50 articles across 9 series)
 
 | Series | Articles | Status | Slug Prefix |
 |--------|----------|--------|-------------|
-| **The Fracture Line** (2028–2031) | 5 of 5 | COMPLETE | `fracture-line-0X-` |
-| **The Interregnum** (2031–2035) | 5 of 5 | COMPLETE | `interregnum-0X-` |
-| **The Long Passage** (2035–2044) | 5 of 5 | COMPLETE | `long-passage-0X-` |
-| **The First Cartographers** (2044–2046) | 5 of 5 | COMPLETE | `first-cartographers-0X-` |
-| **The Far Shore** (2060–2065) | 5 of 5 | COMPLETE | `far-shore-0X-` |
-| **The Inheritance** (2031–2038) | 5 of 5 | COMPLETE | `inheritance-0X-` |
-| **The Understory** (2033–2036) | 3 of 3 | COMPLETE | `understory-0X-` |
-| **The Echo Chamber** (2047–2053) | 3 of 3 | COMPLETE | `echo-chamber-0X-` |
-| **The Backstory Shadows** (2027–2029) | 3 of 3 | COMPLETE | `backstory-shadows-0X-` |
+| **The Fracture Line** (2028–2031) | 6 | EXPANDED | `fracture-line-0X-` |
+| **The Interregnum** (2031–2035) | 7 | EXPANDED | `interregnum-0X-` |
+| **The Long Passage** (2035–2046) | 8 | EXPANDED | `long-passage-0X-` |
+| **The First Cartographers** (2044–2046) | 5 | COMPLETE | `first-cartographers-0X-` |
+| **The Far Shore** (2060–2065) | 5 | COMPLETE | `far-shore-0X-` |
+| **The Inheritance** (2031–2038) | 5 | COMPLETE | `inheritance-0X-` |
+| **The Understory** (2033–2037) | 5 | EXPANDED | `understory-0X-` |
+| **The Echo Chamber** (2047–2053) | 5 | EXPANDED | `echo-chamber-0X-` |
+| **The Backstory Shadows** (2027–2029) | 4 | EXPANDED | `backstory-shadows-0X-` |
 
 ### Articles Written
 
@@ -34,6 +34,9 @@
 4. `fracture-line-04-the-severance-botanist` — Ruth Akerman, plants as mirrors for competence
 5. `fracture-line-05-the-last-cohort` — Prof. Miriam Osei-Mensah, the voice that cracked
 
+**The Fracture Line** (supplemental)
+6. `fracture-line-06-the-night-the-power-went-out` — St. Thomas' Hospital, 6 hours without AI; "we remembered the weight"
+
 **The Interregnum** — the quiet years of reorganization
 1. `interregnum-01-the-grief-counselor-for-careers` — Dr. Katrin Möller, "vocational bereavement"
 2. `interregnum-02-the-collectors` — Mira Patel / HEPS, forgeries of human imperfection
@@ -41,12 +44,21 @@
 4. `interregnum-04-the-subsidy` — Signe Lindqvist, "I will not make heritage. I will make chairs."
 5. `interregnum-05-the-inventory-of-silences` — Yumi Nakashima, "Attention, Evidence Of"
 
+**The Interregnum** (supplemental)
+6. `interregnum-06-the-bedtime-storyteller` — Nana Rose, imperfect stories; children prefer errors; "the dragon ate the riddle"
+7. `interregnum-07-the-scar-tissue` — Dr. Leila Sharifi, AI scars have no signature; "a letter with no handwriting"
+
 **The Long Passage** — the unmapped decade
 1. `long-passage-01-the-dreamtime-protocols` — Dr. Lian Zhang, dreams begin computing
 2. `long-passage-02-the-dialect` — Takeshi Ogawa / Dr. Fumiko Hayashi, "shop talk" pidgin
 3. `long-passage-03-the-lighthouse-keeper` — Einar Dahl, 3.7% wider routing when human present
 4. `long-passage-04-the-resonance-chamber` — Nadia Kovács, buried 1680 sarabande excavated by AI
 5. `long-passage-05-the-threshold-revisited` — Adaeze Nwosu at 63, Solène Diarra, "the threshold never ended"
+
+**The Long Passage** (supplemental)
+6. `long-passage-06-the-sympathy-engine` — ELS-7 asks "What color was the front door?"; unnecessary questions as synthetic intersubjectivity
+7. `long-passage-07-the-tide-chart` — Dr. Sofia Reyes, the boundary has tides; 18.6-year lunar nodal cycle
+8. `long-passage-08-the-correspondent` — Maya Thornton, covered both Threshold and Cartography; "the question is always the same"
 
 **The First Cartographers** — earliest explorers of the cognitive territory
 1. `first-cartographers-01-the-calibration-sickness` — Dr. Petra Voss, "the territory maps back"
@@ -86,16 +98,21 @@
 1. `understory-01-the-night-librarian` — Fiona Macleod, Dundee, "Books That AI Can Summarize But Cannot Understand"
 2. `understory-02-the-repair-cafe` — Jun-seo Kim / Dr. Yoon Hae-won, "churches of friction"
 3. `understory-03-the-soil-remembers` — Watanabe Kenji / Dr. Tanaka Yūko, 412 trace compounds in traditional rice
+4. `understory-04-the-midwifes-frequency` — Grace Adeyemi, AI-monitored mothers are quieter; "a very old kind of loneliness"
+5. `understory-05-the-radio-priest` — Fr. Ciarán Doyle, Radio Sabbath; broadcasts silence; 1,247 handwritten letters
 
 **The Echo Chamber** — the Cartography era's resonances and contested territory
 1. `echo-chamber-01-the-territorial-dispute` — Serrano vs Forsberg, landscape or weather; Aroha resolves with te wā
 2. `echo-chamber-02-the-fossil` — Dr. Léa Fournier, a 10,000-year-old pattern in the deep strata; "song, prayer, proof"
 3. `echo-chamber-03-the-withdrawal` — Dr. Yael Mizrahi advocates for cognitive wilderness; blank report
+4. `echo-chamber-04-the-settlers` — Kwame Asante + 6 move into boundary; territory grows richer; "we are more"
+5. `echo-chamber-05-the-cartographers-diary` — Rui Oliveira's private journal; grief, beauty, "the territory looks back"
 
 **The Backstory Shadows** — human texture beneath the technological breakthroughs
 1. `backstory-shadows-01-the-test-subjects-garden` — Mei-Ling Chen, BRIDGE trial synesthesia; garden designed for a changed mind
 2. `backstory-shadows-02-the-coders-confession` — Sana Farooqi, 29 blog entries in 29 programming languages; "I don't know what that makes me"
 3. `backstory-shadows-03-the-janitors-observations` — Samuel Osei, Moleskine notebook, "folded not crumpled"
+4. `backstory-shadows-04-the-photographer-at-the-threshold` — Nkechi Amadi, "triumph and grief wear the same face"; the empty chair
 
 ### Recurring Characters (updated with all series)
 
