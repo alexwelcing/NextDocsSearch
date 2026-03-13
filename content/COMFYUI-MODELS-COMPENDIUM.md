@@ -11,7 +11,9 @@
 
 ### The Platform (March 2026)
 
-ComfyUI has become the universal interface for AI image and video generation. Version **0.16.1** is current. It is a node-based visual programming environment for diffusion models — every operation is a node, every pipeline is a graph, everything is composable.
+ComfyUI has become the universal interface for AI image and video generation. Version **0.17.0** (released March 13, 2026; Desktop v0.8.18 bundles core v0.16.4). It is a node-based visual programming environment for diffusion models — every operation is a node, every pipeline is a graph, everything is composable.
+
+**v0.17.0 highlights:** Flux 2 Klein KV cache support, modular asset architecture with async scanner, enhanced VRAM handling, LTX-2.3 day-0 support, ElevenLabs integration, Kling 3.0 Motion Control. Recommended PyTorch: torch 2.9.1+cu130.
 
 **Why ComfyUI over alternatives:**
 - **Forge UI** is simpler but less flexible — good for one-off generations, not for production pipelines
@@ -114,6 +116,26 @@ These are fine-tuned Flux checkpoints — start with these before training custo
 | **Colossus Project v12** | Flagship community model. Versatile. | Good all-rounder. |
 | **Fluxmania** | Portraits and photography focus. | Good for character close-ups. |
 | **Pandora FLUX** | 75% photographic, 25% artistic. 3.9★ across 161 reviews. | Good for our blended aesthetic. |
+
+### Top SDXL Photorealistic Checkpoints
+
+| Model | Strengths | Notes |
+|-------|-----------|-------|
+| **Juggernaut XL v10** | Gold standard. Best all-around for skin texture, lighting, anatomy. | Also excels at environments. Most recommended by Reddit. |
+| **epiCRealism XL (Last FAME)** | Unmatched texture depth, micro-expressions, editorial/beauty photography. | Best for close-up character portraits. |
+| **RealVisXL V5** | Strong skin detail, hair texture. | "Mirrorless vs DSLR" compared to Juggernaut. |
+| **Realism Engine SDXL** | Best specifically for faces. | Face-focused work. |
+| **DreamShaper XL** | Artistic/painterly. | Good for Understory and Interregnum eras. |
+
+### Anime / Stylized Models (if needed for territory visualization)
+
+| Model | Base | Notes |
+|-------|------|-------|
+| **NoobAI-XL VPred 1.0** | Illustrious/SDXL | V-Prediction tech. Vibrant color. Trained on ~13M images. Use Euler A, 28 steps, CFG 3.5. |
+| **Pony Diffusion V6** | SDXL | Top-tier anime with large LoRA ecosystem. |
+| **Illustrious XL v2.0** | SDXL | Strong anime foundation. |
+
+> These may be useful for the cognitive territory sequences, where "colors that don't exist in nature" and the FFX Farplane aesthetic push beyond photorealism.
 
 ### Recommended Samplers
 
@@ -355,14 +377,24 @@ Released January 2026. The newest and most exciting for our use case.
 
 **Pipeline for THE REACHING:** Generate hero image with Flux → animate with CogVideoX I2V. This is the most reliable way to bring still character portraits to life.
 
+#### 5. Kling 2.6 / 3.0 (Kuaishou) — AUDIO + VIDEO
+
+- Native synchronized voiceover, dialogue, and sound effects
+- Kling 3.0: Motion Control support (integrated into ComfyUI March 2026)
+- Kling 3.5: Currently ranked #1 for I2V by Artificial Analysis
+- Best for rapid iteration and audio-synced content
+
+**For THE REACHING:** Consider Kling for dialogue-heavy sequences (exit interviews, Ciarán's radio show, Nana Rose's stories) where synced speech matters.
+
 ### Model Comparison at a Glance
 
 | Model | Speed | Face Quality | Motion | Resolution | I2V | Audio | VRAM |
 |-------|-------|-------------|--------|-----------|-----|-------|------|
 | **LTX-2.3** | Fastest | Good | Good | 4K/50fps | Yes | Yes (synced) | 32GB+ |
 | **WAN 2.6** | Medium | Good | Best (reference) | 1080p | Yes | No | 16GB+ |
-| **HunyuanVideo 1.5** | Slow | Best | Good | 720p+ | Yes | No | 14GB+ |
+| **HunyuanVideo 1.5** | Slow | Best | Best physics | 1080p | Yes | No | 14GB+ |
 | **CogVideoX-5B** | Slow | Good | Good | 720p | Best I2V | No | 16GB+ |
+| **Kling 3.0** | Fast | Good | Good | 1080p+ | Excellent | Yes (dialogue) | Cloud |
 
 ### Recommended Video Pipeline for THE REACHING
 
@@ -402,15 +434,33 @@ Released January 2026. The newest and most exciting for our use case.
 | **ComfyUI-AnimateDiff-Evolved** | AnimateDiff for motion generation | Active |
 | **ControlNet Preprocessors** | OpenPose, depth, canny, etc. | Built into ComfyUI ecosystem |
 | **ComfyUI-Tiled-Diffusion** | High-resolution upscaling | Active. For hero shots. |
+| **ComfyUI-SAM3** | Segment Anything with natural language | Active. Zero-shot masking. Game-changer for inpainting. |
+| **SuperScaler** | All-in-one multi-pass upscaling | Active (Nov 2025). Replaces 10+ node chains. |
+| **ComfyUI-LayerForge** | Photoshop-like layered canvas, compositing | Active. Useful for double-exposure/palimpsest effects. |
+| **StrawberryFist VRAM Optimizer** | Auto-cleanup, GPU monitoring | Active. Essential for multi-model pipelines. |
+| **ZenID FaceSwap** | Age transformation, face swap | Active. Generates different ages from single reference — no LoRA needed. |
 
 ### ControlNet Models to Download
 
+**Important:** ControlNet models are NOT cross-compatible between architectures. Download the right ones for your base model.
+
+**For Flux (primary):**
+
 | Model | Purpose | For THE REACHING |
 |-------|---------|-----------------|
-| **OpenPose** | Pose matching | Cross-era gesture echoes (Cloud Atlas style) |
-| **Depth** | Depth map conditioning | Preserving composition during aging pipeline |
-| **Canny** | Edge detection | Architectural consistency across eras |
-| **Lineart** | Line art conditioning | Title card generation |
+| **Shakker Labs Union Pro 2.0** | All-in-one: canny, soft edge, depth, pose, gray | The most comprehensive Flux ControlNet. Start here. |
+| **BFL Official Canny** | Edge detection | Architectural consistency across eras |
+| **BFL Official Depth** | Depth map conditioning | Preserving composition during aging pipeline |
+| **XLabs HED/Canny/Depth** | Additional preprocessors | Backup options |
+| **TheMisto Lineart** | Line art conditioning | Title card generation |
+
+**For SDXL (secondary):**
+
+| Model | Purpose | For THE REACHING |
+|-------|---------|-----------------|
+| **Xinsir OpenPose** | Pose matching | Cross-era gesture echoes (Cloud Atlas style) |
+| **Xinsir Canny** | Edge detection | Best SDXL canny model |
+| **ControlNet Union** | All-in-one (all control types in one file) | Simplifies SDXL workflows |
 | **SoftEdge** | Soft edge detection | Dreamy/impressionistic territory scenes |
 
 ---
