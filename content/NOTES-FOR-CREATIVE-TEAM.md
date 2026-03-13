@@ -445,6 +445,8 @@ Each series should produce:
 
 ### Transition Sequences Between Eras
 
+> **Key technique:** WAN 2.2's First-and-Last-Frame-to-Video (FLF2V) generates video between two keyframes. Generate frame 1 in the outgoing era and frame N in the incoming era → WAN interpolates the visual transformation. Ideal for aging and era transitions.
+
 These are the Cloud Atlas moments — visual bridges between decades:
 
 | Transition | Visual Concept | Duration |

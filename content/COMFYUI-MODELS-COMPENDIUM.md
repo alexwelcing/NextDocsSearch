@@ -213,11 +213,14 @@ ComfyUI-PuLID-Flux-Chroma fork adds Chroma model support. Chroma provides enhanc
 
 | Tool | Best For | Notes |
 |------|----------|-------|
-| **Kohya-ss/sd-scripts v0.9.1** | Industry standard. Most flexible. | Command-line mastery gives maximum control. |
-| **AI-Toolkit (Ostris)** | Flux-specific training | Streamlined for Flux.1 LoRAs. |
+| **Kohya-ss/sd-scripts v0.9.1** | Industry standard. SDXL + Flux. Most flexible. | Command-line mastery gives maximum control. |
+| **SimpleTuner** | Production Flux LoRAs. Most stable/reliable. | Gold standard for stability. Extensive config. Most predictable results. |
+| **AI-Toolkit (Ostris)** | Fast Flux prototyping. 20–30% faster training. | Streamlined config. Good for iteration. |
 | **OneTrainer** | GUI-based training | Good for iteration without CLI expertise. |
-| **FluxGym** | Quick Flux LoRAs | Graphical interface, simplified settings. |
+| **FluxGym** | Quick Flux experiments | Graphical interface, simplified settings. |
 | **CivitAI Training** | Cloud training | 2000 buzz (~$2). Upload dataset, configure, train. No local GPU needed. |
+
+**Recommendation:** Prototype with AI-Toolkit for speed, then use SimpleTuner for final production LoRAs.
 
 ### Settings — SDXL LoRAs
 
@@ -351,7 +354,9 @@ Released January 2026. The newest and most exciting for our use case.
 - WAN 2.2/2.6 via **ComfyUI-WanVideoWrapper** (Kijai)
 - Quality ranking: fp16 > bf16 > fp8_scaled > fp8_e4m3fn
 
-**For THE REACHING:** WAN 2.6 reference-to-video is ideal for creating visual echoes between eras — film a gesture in one era, use it as a reference to generate the same gesture in a different era with different characters.
+**Key workflow — First-and-Last-Frame-to-Video (FLF2V):** Generate video between two keyframes. This is ideal for aging timeline transitions — generate Adaeze at 34 as frame 1 and at 63 as frame N, and WAN interpolates the transformation.
+
+**For THE REACHING:** WAN 2.6 reference-to-video is ideal for creating visual echoes between eras — film a gesture in one era, use it as a reference to generate the same gesture in a different era with different characters. FLF2V is ideal for aging transition sequences.
 
 #### 3. HunyuanVideo 1.5 (Tencent) — BEST FACES
 
@@ -360,10 +365,12 @@ Released January 2026. The newest and most exciting for our use case.
 - Cinema-quality realism with exceptional temporal consistency
 - Best face generation of any open video model
 - Runs on 14GB+ VRAM with offloading
-- 8–15 minutes per clip on RTX 4090
+- 8–15 minutes per clip on RTX 4090 (1.7x faster with ComfyUI-MagCache)
 - Full OSS toolchain: xDiT parallelism, FP8 weights, Diffusers/ComfyUI support
+- **500+ LoRAs on CivitAI** — the largest video LoRA ecosystem. Critical for character consistency.
+- ComfyUI-HunyuanVideoMultiLora — load multiple LoRAs without blur/artifacts
 
-**For THE REACHING:** Best for close-up character shots (Adaeze's face, Ciarán's tea-making, the handshake). When face quality matters more than speed.
+**For THE REACHING:** Best for close-up character shots (Adaeze's face, Ciarán's tea-making, the handshake). When face quality matters more than speed. The LoRA ecosystem means we can train character-specific video LoRAs.
 
 #### 4. CogVideoX-5B (Tsinghua/Zhipu AI) — BEST IMAGE-TO-VIDEO
 
@@ -503,10 +510,12 @@ Released January 2026. The newest and most exciting for our use case.
 
 | Component | Minimum | Recommended | Ideal |
 |-----------|---------|-------------|-------|
-| **GPU** | RTX 4070 Ti (12GB) | RTX 4090 (24GB) | 2× RTX 4090 or A6000 (48GB) |
+| **GPU** | RTX 4070 Ti (12GB) | RTX 4090 (24GB) | RTX 5090 (32GB) or A6000 (48GB) |
 | **RAM** | 32GB | 64GB | 128GB |
 | **Storage** | 500GB NVMe | 2TB NVMe | 4TB+ NVMe |
 | **CPU** | Modern 8-core | 12+ cores | 16+ cores |
+
+> **RTX 5090 note:** With NVFP4 quantization, the RTX 5090 delivers 2.5x speedup and 60% VRAM reduction compared to RTX 4090. This makes Flux.2 Dev comfortable and video generation fast.
 
 ### What Runs Where
 
