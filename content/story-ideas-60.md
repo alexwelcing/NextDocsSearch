@@ -11,7 +11,7 @@
 
 ## AUTHORIAL PROGRESS
 
-### Written & Published (30 articles across 6 new series)
+### Written & Published (39 articles across 9 series)
 
 | Series | Articles | Status | Slug Prefix |
 |--------|----------|--------|-------------|
@@ -21,6 +21,9 @@
 | **The First Cartographers** (2044–2046) | 5 of 5 | COMPLETE | `first-cartographers-0X-` |
 | **The Far Shore** (2060–2065) | 5 of 5 | COMPLETE | `far-shore-0X-` |
 | **The Inheritance** (2031–2038) | 5 of 5 | COMPLETE | `inheritance-0X-` |
+| **The Understory** (2033–2036) | 3 of 3 | COMPLETE | `understory-0X-` |
+| **The Echo Chamber** (2047–2053) | 3 of 3 | COMPLETE | `echo-chamber-0X-` |
+| **The Backstory Shadows** (2027–2029) | 3 of 3 | COMPLETE | `backstory-shadows-0X-` |
 
 ### Articles Written
 
@@ -79,7 +82,22 @@
 4. `far-shore-04-the-last-cartographer` — Solène Diarra retires; one sentence beside the blank map
 5. `far-shore-05-the-return` — Adaeze at 101; the diagnosis was never lost, it was planted
 
-### Recurring Characters (updated with Far Shore)
+**The Understory** — quiet stories from the margins
+1. `understory-01-the-night-librarian` — Fiona Macleod, Dundee, "Books That AI Can Summarize But Cannot Understand"
+2. `understory-02-the-repair-cafe` — Jun-seo Kim / Dr. Yoon Hae-won, "churches of friction"
+3. `understory-03-the-soil-remembers` — Watanabe Kenji / Dr. Tanaka Yūko, 412 trace compounds in traditional rice
+
+**The Echo Chamber** — the Cartography era's resonances and contested territory
+1. `echo-chamber-01-the-territorial-dispute` — Serrano vs Forsberg, landscape or weather; Aroha resolves with te wā
+2. `echo-chamber-02-the-fossil` — Dr. Léa Fournier, a 10,000-year-old pattern in the deep strata; "song, prayer, proof"
+3. `echo-chamber-03-the-withdrawal` — Dr. Yael Mizrahi advocates for cognitive wilderness; blank report
+
+**The Backstory Shadows** — human texture beneath the technological breakthroughs
+1. `backstory-shadows-01-the-test-subjects-garden` — Mei-Ling Chen, BRIDGE trial synesthesia; garden designed for a changed mind
+2. `backstory-shadows-02-the-coders-confession` — Sana Farooqi, 29 blog entries in 29 programming languages; "I don't know what that makes me"
+3. `backstory-shadows-03-the-janitors-observations` — Samuel Osei, Moleskine notebook, "folded not crumpled"
+
+### Recurring Characters (updated with all series)
 
 | Character | First Appears | Returns In |
 |-----------|---------------|------------|
@@ -102,13 +120,16 @@
 | Amara Ekong | First Cartographers-01 | Far Shore-05 (finds the living patterns) |
 | Esme Okafor-Laurent | Far Shore-01 | Far Shore-02, 05 (accompanies Adaeze) |
 
-### Remaining Clusters (not yet written)
+### Remaining Unwritten Ideas
 
-| Cluster | Ideas | Status | Notes |
-|---------|-------|--------|-------|
-| **VI. The Understory** (2032–2045) | #41–48 | UNWRITTEN | Quiet margin stories the main narrative overlooked |
-| **VII. The Echo Chamber** (2045–2055) | #49–54 | UNWRITTEN | Cartography-era resonances, territory becomes contested |
-| **VIII. The Backstory Shadows** (2026–2030) | #55–58 | UNWRITTEN | Human texture beneath the Backstory Chronicles |
+All 9 clusters have been started. The following ideas from each cluster were not selected
+for the current articles but remain available for future expansion:
+
+| Cluster | Unwritten Ideas |
+|---------|----------------|
+| **The Understory** | #44 Midwife's Frequency, #45 Bookbinder's Apprentice, #46 The Unmeasured, #47 Radio Priest, #48 Last Handshake |
+| **The Echo Chamber** | #50 The Settlers, #51 The Customs Officer, #53 The Cartographer's Diary |
+| **The Backstory Shadows** | #57 The Photographer at the Threshold |
 
 ### Unwritten Ideas from Completed Clusters
 
