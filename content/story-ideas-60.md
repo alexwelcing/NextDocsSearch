@@ -11,7 +11,7 @@
 
 ## AUTHORIAL PROGRESS
 
-### Written & Published (20 articles across 4 new series)
+### Written & Published (30 articles across 6 new series)
 
 | Series | Articles | Status | Slug Prefix |
 |--------|----------|--------|-------------|
@@ -20,6 +20,7 @@
 | **The Long Passage** (2035–2044) | 5 of 5 | COMPLETE | `long-passage-0X-` |
 | **The First Cartographers** (2044–2046) | 5 of 5 | COMPLETE | `first-cartographers-0X-` |
 | **The Far Shore** (2060–2065) | 5 of 5 | COMPLETE | `far-shore-0X-` |
+| **The Inheritance** (2031–2038) | 5 of 5 | COMPLETE | `inheritance-0X-` |
 
 ### Articles Written
 
@@ -64,6 +65,13 @@
 | Yumi Nakashima | Interregnum-05 | Referenced by Cartography Initiative (11 years later) |
 | Lian Zhang | Long Passage-01 | Referenced as foundational text of cognitive cartography |
 
+**The Inheritance** — what was passed down between generations
+1. `inheritance-01-the-mothers-hands` — Akiko Tanaka-Bauer, Hisako's daughter; Ines Achterberg coins "orphaned gestures"
+2. `inheritance-02-the-archive-of-errors` — Priya Chakrabarti, "Human errors are the fossil record of human thought"
+3. `inheritance-03-the-seed-vault` — Margit Halvorsen, Knowledge Seed Vault on Andøya; 847 depositors
+4. `inheritance-04-the-orphan-protocols` — Nadia Kovács, 63% of EU standards bodies dissolved; the verification gap
+5. `inheritance-05-the-letters` — Elena & Carmen Vasquez, 1993 CAD letters mirror 2029 AI journal; "Thresholds are older than AI"
+
 **The Far Shore** — the ending, beyond the Cartography
 1. `far-shore-01-the-rememberer` — Esme Okafor-Laurent (Constance's granddaughter), last specialist in solitary thought
 2. `far-shore-02-the-quiet-festival` — March 8th, the Commons goes silent; Adaeze at 98
@@ -78,9 +86,15 @@
 | Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63), Far Shore-02 (at 98), Far Shore-05 (at 101) |
 | Maren Solberg | Threshold-02 | Interregnum-03, referenced in Far Shore-01 (posthumous) |
 | Tomáš Horák | Threshold-03 | Fracture Line-03 (takes on Zuzana) |
-| Constance Okafor | Fracture Line-01 | Referenced in Far Shore-01 (grandmother of Esme) |
+| Constance Okafor | Fracture Line-01 | Inheritance-01 (meets Ines), Inheritance-03 (visits vault), Far Shore-01 (grandmother of Esme) |
 | Zuzana Krejčí | Fracture Line-03 | Far Shore-01 (at 47, runs a school for embodied knowing) |
-| Solène Diarra | Long Passage-05 | First Cartographers-01/03/05, Far Shore-04 (retires at 66) |
+| Hisako Tanaka | Inheritance-01 | Far Shore-03 (referenced, grandmother of Yuki) |
+| Akiko Tanaka-Bauer | Inheritance-01 | Far Shore-03 (mother of Yuki, still carries the cascade) |
+| Ines Achterberg | Inheritance-01 | Far Shore-03 (as Dr. Inès Achterberg, somatic memory researcher) |
+| Priya Chakrabarti | Inheritance-02 | Referenced in Inheritance-04 (error archive informs Nadia's work) |
+| Margit Halvorsen | Inheritance-03 | — (Knowledge Seed Vault founder) |
+| Nadia Kovács | Inheritance-04 | Long Passage-04 (resonance chamber, same character) |
+| Solène Diarra | Long Passage-05 | Inheritance-02 (reads Priya's paper at 26), First Cartographers-01/03/05, Far Shore-04 (retires at 66) |
 | Petra Voss | First Cartographers-01 | First Cartographers-05, referenced in Far Shore-04 |
 | Hana Kovačević | First Cartographers-02 | Referenced in Far Shore-04 (blank map) |
 | Agnes de Vries | First Cartographers-03 | Referenced in Far Shore-04 |
@@ -92,7 +106,6 @@
 
 | Cluster | Ideas | Status | Notes |
 |---------|-------|--------|-------|
-| **V. The Inheritance** (2030–2040) | #35–40 | UNWRITTEN | What was passed down between generations |
 | **VI. The Understory** (2032–2045) | #41–48 | UNWRITTEN | Quiet margin stories the main narrative overlooked |
 | **VII. The Echo Chamber** (2045–2055) | #49–54 | UNWRITTEN | Cartography-era resonances, territory becomes contested |
 | **VIII. The Backstory Shadows** (2026–2030) | #55–58 | UNWRITTEN | Human texture beneath the Backstory Chronicles |
