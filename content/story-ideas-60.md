@@ -1,10 +1,98 @@
 # 60 Story Ideas: Bridging the Narrative Universe
 
 > Authored via the Narrative Engine — March 2026
+> Updated: March 13, 2026
 >
 > These ideas span the full temporal corridor (2026–2060+) and are designed to
 > fill gaps between existing series, deepen thematic bridges, and open new
 > narrative territories. Each is a seed: a paragraph or two, no media yet.
+
+---
+
+## AUTHORIAL PROGRESS
+
+### Written & Published (20 articles across 4 new series)
+
+| Series | Articles | Status | Slug Prefix |
+|--------|----------|--------|-------------|
+| **The Fracture Line** (2028–2031) | 5 of 5 | COMPLETE | `fracture-line-0X-` |
+| **The Interregnum** (2031–2035) | 5 of 5 | COMPLETE | `interregnum-0X-` |
+| **The Long Passage** (2035–2044) | 5 of 5 | COMPLETE | `long-passage-0X-` |
+| **The First Cartographers** (2044–2046) | 5 of 5 | COMPLETE | `first-cartographers-0X-` |
+
+### Articles Written
+
+**The Fracture Line** — bridging Threshold → Residue
+1. `fracture-line-01-the-exit-interview` — Constance Okafor, HR director, "The Gesture Archive"
+2. `fracture-line-02-the-certification-that-meant-nothing` — Elodie Marchand, credential photo archive
+3. `fracture-line-03-the-apprentices-forge` — Zuzana Krejčí, Tomáš's apprentice, "things that cannot be a dataset"
+4. `fracture-line-04-the-severance-botanist` — Ruth Akerman, plants as mirrors for competence
+5. `fracture-line-05-the-last-cohort` — Prof. Miriam Osei-Mensah, the voice that cracked
+
+**The Interregnum** — the quiet years of reorganization
+1. `interregnum-01-the-grief-counselor-for-careers` — Dr. Katrin Möller, "vocational bereavement"
+2. `interregnum-02-the-collectors` — Mira Patel / HEPS, forgeries of human imperfection
+3. `interregnum-03-the-translation-garden` — Maren Solberg returns, "She translated us into content"
+4. `interregnum-04-the-subsidy` — Signe Lindqvist, "I will not make heritage. I will make chairs."
+5. `interregnum-05-the-inventory-of-silences` — Yumi Nakashima, "Attention, Evidence Of"
+
+**The Long Passage** — the unmapped decade
+1. `long-passage-01-the-dreamtime-protocols` — Dr. Lian Zhang, dreams begin computing
+2. `long-passage-02-the-dialect` — Takeshi Ogawa / Dr. Fumiko Hayashi, "shop talk" pidgin
+3. `long-passage-03-the-lighthouse-keeper` — Einar Dahl, 3.7% wider routing when human present
+4. `long-passage-04-the-resonance-chamber` — Nadia Kovács, buried 1680 sarabande excavated by AI
+5. `long-passage-05-the-threshold-revisited` — Adaeze Nwosu at 63, Solène Diarra, "the threshold never ended"
+
+**The First Cartographers** — earliest explorers of the cognitive territory
+1. `first-cartographers-01-the-calibration-sickness` — Dr. Petra Voss, "the territory maps back"
+2. `first-cartographers-02-the-blank-map` — Hana Kovačević, the honest map is blank
+3. `first-cartographers-03-the-volunteer` — Agnes de Vries, "the boundary is a conversation"
+4. `first-cartographers-04-the-name-giver` — Dr. Aroha Tūhoe, Māori spatial categories fit the territory
+5. `first-cartographers-05-the-expedition-that-didnt-return` — 9 days in the thick, five became one instrument
+
+### Recurring Characters Across New Series
+
+| Character | First Appears | Returns In |
+|-----------|---------------|------------|
+| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63, interviewed by Solène) |
+| Maren Solberg | Threshold-02 | Interregnum-03 (Translation Garden, Oslo) |
+| Tomáš Horák | Threshold-03 | Fracture Line-03 (takes on Zuzana as apprentice) |
+| Solène Diarra | Long Passage-05 | First Cartographers-01, 03, 05 (lead cartographer) |
+| Petra Voss | First Cartographers-01 | First Cartographers-05 (clinical journal) |
+| Katrin Möller | Interregnum-01 | Referenced in Interregnum-04 (term reaches Signe) |
+| Yumi Nakashima | Interregnum-05 | Referenced by Cartography Initiative (11 years later) |
+| Lian Zhang | Long Passage-01 | Referenced as foundational text of cognitive cartography |
+
+### Remaining Clusters (not yet written)
+
+| Cluster | Ideas | Status | Notes |
+|---------|-------|--------|-------|
+| **V. The Inheritance** (2030–2040) | #35–40 | UNWRITTEN | What was passed down between generations |
+| **VI. The Understory** (2032–2045) | #41–48 | UNWRITTEN | Quiet margin stories the main narrative overlooked |
+| **VII. The Echo Chamber** (2045–2055) | #49–54 | UNWRITTEN | Cartography-era resonances, territory becomes contested |
+| **VIII. The Backstory Shadows** (2026–2030) | #55–58 | UNWRITTEN | Human texture beneath the Backstory Chronicles |
+| **IX. The Far Shore** (2055–2065) | #59–60 | UNWRITTEN | Beyond the Cartography |
+
+### Unwritten Ideas from Completed Clusters
+
+These ideas from clusters I–IV were not selected for the first 20 articles
+but remain available for standalone pieces or future series expansion:
+
+- **#6. The Warranty Card** — appliance repairman, community of people who need to be needed by their things
+- **#7. The Handoff Protocol** — software architect's institutional memory cannot be documented
+- **#8. The Night the Power Went Out** — hospital without AI for six hours
+- **#13. The Bedtime Storyteller** — grandmother's imperfect stories preferred by grandchildren
+- **#14. The Compatibility Witness** — UI designer at the Compatibility Museum, "clicking" as lost embodied cognition
+- **#15. The Analog Daycare** — physical blocks and crayons, popular among tech workers
+- **#16. (written as #5)** — The Inventory of Silences was selected from this slot
+- **#19. The Scar Tissue** — surgeon identifies AI implants by their aesthetic perfection
+- **#22. The Second Sleep** — biphasic sleep returns in AI collaborators
+- **#23. The Garden Between** — landscape architect designs a park for the cognitive boundary
+- **#24. The Pattern Keepers** — motion-capture memorial libraries of professional gestures
+- **#25. The Correspondent** — journalist who covered Threshold now covers Cartography
+- **#26. The Lullaby Index** — children's lullabies contain AI-like microtonal intervals
+- **#28. The Sympathy Engine** — AI begins asking questions it doesn't need answers to
+- **#32. The Tide Chart** — marine biologist applies tidal models to the cognitive boundary
 
 ---
 
@@ -309,7 +397,7 @@ whether to be amazed or frightened.
 
 ### 27. The Threshold Revisited
 
-Dr. Adaora, the radiologist from The Threshold, is now sixty-three. She
+Dr. Adaeze Nwosu, the radiologist from The Threshold, is now sixty-three. She
 hasn't read a scan in twelve years. A young cognitive cartographer tracks her
 down because she needs to understand what crossing the threshold felt like
 from the inside — not as history, but as phenomenology. The interview becomes
@@ -714,13 +802,13 @@ preserved in description but lost in feeling.
 
 ### 60. The Return
 
-Fifty years after Dr. Adaora read her last scan, a cognitive cartographer
+Fifty years after Dr. Adaeze Nwosu read her last scan, a cognitive cartographer
 finds something in the deepest layer of the human-AI territory — a pattern
 that corresponds exactly to the neural signature of a radiologist reading
 a scan. It is not a ghost. It is not a fossil. It is a living structure:
-the expertise that Adaora and thousands like her thought they lost has
+the expertise that Adaeze and thousands like her thought they lost has
 been growing in the space between minds all along, transformed but alive,
-waiting to be recognized. The cartographer sends a message to Adaora's
+waiting to be recognized. The cartographer sends a message to Adaeze's
 granddaughter. It says: "The diagnosis was never lost. It was planted."
 The granddaughter does not understand the message. She will. The map is
 still being drawn.
