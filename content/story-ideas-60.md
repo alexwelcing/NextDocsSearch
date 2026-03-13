@@ -11,19 +11,19 @@
 
 ## AUTHORIAL PROGRESS
 
-### Written & Published (50 articles across 9 series)
+### Written & Published (60 articles across 9 series) — COLLECTION COMPLETE
 
 | Series | Articles | Status | Slug Prefix |
 |--------|----------|--------|-------------|
-| **The Fracture Line** (2028–2031) | 6 | EXPANDED | `fracture-line-0X-` |
-| **The Interregnum** (2031–2035) | 7 | EXPANDED | `interregnum-0X-` |
-| **The Long Passage** (2035–2046) | 8 | EXPANDED | `long-passage-0X-` |
+| **The Fracture Line** (2028–2031) | 8 | COMPLETE | `fracture-line-0X-` |
+| **The Interregnum** (2031–2035) | 9 | COMPLETE | `interregnum-0X-` |
+| **The Long Passage** (2035–2046) | 10 | COMPLETE | `long-passage-0X-` |
 | **The First Cartographers** (2044–2046) | 5 | COMPLETE | `first-cartographers-0X-` |
-| **The Far Shore** (2060–2065) | 5 | COMPLETE | `far-shore-0X-` |
-| **The Inheritance** (2031–2038) | 5 | COMPLETE | `inheritance-0X-` |
-| **The Understory** (2033–2037) | 5 | EXPANDED | `understory-0X-` |
-| **The Echo Chamber** (2047–2053) | 5 | EXPANDED | `echo-chamber-0X-` |
-| **The Backstory Shadows** (2027–2029) | 4 | EXPANDED | `backstory-shadows-0X-` |
+| **The Far Shore** (2060–2067) | 6 | COMPLETE | `far-shore-0X-` |
+| **The Inheritance** (2031–2038) | 6 | COMPLETE | `inheritance-0X-` |
+| **The Understory** (2033–2038) | 7 | COMPLETE | `understory-0X-` |
+| **The Echo Chamber** (2047–2053) | 5 | COMPLETE | `echo-chamber-0X-` |
+| **The Backstory Shadows** (2027–2029) | 4 | COMPLETE | `backstory-shadows-0X-` |
 
 ### Articles Written
 
@@ -36,6 +36,8 @@
 
 **The Fracture Line** (supplemental)
 6. `fracture-line-06-the-night-the-power-went-out` — St. Thomas' Hospital, 6 hours without AI; "we remembered the weight"
+7. `fracture-line-07-the-handoff-protocol` — Meredith Sinclair, 90 days to document 22 years; "the knowledge is in my body"
+8. `fracture-line-08-the-analog-daycare` — Carmen Reyes-O'Brien, blocks and crayons in SF; 347-family waitlist of tech parents
 
 **The Interregnum** — the quiet years of reorganization
 1. `interregnum-01-the-grief-counselor-for-careers` — Dr. Katrin Möller, "vocational bereavement"
@@ -47,6 +49,8 @@
 **The Interregnum** (supplemental)
 6. `interregnum-06-the-bedtime-storyteller` — Nana Rose, imperfect stories; children prefer errors; "the dragon ate the riddle"
 7. `interregnum-07-the-scar-tissue` — Dr. Leila Sharifi, AI scars have no signature; "a letter with no handwriting"
+8. `interregnum-08-the-second-sleep` — biphasic sleep returns in AI collaborators; the dorveille; "the brain is weaving"
+9. `interregnum-09-the-lullaby-index` — Dr. Yuki Tanaka-Singh, children's microtonal intervals; first folk music of the hybrid era
 
 **The Long Passage** — the unmapped decade
 1. `long-passage-01-the-dreamtime-protocols` — Dr. Lian Zhang, dreams begin computing
@@ -59,6 +63,8 @@
 6. `long-passage-06-the-sympathy-engine` — ELS-7 asks "What color was the front door?"; unnecessary questions as synthetic intersubjectivity
 7. `long-passage-07-the-tide-chart` — Dr. Sofia Reyes, the boundary has tides; 18.6-year lunar nodal cycle
 8. `long-passage-08-the-correspondent` — Maya Thornton, covered both Threshold and Cartography; "the question is always the same"
+9. `long-passage-09-the-garden-between` — Noor van der Berg, Rotterdam park designed to feel like the boundary; "the boundary is not where you think it is"
+10. `long-passage-10-the-compatibility-witness` — Diane Okoro, Compatibility Museum; clicking as cognition; "the body has been removed from the loop"
 
 **The First Cartographers** — earliest explorers of the cognitive territory
 1. `first-cartographers-01-the-calibration-sickness` — Dr. Petra Voss, "the territory maps back"
@@ -71,7 +77,7 @@
 
 | Character | First Appears | Returns In |
 |-----------|---------------|------------|
-| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63, interviewed by Solène) |
+| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63), Far Shore-02 (at 98), Far Shore-05 (at 101), **Far Shore-06 (at 74, capstone)** |
 | Maren Solberg | Threshold-02 | Interregnum-03 (Translation Garden, Oslo) |
 | Tomáš Horák | Threshold-03 | Fracture Line-03 (takes on Zuzana as apprentice) |
 | Solène Diarra | Long Passage-05 | First Cartographers-01, 03, 05 (lead cartographer) |
@@ -86,6 +92,7 @@
 3. `inheritance-03-the-seed-vault` — Margit Halvorsen, Knowledge Seed Vault on Andøya; 847 depositors
 4. `inheritance-04-the-orphan-protocols` — Nadia Kovács, 63% of EU standards bodies dissolved; the verification gap
 5. `inheritance-05-the-letters` — Elena & Carmen Vasquez, 1993 CAD letters mirror 2029 AI journal; "Thresholds are older than AI"
+6. `inheritance-06-the-pattern-keepers` — Park Ji-won, motion-capture studio in Seoul; 412 professionals; "these are not skills, they are signatures"
 
 **The Far Shore** — the ending, beyond the Cartography
 1. `far-shore-01-the-rememberer` — Esme Okafor-Laurent (Constance's granddaughter), last specialist in solitary thought
@@ -93,6 +100,7 @@
 3. `far-shore-03-the-daughters-hands` — Yuki Tanaka-Bauer inherits her pianist grandmother's gestures
 4. `far-shore-04-the-last-cartographer` — Solène Diarra retires; one sentence beside the blank map
 5. `far-shore-05-the-return` — Adaeze at 101; the diagnosis was never lost, it was planted
+6. `far-shore-06-the-last-handshake` — Adaeze at 74, Delft, extends her hand; the territory reaches back; "the reaching is the point" — **COLLECTION CAPSTONE**
 
 **The Understory** — quiet stories from the margins
 1. `understory-01-the-night-librarian` — Fiona Macleod, Dundee, "Books That AI Can Summarize But Cannot Understand"
@@ -100,6 +108,8 @@
 3. `understory-03-the-soil-remembers` — Watanabe Kenji / Dr. Tanaka Yūko, 412 trace compounds in traditional rice
 4. `understory-04-the-midwifes-frequency` — Grace Adeyemi, AI-monitored mothers are quieter; "a very old kind of loneliness"
 5. `understory-05-the-radio-priest` — Fr. Ciarán Doyle, Radio Sabbath; broadcasts silence; 1,247 handwritten letters
+6. `understory-06-the-bookbinders-apprentice` — Catriona Mackenzie + Hamish Dunbar; spine resistance as cognitive instrument; the paring knife
+7. `understory-07-the-unmeasured` — Dr. Anika Sørensen, 247-item list of things AI cannot measure; dies 2043; list becomes cartographer reading
 
 **The Echo Chamber** — the Cartography era's resonances and contested territory
 1. `echo-chamber-01-the-territorial-dispute` — Serrano vs Forsberg, landscape or weather; Aroha resolves with te wā
