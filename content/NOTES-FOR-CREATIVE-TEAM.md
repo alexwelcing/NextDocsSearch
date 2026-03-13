@@ -65,7 +65,7 @@ The emotional spine of the entire collection. She appears at five ages across fo
 | Young professional | 34 | 2027 | The Last Diagnosis | Sharp, focused, hands on trackpad, dark under-eye circles from night shifts. Hair in neat braids. White coat. The competence is visible in her posture. |
 | Mid-career | ~43 | 2036 | (referenced) | The braids are greying at the temples. The white coat is gone. She dresses in warm layers — ochre, burgundy. She has softened but the sharpness is in her eyes. |
 | Elder witness | 63 | 2063 | The Threshold Revisited | Silver hair, reading glasses, cardigan. Sits very still. When she speaks, her hands still scroll — phantom gesture of the radiologist. |
-| The hand | 74 | 2067 | The Last Handshake | In Delft. Winter. A wool coat. She is thinner. Her hand, when she extends it, trembles slightly — not from weakness but from the effort of reaching toward something enormous. |
+| The hand | 103 | 2067 | The Last Handshake | In Delft. Winter. A wool coat. She is thinner. Her hand, when she extends it, trembles slightly — not from weakness but from the effort of reaching toward something enormous. |
 | Ancient | 98–101 | 2063–2065 | Quiet Festival / The Return | Small, luminous, seated on a balcony in Brixton. Tomato pots. She has become elemental — bone and light and the specific beauty of a face that has witnessed everything and is still here. |
 
 **LoRA training pipeline:**
@@ -274,7 +274,7 @@ Medical officer of the Cartography Institute. German, precise, contained.
 - The Quiet Festival — the Commons dimming, four billion people simultaneously choosing silence
 - The Daughter's Hands — Yuki performing her grandmother's piano gestures, the ghost of the music
 - Solène's retirement — the sentence beside the blank map, the room empty except for the sentence and the light
-- **THE LAST HANDSHAKE** — Adaeze at 74 in Delft, extending her hand toward the wall. This is the FINAL SHOT. The hand. The wall. The warmth. Hold for thirty seconds. No music. Just breathing.
+- **THE LAST HANDSHAKE** — Adaeze at 103 in Delft, extending her hand toward the wall. This is the FINAL SHOT. The hand. The wall. The warmth. Hold for thirty seconds. No music. Just breathing.
 
 **Camera language:** Transcendent. The camera is no longer observing. The camera is participating. The boundary between viewer and viewed has dissolved.
 

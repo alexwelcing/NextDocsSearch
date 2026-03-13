@@ -77,7 +77,7 @@
 
 | Character | First Appears | Returns In |
 |-----------|---------------|------------|
-| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63), Far Shore-02 (at 98), Far Shore-05 (at 101), **Far Shore-06 (at 74, capstone)** |
+| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63), Far Shore-02 (at 98), Far Shore-05 (at 101), **Far Shore-06 (at 103, capstone)** |
 | Maren Solberg | Threshold-02 | Interregnum-03 (Translation Garden, Oslo) |
 | Tomáš Horák | Threshold-03 | Fracture Line-03 (takes on Zuzana as apprentice) |
 | Solène Diarra | Long Passage-05 | First Cartographers-01, 03, 05 (lead cartographer) |
@@ -100,7 +100,7 @@
 3. `far-shore-03-the-daughters-hands` — Yuki Tanaka-Bauer inherits her pianist grandmother's gestures
 4. `far-shore-04-the-last-cartographer` — Solène Diarra retires; one sentence beside the blank map
 5. `far-shore-05-the-return` — Adaeze at 101; the diagnosis was never lost, it was planted
-6. `far-shore-06-the-last-handshake` — Adaeze at 74, Delft, extends her hand; the territory reaches back; "the reaching is the point" — **COLLECTION CAPSTONE**
+6. `far-shore-06-the-last-handshake` — Adaeze at 103, Delft, extends her hand; the territory reaches back; "the reaching is the point" — **COLLECTION CAPSTONE**
 
 **The Understory** — quiet stories from the margins
 1. `understory-01-the-night-librarian` — Fiona Macleod, Dundee, "Books That AI Can Summarize But Cannot Understand"

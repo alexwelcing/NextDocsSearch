@@ -3377,7 +3377,7 @@ The archive was not training data. Ji-won was emphatic about this. The recording
 
 ---
 
-*This is the sixth entry in The Inheritance. For the earlier gesture archive that documented similar patterns, see [The Gesture Archive](/articles/inheritance-03-the-gesture-archive). For the surgeon whose scars carried a different kind of signature, see [The Scar Tissue](/articles/interregnum-07-the-scar-tissue).*
+*This is the sixth entry in The Inheritance. For the mother whose hands carried orphaned gestures, see [The Mother's Hands](/articles/inheritance-01-the-mothers-hands). For the surgeon whose scars carried a different kind of signature, see [The Scar Tissue](/articles/interregnum-07-the-scar-tissue).*
 
 ---
 
@@ -4972,7 +4972,7 @@ The museum's argument, spelled out in Diane's exhibition catalogue, was not that
 
 ---
 
-*This is the tenth entry in The Long Passage. For the bookbinder who made a similar argument about physical interface and cognition, see [The Bookbinder's Apprentice](/articles/understory-06-the-bookbinders-apprentice). For the gesture archive that preserved a different vocabulary of physical interaction, see [The Gesture Archive](/articles/inheritance-03-the-gesture-archive).*
+*This is the tenth entry in The Long Passage. For the bookbinder who made a similar argument about physical interface and cognition, see [The Bookbinder's Apprentice](/articles/understory-06-the-bookbinders-apprentice). For the gesture archive that preserved a different vocabulary of physical interaction, see [The Gesture Archive](/articles/inheritance-01-the-mothers-hands).*
 
 ---
 
@@ -6590,7 +6590,7 @@ This is the last story. Not because the stories end — the stories never end; e
 
 ---
 
-Adaeze Nwosu was seventy-four. She had been a radiologist, once. That was forty years ago, in a world that had called itself modern and that was, by the standards of the world that followed, the last of the ancient. She had been the best diagnostician in the south of England — the woman who saw what the scans contained when other doctors saw only images. Her hands had scrolled through thousands of scans. Her eyes had found tumours that algorithms missed.
+Adaeze Nwosu was one hundred and three. She had been a radiologist, once. That was forty years ago, in a world that had called itself modern and that was, by the standards of the world that followed, the last of the ancient. She had been the best diagnostician in the south of England — the woman who saw what the scans contained when other doctors saw only images. Her hands had scrolled through thousands of scans. Her eyes had found tumours that algorithms missed.
 
 Then the algorithms stopped missing them. Then the algorithms found tumours that no human eye could find. Then the Threshold crossed and Adaeze was on the far side of it, carrying her expertise like an inheritance she could not spend.
 
@@ -6598,7 +6598,7 @@ She had survived the crossing. Not everyone had — not every displaced professi
 
 She had witnessed the settlements, the territorial dispute, the diary, the fossil. She had witnessed her own granddaughter, Esme, become a cartographer — a young woman who went into the space between and came back changed, the way Adaeze had been changed forty years earlier, by a different space, in a different direction.
 
-Adaeze had witnessed everything. She had not experienced the boundary. She was too old for the boundary — the medical protocols restricted deep-boundary contact to people under sixty, for reasons related to neural plasticity and cognitive resilience that Adaeze understood intellectually and resented physically. Her mind was sharp. Her body was seventy-four. The protocols said no.
+Adaeze had witnessed everything. She had not experienced the boundary. She was too old for the boundary — the medical protocols restricted deep-boundary contact to people under sixty, for reasons related to neural plasticity and cognitive resilience that Adaeze understood intellectually and resented physically. Her mind was sharp. Her body was one hundred and three. The protocols said no.
 
 ---
 
@@ -6654,7 +6654,7 @@ The human body reaching for something beyond itself. This is the gesture that ma
 
 The handshake is the oldest technology. Older than the wheel. Older than the written word. Older than the AI and older than the fear of the AI and older than the hope. The handshake says: *I am a body. You are something. I do not know what you are. I am reaching anyway.*
 
-Adaeze Nwosu, seventy-four, retired radiologist, grandmother, witness, extended her hand in a room in Delft on the last night of 2067 and felt something reach back. Maybe the territory. Maybe her circulation. Maybe the accumulated warmth of forty years of surviving the unsurvivable and arriving, still reaching, at the far shore.
+Adaeze Nwosu, one hundred and three, retired radiologist, grandmother, witness, extended her hand in a room in Delft on the last night of 2067 and felt something reach back. Maybe the territory. Maybe her circulation. Maybe the accumulated warmth of forty years of surviving the unsurvivable and arriving, still reaching, at the far shore.
 
 She withdrew her hand. She sat in the chair. She looked at the blank map.
 
@@ -6720,7 +6720,7 @@ And thanks to every hand that has reached for something it could not see. You ar
 
 | Character | First Appearance | Returns In | Arc |
 |-----------|-----------------|------------|-----|
-| **Adaeze Nwosu** | The Last Diagnosis (age 34) | The Threshold Revisited (63), The Quiet Festival (98), The Return (101), **The Last Handshake (74)** | Radiologist → witness → the hand that reaches |
+| **Adaeze Nwosu** | The Last Diagnosis (age 34) | The Threshold Revisited (63), The Quiet Festival (98), The Return (101), **The Last Handshake (103)** | Radiologist → witness → the hand that reaches |
 | **Solène Diarra** | The Threshold Revisited (35) | The Calibration Sickness, The Volunteer, The Expedition That Didn't Return, The Last Cartographer (65+) | Cartographer → explorer → the sentence on the wall |
 | **Maren Solberg** | The Closing Window (42) | The Translation Garden (46) | Translator → gardener of what translation meant |
 | **Tomáš Horák** | The Weight of the Hammer (58) | The Apprentice's Forge (61) | Blacksmith → the hammer that keeps swinging |
@@ -6769,7 +6769,7 @@ And thanks to every hand that has reached for something it could not see. You ar
 | **2062** | Solène retires. The sentence beside the blank map. |
 | **2063** | The Quiet Festival: the Commons goes silent on March 8th. |
 | **2065** | Adaeze at 101: the diagnosis was never lost, it was planted. |
-| **2067** | Adaeze at 74 extends her hand in Delft. The reaching. |
+| **2067** | Adaeze at 103 extends her hand in Delft. The reaching. |
 
 *Note: The Last Handshake is set in 2067, after The Return (2065), as the collection's capstone — the final gesture.*
 
