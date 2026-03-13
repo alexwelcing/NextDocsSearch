@@ -282,29 +282,35 @@ Medical officer of the Cartography Institute. German, precise, contained.
 
 ## IV. COMFYUI WORKFLOW RECOMMENDATIONS
 
-### Base Model Selection
+> **See also: [COMFYUI-MODELS-COMPENDIUM.md](./COMFYUI-MODELS-COMPENDIUM.md)** for the full technical reference — model benchmarks, hardware requirements, community resources, and step-by-step installation checklist.
+
+### Base Model Selection (Updated March 2026)
 
 | Purpose | Recommended Model | Notes |
 |---------|-------------------|-------|
-| **Character portraits / LoRA training data** | Flux.1 Dev or SDXL + RealVisXL | Photorealistic, high detail for face consistency |
-| **Environment / mood concepts** | SD3.5 Large or Flux.1 | Better at atmosphere, lighting, abstract beauty |
-| **The cognitive territory** | Flux.1 + custom aesthetic LoRA | Train a LoRA on aurora/borealis + underwater light + fog imagery for the territory's unique look |
-| **Period-specific imagery** | SDXL + era-specific LoRA | Train micro-LoRAs for each era's color palette and film stock |
-| **Typography / title cards** | Flux.1 (text rendering) | Best text-in-image capability for title cards |
+| **Character portraits / LoRA training data** | **Flux.2 Dev** + UltraReal Fine-Tune v4 | 32B parameter model. Best photorealism available. Use Flux Kontext for turnaround sheets. |
+| **Character consistency (zero-shot)** | **Flux Kontext** + PuLID Flux II | No LoRA needed for initial consistency. PuLID locks facial identity. The triple-threat stack: LoRA (0.6) + PuLID (0.8) + ControlNet OpenPose. |
+| **Environment / mood concepts** | Flux.2 Dev or SDXL + DreamShaper XL | Flux.2 for realism, DreamShaper for painterly/artistic eras (Understory, Interregnum) |
+| **The cognitive territory** | Flux.2 Dev + custom territory LoRA | Train on aurora borealis + bioluminescent water + Turner paintings + fog + ice caves + nebulae |
+| **Period-specific imagery** | Character LoRA (0.7) + Era LoRA (0.5) stacked | Train lightweight era LoRAs (rank 8, 1000 steps) for each series' color palette |
+| **Typography / title cards** | Flux.2 Dev | Best text-in-image capability. Supports hex color codes for exact palette matching. |
 
-### LoRA Training Pipeline
+### LoRA Training Pipeline (2026 Best Practices)
+
+**Tools:** Kohya-ss/sd-scripts v0.9.1 (industry standard), AI-Toolkit by Ostris (Flux-specific), or CivitAI cloud training (~$2 per run).
 
 **Character LoRAs (per character):**
-1. **Concept generation**: Generate 30–50 reference images of the character at their primary age using txt2img with detailed prompts
-2. **Curation**: Select 20–30 best images showing varied angles, expressions, lighting
-3. **Training**: Train SDXL LoRA at rank 16–32, 1500–2000 steps, learning rate 1e-4
+1. **Concept generation**: Use Flux.2 Dev + UltraReal to generate 50 candidate portraits. Use Kontext Character Creator for turnaround sheets (front, 3/4, side, back).
+2. **Curation**: Select 20–30 best images. Caption with WD14 Tagger v3 + manual refinement.
+3. **Training**: Train Flux LoRA — rank 128, 2000 steps, AdamW8bit, bf16 mixed precision, FP8_Scaled enabled (saves ~8GB VRAM). Use LoRA+ with 16x ratio.
 4. **Validation**: Generate test images at different ages, outfits, lighting to verify consistency
-5. **Age variants**: Use IP-Adapter to transfer the trained character's identity onto age-appropriate base images
+5. **Age variants**: Use IPAdapter (weight 0.5, decreasing 0.1 per decade) + PuLID (fidelity mode, weight 0.8) + ControlNet depth. Key: EYES INTENSIFY as face ages.
+6. **Retrain**: Add 10 best age-variant images per milestone. Retrain so the LoRA encodes the full aging arc.
 
 **Era LoRAs (per series):**
 1. Collect 50+ reference images matching the era's color palette and lighting philosophy
 2. Train style LoRA at rank 8, 1000 steps — keep it lightweight so it blends with character LoRAs
-3. Use LoRA stacking: Character LoRA (weight 0.8) + Era LoRA (weight 0.5) for each image
+3. Use LoRA stacking: Character LoRA (weight 0.7) + Era LoRA (weight 0.5) for each image
 
 ### Key Workflows
 
@@ -356,7 +362,9 @@ For each transition, generate a "bridge image" using IPAdapter with:
 
 ---
 
-## V. LTX 2.3 VIDEO SEQUENCE PLANNING
+## V. VIDEO SEQUENCE PLANNING
+
+> **Models available (March 2026):** LTX-2.3 (fastest, 4K/50fps, synced audio), WAN 2.6 (reference-to-video — recreate gestures across eras), HunyuanVideo 1.5 (best faces), CogVideoX-5B (best image-to-video). See COMFYUI-MODELS-COMPENDIUM.md for full comparison.
 
 ### Priority Sequences (Most Cinematic Moments)
 
@@ -419,12 +427,16 @@ Each series should produce:
 
 ### Character Consistency in Video
 
-**Pipeline for LTX 2.3 character consistency:**
-1. Generate a reference frame using the character's LoRA (static image, high quality)
-2. Use LTX 2.3 image-to-video with the reference frame as first frame
+**Pipeline for video character consistency (multi-model):**
+1. Generate a reference frame using the character's LoRA + PuLID (static image, high quality)
+2. Choose video model by shot type:
+   - **Face-critical close-ups** → HunyuanVideo 1.5 (best face generation)
+   - **Environment-heavy / audio-synced** → LTX-2.3 (fastest, includes audio)
+   - **Still-to-motion transitions** → CogVideoX-5B I2V (best image-to-video)
+   - **Cross-era gesture echoes** → WAN 2.6 reference-to-video (reproduce motion/style from reference clips)
 3. For multi-shot sequences of the same character:
-   - Generate each shot's first frame via LoRA (consistent identity)
-   - Apply LTX 2.3 to each first frame independently
+   - Generate each shot's first frame via LoRA + PuLID (consistent identity)
+   - Apply chosen video model to each first frame independently
    - Color-grade in post for seamless intercutting
 4. For aging across eras:
    - Generate reference frames at each age point via the aging pipeline
@@ -469,7 +481,7 @@ These are the Cloud Atlas moments — visual bridges between decades:
 
 ### Character Aging Pipeline (img2img + LoRA blending)
 
-**Adaeze Nwosu Aging Sequence (34 → 74 → 101):**
+**Adaeze Nwosu Aging Sequence (34 → 103):**
 
 This is the collection's visual spine. Get this right and the rest follows.
 
