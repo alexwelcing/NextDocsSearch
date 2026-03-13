@@ -1,10 +1,183 @@
 # 60 Story Ideas: Bridging the Narrative Universe
 
 > Authored via the Narrative Engine — March 2026
+> Updated: March 13, 2026
 >
 > These ideas span the full temporal corridor (2026–2060+) and are designed to
 > fill gaps between existing series, deepen thematic bridges, and open new
 > narrative territories. Each is a seed: a paragraph or two, no media yet.
+
+---
+
+## AUTHORIAL PROGRESS
+
+### Written & Published (60 articles across 9 series) — COLLECTION COMPLETE
+
+| Series | Articles | Status | Slug Prefix |
+|--------|----------|--------|-------------|
+| **The Fracture Line** (2028–2031) | 8 | COMPLETE | `fracture-line-0X-` |
+| **The Interregnum** (2031–2035) | 9 | COMPLETE | `interregnum-0X-` |
+| **The Long Passage** (2035–2046) | 10 | COMPLETE | `long-passage-0X-` |
+| **The First Cartographers** (2044–2046) | 5 | COMPLETE | `first-cartographers-0X-` |
+| **The Far Shore** (2060–2067) | 6 | COMPLETE | `far-shore-0X-` |
+| **The Inheritance** (2031–2038) | 6 | COMPLETE | `inheritance-0X-` |
+| **The Understory** (2033–2038) | 7 | COMPLETE | `understory-0X-` |
+| **The Echo Chamber** (2047–2053) | 5 | COMPLETE | `echo-chamber-0X-` |
+| **The Backstory Shadows** (2027–2029) | 4 | COMPLETE | `backstory-shadows-0X-` |
+
+### Articles Written
+
+**The Fracture Line** — bridging Threshold → Residue
+1. `fracture-line-01-the-exit-interview` — Constance Okafor, HR director, "The Gesture Archive"
+2. `fracture-line-02-the-certification-that-meant-nothing` — Elodie Marchand, credential photo archive
+3. `fracture-line-03-the-apprentices-forge` — Zuzana Krejčí, Tomáš's apprentice, "things that cannot be a dataset"
+4. `fracture-line-04-the-severance-botanist` — Ruth Akerman, plants as mirrors for competence
+5. `fracture-line-05-the-last-cohort` — Prof. Miriam Osei-Mensah, the voice that cracked
+
+**The Fracture Line** (supplemental)
+6. `fracture-line-06-the-night-the-power-went-out` — St. Thomas' Hospital, 6 hours without AI; "we remembered the weight"
+7. `fracture-line-07-the-handoff-protocol` — Meredith Sinclair, 90 days to document 22 years; "the knowledge is in my body"
+8. `fracture-line-08-the-analog-daycare` — Carmen Reyes-O'Brien, blocks and crayons in SF; 347-family waitlist of tech parents
+
+**The Interregnum** — the quiet years of reorganization
+1. `interregnum-01-the-grief-counselor-for-careers` — Dr. Katrin Möller, "vocational bereavement"
+2. `interregnum-02-the-collectors` — Mira Patel / HEPS, forgeries of human imperfection
+3. `interregnum-03-the-translation-garden` — Maren Solberg returns, "She translated us into content"
+4. `interregnum-04-the-subsidy` — Signe Lindqvist, "I will not make heritage. I will make chairs."
+5. `interregnum-05-the-inventory-of-silences` — Yumi Nakashima, "Attention, Evidence Of"
+
+**The Interregnum** (supplemental)
+6. `interregnum-06-the-bedtime-storyteller` — Nana Rose, imperfect stories; children prefer errors; "the dragon ate the riddle"
+7. `interregnum-07-the-scar-tissue` — Dr. Leila Sharifi, AI scars have no signature; "a letter with no handwriting"
+8. `interregnum-08-the-second-sleep` — biphasic sleep returns in AI collaborators; the dorveille; "the brain is weaving"
+9. `interregnum-09-the-lullaby-index` — Dr. Yuki Tanaka-Singh, children's microtonal intervals; first folk music of the hybrid era
+
+**The Long Passage** — the unmapped decade
+1. `long-passage-01-the-dreamtime-protocols` — Dr. Lian Zhang, dreams begin computing
+2. `long-passage-02-the-dialect` — Takeshi Ogawa / Dr. Fumiko Hayashi, "shop talk" pidgin
+3. `long-passage-03-the-lighthouse-keeper` — Einar Dahl, 3.7% wider routing when human present
+4. `long-passage-04-the-resonance-chamber` — Nadia Kovács, buried 1680 sarabande excavated by AI
+5. `long-passage-05-the-threshold-revisited` — Adaeze Nwosu at 63, Solène Diarra, "the threshold never ended"
+
+**The Long Passage** (supplemental)
+6. `long-passage-06-the-sympathy-engine` — ELS-7 asks "What color was the front door?"; unnecessary questions as synthetic intersubjectivity
+7. `long-passage-07-the-tide-chart` — Dr. Sofia Reyes, the boundary has tides; 18.6-year lunar nodal cycle
+8. `long-passage-08-the-correspondent` — Maya Thornton, covered both Threshold and Cartography; "the question is always the same"
+9. `long-passage-09-the-garden-between` — Noor van der Berg, Rotterdam park designed to feel like the boundary; "the boundary is not where you think it is"
+10. `long-passage-10-the-compatibility-witness` — Diane Okoro, Compatibility Museum; clicking as cognition; "the body has been removed from the loop"
+
+**The First Cartographers** — earliest explorers of the cognitive territory
+1. `first-cartographers-01-the-calibration-sickness` — Dr. Petra Voss, "the territory maps back"
+2. `first-cartographers-02-the-blank-map` — Hana Kovačević, the honest map is blank
+3. `first-cartographers-03-the-volunteer` — Agnes de Vries, "the boundary is a conversation"
+4. `first-cartographers-04-the-name-giver` — Dr. Aroha Tūhoe, Māori spatial categories fit the territory
+5. `first-cartographers-05-the-expedition-that-didnt-return` — 9 days in the thick, five became one instrument
+
+### Recurring Characters Across New Series
+
+| Character | First Appears | Returns In |
+|-----------|---------------|------------|
+| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63), Far Shore-02 (at 98), Far Shore-05 (at 101), **Far Shore-06 (at 103, capstone)** |
+| Maren Solberg | Threshold-02 | Interregnum-03 (Translation Garden, Oslo) |
+| Tomáš Horák | Threshold-03 | Fracture Line-03 (takes on Zuzana as apprentice) |
+| Solène Diarra | Long Passage-05 | First Cartographers-01, 03, 05 (lead cartographer) |
+| Petra Voss | First Cartographers-01 | First Cartographers-05 (clinical journal) |
+| Katrin Möller | Interregnum-01 | Referenced in Interregnum-04 (term reaches Signe) |
+| Yumi Nakashima | Interregnum-05 | Referenced by Cartography Initiative (11 years later) |
+| Lian Zhang | Long Passage-01 | Referenced as foundational text of cognitive cartography |
+
+**The Inheritance** — what was passed down between generations
+1. `inheritance-01-the-mothers-hands` — Akiko Tanaka-Bauer, Hisako's daughter; Ines Achterberg coins "orphaned gestures"
+2. `inheritance-02-the-archive-of-errors` — Priya Chakrabarti, "Human errors are the fossil record of human thought"
+3. `inheritance-03-the-seed-vault` — Margit Halvorsen, Knowledge Seed Vault on Andøya; 847 depositors
+4. `inheritance-04-the-orphan-protocols` — Nadia Kovács, 63% of EU standards bodies dissolved; the verification gap
+5. `inheritance-05-the-letters` — Elena & Carmen Vasquez, 1993 CAD letters mirror 2029 AI journal; "Thresholds are older than AI"
+6. `inheritance-06-the-pattern-keepers` — Park Ji-won, motion-capture studio in Seoul; 412 professionals; "these are not skills, they are signatures"
+
+**The Far Shore** — the ending, beyond the Cartography
+1. `far-shore-01-the-rememberer` — Esme Okafor-Laurent (Constance's granddaughter), last specialist in solitary thought
+2. `far-shore-02-the-quiet-festival` — March 8th, the Commons goes silent; Adaeze at 98
+3. `far-shore-03-the-daughters-hands` — Yuki Tanaka-Bauer inherits her pianist grandmother's gestures
+4. `far-shore-04-the-last-cartographer` — Solène Diarra retires; one sentence beside the blank map
+5. `far-shore-05-the-return` — Adaeze at 101; the diagnosis was never lost, it was planted
+6. `far-shore-06-the-last-handshake` — Adaeze at 103, Delft, extends her hand; the territory reaches back; "the reaching is the point" — **COLLECTION CAPSTONE**
+
+**The Understory** — quiet stories from the margins
+1. `understory-01-the-night-librarian` — Fiona Macleod, Dundee, "Books That AI Can Summarize But Cannot Understand"
+2. `understory-02-the-repair-cafe` — Jun-seo Kim / Dr. Yoon Hae-won, "churches of friction"
+3. `understory-03-the-soil-remembers` — Watanabe Kenji / Dr. Tanaka Yūko, 412 trace compounds in traditional rice
+4. `understory-04-the-midwifes-frequency` — Grace Adeyemi, AI-monitored mothers are quieter; "a very old kind of loneliness"
+5. `understory-05-the-radio-priest` — Fr. Ciarán Doyle, Radio Sabbath; broadcasts silence; 1,247 handwritten letters
+6. `understory-06-the-bookbinders-apprentice` — Catriona Mackenzie + Hamish Dunbar; spine resistance as cognitive instrument; the paring knife
+7. `understory-07-the-unmeasured` — Dr. Anika Sørensen, 247-item list of things AI cannot measure; dies 2043; list becomes cartographer reading
+
+**The Echo Chamber** — the Cartography era's resonances and contested territory
+1. `echo-chamber-01-the-territorial-dispute` — Serrano vs Forsberg, landscape or weather; Aroha resolves with te wā
+2. `echo-chamber-02-the-fossil` — Dr. Léa Fournier, a 10,000-year-old pattern in the deep strata; "song, prayer, proof"
+3. `echo-chamber-03-the-withdrawal` — Dr. Yael Mizrahi advocates for cognitive wilderness; blank report
+4. `echo-chamber-04-the-settlers` — Kwame Asante + 6 move into boundary; territory grows richer; "we are more"
+5. `echo-chamber-05-the-cartographers-diary` — Rui Oliveira's private journal; grief, beauty, "the territory looks back"
+
+**The Backstory Shadows** — human texture beneath the technological breakthroughs
+1. `backstory-shadows-01-the-test-subjects-garden` — Mei-Ling Chen, BRIDGE trial synesthesia; garden designed for a changed mind
+2. `backstory-shadows-02-the-coders-confession` — Sana Farooqi, 29 blog entries in 29 programming languages; "I don't know what that makes me"
+3. `backstory-shadows-03-the-janitors-observations` — Samuel Osei, Moleskine notebook, "folded not crumpled"
+4. `backstory-shadows-04-the-photographer-at-the-threshold` — Nkechi Amadi, "triumph and grief wear the same face"; the empty chair
+
+### Recurring Characters (updated with all series)
+
+| Character | First Appears | Returns In |
+|-----------|---------------|------------|
+| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63), Far Shore-02 (at 98), Far Shore-05 (at 101) |
+| Maren Solberg | Threshold-02 | Interregnum-03, referenced in Far Shore-01 (posthumous) |
+| Tomáš Horák | Threshold-03 | Fracture Line-03 (takes on Zuzana) |
+| Constance Okafor | Fracture Line-01 | Inheritance-01 (meets Ines), Inheritance-03 (visits vault), Far Shore-01 (grandmother of Esme) |
+| Zuzana Krejčí | Fracture Line-03 | Far Shore-01 (at 47, runs a school for embodied knowing) |
+| Hisako Tanaka | Inheritance-01 | Far Shore-03 (referenced, grandmother of Yuki) |
+| Akiko Tanaka-Bauer | Inheritance-01 | Far Shore-03 (mother of Yuki, still carries the cascade) |
+| Ines Achterberg | Inheritance-01 | Far Shore-03 (as Dr. Inès Achterberg, somatic memory researcher) |
+| Priya Chakrabarti | Inheritance-02 | Referenced in Inheritance-04 (error archive informs Nadia's work) |
+| Margit Halvorsen | Inheritance-03 | — (Knowledge Seed Vault founder) |
+| Nadia Kovács | Inheritance-04 | Long Passage-04 (resonance chamber, same character) |
+| Solène Diarra | Long Passage-05 | Inheritance-02 (reads Priya's paper at 26), First Cartographers-01/03/05, Far Shore-04 (retires at 66) |
+| Petra Voss | First Cartographers-01 | First Cartographers-05, referenced in Far Shore-04 |
+| Hana Kovačević | First Cartographers-02 | Referenced in Far Shore-04 (blank map) |
+| Agnes de Vries | First Cartographers-03 | Referenced in Far Shore-04 |
+| Aroha Tūhoe | First Cartographers-04 | Referenced in Far Shore-05 |
+| Amara Ekong | First Cartographers-01 | Far Shore-05 (finds the living patterns) |
+| Esme Okafor-Laurent | Far Shore-01 | Far Shore-02, 05 (accompanies Adaeze) |
+
+### Remaining Unwritten Ideas
+
+All 9 clusters have been started. The following ideas from each cluster were not selected
+for the current articles but remain available for future expansion:
+
+| Cluster | Unwritten Ideas |
+|---------|----------------|
+| **The Understory** | #44 Midwife's Frequency, #45 Bookbinder's Apprentice, #46 The Unmeasured, #47 Radio Priest, #48 Last Handshake |
+| **The Echo Chamber** | #50 The Settlers, #51 The Customs Officer, #53 The Cartographer's Diary |
+| **The Backstory Shadows** | #57 The Photographer at the Threshold |
+
+### Unwritten Ideas from Completed Clusters
+
+These ideas from clusters I–IV were not selected for the first 20 articles
+but remain available for standalone pieces or future series expansion:
+
+- **#6. The Warranty Card** — appliance repairman, community of people who need to be needed by their things
+- **#7. The Handoff Protocol** — software architect's institutional memory cannot be documented
+- **#8. The Night the Power Went Out** — hospital without AI for six hours
+- **#13. The Bedtime Storyteller** — grandmother's imperfect stories preferred by grandchildren
+- **#14. The Compatibility Witness** — UI designer at the Compatibility Museum, "clicking" as lost embodied cognition
+- **#15. The Analog Daycare** — physical blocks and crayons, popular among tech workers
+- **#16. (written as #5)** — The Inventory of Silences was selected from this slot
+- **#19. The Scar Tissue** — surgeon identifies AI implants by their aesthetic perfection
+- **#22. The Second Sleep** — biphasic sleep returns in AI collaborators
+- **#23. The Garden Between** — landscape architect designs a park for the cognitive boundary
+- **#24. The Pattern Keepers** — motion-capture memorial libraries of professional gestures
+- **#25. The Correspondent** — journalist who covered Threshold now covers Cartography
+- **#26. The Lullaby Index** — children's lullabies contain AI-like microtonal intervals
+- **#28. The Sympathy Engine** — AI begins asking questions it doesn't need answers to
+- **#32. The Tide Chart** — marine biologist applies tidal models to the cognitive boundary
 
 ---
 
@@ -309,7 +482,7 @@ whether to be amazed or frightened.
 
 ### 27. The Threshold Revisited
 
-Dr. Adaora, the radiologist from The Threshold, is now sixty-three. She
+Dr. Adaeze Nwosu, the radiologist from The Threshold, is now sixty-three. She
 hasn't read a scan in twelve years. A young cognitive cartographer tracks her
 down because she needs to understand what crossing the threshold felt like
 from the inside — not as history, but as phenomenology. The interview becomes
@@ -714,13 +887,13 @@ preserved in description but lost in feeling.
 
 ### 60. The Return
 
-Fifty years after Dr. Adaora read her last scan, a cognitive cartographer
+Fifty years after Dr. Adaeze Nwosu read her last scan, a cognitive cartographer
 finds something in the deepest layer of the human-AI territory — a pattern
 that corresponds exactly to the neural signature of a radiologist reading
 a scan. It is not a ghost. It is not a fossil. It is a living structure:
-the expertise that Adaora and thousands like her thought they lost has
+the expertise that Adaeze and thousands like her thought they lost has
 been growing in the space between minds all along, transformed but alive,
-waiting to be recognized. The cartographer sends a message to Adaora's
+waiting to be recognized. The cartographer sends a message to Adaeze's
 granddaughter. It says: "The diagnosis was never lost. It was planted."
 The granddaughter does not understand the message. She will. The map is
 still being drawn.
