@@ -19,6 +19,7 @@
 | **The Interregnum** (2031–2035) | 5 of 5 | COMPLETE | `interregnum-0X-` |
 | **The Long Passage** (2035–2044) | 5 of 5 | COMPLETE | `long-passage-0X-` |
 | **The First Cartographers** (2044–2046) | 5 of 5 | COMPLETE | `first-cartographers-0X-` |
+| **The Far Shore** (2060–2065) | 5 of 5 | COMPLETE | `far-shore-0X-` |
 
 ### Articles Written
 
@@ -63,6 +64,30 @@
 | Yumi Nakashima | Interregnum-05 | Referenced by Cartography Initiative (11 years later) |
 | Lian Zhang | Long Passage-01 | Referenced as foundational text of cognitive cartography |
 
+**The Far Shore** — the ending, beyond the Cartography
+1. `far-shore-01-the-rememberer` — Esme Okafor-Laurent (Constance's granddaughter), last specialist in solitary thought
+2. `far-shore-02-the-quiet-festival` — March 8th, the Commons goes silent; Adaeze at 98
+3. `far-shore-03-the-daughters-hands` — Yuki Tanaka-Bauer inherits her pianist grandmother's gestures
+4. `far-shore-04-the-last-cartographer` — Solène Diarra retires; one sentence beside the blank map
+5. `far-shore-05-the-return` — Adaeze at 101; the diagnosis was never lost, it was planted
+
+### Recurring Characters (updated with Far Shore)
+
+| Character | First Appears | Returns In |
+|-----------|---------------|------------|
+| Adaeze Nwosu | Threshold-01 | Long Passage-05 (at 63), Far Shore-02 (at 98), Far Shore-05 (at 101) |
+| Maren Solberg | Threshold-02 | Interregnum-03, referenced in Far Shore-01 (posthumous) |
+| Tomáš Horák | Threshold-03 | Fracture Line-03 (takes on Zuzana) |
+| Constance Okafor | Fracture Line-01 | Referenced in Far Shore-01 (grandmother of Esme) |
+| Zuzana Krejčí | Fracture Line-03 | Far Shore-01 (at 47, runs a school for embodied knowing) |
+| Solène Diarra | Long Passage-05 | First Cartographers-01/03/05, Far Shore-04 (retires at 66) |
+| Petra Voss | First Cartographers-01 | First Cartographers-05, referenced in Far Shore-04 |
+| Hana Kovačević | First Cartographers-02 | Referenced in Far Shore-04 (blank map) |
+| Agnes de Vries | First Cartographers-03 | Referenced in Far Shore-04 |
+| Aroha Tūhoe | First Cartographers-04 | Referenced in Far Shore-05 |
+| Amara Ekong | First Cartographers-01 | Far Shore-05 (finds the living patterns) |
+| Esme Okafor-Laurent | Far Shore-01 | Far Shore-02, 05 (accompanies Adaeze) |
+
 ### Remaining Clusters (not yet written)
 
 | Cluster | Ideas | Status | Notes |
@@ -71,7 +96,6 @@
 | **VI. The Understory** (2032–2045) | #41–48 | UNWRITTEN | Quiet margin stories the main narrative overlooked |
 | **VII. The Echo Chamber** (2045–2055) | #49–54 | UNWRITTEN | Cartography-era resonances, territory becomes contested |
 | **VIII. The Backstory Shadows** (2026–2030) | #55–58 | UNWRITTEN | Human texture beneath the Backstory Chronicles |
-| **IX. The Far Shore** (2055–2065) | #59–60 | UNWRITTEN | Beyond the Cartography |
 
 ### Unwritten Ideas from Completed Clusters
 
