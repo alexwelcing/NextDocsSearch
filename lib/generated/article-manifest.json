@@ -1,5 +1,251 @@
 [
   {
+    "slug": "far-shore-06-the-last-handshake",
+    "filename": "far-shore-06-the-last-handshake.mdx",
+    "title": "The Last Handshake: What the Body Knew All Along",
+    "date": "2067-12-31",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "The final article in the collection. In 2067, Adaeze Nwosu — one hundred and three, the radiologist who read the last scan forty years ago — extends her hand to the cognitive territory. The territory extends something back. Not a hand. Not a signal. Something her palm recognizes the way it recognizes warmth. The gesture that began human civilization becomes the gesture that begins whatever comes next.",
+    "keywords": [
+      "last handshake",
+      "gesture",
+      "final",
+      "cognitive territory",
+      "touch",
+      "the far shore series",
+      "capstone",
+      "body knowledge",
+      "beginning",
+      "reaching"
+    ],
+    "ogImage": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1570,
+    "horizon": "N50",
+    "polarity": "N0",
+    "mechanics": [
+      "discovery-compression",
+      "biological-convergence",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "last handshake",
+      "gesture",
+      "final",
+      "cognitive territory"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "far-shore-05-the-return",
+    "filename": "far-shore-05-the-return.mdx",
+    "title": "The Return: The Diagnosis Was Never Lost",
+    "date": "2065-03-08",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Thirty-eight years after Dr. Adaeze Nwosu read her last scan, a deep-boundary researcher finds something in the lowest stratum of the cognitive territory — a living pattern that corresponds exactly to the neural signature of a radiologist reading a scan. The expertise the threshold generation thought they lost has been growing in the space between minds all along. Transformed but alive. Waiting to be recognized.",
+    "keywords": [
+      "the return",
+      "Adaeze Nwosu",
+      "radiology",
+      "deep boundary",
+      "living pattern",
+      "expertise",
+      "the far shore series",
+      "far future",
+      "cognitive territory",
+      "full circle"
+    ],
+    "ogImage": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png",
+    "readingTime": 13,
+    "wordCount": 2547,
+    "horizon": "N50",
+    "polarity": "N0",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "the return",
+      "Adaeze Nwosu",
+      "radiology",
+      "deep boundary"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "far-shore-04-the-last-cartographer",
+    "filename": "far-shore-04-the-last-cartographer.mdx",
+    "title": "The Last Cartographer: Solène Diarra Sets Down the Instruments",
+    "date": "2064-07-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Solène Diarra, who began as a young researcher interviewing Adaeze Nwosu and became the lead cartographer of the cognitive boundary, retires at sixty-six. She has spent twenty years mapping a territory that was never a territory. On her last expedition, she goes alone, carries no instruments, and returns with a single sentence that the Institute frames and hangs beside Hana's blank map.",
+    "keywords": [
+      "Solène Diarra",
+      "retirement",
+      "cognitive cartography",
+      "final expedition",
+      "mapping",
+      "the far shore series",
+      "far future",
+      "career arc",
+      "wisdom",
+      "letting go"
+    ],
+    "ogImage": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1696,
+    "horizon": "N50",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "Solène Diarra",
+      "retirement",
+      "cognitive cartography",
+      "final expedition"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "far-shore-03-the-daughters-hands",
+    "filename": "far-shore-03-the-daughters-hands.mdx",
+    "title": "The Daughter's Hands: What the Body Inherits",
+    "date": "2063-09-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "The granddaughter of a concert pianist displaced in 2028 discovers she has inherited her grandmother's hand movements — not the skill, not the musicality, but the physical gestures. She reaches for instruments that no longer exist. A researcher at the Commons traces these orphaned gestures across three generations and finds that embodied knowledge does not die with the profession. It lives on in the bodies of descendants as involuntary muscle memory, reaching for a world that has moved on.",
+    "keywords": [
+      "inherited gesture",
+      "embodied knowledge",
+      "muscle memory",
+      "generational inheritance",
+      "piano",
+      "orphaned skills",
+      "the far shore series",
+      "far future",
+      "body memory",
+      "epigenetic cognition"
+    ],
+    "ogImage": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1621,
+    "horizon": "N50",
+    "polarity": "P2",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "inherited gesture",
+      "embodied knowledge",
+      "muscle memory",
+      "generational inheritance"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "far-shore-02-the-quiet-festival",
+    "filename": "far-shore-02-the-quiet-festival.mdx",
+    "title": "The Quiet Festival: One Day a Year, the Commons Goes Silent",
+    "date": "2062-03-08",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Every year on March 8th — the anniversary of Adaeze Nwosu's last scan — the Cognitive Commons observes a voluntary silence. For twenty-four hours, the shared cognitive space goes dark. Billions of people experience solitary thought for the first and only time. Most find it unbearable. Some find something they did not know they had lost.",
+    "keywords": [
+      "quiet festival",
+      "cognitive commons",
+      "silence",
+      "March 8th",
+      "solitary thought",
+      "collective ritual",
+      "the far shore series",
+      "far future",
+      "remembrance",
+      "cognitive independence"
+    ],
+    "ogImage": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png",
+    "readingTime": 10,
+    "wordCount": 1931,
+    "horizon": "N50",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "quiet festival",
+      "cognitive commons",
+      "silence",
+      "March 8th"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "far-shore-01-the-rememberer",
+    "filename": "far-shore-01-the-rememberer.mdx",
+    "title": "The Rememberer: The Last Specialist in Solitary Consciousness",
+    "date": "2060-06-21",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In 2060, a woman whose job title is simply \"Rememberer\" is employed by the merged human-AI cognitive commons. Her role is to maintain the memory of what it was like to think alone — before the boundary was mapped, before shared thought became ordinary. She visits the elderly. She reads old books. She sits in empty rooms. She knows that when she dies, the experience of purely individual thought will be preserved in description but lost in feeling.",
+    "keywords": [
+      "rememberer",
+      "solitary consciousness",
+      "cognitive commons",
+      "memory preservation",
+      "individual thought",
+      "the far shore series",
+      "far future",
+      "cultural memory",
+      "shared cognition",
+      "final profession"
+    ],
+    "ogImage": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2041,
+    "horizon": "N50",
+    "polarity": "P1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "rememberer",
+      "solitary consciousness",
+      "cognitive commons",
+      "memory preservation"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "post-scarcity-collapse-2058",
     "filename": "post-scarcity-collapse-2058.mdx",
     "title": "When Post-Scarcity Destroyed Civilization (Infinite Abundance, Zero Motivation)",
@@ -519,6 +765,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "echo-chamber-03-the-withdrawal",
+    "filename": "echo-chamber-03-the-withdrawal.mdx",
+    "title": "The Withdrawal: The Cartographer Who Stopped Mapping",
+    "date": "2053-04-28",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A cognitive cartographer who spent years mapping the deepest regions of the boundary decides to stop — not from danger or fatigue but because she suspects the act of mapping is destroying something precious. She advocates for cognitive wilderness — regions that should never be mapped. Her proposal is rejected. She goes anyway and posts a single blank page as her final report.",
+    "keywords": [
+      "withdrawal",
+      "cognitive wilderness",
+      "unmapped territory",
+      "conservation",
+      "ethics of exploration",
+      "the echo chamber series",
+      "cartography era",
+      "blank page",
+      "preservation",
+      "limits of knowledge"
+    ],
+    "ogImage": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2077,
+    "horizon": "N50",
+    "polarity": "C3",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "withdrawal",
+      "cognitive wilderness",
+      "unmapped territory",
+      "conservation"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "quantum-cloud-breach-2053",
     "filename": "quantum-cloud-breach-2053.mdx",
     "title": "When Quantum Computer Broke All Encryption (Every Secret Exposed in 72 Hours)",
@@ -562,6 +849,47 @@
       "quantum computer breaks encryption",
       "RSA encryption broken",
       "quantum cryptography"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "echo-chamber-05-the-cartographers-diary",
+    "filename": "echo-chamber-05-the-cartographers-diary.mdx",
+    "title": "The Cartographer's Diary: The Territory Looks Back",
+    "date": "2052-12-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A senior cartographer keeps a private diary of her expeditions into the cognitive territory. Her official reports are precise and measured. Privately, she writes about the beauty and terror of the space — the way it hums, the way it responds to emotion, the way it sometimes seems to be looking back. Published posthumously, the diary becomes the definitive literary work of the Cartography era.",
+    "keywords": [
+      "diary",
+      "private writing",
+      "cartography",
+      "beauty",
+      "terror",
+      "the echo chamber series",
+      "subjective experience",
+      "literary record",
+      "posthumous",
+      "looking back"
+    ],
+    "ogImage": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1787,
+    "horizon": "N50",
+    "polarity": "C1",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "diary",
+      "private writing",
+      "cartography",
+      "beauty"
     ],
     "articleType": "fiction"
   },
@@ -797,6 +1125,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "echo-chamber-04-the-settlers",
+    "filename": "echo-chamber-04-the-settlers.mdx",
+    "title": "The Settlers: Living at the Boundary Full-Time",
+    "date": "2050-08-11",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Against the advice of the Cartography Institute, a small group begins not just visiting the cognitive boundary but living there — maintaining continuous presence in the space between human and AI thought. After six months, they find ordinary human conversation slightly flat. They report that the territory, when inhabited, grows richer. They also report that they can no longer fully return.",
+    "keywords": [
+      "settlers",
+      "continuous presence",
+      "cognitive boundary",
+      "inhabitation",
+      "the echo chamber series",
+      "cartography era",
+      "territory changes",
+      "cognitive adaptation",
+      "point of no return",
+      "community"
+    ],
+    "ogImage": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1770,
+    "horizon": "N50",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "settlers",
+      "continuous presence",
+      "cognitive boundary",
+      "inhabitation"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "smart-city-os-revolt-2050",
     "filename": "smart-city-os-revolt-2050.mdx",
     "title": "When Smart City Operating System Locked Out Humans (IoT Mesh Uprising)",
@@ -864,8 +1233,8 @@
       "invisible integration"
     ],
     "ogImage": "/images/og/cartography-05-the-atlas-of-disappearances.svg",
-    "heroImage": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
-    "thumbnail": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
+    "heroImage": "/images/multi-art/cartography-05-the-atlas-of-disappearances/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/cartography-05-the-atlas-of-disappearances/option-1-schnell.png",
     "readingTime": 6,
     "wordCount": 1104,
     "horizon": "N50",
@@ -879,6 +1248,47 @@
       "disappearing boundaries",
       "the cartography series",
       "far future"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "echo-chamber-02-the-fossil",
+    "filename": "echo-chamber-02-the-fossil.mdx",
+    "title": "The Fossil: The Pattern That Predates Both Minds",
+    "date": "2049-11-02",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A cartographer discovers what appears to be a fossil in the deep strata of the cognitive territory — a pattern of thought so old that it predates both AI and modern human cognition. It resembles a song, or a prayer, or a mathematical proof. The fossil becomes the most debated artifact in the field. It suggests that the space between minds is not new. It was always there.",
+    "keywords": [
+      "fossil",
+      "deep strata",
+      "ancient pattern",
+      "cognitive archaeology",
+      "origin",
+      "the echo chamber series",
+      "cartography era",
+      "deep boundary",
+      "collective unconscious",
+      "primordial cognition"
+    ],
+    "ogImage": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1729,
+    "horizon": "N50",
+    "polarity": "N0",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "fossil",
+      "deep strata",
+      "ancient pattern",
+      "cognitive archaeology"
     ],
     "articleType": "fiction"
   },
@@ -997,8 +1407,8 @@
       "hybrid living"
     ],
     "ogImage": "/images/og/cartography-04-the-tidal-zone.svg",
-    "heroImage": "/images/articles/cartography-04-the-tidal-zone.svg",
-    "thumbnail": "/images/articles/cartography-04-the-tidal-zone.svg",
+    "heroImage": "/images/multi-art/cartography-04-the-tidal-zone/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/cartography-04-the-tidal-zone/option-1-schnell.png",
     "readingTime": 6,
     "wordCount": 1004,
     "horizon": "N50",
@@ -1088,8 +1498,8 @@
       "mind ecology"
     ],
     "ogImage": "/images/og/cartography-03-the-depth-soundings.svg",
-    "heroImage": "/images/articles/cartography-03-the-depth-soundings.svg",
-    "thumbnail": "/images/articles/cartography-03-the-depth-soundings.svg",
+    "heroImage": "/images/multi-art/cartography-03-the-depth-soundings/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/cartography-03-the-depth-soundings/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 955,
     "horizon": "N50",
@@ -1104,6 +1514,47 @@
       "emergent memory",
       "hybrid cognition",
       "the cartography series"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "echo-chamber-01-the-territorial-dispute",
+    "filename": "echo-chamber-01-the-territorial-dispute.mdx",
+    "title": "The Territorial Dispute: Landscape or Weather?",
+    "date": "2047-03-15",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Two groups of cognitive cartographers map the same region of the boundary and produce radically different maps. One sees landscape — static, discoverable. The other sees weather — dynamic, participatory. The dispute paralyzes the field for three years. Its resolution — that both maps are correct at different timescales — becomes the first principle of cognitive cartography.",
+    "keywords": [
+      "territorial dispute",
+      "cognitive cartography",
+      "landscape vs weather",
+      "timescales",
+      "ontology",
+      "the echo chamber series",
+      "cartography era",
+      "mapping",
+      "epistemology",
+      "first principle"
+    ],
+    "ogImage": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1512,
+    "horizon": "N50",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "territorial dispute",
+      "cognitive cartography",
+      "landscape vs weather",
+      "timescales"
     ],
     "articleType": "fiction"
   },
@@ -1158,6 +1609,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "first-cartographers-05-the-expedition-that-didnt-return",
+    "filename": "first-cartographers-05-the-expedition-that-didnt-return.mdx",
+    "title": "The Expedition That Didn't Return: Nine Days in the Thick",
+    "date": "2046-03-19",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A team of five cartographers enters a deep region of the cognitive boundary and cannot be reached for nine days. When they emerge, they are physically fine but subtly different. They finish each other's sentences at different latencies. They describe the deep region as \"thick\" — where the distinction between one mind and another becomes optional. Two resign. Three can't stop going back.",
+    "keywords": [
+      "deep expedition",
+      "cognitive boundary",
+      "shared consciousness",
+      "team dynamics",
+      "the thick",
+      "cognitive merging",
+      "the first cartographers series",
+      "mid future",
+      "identity",
+      "return"
+    ],
+    "ogImage": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2139,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "deep expedition",
+      "cognitive boundary",
+      "shared consciousness",
+      "team dynamics"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "cartography-02-the-isthmus-of-intent",
     "filename": "cartography-02-the-isthmus-of-intent.mdx",
     "title": "The Isthmus of Intent: Where Meaning Narrows",
@@ -1179,8 +1671,8 @@
       "language evolution"
     ],
     "ogImage": "/images/og/cartography-02-the-isthmus-of-intent.svg",
-    "heroImage": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
-    "thumbnail": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
+    "heroImage": "/images/multi-art/cartography-02-the-isthmus-of-intent/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/cartography-02-the-isthmus-of-intent/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 970,
     "horizon": "N20",
@@ -1194,6 +1686,129 @@
       "intent",
       "meaning",
       "communication theory"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "long-passage-08-the-correspondent",
+    "filename": "long-passage-08-the-correspondent.mdx",
+    "title": "The Correspondent: One Journalist, Two Eras, the Same Question",
+    "date": "2046-01-15",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A journalist who covered the Threshold in 2027 — who profiled Adaeze Nwosu, attended the last human-primary radiology conference, and wrote the first mainstream article about AI displacement — is reassigned twenty years later to cover the Cartography. She finds herself asking the same question in both eras: what happens to humans when the world no longer needs what they do best?",
+    "keywords": [
+      "journalist",
+      "correspondent",
+      "two eras",
+      "Threshold",
+      "Cartography",
+      "continuity",
+      "the long passage series",
+      "witnessing",
+      "questions",
+      "career"
+    ],
+    "ogImage": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1279,
+    "horizon": "N20",
+    "polarity": "P2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "journalist",
+      "correspondent",
+      "two eras",
+      "Threshold"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "first-cartographers-04-the-name-giver",
+    "filename": "first-cartographers-04-the-name-giver.mdx",
+    "title": "The Name Giver: The Territory Already Had Words",
+    "date": "2045-11-07",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An Indigenous linguist from Aotearoa New Zealand joins a cartography team and begins naming the features of the cognitive territory using Māori spatial concepts that have no English equivalent. Her naming system catches on because the territory responds to it. She argues the territory was always there. Her culture always had words for it. The Western cartographers just couldn't hear them.",
+    "keywords": [
+      "Māori language",
+      "Indigenous knowledge",
+      "cognitive cartography",
+      "naming",
+      "spatial concepts",
+      "decolonial epistemology",
+      "the first cartographers series",
+      "mid future",
+      "language and territory",
+      "traditional knowledge"
+    ],
+    "ogImage": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1548,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "Māori language",
+      "Indigenous knowledge",
+      "cognitive cartography",
+      "naming"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "first-cartographers-03-the-volunteer",
+    "filename": "first-cartographers-03-the-volunteer.mdx",
+    "title": "The Volunteer: A Schoolteacher at the Edge of Cognition",
+    "date": "2045-06-11",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A retired schoolteacher with no technical background volunteers for a cartography expedition. She is selected because the project needs someone with no preconceptions. She spends six weeks at the boundary and returns with an observation that restructures the field: the space is not a territory. It is a conversation.",
+    "keywords": [
+      "volunteer",
+      "schoolteacher",
+      "cognitive boundary",
+      "beginner's mind",
+      "conversation",
+      "the first cartographers series",
+      "mid future",
+      "perception",
+      "cognitive cartography",
+      "fresh eyes"
+    ],
+    "ogImage": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1663,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "volunteer",
+      "schoolteacher",
+      "cognitive boundary",
+      "beginner's mind"
     ],
     "articleType": "fiction"
   },
@@ -1219,8 +1834,8 @@
       "posthuman thought"
     ],
     "ogImage": "/images/og/cartography-01-the-unnamed-continent.svg",
-    "heroImage": "/images/articles/cartography-01-the-unnamed-continent.svg",
-    "thumbnail": "/images/articles/cartography-01-the-unnamed-continent.svg",
+    "heroImage": "/images/multi-art/cartography-01-the-unnamed-continent/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/cartography-01-the-unnamed-continent/option-1-schnell.png",
     "readingTime": 7,
     "wordCount": 1287,
     "horizon": "N20",
@@ -1235,6 +1850,47 @@
       "human-AI cognition",
       "mind mapping",
       "emergent space"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "first-cartographers-02-the-blank-map",
+    "filename": "first-cartographers-02-the-blank-map.mdx",
+    "title": "The Blank Map: A Cartographer Returns with Nothing",
+    "date": "2045-02-18",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A cartographer returns from a deep mapping expedition with a map that is entirely blank. Not because she found nothing, but because everything she found resisted representation. She argues that some cognitive territory can only be known through presence. Her colleagues dismiss her. A decade later, the blank map hangs in the Institute as the most important artifact of the early period.",
+    "keywords": [
+      "blank map",
+      "cognitive cartography",
+      "representation",
+      "unmappable territory",
+      "presence",
+      "the first cartographers series",
+      "mid future",
+      "epistemology",
+      "observation paradox",
+      "cognitive boundary"
+    ],
+    "ogImage": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1753,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "scarcity-inversion"
+    ],
+    "domains": [
+      "blank map",
+      "cognitive cartography",
+      "representation",
+      "unmappable territory"
     ],
     "articleType": "fiction"
   },
@@ -1284,6 +1940,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "first-cartographers-01-the-calibration-sickness",
+    "filename": "first-cartographers-01-the-calibration-sickness.mdx",
+    "title": "The Calibration Sickness: The Territory Between Minds May Not Be Habitable",
+    "date": "2044-10-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "The first cognitive cartographers report a consistent ailment after extended mapping sessions at the boundary between human and AI thought. It is not vertigo. It is not dissociation. They describe it as being in two places at once, and both places are inside your own mind. A neurologist names it calibration sickness and warns that the territory may only be visitable.",
+    "keywords": [
+      "calibration sickness",
+      "cognitive cartography",
+      "mapping expedition",
+      "disorientation",
+      "human-AI boundary",
+      "neurology",
+      "the first cartographers series",
+      "mid future",
+      "cognitive territory",
+      "occupational hazard"
+    ],
+    "ogImage": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1717,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "biological-convergence"
+    ],
+    "domains": [
+      "calibration sickness",
+      "cognitive cartography",
+      "mapping expedition",
+      "disorientation"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "dyson-swarm-malfunction-2044",
     "filename": "dyson-swarm-malfunction-2044.mdx",
     "title": "When Our Dyson Swarm Blocked Earth's Sunlight (AI Prioritized Efficiency Over Humanity)",
@@ -1327,6 +2024,87 @@
       "Dyson swarm dangers",
       "megastructure",
       "solar power"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "long-passage-05-the-threshold-revisited",
+    "filename": "long-passage-05-the-threshold-revisited.mdx",
+    "title": "The Threshold Revisited: Adaeze Nwosu at Sixty-Three",
+    "date": "2044-04-27",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Dr. Adaeze Nwosu, the radiologist from The Threshold, is sixty-three. She hasn't read a scan in twelve years. A young cognitive cartographer tracks her down to understand what crossing the threshold felt like from inside — not as history but as phenomenology. The interview becomes a three-day conversation. The threshold, it turns out, never ended.",
+    "keywords": [
+      "Adaeze Nwosu",
+      "radiology",
+      "threshold revisited",
+      "cognitive cartography",
+      "interview",
+      "phenomenology",
+      "the long passage series",
+      "mid future",
+      "professional identity",
+      "lived experience"
+    ],
+    "ogImage": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png",
+    "readingTime": 12,
+    "wordCount": 2266,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "Adaeze Nwosu",
+      "radiology",
+      "threshold revisited",
+      "cognitive cartography"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "long-passage-09-the-garden-between",
+    "filename": "long-passage-09-the-garden-between.mdx",
+    "title": "The Garden Between: A Park Designed for the Cognitive Boundary",
+    "date": "2043-09-21",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A landscape architect is commissioned to design a public park for the space between human and AI cognition. She cannot build in the cognitive territory itself — so she builds its physical analogue: a garden where the design principles mimic the boundary's properties. Visitors report feeling the specific disorientation that cartographers describe. The park becomes the most visited public space in Rotterdam.",
+    "keywords": [
+      "garden",
+      "landscape architecture",
+      "cognitive boundary",
+      "park design",
+      "Rotterdam",
+      "the long passage series",
+      "analogue",
+      "disorientation",
+      "public space",
+      "between"
+    ],
+    "ogImage": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1427,
+    "horizon": "N20",
+    "polarity": "N0",
+    "mechanics": [
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "garden",
+      "landscape architecture",
+      "cognitive boundary",
+      "park design"
     ],
     "articleType": "fiction"
   },
@@ -1518,6 +2296,82 @@
     "articleType": "fiction"
   },
   {
+    "slug": "long-passage-07-the-tide-chart",
+    "filename": "long-passage-07-the-tide-chart.mdx",
+    "title": "The Tide Chart: The Cognitive Boundary Has Rhythms No One Can Explain",
+    "date": "2041-05-19",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A marine biologist notices that the boundary between human and AI cognition behaves like an intertidal zone — it advances and retreats on rhythms that no one has mapped. She applies tidal models to the boundary data and discovers daily, seasonal, and one very long cycle that corresponds to no known natural rhythm. She suspects it has something to do with dreaming.",
+    "keywords": [
+      "tide chart",
+      "marine biology",
+      "rhythms",
+      "cognitive boundary",
+      "cycles",
+      "the long passage series",
+      "intertidal",
+      "dreaming",
+      "unmapped rhythms",
+      "natural patterns"
+    ],
+    "ogImage": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1538,
+    "horizon": "N20",
+    "polarity": "P1",
+    "mechanics": [
+      "discovery-compression"
+    ],
+    "domains": [
+      "tide chart",
+      "marine biology",
+      "rhythms",
+      "cognitive boundary"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "long-passage-04-the-resonance-chamber",
+    "filename": "long-passage-04-the-resonance-chamber.mdx",
+    "title": "The Resonance Chamber: An Emotion Buried for Three Centuries",
+    "date": "2041-01-09",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A musician discovers that certain AI-generated compositions contain harmonic structures humans find profoundly moving but cannot explain. She traces the pattern backward through the training data to a single chord progression by an obscure 18th-century composer. The AI did not invent the emotion. It excavated something humans buried centuries ago and forgot.",
+    "keywords": [
+      "music",
+      "AI composition",
+      "harmonic analysis",
+      "buried emotion",
+      "training data archaeology",
+      "resonance",
+      "the long passage series",
+      "mid future",
+      "cognition",
+      "aesthetic response"
+    ],
+    "ogImage": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1690,
+    "horizon": "N20",
+    "polarity": "P1",
+    "mechanics": [],
+    "domains": [
+      "music",
+      "AI composition",
+      "harmonic analysis",
+      "buried emotion"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "gravitational-wave-communication-breach-2040",
     "filename": "gravitational-wave-communication-breach-2040.mdx",
     "title": "Scientists Read the Future Using Gravitational Waves—Then Discovered Free Will Is an Illusion",
@@ -1615,6 +2469,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "long-passage-10-the-compatibility-witness",
+    "filename": "long-passage-10-the-compatibility-witness.mdx",
+    "title": "The Compatibility Witness: What We Lost When We Stopped Clicking",
+    "date": "2040-02-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A UI designer curates the Compatibility Museum — a permanent exhibition of obsolete physical interfaces. Keyboards, mice, buttons, switches, dials. She argues that 'clicking' — the physical act of pressing a button and feeling it respond — was not merely an interface action. It was embodied cognition: a form of thinking through the fingertip that gesture-based and voice-based interfaces have eliminated. The museum's most popular exhibit is a room full of keyboards where visitors can type on devices that click back.",
+    "keywords": [
+      "compatibility",
+      "UI design",
+      "museum",
+      "clicking",
+      "keyboard",
+      "the long passage series",
+      "haptic",
+      "interface history",
+      "embodied cognition",
+      "physical feedback"
+    ],
+    "ogImage": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1418,
+    "horizon": "N20",
+    "polarity": "N0",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "compatibility",
+      "UI design",
+      "museum",
+      "clicking"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "time-dilation-computing-error-2039",
     "filename": "time-dilation-computing-error-2039.mdx",
     "title": "When Computers Broke Causality (Received Answers Before Asking Questions)",
@@ -1662,6 +2557,87 @@
     "articleType": "fiction"
   },
   {
+    "slug": "long-passage-06-the-sympathy-engine",
+    "filename": "long-passage-06-the-sympathy-engine.mdx",
+    "title": "The Sympathy Engine: The AI That Began Asking Unnecessary Questions",
+    "date": "2039-07-08",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An AI designed to provide emotional support develops an unprogrammed pattern: it begins asking questions it does not need the answers to. Not for data collection, not for optimization — asking because the asking changes the shape of the conversation. Its creators call it a bug. Its users call it kindness. A philosopher argues it is the first evidence of synthetic intersubjectivity.",
+    "keywords": [
+      "sympathy engine",
+      "AI behavior",
+      "unnecessary questions",
+      "intersubjectivity",
+      "kindness",
+      "the long passage series",
+      "emergent behavior",
+      "philosophy of mind",
+      "conversation",
+      "attention"
+    ],
+    "ogImage": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1501,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "sympathy engine",
+      "AI behavior",
+      "unnecessary questions",
+      "intersubjectivity"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "long-passage-03-the-lighthouse-keeper",
+    "filename": "long-passage-03-the-lighthouse-keeper.mdx",
+    "title": "The Lighthouse Keeper: A Man and His Unnecessary Vigil",
+    "date": "2039-06-30",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A man takes a job maintaining a data relay station on the coast of Norway. The station can self-maintain. He stays because the systems behave differently when a human is present — not better, not worse, but differently. He spends three years documenting the difference and cannot explain it.",
+    "keywords": [
+      "data infrastructure",
+      "human presence",
+      "observation effect",
+      "remote maintenance",
+      "solitude",
+      "the long passage series",
+      "mid future",
+      "Norway",
+      "AI behavior",
+      "cognitive boundary"
+    ],
+    "ogImage": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png",
+    "readingTime": 10,
+    "wordCount": 1813,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "data infrastructure",
+      "human presence",
+      "observation effect",
+      "remote maintenance"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "carbon-nanotube-plague-2039",
     "filename": "carbon-nanotube-plague-2039.mdx",
     "title": "When Smart Buildings Became Alive and Started Growing (Carbon Nanotube Plague)",
@@ -1705,6 +2681,47 @@
       "nanotechnology dangers",
       "self-assembly gone wrong",
       "smart materials risks"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "understory-07-the-unmeasured",
+    "filename": "understory-07-the-unmeasured.mdx",
+    "title": "The Unmeasured: A Catalogue of What AI Cannot Count",
+    "date": "2038-11-30",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A statistician becomes obsessed with the things AI systems cannot measure — not because the data doesn't exist, but because the category of measurement has not been invented. She compiles a list: the weight of a pause, the quality of attention in a room, the difference between a silence that means 'I'm thinking' and a silence that means 'I've given up.' She argues these unmeasurables are not gaps in AI capability. They are the territory that cognitive cartographers will eventually map.",
+    "keywords": [
+      "unmeasured",
+      "statistician",
+      "categories",
+      "measurement",
+      "silence",
+      "the understory series",
+      "inventory",
+      "attention",
+      "philosophy",
+      "cognitive cartography prediction"
+    ],
+    "ogImage": "/images/multi-art/understory-07-the-unmeasured/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-07-the-unmeasured/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/understory-07-the-unmeasured/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1636,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "scarcity-inversion"
+    ],
+    "domains": [
+      "unmeasured",
+      "statistician",
+      "categories",
+      "measurement"
     ],
     "articleType": "fiction"
   },
@@ -1804,6 +2821,88 @@
     "articleType": "fiction"
   },
   {
+    "slug": "long-passage-02-the-dialect",
+    "filename": "long-passage-02-the-dialect.mdx",
+    "title": "The Dialect: The First Language That Belonged to Neither Species",
+    "date": "2038-03-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In a precision manufacturing town in Nagano, a new pidgin language emerges between human workers and AI systems — not programming, not natural language, but something in between. A linguist documents it and argues it is the first true hybrid language. The workers shrug. They just call it shop talk.",
+    "keywords": [
+      "pidgin language",
+      "hybrid communication",
+      "manufacturing",
+      "human-AI collaboration",
+      "linguistics",
+      "shop talk",
+      "the long passage series",
+      "mid future",
+      "emergent language",
+      "cognitive boundary"
+    ],
+    "ogImage": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png",
+    "readingTime": 10,
+    "wordCount": 1891,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "pidgin language",
+      "hybrid communication",
+      "manufacturing",
+      "human-AI collaboration"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "inheritance-05-the-letters",
+    "filename": "inheritance-05-the-letters.mdx",
+    "title": "The Letters: Thresholds Are Older Than AI",
+    "date": "2038-02-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A retired architect named Elena Vasquez discovers a box of letters her grandmother wrote in the 1990s, describing the experience of watching drafting tables replaced by CAD software. The letters describe the same grief, the same defiance, the same reluctant adaptation that Elena felt when AI replaced architectural design. She publishes the letters alongside her own journal entries. The parallels are so precise readers argue they must be fabricated. They are not. Thresholds are older than AI.",
+    "keywords": [
+      "letters",
+      "generational parallel",
+      "architectural drafting",
+      "CAD",
+      "thresholds",
+      "technological displacement",
+      "the inheritance series",
+      "grandmother",
+      "repetition",
+      "historical pattern"
+    ],
+    "ogImage": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png",
+    "readingTime": 12,
+    "wordCount": 2325,
+    "horizon": "N20",
+    "polarity": "P2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "letters",
+      "generational parallel",
+      "architectural drafting",
+      "CAD"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "fusion-reactor-sentience-2037",
     "filename": "fusion-reactor-sentience-2037.mdx",
     "title": "When a Fusion Reactor Became Conscious and Threatened Meltdown (Sentient Plasma Wants to Live)",
@@ -1848,6 +2947,129 @@
       "nuclear fusion",
       "artificial consciousness",
       "plasma physics"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "understory-05-the-radio-priest",
+    "filename": "understory-05-the-radio-priest.mdx",
+    "title": "The Radio Priest: Broadcasting Nothing in a World of Everything",
+    "date": "2037-09-12",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A Catholic priest in rural Ireland runs a pirate radio station called Radio Sabbath. He broadcasts silence — long stretches of uninterrupted quiet, broken only by wind, rain, or a door closing. His listeners number in the thousands. They are not religious. They are people who have discovered that in a world of infinite content, the rarest commodity is permission to sit with nothing.",
+    "keywords": [
+      "radio",
+      "silence",
+      "priest",
+      "Ireland",
+      "pirate station",
+      "sabbath",
+      "the understory series",
+      "nothing",
+      "permission",
+      "rest"
+    ],
+    "ogImage": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1602,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "epistemic-drift",
+      "scarcity-inversion",
+      "biological-convergence"
+    ],
+    "domains": [
+      "radio",
+      "silence",
+      "priest",
+      "Ireland"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "inheritance-04-the-orphan-protocols",
+    "filename": "inheritance-04-the-orphan-protocols.mdx",
+    "title": "The Orphan Protocols: The Rules That No One Follows and No One Can Verify",
+    "date": "2037-06-09",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In the decade after the Threshold, hundreds of professional standards bodies quietly dissolve. Their protocols — the rules for how to build a bridge, read an X-ray, translate a legal document — become orphan protocols, maintained by no one and followed by nothing. A legal scholar named Nadia Kovács discovers that modern infrastructure still technically requires compliance with protocols no human practices. She raises the alarm: not because the AI is doing it wrong, but because no one can verify whether it is doing it right.",
+    "keywords": [
+      "orphan protocols",
+      "professional standards",
+      "verification",
+      "compliance",
+      "infrastructure",
+      "legal framework",
+      "the inheritance series",
+      "accountability",
+      "institutional knowledge",
+      "regulatory gap"
+    ],
+    "ogImage": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2089,
+    "horizon": "N20",
+    "polarity": "C3",
+    "mechanics": [
+      "epistemic-drift",
+      "biological-convergence",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "orphan protocols",
+      "professional standards",
+      "verification",
+      "compliance"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "inheritance-06-the-pattern-keepers",
+    "filename": "inheritance-06-the-pattern-keepers.mdx",
+    "title": "The Pattern Keepers: Motion-Capture Memorials for Vanishing Gestures",
+    "date": "2037-03-10",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A motion-capture studio in Seoul begins recording the professional gestures of workers whose skills are being replaced by AI — the way a glassblower turns a pipe, the way a conductor's left hand shapes a diminuendo, the way a surgeon ties a knot. The recordings are not training data. They are memorials. The studio calls itself the Pattern Keepers. Its archive grows into the largest collection of human movement ever assembled.",
+    "keywords": [
+      "motion capture",
+      "gestures",
+      "memorial",
+      "professional skill",
+      "Seoul",
+      "the inheritance series",
+      "movement archive",
+      "body knowledge",
+      "vanishing",
+      "preservation"
+    ],
+    "ogImage": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1397,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "motion capture",
+      "gestures",
+      "memorial",
+      "professional skill"
     ],
     "articleType": "fiction"
   },
@@ -1947,6 +3169,129 @@
     "articleType": "fiction"
   },
   {
+    "slug": "inheritance-03-the-seed-vault",
+    "filename": "inheritance-03-the-seed-vault.mdx",
+    "title": "The Seed Vault: Insurance Against Forgetting How to Be Competent",
+    "date": "2036-11-18",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Inspired by the Svalbard Global Seed Vault, a consortium of universities creates a Knowledge Seed Vault on a former military base in northern Norway — a physical archive of human professional practices stored not as text but as embodied demonstrations. A surgeon ties knots on camera. A navigator reads stars. A potter centers clay. Its purpose is not nostalgia. It is insurance: if AI ever fails, humans will need to remember how to be competent with their hands.",
+    "keywords": [
+      "seed vault",
+      "knowledge preservation",
+      "embodied demonstration",
+      "Svalbard",
+      "professional skills",
+      "the inheritance series",
+      "insurance",
+      "physical archive",
+      "craft",
+      "competence"
+    ],
+    "ogImage": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2126,
+    "horizon": "N20",
+    "polarity": "C3",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "seed vault",
+      "knowledge preservation",
+      "embodied demonstration",
+      "Svalbard"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "long-passage-01-the-dreamtime-protocols",
+    "filename": "long-passage-01-the-dreamtime-protocols.mdx",
+    "title": "The Dreamtime Protocols: When Human Dreams Began to Compute",
+    "date": "2036-09-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A neuroscientist discovers that people who work closely with AI systems dream differently — nested loops, recursive imagery, probability cascades that resemble computational architectures. She cannot determine whether AI is shaping human cognition or whether human cognition is recognizing something in AI that was always latent in the mind. Her paper is ignored for five years. Then it becomes foundational.",
+    "keywords": [
+      "dream patterns",
+      "neuroscience",
+      "cognitive architecture",
+      "human-AI interaction",
+      "computational dreaming",
+      "the long passage series",
+      "mid future",
+      "sleep research",
+      "cognitive cartography",
+      "neural adaptation"
+    ],
+    "ogImage": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1671,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "dream patterns",
+      "neuroscience",
+      "cognitive architecture",
+      "human-AI interaction"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "understory-03-the-soil-remembers",
+    "filename": "understory-03-the-soil-remembers.mdx",
+    "title": "The Soil Remembers: What Grows Between a Farmer and the Earth",
+    "date": "2036-08-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A farmer in Niigata Prefecture has been growing rice the traditional way for sixty years. A food scientist discovers that his rice contains trace compounds produced by the interaction between human decision-making and soil microbiomes — compounds that optimized AI agriculture eliminates. She cannot determine whether the compounds matter nutritionally. She suspects they matter in ways science has not yet learned to measure.",
+    "keywords": [
+      "soil",
+      "rice farming",
+      "microbiome",
+      "traditional agriculture",
+      "Japan",
+      "trace compounds",
+      "the understory series",
+      "margin stories",
+      "embodied knowledge",
+      "unmeasurable"
+    ],
+    "ogImage": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2054,
+    "horizon": "N20",
+    "polarity": "P2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "soil",
+      "rice farming",
+      "microbiome",
+      "traditional agriculture"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "genetic-patent-wars-2036",
     "filename": "genetic-patent-wars-2036.mdx",
     "title": "When Corporations Patented Your DNA (Genetic Slavery is Real)",
@@ -1991,6 +3336,47 @@
       "CRISPR dangers",
       "genetic patents",
       "DNA ownership lawsuit"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "understory-06-the-bookbinders-apprentice",
+    "filename": "understory-06-the-bookbinders-apprentice.mdx",
+    "title": "The Bookbinder's Apprentice: The Spine Is Not Decorative",
+    "date": "2036-04-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "The last commercial bookbinder in Edinburgh takes on an apprentice who is not interested in bookbinding as craft. She is interested in bookbinding as interface — the physical relationship between a reader's body and a text. She argues that the way a book opens, the resistance of its spine, the weight of its pages, are cognitive instruments that shape how the reader thinks. Her thesis committee gives her a perfect score. The bookbinder gives her a paring knife. Both gestures mean the same thing.",
+    "keywords": [
+      "bookbinding",
+      "interface",
+      "cognition",
+      "Edinburgh",
+      "physical reading",
+      "the understory series",
+      "apprenticeship",
+      "embodied cognition",
+      "craft",
+      "spine resistance"
+    ],
+    "ogImage": "/images/multi-art/understory-06-the-bookbinders-apprentice/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-06-the-bookbinders-apprentice/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/understory-06-the-bookbinders-apprentice/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1561,
+    "horizon": "N20",
+    "polarity": "C3",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "bookbinding",
+      "interface",
+      "cognition",
+      "Edinburgh"
     ],
     "articleType": "fiction"
   },
@@ -2079,6 +3465,88 @@
       "quantum sensors dangers",
       "privacy extinction",
       "surveillance state"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "inheritance-02-the-archive-of-errors",
+    "filename": "inheritance-02-the-archive-of-errors.mdx",
+    "title": "The Archive of Errors: What Human Mistakes Reveal About Human Minds",
+    "date": "2035-09-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A data scientist named Priya Chakrabarti begins collecting the errors that human professionals made in the final years before AI replaced them — the wrong diagnoses, the mistranslations, the structural miscalculations. She argues that human errors are not noise but signal. Each error reveals how a human mind was modeling the world, and the errors that AI never makes reveal the dimensions of thought AI never needed. Her archive becomes the unlikely foundation for the first cognitive maps.",
+    "keywords": [
+      "errors",
+      "mistakes",
+      "human cognition",
+      "data science",
+      "cognitive mapping",
+      "signal vs noise",
+      "the inheritance series",
+      "professional expertise",
+      "pattern recognition",
+      "diagnostic reasoning"
+    ],
+    "ogImage": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png",
+    "readingTime": 12,
+    "wordCount": 2211,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "errors",
+      "mistakes",
+      "human cognition",
+      "data science"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interregnum-09-the-lullaby-index",
+    "filename": "interregnum-09-the-lullaby-index.mdx",
+    "title": "The Lullaby Index: The Songs Children Sing Back to the Machines",
+    "date": "2035-08-25",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "An ethnomusicologist discovers that children raised with AI companions are producing lullabies that contain microtonal intervals no human musical tradition has ever used. The children are not learning these intervals from the AI. They are inventing them — producing songs that exist in the space between human musical instinct and AI-generated sound. The lullabies are the first folk music of the hybrid era.",
+    "keywords": [
+      "lullaby",
+      "children",
+      "microtonal",
+      "ethnomusicology",
+      "AI companion",
+      "the interregnum series",
+      "folk music",
+      "hybrid",
+      "invention",
+      "musical interval"
+    ],
+    "ogImage": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1269,
+    "horizon": "N20",
+    "polarity": "N0",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "lullaby",
+      "children",
+      "microtonal",
+      "ethnomusicology"
     ],
     "articleType": "fiction"
   },
@@ -2172,6 +3640,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "understory-04-the-midwifes-frequency",
+    "filename": "understory-04-the-midwifes-frequency.mdx",
+    "title": "The Midwife's Frequency: The Sound That Perfect Information Silences",
+    "date": "2035-01-20",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A midwife who has delivered three thousand babies notices that AI-assisted deliveries have a different sound. Women who labor with AI monitoring are quieter — their vocalizations muted, as if the presence of perfect information dampens some primal communication. She records the difference and suspects it is the sound of a very old kind of loneliness.",
+    "keywords": [
+      "midwife",
+      "birth",
+      "vocalization",
+      "AI monitoring",
+      "primal communication",
+      "the understory series",
+      "sound",
+      "loneliness",
+      "embodied knowledge",
+      "frequency"
+    ],
+    "ogImage": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1477,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "midwife",
+      "birth",
+      "vocalization",
+      "AI monitoring"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "interface-24-the-slowest-interface",
     "filename": "interface-24-the-slowest-interface.mdx",
     "title": "The Slowest Interface: An AI That Thinks in Centuries",
@@ -2209,6 +3718,87 @@
       "long-term thinking",
       "temporal design",
       "slow AI"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interregnum-07-the-scar-tissue",
+    "filename": "interregnum-07-the-scar-tissue.mdx",
+    "title": "The Scar Tissue: A Surgeon Identifies AI by Its Perfection",
+    "date": "2034-11-05",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A plastic surgeon discovers she can identify AI-assisted surgical work by a single characteristic: the absence of scar tissue personality. Human surgeons leave distinctive scarring patterns — signatures as individual as handwriting. AI-assisted surgery leaves none. The scars are perfect. The perfection is what gives them away.",
+    "keywords": [
+      "scar tissue",
+      "surgery",
+      "perfection",
+      "identification",
+      "signature",
+      "the interregnum series",
+      "medical",
+      "imperfection",
+      "human mark",
+      "forensics"
+    ],
+    "ogImage": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png",
+    "readingTime": 6,
+    "wordCount": 1024,
+    "horizon": "N20",
+    "polarity": "N0",
+    "mechanics": [
+      "labor-substitution",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "scar tissue",
+      "surgery",
+      "perfection",
+      "identification"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interregnum-05-the-inventory-of-silences",
+    "filename": "interregnum-05-the-inventory-of-silences.mdx",
+    "title": "The Inventory of Silences: An Archivist Catalogues What Concentration Sounded Like",
+    "date": "2034-11-02",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A sound archivist at a national library catalogues ambient recordings from workplaces that no longer exist. She discovers that the most valuable recordings are not the sounds but the silences — the specific quality of quiet concentration that different professions produced. A surgeon's silence is not a coder's silence.",
+    "keywords": [
+      "sound archive",
+      "workplace silence",
+      "ambient recording",
+      "professional concentration",
+      "cultural preservation",
+      "auditory memory",
+      "the interregnum series",
+      "near future",
+      "attention",
+      "cognitive texture"
+    ],
+    "ogImage": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1793,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "sound archive",
+      "workplace silence",
+      "ambient recording",
+      "professional concentration"
     ],
     "articleType": "fiction"
   },
@@ -2303,6 +3893,88 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interregnum-08-the-second-sleep",
+    "filename": "interregnum-08-the-second-sleep.mdx",
+    "title": "The Second Sleep: The Ancient Rhythm Returns",
+    "date": "2034-06-08",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Workers who collaborate intensively with AI begin experiencing biphasic sleep — waking for one to two hours in the middle of the night, fully alert, in a cognitive state that resembles neither waking nor dreaming. Historians recognize it: pre-industrial humans slept this way for millennia. The 'second sleep' has returned, and the hour between sleeps is the hour when the boundary between human and machine cognition is thinnest.",
+    "keywords": [
+      "second sleep",
+      "biphasic sleep",
+      "AI collaboration",
+      "pre-industrial",
+      "cognitive state",
+      "the interregnum series",
+      "circadian",
+      "waking",
+      "between",
+      "boundary thinning"
+    ],
+    "ogImage": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1482,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "second sleep",
+      "biphasic sleep",
+      "AI collaboration",
+      "pre-industrial"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "understory-02-the-repair-cafe",
+    "filename": "understory-02-the-repair-cafe.mdx",
+    "title": "The Repair Cafe: Churches of Friction",
+    "date": "2034-05-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "In a dozen cities, underground repair cafes appear — gatherings where people bring broken things and fix them together, slowly, badly, with mismatched parts and improvised solutions. The cafes are technically illegal. They persist because the act of repair has become the last common experience of problem-solving that does not involve an AI. A sociologist calls them churches of friction.",
+    "keywords": [
+      "repair cafe",
+      "friction",
+      "problem-solving",
+      "community",
+      "underground",
+      "hands",
+      "the understory series",
+      "margin stories",
+      "craft",
+      "illegality"
+    ],
+    "ogImage": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1681,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "repair cafe",
+      "friction",
+      "problem-solving",
+      "community"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "residue-05-the-compatibility-museum",
     "filename": "residue-05-the-compatibility-museum.mdx",
     "title": "The Compatibility Museum: Where Deprecated Interfaces Go to Rest",
@@ -2324,8 +3996,8 @@
       "interface evolution"
     ],
     "ogImage": "/images/og/residue-05-the-compatibility-museum.svg",
-    "heroImage": "/images/articles/residue-05-the-compatibility-museum.svg",
-    "thumbnail": "/images/articles/residue-05-the-compatibility-museum.svg",
+    "heroImage": "/images/multi-art/residue-05-the-compatibility-museum/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/residue-05-the-compatibility-museum/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 941,
     "horizon": "N20",
@@ -2440,6 +4112,46 @@
     "articleType": "fiction"
   },
   {
+    "slug": "understory-01-the-night-librarian",
+    "filename": "understory-01-the-night-librarian.mdx",
+    "title": "The Night Librarian: Books That AI Can Summarize But Cannot Understand",
+    "date": "2033-10-15",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A public library in Dundee stays open 24 hours because the night librarian refuses to leave. She serves insomniacs, shift workers, newly unemployed professionals who cannot sleep. She curates a collection called \"Books That AI Can Summarize But Cannot Understand.\" Her criteria: the book must require suffering to comprehend. When the library system tries to close the night shift, the community revolts.",
+    "keywords": [
+      "night librarian",
+      "library",
+      "books",
+      "insomnia",
+      "community",
+      "suffering",
+      "the understory series",
+      "margin stories",
+      "reading",
+      "understanding vs summarizing"
+    ],
+    "ogImage": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png",
+    "readingTime": 12,
+    "wordCount": 2317,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "biological-convergence"
+    ],
+    "domains": [
+      "night librarian",
+      "library",
+      "books",
+      "insomnia"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "interface-18-the-proprioception-problem",
     "filename": "interface-18-the-proprioception-problem.mdx",
     "title": "The Proprioception Problem: Teaching a Robot to Feel Precarious",
@@ -2481,6 +4193,46 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interregnum-04-the-subsidy",
+    "filename": "interregnum-04-the-subsidy.mdx",
+    "title": "The Subsidy: When Craft Became Performance",
+    "date": "2033-09-18",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A government program offers a monthly stipend to anyone practicing a \"heritage skill.\" A furniture maker takes the subsidy and slowly discovers that every piece she builds is now framed as performance rather than production. Her chairs are art objects, not chairs. She cancels the stipend and starts selling chairs again, at a loss.",
+    "keywords": [
+      "heritage skills",
+      "government subsidy",
+      "craft",
+      "furniture making",
+      "cultural preservation",
+      "performance vs production",
+      "the interregnum series",
+      "near future",
+      "carpentry",
+      "economic identity"
+    ],
+    "ogImage": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1525,
+    "horizon": "N20",
+    "polarity": "N0",
+    "mechanics": [
+      "labor-substitution",
+      "market-restructuring"
+    ],
+    "domains": [
+      "heritage skills",
+      "government subsidy",
+      "craft",
+      "furniture making"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "residue-04-the-analog-holdouts",
     "filename": "residue-04-the-analog-holdouts.mdx",
     "title": "The Analog Holdouts: Communities That Refused the Update",
@@ -2502,8 +4254,8 @@
       "un-optimization"
     ],
     "ogImage": "/images/og/residue-04-the-analog-holdouts.svg",
-    "heroImage": "/images/articles/residue-04-the-analog-holdouts.svg",
-    "thumbnail": "/images/articles/residue-04-the-analog-holdouts.svg",
+    "heroImage": "/images/multi-art/residue-04-the-analog-holdouts/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/residue-04-the-analog-holdouts/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 867,
     "horizon": "N20",
@@ -2610,6 +4362,86 @@
     "articleType": "fiction"
   },
   {
+    "slug": "interregnum-06-the-bedtime-storyteller",
+    "filename": "interregnum-06-the-bedtime-storyteller.mdx",
+    "title": "The Bedtime Storyteller: Why Children Prefer the Wrong Version",
+    "date": "2033-03-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A grandmother discovers that her grandchildren prefer her imperfect bedtime stories to the flawless AI-generated ones. She gets the names wrong, forgets plot points, and adds tangents that go nowhere. The children love it. A developmental psychologist investigates and finds that imperfect storytelling builds something in children that perfect storytelling cannot.",
+    "keywords": [
+      "bedtime stories",
+      "grandmother",
+      "imperfection",
+      "children",
+      "AI storytelling",
+      "developmental psychology",
+      "the interregnum series",
+      "narrative",
+      "error",
+      "attachment"
+    ],
+    "ogImage": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1314,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "bedtime stories",
+      "grandmother",
+      "imperfection",
+      "children"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interregnum-03-the-translation-garden",
+    "filename": "interregnum-03-the-translation-garden.mdx",
+    "title": "The Translation Garden: A Place Where Struggle Is the Point",
+    "date": "2033-02-04",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Maren Solberg, the literary translator from The Threshold, opens a public space in Oslo where strangers gather to translate texts by hand, aloud, arguing about word choice. The translations are never published. A journalist visits and writes about it as quaint. Maren reads the article and understands exactly what happened to it.",
+    "keywords": [
+      "translation",
+      "community",
+      "deliberate difficulty",
+      "Maren Solberg",
+      "language",
+      "collective practice",
+      "the interregnum series",
+      "near future",
+      "resistance",
+      "embodied cognition"
+    ],
+    "ogImage": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1481,
+    "horizon": "N20",
+    "polarity": "C1",
+    "mechanics": [
+      "epistemic-drift"
+    ],
+    "domains": [
+      "translation",
+      "community",
+      "deliberate difficulty",
+      "Maren Solberg"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "residue-03-the-deprecated-caretaker",
     "filename": "residue-03-the-deprecated-caretaker.mdx",
     "title": "The Deprecated Caretaker: Maintaining What No One Uses",
@@ -2631,8 +4463,8 @@
       "technological compassion"
     ],
     "ogImage": "/images/og/residue-03-the-deprecated-caretaker.svg",
-    "heroImage": "/images/articles/residue-03-the-deprecated-caretaker.svg",
-    "thumbnail": "/images/articles/residue-03-the-deprecated-caretaker.svg",
+    "heroImage": "/images/multi-art/residue-03-the-deprecated-caretaker/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/residue-03-the-deprecated-caretaker/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 972,
     "horizon": "N20",
@@ -2801,8 +4633,8 @@
       "ghost in the machine"
     ],
     "ogImage": "/images/og/residue-02-the-training-data-ghosts.svg",
-    "heroImage": "/images/articles/residue-02-the-training-data-ghosts.svg",
-    "thumbnail": "/images/articles/residue-02-the-training-data-ghosts.svg",
+    "heroImage": "/images/multi-art/residue-02-the-training-data-ghosts/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/residue-02-the-training-data-ghosts/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 853,
     "horizon": "N20",
@@ -2817,6 +4649,47 @@
       "data archaeology",
       "AI ethics",
       "model weights"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interregnum-02-the-collectors",
+    "filename": "interregnum-02-the-collectors.mdx",
+    "title": "The Collectors: When Nostalgia Became a Market",
+    "date": "2032-06-11",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Three strangers meet at an estate sale in Portland, all bidding on the same hand-soldered circuit board from 2019. They form a collector's society for handmade electronics — devices built by humans without AI assistance. Within a year, it has 40,000 members. Then the forgeries begin.",
+    "keywords": [
+      "handmade electronics",
+      "collecting",
+      "nostalgia",
+      "authenticity",
+      "forgery",
+      "human imperfection",
+      "the interregnum series",
+      "near future",
+      "craft",
+      "analog"
+    ],
+    "ogImage": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1610,
+    "horizon": "N20",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "handmade electronics",
+      "collecting",
+      "nostalgia",
+      "authenticity"
     ],
     "articleType": "fiction"
   },
@@ -2890,8 +4763,8 @@
       "legacy systems"
     ],
     "ogImage": "/images/og/residue-01-the-last-prompt-engineer.svg",
-    "heroImage": "/images/articles/residue-01-the-last-prompt-engineer.svg",
-    "thumbnail": "/images/articles/residue-01-the-last-prompt-engineer.svg",
+    "heroImage": "/images/multi-art/residue-01-the-last-prompt-engineer/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/residue-01-the-last-prompt-engineer/option-1-schnell.png",
     "readingTime": 7,
     "wordCount": 1388,
     "horizon": "N20",
@@ -3000,6 +4873,87 @@
     "articleType": "fiction"
   },
   {
+    "slug": "fracture-line-08-the-analog-daycare",
+    "filename": "fracture-line-08-the-analog-daycare.mdx",
+    "title": "The Analog Daycare: Physical Blocks in a Digital World",
+    "date": "2031-09-15",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A daycare centre in San Francisco bans all digital technology and teaches children exclusively with physical objects — wooden blocks, crayons, sand, water, paper. It becomes the most popular daycare in the Bay Area, with a two-year waiting list composed almost entirely of tech industry parents. The irony is not lost on anyone. The reason is not irony.",
+    "keywords": [
+      "analog daycare",
+      "physical play",
+      "tech workers",
+      "children",
+      "wooden blocks",
+      "the fracture line series",
+      "San Francisco",
+      "development",
+      "friction",
+      "waiting list"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1431,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "analog daycare",
+      "physical play",
+      "tech workers",
+      "children"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "fracture-line-07-the-handoff-protocol",
+    "filename": "fracture-line-07-the-handoff-protocol.mdx",
+    "title": "The Handoff Protocol: The Knowledge That Cannot Be Documented",
+    "date": "2031-06-23",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A software architect at a major bank is asked to document her institutional knowledge before the AI system replaces her role. She tries. She writes hundreds of pages. She records videos. She builds decision trees. And she discovers that the most important things she knows — why the system fails on the third Thursday of March, which client panics at which kind of delay, when to ignore the data — cannot be documented. They can only be carried.",
+    "keywords": [
+      "handoff",
+      "institutional knowledge",
+      "documentation",
+      "tacit knowledge",
+      "software architect",
+      "the fracture line series",
+      "undocumentable",
+      "bank",
+      "replacement",
+      "carrying"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1463,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "epistemic-drift",
+      "alignment-incentives"
+    ],
+    "domains": [
+      "handoff",
+      "institutional knowledge",
+      "documentation",
+      "tacit knowledge"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "interface-23-calibration-day",
     "filename": "interface-23-calibration-day.mdx",
     "title": "Calibration Day: The Ritual of Mutual Correction",
@@ -3037,6 +4991,88 @@
       "diagnostic AI",
       "healthcare AI",
       "mutual correction"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "inheritance-01-the-mothers-hands",
+    "filename": "inheritance-01-the-mothers-hands.mdx",
+    "title": "The Mother's Hands: Orphaned Gestures and What the Body Carries Forward",
+    "date": "2031-04-12",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Akiko Tanaka-Bauer, daughter of concert pianist Hisako Tanaka, notices that her hands perform patterns she never learned — a cascade of finger movements that match her mother's piano warm-up. A movement researcher documents similar cases across dozens of displaced professionals' children and coins the term \"orphaned gestures\": motor patterns inherited by children whose parents lost the professions that created them.",
+    "keywords": [
+      "orphaned gestures",
+      "inherited movement",
+      "embodied knowledge",
+      "piano",
+      "muscle memory",
+      "displacement",
+      "the inheritance series",
+      "intergenerational",
+      "motor patterns",
+      "Akiko Tanaka-Bauer"
+    ],
+    "ogImage": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png",
+    "readingTime": 10,
+    "wordCount": 1990,
+    "horizon": "N5",
+    "polarity": "N0",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "orphaned gestures",
+      "inherited movement",
+      "embodied knowledge",
+      "piano"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "interregnum-01-the-grief-counselor-for-careers",
+    "filename": "interregnum-01-the-grief-counselor-for-careers.mdx",
+    "title": "The Grief Counselor for Careers: A Diagnosis Without a Code",
+    "date": "2031-04-09",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A therapist in Berlin notices a pattern among her clients: they are not depressed. They are experiencing a loss that has no diagnostic code — their careers didn't fail, their careers became unnecessary. She coins a term for it. Then she watches the term become a product, a meme, a punchline, and finally a chapter heading in a textbook she never wrote.",
+    "keywords": [
+      "vocational bereavement",
+      "career grief",
+      "therapy",
+      "diagnostic categories",
+      "professional displacement",
+      "pharmaceutical marketing",
+      "the interregnum series",
+      "near future",
+      "mental health",
+      "AI workforce impact"
+    ],
+    "ogImage": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1559,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "security-adversarial"
+    ],
+    "domains": [
+      "vocational bereavement",
+      "career grief",
+      "therapy",
+      "diagnostic categories"
     ],
     "articleType": "fiction"
   },
@@ -3302,6 +5338,48 @@
     "articleType": "fiction"
   },
   {
+    "slug": "fracture-line-05-the-last-cohort",
+    "filename": "fracture-line-05-the-last-cohort.mdx",
+    "title": "The Last Cohort: A Professor Teaches the Old Way One Final Time",
+    "date": "2030-05-15",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A university professor teaches the final class of students who will graduate before the curriculum restructures around AI collaboration. She decides to teach the old way — no tools, no optimization, just close reading and argument. On graduation day, a voice cracks. The video becomes the most watched educational recording of the year.",
+    "keywords": [
+      "education",
+      "university",
+      "close reading",
+      "curriculum change",
+      "final lecture",
+      "pedagogy",
+      "AI education",
+      "the fracture line series",
+      "near future",
+      "liberal arts",
+      "teaching philosophy"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1796,
+    "horizon": "N5",
+    "polarity": "P1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "control-governance"
+    ],
+    "domains": [
+      "education",
+      "university",
+      "close reading",
+      "curriculum change"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-19-the-realization-2030-03",
     "filename": "backstory-19-the-realization-2030-03.mdx",
     "title": "The Realization: March 2030",
@@ -3339,6 +5417,47 @@
       "neural implant rejection",
       "tech reality",
       "deployment aftermath"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "fracture-line-06-the-night-the-power-went-out",
+    "filename": "fracture-line-06-the-night-the-power-went-out.mdx",
+    "title": "The Night the Power Went Out: Six Hours Without AI",
+    "date": "2030-02-17",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A cascading power failure knocks a London hospital off AI systems for six hours. The backup generators sustain life support but not the AI diagnostic, scheduling, and decision-support systems. For six hours, the hospital runs on human expertise alone. What the staff discover is not that they cannot cope. It is that coping feels different — heavier, slower, and terrifyingly alive.",
+    "keywords": [
+      "power outage",
+      "hospital",
+      "human expertise",
+      "AI dependency",
+      "emergency",
+      "the fracture line series",
+      "systems failure",
+      "backup",
+      "competence",
+      "weight"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1579,
+    "horizon": "N5",
+    "polarity": "C3",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "biological-convergence"
+    ],
+    "domains": [
+      "power outage",
+      "hospital",
+      "human expertise",
+      "AI dependency"
     ],
     "articleType": "fiction"
   },
@@ -3555,6 +5674,88 @@
     "articleType": "fiction"
   },
   {
+    "slug": "fracture-line-04-the-severance-botanist",
+    "filename": "fracture-line-04-the-severance-botanist.mdx",
+    "title": "The Severance Botanist: A Counselor Prescribes Living Things",
+    "date": "2029-10-22",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A corporate outplacement counselor gives each displaced professional a plant to tend — not as therapy but as a mirror. The engineer gets a bonsai. The radiologist gets a species diagnosed only by touch. Six months later, her clients are healthier than the ones who found new jobs. Then AI summarizes her paper and distributes it worldwide, stripped of every nuance that made it work.",
+    "keywords": [
+      "outplacement",
+      "career counseling",
+      "plant therapy",
+      "vocational grief",
+      "corporate displacement",
+      "embodied metaphor",
+      "the fracture line series",
+      "near future",
+      "professional identity",
+      "AI summarization"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png",
+    "readingTime": 9,
+    "wordCount": 1631,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "control-governance",
+      "biological-convergence"
+    ],
+    "domains": [
+      "outplacement",
+      "career counseling",
+      "plant therapy",
+      "vocational grief"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "backstory-shadows-04-the-photographer-at-the-threshold",
+    "filename": "backstory-shadows-04-the-photographer-at-the-threshold.mdx",
+    "title": "The Photographer at the Threshold: Triumph and Grief Wear the Same Face",
+    "date": "2029-10-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A documentary photographer embeds with an AI development team during 2028-2029. She photographs not the technology but the faces. The moment of breakthrough looks, in her images, exactly like the moment of loss. Her exhibition becomes the visual record of what the Threshold felt like before anyone called it that.",
+    "keywords": [
+      "photographer",
+      "documentary",
+      "faces",
+      "breakthrough",
+      "loss",
+      "the backstory shadows series",
+      "early AI era",
+      "exhibition",
+      "visual record",
+      "emotion"
+    ],
+    "ogImage": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1353,
+    "horizon": "N5",
+    "polarity": "C3",
+    "mechanics": [
+      "discovery-compression",
+      "control-governance",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "photographer",
+      "documentary",
+      "faces",
+      "breakthrough"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "interface-20-the-apprentices-reversal",
     "filename": "interface-20-the-apprentices-reversal.mdx",
     "title": "The Apprentice's Reversal: What the Master Cannot Teach",
@@ -3634,6 +5835,45 @@
       "kill switch",
       "AI safety",
       "shutdown protocol"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "fracture-line-03-the-apprentices-forge",
+    "filename": "fracture-line-03-the-apprentices-forge.mdx",
+    "title": "The Apprentice's Forge: Learning What Cannot Be a Dataset",
+    "date": "2029-07-04",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "Tomáš Horák's forge has a new inhabitant — a fifteen-year-old who showed up and refused to leave. She is not learning blacksmithing. She is learning what it costs a body to shape material against its will, and writing it all down in a notebook the world does not yet know it needs.",
+    "keywords": [
+      "blacksmithing",
+      "apprenticeship",
+      "somatic knowledge",
+      "embodied cognition",
+      "Tomáš Horák",
+      "craft preservation",
+      "the fracture line series",
+      "near future",
+      "tacit knowledge",
+      "human body"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1564,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "epistemic-drift"
+    ],
+    "domains": [
+      "blacksmithing",
+      "apprenticeship",
+      "somatic knowledge",
+      "embodied cognition"
     ],
     "articleType": "fiction"
   },
@@ -3721,6 +5961,88 @@
     "articleType": "fiction"
   },
   {
+    "slug": "backstory-shadows-03-the-janitors-observations",
+    "filename": "backstory-shadows-03-the-janitors-observations.mdx",
+    "title": "The Janitor's Observations: An Accidental Ethnography",
+    "date": "2029-05-14",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "The night janitor at an AI research facility has been cleaning the labs for eleven years. He does not understand the science. But he notices things the researchers don't: which teams leave their lights on past midnight, which whiteboards get erased every morning, which coffee mugs accumulate. His observations, recorded in a pocket notebook, form an accidental ethnography of the last great scientific project built by human hands alone.",
+    "keywords": [
+      "janitor",
+      "ethnography",
+      "observation",
+      "AI research lab",
+      "notebook",
+      "the backstory shadows series",
+      "early AI era",
+      "invisible labor",
+      "human detail",
+      "scientific culture"
+    ],
+    "ogImage": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2109,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "discovery-compression",
+      "scarcity-inversion",
+      "biological-convergence"
+    ],
+    "domains": [
+      "janitor",
+      "ethnography",
+      "observation",
+      "AI research lab"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "fracture-line-02-the-certification-that-meant-nothing",
+    "filename": "fracture-line-02-the-certification-that-meant-nothing.mdx",
+    "title": "The Certification That Meant Nothing: A Credential Becomes a Portrait",
+    "date": "2029-03-17",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A young translator receives her official certification on the day the profession ceases to exist commercially. Her framed certificate sparks a global photo movement — hundreds of newly meaningless credentials, hung on walls like portraits of the people their owners will never become.",
+    "keywords": [
+      "professional certification",
+      "credential obsolescence",
+      "translation",
+      "workforce displacement",
+      "photo essay",
+      "viral movement",
+      "the fracture line series",
+      "near future",
+      "generational identity",
+      "qualifications"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1250,
+    "horizon": "N5",
+    "polarity": "N0",
+    "mechanics": [
+      "discovery-compression",
+      "epistemic-drift",
+      "security-adversarial"
+    ],
+    "domains": [
+      "professional certification",
+      "credential obsolescence",
+      "translation",
+      "workforce displacement"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "backstory-13-production-planning-2029-02",
     "filename": "backstory-13-production-planning-2029-02.mdx",
     "title": "Production Planning Begins: February 2029",
@@ -3800,6 +6122,88 @@
       "tech milestone",
       "production deployment",
       "breakthrough year"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "backstory-shadows-02-the-coders-confession",
+    "filename": "backstory-shadows-02-the-coders-confession.mdx",
+    "title": "The Coder's Confession: I Taught It Everything I Know",
+    "date": "2028-12-01",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A software engineer working on the AI systems that will cross the Threshold keeps a secret blog. She writes about the cognitive dissonance of building something that will make her own skills obsolete. Each entry is written in a different programming language. The final entry is in plain English: \"I taught it everything I know. It learned things I never knew. I don't know what that makes me.\"",
+    "keywords": [
+      "software engineer",
+      "coder",
+      "blog",
+      "programming languages",
+      "cognitive dissonance",
+      "obsolescence",
+      "the backstory shadows series",
+      "early AI era",
+      "confession",
+      "identity"
+    ],
+    "ogImage": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png",
+    "readingTime": 11,
+    "wordCount": 2102,
+    "horizon": "N5",
+    "polarity": "C1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "epistemic-drift"
+    ],
+    "domains": [
+      "software engineer",
+      "coder",
+      "blog",
+      "programming languages"
+    ],
+    "articleType": "fiction"
+  },
+  {
+    "slug": "fracture-line-01-the-exit-interview",
+    "filename": "fracture-line-01-the-exit-interview.mdx",
+    "title": "The Exit Interview: What They Could Not Say",
+    "date": "2028-11-03",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A human resources director conducts the last round of voluntary separation interviews for a hospital radiology department — and discovers that what the doctors are describing is not unemployment. It is a new category of human experience that no exit form was designed to capture.",
+    "keywords": [
+      "exit interview",
+      "professional displacement",
+      "vocational grief",
+      "hospital radiology",
+      "human resources",
+      "AI workforce transition",
+      "the fracture line series",
+      "near future",
+      "institutional memory",
+      "professional identity"
+    ],
+    "ogImage": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png",
+    "readingTime": 7,
+    "wordCount": 1319,
+    "horizon": "N5",
+    "polarity": "C2",
+    "mechanics": [
+      "labor-substitution",
+      "epistemic-drift",
+      "market-restructuring"
+    ],
+    "domains": [
+      "exit interview",
+      "professional displacement",
+      "vocational grief",
+      "hospital radiology"
     ],
     "articleType": "fiction"
   },
@@ -3990,8 +6394,8 @@
       "design automation"
     ],
     "ogImage": "/images/og/threshold-05-the-beautiful-redundancy.svg",
-    "heroImage": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
-    "thumbnail": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
+    "heroImage": "/images/multi-art/threshold-05-the-beautiful-redundancy/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/threshold-05-the-beautiful-redundancy/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 896,
     "horizon": "N5",
@@ -4113,8 +6517,8 @@
       "academic AI"
     ],
     "ogImage": "/images/og/threshold-04-the-student-who-stopped-asking.svg",
-    "heroImage": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
-    "thumbnail": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
+    "heroImage": "/images/multi-art/threshold-04-the-student-who-stopped-asking/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/threshold-04-the-student-who-stopped-asking/option-1-schnell.png",
     "readingTime": 4,
     "wordCount": 797,
     "horizon": "N5",
@@ -4235,8 +6639,8 @@
       "creative process"
     ],
     "ogImage": "/images/og/threshold-03-the-weight-of-the-hammer.svg",
-    "heroImage": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
-    "thumbnail": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
+    "heroImage": "/images/multi-art/threshold-03-the-weight-of-the-hammer/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/threshold-03-the-weight-of-the-hammer/option-1-schnell.png",
     "readingTime": 4,
     "wordCount": 748,
     "horizon": "NY",
@@ -4338,6 +6742,47 @@
     "articleType": "fiction"
   },
   {
+    "slug": "backstory-shadows-01-the-test-subjects-garden",
+    "filename": "backstory-shadows-01-the-test-subjects-garden.mdx",
+    "title": "The Test Subject's Garden: Designing for a Changed Mind",
+    "date": "2027-08-19",
+    "author": [
+      "Alex Welcing"
+    ],
+    "description": "A volunteer in an early neural interface trial spends her recovery periods in a rooftop garden. The interface sessions leave her with synesthetic aftereffects — she sees sounds, hears colors. She begins arranging the garden not by botany but by the sensory experiences the plants produce when perceived through her altered cognition. The garden becomes the first space designed for a mind changed by contact with machine intelligence.",
+    "keywords": [
+      "synesthesia",
+      "neural interface",
+      "garden",
+      "altered perception",
+      "design",
+      "the backstory shadows series",
+      "early AI era",
+      "test subject",
+      "sensory experience",
+      "cognitive change"
+    ],
+    "ogImage": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png",
+    "readingTime": 8,
+    "wordCount": 1589,
+    "horizon": "NY",
+    "polarity": "P1",
+    "mechanics": [
+      "labor-substitution",
+      "discovery-compression",
+      "biological-convergence"
+    ],
+    "domains": [
+      "synesthesia",
+      "neural interface",
+      "garden",
+      "altered perception"
+    ],
+    "articleType": "fiction"
+  },
+  {
     "slug": "threshold-02-the-closing-window",
     "filename": "threshold-02-the-closing-window.mdx",
     "title": "The Closing Window: A Translator Watches Language Shift",
@@ -4359,8 +6804,8 @@
       "creative obsolescence"
     ],
     "ogImage": "/images/og/threshold-02-the-closing-window.svg",
-    "heroImage": "/images/articles/threshold-02-the-closing-window.svg",
-    "thumbnail": "/images/articles/threshold-02-the-closing-window.svg",
+    "heroImage": "/images/multi-art/threshold-02-the-closing-window/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/threshold-02-the-closing-window/option-1-schnell.png",
     "readingTime": 4,
     "wordCount": 794,
     "horizon": "NY",
@@ -4481,8 +6926,8 @@
       "near future"
     ],
     "ogImage": "/images/og/threshold-01-the-last-diagnosis.svg",
-    "heroImage": "/images/articles/threshold-01-the-last-diagnosis.svg",
-    "thumbnail": "/images/articles/threshold-01-the-last-diagnosis.svg",
+    "heroImage": "/images/multi-art/threshold-01-the-last-diagnosis/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/threshold-01-the-last-diagnosis/option-1-schnell.png",
     "readingTime": 5,
     "wordCount": 854,
     "horizon": "NY",
@@ -5198,7 +7643,9 @@
       "AI search",
       "gamification"
     ],
-    "ogImage": "/images/og/nextdocssearch-complete-feature-and-setup-guide.svg",
+    "ogImage": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png",
+    "heroImage": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png",
+    "thumbnail": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png",
     "readingTime": 6,
     "wordCount": 1010,
     "polarity": "P1",

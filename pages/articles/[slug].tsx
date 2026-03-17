@@ -1143,6 +1143,15 @@ function calculateReadingTime(content: string): number {
   return Math.ceil(wordCount / wordsPerMinute);
 }
 
+function resolveExistingPublicImage(candidate: unknown): string | null {
+  if (typeof candidate !== 'string' || !candidate.startsWith('/')) {
+    return null;
+  }
+
+  const diskPath = path.join(process.cwd(), 'public', candidate.replace(/^\//, ''));
+  return fs.existsSync(diskPath) ? candidate : null;
+}
+
 interface ArticleSummary {
   slug: string;
   title: string;
@@ -1178,12 +1187,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       const filePath = path.join(articleFolderPath, filename);
       const fileContents = fs.readFileSync(filePath, 'utf8');
       const { data } = matter(fileContents);
+      const relatedSlug = filename.replace('.mdx', '');
+      const relatedImages = discoverArticleImages(relatedSlug);
       return {
-        slug: filename.replace('.mdx', ''),
+        slug: relatedSlug,
         title: data.title,
         description: data.description,
         date: data.date,
-        ogImage: data.ogImage
+        ogImage: resolveExistingPublicImage(data.ogImage) || relatedImages.ogImage || relatedImages.heroImage || undefined
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -1196,6 +1207,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }));
 
   const images = discoverArticleImages(slug);
+  const resolvedOgImage =
+    resolveExistingPublicImage(data.ogImage) ||
+    images.ogImage ||
+    images.heroImage ||
+    images.thumbnail ||
+    '';
 
   const videoPath = `/images/article-videos/${slug}.mp4`;
   const videoExists = fs.existsSync(path.join(process.cwd(), 'public', videoPath));
@@ -1207,7 +1224,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       author: Array.isArray(data.author) ? (data.author as string[]) : ([data.author] as string[]),
       description: data.description || '',
       keywords: data.keywords || [],
-      ogImage: data.ogImage || images.ogImage || '',
+      ogImage: resolvedOgImage,
       heroImage: images.heroImage,
       multiArtImages: images.multiArt,
       videoURL: data.videoURL || '',

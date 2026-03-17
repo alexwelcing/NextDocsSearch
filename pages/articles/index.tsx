@@ -6,6 +6,7 @@ import { GetStaticProps } from 'next'
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { discoverArticleImages } from '@/lib/article-images'
 import ArticleDiscovery from '@/components/ui/ArticleDiscovery'
 import CollectionShowcase from '@/components/ui/CollectionShowcase'
 import CircleNav from '@/components/ui/CircleNav'
@@ -468,14 +469,7 @@ export default function ArticlesIndex({
 }
 
 function resolveHeroImage(slug: string): string {
-  const extensions = ['.png', '.jpg', '.svg']
-  for (const ext of extensions) {
-    const imgPath = path.join(process.cwd(), 'public', 'images', 'articles', `${slug}${ext}`)
-    if (fs.existsSync(imgPath)) {
-      return `/images/articles/${slug}${ext}`
-    }
-  }
-  return ''
+  return discoverArticleImages(slug).heroImage || ''
 }
 
 export const getStaticProps: GetStaticProps = async () => {

@@ -605,9 +605,9 @@ async function main() {
   console.log('═'.repeat(60));
 
   // Validate environment
-  const falKey = process.env.FAL_KEY;
+  const falKey = process.env.FAL_API_KEY || process.env.FAL_KEY;
   console.log(`\n🔧 Environment:`);
-  console.log(`   FAL_KEY: ${falKey ? falKey.substring(0, 12) + '...' : '❌ NOT FOUND'}`);
+  console.log(`   FAL key: ${falKey ? falKey.substring(0, 12) + '...' : '❌ NOT FOUND'}`);
   console.log(`   Supabase: ${supabaseUrl ? '✅' : '❌'}`);
   // Reset failed models if requested
   if (argv.resetFailed) {
@@ -620,7 +620,7 @@ async function main() {
   }
 
   if (!falKey && !argv.dryRun) {
-    console.error('\n❌ FAL_KEY is required for generation');
+    console.error('\n❌ FAL_API_KEY or FAL_KEY is required for generation');
     process.exit(1);
   }
 

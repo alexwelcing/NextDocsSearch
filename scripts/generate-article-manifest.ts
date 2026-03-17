@@ -49,6 +49,15 @@ interface EnhancedArticleData {
   articleType: ArticleType;
 }
 
+function resolveExistingPublicImage(candidate: unknown): string | undefined {
+  if (typeof candidate !== 'string' || !candidate.startsWith('/')) {
+    return undefined;
+  }
+
+  const diskPath = path.join(process.cwd(), 'public', candidate.replace(/^\//, ''));
+  return fs.existsSync(diskPath) ? candidate : undefined;
+}
+
 // ── Inference helpers (copied from pages/api/articles-enhanced.ts) ──
 
 function inferHorizon(slug: string, content: string): TimeHorizon | undefined {
@@ -228,6 +237,7 @@ function main() {
       ? data.keywords.filter((k: unknown): k is string => typeof k === 'string')
       : [];
     const images = imageManifest[slug] || { heroImage: null, ogImage: null, thumbnail: null };
+    const frontmatterOgImage = resolveExistingPublicImage(data.ogImage);
 
     return {
       slug,
@@ -237,7 +247,7 @@ function main() {
       author: Array.isArray(data.author) ? data.author : [data.author || 'Unknown'],
       description: data.description || content.substring(0, 200).replace(/[#*_`]/g, '').trim() + '...',
       keywords,
-      ogImage: data.ogImage || images.heroImage || images.thumbnail || images.ogImage || undefined,
+      ogImage: frontmatterOgImage || images.heroImage || images.thumbnail || images.ogImage || undefined,
       heroImage: images.heroImage || images.thumbnail || undefined,
       thumbnail: images.thumbnail || images.heroImage || undefined,
       readingTime,

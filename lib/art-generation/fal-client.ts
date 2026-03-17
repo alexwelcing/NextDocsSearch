@@ -41,9 +41,9 @@ export class FalClient {
   private apiKey: string;
 
   constructor(apiKey?: string) {
-    this.apiKey = apiKey || process.env.FAL_KEY || '';
+    this.apiKey = apiKey || process.env.FAL_API_KEY || process.env.FAL_KEY || '';
     if (!this.apiKey) {
-      throw new Error('FAL_KEY is required');
+      throw new Error('FAL_API_KEY or FAL_KEY is required');
     }
   }
 

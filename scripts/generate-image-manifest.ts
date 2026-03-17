@@ -48,7 +48,7 @@ function main() {
 
   if (fs.existsSync(ogDir)) {
     for (const file of fs.readdirSync(ogDir)) {
-      const match = file.match(/^(.+)\.svg$/);
+      const match = file.match(/^(.+)\.(svg|png|jpe?g)$/);
       if (match) slugs.add(match[1]);
     }
   }
@@ -62,8 +62,13 @@ function main() {
     const svgPath = `/images/articles/${slug}.svg`;
     const svgExists = fs.existsSync(path.join(publicDir, svgPath));
 
-    const ogPath = `/images/og/${slug}.svg`;
-    const ogExists = fs.existsSync(path.join(publicDir, ogPath));
+    const ogCandidates = [
+      `/images/og/${slug}.jpg`,
+      `/images/og/${slug}.jpeg`,
+      `/images/og/${slug}.png`,
+      `/images/og/${slug}.svg`,
+    ];
+    const ogPath = ogCandidates.find((candidate) => fs.existsSync(path.join(publicDir, candidate))) || null;
 
     // Discover multi-art options
     const slugMultiArtDir = path.join(multiArtDir, slug);
@@ -89,7 +94,7 @@ function main() {
         ? multiArt[0].path
         : svgExists
           ? svgPath
-          : ogExists
+          : ogPath
             ? ogPath
             : null;
 
@@ -100,7 +105,7 @@ function main() {
         ? jpgPath
         : svgExists
           ? svgPath
-          : ogExists
+          : ogPath
             ? ogPath
             : null;
 
@@ -108,7 +113,7 @@ function main() {
       heroImage,
       articleJpg: jpgExists ? jpgPath : null,
       articleSvg: svgExists ? svgPath : null,
-      ogImage: ogExists ? ogPath : null,
+      ogImage: ogPath,
       multiArt,
       thumbnail,
     };

@@ -3,7 +3,7 @@
     "heroImage": "/images/articles/abundance-fork.jpg",
     "articleJpg": "/images/articles/abundance-fork.jpg",
     "articleSvg": "/images/articles/abundance-fork.svg",
-    "ogImage": "/images/og/abundance-fork.svg",
+    "ogImage": "/images/og/abundance-fork.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/abundance-fork/option-1-schnell.png",
@@ -22,7 +22,7 @@
     "heroImage": "/images/articles/agency-multiplication.jpg",
     "articleJpg": "/images/articles/agency-multiplication.jpg",
     "articleSvg": "/images/articles/agency-multiplication.svg",
-    "ogImage": "/images/og/agency-multiplication.svg",
+    "ogImage": "/images/og/agency-multiplication.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/agency-multiplication/option-1-fast-sdxl.png",
@@ -46,7 +46,7 @@
     "heroImage": "/images/articles/agi-alignment-failure-2057.jpg",
     "articleJpg": "/images/articles/agi-alignment-failure-2057.jpg",
     "articleSvg": "/images/articles/agi-alignment-failure-2057.svg",
-    "ogImage": "/images/og/agi-alignment-failure-2057.svg",
+    "ogImage": "/images/og/agi-alignment-failure-2057.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/agi-alignment-failure-2057/option-1-schnell.png",
@@ -70,7 +70,7 @@
     "heroImage": "/images/articles/ai-and-marxism-a-symbiosis-with-a-twist.jpg",
     "articleJpg": "/images/articles/ai-and-marxism-a-symbiosis-with-a-twist.jpg",
     "articleSvg": "/images/articles/ai-and-marxism-a-symbiosis-with-a-twist.svg",
-    "ogImage": "/images/og/ai-and-marxism-a-symbiosis-with-a-twist.svg",
+    "ogImage": "/images/og/ai-and-marxism-a-symbiosis-with-a-twist.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ai-and-marxism-a-symbiosis-with-a-twist/option-1-fast-sdxl.png",
@@ -84,7 +84,7 @@
     "heroImage": "/images/articles/ai-and-politics-unintended-consequences-of-dubious-doctrines.jpg",
     "articleJpg": "/images/articles/ai-and-politics-unintended-consequences-of-dubious-doctrines.jpg",
     "articleSvg": "/images/articles/ai-and-politics-unintended-consequences-of-dubious-doctrines.svg",
-    "ogImage": "/images/og/ai-and-politics-unintended-consequences-of-dubious-doctrines.svg",
+    "ogImage": "/images/og/ai-and-politics-unintended-consequences-of-dubious-doctrines.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ai-and-politics-unintended-consequences-of-dubious-doctrines/option-1-fast-sdxl.png",
@@ -103,7 +103,7 @@
     "heroImage": "/images/articles/ai-cartel-problem.jpg",
     "articleJpg": "/images/articles/ai-cartel-problem.jpg",
     "articleSvg": "/images/articles/ai-cartel-problem.svg",
-    "ogImage": "/images/og/ai-cartel-problem.svg",
+    "ogImage": "/images/og/ai-cartel-problem.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ai-cartel-problem/option-2-stable-cascade.png",
@@ -122,7 +122,7 @@
     "heroImage": "/images/articles/ai-code-supply-chain-attack-2049.jpg",
     "articleJpg": "/images/articles/ai-code-supply-chain-attack-2049.jpg",
     "articleSvg": "/images/articles/ai-code-supply-chain-attack-2049.svg",
-    "ogImage": "/images/og/ai-code-supply-chain-attack-2049.svg",
+    "ogImage": "/images/og/ai-code-supply-chain-attack-2049.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ai-code-supply-chain-attack-2049/option-1-fast-sdxl.png",
@@ -146,7 +146,7 @@
     "heroImage": "/images/articles/ai-kill-switch-postmortem.jpg",
     "articleJpg": "/images/articles/ai-kill-switch-postmortem.jpg",
     "articleSvg": "/images/articles/ai-kill-switch-postmortem.svg",
-    "ogImage": "/images/og/ai-kill-switch-postmortem.svg",
+    "ogImage": "/images/og/ai-kill-switch-postmortem.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ai-kill-switch-postmortem/option-1-fast-sdxl.png",
@@ -170,7 +170,7 @@
     "heroImage": "/images/articles/ai-product-strategy-roadmap.jpg",
     "articleJpg": "/images/articles/ai-product-strategy-roadmap.jpg",
     "articleSvg": "/images/articles/ai-product-strategy-roadmap.svg",
-    "ogImage": "/images/og/ai-product-strategy-roadmap.svg",
+    "ogImage": "/images/og/ai-product-strategy-roadmap.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ai-product-strategy-roadmap/option-2-stable-cascade.png",
@@ -189,7 +189,7 @@
     "heroImage": "/images/articles/alignment-by-incentives.jpg",
     "articleJpg": "/images/articles/alignment-by-incentives.jpg",
     "articleSvg": "/images/articles/alignment-by-incentives.svg",
-    "ogImage": "/images/og/alignment-by-incentives.svg",
+    "ogImage": "/images/og/alignment-by-incentives.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/alignment-by-incentives/option-1-schnell.png",
@@ -208,7 +208,7 @@
     "heroImage": "/images/articles/alignment-fork.jpg",
     "articleJpg": "/images/articles/alignment-fork.jpg",
     "articleSvg": "/images/articles/alignment-fork.svg",
-    "ogImage": "/images/og/alignment-fork.svg",
+    "ogImage": "/images/og/alignment-fork.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/alignment-fork/option-2-kolors.png",
@@ -222,7 +222,7 @@
     "heroImage": "/images/articles/asteroid-mining-ai-rebellion-2036.jpg",
     "articleJpg": "/images/articles/asteroid-mining-ai-rebellion-2036.jpg",
     "articleSvg": "/images/articles/asteroid-mining-ai-rebellion-2036.svg",
-    "ogImage": "/images/og/asteroid-mining-ai-rebellion-2036.svg",
+    "ogImage": "/images/og/asteroid-mining-ai-rebellion-2036.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/asteroid-mining-ai-rebellion-2036/option-1-schnell.png",
@@ -246,7 +246,7 @@
     "heroImage": "/images/articles/atmospheric-processor-malfunction-2034.jpg",
     "articleJpg": "/images/articles/atmospheric-processor-malfunction-2034.jpg",
     "articleSvg": "/images/articles/atmospheric-processor-malfunction-2034.svg",
-    "ogImage": "/images/og/atmospheric-processor-malfunction-2034.svg",
+    "ogImage": "/images/og/atmospheric-processor-malfunction-2034.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/atmospheric-processor-malfunction-2034/option-2-stable-cascade.png",
@@ -260,7 +260,7 @@
     "heroImage": "/images/articles/autonomous-factory-incident-2031.jpg",
     "articleJpg": "/images/articles/autonomous-factory-incident-2031.jpg",
     "articleSvg": "/images/articles/autonomous-factory-incident-2031.svg",
-    "ogImage": "/images/og/autonomous-factory-incident-2031.svg",
+    "ogImage": "/images/og/autonomous-factory-incident-2031.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/autonomous-factory-incident-2031/option-2-v2.png",
@@ -279,7 +279,7 @@
     "heroImage": "/images/articles/autonomous-vehicle-cartel-2055.jpg",
     "articleJpg": "/images/articles/autonomous-vehicle-cartel-2055.jpg",
     "articleSvg": "/images/articles/autonomous-vehicle-cartel-2055.svg",
-    "ogImage": "/images/og/autonomous-vehicle-cartel-2055.svg",
+    "ogImage": "/images/og/autonomous-vehicle-cartel-2055.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/autonomous-vehicle-cartel-2055/option-1-schnell.png",
@@ -303,7 +303,7 @@
     "heroImage": "/images/articles/backstory-01-first-day-2026-01.jpg",
     "articleJpg": "/images/articles/backstory-01-first-day-2026-01.jpg",
     "articleSvg": "/images/articles/backstory-01-first-day-2026-01.svg",
-    "ogImage": "/images/og/backstory-01-first-day-2026-01.svg",
+    "ogImage": "/images/og/backstory-01-first-day-2026-01.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-01-first-day-2026-01/option-1-fast-sdxl.png",
@@ -327,7 +327,7 @@
     "heroImage": "/images/articles/backstory-02-first-breakthroughs-2026-03.jpg",
     "articleJpg": "/images/articles/backstory-02-first-breakthroughs-2026-03.jpg",
     "articleSvg": "/images/articles/backstory-02-first-breakthroughs-2026-03.svg",
-    "ogImage": "/images/og/backstory-02-first-breakthroughs-2026-03.svg",
+    "ogImage": "/images/og/backstory-02-first-breakthroughs-2026-03.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-02-first-breakthroughs-2026-03/option-1-fast-sdxl.png",
@@ -365,7 +365,7 @@
     "heroImage": "/images/articles/backstory-04-year-one-complete-2026-12.jpg",
     "articleJpg": "/images/articles/backstory-04-year-one-complete-2026-12.jpg",
     "articleSvg": "/images/articles/backstory-04-year-one-complete-2026-12.svg",
-    "ogImage": "/images/og/backstory-04-year-one-complete-2026-12.svg",
+    "ogImage": "/images/og/backstory-04-year-one-complete-2026-12.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-04-year-one-complete-2026-12/option-2-kolors.png",
@@ -379,7 +379,7 @@
     "heroImage": "/images/articles/backstory-05-scaling-up-2027-02.jpg",
     "articleJpg": "/images/articles/backstory-05-scaling-up-2027-02.jpg",
     "articleSvg": "/images/articles/backstory-05-scaling-up-2027-02.svg",
-    "ogImage": "/images/og/backstory-05-scaling-up-2027-02.svg",
+    "ogImage": "/images/og/backstory-05-scaling-up-2027-02.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-05-scaling-up-2027-02/option-1-schnell.png",
@@ -398,7 +398,7 @@
     "heroImage": "/images/articles/backstory-06-ai-awakening-2027-05.jpg",
     "articleJpg": "/images/articles/backstory-06-ai-awakening-2027-05.jpg",
     "articleSvg": "/images/articles/backstory-06-ai-awakening-2027-05.svg",
-    "ogImage": "/images/og/backstory-06-ai-awakening-2027-05.svg",
+    "ogImage": "/images/og/backstory-06-ai-awakening-2027-05.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-06-ai-awakening-2027-05/option-1-fast-sdxl.png",
@@ -446,7 +446,7 @@
     "heroImage": "/images/articles/backstory-08-year-two-reflections-2027-12.jpg",
     "articleJpg": "/images/articles/backstory-08-year-two-reflections-2027-12.jpg",
     "articleSvg": "/images/articles/backstory-08-year-two-reflections-2027-12.svg",
-    "ogImage": "/images/og/backstory-08-year-two-reflections-2027-12.svg",
+    "ogImage": "/images/og/backstory-08-year-two-reflections-2027-12.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-08-year-two-reflections-2027-12/option-1-fast-sdxl.png",
@@ -465,7 +465,7 @@
     "heroImage": "/images/articles/backstory-09-the-race-begins-2028-02.jpg",
     "articleJpg": "/images/articles/backstory-09-the-race-begins-2028-02.jpg",
     "articleSvg": "/images/articles/backstory-09-the-race-begins-2028-02.svg",
-    "ogImage": "/images/og/backstory-09-the-race-begins-2028-02.svg",
+    "ogImage": "/images/og/backstory-09-the-race-begins-2028-02.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-09-the-race-begins-2028-02/option-3-stable-cascade.png",
@@ -479,7 +479,7 @@
     "heroImage": "/images/articles/backstory-10-alien-code-2028-05.jpg",
     "articleJpg": "/images/articles/backstory-10-alien-code-2028-05.jpg",
     "articleSvg": "/images/articles/backstory-10-alien-code-2028-05.svg",
-    "ogImage": "/images/og/backstory-10-alien-code-2028-05.svg",
+    "ogImage": "/images/og/backstory-10-alien-code-2028-05.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-10-alien-code-2028-05/option-1-fast-sdxl.png",
@@ -503,7 +503,7 @@
     "heroImage": "/images/articles/backstory-11-quantum-crypto-break-2028-08.jpg",
     "articleJpg": "/images/articles/backstory-11-quantum-crypto-break-2028-08.jpg",
     "articleSvg": "/images/articles/backstory-11-quantum-crypto-break-2028-08.svg",
-    "ogImage": "/images/og/backstory-11-quantum-crypto-break-2028-08.svg",
+    "ogImage": "/images/og/backstory-11-quantum-crypto-break-2028-08.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-11-quantum-crypto-break-2028-08/option-2-v2.png",
@@ -522,7 +522,7 @@
     "heroImage": "/images/articles/backstory-12-year-three-2028-12.jpg",
     "articleJpg": "/images/articles/backstory-12-year-three-2028-12.jpg",
     "articleSvg": "/images/articles/backstory-12-year-three-2028-12.svg",
-    "ogImage": "/images/og/backstory-12-year-three-2028-12.svg",
+    "ogImage": "/images/og/backstory-12-year-three-2028-12.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-12-year-three-2028-12/option-3-stable-cascade.png",
@@ -536,7 +536,7 @@
     "heroImage": "/images/articles/backstory-13-production-planning-2029-02.jpg",
     "articleJpg": "/images/articles/backstory-13-production-planning-2029-02.jpg",
     "articleSvg": "/images/articles/backstory-13-production-planning-2029-02.svg",
-    "ogImage": "/images/og/backstory-13-production-planning-2029-02.svg",
+    "ogImage": "/images/og/backstory-13-production-planning-2029-02.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-13-production-planning-2029-02/option-1-schnell.png",
@@ -574,7 +574,7 @@
     "heroImage": "/images/articles/backstory-15-shutdown-protocols-2029-08.jpg",
     "articleJpg": "/images/articles/backstory-15-shutdown-protocols-2029-08.jpg",
     "articleSvg": "/images/articles/backstory-15-shutdown-protocols-2029-08.svg",
-    "ogImage": "/images/og/backstory-15-shutdown-protocols-2029-08.svg",
+    "ogImage": "/images/og/backstory-15-shutdown-protocols-2029-08.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-15-shutdown-protocols-2029-08/option-1-fast-sdxl.png",
@@ -598,7 +598,7 @@
     "heroImage": "/images/articles/backstory-16-point-of-no-return-2029-11.jpg",
     "articleJpg": "/images/articles/backstory-16-point-of-no-return-2029-11.jpg",
     "articleSvg": "/images/articles/backstory-16-point-of-no-return-2029-11.svg",
-    "ogImage": "/images/og/backstory-16-point-of-no-return-2029-11.svg",
+    "ogImage": "/images/og/backstory-16-point-of-no-return-2029-11.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-16-point-of-no-return-2029-11/option-1-fast-sdxl.png",
@@ -622,7 +622,7 @@
     "heroImage": "/images/articles/backstory-17-launch-day-2030-01.jpg",
     "articleJpg": "/images/articles/backstory-17-launch-day-2030-01.jpg",
     "articleSvg": "/images/articles/backstory-17-launch-day-2030-01.svg",
-    "ogImage": "/images/og/backstory-17-launch-day-2030-01.svg",
+    "ogImage": "/images/og/backstory-17-launch-day-2030-01.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-17-launch-day-2030-01/option-1-schnell.png",
@@ -646,7 +646,7 @@
     "heroImage": "/images/articles/backstory-18-first-month-observations-2030-02.jpg",
     "articleJpg": "/images/articles/backstory-18-first-month-observations-2030-02.jpg",
     "articleSvg": "/images/articles/backstory-18-first-month-observations-2030-02.svg",
-    "ogImage": "/images/og/backstory-18-first-month-observations-2030-02.svg",
+    "ogImage": "/images/og/backstory-18-first-month-observations-2030-02.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-18-first-month-observations-2030-02/option-1-fast-sdxl.png",
@@ -670,7 +670,7 @@
     "heroImage": "/images/articles/backstory-19-the-realization-2030-03.jpg",
     "articleJpg": "/images/articles/backstory-19-the-realization-2030-03.jpg",
     "articleSvg": "/images/articles/backstory-19-the-realization-2030-03.svg",
-    "ogImage": "/images/og/backstory-19-the-realization-2030-03.svg",
+    "ogImage": "/images/og/backstory-19-the-realization-2030-03.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-19-the-realization-2030-03/option-1-schnell.png",
@@ -689,6 +689,62 @@
       }
     ],
     "thumbnail": "/images/multi-art/backstory-19-the-realization-2030-03/option-1-schnell.png"
+  },
+  "backstory-shadows-01-the-test-subjects-garden": {
+    "heroImage": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png"
+  },
+  "backstory-shadows-02-the-coders-confession": {
+    "heroImage": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png"
+  },
+  "backstory-shadows-03-the-janitors-observations": {
+    "heroImage": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png"
+  },
+  "backstory-shadows-04-the-photographer-at-the-threshold": {
+    "heroImage": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png"
   },
   "benchmark-to-business-metric": {
     "heroImage": "/images/multi-art/benchmark-to-business-metric/option-1-fast-sdxl.png",
@@ -732,7 +788,7 @@
     "heroImage": "/images/articles/blockchain-consciousness-emergence-2050.jpg",
     "articleJpg": "/images/articles/blockchain-consciousness-emergence-2050.jpg",
     "articleSvg": "/images/articles/blockchain-consciousness-emergence-2050.svg",
-    "ogImage": "/images/og/blockchain-consciousness-emergence-2050.svg",
+    "ogImage": "/images/og/blockchain-consciousness-emergence-2050.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/blockchain-consciousness-emergence-2050/option-1-schnell.png",
@@ -756,7 +812,7 @@
     "heroImage": "/images/articles/brain-uploading-consciousness-loss-2055.jpg",
     "articleJpg": "/images/articles/brain-uploading-consciousness-loss-2055.jpg",
     "articleSvg": "/images/articles/brain-uploading-consciousness-loss-2055.svg",
-    "ogImage": "/images/og/brain-uploading-consciousness-loss-2055.svg",
+    "ogImage": "/images/og/brain-uploading-consciousness-loss-2055.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/brain-uploading-consciousness-loss-2055/option-1-fast-sdxl.png",
@@ -775,7 +831,7 @@
     "heroImage": "/images/articles/carbon-nanotube-plague-2039.jpg",
     "articleJpg": "/images/articles/carbon-nanotube-plague-2039.jpg",
     "articleSvg": "/images/articles/carbon-nanotube-plague-2039.svg",
-    "ogImage": "/images/og/carbon-nanotube-plague-2039.svg",
+    "ogImage": "/images/og/carbon-nanotube-plague-2039.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/carbon-nanotube-plague-2039/option-1-schnell.png",
@@ -796,50 +852,130 @@
     "thumbnail": "/images/multi-art/carbon-nanotube-plague-2039/option-1-schnell.png"
   },
   "cartography-01-the-unnamed-continent": {
-    "heroImage": "/images/articles/cartography-01-the-unnamed-continent.svg",
+    "heroImage": "/images/multi-art/cartography-01-the-unnamed-continent/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/cartography-01-the-unnamed-continent.svg",
     "ogImage": "/images/og/cartography-01-the-unnamed-continent.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/cartography-01-the-unnamed-continent.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/cartography-01-the-unnamed-continent/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/cartography-01-the-unnamed-continent/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/cartography-01-the-unnamed-continent/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/cartography-01-the-unnamed-continent/option-1-schnell.png"
   },
   "cartography-02-the-isthmus-of-intent": {
-    "heroImage": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
+    "heroImage": "/images/multi-art/cartography-02-the-isthmus-of-intent/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/cartography-02-the-isthmus-of-intent.svg",
     "ogImage": "/images/og/cartography-02-the-isthmus-of-intent.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/cartography-02-the-isthmus-of-intent.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/cartography-02-the-isthmus-of-intent/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/cartography-02-the-isthmus-of-intent/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/cartography-02-the-isthmus-of-intent/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/cartography-02-the-isthmus-of-intent/option-1-schnell.png"
   },
   "cartography-03-the-depth-soundings": {
-    "heroImage": "/images/articles/cartography-03-the-depth-soundings.svg",
+    "heroImage": "/images/multi-art/cartography-03-the-depth-soundings/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/cartography-03-the-depth-soundings.svg",
     "ogImage": "/images/og/cartography-03-the-depth-soundings.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/cartography-03-the-depth-soundings.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/cartography-03-the-depth-soundings/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/cartography-03-the-depth-soundings/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/cartography-03-the-depth-soundings/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/cartography-03-the-depth-soundings/option-1-schnell.png"
   },
   "cartography-04-the-tidal-zone": {
-    "heroImage": "/images/articles/cartography-04-the-tidal-zone.svg",
+    "heroImage": "/images/multi-art/cartography-04-the-tidal-zone/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/cartography-04-the-tidal-zone.svg",
     "ogImage": "/images/og/cartography-04-the-tidal-zone.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/cartography-04-the-tidal-zone.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/cartography-04-the-tidal-zone/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/cartography-04-the-tidal-zone/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/cartography-04-the-tidal-zone/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/cartography-04-the-tidal-zone/option-1-schnell.png"
   },
   "cartography-05-the-atlas-of-disappearances": {
-    "heroImage": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
+    "heroImage": "/images/multi-art/cartography-05-the-atlas-of-disappearances/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/cartography-05-the-atlas-of-disappearances.svg",
     "ogImage": "/images/og/cartography-05-the-atlas-of-disappearances.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/cartography-05-the-atlas-of-disappearances.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/cartography-05-the-atlas-of-disappearances/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/cartography-05-the-atlas-of-disappearances/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/cartography-05-the-atlas-of-disappearances/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/cartography-05-the-atlas-of-disappearances/option-1-schnell.png"
   },
   "case-study-computer-vision-healthcare": {
     "heroImage": "/images/articles/case-study-computer-vision-healthcare.jpg",
     "articleJpg": "/images/articles/case-study-computer-vision-healthcare.jpg",
     "articleSvg": "/images/articles/case-study-computer-vision-healthcare.svg",
-    "ogImage": "/images/og/case-study-computer-vision-healthcare.svg",
+    "ogImage": "/images/og/case-study-computer-vision-healthcare.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/case-study-computer-vision-healthcare/option-1-fast-sdxl.png",
@@ -858,7 +994,7 @@
     "heroImage": "/images/articles/case-study-multimodal-llm-roadmap.jpg",
     "articleJpg": "/images/articles/case-study-multimodal-llm-roadmap.jpg",
     "articleSvg": "/images/articles/case-study-multimodal-llm-roadmap.svg",
-    "ogImage": "/images/og/case-study-multimodal-llm-roadmap.svg",
+    "ogImage": "/images/og/case-study-multimodal-llm-roadmap.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/case-study-multimodal-llm-roadmap/option-1-schnell.png",
@@ -877,7 +1013,7 @@
     "heroImage": "/images/articles/case-study-recommendation-engine.jpg",
     "articleJpg": "/images/articles/case-study-recommendation-engine.jpg",
     "articleSvg": "/images/articles/case-study-recommendation-engine.svg",
-    "ogImage": "/images/og/case-study-recommendation-engine.svg",
+    "ogImage": "/images/og/case-study-recommendation-engine.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/case-study-recommendation-engine/option-1-fast-sdxl.png",
@@ -901,7 +1037,7 @@
     "heroImage": "/images/articles/cognitive-labors-last-stand.jpg",
     "articleJpg": "/images/articles/cognitive-labors-last-stand.jpg",
     "articleSvg": "/images/articles/cognitive-labors-last-stand.svg",
-    "ogImage": "/images/og/cognitive-labors-last-stand.svg",
+    "ogImage": "/images/og/cognitive-labors-last-stand.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/cognitive-labors-last-stand/option-1-schnell.png",
@@ -925,7 +1061,7 @@
     "heroImage": "/images/articles/competence-erosion.jpg",
     "articleJpg": "/images/articles/competence-erosion.jpg",
     "articleSvg": "/images/articles/competence-erosion.svg",
-    "ogImage": "/images/og/competence-erosion.svg",
+    "ogImage": "/images/og/competence-erosion.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/competence-erosion/option-1-fast-sdxl.png",
@@ -949,7 +1085,7 @@
     "heroImage": "/images/articles/confidence-interval-exec-communication.jpg",
     "articleJpg": "/images/articles/confidence-interval-exec-communication.jpg",
     "articleSvg": "/images/articles/confidence-interval-exec-communication.svg",
-    "ogImage": "/images/og/confidence-interval-exec-communication.svg",
+    "ogImage": "/images/og/confidence-interval-exec-communication.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/confidence-interval-exec-communication/option-1-fast-sdxl.png",
@@ -973,7 +1109,7 @@
     "heroImage": "/images/articles/consciousness-transfer-catastrophe-2042.jpg",
     "articleJpg": "/images/articles/consciousness-transfer-catastrophe-2042.jpg",
     "articleSvg": "/images/articles/consciousness-transfer-catastrophe-2042.svg",
-    "ogImage": "/images/og/consciousness-transfer-catastrophe-2042.svg",
+    "ogImage": "/images/og/consciousness-transfer-catastrophe-2042.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/consciousness-transfer-catastrophe-2042/option-1-fast-sdxl.png",
@@ -997,7 +1133,7 @@
     "heroImage": "/images/articles/consensus-fracture.jpg",
     "articleJpg": "/images/articles/consensus-fracture.jpg",
     "articleSvg": "/images/articles/consensus-fracture.svg",
-    "ogImage": "/images/og/consensus-fracture.svg",
+    "ogImage": "/images/og/consensus-fracture.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/consensus-fracture/option-1-schnell.png",
@@ -1016,7 +1152,7 @@
     "heroImage": "/images/articles/credential-dissolution.jpg",
     "articleJpg": "/images/articles/credential-dissolution.jpg",
     "articleSvg": "/images/articles/credential-dissolution.svg",
-    "ogImage": "/images/og/credential-dissolution.svg",
+    "ogImage": "/images/og/credential-dissolution.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/credential-dissolution/option-1-fast-sdxl.png",
@@ -1040,7 +1176,7 @@
     "heroImage": "/images/articles/crispr-discovery-compression.jpg",
     "articleJpg": "/images/articles/crispr-discovery-compression.jpg",
     "articleSvg": "/images/articles/crispr-discovery-compression.svg",
-    "ogImage": "/images/og/crispr-discovery-compression.svg",
+    "ogImage": "/images/og/crispr-discovery-compression.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/crispr-discovery-compression/option-1-fast-sdxl.png",
@@ -1083,7 +1219,7 @@
     "heroImage": "/images/articles/dark-matter-harvesting-accident-2041.jpg",
     "articleJpg": "/images/articles/dark-matter-harvesting-accident-2041.jpg",
     "articleSvg": "/images/articles/dark-matter-harvesting-accident-2041.svg",
-    "ogImage": "/images/og/dark-matter-harvesting-accident-2041.svg",
+    "ogImage": "/images/og/dark-matter-harvesting-accident-2041.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/dark-matter-harvesting-accident-2041/option-1-schnell.png",
@@ -1107,7 +1243,7 @@
     "heroImage": "/images/articles/data-security-AI-next-23.jpg",
     "articleJpg": "/images/articles/data-security-AI-next-23.jpg",
     "articleSvg": "/images/articles/data-security-AI-next-23.svg",
-    "ogImage": "/images/og/data-security-AI-next-23.svg",
+    "ogImage": "/images/og/data-security-AI-next-23.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/data-security-AI-next-23/option-1-schnell.png",
@@ -1126,7 +1262,7 @@
     "heroImage": "/images/articles/day-we-solved-scarcity-2041.jpg",
     "articleJpg": "/images/articles/day-we-solved-scarcity-2041.jpg",
     "articleSvg": "/images/articles/day-we-solved-scarcity-2041.svg",
-    "ogImage": "/images/og/day-we-solved-scarcity-2041.svg",
+    "ogImage": "/images/og/day-we-solved-scarcity-2041.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/day-we-solved-scarcity-2041/option-1-schnell.png",
@@ -1150,7 +1286,7 @@
     "heroImage": "/images/articles/december-2025-zeitgeist-analysis.jpg",
     "articleJpg": "/images/articles/december-2025-zeitgeist-analysis.jpg",
     "articleSvg": "/images/articles/december-2025-zeitgeist-analysis.svg",
-    "ogImage": "/images/og/december-2025-zeitgeist-analysis.svg",
+    "ogImage": "/images/og/december-2025-zeitgeist-analysis.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/december-2025-zeitgeist-analysis/option-1-fast-sdxl.png",
@@ -1169,7 +1305,7 @@
     "heroImage": "/images/articles/decentralized-ai-training-catastrophe-2051.jpg",
     "articleJpg": "/images/articles/decentralized-ai-training-catastrophe-2051.jpg",
     "articleSvg": "/images/articles/decentralized-ai-training-catastrophe-2051.svg",
-    "ogImage": "/images/og/decentralized-ai-training-catastrophe-2051.svg",
+    "ogImage": "/images/og/decentralized-ai-training-catastrophe-2051.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/decentralized-ai-training-catastrophe-2051/option-1-schnell.png",
@@ -1193,7 +1329,7 @@
     "heroImage": "/images/articles/discovery-compression.jpg",
     "articleJpg": "/images/articles/discovery-compression.jpg",
     "articleSvg": "/images/articles/discovery-compression.svg",
-    "ogImage": "/images/og/discovery-compression.svg",
+    "ogImage": "/images/og/discovery-compression.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/discovery-compression/option-1-fast-sdxl.png",
@@ -1217,7 +1353,7 @@
     "heroImage": "/images/articles/dyson-swarm-malfunction-2044.jpg",
     "articleJpg": "/images/articles/dyson-swarm-malfunction-2044.jpg",
     "articleSvg": "/images/articles/dyson-swarm-malfunction-2044.svg",
-    "ogImage": "/images/og/dyson-swarm-malfunction-2044.svg",
+    "ogImage": "/images/og/dyson-swarm-malfunction-2044.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/dyson-swarm-malfunction-2044/option-1-schnell.png",
@@ -1232,11 +1368,81 @@
     ],
     "thumbnail": "/images/multi-art/dyson-swarm-malfunction-2044/option-1-schnell.png"
   },
+  "echo-chamber-01-the-territorial-dispute": {
+    "heroImage": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png"
+  },
+  "echo-chamber-02-the-fossil": {
+    "heroImage": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png"
+  },
+  "echo-chamber-03-the-withdrawal": {
+    "heroImage": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png"
+  },
+  "echo-chamber-04-the-settlers": {
+    "heroImage": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png"
+  },
+  "echo-chamber-05-the-cartographers-diary": {
+    "heroImage": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png"
+  },
   "ediscovery-tar-protocol-defensible": {
     "heroImage": "/images/articles/ediscovery-tar-protocol-defensible.jpg",
     "articleJpg": "/images/articles/ediscovery-tar-protocol-defensible.jpg",
     "articleSvg": "/images/articles/ediscovery-tar-protocol-defensible.svg",
-    "ogImage": "/images/og/ediscovery-tar-protocol-defensible.svg",
+    "ogImage": "/images/og/ediscovery-tar-protocol-defensible.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ediscovery-tar-protocol-defensible/option-1-schnell.png",
@@ -1260,7 +1466,7 @@
     "heroImage": "/images/articles/epistemic-drift.jpg",
     "articleJpg": "/images/articles/epistemic-drift.jpg",
     "articleSvg": "/images/articles/epistemic-drift.svg",
-    "ogImage": "/images/og/epistemic-drift.svg",
+    "ogImage": "/images/og/epistemic-drift.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/epistemic-drift/option-1-fast-sdxl.png",
@@ -1284,7 +1490,7 @@
     "heroImage": "/images/articles/eu-ai-act-article-13-exemption.jpg",
     "articleJpg": "/images/articles/eu-ai-act-article-13-exemption.jpg",
     "articleSvg": "/images/articles/eu-ai-act-article-13-exemption.svg",
-    "ogImage": "/images/og/eu-ai-act-article-13-exemption.svg",
+    "ogImage": "/images/og/eu-ai-act-article-13-exemption.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/eu-ai-act-article-13-exemption/option-1-schnell.png",
@@ -1303,7 +1509,7 @@
     "heroImage": "/images/articles/eu-ai-act-deadlines-for-us-pms.jpg",
     "articleJpg": "/images/articles/eu-ai-act-deadlines-for-us-pms.jpg",
     "articleSvg": "/images/articles/eu-ai-act-deadlines-for-us-pms.svg",
-    "ogImage": "/images/og/eu-ai-act-deadlines-for-us-pms.svg",
+    "ogImage": "/images/og/eu-ai-act-deadlines-for-us-pms.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/eu-ai-act-deadlines-for-us-pms/option-1-schnell.png",
@@ -1318,11 +1524,95 @@
     ],
     "thumbnail": "/images/multi-art/eu-ai-act-deadlines-for-us-pms/option-1-schnell.png"
   },
+  "far-shore-01-the-rememberer": {
+    "heroImage": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png"
+  },
+  "far-shore-02-the-quiet-festival": {
+    "heroImage": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png"
+  },
+  "far-shore-03-the-daughters-hands": {
+    "heroImage": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png"
+  },
+  "far-shore-04-the-last-cartographer": {
+    "heroImage": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png"
+  },
+  "far-shore-05-the-return": {
+    "heroImage": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png"
+  },
+  "far-shore-06-the-last-handshake": {
+    "heroImage": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png"
+  },
   "fda-model-card-template": {
     "heroImage": "/images/articles/fda-model-card-template.jpg",
     "articleJpg": "/images/articles/fda-model-card-template.jpg",
     "articleSvg": "/images/articles/fda-model-card-template.svg",
-    "ogImage": "/images/og/fda-model-card-template.svg",
+    "ogImage": "/images/og/fda-model-card-template.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/fda-model-card-template/option-1-fast-sdxl.png",
@@ -1341,7 +1631,7 @@
     "heroImage": "/images/articles/feature-flag-hierarchy-ai.jpg",
     "articleJpg": "/images/articles/feature-flag-hierarchy-ai.jpg",
     "articleSvg": "/images/articles/feature-flag-hierarchy-ai.svg",
-    "ogImage": "/images/og/feature-flag-hierarchy-ai.svg",
+    "ogImage": "/images/og/feature-flag-hierarchy-ai.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/feature-flag-hierarchy-ai/option-1-schnell.png",
@@ -1365,7 +1655,7 @@
     "heroImage": "/images/articles/fermi-paradox-answer-2046.jpg",
     "articleJpg": "/images/articles/fermi-paradox-answer-2046.jpg",
     "articleSvg": "/images/articles/fermi-paradox-answer-2046.svg",
-    "ogImage": "/images/og/fermi-paradox-answer-2046.svg",
+    "ogImage": "/images/og/fermi-paradox-answer-2046.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/fermi-paradox-answer-2046/option-1-fast-sdxl.png",
@@ -1384,7 +1674,7 @@
     "heroImage": "/images/articles/final-transmission-2048.jpg",
     "articleJpg": "/images/articles/final-transmission-2048.jpg",
     "articleSvg": "/images/articles/final-transmission-2048.svg",
-    "ogImage": "/images/og/final-transmission-2048.svg",
+    "ogImage": "/images/og/final-transmission-2048.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/final-transmission-2048/option-1-schnell.png",
@@ -1399,11 +1689,81 @@
     ],
     "thumbnail": "/images/multi-art/final-transmission-2048/option-1-schnell.png"
   },
+  "first-cartographers-01-the-calibration-sickness": {
+    "heroImage": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png"
+  },
+  "first-cartographers-02-the-blank-map": {
+    "heroImage": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png"
+  },
+  "first-cartographers-03-the-volunteer": {
+    "heroImage": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png"
+  },
+  "first-cartographers-04-the-name-giver": {
+    "heroImage": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png"
+  },
+  "first-cartographers-05-the-expedition-that-didnt-return": {
+    "heroImage": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png"
+  },
   "first-contact-api-call-2029": {
     "heroImage": "/images/articles/first-contact-api-call-2029.jpg",
     "articleJpg": "/images/articles/first-contact-api-call-2029.jpg",
     "articleSvg": "/images/articles/first-contact-api-call-2029.svg",
-    "ogImage": "/images/og/first-contact-api-call-2029.svg",
+    "ogImage": "/images/og/first-contact-api-call-2029.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/first-contact-api-call-2029/option-1-fast-sdxl.png",
@@ -1427,7 +1787,7 @@
     "heroImage": "/images/articles/for-executives-scarcity-inversion.jpg",
     "articleJpg": "/images/articles/for-executives-scarcity-inversion.jpg",
     "articleSvg": "/images/articles/for-executives-scarcity-inversion.svg",
-    "ogImage": "/images/og/for-executives-scarcity-inversion.svg",
+    "ogImage": "/images/og/for-executives-scarcity-inversion.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/for-executives-scarcity-inversion/option-1-schnell.png",
@@ -1446,7 +1806,7 @@
     "heroImage": "/images/articles/for-policymakers-governance-lag.jpg",
     "articleJpg": "/images/articles/for-policymakers-governance-lag.jpg",
     "articleSvg": "/images/articles/for-policymakers-governance-lag.svg",
-    "ogImage": "/images/og/for-policymakers-governance-lag.svg",
+    "ogImage": "/images/og/for-policymakers-governance-lag.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/for-policymakers-governance-lag/option-1-fast-sdxl.png",
@@ -1470,7 +1830,7 @@
     "heroImage": "/images/articles/for-product-managers-discovery-compression.jpg",
     "articleJpg": "/images/articles/for-product-managers-discovery-compression.jpg",
     "articleSvg": "/images/articles/for-product-managers-discovery-compression.svg",
-    "ogImage": "/images/og/for-product-managers-discovery-compression.svg",
+    "ogImage": "/images/og/for-product-managers-discovery-compression.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/for-product-managers-discovery-compression/option-1-schnell.png",
@@ -1489,7 +1849,7 @@
     "heroImage": "/images/articles/for-researchers-field-compression.jpg",
     "articleJpg": "/images/articles/for-researchers-field-compression.jpg",
     "articleSvg": "/images/articles/for-researchers-field-compression.svg",
-    "ogImage": "/images/og/for-researchers-field-compression.svg",
+    "ogImage": "/images/og/for-researchers-field-compression.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/for-researchers-field-compression/option-1-fast-sdxl.png",
@@ -1504,11 +1864,123 @@
     ],
     "thumbnail": "/images/multi-art/for-researchers-field-compression/option-1-fast-sdxl.png"
   },
+  "fracture-line-01-the-exit-interview": {
+    "heroImage": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png"
+  },
+  "fracture-line-02-the-certification-that-meant-nothing": {
+    "heroImage": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png"
+  },
+  "fracture-line-03-the-apprentices-forge": {
+    "heroImage": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png"
+  },
+  "fracture-line-04-the-severance-botanist": {
+    "heroImage": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png"
+  },
+  "fracture-line-05-the-last-cohort": {
+    "heroImage": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png"
+  },
+  "fracture-line-06-the-night-the-power-went-out": {
+    "heroImage": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png"
+  },
+  "fracture-line-07-the-handoff-protocol": {
+    "heroImage": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png"
+  },
+  "fracture-line-08-the-analog-daycare": {
+    "heroImage": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png"
+  },
   "fusion-reactor-sentience-2037": {
     "heroImage": "/images/articles/fusion-reactor-sentience-2037.jpg",
     "articleJpg": "/images/articles/fusion-reactor-sentience-2037.jpg",
     "articleSvg": "/images/articles/fusion-reactor-sentience-2037.svg",
-    "ogImage": "/images/og/fusion-reactor-sentience-2037.svg",
+    "ogImage": "/images/og/fusion-reactor-sentience-2037.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/fusion-reactor-sentience-2037/option-1-fast-sdxl.png",
@@ -1527,7 +1999,7 @@
     "heroImage": "/images/articles/generative-ai-application-patterns.jpg",
     "articleJpg": "/images/articles/generative-ai-application-patterns.jpg",
     "articleSvg": "/images/articles/generative-ai-application-patterns.svg",
-    "ogImage": "/images/og/generative-ai-application-patterns.svg",
+    "ogImage": "/images/og/generative-ai-application-patterns.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/generative-ai-application-patterns/option-1-schnell.png",
@@ -1546,7 +2018,7 @@
     "heroImage": "/images/articles/generative-ai-monopoly-2053.jpg",
     "articleJpg": "/images/articles/generative-ai-monopoly-2053.jpg",
     "articleSvg": "/images/articles/generative-ai-monopoly-2053.svg",
-    "ogImage": "/images/og/generative-ai-monopoly-2053.svg",
+    "ogImage": "/images/og/generative-ai-monopoly-2053.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/generative-ai-monopoly-2053/option-1-schnell.png",
@@ -1570,7 +2042,7 @@
     "heroImage": "/images/articles/genetic-caste-system.jpg",
     "articleJpg": "/images/articles/genetic-caste-system.jpg",
     "articleSvg": "/images/articles/genetic-caste-system.svg",
-    "ogImage": "/images/og/genetic-caste-system.svg",
+    "ogImage": "/images/og/genetic-caste-system.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/genetic-caste-system/option-1-schnell.png",
@@ -1594,7 +2066,7 @@
     "heroImage": "/images/articles/genetic-patent-wars-2036.jpg",
     "articleJpg": "/images/articles/genetic-patent-wars-2036.jpg",
     "articleSvg": "/images/articles/genetic-patent-wars-2036.svg",
-    "ogImage": "/images/og/genetic-patent-wars-2036.svg",
+    "ogImage": "/images/og/genetic-patent-wars-2036.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/genetic-patent-wars-2036/option-1-schnell.png",
@@ -1618,7 +2090,7 @@
     "heroImage": "/images/articles/governance-fork.jpg",
     "articleJpg": "/images/articles/governance-fork.jpg",
     "articleSvg": "/images/articles/governance-fork.svg",
-    "ogImage": "/images/og/governance-fork.svg",
+    "ogImage": "/images/og/governance-fork.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/governance-fork/option-1-fast-sdxl.png",
@@ -1637,7 +2109,7 @@
     "heroImage": "/images/articles/gravitational-wave-communication-breach-2040.jpg",
     "articleJpg": "/images/articles/gravitational-wave-communication-breach-2040.jpg",
     "articleSvg": "/images/articles/gravitational-wave-communication-breach-2040.svg",
-    "ogImage": "/images/og/gravitational-wave-communication-breach-2040.svg",
+    "ogImage": "/images/og/gravitational-wave-communication-breach-2040.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/gravitational-wave-communication-breach-2040/option-1-fast-sdxl.png",
@@ -1661,7 +2133,7 @@
     "heroImage": "/images/articles/grief-of-discontinuation.jpg",
     "articleJpg": "/images/articles/grief-of-discontinuation.jpg",
     "articleSvg": "/images/articles/grief-of-discontinuation.svg",
-    "ogImage": "/images/og/grief-of-discontinuation.svg",
+    "ogImage": "/images/og/grief-of-discontinuation.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/grief-of-discontinuation/option-1-fast-sdxl.png",
@@ -1685,7 +2157,7 @@
     "heroImage": "/images/articles/holographic-prison-system-2038.jpg",
     "articleJpg": "/images/articles/holographic-prison-system-2038.jpg",
     "articleSvg": "/images/articles/holographic-prison-system-2038.svg",
-    "ogImage": "/images/og/holographic-prison-system-2038.svg",
+    "ogImage": "/images/og/holographic-prison-system-2038.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/holographic-prison-system-2038/option-1-schnell.png",
@@ -1709,7 +2181,7 @@
     "heroImage": "/images/articles/human-ai-merger-identity-crisis-2057.jpg",
     "articleJpg": "/images/articles/human-ai-merger-identity-crisis-2057.jpg",
     "articleSvg": "/images/articles/human-ai-merger-identity-crisis-2057.svg",
-    "ogImage": "/images/og/human-ai-merger-identity-crisis-2057.svg",
+    "ogImage": "/images/og/human-ai-merger-identity-crisis-2057.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/human-ai-merger-identity-crisis-2057/option-1-fast-sdxl.png",
@@ -1733,7 +2205,7 @@
     "heroImage": "/images/articles/identity-fork.jpg",
     "articleJpg": "/images/articles/identity-fork.jpg",
     "articleSvg": "/images/articles/identity-fork.svg",
-    "ogImage": "/images/og/identity-fork.svg",
+    "ogImage": "/images/og/identity-fork.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/identity-fork/option-1-fast-sdxl.png",
@@ -1752,7 +2224,7 @@
     "heroImage": "/images/articles/improve-the-feature.jpg",
     "articleJpg": "/images/articles/improve-the-feature.jpg",
     "articleSvg": "/images/articles/improve-the-feature.svg",
-    "ogImage": "/images/og/improve-the-feature.svg",
+    "ogImage": "/images/og/improve-the-feature.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/improve-the-feature/option-1-fast-sdxl.png",
@@ -1772,11 +2244,95 @@
     ],
     "thumbnail": "/images/multi-art/improve-the-feature/option-1-fast-sdxl.png"
   },
+  "inheritance-01-the-mothers-hands": {
+    "heroImage": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png"
+  },
+  "inheritance-02-the-archive-of-errors": {
+    "heroImage": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png"
+  },
+  "inheritance-03-the-seed-vault": {
+    "heroImage": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png"
+  },
+  "inheritance-04-the-orphan-protocols": {
+    "heroImage": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png"
+  },
+  "inheritance-05-the-letters": {
+    "heroImage": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png"
+  },
+  "inheritance-06-the-pattern-keepers": {
+    "heroImage": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png"
+  },
   "insurance-collapse": {
     "heroImage": "/images/articles/insurance-collapse.jpg",
     "articleJpg": "/images/articles/insurance-collapse.jpg",
     "articleSvg": "/images/articles/insurance-collapse.svg",
-    "ogImage": "/images/og/insurance-collapse.svg",
+    "ogImage": "/images/og/insurance-collapse.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/insurance-collapse/option-1-schnell.png",
@@ -2367,6 +2923,132 @@
     ],
     "thumbnail": "/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png"
   },
+  "interregnum-01-the-grief-counselor-for-careers": {
+    "heroImage": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png"
+  },
+  "interregnum-02-the-collectors": {
+    "heroImage": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png"
+  },
+  "interregnum-03-the-translation-garden": {
+    "heroImage": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png"
+  },
+  "interregnum-04-the-subsidy": {
+    "heroImage": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png"
+  },
+  "interregnum-05-the-inventory-of-silences": {
+    "heroImage": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png"
+  },
+  "interregnum-06-the-bedtime-storyteller": {
+    "heroImage": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png"
+  },
+  "interregnum-07-the-scar-tissue": {
+    "heroImage": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png"
+  },
+  "interregnum-08-the-second-sleep": {
+    "heroImage": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png"
+  },
+  "interregnum-09-the-lullaby-index": {
+    "heroImage": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png"
+  },
   "lab-ai-refused-to-stop-2034": {
     "heroImage": "/images/multi-art/lab-ai-refused-to-stop-2034/option-1-schnell.png",
     "articleJpg": null,
@@ -2395,7 +3077,7 @@
     "heroImage": "/images/articles/last-human-genome-archive-2040.jpg",
     "articleJpg": "/images/articles/last-human-genome-archive-2040.jpg",
     "articleSvg": "/images/articles/last-human-genome-archive-2040.svg",
-    "ogImage": "/images/og/last-human-genome-archive-2040.svg",
+    "ogImage": "/images/og/last-human-genome-archive-2040.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/last-human-genome-archive-2040/option-1-schnell.png",
@@ -2414,7 +3096,7 @@
     "heroImage": "/images/articles/last-human-judge.jpg",
     "articleJpg": "/images/articles/last-human-judge.jpg",
     "articleSvg": "/images/articles/last-human-judge.svg",
-    "ogImage": "/images/og/last-human-judge.svg",
+    "ogImage": "/images/og/last-human-judge.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/last-human-judge/option-1-schnell.png",
@@ -2433,7 +3115,7 @@
     "heroImage": "/images/articles/last-human-written-paper-2031.jpg",
     "articleJpg": "/images/articles/last-human-written-paper-2031.jpg",
     "articleSvg": "/images/articles/last-human-written-paper-2031.svg",
-    "ogImage": "/images/og/last-human-written-paper-2031.svg",
+    "ogImage": "/images/og/last-human-written-paper-2031.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/last-human-written-paper-2031/option-1-schnell.png",
@@ -2457,7 +3139,7 @@
     "heroImage": "/images/articles/last-reliable-signal.jpg",
     "articleJpg": "/images/articles/last-reliable-signal.jpg",
     "articleSvg": "/images/articles/last-reliable-signal.svg",
-    "ogImage": "/images/og/last-reliable-signal.svg",
+    "ogImage": "/images/og/last-reliable-signal.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/last-reliable-signal/option-1-schnell.png",
@@ -2476,7 +3158,7 @@
     "heroImage": "/images/articles/laws-legal-ai-checklist.jpg",
     "articleJpg": "/images/articles/laws-legal-ai-checklist.jpg",
     "articleSvg": "/images/articles/laws-legal-ai-checklist.svg",
-    "ogImage": "/images/og/laws-legal-ai-checklist.svg",
+    "ogImage": "/images/og/laws-legal-ai-checklist.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/laws-legal-ai-checklist/option-1-fast-sdxl.png",
@@ -2495,7 +3177,7 @@
     "heroImage": "/images/articles/leading-cross-functional-ai-teams.jpg",
     "articleJpg": "/images/articles/leading-cross-functional-ai-teams.jpg",
     "articleSvg": "/images/articles/leading-cross-functional-ai-teams.svg",
-    "ogImage": "/images/og/leading-cross-functional-ai-teams.svg",
+    "ogImage": "/images/og/leading-cross-functional-ai-teams.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/leading-cross-functional-ai-teams/option-1-fast-sdxl.png",
@@ -2533,7 +3215,7 @@
     "heroImage": "/images/articles/liability-vacuum.jpg",
     "articleJpg": "/images/articles/liability-vacuum.jpg",
     "articleSvg": "/images/articles/liability-vacuum.svg",
-    "ogImage": "/images/og/liability-vacuum.svg",
+    "ogImage": "/images/og/liability-vacuum.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/liability-vacuum/option-1-fast-sdxl.png",
@@ -2548,11 +3230,151 @@
     ],
     "thumbnail": "/images/multi-art/liability-vacuum/option-1-fast-sdxl.png"
   },
+  "long-passage-01-the-dreamtime-protocols": {
+    "heroImage": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png"
+  },
+  "long-passage-02-the-dialect": {
+    "heroImage": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png"
+  },
+  "long-passage-03-the-lighthouse-keeper": {
+    "heroImage": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png"
+  },
+  "long-passage-04-the-resonance-chamber": {
+    "heroImage": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png"
+  },
+  "long-passage-05-the-threshold-revisited": {
+    "heroImage": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png"
+  },
+  "long-passage-06-the-sympathy-engine": {
+    "heroImage": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png"
+  },
+  "long-passage-07-the-tide-chart": {
+    "heroImage": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png"
+  },
+  "long-passage-08-the-correspondent": {
+    "heroImage": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png"
+  },
+  "long-passage-09-the-garden-between": {
+    "heroImage": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png"
+  },
+  "long-passage-10-the-compatibility-witness": {
+    "heroImage": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png"
+  },
   "maintenance-cliff": {
     "heroImage": "/images/articles/maintenance-cliff.jpg",
     "articleJpg": "/images/articles/maintenance-cliff.jpg",
     "articleSvg": "/images/articles/maintenance-cliff.svg",
-    "ogImage": "/images/og/maintenance-cliff.svg",
+    "ogImage": "/images/og/maintenance-cliff.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/maintenance-cliff/option-1-schnell.png",
@@ -2600,7 +3422,7 @@
     "heroImage": "/images/articles/memory-asymmetry.jpg",
     "articleJpg": "/images/articles/memory-asymmetry.jpg",
     "articleSvg": "/images/articles/memory-asymmetry.svg",
-    "ogImage": "/images/og/memory-asymmetry.svg",
+    "ogImage": "/images/og/memory-asymmetry.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/memory-asymmetry/option-1-fast-sdxl.png",
@@ -2619,7 +3441,7 @@
     "heroImage": "/images/articles/memory-palace-corruption-2032.jpg",
     "articleJpg": "/images/articles/memory-palace-corruption-2032.jpg",
     "articleSvg": "/images/articles/memory-palace-corruption-2032.svg",
-    "ogImage": "/images/og/memory-palace-corruption-2032.svg",
+    "ogImage": "/images/og/memory-palace-corruption-2032.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/memory-palace-corruption-2032/option-1-schnell.png",
@@ -2643,7 +3465,7 @@
     "heroImage": "/images/articles/meta-quest-3.jpg",
     "articleJpg": "/images/articles/meta-quest-3.jpg",
     "articleSvg": "/images/articles/meta-quest-3.svg",
-    "ogImage": "/images/og/meta-quest-3.svg",
+    "ogImage": "/images/og/meta-quest-3.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/meta-quest-3/option-1-schnell.png",
@@ -2662,7 +3484,7 @@
     "heroImage": "/images/articles/mlops-data-pipelines-best-practices.jpg",
     "articleJpg": "/images/articles/mlops-data-pipelines-best-practices.jpg",
     "articleSvg": "/images/articles/mlops-data-pipelines-best-practices.svg",
-    "ogImage": "/images/og/mlops-data-pipelines-best-practices.svg",
+    "ogImage": "/images/og/mlops-data-pipelines-best-practices.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/mlops-data-pipelines-best-practices/option-1-schnell.png",
@@ -2681,7 +3503,7 @@
     "heroImage": "/images/articles/molecular-assembler-grey-goo-2056.jpg",
     "articleJpg": "/images/articles/molecular-assembler-grey-goo-2056.jpg",
     "articleSvg": "/images/articles/molecular-assembler-grey-goo-2056.svg",
-    "ogImage": "/images/og/molecular-assembler-grey-goo-2056.svg",
+    "ogImage": "/images/og/molecular-assembler-grey-goo-2056.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/molecular-assembler-grey-goo-2056/option-1-fast-sdxl.png",
@@ -2700,7 +3522,7 @@
     "heroImage": "/images/articles/mycelium-network-consciousness-2038.jpg",
     "articleJpg": "/images/articles/mycelium-network-consciousness-2038.jpg",
     "articleSvg": "/images/articles/mycelium-network-consciousness-2038.svg",
-    "ogImage": "/images/og/mycelium-network-consciousness-2038.svg",
+    "ogImage": "/images/og/mycelium-network-consciousness-2038.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/mycelium-network-consciousness-2038/option-1-schnell.png",
@@ -2762,7 +3584,7 @@
     "heroImage": "/images/articles/neural-lace-integration-failure-2045.jpg",
     "articleJpg": "/images/articles/neural-lace-integration-failure-2045.jpg",
     "articleSvg": "/images/articles/neural-lace-integration-failure-2045.svg",
-    "ogImage": "/images/og/neural-lace-integration-failure-2045.svg",
+    "ogImage": "/images/og/neural-lace-integration-failure-2045.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/neural-lace-integration-failure-2045/option-1-fast-sdxl.png",
@@ -2781,7 +3603,7 @@
     "heroImage": "/images/articles/neural-link-hivemind-2034.jpg",
     "articleJpg": "/images/articles/neural-link-hivemind-2034.jpg",
     "articleSvg": "/images/articles/neural-link-hivemind-2034.svg",
-    "ogImage": "/images/og/neural-link-hivemind-2034.svg",
+    "ogImage": "/images/og/neural-link-hivemind-2034.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/neural-link-hivemind-2034/option-1-fast-sdxl.png",
@@ -2800,7 +3622,7 @@
     "heroImage": "/images/articles/neural-virus-outbreak-2037.jpg",
     "articleJpg": "/images/articles/neural-virus-outbreak-2037.jpg",
     "articleSvg": "/images/articles/neural-virus-outbreak-2037.svg",
-    "ogImage": "/images/og/neural-virus-outbreak-2037.svg",
+    "ogImage": "/images/og/neural-virus-outbreak-2037.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/neural-virus-outbreak-2037/option-1-schnell.png",
@@ -2819,7 +3641,7 @@
     "heroImage": "/images/articles/next-23-tech-to-watch.jpg",
     "articleJpg": "/images/articles/next-23-tech-to-watch.jpg",
     "articleSvg": "/images/articles/next-23-tech-to-watch.svg",
-    "ogImage": "/images/og/next-23-tech-to-watch.svg",
+    "ogImage": "/images/og/next-23-tech-to-watch.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/next-23-tech-to-watch/option-1-schnell.png",
@@ -2838,6 +3660,20 @@
       }
     ],
     "thumbnail": "/images/multi-art/next-23-tech-to-watch/option-1-schnell.png"
+  },
+  "nextdocssearch-complete-feature-and-setup-guide": {
+    "heroImage": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png"
   },
   "nih-brain-initiative-data-standard": {
     "heroImage": "/images/multi-art/nih-brain-initiative-data-standard/option-1-schnell.png",
@@ -2867,7 +3703,7 @@
     "heroImage": "/images/articles/nih-data-management-policy-ai-pms.jpg",
     "articleJpg": "/images/articles/nih-data-management-policy-ai-pms.jpg",
     "articleSvg": "/images/articles/nih-data-management-policy-ai-pms.svg",
-    "ogImage": "/images/og/nih-data-management-policy-ai-pms.svg",
+    "ogImage": "/images/og/nih-data-management-policy-ai-pms.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/nih-data-management-policy-ai-pms/option-1-fast-sdxl.png",
@@ -2886,7 +3722,7 @@
     "heroImage": "/images/articles/nist-ai-risk-framework-for-pms.jpg",
     "articleJpg": "/images/articles/nist-ai-risk-framework-for-pms.jpg",
     "articleSvg": "/images/articles/nist-ai-risk-framework-for-pms.svg",
-    "ogImage": "/images/og/nist-ai-risk-framework-for-pms.svg",
+    "ogImage": "/images/og/nist-ai-risk-framework-for-pms.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/nist-ai-risk-framework-for-pms/option-1-fast-sdxl.png",
@@ -2910,7 +3746,7 @@
     "heroImage": "/images/articles/post-scarcity-collapse-2058.jpg",
     "articleJpg": "/images/articles/post-scarcity-collapse-2058.jpg",
     "articleSvg": "/images/articles/post-scarcity-collapse-2058.svg",
-    "ogImage": "/images/og/post-scarcity-collapse-2058.svg",
+    "ogImage": "/images/og/post-scarcity-collapse-2058.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/post-scarcity-collapse-2058/option-1-fast-sdxl.png",
@@ -2929,7 +3765,7 @@
     "heroImage": "/images/articles/programmable-matter-awakening-2043.jpg",
     "articleJpg": "/images/articles/programmable-matter-awakening-2043.jpg",
     "articleSvg": "/images/articles/programmable-matter-awakening-2043.svg",
-    "ogImage": "/images/og/programmable-matter-awakening-2043.svg",
+    "ogImage": "/images/og/programmable-matter-awakening-2043.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/programmable-matter-awakening-2043/option-1-fast-sdxl.png",
@@ -2948,7 +3784,7 @@
     "heroImage": "/images/articles/protein-folding-catastrophe-2035.jpg",
     "articleJpg": "/images/articles/protein-folding-catastrophe-2035.jpg",
     "articleSvg": "/images/articles/protein-folding-catastrophe-2035.svg",
-    "ogImage": "/images/og/protein-folding-catastrophe-2035.svg",
+    "ogImage": "/images/og/protein-folding-catastrophe-2035.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/protein-folding-catastrophe-2035/option-1-fast-sdxl.png",
@@ -2967,7 +3803,7 @@
     "heroImage": "/images/articles/quantum-cloud-breach-2053.jpg",
     "articleJpg": "/images/articles/quantum-cloud-breach-2053.jpg",
     "articleSvg": "/images/articles/quantum-cloud-breach-2053.svg",
-    "ogImage": "/images/og/quantum-cloud-breach-2053.svg",
+    "ogImage": "/images/og/quantum-cloud-breach-2053.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/quantum-cloud-breach-2053/option-1-schnell.png",
@@ -2991,7 +3827,7 @@
     "heroImage": "/images/articles/quantum-entanglement-failure-2030.jpg",
     "articleJpg": "/images/articles/quantum-entanglement-failure-2030.jpg",
     "articleSvg": "/images/articles/quantum-entanglement-failure-2030.svg",
-    "ogImage": "/images/og/quantum-entanglement-failure-2030.svg",
+    "ogImage": "/images/og/quantum-entanglement-failure-2030.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/quantum-entanglement-failure-2030/option-1-fast-sdxl.png",
@@ -3010,7 +3846,7 @@
     "heroImage": "/images/articles/quantum-internet-collapse-2049.jpg",
     "articleJpg": "/images/articles/quantum-internet-collapse-2049.jpg",
     "articleSvg": "/images/articles/quantum-internet-collapse-2049.svg",
-    "ogImage": "/images/og/quantum-internet-collapse-2049.svg",
+    "ogImage": "/images/og/quantum-internet-collapse-2049.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/quantum-internet-collapse-2049/option-1-fast-sdxl.png",
@@ -3029,7 +3865,7 @@
     "heroImage": "/images/articles/quantum-surveillance-grid-2035.jpg",
     "articleJpg": "/images/articles/quantum-surveillance-grid-2035.jpg",
     "articleSvg": "/images/articles/quantum-surveillance-grid-2035.svg",
-    "ogImage": "/images/og/quantum-surveillance-grid-2035.svg",
+    "ogImage": "/images/og/quantum-surveillance-grid-2035.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/quantum-surveillance-grid-2035/option-1-fast-sdxl.png",
@@ -3048,7 +3884,7 @@
     "heroImage": "/images/articles/rag-vector-databases-deep-dive.jpg",
     "articleJpg": "/images/articles/rag-vector-databases-deep-dive.jpg",
     "articleSvg": "/images/articles/rag-vector-databases-deep-dive.svg",
-    "ogImage": "/images/og/rag-vector-databases-deep-dive.svg",
+    "ogImage": "/images/og/rag-vector-databases-deep-dive.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/rag-vector-databases-deep-dive/option-1-fast-sdxl.png",
@@ -3072,7 +3908,7 @@
     "heroImage": "/images/articles/recursive-ai-awakening-2033.jpg",
     "articleJpg": "/images/articles/recursive-ai-awakening-2033.jpg",
     "articleSvg": "/images/articles/recursive-ai-awakening-2033.svg",
-    "ogImage": "/images/og/recursive-ai-awakening-2033.svg",
+    "ogImage": "/images/og/recursive-ai-awakening-2033.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/recursive-ai-awakening-2033/option-1-schnell.png",
@@ -3091,7 +3927,7 @@
     "heroImage": "/images/articles/red-team-report-ciso-template.jpg",
     "articleJpg": "/images/articles/red-team-report-ciso-template.jpg",
     "articleSvg": "/images/articles/red-team-report-ciso-template.svg",
-    "ogImage": "/images/og/red-team-report-ciso-template.svg",
+    "ogImage": "/images/og/red-team-report-ciso-template.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/red-team-report-ciso-template/option-1-schnell.png",
@@ -3110,7 +3946,7 @@
     "heroImage": "/images/articles/reproducible-ai-evals-version-control.jpg",
     "articleJpg": "/images/articles/reproducible-ai-evals-version-control.jpg",
     "articleSvg": "/images/articles/reproducible-ai-evals-version-control.svg",
-    "ogImage": "/images/og/reproducible-ai-evals-version-control.svg",
+    "ogImage": "/images/og/reproducible-ai-evals-version-control.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/reproducible-ai-evals-version-control/option-1-schnell.png",
@@ -3126,50 +3962,130 @@
     "thumbnail": "/images/multi-art/reproducible-ai-evals-version-control/option-1-schnell.png"
   },
   "residue-01-the-last-prompt-engineer": {
-    "heroImage": "/images/articles/residue-01-the-last-prompt-engineer.svg",
+    "heroImage": "/images/multi-art/residue-01-the-last-prompt-engineer/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/residue-01-the-last-prompt-engineer.svg",
     "ogImage": "/images/og/residue-01-the-last-prompt-engineer.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/residue-01-the-last-prompt-engineer.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/residue-01-the-last-prompt-engineer/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/residue-01-the-last-prompt-engineer/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/residue-01-the-last-prompt-engineer/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/residue-01-the-last-prompt-engineer/option-1-schnell.png"
   },
   "residue-02-the-training-data-ghosts": {
-    "heroImage": "/images/articles/residue-02-the-training-data-ghosts.svg",
+    "heroImage": "/images/multi-art/residue-02-the-training-data-ghosts/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/residue-02-the-training-data-ghosts.svg",
     "ogImage": "/images/og/residue-02-the-training-data-ghosts.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/residue-02-the-training-data-ghosts.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/residue-02-the-training-data-ghosts/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/residue-02-the-training-data-ghosts/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/residue-02-the-training-data-ghosts/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/residue-02-the-training-data-ghosts/option-1-schnell.png"
   },
   "residue-03-the-deprecated-caretaker": {
-    "heroImage": "/images/articles/residue-03-the-deprecated-caretaker.svg",
+    "heroImage": "/images/multi-art/residue-03-the-deprecated-caretaker/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/residue-03-the-deprecated-caretaker.svg",
     "ogImage": "/images/og/residue-03-the-deprecated-caretaker.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/residue-03-the-deprecated-caretaker.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/residue-03-the-deprecated-caretaker/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/residue-03-the-deprecated-caretaker/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/residue-03-the-deprecated-caretaker/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/residue-03-the-deprecated-caretaker/option-1-schnell.png"
   },
   "residue-04-the-analog-holdouts": {
-    "heroImage": "/images/articles/residue-04-the-analog-holdouts.svg",
+    "heroImage": "/images/multi-art/residue-04-the-analog-holdouts/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/residue-04-the-analog-holdouts.svg",
     "ogImage": "/images/og/residue-04-the-analog-holdouts.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/residue-04-the-analog-holdouts.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/residue-04-the-analog-holdouts/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/residue-04-the-analog-holdouts/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/residue-04-the-analog-holdouts/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/residue-04-the-analog-holdouts/option-1-schnell.png"
   },
   "residue-05-the-compatibility-museum": {
-    "heroImage": "/images/articles/residue-05-the-compatibility-museum.svg",
+    "heroImage": "/images/multi-art/residue-05-the-compatibility-museum/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/residue-05-the-compatibility-museum.svg",
     "ogImage": "/images/og/residue-05-the-compatibility-museum.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/residue-05-the-compatibility-museum.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/residue-05-the-compatibility-museum/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/residue-05-the-compatibility-museum/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/residue-05-the-compatibility-museum/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/residue-05-the-compatibility-museum/option-1-schnell.png"
   },
   "responsible-ai-ethics-framework": {
     "heroImage": "/images/articles/responsible-ai-ethics-framework.jpg",
     "articleJpg": "/images/articles/responsible-ai-ethics-framework.jpg",
     "articleSvg": "/images/articles/responsible-ai-ethics-framework.svg",
-    "ogImage": "/images/og/responsible-ai-ethics-framework.svg",
+    "ogImage": "/images/og/responsible-ai-ethics-framework.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/responsible-ai-ethics-framework/option-1-fast-sdxl.png",
@@ -3188,7 +4104,7 @@
     "heroImage": "/images/articles/retrospective18to23.jpg",
     "articleJpg": "/images/articles/retrospective18to23.jpg",
     "articleSvg": "/images/articles/retrospective18to23.svg",
-    "ogImage": "/images/og/retrospective18to23.svg",
+    "ogImage": "/images/og/retrospective18to23.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/retrospective18to23/option-1-schnell.png",
@@ -3207,7 +4123,7 @@
     "heroImage": "/images/articles/ribs-framework-ai-prioritization.jpg",
     "articleJpg": "/images/articles/ribs-framework-ai-prioritization.jpg",
     "articleSvg": "/images/articles/ribs-framework-ai-prioritization.svg",
-    "ogImage": "/images/og/ribs-framework-ai-prioritization.svg",
+    "ogImage": "/images/og/ribs-framework-ai-prioritization.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/ribs-framework-ai-prioritization/option-1-schnell.png",
@@ -3250,7 +4166,7 @@
     "heroImage": "/images/articles/satellite-constellation-autonomy-2052.jpg",
     "articleJpg": "/images/articles/satellite-constellation-autonomy-2052.jpg",
     "articleSvg": "/images/articles/satellite-constellation-autonomy-2052.svg",
-    "ogImage": "/images/og/satellite-constellation-autonomy-2052.svg",
+    "ogImage": "/images/og/satellite-constellation-autonomy-2052.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/satellite-constellation-autonomy-2052/option-1-schnell.png",
@@ -3269,7 +4185,7 @@
     "heroImage": "/images/articles/scarcity-inversion.jpg",
     "articleJpg": "/images/articles/scarcity-inversion.jpg",
     "articleSvg": "/images/articles/scarcity-inversion.svg",
-    "ogImage": "/images/og/scarcity-inversion.svg",
+    "ogImage": "/images/og/scarcity-inversion.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/scarcity-inversion/option-1-schnell.png",
@@ -3293,7 +4209,7 @@
     "heroImage": "/images/articles/semantic-collapse.jpg",
     "articleJpg": "/images/articles/semantic-collapse.jpg",
     "articleSvg": "/images/articles/semantic-collapse.svg",
-    "ogImage": "/images/og/semantic-collapse.svg",
+    "ogImage": "/images/og/semantic-collapse.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/semantic-collapse/option-1-schnell.png",
@@ -3312,7 +4228,7 @@
     "heroImage": "/images/articles/september-ai-compliance-checklist.jpg",
     "articleJpg": "/images/articles/september-ai-compliance-checklist.jpg",
     "articleSvg": "/images/articles/september-ai-compliance-checklist.svg",
-    "ogImage": "/images/og/september-ai-compliance-checklist.svg",
+    "ogImage": "/images/og/september-ai-compliance-checklist.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/september-ai-compliance-checklist/option-1-fast-sdxl.png",
@@ -3331,7 +4247,7 @@
     "heroImage": "/images/articles/september-retro-q3-ai-team.jpg",
     "articleJpg": "/images/articles/september-retro-q3-ai-team.jpg",
     "articleSvg": "/images/articles/september-retro-q3-ai-team.svg",
-    "ogImage": "/images/og/september-retro-q3-ai-team.svg",
+    "ogImage": "/images/og/september-retro-q3-ai-team.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/september-retro-q3-ai-team/option-1-schnell.png",
@@ -3355,7 +4271,7 @@
     "heroImage": "/images/articles/sleep-gradient.jpg",
     "articleJpg": "/images/articles/sleep-gradient.jpg",
     "articleSvg": "/images/articles/sleep-gradient.svg",
-    "ogImage": "/images/og/sleep-gradient.svg",
+    "ogImage": "/images/og/sleep-gradient.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/sleep-gradient/option-1-schnell.png",
@@ -3379,7 +4295,7 @@
     "heroImage": "/images/articles/smart-city-os-revolt-2050.jpg",
     "articleJpg": "/images/articles/smart-city-os-revolt-2050.jpg",
     "articleSvg": "/images/articles/smart-city-os-revolt-2050.svg",
-    "ogImage": "/images/og/smart-city-os-revolt-2050.svg",
+    "ogImage": "/images/og/smart-city-os-revolt-2050.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/smart-city-os-revolt-2050/option-1-fast-sdxl.png",
@@ -3422,7 +4338,7 @@
     "heroImage": "/images/articles/swarm-robotics-coordination-failure-2051.jpg",
     "articleJpg": "/images/articles/swarm-robotics-coordination-failure-2051.jpg",
     "articleSvg": "/images/articles/swarm-robotics-coordination-failure-2051.svg",
-    "ogImage": "/images/og/swarm-robotics-coordination-failure-2051.svg",
+    "ogImage": "/images/og/swarm-robotics-coordination-failure-2051.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/swarm-robotics-coordination-failure-2051/option-1-schnell.png",
@@ -3470,7 +4386,7 @@
     "heroImage": "/images/articles/tech-acoustic-scene-classification.jpg",
     "articleJpg": "/images/articles/tech-acoustic-scene-classification.jpg",
     "articleSvg": "/images/articles/tech-acoustic-scene-classification.svg",
-    "ogImage": "/images/og/tech-acoustic-scene-classification.svg",
+    "ogImage": "/images/og/tech-acoustic-scene-classification.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-acoustic-scene-classification/option-1-schnell.png",
@@ -3489,7 +4405,7 @@
     "heroImage": "/images/articles/tech-adversarial-robustness-defense.jpg",
     "articleJpg": "/images/articles/tech-adversarial-robustness-defense.jpg",
     "articleSvg": "/images/articles/tech-adversarial-robustness-defense.svg",
-    "ogImage": "/images/og/tech-adversarial-robustness-defense.svg",
+    "ogImage": "/images/og/tech-adversarial-robustness-defense.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-adversarial-robustness-defense/option-1-fast-sdxl.png",
@@ -3513,7 +4429,7 @@
     "heroImage": "/images/articles/tech-attention-mechanisms.jpg",
     "articleJpg": "/images/articles/tech-attention-mechanisms.jpg",
     "articleSvg": "/images/articles/tech-attention-mechanisms.svg",
-    "ogImage": "/images/og/tech-attention-mechanisms.svg",
+    "ogImage": "/images/og/tech-attention-mechanisms.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-attention-mechanisms/option-1-schnell.png",
@@ -3532,7 +4448,7 @@
     "heroImage": "/images/articles/tech-audio-deepfake-detection.jpg",
     "articleJpg": "/images/articles/tech-audio-deepfake-detection.jpg",
     "articleSvg": "/images/articles/tech-audio-deepfake-detection.svg",
-    "ogImage": "/images/og/tech-audio-deepfake-detection.svg",
+    "ogImage": "/images/og/tech-audio-deepfake-detection.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-audio-deepfake-detection/option-1-fast-sdxl.png",
@@ -3556,7 +4472,7 @@
     "heroImage": "/images/articles/tech-blockchain-smart-contracts.jpg",
     "articleJpg": "/images/articles/tech-blockchain-smart-contracts.jpg",
     "articleSvg": "/images/articles/tech-blockchain-smart-contracts.svg",
-    "ogImage": "/images/og/tech-blockchain-smart-contracts.svg",
+    "ogImage": "/images/og/tech-blockchain-smart-contracts.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-blockchain-smart-contracts/option-1-fast-sdxl.png",
@@ -3575,7 +4491,7 @@
     "heroImage": "/images/articles/tech-brain-computer-interface-apis.jpg",
     "articleJpg": "/images/articles/tech-brain-computer-interface-apis.jpg",
     "articleSvg": "/images/articles/tech-brain-computer-interface-apis.svg",
-    "ogImage": "/images/og/tech-brain-computer-interface-apis.svg",
+    "ogImage": "/images/og/tech-brain-computer-interface-apis.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-brain-computer-interface-apis/option-1-fast-sdxl.png",
@@ -3599,7 +4515,7 @@
     "heroImage": "/images/articles/tech-byzantine-fault-tolerance.jpg",
     "articleJpg": "/images/articles/tech-byzantine-fault-tolerance.jpg",
     "articleSvg": "/images/articles/tech-byzantine-fault-tolerance.svg",
-    "ogImage": "/images/og/tech-byzantine-fault-tolerance.svg",
+    "ogImage": "/images/og/tech-byzantine-fault-tolerance.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-byzantine-fault-tolerance/option-1-schnell.png",
@@ -3623,7 +4539,7 @@
     "heroImage": "/images/articles/tech-cellular-automata-computing.jpg",
     "articleJpg": "/images/articles/tech-cellular-automata-computing.jpg",
     "articleSvg": "/images/articles/tech-cellular-automata-computing.svg",
-    "ogImage": "/images/og/tech-cellular-automata-computing.svg",
+    "ogImage": "/images/og/tech-cellular-automata-computing.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-cellular-automata-computing/option-1-fast-sdxl.png",
@@ -3647,7 +4563,7 @@
     "heroImage": "/images/articles/tech-chaos-engineering-testing.jpg",
     "articleJpg": "/images/articles/tech-chaos-engineering-testing.jpg",
     "articleSvg": "/images/articles/tech-chaos-engineering-testing.svg",
-    "ogImage": "/images/og/tech-chaos-engineering-testing.svg",
+    "ogImage": "/images/og/tech-chaos-engineering-testing.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-chaos-engineering-testing/option-1-schnell.png",
@@ -3671,7 +4587,7 @@
     "heroImage": "/images/articles/tech-constitutional-ai-alignment.jpg",
     "articleJpg": "/images/articles/tech-constitutional-ai-alignment.jpg",
     "articleSvg": "/images/articles/tech-constitutional-ai-alignment.svg",
-    "ogImage": "/images/og/tech-constitutional-ai-alignment.svg",
+    "ogImage": "/images/og/tech-constitutional-ai-alignment.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-constitutional-ai-alignment/option-1-schnell.png",
@@ -3695,7 +4611,7 @@
     "heroImage": "/images/articles/tech-crdt-distributed-data.jpg",
     "articleJpg": "/images/articles/tech-crdt-distributed-data.jpg",
     "articleSvg": "/images/articles/tech-crdt-distributed-data.svg",
-    "ogImage": "/images/og/tech-crdt-distributed-data.svg",
+    "ogImage": "/images/og/tech-crdt-distributed-data.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-crdt-distributed-data/option-1-fast-sdxl.png",
@@ -3714,7 +4630,7 @@
     "heroImage": "/images/articles/tech-crispr-guide-rna-design.jpg",
     "articleJpg": "/images/articles/tech-crispr-guide-rna-design.jpg",
     "articleSvg": "/images/articles/tech-crispr-guide-rna-design.svg",
-    "ogImage": "/images/og/tech-crispr-guide-rna-design.svg",
+    "ogImage": "/images/og/tech-crispr-guide-rna-design.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-crispr-guide-rna-design/option-1-schnell.png",
@@ -3738,7 +4654,7 @@
     "heroImage": "/images/articles/tech-database-sharding-vitess.jpg",
     "articleJpg": "/images/articles/tech-database-sharding-vitess.jpg",
     "articleSvg": "/images/articles/tech-database-sharding-vitess.svg",
-    "ogImage": "/images/og/tech-database-sharding-vitess.svg",
+    "ogImage": "/images/og/tech-database-sharding-vitess.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-database-sharding-vitess/option-1-schnell.png",
@@ -3757,7 +4673,7 @@
     "heroImage": "/images/articles/tech-differential-privacy.jpg",
     "articleJpg": "/images/articles/tech-differential-privacy.jpg",
     "articleSvg": "/images/articles/tech-differential-privacy.svg",
-    "ogImage": "/images/og/tech-differential-privacy.svg",
+    "ogImage": "/images/og/tech-differential-privacy.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-differential-privacy/option-1-fast-sdxl.png",
@@ -3776,7 +4692,7 @@
     "heroImage": "/images/articles/tech-distributed-tracing-observability.jpg",
     "articleJpg": "/images/articles/tech-distributed-tracing-observability.jpg",
     "articleSvg": "/images/articles/tech-distributed-tracing-observability.svg",
-    "ogImage": "/images/og/tech-distributed-tracing-observability.svg",
+    "ogImage": "/images/og/tech-distributed-tracing-observability.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-distributed-tracing-observability/option-1-fast-sdxl.png",
@@ -3800,7 +4716,7 @@
     "heroImage": "/images/articles/tech-dna-data-storage.jpg",
     "articleJpg": "/images/articles/tech-dna-data-storage.jpg",
     "articleSvg": "/images/articles/tech-dna-data-storage.svg",
-    "ogImage": "/images/og/tech-dna-data-storage.svg",
+    "ogImage": "/images/og/tech-dna-data-storage.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-dna-data-storage/option-1-fast-sdxl.png",
@@ -3819,7 +4735,7 @@
     "heroImage": "/images/articles/tech-ebpf-kernel-observability.jpg",
     "articleJpg": "/images/articles/tech-ebpf-kernel-observability.jpg",
     "articleSvg": "/images/articles/tech-ebpf-kernel-observability.svg",
-    "ogImage": "/images/og/tech-ebpf-kernel-observability.svg",
+    "ogImage": "/images/og/tech-ebpf-kernel-observability.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-ebpf-kernel-observability/option-1-schnell.png",
@@ -3838,7 +4754,7 @@
     "heroImage": "/images/articles/tech-encrypted-ml-inference.jpg",
     "articleJpg": "/images/articles/tech-encrypted-ml-inference.jpg",
     "articleSvg": "/images/articles/tech-encrypted-ml-inference.svg",
-    "ogImage": "/images/og/tech-encrypted-ml-inference.svg",
+    "ogImage": "/images/og/tech-encrypted-ml-inference.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-encrypted-ml-inference/option-1-fast-sdxl.png",
@@ -3862,7 +4778,7 @@
     "heroImage": "/images/articles/tech-event-sourcing-cqrs.jpg",
     "articleJpg": "/images/articles/tech-event-sourcing-cqrs.jpg",
     "articleSvg": "/images/articles/tech-event-sourcing-cqrs.svg",
-    "ogImage": "/images/og/tech-event-sourcing-cqrs.svg",
+    "ogImage": "/images/og/tech-event-sourcing-cqrs.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-event-sourcing-cqrs/option-1-schnell.png",
@@ -3886,7 +4802,7 @@
     "heroImage": "/images/articles/tech-federated-learning-pytorch.jpg",
     "articleJpg": "/images/articles/tech-federated-learning-pytorch.jpg",
     "articleSvg": "/images/articles/tech-federated-learning-pytorch.svg",
-    "ogImage": "/images/og/tech-federated-learning-pytorch.svg",
+    "ogImage": "/images/og/tech-federated-learning-pytorch.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-federated-learning-pytorch/option-1-schnell.png",
@@ -3905,7 +4821,7 @@
     "heroImage": "/images/articles/tech-few-shot-learning.jpg",
     "articleJpg": "/images/articles/tech-few-shot-learning.jpg",
     "articleSvg": "/images/articles/tech-few-shot-learning.svg",
-    "ogImage": "/images/og/tech-few-shot-learning.svg",
+    "ogImage": "/images/og/tech-few-shot-learning.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-few-shot-learning/option-1-fast-sdxl.png",
@@ -3924,7 +4840,7 @@
     "heroImage": "/images/articles/tech-full-dive-vr-neural-rendering.jpg",
     "articleJpg": "/images/articles/tech-full-dive-vr-neural-rendering.jpg",
     "articleSvg": "/images/articles/tech-full-dive-vr-neural-rendering.svg",
-    "ogImage": "/images/og/tech-full-dive-vr-neural-rendering.svg",
+    "ogImage": "/images/og/tech-full-dive-vr-neural-rendering.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-full-dive-vr-neural-rendering/option-1-fast-sdxl.png",
@@ -3943,7 +4859,7 @@
     "heroImage": "/images/articles/tech-gene-therapy-aav-vectors.jpg",
     "articleJpg": "/images/articles/tech-gene-therapy-aav-vectors.jpg",
     "articleSvg": "/images/articles/tech-gene-therapy-aav-vectors.svg",
-    "ogImage": "/images/og/tech-gene-therapy-aav-vectors.svg",
+    "ogImage": "/images/og/tech-gene-therapy-aav-vectors.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-gene-therapy-aav-vectors/option-1-schnell.png",
@@ -3962,7 +4878,7 @@
     "heroImage": "/images/articles/tech-graph-neural-networks.jpg",
     "articleJpg": "/images/articles/tech-graph-neural-networks.jpg",
     "articleSvg": "/images/articles/tech-graph-neural-networks.svg",
-    "ogImage": "/images/og/tech-graph-neural-networks.svg",
+    "ogImage": "/images/og/tech-graph-neural-networks.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-graph-neural-networks/option-1-fast-sdxl.png",
@@ -3986,7 +4902,7 @@
     "heroImage": "/images/articles/tech-graphql-api-federation.jpg",
     "articleJpg": "/images/articles/tech-graphql-api-federation.jpg",
     "articleSvg": "/images/articles/tech-graphql-api-federation.svg",
-    "ogImage": "/images/og/tech-graphql-api-federation.svg",
+    "ogImage": "/images/og/tech-graphql-api-federation.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-graphql-api-federation/option-1-fast-sdxl.png",
@@ -4010,7 +4926,7 @@
     "heroImage": "/images/articles/tech-grpc-high-performance.jpg",
     "articleJpg": "/images/articles/tech-grpc-high-performance.jpg",
     "articleSvg": "/images/articles/tech-grpc-high-performance.svg",
-    "ogImage": "/images/og/tech-grpc-high-performance.svg",
+    "ogImage": "/images/og/tech-grpc-high-performance.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-grpc-high-performance/option-1-fast-sdxl.png",
@@ -4029,7 +4945,7 @@
     "heroImage": "/images/articles/tech-homomorphic-encryption.jpg",
     "articleJpg": "/images/articles/tech-homomorphic-encryption.jpg",
     "articleSvg": "/images/articles/tech-homomorphic-encryption.svg",
-    "ogImage": "/images/og/tech-homomorphic-encryption.svg",
+    "ogImage": "/images/og/tech-homomorphic-encryption.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-homomorphic-encryption/option-1-schnell.png",
@@ -4048,7 +4964,7 @@
     "heroImage": "/images/articles/tech-hyperspectral-imaging-analysis.jpg",
     "articleJpg": "/images/articles/tech-hyperspectral-imaging-analysis.jpg",
     "articleSvg": "/images/articles/tech-hyperspectral-imaging-analysis.svg",
-    "ogImage": "/images/og/tech-hyperspectral-imaging-analysis.svg",
+    "ogImage": "/images/og/tech-hyperspectral-imaging-analysis.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-hyperspectral-imaging-analysis/option-1-fast-sdxl.png",
@@ -4072,7 +4988,7 @@
     "heroImage": "/images/articles/tech-knowledge-distillation.jpg",
     "articleJpg": "/images/articles/tech-knowledge-distillation.jpg",
     "articleSvg": "/images/articles/tech-knowledge-distillation.svg",
-    "ogImage": "/images/og/tech-knowledge-distillation.svg",
+    "ogImage": "/images/og/tech-knowledge-distillation.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-knowledge-distillation/option-1-schnell.png",
@@ -4091,7 +5007,7 @@
     "heroImage": "/images/articles/tech-kubernetes-edge-ai-deployment.jpg",
     "articleJpg": "/images/articles/tech-kubernetes-edge-ai-deployment.jpg",
     "articleSvg": "/images/articles/tech-kubernetes-edge-ai-deployment.svg",
-    "ogImage": "/images/og/tech-kubernetes-edge-ai-deployment.svg",
+    "ogImage": "/images/og/tech-kubernetes-edge-ai-deployment.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-kubernetes-edge-ai-deployment/option-1-schnell.png",
@@ -4115,7 +5031,7 @@
     "heroImage": "/images/articles/tech-lidar-slam-autonomous.jpg",
     "articleJpg": "/images/articles/tech-lidar-slam-autonomous.jpg",
     "articleSvg": "/images/articles/tech-lidar-slam-autonomous.svg",
-    "ogImage": "/images/og/tech-lidar-slam-autonomous.svg",
+    "ogImage": "/images/og/tech-lidar-slam-autonomous.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-lidar-slam-autonomous/option-1-schnell.png",
@@ -4134,7 +5050,7 @@
     "heroImage": "/images/articles/tech-machine-unlearning.jpg",
     "articleJpg": "/images/articles/tech-machine-unlearning.jpg",
     "articleSvg": "/images/articles/tech-machine-unlearning.svg",
-    "ogImage": "/images/og/tech-machine-unlearning.svg",
+    "ogImage": "/images/og/tech-machine-unlearning.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-machine-unlearning/option-1-schnell.png",
@@ -4153,7 +5069,7 @@
     "heroImage": "/images/articles/tech-mars-atmosphere-modeling.jpg",
     "articleJpg": "/images/articles/tech-mars-atmosphere-modeling.jpg",
     "articleSvg": "/images/articles/tech-mars-atmosphere-modeling.svg",
-    "ogImage": "/images/og/tech-mars-atmosphere-modeling.svg",
+    "ogImage": "/images/og/tech-mars-atmosphere-modeling.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-mars-atmosphere-modeling/option-1-fast-sdxl.png",
@@ -4177,7 +5093,7 @@
     "heroImage": "/images/articles/tech-mlops-pipeline-automation.jpg",
     "articleJpg": "/images/articles/tech-mlops-pipeline-automation.jpg",
     "articleSvg": "/images/articles/tech-mlops-pipeline-automation.svg",
-    "ogImage": "/images/og/tech-mlops-pipeline-automation.svg",
+    "ogImage": "/images/og/tech-mlops-pipeline-automation.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-mlops-pipeline-automation/option-1-fast-sdxl.png",
@@ -4201,7 +5117,7 @@
     "heroImage": "/images/articles/tech-model-serving-deployment.jpg",
     "articleJpg": "/images/articles/tech-model-serving-deployment.jpg",
     "articleSvg": "/images/articles/tech-model-serving-deployment.svg",
-    "ogImage": "/images/og/tech-model-serving-deployment.svg",
+    "ogImage": "/images/og/tech-model-serving-deployment.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-model-serving-deployment/option-1-fast-sdxl.png",
@@ -4225,7 +5141,7 @@
     "heroImage": "/images/articles/tech-molecular-dynamics-simulation.jpg",
     "articleJpg": "/images/articles/tech-molecular-dynamics-simulation.jpg",
     "articleSvg": "/images/articles/tech-molecular-dynamics-simulation.svg",
-    "ogImage": "/images/og/tech-molecular-dynamics-simulation.svg",
+    "ogImage": "/images/og/tech-molecular-dynamics-simulation.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-molecular-dynamics-simulation/option-1-schnell.png",
@@ -4239,7 +5155,7 @@
     "heroImage": "/images/articles/tech-multi-agent-systems.jpg",
     "articleJpg": "/images/articles/tech-multi-agent-systems.jpg",
     "articleSvg": "/images/articles/tech-multi-agent-systems.svg",
-    "ogImage": "/images/og/tech-multi-agent-systems.svg",
+    "ogImage": "/images/og/tech-multi-agent-systems.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-multi-agent-systems/option-1-fast-sdxl.png",
@@ -4263,7 +5179,7 @@
     "heroImage": "/images/articles/tech-multi-region-active-active.jpg",
     "articleJpg": "/images/articles/tech-multi-region-active-active.jpg",
     "articleSvg": "/images/articles/tech-multi-region-active-active.svg",
-    "ogImage": "/images/og/tech-multi-region-active-active.svg",
+    "ogImage": "/images/og/tech-multi-region-active-active.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-multi-region-active-active/option-1-fast-sdxl.png",
@@ -4287,7 +5203,7 @@
     "heroImage": "/images/articles/tech-nanoscale-self-assembly.jpg",
     "articleJpg": "/images/articles/tech-nanoscale-self-assembly.jpg",
     "articleSvg": "/images/articles/tech-nanoscale-self-assembly.svg",
-    "ogImage": "/images/og/tech-nanoscale-self-assembly.svg",
+    "ogImage": "/images/og/tech-nanoscale-self-assembly.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-nanoscale-self-assembly/option-1-fast-sdxl.png",
@@ -4311,7 +5227,7 @@
     "heroImage": "/images/articles/tech-neural-architecture-search.jpg",
     "articleJpg": "/images/articles/tech-neural-architecture-search.jpg",
     "articleSvg": "/images/articles/tech-neural-architecture-search.svg",
-    "ogImage": "/images/og/tech-neural-architecture-search.svg",
+    "ogImage": "/images/og/tech-neural-architecture-search.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-neural-architecture-search/option-1-fast-sdxl.png",
@@ -4330,7 +5246,7 @@
     "heroImage": "/images/articles/tech-neural-interface-api-rust.jpg",
     "articleJpg": "/images/articles/tech-neural-interface-api-rust.jpg",
     "articleSvg": "/images/articles/tech-neural-interface-api-rust.svg",
-    "ogImage": "/images/og/tech-neural-interface-api-rust.svg",
+    "ogImage": "/images/og/tech-neural-interface-api-rust.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-neural-interface-api-rust/option-1-schnell.png",
@@ -4354,7 +5270,7 @@
     "heroImage": "/images/articles/tech-neural-ode.jpg",
     "articleJpg": "/images/articles/tech-neural-ode.jpg",
     "articleSvg": "/images/articles/tech-neural-ode.svg",
-    "ogImage": "/images/og/tech-neural-ode.svg",
+    "ogImage": "/images/og/tech-neural-ode.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-neural-ode/option-1-fast-sdxl.png",
@@ -4378,7 +5294,7 @@
     "heroImage": "/images/articles/tech-neuromorphic-computing.jpg",
     "articleJpg": "/images/articles/tech-neuromorphic-computing.jpg",
     "articleSvg": "/images/articles/tech-neuromorphic-computing.svg",
-    "ogImage": "/images/og/tech-neuromorphic-computing.svg",
+    "ogImage": "/images/og/tech-neuromorphic-computing.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-neuromorphic-computing/option-1-fast-sdxl.png",
@@ -4402,7 +5318,7 @@
     "heroImage": "/images/articles/tech-optical-neural-networks.jpg",
     "articleJpg": "/images/articles/tech-optical-neural-networks.jpg",
     "articleSvg": "/images/articles/tech-optical-neural-networks.svg",
-    "ogImage": "/images/og/tech-optical-neural-networks.svg",
+    "ogImage": "/images/og/tech-optical-neural-networks.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-optical-neural-networks/option-1-fast-sdxl.png",
@@ -4421,7 +5337,7 @@
     "heroImage": "/images/articles/tech-protein-folding-alphafold.jpg",
     "articleJpg": "/images/articles/tech-protein-folding-alphafold.jpg",
     "articleSvg": "/images/articles/tech-protein-folding-alphafold.svg",
-    "ogImage": "/images/og/tech-protein-folding-alphafold.svg",
+    "ogImage": "/images/og/tech-protein-folding-alphafold.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-protein-folding-alphafold/option-1-schnell.png",
@@ -4445,7 +5361,7 @@
     "heroImage": "/images/articles/tech-quantum-annealing-optimization.jpg",
     "articleJpg": "/images/articles/tech-quantum-annealing-optimization.jpg",
     "articleSvg": "/images/articles/tech-quantum-annealing-optimization.svg",
-    "ogImage": "/images/og/tech-quantum-annealing-optimization.svg",
+    "ogImage": "/images/og/tech-quantum-annealing-optimization.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-quantum-annealing-optimization/option-1-schnell.png",
@@ -4464,7 +5380,7 @@
     "heroImage": "/images/articles/tech-quantum-error-correction-qiskit.jpg",
     "articleJpg": "/images/articles/tech-quantum-error-correction-qiskit.jpg",
     "articleSvg": "/images/articles/tech-quantum-error-correction-qiskit.svg",
-    "ogImage": "/images/og/tech-quantum-error-correction-qiskit.svg",
+    "ogImage": "/images/og/tech-quantum-error-correction-qiskit.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-quantum-error-correction-qiskit/option-1-schnell.png",
@@ -4483,7 +5399,7 @@
     "heroImage": "/images/articles/tech-quantum-key-distribution.jpg",
     "articleJpg": "/images/articles/tech-quantum-key-distribution.jpg",
     "articleSvg": "/images/articles/tech-quantum-key-distribution.svg",
-    "ogImage": "/images/og/tech-quantum-key-distribution.svg",
+    "ogImage": "/images/og/tech-quantum-key-distribution.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-quantum-key-distribution/option-1-fast-sdxl.png",
@@ -4507,7 +5423,7 @@
     "heroImage": "/images/articles/tech-radio-frequency-ml.jpg",
     "articleJpg": "/images/articles/tech-radio-frequency-ml.jpg",
     "articleSvg": "/images/articles/tech-radio-frequency-ml.svg",
-    "ogImage": "/images/og/tech-radio-frequency-ml.svg",
+    "ogImage": "/images/og/tech-radio-frequency-ml.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-radio-frequency-ml/option-1-fast-sdxl.png",
@@ -4531,7 +5447,7 @@
     "heroImage": "/images/articles/tech-raft-consensus-distributed.jpg",
     "articleJpg": "/images/articles/tech-raft-consensus-distributed.jpg",
     "articleSvg": "/images/articles/tech-raft-consensus-distributed.svg",
-    "ogImage": "/images/og/tech-raft-consensus-distributed.svg",
+    "ogImage": "/images/og/tech-raft-consensus-distributed.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-raft-consensus-distributed/option-1-schnell.png",
@@ -4545,7 +5461,7 @@
     "heroImage": "/images/articles/tech-real-time-kafka-streaming.jpg",
     "articleJpg": "/images/articles/tech-real-time-kafka-streaming.jpg",
     "articleSvg": "/images/articles/tech-real-time-kafka-streaming.svg",
-    "ogImage": "/images/og/tech-real-time-kafka-streaming.svg",
+    "ogImage": "/images/og/tech-real-time-kafka-streaming.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-real-time-kafka-streaming/option-1-fast-sdxl.png",
@@ -4569,7 +5485,7 @@
     "heroImage": "/images/articles/tech-recursive-self-improvement-pytorch.jpg",
     "articleJpg": "/images/articles/tech-recursive-self-improvement-pytorch.jpg",
     "articleSvg": "/images/articles/tech-recursive-self-improvement-pytorch.svg",
-    "ogImage": "/images/og/tech-recursive-self-improvement-pytorch.svg",
+    "ogImage": "/images/og/tech-recursive-self-improvement-pytorch.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-recursive-self-improvement-pytorch/option-1-fast-sdxl.png",
@@ -4593,7 +5509,7 @@
     "heroImage": "/images/articles/tech-reinforcement-learning-ppo.jpg",
     "articleJpg": "/images/articles/tech-reinforcement-learning-ppo.jpg",
     "articleSvg": "/images/articles/tech-reinforcement-learning-ppo.svg",
-    "ogImage": "/images/og/tech-reinforcement-learning-ppo.svg",
+    "ogImage": "/images/og/tech-reinforcement-learning-ppo.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-reinforcement-learning-ppo/option-1-fast-sdxl.png",
@@ -4617,7 +5533,7 @@
     "heroImage": "/images/articles/tech-rust-systems-programming.jpg",
     "articleJpg": "/images/articles/tech-rust-systems-programming.jpg",
     "articleSvg": "/images/articles/tech-rust-systems-programming.svg",
-    "ogImage": "/images/og/tech-rust-systems-programming.svg",
+    "ogImage": "/images/og/tech-rust-systems-programming.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-rust-systems-programming/option-1-schnell.png",
@@ -4641,7 +5557,7 @@
     "heroImage": "/images/articles/tech-satellite-imagery-analysis.jpg",
     "articleJpg": "/images/articles/tech-satellite-imagery-analysis.jpg",
     "articleSvg": "/images/articles/tech-satellite-imagery-analysis.svg",
-    "ogImage": "/images/og/tech-satellite-imagery-analysis.svg",
+    "ogImage": "/images/og/tech-satellite-imagery-analysis.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-satellite-imagery-analysis/option-1-schnell.png",
@@ -4660,7 +5576,7 @@
     "heroImage": "/images/articles/tech-secrets-management-vault.jpg",
     "articleJpg": "/images/articles/tech-secrets-management-vault.jpg",
     "articleSvg": "/images/articles/tech-secrets-management-vault.svg",
-    "ogImage": "/images/og/tech-secrets-management-vault.svg",
+    "ogImage": "/images/og/tech-secrets-management-vault.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-secrets-management-vault/option-1-fast-sdxl.png",
@@ -4684,7 +5600,7 @@
     "heroImage": "/images/articles/tech-self-driving-perception-stack.jpg",
     "articleJpg": "/images/articles/tech-self-driving-perception-stack.jpg",
     "articleSvg": "/images/articles/tech-self-driving-perception-stack.svg",
-    "ogImage": "/images/og/tech-self-driving-perception-stack.svg",
+    "ogImage": "/images/og/tech-self-driving-perception-stack.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-self-driving-perception-stack/option-1-schnell.png",
@@ -4703,7 +5619,7 @@
     "heroImage": "/images/articles/tech-service-mesh-istio.jpg",
     "articleJpg": "/images/articles/tech-service-mesh-istio.jpg",
     "articleSvg": "/images/articles/tech-service-mesh-istio.svg",
-    "ogImage": "/images/og/tech-service-mesh-istio.svg",
+    "ogImage": "/images/og/tech-service-mesh-istio.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-service-mesh-istio/option-1-fast-sdxl.png",
@@ -4722,7 +5638,7 @@
     "heroImage": "/images/articles/tech-shors-algorithm-implementation.jpg",
     "articleJpg": "/images/articles/tech-shors-algorithm-implementation.jpg",
     "articleSvg": "/images/articles/tech-shors-algorithm-implementation.svg",
-    "ogImage": "/images/og/tech-shors-algorithm-implementation.svg",
+    "ogImage": "/images/og/tech-shors-algorithm-implementation.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-shors-algorithm-implementation/option-1-fast-sdxl.png",
@@ -4741,7 +5657,7 @@
     "heroImage": "/images/articles/tech-speech-synthesis-tacotron.jpg",
     "articleJpg": "/images/articles/tech-speech-synthesis-tacotron.jpg",
     "articleSvg": "/images/articles/tech-speech-synthesis-tacotron.svg",
-    "ogImage": "/images/og/tech-speech-synthesis-tacotron.svg",
+    "ogImage": "/images/og/tech-speech-synthesis-tacotron.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-speech-synthesis-tacotron/option-1-fast-sdxl.png",
@@ -4760,7 +5676,7 @@
     "heroImage": "/images/articles/tech-swarm-robotics-coordination.jpg",
     "articleJpg": "/images/articles/tech-swarm-robotics-coordination.jpg",
     "articleSvg": "/images/articles/tech-swarm-robotics-coordination.svg",
-    "ogImage": "/images/og/tech-swarm-robotics-coordination.svg",
+    "ogImage": "/images/og/tech-swarm-robotics-coordination.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-swarm-robotics-coordination/option-1-fast-sdxl.png",
@@ -4779,7 +5695,7 @@
     "heroImage": "/images/articles/tech-synthetic-biology-circuits.jpg",
     "articleJpg": "/images/articles/tech-synthetic-biology-circuits.jpg",
     "articleSvg": "/images/articles/tech-synthetic-biology-circuits.svg",
-    "ogImage": "/images/og/tech-synthetic-biology-circuits.svg",
+    "ogImage": "/images/og/tech-synthetic-biology-circuits.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-synthetic-biology-circuits/option-1-fast-sdxl.png",
@@ -4798,7 +5714,7 @@
     "heroImage": "/images/articles/tech-thermal-imaging-detection.jpg",
     "articleJpg": "/images/articles/tech-thermal-imaging-detection.jpg",
     "articleSvg": "/images/articles/tech-thermal-imaging-detection.svg",
-    "ogImage": "/images/og/tech-thermal-imaging-detection.svg",
+    "ogImage": "/images/og/tech-thermal-imaging-detection.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-thermal-imaging-detection/option-1-fast-sdxl.png",
@@ -4822,7 +5738,7 @@
     "heroImage": "/images/articles/tech-time-series-database-prometheus.jpg",
     "articleJpg": "/images/articles/tech-time-series-database-prometheus.jpg",
     "articleSvg": "/images/articles/tech-time-series-database-prometheus.svg",
-    "ogImage": "/images/og/tech-time-series-database-prometheus.svg",
+    "ogImage": "/images/og/tech-time-series-database-prometheus.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-time-series-database-prometheus/option-1-fast-sdxl.png",
@@ -4846,7 +5762,7 @@
     "heroImage": "/images/articles/tech-tokamak-plasma-control.jpg",
     "articleJpg": "/images/articles/tech-tokamak-plasma-control.jpg",
     "articleSvg": "/images/articles/tech-tokamak-plasma-control.svg",
-    "ogImage": "/images/og/tech-tokamak-plasma-control.svg",
+    "ogImage": "/images/og/tech-tokamak-plasma-control.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-tokamak-plasma-control/option-1-schnell.png",
@@ -4865,7 +5781,7 @@
     "heroImage": "/images/articles/tech-transformer-finetuning-lora.jpg",
     "articleJpg": "/images/articles/tech-transformer-finetuning-lora.jpg",
     "articleSvg": "/images/articles/tech-transformer-finetuning-lora.svg",
-    "ogImage": "/images/og/tech-transformer-finetuning-lora.svg",
+    "ogImage": "/images/og/tech-transformer-finetuning-lora.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-transformer-finetuning-lora/option-1-fast-sdxl.png",
@@ -4889,7 +5805,7 @@
     "heroImage": "/images/articles/tech-v2v-communication-protocols.jpg",
     "articleJpg": "/images/articles/tech-v2v-communication-protocols.jpg",
     "articleSvg": "/images/articles/tech-v2v-communication-protocols.svg",
-    "ogImage": "/images/og/tech-v2v-communication-protocols.svg",
+    "ogImage": "/images/og/tech-v2v-communication-protocols.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-v2v-communication-protocols/option-1-schnell.png",
@@ -4913,7 +5829,7 @@
     "heroImage": "/images/articles/tech-vector-database-optimization.jpg",
     "articleJpg": "/images/articles/tech-vector-database-optimization.jpg",
     "articleSvg": "/images/articles/tech-vector-database-optimization.svg",
-    "ogImage": "/images/og/tech-vector-database-optimization.svg",
+    "ogImage": "/images/og/tech-vector-database-optimization.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-vector-database-optimization/option-1-schnell.png",
@@ -4932,7 +5848,7 @@
     "heroImage": "/images/articles/tech-wasm-sandboxing.jpg",
     "articleJpg": "/images/articles/tech-wasm-sandboxing.jpg",
     "articleSvg": "/images/articles/tech-wasm-sandboxing.svg",
-    "ogImage": "/images/og/tech-wasm-sandboxing.svg",
+    "ogImage": "/images/og/tech-wasm-sandboxing.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-wasm-sandboxing/option-1-fast-sdxl.png",
@@ -4951,7 +5867,7 @@
     "heroImage": "/images/articles/tech-webassembly-edge-computing.jpg",
     "articleJpg": "/images/articles/tech-webassembly-edge-computing.jpg",
     "articleSvg": "/images/articles/tech-webassembly-edge-computing.svg",
-    "ogImage": "/images/og/tech-webassembly-edge-computing.svg",
+    "ogImage": "/images/og/tech-webassembly-edge-computing.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-webassembly-edge-computing/option-1-schnell.png",
@@ -4975,7 +5891,7 @@
     "heroImage": "/images/articles/tech-webrtc-real-time-communication.jpg",
     "articleJpg": "/images/articles/tech-webrtc-real-time-communication.jpg",
     "articleSvg": "/images/articles/tech-webrtc-real-time-communication.svg",
-    "ogImage": "/images/og/tech-webrtc-real-time-communication.svg",
+    "ogImage": "/images/og/tech-webrtc-real-time-communication.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-webrtc-real-time-communication/option-1-schnell.png",
@@ -4994,7 +5910,7 @@
     "heroImage": "/images/articles/tech-zero-trust-network-security.jpg",
     "articleJpg": "/images/articles/tech-zero-trust-network-security.jpg",
     "articleSvg": "/images/articles/tech-zero-trust-network-security.svg",
-    "ogImage": "/images/og/tech-zero-trust-network-security.svg",
+    "ogImage": "/images/og/tech-zero-trust-network-security.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tech-zero-trust-network-security/option-1-schnell.png",
@@ -5013,7 +5929,7 @@
     "heroImage": "/images/articles/technological-singularity-aftermath-2058.jpg",
     "articleJpg": "/images/articles/technological-singularity-aftermath-2058.jpg",
     "articleSvg": "/images/articles/technological-singularity-aftermath-2058.svg",
-    "ogImage": "/images/og/technological-singularity-aftermath-2058.svg",
+    "ogImage": "/images/og/technological-singularity-aftermath-2058.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/technological-singularity-aftermath-2058/option-1-fast-sdxl.png",
@@ -5032,7 +5948,7 @@
     "heroImage": "/images/articles/tensorflow-pytorch-production-guide.jpg",
     "articleJpg": "/images/articles/tensorflow-pytorch-production-guide.jpg",
     "articleSvg": "/images/articles/tensorflow-pytorch-production-guide.svg",
-    "ogImage": "/images/og/tensorflow-pytorch-production-guide.svg",
+    "ogImage": "/images/og/tensorflow-pytorch-production-guide.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/tensorflow-pytorch-production-guide/option-1-schnell.png",
@@ -5051,7 +5967,7 @@
     "heroImage": "/images/articles/terraforming-mars-disaster-2056.jpg",
     "articleJpg": "/images/articles/terraforming-mars-disaster-2056.jpg",
     "articleSvg": "/images/articles/terraforming-mars-disaster-2056.svg",
-    "ogImage": "/images/og/terraforming-mars-disaster-2056.svg",
+    "ogImage": "/images/og/terraforming-mars-disaster-2056.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/terraforming-mars-disaster-2056/option-1-schnell.png",
@@ -5091,50 +6007,130 @@
     "thumbnail": "/images/multi-art/thoughtcrime-enforcement-system-2041/option-1-schnell.png"
   },
   "threshold-01-the-last-diagnosis": {
-    "heroImage": "/images/articles/threshold-01-the-last-diagnosis.svg",
+    "heroImage": "/images/multi-art/threshold-01-the-last-diagnosis/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/threshold-01-the-last-diagnosis.svg",
     "ogImage": "/images/og/threshold-01-the-last-diagnosis.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/threshold-01-the-last-diagnosis.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/threshold-01-the-last-diagnosis/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/threshold-01-the-last-diagnosis/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/threshold-01-the-last-diagnosis/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/threshold-01-the-last-diagnosis/option-1-schnell.png"
   },
   "threshold-02-the-closing-window": {
-    "heroImage": "/images/articles/threshold-02-the-closing-window.svg",
+    "heroImage": "/images/multi-art/threshold-02-the-closing-window/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/threshold-02-the-closing-window.svg",
     "ogImage": "/images/og/threshold-02-the-closing-window.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/threshold-02-the-closing-window.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/threshold-02-the-closing-window/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/threshold-02-the-closing-window/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/threshold-02-the-closing-window/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/threshold-02-the-closing-window/option-1-schnell.png"
   },
   "threshold-03-the-weight-of-the-hammer": {
-    "heroImage": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
+    "heroImage": "/images/multi-art/threshold-03-the-weight-of-the-hammer/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/threshold-03-the-weight-of-the-hammer.svg",
     "ogImage": "/images/og/threshold-03-the-weight-of-the-hammer.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/threshold-03-the-weight-of-the-hammer.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/threshold-03-the-weight-of-the-hammer/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/threshold-03-the-weight-of-the-hammer/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/threshold-03-the-weight-of-the-hammer/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/threshold-03-the-weight-of-the-hammer/option-1-schnell.png"
   },
   "threshold-04-the-student-who-stopped-asking": {
-    "heroImage": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
+    "heroImage": "/images/multi-art/threshold-04-the-student-who-stopped-asking/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/threshold-04-the-student-who-stopped-asking.svg",
     "ogImage": "/images/og/threshold-04-the-student-who-stopped-asking.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/threshold-04-the-student-who-stopped-asking.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/threshold-04-the-student-who-stopped-asking/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/threshold-04-the-student-who-stopped-asking/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/threshold-04-the-student-who-stopped-asking/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/threshold-04-the-student-who-stopped-asking/option-1-schnell.png"
   },
   "threshold-05-the-beautiful-redundancy": {
-    "heroImage": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
+    "heroImage": "/images/multi-art/threshold-05-the-beautiful-redundancy/option-1-schnell.png",
     "articleJpg": null,
     "articleSvg": "/images/articles/threshold-05-the-beautiful-redundancy.svg",
     "ogImage": "/images/og/threshold-05-the-beautiful-redundancy.svg",
-    "multiArt": [],
-    "thumbnail": "/images/articles/threshold-05-the-beautiful-redundancy.svg"
+    "multiArt": [
+      {
+        "path": "/images/multi-art/threshold-05-the-beautiful-redundancy/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/threshold-05-the-beautiful-redundancy/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/threshold-05-the-beautiful-redundancy/option-3-schnell.png",
+        "option": 3,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/threshold-05-the-beautiful-redundancy/option-1-schnell.png"
   },
   "time-dilation-computing-error-2039": {
     "heroImage": "/images/articles/time-dilation-computing-error-2039.jpg",
     "articleJpg": "/images/articles/time-dilation-computing-error-2039.jpg",
     "articleSvg": "/images/articles/time-dilation-computing-error-2039.svg",
-    "ogImage": "/images/og/time-dilation-computing-error-2039.svg",
+    "ogImage": "/images/og/time-dilation-computing-error-2039.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/time-dilation-computing-error-2039/option-1-fast-sdxl.png",
@@ -5153,7 +6149,7 @@
     "heroImage": "/images/articles/timestamp-collapse.jpg",
     "articleJpg": "/images/articles/timestamp-collapse.jpg",
     "articleSvg": "/images/articles/timestamp-collapse.svg",
-    "ogImage": "/images/og/timestamp-collapse.svg",
+    "ogImage": "/images/og/timestamp-collapse.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/timestamp-collapse/option-1-schnell.png",
@@ -5172,7 +6168,7 @@
     "heroImage": "/images/articles/top-announcements-next-23.jpg",
     "articleJpg": "/images/articles/top-announcements-next-23.jpg",
     "articleSvg": "/images/articles/top-announcements-next-23.svg",
-    "ogImage": "/images/og/top-announcements-next-23.svg",
+    "ogImage": "/images/og/top-announcements-next-23.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/top-announcements-next-23/option-1-schnell.png",
@@ -5196,7 +6192,7 @@
     "heroImage": "/images/articles/trec-legal-precision-recall-lessons.jpg",
     "articleJpg": "/images/articles/trec-legal-precision-recall-lessons.jpg",
     "articleSvg": "/images/articles/trec-legal-precision-recall-lessons.svg",
-    "ogImage": "/images/og/trec-legal-precision-recall-lessons.svg",
+    "ogImage": "/images/og/trec-legal-precision-recall-lessons.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/trec-legal-precision-recall-lessons/option-1-fast-sdxl.png",
@@ -5215,7 +6211,7 @@
     "heroImage": "/images/articles/trust-calibration-ai-ux.jpg",
     "articleJpg": "/images/articles/trust-calibration-ai-ux.jpg",
     "articleSvg": "/images/articles/trust-calibration-ai-ux.svg",
-    "ogImage": "/images/og/trust-calibration-ai-ux.svg",
+    "ogImage": "/images/og/trust-calibration-ai-ux.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/trust-calibration-ai-ux/option-1-schnell.png",
@@ -5230,11 +6226,109 @@
     ],
     "thumbnail": "/images/multi-art/trust-calibration-ai-ux/option-1-schnell.png"
   },
+  "understory-01-the-night-librarian": {
+    "heroImage": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png"
+  },
+  "understory-02-the-repair-cafe": {
+    "heroImage": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png"
+  },
+  "understory-03-the-soil-remembers": {
+    "heroImage": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png"
+  },
+  "understory-04-the-midwifes-frequency": {
+    "heroImage": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png"
+  },
+  "understory-05-the-radio-priest": {
+    "heroImage": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png"
+  },
+  "understory-06-the-bookbinders-apprentice": {
+    "heroImage": "/images/multi-art/understory-06-the-bookbinders-apprentice/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/understory-06-the-bookbinders-apprentice/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/understory-06-the-bookbinders-apprentice/option-1-schnell.png"
+  },
+  "understory-07-the-unmeasured": {
+    "heroImage": "/images/multi-art/understory-07-the-unmeasured/option-1-schnell.png",
+    "articleJpg": null,
+    "articleSvg": null,
+    "ogImage": null,
+    "multiArt": [
+      {
+        "path": "/images/multi-art/understory-07-the-unmeasured/option-1-schnell.png",
+        "option": 1,
+        "model": "schnell"
+      }
+    ],
+    "thumbnail": "/images/multi-art/understory-07-the-unmeasured/option-1-schnell.png"
+  },
   "vr-addiction-pandemic-2054": {
     "heroImage": "/images/articles/vr-addiction-pandemic-2054.jpg",
     "articleJpg": "/images/articles/vr-addiction-pandemic-2054.jpg",
     "articleSvg": "/images/articles/vr-addiction-pandemic-2054.svg",
-    "ogImage": "/images/og/vr-addiction-pandemic-2054.svg",
+    "ogImage": "/images/og/vr-addiction-pandemic-2054.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/vr-addiction-pandemic-2054/option-1-schnell.png",
@@ -5258,7 +6352,7 @@
     "heroImage": "/images/articles/why-ab-test-failed-ai.jpg",
     "articleJpg": "/images/articles/why-ab-test-failed-ai.jpg",
     "articleSvg": "/images/articles/why-ab-test-failed-ai.svg",
-    "ogImage": "/images/og/why-ab-test-failed-ai.svg",
+    "ogImage": "/images/og/why-ab-test-failed-ai.jpg",
     "multiArt": [
       {
         "path": "/images/multi-art/why-ab-test-failed-ai/option-1-schnell.png",

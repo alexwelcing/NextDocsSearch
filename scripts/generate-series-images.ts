@@ -104,10 +104,10 @@ if (!ALL && !SERIES_FILTER && !SINGLE_ARTICLE) {
 // ENVIRONMENT
 // ═══════════════════════════════════════════════════════════════
 
-const falKey = process.env.FAL_KEY
+const falKey = process.env.FAL_API_KEY || process.env.FAL_KEY
 
 if (!falKey && !DRY_RUN) {
-  console.error('FAL_KEY is required. Set it in .env.local')
+  console.error('FAL_API_KEY or FAL_KEY is required. Set it in .env.local')
   process.exit(1)
 }
 
@@ -120,7 +120,7 @@ async function generateImage(
   prompt: string,
   imageSize: string
 ): Promise<{ success: boolean; imageUrl?: string; error?: string }> {
-  if (!falKey) return { success: false, error: 'No FAL_KEY' }
+  if (!falKey) return { success: false, error: 'No FAL API key' }
 
   try {
     const response = await proxyFetch(`https://fal.run/${modelId}`, {
