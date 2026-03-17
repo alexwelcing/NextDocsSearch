@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:10:25.208Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 9.17,
+    "rationale": "editorial illustration bias; editorial motifs: letters, pattern; dark motifs: threshold; human motifs: mother",
+    "publicPath": "/images/multi-art/inheritance-05-the-letters/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.17,
+      "rationale": "editorial illustration bias; editorial motifs: letters, pattern; dark motifs: threshold; human motifs: mother",
+      "publicPath": "/images/multi-art/inheritance-05-the-letters/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.03,
+      "rationale": "cinematic human-focus bias; editorial motifs: letters, pattern; dark motifs: threshold; human motifs: mother",
+      "publicPath": "/images/multi-art/inheritance-05-the-letters/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.63,
+      "rationale": "moody tension and detail bias; editorial motifs: letters, pattern; dark motifs: threshold; human motifs: mother",
+      "publicPath": "/images/multi-art/inheritance-05-the-letters/option-3-sd35-large.png"
+    }
+  ]
+}

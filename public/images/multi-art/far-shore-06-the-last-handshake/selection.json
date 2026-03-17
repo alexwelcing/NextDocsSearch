@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:03:38.596Z",
+  "winner": {
+    "modelId": "fal-ai/stable-diffusion-v35-large",
+    "score": 9.18,
+    "rationale": "moody tension and detail bias; editorial motifs: hands; human motifs: handshake",
+    "publicPath": "/images/multi-art/far-shore-06-the-last-handshake/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.18,
+      "rationale": "moody tension and detail bias; editorial motifs: hands; human motifs: handshake",
+      "publicPath": "/images/multi-art/far-shore-06-the-last-handshake/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.85,
+      "rationale": "cinematic human-focus bias; editorial motifs: hands; human motifs: handshake",
+      "publicPath": "/images/multi-art/far-shore-06-the-last-handshake/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.72,
+      "rationale": "editorial illustration bias; editorial motifs: hands; human motifs: handshake",
+      "publicPath": "/images/multi-art/far-shore-06-the-last-handshake/option-4-recraft-v3.png"
+    }
+  ]
+}

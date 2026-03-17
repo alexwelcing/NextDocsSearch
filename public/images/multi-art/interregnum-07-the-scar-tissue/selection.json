@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:13:12.888Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 8.58,
+    "rationale": "cinematic human-focus bias; editorial motifs: pattern; dark motifs: scar",
+    "publicPath": "/images/multi-art/interregnum-07-the-scar-tissue/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.58,
+      "rationale": "cinematic human-focus bias; editorial motifs: pattern; dark motifs: scar",
+      "publicPath": "/images/multi-art/interregnum-07-the-scar-tissue/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.55,
+      "rationale": "moody tension and detail bias; editorial motifs: pattern; dark motifs: scar",
+      "publicPath": "/images/multi-art/interregnum-07-the-scar-tissue/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.55,
+      "rationale": "editorial illustration bias; editorial motifs: pattern; dark motifs: scar",
+      "publicPath": "/images/multi-art/interregnum-07-the-scar-tissue/option-4-recraft-v3.png"
+    }
+  ]
+}

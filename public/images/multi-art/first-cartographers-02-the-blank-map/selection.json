@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:04:23.526Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.48,
+    "rationale": "cinematic human-focus bias; editorial motifs: map, cartograph; dark motifs: expedition; human motifs: return, cartographer",
+    "publicPath": "/images/multi-art/first-cartographers-02-the-blank-map/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.48,
+      "rationale": "cinematic human-focus bias; editorial motifs: map, cartograph; dark motifs: expedition; human motifs: return, cartographer",
+      "publicPath": "/images/multi-art/first-cartographers-02-the-blank-map/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.29,
+      "rationale": "editorial illustration bias; editorial motifs: map, cartograph; dark motifs: expedition; human motifs: return, cartographer",
+      "publicPath": "/images/multi-art/first-cartographers-02-the-blank-map/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.71,
+      "rationale": "moody tension and detail bias; editorial motifs: map, cartograph; dark motifs: expedition; human motifs: return, cartographer",
+      "publicPath": "/images/multi-art/first-cartographers-02-the-blank-map/option-3-sd35-large.png"
+    }
+  ]
+}

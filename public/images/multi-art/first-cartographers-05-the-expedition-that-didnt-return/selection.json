@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:05:37.520Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.48,
+    "rationale": "cinematic human-focus bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, cartographer",
+    "publicPath": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.48,
+      "rationale": "cinematic human-focus bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, cartographer",
+      "publicPath": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.79,
+      "rationale": "editorial illustration bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, cartographer",
+      "publicPath": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.71,
+      "rationale": "moody tension and detail bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, cartographer",
+      "publicPath": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-3-sd35-large.png"
+    }
+  ]
+}

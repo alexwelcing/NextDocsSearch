@@ -1,7 +1,8 @@
-const { ProxyAgent, fetch: undiciFetch } = require('undici')
 const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY
-const agent = proxyUrl ? new ProxyAgent(proxyUrl) : undefined
-const pf = agent ? (url, init) => undiciFetch(url, { ...init, dispatcher: agent }) : fetch
+if (proxyUrl) {
+  console.warn('test-hf-info: proxy environment detected; native fetch may not honor proxy settings.')
+}
+const pf = fetch
 
 async function main() {
   const res = await pf('https://lightricks-ltx-video-distilled.hf.space/gradio_api/info', {

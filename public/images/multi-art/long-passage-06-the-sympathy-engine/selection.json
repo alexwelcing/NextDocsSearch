@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:16:23.632Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 8.6,
+    "rationale": "editorial illustration bias; editorial motifs: pattern",
+    "publicPath": "/images/multi-art/long-passage-06-the-sympathy-engine/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.6,
+      "rationale": "editorial illustration bias; editorial motifs: pattern",
+      "publicPath": "/images/multi-art/long-passage-06-the-sympathy-engine/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.4,
+      "rationale": "cinematic human-focus bias; editorial motifs: pattern",
+      "publicPath": "/images/multi-art/long-passage-06-the-sympathy-engine/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8,
+      "rationale": "moody tension and detail bias; editorial motifs: pattern",
+      "publicPath": "/images/multi-art/long-passage-06-the-sympathy-engine/option-3-sd35-large.png"
+    }
+  ]
+}

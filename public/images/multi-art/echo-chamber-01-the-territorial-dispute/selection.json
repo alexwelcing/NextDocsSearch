@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:00:00.896Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.21,
+    "rationale": "cinematic human-focus bias; editorial motifs: map, cartograph; dark motifs: dispute, territorial; human motifs: cartographer",
+    "publicPath": "/images/multi-art/echo-chamber-01-the-territorial-dispute/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.21,
+      "rationale": "cinematic human-focus bias; editorial motifs: map, cartograph; dark motifs: dispute, territorial; human motifs: cartographer",
+      "publicPath": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.18,
+      "rationale": "moody tension and detail bias; editorial motifs: map, cartograph; dark motifs: dispute, territorial; human motifs: cartographer",
+      "publicPath": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.12,
+      "rationale": "editorial illustration bias; editorial motifs: map, cartograph; dark motifs: dispute, territorial; human motifs: cartographer",
+      "publicPath": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-4-recraft-v3.png"
+    }
+  ]
+}

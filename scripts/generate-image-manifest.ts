@@ -72,10 +72,21 @@ function main() {
 
     // Discover multi-art options
     const slugMultiArtDir = path.join(multiArtDir, slug);
+    const selectedMultiArtCandidates = [
+      path.join(slugMultiArtDir, 'selected.png'),
+      path.join(slugMultiArtDir, 'selected.jpg'),
+      path.join(slugMultiArtDir, 'selected.jpeg'),
+      path.join(slugMultiArtDir, 'selected.webp'),
+    ];
+    const selectedMultiArtPath = selectedMultiArtCandidates.find((candidate) => fs.existsSync(candidate));
+    const selectedMultiArt = selectedMultiArtPath
+      ? `/images/multi-art/${slug}/${path.basename(selectedMultiArtPath)}`
+      : null;
+
     let multiArt: MultiArtOption[] = [];
     if (fs.existsSync(slugMultiArtDir)) {
       const files = fs.readdirSync(slugMultiArtDir)
-        .filter(f => f.endsWith('.png'))
+        .filter(f => f.endsWith('.png') && !f.startsWith('selected.'))
         .sort();
       multiArt = files.map(f => {
         const match = f.match(/^option-(\d+)-(.+)\.png$/);
@@ -88,8 +99,10 @@ function main() {
     }
 
     // Hero priority: JPG > first multi-art > article SVG > OG SVG
-    const heroImage = jpgExists
-      ? jpgPath
+    const heroImage = selectedMultiArt
+      ? selectedMultiArt
+      : jpgExists
+        ? jpgPath
       : multiArt.length > 0
         ? multiArt[0].path
         : svgExists
@@ -98,8 +111,10 @@ function main() {
             ? ogPath
             : null;
 
-    // Thumbnail priority: first multi-art > JPG > SVG > OG
-    const thumbnail = multiArt.length > 0
+    // Thumbnail priority: selected > first multi-art > JPG > SVG > OG
+    const thumbnail = selectedMultiArt
+      ? selectedMultiArt
+      : multiArt.length > 0
       ? multiArt[0].path
       : jpgExists
         ? jpgPath
@@ -113,7 +128,7 @@ function main() {
       heroImage,
       articleJpg: jpgExists ? jpgPath : null,
       articleSvg: svgExists ? svgPath : null,
-      ogImage: ogPath,
+      ogImage: selectedMultiArt || ogPath,
       multiArt,
       thumbnail,
     };

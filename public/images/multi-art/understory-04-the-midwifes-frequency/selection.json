@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:32:07.229Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 8.85,
+    "rationale": "cinematic human-focus bias; human motifs: midwife",
+    "publicPath": "/images/multi-art/understory-04-the-midwifes-frequency/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.85,
+      "rationale": "cinematic human-focus bias; human motifs: midwife",
+      "publicPath": "/images/multi-art/understory-04-the-midwifes-frequency/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.22,
+      "rationale": "editorial illustration bias; human motifs: midwife",
+      "publicPath": "/images/multi-art/understory-04-the-midwifes-frequency/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.08,
+      "rationale": "moody tension and detail bias; human motifs: midwife",
+      "publicPath": "/images/multi-art/understory-04-the-midwifes-frequency/option-3-sd35-large.png"
+    }
+  ]
+}

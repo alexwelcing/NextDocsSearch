@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:02:35.178Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 9.34,
+    "rationale": "editorial illustration bias; editorial motifs: hands, commons; human motifs: daughter, mother",
+    "publicPath": "/images/multi-art/far-shore-03-the-daughters-hands/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.34,
+      "rationale": "editorial illustration bias; editorial motifs: hands, commons; human motifs: daughter, mother",
+      "publicPath": "/images/multi-art/far-shore-03-the-daughters-hands/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.3,
+      "rationale": "cinematic human-focus bias; editorial motifs: hands, commons; human motifs: daughter, mother",
+      "publicPath": "/images/multi-art/far-shore-03-the-daughters-hands/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.26,
+      "rationale": "moody tension and detail bias; editorial motifs: hands, commons; human motifs: daughter, mother",
+      "publicPath": "/images/multi-art/far-shore-03-the-daughters-hands/option-3-sd35-large.png"
+    }
+  ]
+}

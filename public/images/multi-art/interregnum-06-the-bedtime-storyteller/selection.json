@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:12:53.191Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.3,
+    "rationale": "cinematic human-focus bias; human motifs: mother, storyteller",
+    "publicPath": "/images/multi-art/interregnum-06-the-bedtime-storyteller/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.3,
+      "rationale": "cinematic human-focus bias; human motifs: mother, storyteller",
+      "publicPath": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.34,
+      "rationale": "editorial illustration bias; human motifs: mother, storyteller",
+      "publicPath": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.16,
+      "rationale": "moody tension and detail bias; human motifs: mother, storyteller",
+      "publicPath": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-3-sd35-large.png"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:06:43.302Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 8.85,
+    "rationale": "cinematic human-focus bias; human motifs: apprentice",
+    "publicPath": "/images/multi-art/fracture-line-03-the-apprentices-forge/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.85,
+      "rationale": "cinematic human-focus bias; human motifs: apprentice",
+      "publicPath": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.22,
+      "rationale": "editorial illustration bias; human motifs: apprentice",
+      "publicPath": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.08,
+      "rationale": "moody tension and detail bias; human motifs: apprentice",
+      "publicPath": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-3-sd35-large.png"
+    }
+  ]
+}

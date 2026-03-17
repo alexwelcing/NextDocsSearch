@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:01:49.743Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 9.22,
+    "rationale": "editorial illustration bias; editorial motifs: map, commons; human motifs: rememberer",
+    "publicPath": "/images/multi-art/far-shore-01-the-rememberer/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.22,
+      "rationale": "editorial illustration bias; editorial motifs: map, commons; human motifs: rememberer",
+      "publicPath": "/images/multi-art/far-shore-01-the-rememberer/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.18,
+      "rationale": "moody tension and detail bias; editorial motifs: map, commons; human motifs: rememberer",
+      "publicPath": "/images/multi-art/far-shore-01-the-rememberer/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.85,
+      "rationale": "cinematic human-focus bias; editorial motifs: map, commons; human motifs: rememberer",
+      "publicPath": "/images/multi-art/far-shore-01-the-rememberer/option-2-dev.png"
+    }
+  ]
+}

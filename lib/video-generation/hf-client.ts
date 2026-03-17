@@ -9,21 +9,18 @@
 
 import * as fs from 'fs'
 import * as pathLib from 'path'
-import { ProxyAgent, fetch as undiciFetch } from 'undici'
 import { buildLtxParameters, validateLtxParameters } from './parameters'
 import type { LtxMode, VideoGenerationResponse } from './types'
 
 /**
  * Create a proxy-aware fetch function.
- * Node.js native fetch doesn't respect HTTP_PROXY/HTTPS_PROXY env vars,
- * so we use undici's ProxyAgent when a proxy is configured.
+ * Native fetch is used by default in this container.
+ * If a proxy env var is present, warn because native fetch may ignore it.
  */
 function getProxyFetch(): typeof globalThis.fetch {
   const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || process.env.https_proxy || process.env.http_proxy
   if (proxyUrl) {
-    const agent = new ProxyAgent(proxyUrl)
-    return ((url: string | URL | Request, init?: RequestInit) =>
-      undiciFetch(url as string, { ...init, dispatcher: agent } as never)) as unknown as typeof globalThis.fetch
+    console.warn('HF client: proxy environment detected; native fetch may not honor proxy settings in this environment.')
   }
   return globalThis.fetch
 }
@@ -94,7 +91,7 @@ async function uploadAndRegisterImage(
     throw new Error(`Image upload failed (${uploadRes.status}): ${await uploadRes.text()}`)
   }
 
-  const paths = (await uploadRes.json()) as string[]
+  const paths = await parseJsonResponse<string[]>(uploadRes, 'HF image upload')
   const remotePath = paths[0]
   const remoteUrl = `${HF_SPACE_BASE}/gradio_api/file=${remotePath}`
   const fileData: GradioFileData = { url: remoteUrl, path: remotePath, meta: { _type: 'gradio.FileData' } }
@@ -113,7 +110,10 @@ async function uploadAndRegisterImage(
     }
   )
 
-  const dimsSubmit = (await dimsSubmitRes.json()) as { event_id: string }
+  const dimsSubmit = await parseJsonResponse<{ event_id: string }>(
+    dimsSubmitRes,
+    'HF image registration submit'
+  )
 
   // Wait briefly then fetch the dims result
   await new Promise((r) => setTimeout(r, 1500))
@@ -193,6 +193,16 @@ export interface HfVideoResult {
 const MAX_RETRIES = 3
 const INITIAL_BACKOFF_MS = 5_000
 
+async function parseJsonResponse<T>(response: Response, context: string): Promise<T> {
+  const text = await response.text()
+
+  try {
+    return JSON.parse(text) as T
+  } catch {
+    throw new Error(`${context} returned non-JSON response: ${text.slice(0, 300)}`)
+  }
+}
+
 function isRetryable(error: string): boolean {
   const retryPatterns = [
     'fetch failed',
@@ -234,13 +244,23 @@ export async function generateVideoViaHf(
     }
     lastResult = await generateVideoViaHfCore(request, token, outputPath)
     if (lastResult.success) return lastResult
-    if (!isRetryable(lastResult.error || '')) return lastResult
+
+    if (!isRetryable(lastResult.error || '')) {
+      break
+    }
   }
 
-  // If I2V keeps failing with 404 (replica routing issue), fall back to T2V
+  // If I2V keeps failing, fall back to T2V.
   if (request.mode === 'I2V' && lastResult && !lastResult.success) {
     const err = lastResult.error || ''
-    if (err.includes('404') || err.includes('null')) {
+    if (
+      err.includes('404') ||
+      err.includes('null') ||
+      err.includes('Traceback') ||
+      err.includes('non-JSON response') ||
+      err.includes('image upload') ||
+      err.includes('image registration')
+    ) {
       console.log(`   ⚡ Falling back to T2V mode (I2V upload routing failed)`)
       const t2vRequest = { ...request, mode: 'T2V' as const, imagePath: undefined, imageUrl: undefined }
       for (let attempt = 0; attempt <= 1; attempt++) {
@@ -390,7 +410,10 @@ async function generateVideoViaHfCore(
       }
     }
 
-    const submitData = (await submitResponse.json()) as { event_id: string }
+    const submitData = await parseJsonResponse<{ event_id: string }>(
+      submitResponse,
+      'HF Gradio submit'
+    )
     const eventId = submitData.event_id
 
     if (!eventId) {

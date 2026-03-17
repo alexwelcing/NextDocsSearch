@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T17:14:36.026Z",
+  "winner": {
+    "modelId": "fal-ai/stable-diffusion-v35-large",
+    "score": 9.1,
+    "rationale": "moody tension and detail bias; dark motifs: threshold, confession",
+    "publicPath": "/images/multi-art/backstory-shadows-02-the-coders-confession/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.1,
+      "rationale": "moody tension and detail bias; dark motifs: threshold, confession",
+      "publicPath": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.76,
+      "rationale": "cinematic human-focus bias; dark motifs: threshold, confession",
+      "publicPath": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8,
+      "rationale": "editorial illustration bias; dark motifs: threshold, confession",
+      "publicPath": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-4-recraft-v3.png"
+    }
+  ]
+}

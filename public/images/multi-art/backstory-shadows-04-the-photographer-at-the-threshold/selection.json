@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T17:59:41.912Z",
+  "winner": {
+    "modelId": "fal-ai/stable-diffusion-v35-large",
+    "score": 9.65,
+    "rationale": "moody tension and detail bias; dark motifs: threshold",
+    "publicPath": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.65,
+      "rationale": "moody tension and detail bias; dark motifs: threshold",
+      "publicPath": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.58,
+      "rationale": "cinematic human-focus bias; dark motifs: threshold",
+      "publicPath": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.05,
+      "rationale": "editorial illustration bias; dark motifs: threshold",
+      "publicPath": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-4-recraft-v3.png"
+    }
+  ]
+}

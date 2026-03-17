@@ -39,6 +39,7 @@
     "generate:series-videos": "tsx scripts/generate-series-videos.ts",
     "generate:series-videos:dry-run": "tsx scripts/generate-series-videos.ts --all --dry-run",
     "generate:series-videos:t2v": "tsx scripts/generate-series-videos.ts --all --t2v-only",
+    "publish:local-videos": "tsx scripts/publish-local-videos.ts",
     "narrative": "tsx scripts/narrative-compose.ts",
     "narrative:graph": "tsx scripts/narrative-compose.ts graph",
     "narrative:arc": "tsx scripts/narrative-compose.ts arc",

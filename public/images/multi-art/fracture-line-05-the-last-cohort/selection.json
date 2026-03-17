@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:07:28.853Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 8.58,
+    "rationale": "cinematic human-focus bias; dark motifs: cohort",
+    "publicPath": "/images/multi-art/fracture-line-05-the-last-cohort/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.58,
+      "rationale": "cinematic human-focus bias; dark motifs: cohort",
+      "publicPath": "/images/multi-art/fracture-line-05-the-last-cohort/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.55,
+      "rationale": "moody tension and detail bias; dark motifs: cohort",
+      "publicPath": "/images/multi-art/fracture-line-05-the-last-cohort/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.05,
+      "rationale": "editorial illustration bias; dark motifs: cohort",
+      "publicPath": "/images/multi-art/fracture-line-05-the-last-cohort/option-4-recraft-v3.png"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:13:34.203Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.03,
+    "rationale": "cinematic human-focus bias; dark motifs: night; human motifs: return",
+    "publicPath": "/images/multi-art/interregnum-08-the-second-sleep/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.03,
+      "rationale": "cinematic human-focus bias; dark motifs: night; human motifs: return",
+      "publicPath": "/images/multi-art/interregnum-08-the-second-sleep/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.63,
+      "rationale": "moody tension and detail bias; dark motifs: night; human motifs: return",
+      "publicPath": "/images/multi-art/interregnum-08-the-second-sleep/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.17,
+      "rationale": "editorial illustration bias; dark motifs: night; human motifs: return",
+      "publicPath": "/images/multi-art/interregnum-08-the-second-sleep/option-4-recraft-v3.png"
+    }
+  ]
+}

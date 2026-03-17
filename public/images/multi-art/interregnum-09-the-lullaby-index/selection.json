@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:13:58.003Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 9.1,
+    "rationale": "editorial illustration bias; editorial motifs: index, lullaby",
+    "publicPath": "/images/multi-art/interregnum-09-the-lullaby-index/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.1,
+      "rationale": "editorial illustration bias; editorial motifs: index, lullaby",
+      "publicPath": "/images/multi-art/interregnum-09-the-lullaby-index/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.4,
+      "rationale": "cinematic human-focus bias; editorial motifs: index, lullaby",
+      "publicPath": "/images/multi-art/interregnum-09-the-lullaby-index/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8,
+      "rationale": "moody tension and detail bias; editorial motifs: index, lullaby",
+      "publicPath": "/images/multi-art/interregnum-09-the-lullaby-index/option-3-sd35-large.png"
+    }
+  ]
+}

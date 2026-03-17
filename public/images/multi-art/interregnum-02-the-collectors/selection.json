@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:11:27.066Z",
+  "winner": {
+    "modelId": "fal-ai/stable-diffusion-v35-large",
+    "score": 9.18,
+    "rationale": "moody tension and detail bias; human motifs: collector",
+    "publicPath": "/images/multi-art/interregnum-02-the-collectors/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.18,
+      "rationale": "moody tension and detail bias; human motifs: collector",
+      "publicPath": "/images/multi-art/interregnum-02-the-collectors/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.85,
+      "rationale": "cinematic human-focus bias; human motifs: collector",
+      "publicPath": "/images/multi-art/interregnum-02-the-collectors/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.22,
+      "rationale": "editorial illustration bias; human motifs: collector",
+      "publicPath": "/images/multi-art/interregnum-02-the-collectors/option-4-recraft-v3.png"
+    }
+  ]
+}

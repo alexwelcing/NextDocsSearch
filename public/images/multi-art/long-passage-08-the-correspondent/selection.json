@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:29:35.340Z",
+  "winner": {
+    "modelId": "fal-ai/stable-diffusion-v35-large",
+    "score": 9.65,
+    "rationale": "moody tension and detail bias; editorial motifs: cartograph; dark motifs: threshold",
+    "publicPath": "/images/multi-art/long-passage-08-the-correspondent/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 9.65,
+      "rationale": "moody tension and detail bias; editorial motifs: cartograph; dark motifs: threshold",
+      "publicPath": "/images/multi-art/long-passage-08-the-correspondent/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.58,
+      "rationale": "cinematic human-focus bias; editorial motifs: cartograph; dark motifs: threshold",
+      "publicPath": "/images/multi-art/long-passage-08-the-correspondent/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.55,
+      "rationale": "editorial illustration bias; editorial motifs: cartograph; dark motifs: threshold",
+      "publicPath": "/images/multi-art/long-passage-08-the-correspondent/option-4-recraft-v3.png"
+    }
+  ]
+}

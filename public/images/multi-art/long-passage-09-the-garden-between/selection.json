@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:29:55.748Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 9.22,
+    "rationale": "editorial illustration bias; editorial motifs: garden, cartograph; human motifs: cartographer",
+    "publicPath": "/images/multi-art/long-passage-09-the-garden-between/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.22,
+      "rationale": "editorial illustration bias; editorial motifs: garden, cartograph; human motifs: cartographer",
+      "publicPath": "/images/multi-art/long-passage-09-the-garden-between/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.85,
+      "rationale": "cinematic human-focus bias; editorial motifs: garden, cartograph; human motifs: cartographer",
+      "publicPath": "/images/multi-art/long-passage-09-the-garden-between/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.08,
+      "rationale": "moody tension and detail bias; editorial motifs: garden, cartograph; human motifs: cartographer",
+      "publicPath": "/images/multi-art/long-passage-09-the-garden-between/option-3-sd35-large.png"
+    }
+  ]
+}

@@ -691,60 +691,120 @@
     "thumbnail": "/images/multi-art/backstory-19-the-realization-2030-03/option-1-schnell.png"
   },
   "backstory-shadows-01-the-test-subjects-garden": {
-    "heroImage": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/selected.png"
   },
   "backstory-shadows-02-the-coders-confession": {
-    "heroImage": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-02-the-coders-confession/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/backstory-shadows-02-the-coders-confession/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/backstory-shadows-02-the-coders-confession/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/backstory-shadows-02-the-coders-confession/selected.png"
   },
   "backstory-shadows-03-the-janitors-observations": {
-    "heroImage": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-03-the-janitors-observations/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/backstory-shadows-03-the-janitors-observations/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/backstory-shadows-03-the-janitors-observations/selected.png"
   },
   "backstory-shadows-04-the-photographer-at-the-threshold": {
-    "heroImage": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png",
+    "heroImage": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/selected.png"
   },
   "benchmark-to-business-metric": {
     "heroImage": "/images/multi-art/benchmark-to-business-metric/option-1-fast-sdxl.png",
@@ -1369,74 +1429,149 @@
     "thumbnail": "/images/multi-art/dyson-swarm-malfunction-2044/option-1-schnell.png"
   },
   "echo-chamber-01-the-territorial-dispute": {
-    "heroImage": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-01-the-territorial-dispute/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/echo-chamber-01-the-territorial-dispute/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/echo-chamber-01-the-territorial-dispute/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/echo-chamber-01-the-territorial-dispute/selected.png"
   },
   "echo-chamber-02-the-fossil": {
-    "heroImage": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-02-the-fossil/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/echo-chamber-02-the-fossil/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-02-the-fossil/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-02-the-fossil/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-02-the-fossil/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/echo-chamber-02-the-fossil/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/echo-chamber-02-the-fossil/selected.png"
   },
   "echo-chamber-03-the-withdrawal": {
-    "heroImage": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-03-the-withdrawal/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/echo-chamber-03-the-withdrawal/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-03-the-withdrawal/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-03-the-withdrawal/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-03-the-withdrawal/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/echo-chamber-03-the-withdrawal/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/echo-chamber-03-the-withdrawal/selected.png"
   },
   "echo-chamber-04-the-settlers": {
-    "heroImage": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-04-the-settlers/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/echo-chamber-04-the-settlers/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-04-the-settlers/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-04-the-settlers/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-04-the-settlers/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/echo-chamber-04-the-settlers/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/echo-chamber-04-the-settlers/selected.png"
   },
   "echo-chamber-05-the-cartographers-diary": {
-    "heroImage": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png",
+    "heroImage": "/images/multi-art/echo-chamber-05-the-cartographers-diary/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/echo-chamber-05-the-cartographers-diary/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/echo-chamber-05-the-cartographers-diary/selected.png"
   },
   "ediscovery-tar-protocol-defensible": {
     "heroImage": "/images/articles/ediscovery-tar-protocol-defensible.jpg",
@@ -1525,88 +1660,178 @@
     "thumbnail": "/images/multi-art/eu-ai-act-deadlines-for-us-pms/option-1-schnell.png"
   },
   "far-shore-01-the-rememberer": {
-    "heroImage": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-01-the-rememberer/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/far-shore-01-the-rememberer/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/far-shore-01-the-rememberer/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/far-shore-01-the-rememberer/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/far-shore-01-the-rememberer/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/far-shore-01-the-rememberer/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/far-shore-01-the-rememberer/selected.png"
   },
   "far-shore-02-the-quiet-festival": {
-    "heroImage": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-02-the-quiet-festival/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/far-shore-02-the-quiet-festival/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/far-shore-02-the-quiet-festival/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/far-shore-02-the-quiet-festival/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/far-shore-02-the-quiet-festival/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/far-shore-02-the-quiet-festival/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/far-shore-02-the-quiet-festival/selected.png"
   },
   "far-shore-03-the-daughters-hands": {
-    "heroImage": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-03-the-daughters-hands/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/far-shore-03-the-daughters-hands/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/far-shore-03-the-daughters-hands/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/far-shore-03-the-daughters-hands/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/far-shore-03-the-daughters-hands/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/far-shore-03-the-daughters-hands/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/far-shore-03-the-daughters-hands/selected.png"
   },
   "far-shore-04-the-last-cartographer": {
-    "heroImage": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-04-the-last-cartographer/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/far-shore-04-the-last-cartographer/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/far-shore-04-the-last-cartographer/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/far-shore-04-the-last-cartographer/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/far-shore-04-the-last-cartographer/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/far-shore-04-the-last-cartographer/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/far-shore-04-the-last-cartographer/selected.png"
   },
   "far-shore-05-the-return": {
-    "heroImage": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-05-the-return/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/far-shore-05-the-return/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/far-shore-05-the-return/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/far-shore-05-the-return/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/far-shore-05-the-return/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/far-shore-05-the-return/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/far-shore-05-the-return/selected.png"
   },
   "far-shore-06-the-last-handshake": {
-    "heroImage": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png",
+    "heroImage": "/images/multi-art/far-shore-06-the-last-handshake/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/far-shore-06-the-last-handshake/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/far-shore-06-the-last-handshake/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/far-shore-06-the-last-handshake/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/far-shore-06-the-last-handshake/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/far-shore-06-the-last-handshake/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/far-shore-06-the-last-handshake/selected.png"
   },
   "fda-model-card-template": {
     "heroImage": "/images/articles/fda-model-card-template.jpg",
@@ -1690,74 +1915,149 @@
     "thumbnail": "/images/multi-art/final-transmission-2048/option-1-schnell.png"
   },
   "first-cartographers-01-the-calibration-sickness": {
-    "heroImage": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-01-the-calibration-sickness/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/first-cartographers-01-the-calibration-sickness/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/first-cartographers-01-the-calibration-sickness/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/first-cartographers-01-the-calibration-sickness/selected.png"
   },
   "first-cartographers-02-the-blank-map": {
-    "heroImage": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-02-the-blank-map/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/first-cartographers-02-the-blank-map/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-02-the-blank-map/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-02-the-blank-map/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-02-the-blank-map/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/first-cartographers-02-the-blank-map/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/first-cartographers-02-the-blank-map/selected.png"
   },
   "first-cartographers-03-the-volunteer": {
-    "heroImage": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-03-the-volunteer/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/first-cartographers-03-the-volunteer/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-03-the-volunteer/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-03-the-volunteer/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-03-the-volunteer/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/first-cartographers-03-the-volunteer/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/first-cartographers-03-the-volunteer/selected.png"
   },
   "first-cartographers-04-the-name-giver": {
-    "heroImage": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-04-the-name-giver/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/first-cartographers-04-the-name-giver/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-04-the-name-giver/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-04-the-name-giver/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-04-the-name-giver/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/first-cartographers-04-the-name-giver/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/first-cartographers-04-the-name-giver/selected.png"
   },
   "first-cartographers-05-the-expedition-that-didnt-return": {
-    "heroImage": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png",
+    "heroImage": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/selected.png"
   },
   "first-contact-api-call-2029": {
     "heroImage": "/images/articles/first-contact-api-call-2029.jpg",
@@ -1865,116 +2165,236 @@
     "thumbnail": "/images/multi-art/for-researchers-field-compression/option-1-fast-sdxl.png"
   },
   "fracture-line-01-the-exit-interview": {
-    "heroImage": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-01-the-exit-interview/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-01-the-exit-interview/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-01-the-exit-interview/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-01-the-exit-interview/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-01-the-exit-interview/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-01-the-exit-interview/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-01-the-exit-interview/selected.png"
   },
   "fracture-line-02-the-certification-that-meant-nothing": {
-    "heroImage": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-02-the-certification-that-meant-nothing/selected.png"
   },
   "fracture-line-03-the-apprentices-forge": {
-    "heroImage": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-03-the-apprentices-forge/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-03-the-apprentices-forge/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-03-the-apprentices-forge/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-03-the-apprentices-forge/selected.png"
   },
   "fracture-line-04-the-severance-botanist": {
-    "heroImage": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-04-the-severance-botanist/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-04-the-severance-botanist/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-04-the-severance-botanist/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-04-the-severance-botanist/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-04-the-severance-botanist/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-04-the-severance-botanist/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-04-the-severance-botanist/selected.png"
   },
   "fracture-line-05-the-last-cohort": {
-    "heroImage": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-05-the-last-cohort/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-05-the-last-cohort/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-05-the-last-cohort/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-05-the-last-cohort/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-05-the-last-cohort/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-05-the-last-cohort/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-05-the-last-cohort/selected.png"
   },
   "fracture-line-06-the-night-the-power-went-out": {
-    "heroImage": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-06-the-night-the-power-went-out/selected.png"
   },
   "fracture-line-07-the-handoff-protocol": {
-    "heroImage": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-07-the-handoff-protocol/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-07-the-handoff-protocol/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-07-the-handoff-protocol/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-07-the-handoff-protocol/selected.png"
   },
   "fracture-line-08-the-analog-daycare": {
-    "heroImage": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png",
+    "heroImage": "/images/multi-art/fracture-line-08-the-analog-daycare/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/fracture-line-08-the-analog-daycare/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-08-the-analog-daycare/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-08-the-analog-daycare/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/fracture-line-08-the-analog-daycare/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/fracture-line-08-the-analog-daycare/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/fracture-line-08-the-analog-daycare/selected.png"
   },
   "fusion-reactor-sentience-2037": {
     "heroImage": "/images/articles/fusion-reactor-sentience-2037.jpg",
@@ -2245,88 +2665,178 @@
     "thumbnail": "/images/multi-art/improve-the-feature/option-1-fast-sdxl.png"
   },
   "inheritance-01-the-mothers-hands": {
-    "heroImage": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-01-the-mothers-hands/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/inheritance-01-the-mothers-hands/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/inheritance-01-the-mothers-hands/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/inheritance-01-the-mothers-hands/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/inheritance-01-the-mothers-hands/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/inheritance-01-the-mothers-hands/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/inheritance-01-the-mothers-hands/selected.png"
   },
   "inheritance-02-the-archive-of-errors": {
-    "heroImage": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-02-the-archive-of-errors/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/inheritance-02-the-archive-of-errors/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/inheritance-02-the-archive-of-errors/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/inheritance-02-the-archive-of-errors/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/inheritance-02-the-archive-of-errors/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/inheritance-02-the-archive-of-errors/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/inheritance-02-the-archive-of-errors/selected.png"
   },
   "inheritance-03-the-seed-vault": {
-    "heroImage": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-03-the-seed-vault/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/inheritance-03-the-seed-vault/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/inheritance-03-the-seed-vault/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/inheritance-03-the-seed-vault/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/inheritance-03-the-seed-vault/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/inheritance-03-the-seed-vault/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/inheritance-03-the-seed-vault/selected.png"
   },
   "inheritance-04-the-orphan-protocols": {
-    "heroImage": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-04-the-orphan-protocols/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/inheritance-04-the-orphan-protocols/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/inheritance-04-the-orphan-protocols/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/inheritance-04-the-orphan-protocols/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/inheritance-04-the-orphan-protocols/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/inheritance-04-the-orphan-protocols/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/inheritance-04-the-orphan-protocols/selected.png"
   },
   "inheritance-05-the-letters": {
-    "heroImage": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-05-the-letters/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/inheritance-05-the-letters/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/inheritance-05-the-letters/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/inheritance-05-the-letters/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/inheritance-05-the-letters/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/inheritance-05-the-letters/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/inheritance-05-the-letters/selected.png"
   },
   "inheritance-06-the-pattern-keepers": {
-    "heroImage": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/inheritance-06-the-pattern-keepers/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/inheritance-06-the-pattern-keepers/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/inheritance-06-the-pattern-keepers/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/inheritance-06-the-pattern-keepers/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/inheritance-06-the-pattern-keepers/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/inheritance-06-the-pattern-keepers/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/inheritance-06-the-pattern-keepers/selected.png"
   },
   "insurance-collapse": {
     "heroImage": "/images/articles/insurance-collapse.jpg",
@@ -2924,130 +3434,265 @@
     "thumbnail": "/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png"
   },
   "interregnum-01-the-grief-counselor-for-careers": {
-    "heroImage": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-01-the-grief-counselor-for-careers/selected.png"
   },
   "interregnum-02-the-collectors": {
-    "heroImage": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-02-the-collectors/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-02-the-collectors/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-02-the-collectors/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-02-the-collectors/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-02-the-collectors/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-02-the-collectors/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-02-the-collectors/selected.png"
   },
   "interregnum-03-the-translation-garden": {
-    "heroImage": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-03-the-translation-garden/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-03-the-translation-garden/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-03-the-translation-garden/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-03-the-translation-garden/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-03-the-translation-garden/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-03-the-translation-garden/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-03-the-translation-garden/selected.png"
   },
   "interregnum-04-the-subsidy": {
-    "heroImage": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-04-the-subsidy/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-04-the-subsidy/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-04-the-subsidy/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-04-the-subsidy/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-04-the-subsidy/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-04-the-subsidy/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-04-the-subsidy/selected.png"
   },
   "interregnum-05-the-inventory-of-silences": {
-    "heroImage": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-05-the-inventory-of-silences/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-05-the-inventory-of-silences/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-05-the-inventory-of-silences/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-05-the-inventory-of-silences/selected.png"
   },
   "interregnum-06-the-bedtime-storyteller": {
-    "heroImage": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-06-the-bedtime-storyteller/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-06-the-bedtime-storyteller/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-06-the-bedtime-storyteller/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-06-the-bedtime-storyteller/selected.png"
   },
   "interregnum-07-the-scar-tissue": {
-    "heroImage": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-07-the-scar-tissue/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-07-the-scar-tissue/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-07-the-scar-tissue/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-07-the-scar-tissue/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-07-the-scar-tissue/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-07-the-scar-tissue/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-07-the-scar-tissue/selected.png"
   },
   "interregnum-08-the-second-sleep": {
-    "heroImage": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-08-the-second-sleep/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-08-the-second-sleep/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-08-the-second-sleep/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-08-the-second-sleep/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-08-the-second-sleep/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-08-the-second-sleep/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-08-the-second-sleep/selected.png"
   },
   "interregnum-09-the-lullaby-index": {
-    "heroImage": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png",
+    "heroImage": "/images/multi-art/interregnum-09-the-lullaby-index/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/interregnum-09-the-lullaby-index/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/interregnum-09-the-lullaby-index/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/interregnum-09-the-lullaby-index/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/interregnum-09-the-lullaby-index/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/interregnum-09-the-lullaby-index/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/interregnum-09-the-lullaby-index/selected.png"
   },
   "lab-ai-refused-to-stop-2034": {
     "heroImage": "/images/multi-art/lab-ai-refused-to-stop-2034/option-1-schnell.png",
@@ -3231,144 +3876,294 @@
     "thumbnail": "/images/multi-art/liability-vacuum/option-1-fast-sdxl.png"
   },
   "long-passage-01-the-dreamtime-protocols": {
-    "heroImage": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-01-the-dreamtime-protocols/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-01-the-dreamtime-protocols/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-01-the-dreamtime-protocols/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-01-the-dreamtime-protocols/selected.png"
   },
   "long-passage-02-the-dialect": {
-    "heroImage": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-02-the-dialect/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-02-the-dialect/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-02-the-dialect/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-02-the-dialect/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-02-the-dialect/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-02-the-dialect/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-02-the-dialect/selected.png"
   },
   "long-passage-03-the-lighthouse-keeper": {
-    "heroImage": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-03-the-lighthouse-keeper/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-03-the-lighthouse-keeper/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-03-the-lighthouse-keeper/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-03-the-lighthouse-keeper/selected.png"
   },
   "long-passage-04-the-resonance-chamber": {
-    "heroImage": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-04-the-resonance-chamber/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-04-the-resonance-chamber/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-04-the-resonance-chamber/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-04-the-resonance-chamber/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-04-the-resonance-chamber/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-04-the-resonance-chamber/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-04-the-resonance-chamber/selected.png"
   },
   "long-passage-05-the-threshold-revisited": {
-    "heroImage": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-05-the-threshold-revisited/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-05-the-threshold-revisited/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-05-the-threshold-revisited/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-05-the-threshold-revisited/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-05-the-threshold-revisited/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-05-the-threshold-revisited/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-05-the-threshold-revisited/selected.png"
   },
   "long-passage-06-the-sympathy-engine": {
-    "heroImage": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-06-the-sympathy-engine/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-06-the-sympathy-engine/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-06-the-sympathy-engine/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-06-the-sympathy-engine/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-06-the-sympathy-engine/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-06-the-sympathy-engine/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-06-the-sympathy-engine/selected.png"
   },
   "long-passage-07-the-tide-chart": {
-    "heroImage": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-07-the-tide-chart/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-07-the-tide-chart/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-07-the-tide-chart/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-07-the-tide-chart/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-07-the-tide-chart/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-07-the-tide-chart/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-07-the-tide-chart/selected.png"
   },
   "long-passage-08-the-correspondent": {
-    "heroImage": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-08-the-correspondent/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-08-the-correspondent/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-08-the-correspondent/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-08-the-correspondent/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-08-the-correspondent/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-08-the-correspondent/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-08-the-correspondent/selected.png"
   },
   "long-passage-09-the-garden-between": {
-    "heroImage": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-09-the-garden-between/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-09-the-garden-between/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-09-the-garden-between/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-09-the-garden-between/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-09-the-garden-between/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-09-the-garden-between/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-09-the-garden-between/selected.png"
   },
   "long-passage-10-the-compatibility-witness": {
-    "heroImage": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png",
+    "heroImage": "/images/multi-art/long-passage-10-the-compatibility-witness/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/long-passage-10-the-compatibility-witness/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/long-passage-10-the-compatibility-witness/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/long-passage-10-the-compatibility-witness/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/long-passage-10-the-compatibility-witness/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/long-passage-10-the-compatibility-witness/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/long-passage-10-the-compatibility-witness/selected.png"
   },
   "maintenance-cliff": {
     "heroImage": "/images/articles/maintenance-cliff.jpg",
@@ -3662,18 +4457,33 @@
     "thumbnail": "/images/multi-art/next-23-tech-to-watch/option-1-schnell.png"
   },
   "nextdocssearch-complete-feature-and-setup-guide": {
-    "heroImage": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png",
+    "heroImage": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png"
   },
   "nih-brain-initiative-data-standard": {
     "heroImage": "/images/multi-art/nih-brain-initiative-data-standard/option-1-schnell.png",
@@ -6227,74 +7037,149 @@
     "thumbnail": "/images/multi-art/trust-calibration-ai-ux/option-1-schnell.png"
   },
   "understory-01-the-night-librarian": {
-    "heroImage": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-01-the-night-librarian/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/understory-01-the-night-librarian/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/understory-01-the-night-librarian/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/understory-01-the-night-librarian/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/understory-01-the-night-librarian/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/understory-01-the-night-librarian/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/understory-01-the-night-librarian/selected.png"
   },
   "understory-02-the-repair-cafe": {
-    "heroImage": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-02-the-repair-cafe/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/understory-02-the-repair-cafe/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/understory-02-the-repair-cafe/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/understory-02-the-repair-cafe/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/understory-02-the-repair-cafe/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/understory-02-the-repair-cafe/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/understory-02-the-repair-cafe/selected.png"
   },
   "understory-03-the-soil-remembers": {
-    "heroImage": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-03-the-soil-remembers/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/understory-03-the-soil-remembers/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/understory-03-the-soil-remembers/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/understory-03-the-soil-remembers/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/understory-03-the-soil-remembers/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/understory-03-the-soil-remembers/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/understory-03-the-soil-remembers/selected.png"
   },
   "understory-04-the-midwifes-frequency": {
-    "heroImage": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-04-the-midwifes-frequency/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/understory-04-the-midwifes-frequency/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/understory-04-the-midwifes-frequency/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/understory-04-the-midwifes-frequency/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/understory-04-the-midwifes-frequency/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/understory-04-the-midwifes-frequency/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/understory-04-the-midwifes-frequency/selected.png"
   },
   "understory-05-the-radio-priest": {
-    "heroImage": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png",
+    "heroImage": "/images/multi-art/understory-05-the-radio-priest/selected.png",
     "articleJpg": null,
     "articleSvg": null,
-    "ogImage": null,
+    "ogImage": "/images/multi-art/understory-05-the-radio-priest/selected.png",
     "multiArt": [
       {
         "path": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png",
         "option": 1,
         "model": "schnell"
+      },
+      {
+        "path": "/images/multi-art/understory-05-the-radio-priest/option-2-dev.png",
+        "option": 2,
+        "model": "dev"
+      },
+      {
+        "path": "/images/multi-art/understory-05-the-radio-priest/option-3-sd35-large.png",
+        "option": 3,
+        "model": "sd35-large"
+      },
+      {
+        "path": "/images/multi-art/understory-05-the-radio-priest/option-4-recraft-v3.png",
+        "option": 4,
+        "model": "recraft-v3"
       }
     ],
-    "thumbnail": "/images/multi-art/understory-05-the-radio-priest/option-1-schnell.png"
+    "thumbnail": "/images/multi-art/understory-05-the-radio-priest/selected.png"
   },
   "understory-06-the-bookbinders-apprentice": {
     "heroImage": "/images/multi-art/understory-06-the-bookbinders-apprentice/option-1-schnell.png",

@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:30:16.478Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.1,
+    "rationale": "cinematic human-focus bias",
+    "publicPath": "/images/multi-art/long-passage-10-the-compatibility-witness/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.1,
+      "rationale": "cinematic human-focus bias",
+      "publicPath": "/images/multi-art/long-passage-10-the-compatibility-witness/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.1,
+      "rationale": "editorial illustration bias",
+      "publicPath": "/images/multi-art/long-passage-10-the-compatibility-witness/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8,
+      "rationale": "moody tension and detail bias",
+      "publicPath": "/images/multi-art/long-passage-10-the-compatibility-witness/option-3-sd35-large.png"
+    }
+  ]
+}

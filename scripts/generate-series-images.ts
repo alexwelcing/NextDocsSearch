@@ -23,7 +23,6 @@ dotenv.config()
 
 import fs from 'fs'
 import path from 'path'
-import { ProxyAgent, fetch as undiciFetch } from 'undici'
 
 // ═══════════════════════════════════════════════════════════════
 // PROXY-AWARE FETCH
@@ -36,12 +35,7 @@ function getProxyFetch(): typeof globalThis.fetch {
     process.env.https_proxy ||
     process.env.http_proxy
   if (proxyUrl) {
-    const agent = new ProxyAgent(proxyUrl)
-    return ((url: string | URL | Request, init?: RequestInit) =>
-      undiciFetch(url as string, {
-        ...init,
-        dispatcher: agent,
-      } as never)) as unknown as typeof globalThis.fetch
+    console.warn('generate-series-images: proxy environment detected; native fetch may not honor proxy settings.')
   }
   return globalThis.fetch
 }

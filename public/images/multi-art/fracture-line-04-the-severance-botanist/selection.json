@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:07:05.655Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.03,
+    "rationale": "cinematic human-focus bias; dark motifs: severance; human motifs: counselor",
+    "publicPath": "/images/multi-art/fracture-line-04-the-severance-botanist/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.03,
+      "rationale": "cinematic human-focus bias; dark motifs: severance; human motifs: counselor",
+      "publicPath": "/images/multi-art/fracture-line-04-the-severance-botanist/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.63,
+      "rationale": "moody tension and detail bias; dark motifs: severance; human motifs: counselor",
+      "publicPath": "/images/multi-art/fracture-line-04-the-severance-botanist/option-3-sd35-large.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.17,
+      "rationale": "editorial illustration bias; dark motifs: severance; human motifs: counselor",
+      "publicPath": "/images/multi-art/fracture-line-04-the-severance-botanist/option-4-recraft-v3.png"
+    }
+  ]
+}

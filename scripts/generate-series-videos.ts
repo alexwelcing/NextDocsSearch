@@ -25,6 +25,7 @@ import path from 'path'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { generateVideoViaHf } from '../lib/video-generation/hf-client'
 import { ARTICLE_COLLECTIONS } from '../lib/featured-articles'
+import { STORAGE_CONFIG } from '../types/article-media'
 
 // ═══════════════════════════════════════════════════════════════
 // SERIES REGISTRY
@@ -197,7 +198,7 @@ async function uploadToSupabase(
     const storagePath = `${slug}/ltx-hf-${Date.now()}.mp4`
 
     const { error: uploadError } = await supabase.storage
-      .from('article-videos')
+      .from(STORAGE_CONFIG.buckets.videos)
       .upload(storagePath, videoBuffer, { contentType: 'video/mp4', upsert: true })
 
     if (uploadError) {
@@ -210,7 +211,7 @@ async function uploadToSupabase(
       const thumbBuffer = fs.readFileSync(thumbnailLocalPath)
       thumbnailPath = `${slug}/video-thumb.png`
       await supabase.storage
-        .from('article-images')
+        .from(STORAGE_CONFIG.buckets.images)
         .upload(thumbnailPath, thumbBuffer, { contentType: 'image/png', upsert: true })
     }
 
@@ -239,7 +240,7 @@ async function uploadToSupabase(
       return false
     }
 
-    console.log(`   Uploaded: article-videos/${storagePath}`)
+    console.log(`   Uploaded: ${STORAGE_CONFIG.buckets.videos}/${storagePath}`)
     return true
   } catch (err) {
     console.error('   Upload error:', err)

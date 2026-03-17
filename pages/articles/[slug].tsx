@@ -693,6 +693,19 @@ const ArticlePage: NextPage<ArticleProps> = ({
   }, [slug]);
 
   const primaryVideo = articleVideos[0] || null;
+  const indexedVideo = primaryVideo || (articleVideo
+    ? {
+        title: `${title} - Video`,
+        caption: description || title,
+        public_url: `${siteUrl}${articleVideo}`,
+        thumbnail_url: heroImage ? `${siteUrl}${heroImage}` : fullOgImage,
+        mime_type: 'video/mp4',
+        width: undefined,
+        height: undefined,
+        duration_seconds: undefined,
+        created_at: date,
+      }
+    : null)
 
   /* -------------------------------------------------------------------
      Split markdown content at ## headings to interleave with parallax.
@@ -773,25 +786,25 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="article:author" content={author.join(', ')} />
 
         {/* Video meta tags for social sharing */}
-        {primaryVideo && (
+        {indexedVideo && (
           <>
-            <meta property="og:video" content={primaryVideo.public_url} />
-            <meta property="og:video:type" content={primaryVideo.mime_type || 'video/mp4'} />
-            {primaryVideo.width && <meta property="og:video:width" content={String(primaryVideo.width)} />}
-            {primaryVideo.height && <meta property="og:video:height" content={String(primaryVideo.height)} />}
+            <meta property="og:video" content={indexedVideo.public_url} />
+            <meta property="og:video:type" content={indexedVideo.mime_type || 'video/mp4'} />
+            {indexedVideo.width && <meta property="og:video:width" content={String(indexedVideo.width)} />}
+            {indexedVideo.height && <meta property="og:video:height" content={String(indexedVideo.height)} />}
           </>
         )}
 
-        {primaryVideo ? (
+        {indexedVideo ? (
           <>
             <meta name="twitter:card" content="player" />
             <meta name="twitter:site" content="@alexwelcing" />
             <meta name="twitter:title" content={title} />
             <meta name="twitter:description" content={description || `Read ${title}`} />
             <meta name="twitter:player" content={articleUrl} />
-            {primaryVideo.width && <meta name="twitter:player:width" content={String(primaryVideo.width)} />}
-            {primaryVideo.height && <meta name="twitter:player:height" content={String(primaryVideo.height)} />}
-            <meta name="twitter:image" content={primaryVideo.thumbnail_url || fullOgImage} />
+            {indexedVideo.width && <meta name="twitter:player:width" content={String(indexedVideo.width)} />}
+            {indexedVideo.height && <meta name="twitter:player:height" content={String(indexedVideo.height)} />}
+            <meta name="twitter:image" content={indexedVideo.thumbnail_url || fullOgImage} />
           </>
         ) : (
           <>
@@ -841,16 +854,16 @@ const ArticlePage: NextPage<ArticleProps> = ({
       />
 
       {/* VideoObject structured data for Google Video indexing */}
-      {primaryVideo && (
+      {indexedVideo && (
         <StructuredData
           type="VideoObject"
           data={createVideoSchema({
-            name: primaryVideo.title || `${title} — Video`,
-            description: primaryVideo.caption || description || title,
-            thumbnailUrl: primaryVideo.thumbnail_url || fullOgImage,
-            contentUrl: primaryVideo.public_url,
-            uploadDate: primaryVideo.created_at || date,
-            duration: primaryVideo.duration_seconds,
+            name: indexedVideo.title || `${title} — Video`,
+            description: indexedVideo.caption || description || title,
+            thumbnailUrl: indexedVideo.thumbnail_url || fullOgImage,
+            contentUrl: indexedVideo.public_url,
+            uploadDate: indexedVideo.created_at || date,
+            duration: indexedVideo.duration_seconds,
             articleUrl,
           })}
         />

@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:15:59.669Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.73,
+    "rationale": "cinematic human-focus bias; editorial motifs: cartograph; dark motifs: threshold; human motifs: cartographer",
+    "publicPath": "/images/multi-art/long-passage-05-the-threshold-revisited/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.73,
+      "rationale": "cinematic human-focus bias; editorial motifs: cartograph; dark motifs: threshold; human motifs: cartographer",
+      "publicPath": "/images/multi-art/long-passage-05-the-threshold-revisited/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.67,
+      "rationale": "editorial illustration bias; editorial motifs: cartograph; dark motifs: threshold; human motifs: cartographer",
+      "publicPath": "/images/multi-art/long-passage-05-the-threshold-revisited/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.63,
+      "rationale": "moody tension and detail bias; editorial motifs: cartograph; dark motifs: threshold; human motifs: cartographer",
+      "publicPath": "/images/multi-art/long-passage-05-the-threshold-revisited/option-3-sd35-large.png"
+    }
+  ]
+}

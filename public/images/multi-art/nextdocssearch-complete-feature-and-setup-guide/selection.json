@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:30:40.640Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 8.4,
+    "rationale": "cinematic human-focus bias",
+    "publicPath": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.4,
+      "rationale": "cinematic human-focus bias",
+      "publicPath": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.1,
+      "rationale": "editorial illustration bias",
+      "publicPath": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8,
+      "rationale": "moody tension and detail bias",
+      "publicPath": "/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/option-3-sd35-large.png"
+    }
+  ]
+}

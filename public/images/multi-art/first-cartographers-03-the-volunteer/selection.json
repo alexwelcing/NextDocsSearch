@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:04:45.700Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 10.38,
+    "rationale": "cinematic human-focus bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, volunteer, teacher",
+    "publicPath": "/images/multi-art/first-cartographers-03-the-volunteer/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 10.38,
+      "rationale": "cinematic human-focus bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, volunteer, teacher",
+      "publicPath": "/images/multi-art/first-cartographers-03-the-volunteer/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.03,
+      "rationale": "editorial illustration bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, volunteer, teacher",
+      "publicPath": "/images/multi-art/first-cartographers-03-the-volunteer/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.87,
+      "rationale": "moody tension and detail bias; editorial motifs: cartograph; dark motifs: expedition; human motifs: return, volunteer, teacher",
+      "publicPath": "/images/multi-art/first-cartographers-03-the-volunteer/option-3-sd35-large.png"
+    }
+  ]
+}

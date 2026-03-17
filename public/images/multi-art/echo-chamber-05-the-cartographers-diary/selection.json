@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:01:23.403Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 9.17,
+    "rationale": "editorial illustration bias; editorial motifs: cartograph, diary; dark motifs: expedition; human motifs: cartographer",
+    "publicPath": "/images/multi-art/echo-chamber-05-the-cartographers-diary/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.17,
+      "rationale": "editorial illustration bias; editorial motifs: cartograph, diary; dark motifs: expedition; human motifs: cartographer",
+      "publicPath": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.03,
+      "rationale": "cinematic human-focus bias; editorial motifs: cartograph, diary; dark motifs: expedition; human motifs: cartographer",
+      "publicPath": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.63,
+      "rationale": "moody tension and detail bias; editorial motifs: cartograph, diary; dark motifs: expedition; human motifs: cartographer",
+      "publicPath": "/images/multi-art/echo-chamber-05-the-cartographers-diary/option-3-sd35-large.png"
+    }
+  ]
+}

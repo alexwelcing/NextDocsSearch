@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:01:00.636Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 9.3,
+    "rationale": "cinematic human-focus bias; editorial motifs: cartograph; human motifs: return, settlers",
+    "publicPath": "/images/multi-art/echo-chamber-04-the-settlers/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 9.3,
+      "rationale": "cinematic human-focus bias; editorial motifs: cartograph; human motifs: return, settlers",
+      "publicPath": "/images/multi-art/echo-chamber-04-the-settlers/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.84,
+      "rationale": "editorial illustration bias; editorial motifs: cartograph; human motifs: return, settlers",
+      "publicPath": "/images/multi-art/echo-chamber-04-the-settlers/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.16,
+      "rationale": "moody tension and detail bias; editorial motifs: cartograph; human motifs: return, settlers",
+      "publicPath": "/images/multi-art/echo-chamber-04-the-settlers/option-3-sd35-large.png"
+    }
+  ]
+}

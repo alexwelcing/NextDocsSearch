@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T18:11:49.174Z",
+  "winner": {
+    "modelId": "fal-ai/recraft/v3/text-to-image",
+    "score": 9.05,
+    "rationale": "editorial illustration bias; editorial motifs: garden, translation; dark motifs: threshold",
+    "publicPath": "/images/multi-art/interregnum-03-the-translation-garden/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 9.05,
+      "rationale": "editorial illustration bias; editorial motifs: garden, translation; dark motifs: threshold",
+      "publicPath": "/images/multi-art/interregnum-03-the-translation-garden/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.58,
+      "rationale": "cinematic human-focus bias; editorial motifs: garden, translation; dark motifs: threshold",
+      "publicPath": "/images/multi-art/interregnum-03-the-translation-garden/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.55,
+      "rationale": "moody tension and detail bias; editorial motifs: garden, translation; dark motifs: threshold",
+      "publicPath": "/images/multi-art/interregnum-03-the-translation-garden/option-3-sd35-large.png"
+    }
+  ]
+}

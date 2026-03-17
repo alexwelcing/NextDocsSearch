@@ -1,0 +1,29 @@
+{
+  "selectedAt": "2026-03-17T17:14:10.826Z",
+  "winner": {
+    "modelId": "fal-ai/flux/dev",
+    "score": 8.85,
+    "rationale": "cinematic human-focus bias; editorial motifs: garden; human motifs: volunteer",
+    "publicPath": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/selected.png"
+  },
+  "candidates": [
+    {
+      "modelId": "fal-ai/flux/dev",
+      "score": 8.85,
+      "rationale": "cinematic human-focus bias; editorial motifs: garden; human motifs: volunteer",
+      "publicPath": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-2-dev.png"
+    },
+    {
+      "modelId": "fal-ai/recraft/v3/text-to-image",
+      "score": 8.72,
+      "rationale": "editorial illustration bias; editorial motifs: garden; human motifs: volunteer",
+      "publicPath": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-4-recraft-v3.png"
+    },
+    {
+      "modelId": "fal-ai/stable-diffusion-v35-large",
+      "score": 8.08,
+      "rationale": "moody tension and detail bias; editorial motifs: garden; human motifs: volunteer",
+      "publicPath": "/images/multi-art/backstory-shadows-01-the-test-subjects-garden/option-3-sd35-large.png"
+    }
+  ]
+}

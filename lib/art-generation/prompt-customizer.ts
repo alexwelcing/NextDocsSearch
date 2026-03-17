@@ -105,6 +105,13 @@ const PROMPT_CONFIGS: Record<string, Partial<ModelPromptConfig>> = {
     includeKeywords: true,
   },
 
+  'fal-ai/recraft/v3/text-to-image': {
+    stylePrefix: 'Professional digital illustration,',
+    styleSuffix: ', vector art style, clean lines, modern design aesthetic',
+    qualityBoosters: ['graphic design quality', 'polished', 'professional'],
+    includeKeywords: true,
+  },
+
   // Aura Flow - experimental
   'fal-ai/aura-flow': {
     stylePrefix: 'Flowing artistic visualization of',

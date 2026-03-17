@@ -109,8 +109,8 @@ export interface ArticleMediaResponse {
  */
 export const STORAGE_CONFIG = {
   buckets: {
-    images: 'article-images',
-    videos: 'article-videos',
+    images: 'images',
+    videos: 'images',
   },
   limits: {
     image: {
