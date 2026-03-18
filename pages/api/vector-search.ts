@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { codeBlock, oneLine } from 'common-tags';
+import { createClient } from '@supabase/supabase-js'
+import { Configuration, OpenAIApi, type CreateEmbeddingResponse } from 'openai-edge'
 import { ApplicationError, UserError } from '@/lib/errors';
 import articleManifest from '@/lib/generated/article-manifest.json'
 import { generateHuggingFaceChat, generateHuggingFaceChatStream, type HfChatMessage } from '@/lib/ai/huggingface'
@@ -55,6 +57,20 @@ interface ArticleRecord {
   articleType?: string
   date?: string
 }
+
+interface SemanticPageSection {
+  id: number
+  page_id: number
+  slug: string | null
+  heading: string | null
+  content: string
+  similarity: number
+}
+
+const openAiKey = process.env.OPENAI_KEY
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
 const stopWords = new Set([
   'the', 'and', 'for', 'with', 'that', 'this', 'from', 'into', 'your', 'have', 'what', 'about',
   'would', 'there', 'their', 'them', 'then', 'when', 'where', 'which', 'while', 'were', 'been',
@@ -72,6 +88,71 @@ function getManifestArticles(): ArticleRecord[] {
 
 function normalizeWhitespace(value: string): string {
   return value.replace(/\s+/g, ' ').trim()
+}
+
+function hasConfiguredValue(value: string | undefined): value is string {
+  return Boolean(value?.trim() && !/your-[a-z-]*key/i.test(value))
+}
+
+function createSupabaseAdminClient() {
+  if (!hasConfiguredValue(supabaseUrl) || !hasConfiguredValue(supabaseServiceKey)) {
+    return null
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  })
+}
+
+async function getSemanticPageSections(query: string): Promise<SemanticPageSection[]> {
+  if (!hasConfiguredValue(openAiKey)) {
+    return []
+  }
+
+  const supabaseClient = createSupabaseAdminClient()
+  if (!supabaseClient) {
+    return []
+  }
+
+  try {
+    const openai = new OpenAIApi(new Configuration({ apiKey: openAiKey }))
+    const embeddingResponse = await openai.createEmbedding({
+      model: 'text-embedding-ada-002',
+      input: query.replace(/\n/g, ' '),
+    })
+
+    if (!embeddingResponse.ok) {
+      console.error('[vector-search] Failed to create embedding', embeddingResponse.status)
+      return []
+    }
+
+    const embeddingJson = (await embeddingResponse.json()) as CreateEmbeddingResponse
+    const embedding = embeddingJson.data?.[0]?.embedding
+
+    if (!embedding) {
+      return []
+    }
+
+    const { data, error } = await supabaseClient.rpc('match_page_sections', {
+      embedding,
+      match_threshold: 0.72,
+      match_count: 8,
+      min_content_length: 80,
+    })
+
+    if (error) {
+      console.error('[vector-search] Semantic section match failed', error)
+      return []
+    }
+
+    return Array.isArray(data) ? (data as SemanticPageSection[]) : []
+  } catch (error) {
+    console.error('[vector-search] Semantic retrieval fallback to manifest', error)
+    return []
+  }
 }
 
 function tokenize(input: string): string[] {
@@ -116,6 +197,12 @@ function scoreArticle(article: ArticleRecord, query: string, queryTokens: string
 
   return score
 }
+
+function getArticleBySlug(slug: string | null | undefined): ArticleRecord | undefined {
+  if (!slug) return undefined
+  return getManifestArticles().find((article) => article.slug === slug)
+}
+
 function extractSnippet(articleBody: string, queryTokens: string[]): string {
   if (!articleBody) {
     return ''
@@ -140,7 +227,42 @@ function extractSnippet(articleBody: string, queryTokens: string[]): string {
   return `${prefix}${normalizedBody.slice(start, end).trim()}${suffix}`
 }
 
-function buildContextSections(query: string): string {
+function buildSemanticContextSections(
+  sections: SemanticPageSection[],
+  queryTokens: string[],
+): string {
+  if (!sections.length) {
+    return ''
+  }
+
+  let remainingBudget = 2600
+  const blocks: string[] = []
+
+  for (const section of sections) {
+    if (remainingBudget <= 0) {
+      break
+    }
+
+    const article = getArticleBySlug(section.slug)
+    const excerpt = normalizeWhitespace(section.content).slice(0, Math.min(680, remainingBudget))
+    const snippet = extractSnippet(excerpt, queryTokens) || excerpt
+
+    blocks.push(codeBlock`
+      Page: ${article?.title || section.slug || section.heading || 'unknown'}
+      Slug: ${article?.slug || section.slug || 'unknown'}
+      Heading: ${section.heading || 'Intro'}
+      Similarity: ${section.similarity.toFixed(3)}
+      Type: ${article?.articleType || 'unknown'}
+      Matched section: ${snippet}
+    `)
+
+    remainingBudget -= snippet.length
+  }
+
+  return blocks.join('\n\n---\n\n')
+}
+
+function buildLexicalContextSections(query: string): string {
   const articles = getManifestArticles()
   const queryTokens = tokenize(query)
   const rankedArticles = articles
@@ -172,6 +294,17 @@ function buildContextSections(query: string): string {
     .join('\n\n---\n\n')
 }
 
+function buildContextSections(query: string, semanticSections: SemanticPageSection[]): string {
+  const queryTokens = tokenize(query)
+  const semanticContext = buildSemanticContextSections(semanticSections, queryTokens)
+
+  if (semanticContext) {
+    return semanticContext
+  }
+
+  return buildLexicalContextSections(query)
+}
+
 function getInstantResults(query: string, limit = 5): InstantAnswerItem[] {
   const articles = getManifestArticles()
   const queryTokens = tokenize(query)
@@ -191,6 +324,57 @@ function getInstantResults(query: string, limit = 5): InstantAnswerItem[] {
       keywords: article.keywords || [],
       domains: article.domains || [],
     }))
+}
+
+function getSemanticInstantResults(query: string, sections: SemanticPageSection[], limit = 5): InstantAnswerItem[] {
+  const queryTokens = tokenize(query)
+  const grouped = new Map<string, { score: number; section: SemanticPageSection }>()
+
+  for (const section of sections) {
+    const slug = section.slug || undefined
+    if (!slug) continue
+
+    const existing = grouped.get(slug)
+    const score = Math.max(1, Math.round(section.similarity * 100))
+
+    if (!existing || score > existing.score) {
+      grouped.set(slug, { score, section })
+    }
+  }
+
+  return Array.from(grouped.entries())
+    .sort((left, right) => right[1].score - left[1].score)
+    .slice(0, limit)
+    .map(([slug, entry]) => {
+      const article = getArticleBySlug(slug)
+      const sourceText = entry.section.content || article?.searchText || article?.description || ''
+
+      return {
+        slug,
+        title: article?.title || entry.section.heading || slug,
+        description: article?.description || entry.section.heading || 'Relevant archive match.',
+        snippet: extractSnippet(sourceText, queryTokens),
+        articleType: article?.articleType,
+        score: entry.score,
+        keywords: article?.keywords || [],
+        domains: article?.domains || [],
+      }
+    })
+}
+
+function dedupeInstantResults(items: InstantAnswerItem[], limit = 5): InstantAnswerItem[] {
+  const deduped = new Map<string, InstantAnswerItem>()
+
+  for (const item of items) {
+    const existing = deduped.get(item.slug)
+    if (!existing || item.score > existing.score) {
+      deduped.set(item.slug, item)
+    }
+  }
+
+  return Array.from(deduped.values())
+    .sort((left, right) => right.score - left.score)
+    .slice(0, limit)
 }
 
 function writeStreamEvent(res: NextApiResponse, event: ShipStreamEvent) {
@@ -228,21 +412,21 @@ function buildArticleContextSection(articleContext?: VectorSearchRequest['articl
 }
 
 function mergeInstantResults(
-  query: string,
+  baseResults: InstantAnswerItem[],
   articleContext?: VectorSearchRequest['articleContext'],
   limit = 5,
 ): InstantAnswerItem[] {
-  const ranked = getInstantResults(query, limit)
+  const ranked = dedupeInstantResults(baseResults, Math.max(limit, 8))
 
   if (!articleContext?.title) {
-    return ranked
+    return ranked.slice(0, limit)
   }
 
   const currentArticle: InstantAnswerItem = {
     slug: articleContext.slug || 'current-article',
     title: articleContext.title,
     description: articleContext.description || 'Current article context.',
-    snippet: extractSnippet(articleContext.content || articleContext.description || '', tokenize(query)),
+    snippet: extractSnippet(articleContext.content || articleContext.description || '', tokenize(articleContext.title)),
     articleType: articleContext.articleType,
     score: ranked.length > 0 ? Math.max(ranked[0].score + 1, 100) : 100,
     keywords: articleContext.keywords || [],
@@ -254,6 +438,7 @@ function mergeInstantResults(
 
 function buildUserPrompt(
   query: string,
+  archiveContext: string,
   questContext?: QuestContext,
   trickContext?: ResolvedShipTrick,
   articleContext?: VectorSearchRequest['articleContext'],
@@ -281,7 +466,7 @@ function buildUserPrompt(
     ${buildArticleContextSection(articleContext) || 'Current article: none'}
 
     Archive context:
-    ${buildContextSections(trickContext?.searchQuery || sanitizedQuery)}
+    ${archiveContext}
 
     User question:
     """
@@ -410,6 +595,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const sanitizedQuery = query.trim()
     const trickContext = resolveShipTrick(sanitizedQuery)
+    const retrievalQuery = trickContext?.searchQuery || sanitizedQuery
 
     if (trickContext.helpResponse) {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8')
@@ -435,9 +621,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       : []
 
-    const prompt = buildUserPrompt(sanitizedQuery, questContext, trickContext, articleContext)
+    const semanticSections = await getSemanticPageSections(retrievalQuery)
+    const archiveContext = buildContextSections(retrievalQuery, semanticSections)
     const answerMode = (trickContext.trick?.id ?? 'default') as ShipAnswerMode
-    const instantResults = mergeInstantResults(trickContext?.searchQuery || sanitizedQuery, articleContext)
+    const instantResults = mergeInstantResults(
+      [
+        ...getSemanticInstantResults(retrievalQuery, semanticSections, 5),
+        ...getInstantResults(retrievalQuery, 5),
+      ],
+      articleContext,
+    )
+    const prompt = buildUserPrompt(
+      sanitizedQuery,
+      archiveContext,
+      questContext,
+      trickContext,
+      articleContext,
+    )
 
     res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8')
     res.setHeader('Cache-Control', 'no-store')
