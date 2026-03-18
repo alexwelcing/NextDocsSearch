@@ -13,12 +13,13 @@ import matter from 'gray-matter'
 import { createClient } from '@supabase/supabase-js'
 
 import { discoverArticleImages } from '../lib/article-images'
+import { SITE_URL } from '../lib/site-url'
 import { STORAGE_CONFIG } from '../types/article-media'
 
 dotenv.config({ path: '.env.local' })
 dotenv.config()
 
-const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://www.alexwelcing.com'
+const siteUrl = SITE_URL
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 

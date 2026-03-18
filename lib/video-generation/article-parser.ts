@@ -11,6 +11,7 @@ import type {
   ArticleCallout,
   ArticleQuote,
 } from './types'
+import { SITE_URL } from '../site-url'
 
 // ═══════════════════════════════════════════════════════════════
 // PARSING UTILITIES
@@ -221,7 +222,7 @@ export function parseArticle(
     : frontmatter.author || 'Unknown'
 
   return {
-    url: `https://www.alexwelcing.com/articles/${slug}`,
+    url: `${SITE_URL}/articles/${slug}`,
     slug,
     title: frontmatter.title || slug,
     author,

@@ -8,6 +8,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import CircleNav from '@/components/ui/CircleNav'
 import StructuredData from '@/components/StructuredData'
+import { SITE_URL } from '@/lib/site-url'
 
 interface Article {
   slug: string
@@ -49,6 +50,8 @@ const themes = [
 ]
 
 export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
+  const siteUrl = SITE_URL
+  const pageUrl = `${siteUrl}/speculative-ai`
   return (
     <div style={{ minHeight: '100vh', background: '#030308', color: '#e5e5e5' }}>
       <Head>
@@ -63,17 +66,17 @@ export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.alexwelcing.com/speculative-ai" />
+        <link rel="canonical" href={pageUrl} />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Speculative AI Systems | Alex Welcing" />
         <meta
           property="og:description"
           content="Exploring speculative AI systems, failure modes, and emergent behaviors. Original research on how AI reshapes civilization, governance, and human agency."
         />
-        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://www.alexwelcing.com/speculative-ai" />
+        <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
@@ -82,14 +85,14 @@ export default function SpeculativeAIHub({ articles }: SpeculativeAIHubProps) {
           name="twitter:description"
           content="Exploring speculative AI systems, failure modes, and emergent behaviors. Original research on how AI reshapes civilization."
         />
-        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
       </Head>
 
       <StructuredData
         type="Website"
         data={{
           name: 'Speculative AI Systems - Alex Welcing',
-          url: 'https://www.alexwelcing.com/speculative-ai',
+          url: pageUrl,
           description:
             'Research hub for speculative AI systems, failure modes, and emergent intelligence scenarios.',
           author: { '@type': 'Person', name: 'Alex Welcing' },

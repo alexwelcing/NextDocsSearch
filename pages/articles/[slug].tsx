@@ -29,6 +29,7 @@ import ArticleVideoPlayer from '@/components/ArticleVideoPlayer';
 import { ArtFrame, DepthSection, DepthDivider, EditorialSection } from '@/components/ui/ParallaxArtLayers';
 import type { DepthStage } from '@/components/ui/ParallaxArtLayers';
 import { discoverArticleImages } from '@/lib/article-images';
+import { SITE_URL } from '@/lib/site-url';
 import type { MultiArtOption } from '@/lib/article-images';
 
 interface ArticleProps {
@@ -650,7 +651,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   relatedArticles,
   slug
 }) => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.alexwelcing.com';
+  const siteUrl = SITE_URL;
   const articleUrl = `${siteUrl}/articles/${slug}`;
   const defaultOgImage = `${siteUrl}/og-default.png`;
   const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : defaultOgImage;

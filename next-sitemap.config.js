@@ -1,6 +1,34 @@
 /** @type {import('next-sitemap').IConfig} */
+function normalizeSiteUrl(rawUrl) {
+  const defaultSiteUrl = 'https://alexwelcing.com'
+
+  if (!rawUrl) {
+    return defaultSiteUrl
+  }
+
+  try {
+    const parsedUrl = new URL(rawUrl)
+
+    if (parsedUrl.hostname === 'www.alexwelcing.com') {
+      parsedUrl.hostname = 'alexwelcing.com'
+    }
+
+    parsedUrl.pathname = parsedUrl.pathname.replace(/\/+$/, '')
+    parsedUrl.search = ''
+    parsedUrl.hash = ''
+
+    return parsedUrl.toString().replace(/\/$/, '')
+  } catch {
+    return defaultSiteUrl
+  }
+}
+
+const siteUrl = normalizeSiteUrl(
+  process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://alexwelcing.com'
+)
+
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://www.alexwelcing.com',
+  siteUrl,
   generateRobotsTxt: false, // We have a manual robots.txt in public/
   generateIndexSitemap: true,
   changefreq: 'daily',
@@ -53,7 +81,7 @@ module.exports = {
     }
   },
   additionalSitemaps: [
-    `${process.env.SITE_URL || 'https://www.alexwelcing.com'}/video-sitemap.xml`,
+    `${siteUrl}/video-sitemap.xml`,
   ],
   robotsTxtOptions: {
     policies: [
@@ -64,9 +92,9 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      'https://www.alexwelcing.com/sitemap-core.xml',
-      'https://www.alexwelcing.com/sitemap-articles.xml',
-      'https://www.alexwelcing.com/video-sitemap.xml',
+      `${siteUrl}/sitemap-core.xml`,
+      `${siteUrl}/sitemap-articles.xml`,
+      `${siteUrl}/video-sitemap.xml`,
     ],
   },
 }

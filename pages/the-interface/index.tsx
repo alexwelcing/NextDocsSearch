@@ -8,6 +8,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import CircleNav from '@/components/ui/CircleNav'
 import StructuredData from '@/components/StructuredData'
+import { SITE_URL } from '@/lib/site-url'
 
 interface InterfaceArticle {
   slug: string
@@ -23,6 +24,8 @@ interface InterfacePageProps {
 }
 
 export default function TheInterfacePage({ articles }: InterfacePageProps) {
+  const siteUrl = SITE_URL
+  const pageUrl = `${siteUrl}/the-interface`
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   // Pick a few highlight images for the hero mosaic
@@ -48,7 +51,7 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.alexwelcing.com/the-interface" />
+        <link rel="canonical" href={pageUrl} />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="The Interface — A 24-Part Series | Alex Welcing" />
         <meta
@@ -57,11 +60,11 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         />
         <meta
           property="og:image"
-          content="https://www.alexwelcing.com/images/articles/interface-01-the-first-translator.png"
+          content={`${siteUrl}/images/articles/interface-01-the-first-translator.png`}
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://www.alexwelcing.com/the-interface" />
+        <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
@@ -72,7 +75,7 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         />
         <meta
           name="twitter:image"
-          content="https://www.alexwelcing.com/images/articles/interface-01-the-first-translator.png"
+          content={`${siteUrl}/images/articles/interface-01-the-first-translator.png`}
         />
       </Head>
 
@@ -80,7 +83,7 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         type="Website"
         data={{
           name: 'The Interface — A 24-Part Series',
-          url: 'https://www.alexwelcing.com/the-interface',
+          url: pageUrl,
           description:
             'A 24-part fiction series exploring bridge events between human and artificial intelligence.',
           author: {

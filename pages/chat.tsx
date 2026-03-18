@@ -7,6 +7,7 @@ import { getRandomBackgroundImage } from '@/lib/backgroundImages'
 import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
 import { JourneyProvider } from '@/components/contexts/JourneyContext'
 import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
+import { SITE_URL } from '@/lib/site-url'
 
 // Dynamically import Scene3D, using StylishFallback as the loading component.
 const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
@@ -15,6 +16,8 @@ const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
 })
 
 const Chat = () => {
+  const siteUrl = SITE_URL
+  const chatUrl = `${siteUrl}/chat`
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [articles, setArticles] = useState<any[]>([])
   const [cinematicComplete] = useState(true)
@@ -66,20 +69,20 @@ const Chat = () => {
         <meta name="keywords" content="Alex Welcing, interactive portfolio, AI chat, 3D visualization, product manager" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.alexwelcing.com" />
+        <link rel="canonical" href={chatUrl} />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Alex Welcing - Interactive Portfolio" />
         <meta property="og:description" content="Explore Alex Welcing's interactive portfolio with AI chat and immersive 3D environments." />
-        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://www.alexwelcing.com" />
+        <meta property="og:url" content={chatUrl} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Alex Welcing - Interactive Portfolio" />
         <meta name="twitter:description" content="Explore Alex Welcing's interactive portfolio with AI chat and immersive 3D environments." />
-        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
       </Head>
 
       <SupabaseDataProvider>

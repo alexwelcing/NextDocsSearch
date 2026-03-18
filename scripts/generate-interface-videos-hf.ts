@@ -23,6 +23,7 @@ import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { generateVideoViaHf } from '../lib/video-generation/hf-client'
 import { ARTICLE_COLLECTIONS } from '../lib/featured-articles'
+import { SITE_URL } from '../lib/site-url'
 import { STORAGE_CONFIG } from '../types/article-media'
 
 // ═══════════════════════════════════════════════════════════════
@@ -65,7 +66,7 @@ const FORCE = args.includes('--force')
 const hfToken = process.env.HF_TOKEN
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.alexwelcing.com'
+const siteUrl = SITE_URL
 
 if (!hfToken && !DRY_RUN) {
   console.error('❌ HF_TOKEN is required. Set it in .env.local')

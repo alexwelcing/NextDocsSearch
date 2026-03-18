@@ -1,5 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
+import { SITE_URL } from '@/lib/site-url';
+
+const siteUrl = SITE_URL;
 
 export type StructuredDataType =
   | 'Article'
@@ -55,7 +58,7 @@ export const createArticleSchema = ({
 }) => ({
   headline: title,
   description,
-  image: image || 'https://www.alexwelcing.com/social-preview.png',
+  image: image || `${siteUrl}/social-preview.png`,
   datePublished,
   dateModified: dateModified || datePublished,
   url,
@@ -64,20 +67,20 @@ export const createArticleSchema = ({
     ? author.map((name) => ({
         '@type': 'Person',
         name,
-        url: 'https://www.alexwelcing.com/about',
+        url: `${siteUrl}/about`,
       }))
     : {
         '@type': 'Person',
         name: author,
-        url: 'https://www.alexwelcing.com/about',
+        url: `${siteUrl}/about`,
       },
   publisher: {
     '@type': 'Organization',
     name: 'Alex Welcing',
-    url: 'https://www.alexwelcing.com',
+    url: siteUrl,
     logo: {
       '@type': 'ImageObject',
-      url: 'https://www.alexwelcing.com/logo.png',
+      url: `${siteUrl}/logo.png`,
     },
   },
   mainEntityOfPage: {
@@ -102,7 +105,7 @@ export const createPersonSchema = ({
 }) => ({
   name,
   jobTitle,
-  url: 'https://www.alexwelcing.com',
+  url: siteUrl,
   description,
   sameAs: sameAs || [
     'https://www.linkedin.com/in/alexwelcing',
@@ -143,13 +146,15 @@ export const createVideoSchema = ({
   publisher: {
     '@type': 'Organization',
     name: 'Alex Welcing',
-    url: 'https://www.alexwelcing.com',
+    url: siteUrl,
     logo: {
       '@type': 'ImageObject',
-      url: 'https://www.alexwelcing.com/logo.png',
+      url: `${siteUrl}/logo.png`,
     },
   },
+  url: articleUrl,
   embedUrl: articleUrl,
+  mainEntityOfPage: articleUrl,
   interactionStatistic: {
     '@type': 'InteractionCounter',
     interactionType: { '@type': 'WatchAction' },

@@ -12,6 +12,7 @@ import GameHUD from '@/components/overlays/GameHUD'
 import GameLeaderboard from '@/components/overlays/GameLeaderboard'
 import styles from '@/styles/Home.module.css'
 import { getRandomBackgroundImage } from '@/lib/backgroundImages'
+import { SITE_URL } from '@/lib/site-url'
 import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
 import ArticleDisplayPanel from '@/components/3d/interactive/ArticleDisplayPanel'
 import type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
@@ -23,6 +24,7 @@ const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
 })
 
 function HomeContent() {
+  const siteUrl = SITE_URL
   const [currentImage, setCurrentImage] = useState<string | null>(null)
   const [articles, setArticles] = useState<any[]>([])
   const [isIn3DMode, setIsIn3DMode] = useState<boolean>(true)
@@ -160,7 +162,7 @@ function HomeContent() {
         <meta name="keywords" content="Alex Welcing, AI product manager, AI strategy, product leadership, LLM, AI agents, speculative AI, emergent intelligence, technical product manager, AI portfolio" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.alexwelcing.com" />
+        <link rel="canonical" href={siteUrl} />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
@@ -172,10 +174,10 @@ function HomeContent() {
           property="og:description"
           content="AI product leader building intelligent systems and frameworks for emergent AI futures. Research on agent architectures, LLMs, and speculative intelligence."
         />
-        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://www.alexwelcing.com" />
+        <meta property="og:url" content={siteUrl} />
         <meta property="og:type" content="website" />
 
         {/* X (Twitter) Card Meta Tags */}
@@ -183,7 +185,7 @@ function HomeContent() {
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Alex Welcing | AI Strategy & Product Leadership" />
         <meta name="twitter:description" content="AI product leader building intelligent systems and frameworks for emergent AI futures. Research on agent architectures, LLMs, and speculative intelligence." />
-        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
 
         {/* Performance and PWA hints */}
         <meta name="theme-color" content="#0a0a0a" />
@@ -194,9 +196,9 @@ function HomeContent() {
         type="Website"
         data={{
           name: "Alex Welcing - AI Strategy & Product Leadership",
-          url: "https://www.alexwelcing.com",
+          url: siteUrl,
           description: "AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization.",
-          author: { "@type": "Person", name: "Alex Welcing", url: "https://www.alexwelcing.com/about" }
+          author: { "@type": "Person", name: "Alex Welcing", url: `${siteUrl}/about` }
         }}
       />
 
@@ -204,7 +206,7 @@ function HomeContent() {
         type="Person"
         data={{
           name: "Alex Welcing",
-          url: "https://www.alexwelcing.com",
+          url: siteUrl,
           jobTitle: "AI Product Leader",
           description: "AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization. Research on speculative AI futures and emergent intelligence.",
           sameAs: [

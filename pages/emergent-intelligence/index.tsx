@@ -8,6 +8,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import CircleNav from '@/components/ui/CircleNav'
 import StructuredData from '@/components/StructuredData'
+import { SITE_URL } from '@/lib/site-url'
 
 interface Article {
   slug: string
@@ -49,6 +50,8 @@ const themes = [
 ]
 
 export default function EmergentIntelligenceHub({ articles }: EmergentIntelligenceHubProps) {
+  const siteUrl = SITE_URL
+  const pageUrl = `${siteUrl}/emergent-intelligence`
   return (
     <div style={{ minHeight: '100vh', background: '#030308', color: '#e5e5e5' }}>
       <Head>
@@ -63,17 +66,17 @@ export default function EmergentIntelligenceHub({ articles }: EmergentIntelligen
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.alexwelcing.com/emergent-intelligence" />
+        <link rel="canonical" href={pageUrl} />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Emergent Intelligence Systems | Alex Welcing" />
         <meta
           property="og:description"
           content="Research on emergent intelligence, consciousness in AI systems, and the boundary between computation and awareness."
         />
-        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://www.alexwelcing.com/emergent-intelligence" />
+        <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
@@ -82,14 +85,14 @@ export default function EmergentIntelligenceHub({ articles }: EmergentIntelligen
           name="twitter:description"
           content="Research on emergent intelligence, consciousness in AI systems, and the boundary between computation and awareness."
         />
-        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
+        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
       </Head>
 
       <StructuredData
         type="Website"
         data={{
           name: 'Emergent Intelligence Systems - Alex Welcing',
-          url: 'https://www.alexwelcing.com/emergent-intelligence',
+          url: pageUrl,
           description:
             'Research hub for emergent intelligence, AI consciousness, and systems that exceed their design parameters.',
           author: { '@type': 'Person', name: 'Alex Welcing' },
