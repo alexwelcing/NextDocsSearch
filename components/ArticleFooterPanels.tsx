@@ -6,6 +6,7 @@ import styled, { keyframes, css } from 'styled-components'
 import { MessageSquare, User, ArrowRight, X, Send, ExternalLink } from 'lucide-react'
 import { SHIP_TRICKS } from '@/lib/ai/shipTricks'
 import { SHIP_AI_IDLE_MESSAGE, useChat } from '@/lib/hooks/useChat'
+import ShipAnswerPanel from '@/components/chat/ShipAnswerPanel'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -561,14 +562,17 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
 
   const { chatData, sendMessage, chatHistory } = useChat()
 
-  const hasConversation = chatData.response && chatData.response !== SHIP_AI_IDLE_MESSAGE
+  const hasConversation =
+    chatData.status !== 'idle' ||
+    chatData.instantResults.length > 0 ||
+    (chatData.response && chatData.response !== SHIP_AI_IDLE_MESSAGE)
 
   // Auto-scroll chat to bottom
   useEffect(() => {
     if (messagesRef.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     }
-  }, [chatData.response])
+  }, [chatData.response, chatData.instantResults.length, chatData.structuredAnswer])
 
   // Focus input when chat expands
   useEffect(() => {
@@ -637,7 +641,7 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
                       </ChatBubble>
                       <ChatBubble $role="ai">
                         <BubbleLabel $role="ai">ship ai</BubbleLabel>
-                        {chatData.response}
+                        <ShipAnswerPanel chatData={chatData} density="compact" showQuestion={false} />
                         {isStreaming && <Cursor />}
                       </ChatBubble>
                     </>

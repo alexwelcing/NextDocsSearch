@@ -6,6 +6,7 @@ import { useJourney } from '../contexts/JourneyContext';
 import { SHIP_AI_IDLE_MESSAGE } from '@/lib/hooks/useChat';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import WorldGallery from '../WorldGallery';
+import ShipAnswerPanel from '@/components/chat/ShipAnswerPanel';
 
 interface ArticleData {
   title: string;
@@ -756,13 +757,14 @@ export default function TerminalInterface({
               fontSize: isMobile ? '14px' : '13px',
               lineHeight: 1.6,
             }}>
-              {chatData.response && chatData.response !== SHIP_AI_IDLE_MESSAGE ? (
+              {chatData.status !== 'idle' || chatData.instantResults.length > 0 || (chatData.response && chatData.response !== SHIP_AI_IDLE_MESSAGE) ? (
                 <>
                   <div style={{ color: '#0f0', marginBottom: '12px' }}>
                     <span style={{ color: '#555' }}>you:</span> {chatData.question}
                   </div>
-                  <div style={{ color: '#ccc', whiteSpace: 'pre-wrap' }}>
-                    <span style={{ color: '#555' }}>ai:</span> {chatData.response}
+                  <div style={{ color: '#ccc' }}>
+                    <div style={{ color: '#555', marginBottom: '8px' }}>ai:</div>
+                    <ShipAnswerPanel chatData={chatData} density="terminal" showQuestion={false} />
                   </div>
                 </>
               ) : (

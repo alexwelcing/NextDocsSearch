@@ -24,6 +24,8 @@ import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import { useArticleDiscovery } from '../../ArticleDiscoveryProvider';
 import HelpButton from '../../ui/HelpButton';
 import WASDControls from '../controls/WASDControls';
+import { useSupabaseData } from '../../contexts/SupabaseDataContext';
+import AnswerConstellation from '../interactive/AnswerConstellation';
 
 // Re-export GameState type for compatibility
 export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
@@ -169,6 +171,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Journey tracking
   const { completeQuest, updateStats, currentQuest } = useJourney();
+  const { chatData } = useSupabaseData();
 
   // Article discovery - hide floating button during game
   const { setShowFloatingButton } = useArticleDiscovery();
@@ -529,6 +532,15 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                   )}
                 </>
               )}
+
+              <AnswerConstellation
+                structuredAnswer={chatData.structuredAnswer}
+                instantResults={chatData.instantResults}
+                visible={gameState === 'IDLE' && !is3DExploreActive && !isArticleDisplayOpen}
+                onOpenArticle={(slug) => {
+                  window.location.href = `/articles/${slug}`
+                }}
+              />
 
               {/* 3D Article Explorer - Immersive InfiniteLibrary Experience */}
               {is3DExploreActive && enhancedArticles.length > 0 && (

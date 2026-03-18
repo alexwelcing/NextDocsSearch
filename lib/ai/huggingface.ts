@@ -21,6 +21,10 @@ interface HfGenerationResult {
   model: string
 }
 
+interface HfStreamOptions extends HfChatOptions {
+  onDelta?: (delta: string, fullText: string) => void
+}
+
 function getHfToken(): string {
   const token = process.env.HF_TOKEN?.trim()
 
@@ -86,6 +90,126 @@ function extractGeneratedText(payload: unknown): string {
   return ''
 }
 
+function extractStreamDelta(payload: unknown): string {
+  if (!payload || typeof payload !== 'object') {
+    return ''
+  }
+
+  const record = payload as Record<string, unknown>
+  if (!Array.isArray(record.choices) || record.choices.length === 0) {
+    return ''
+  }
+
+  const choice = record.choices[0] as Record<string, unknown>
+  const delta = choice.delta as Record<string, unknown> | undefined
+
+  if (delta) {
+    if (typeof delta.content === 'string') {
+      return delta.content
+    }
+
+    if (Array.isArray(delta.content)) {
+      return delta.content
+        .map((item) => {
+          if (typeof item === 'string') return item
+          if (item && typeof item === 'object') {
+            const text = (item as Record<string, unknown>).text
+            return typeof text === 'string' ? text : ''
+          }
+          return ''
+        })
+        .join('')
+    }
+  }
+
+  const message = choice.message as Record<string, unknown> | undefined
+  if (message && typeof message.content === 'string') {
+    return message.content
+  }
+
+  return ''
+}
+
+async function generateWithModelStream(model: string, options: HfStreamOptions): Promise<string> {
+  const token = getHfToken()
+  const response = await fetch(HUGGING_FACE_CHAT_COMPLETIONS_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      messages: options.messages,
+      max_tokens: options.maxNewTokens ?? 700,
+      temperature: options.temperature ?? 0.75,
+      stream: true,
+    }),
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new ApplicationError(`Hugging Face streaming failed for ${model}`, {
+      status: response.status,
+      body: errorText.slice(0, 500),
+    })
+  }
+
+  const contentType = response.headers.get('content-type') || ''
+  if (!contentType.includes('text/event-stream')) {
+    const payload = await response.json()
+    const text = extractGeneratedText(payload).trim()
+    if (!text) {
+      throw new ApplicationError(`Hugging Face returned an empty streaming response for ${model}`)
+    }
+    options.onDelta?.(text, text)
+    return text
+  }
+
+  const reader = response.body?.getReader()
+  if (!reader) {
+    throw new ApplicationError(`Hugging Face response body missing for ${model}`)
+  }
+
+  const decoder = new TextDecoder()
+  let buffer = ''
+  let fullText = ''
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+
+    buffer += decoder.decode(value, { stream: true })
+    const blocks = buffer.split('\n\n')
+    buffer = blocks.pop() || ''
+
+    for (const block of blocks) {
+      const dataLines = block
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.startsWith('data:'))
+        .map((line) => line.slice(5).trim())
+
+      for (const dataLine of dataLines) {
+        if (!dataLine || dataLine === '[DONE]') continue
+
+        const payload = JSON.parse(dataLine) as unknown
+        const delta = extractStreamDelta(payload)
+        if (!delta) continue
+
+        fullText += delta
+        options.onDelta?.(delta, fullText)
+      }
+    }
+  }
+
+  if (!fullText.trim()) {
+    throw new ApplicationError(`Hugging Face returned an empty streaming response for ${model}`)
+  }
+
+  return fullText.trim()
+}
+
 async function generateWithModel(model: string, options: HfChatOptions): Promise<string> {
   const token = getHfToken()
   const response = await fetch(HUGGING_FACE_CHAT_COMPLETIONS_URL, {
@@ -131,6 +255,27 @@ export async function generateHuggingFaceChat(options: HfChatOptions): Promise<H
     } catch (error) {
       lastError = error
       console.error('[hf-chat] Model failed:', model, error)
+    }
+  }
+
+  if (lastError instanceof ApplicationError) {
+    throw lastError
+  }
+
+  throw new ApplicationError('All Hugging Face chat models failed')
+}
+
+export async function generateHuggingFaceChatStream(options: HfStreamOptions): Promise<HfGenerationResult> {
+  const models = getCandidateModels()
+  let lastError: unknown = null
+
+  for (const model of models) {
+    try {
+      const text = await generateWithModelStream(model, options)
+      return { text, model }
+    } catch (error) {
+      lastError = error
+      console.error('[hf-chat-stream] Model failed:', model, error)
     }
   }
 

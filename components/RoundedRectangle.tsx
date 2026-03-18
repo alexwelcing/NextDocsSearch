@@ -4,6 +4,7 @@ import { useSupabaseData } from './contexts/SupabaseDataContext';
 import styles from '../styles/RetroComputerStyles.module.css';
 import { useCompletion } from 'ai/react';
 import * as THREE from 'three';
+import { buildStructuredAnswer } from '@/lib/chat/shipAnswer';
 
 const RoundedRectangle: React.FC = () => {
   const groupRef = useRef<THREE.Group>(null);
@@ -24,7 +25,12 @@ const RoundedRectangle: React.FC = () => {
 
   useEffect(() => {
     if (completion && !error) {
-      setChatData((prevData) => ({ ...prevData, response: completion }));
+      setChatData((prevData) => ({
+        ...prevData,
+        response: completion,
+        structuredAnswer: buildStructuredAnswer(completion),
+        status: 'complete',
+      }));
     }
   }, [completion, error, setChatData]);
 
@@ -48,7 +54,14 @@ const RoundedRectangle: React.FC = () => {
   const handleSubmit = () => {
     if (query.trim()) {
       complete(query);
-      setChatData({ question: query, response: '' });
+      setChatData((prevData) => ({
+        ...prevData,
+        question: query,
+        response: '',
+        instantResults: [],
+        structuredAnswer: null,
+        status: 'loading',
+      }));
     }
   };
 

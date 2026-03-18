@@ -17,6 +17,7 @@ import {
   isShipAiIdleMessage,
   isShipAiLoadingMessage,
 } from '@/lib/hooks/useChat';
+import ShipAnswerPanel from '@/components/chat/ShipAnswerPanel';
 
 type Question = {
   key: string;
@@ -56,7 +57,9 @@ export function SearchDialog() {
   );
   const [showMoreOptions, setShowMoreOptions] = React.useState(false);
   const isLoading = isShipAiLoadingMessage(chatData.response);
-  const hasResponse = Boolean(chatData.response) && !isShipAiIdleMessage(chatData.response);
+  const hasRenderableAnswer =
+    chatData.instantResults.length > 0 ||
+    (Boolean(chatData.response) && !isShipAiIdleMessage(chatData.response) && !isShipAiErrorMessage(chatData.response));
 
   const handleModalToggle = React.useCallback(() => {
     setOpen(!open);
@@ -149,7 +152,7 @@ min-w-[200px]"
     </button>
   </div>
         <Dialog open={open}>
-          <DialogContent className={`sm:max-w-[850px] text-black  `}>
+          <DialogContent className={`sm:max-w-[980px] text-black`}>
             {' '}
             <DialogHeader>
               <DialogTitle>Ship AI</DialogTitle>
@@ -186,8 +189,8 @@ min-w-[200px]"
                   </div>
                 )}
 
-                {hasResponse && !isLoading ? (
-                  <div className="flex items-center gap-4 dark:text-white">{chatData.response}</div>
+                {hasRenderableAnswer ? (
+                  <ShipAnswerPanel chatData={chatData} density="full" />
                 ) : null}
 
                 <div className="relative">

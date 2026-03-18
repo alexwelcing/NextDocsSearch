@@ -2,9 +2,16 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { codeBlock, oneLine } from 'common-tags';
 import { ApplicationError, UserError } from '@/lib/errors';
 import articleManifest from '@/lib/generated/article-manifest.json'
-import { generateHuggingFaceChat, type HfChatMessage } from '@/lib/ai/huggingface'
-import { shipPersona } from '@/lib/ai/shipPersona';
+import { generateHuggingFaceChat, generateHuggingFaceChatStream, type HfChatMessage } from '@/lib/ai/huggingface'
+import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
 import { resolveShipTrick, type ResolvedShipTrick } from '@/lib/ai/shipTricks'
+import {
+  buildStructuredAnswer,
+  parseStructuredAnswerResponse,
+  type InstantAnswerItem,
+  type ShipAnswerMode,
+  type ShipStreamEvent,
+} from '@/lib/chat/shipAnswer'
 
 interface ChatHistoryEntry {
   question?: string
@@ -157,6 +164,43 @@ function buildContextSections(query: string): string {
     .join('\n\n---\n\n')
 }
 
+function getInstantResults(query: string, limit = 5): InstantAnswerItem[] {
+  const articles = getManifestArticles()
+  const queryTokens = tokenize(query)
+
+  return articles
+    .map((article) => ({ article, score: scoreArticle(article, query, queryTokens) }))
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => right.score - left.score)
+    .slice(0, limit)
+    .map(({ article, score }) => ({
+      slug: article.slug,
+      title: article.title || article.slug,
+      description: article.description || 'No description available.',
+      snippet: extractSnippet(article.searchText || article.description || '', queryTokens),
+      articleType: article.articleType,
+      score,
+      keywords: article.keywords || [],
+      domains: article.domains || [],
+    }))
+}
+
+function writeStreamEvent(res: NextApiResponse, event: ShipStreamEvent) {
+  res.write(`${JSON.stringify(event)}\n`)
+}
+
+const STREAM_BATCH_MIN_CHARS = 32
+const STREAM_BATCH_MAX_DELAY_MS = 180
+
+function shouldFlushAnswerDelta(pendingDelta: string, elapsedMs: number): boolean {
+  if (!pendingDelta.trim()) return false
+  if (elapsedMs >= STREAM_BATCH_MAX_DELAY_MS) return true
+  if (pendingDelta.length >= STREAM_BATCH_MIN_CHARS) return true
+  if (/[.!?]\s*$/.test(pendingDelta)) return true
+  if (/\n\s*\n$/.test(pendingDelta)) return true
+  return false
+}
+
 function buildUserPrompt(query: string, questContext?: QuestContext, trickContext?: ResolvedShipTrick): string {
   const sanitizedQuery = query.trim()
   const questDetails = questContext?.currentQuest
@@ -192,6 +236,86 @@ function buildUserPrompt(query: string, questContext?: QuestContext, trickContex
     - Avoid making up capabilities, dates, or facts.
     - If relevant, connect the answer to product strategy, systems thinking, fiction themes, or technical work.
     - ${trickContext?.styleInstruction || 'Keep the answer tight and high-signal.'}
+  `
+}
+
+function buildStructuredAnswerPrompt(
+  question: string,
+  answer: string,
+  instantResults: InstantAnswerItem[],
+  mode: ShipAnswerMode,
+  trickLabel?: string,
+): string {
+  const sources = instantResults
+    .slice(0, 5)
+    .map((item, index) => `${index + 1}. ${item.slug} | ${item.title} | ${item.domains.join(', ') || 'unknown domain'}`)
+    .join('\n')
+
+  return codeBlock`
+    Transform the answer below into valid JSON only.
+
+    User question:
+    ${question}
+
+    Answer:
+    ${answer}
+
+    Candidate source slugs:
+    ${sources || 'none'}
+
+    Active mode:
+    ${mode}${trickLabel ? ` (${trickLabel})` : ''}
+
+    Return exactly one JSON object with this shape:
+    {
+      "mode": "default" | "brief" | "signal" | "map" | "roast" | "compare" | "mission",
+      "headline": string,
+      "kicker": string,
+      "summary": string,
+      "quickFacts": string[],
+      "suggestedActions": string[],
+      "sections": [
+        {
+          "title": string,
+          "body": string,
+          "tone": "summary" | "insight" | "detail" | "next-step",
+          "sourceSlug": string | null
+        }
+      ],
+      "diagram": {
+        "title": string,
+        "nodes": [
+          {
+            "label": string,
+            "detail": string,
+            "weight": number,
+            "tone": "core" | "supporting" | "source",
+            "sourceSlug": string | null
+          }
+        ]
+      }
+    }
+
+    Rules:
+    - JSON only. No markdown fences. No explanation.
+    - The mode field must equal ${mode}.
+    - headline must be 3 to 7 words, plain text only.
+    - kicker must be 1 short sentence, plain text only.
+    - Keep summary to 1 sentence.
+    - summary must be plain text only, no labels like Verdict or Executive Brief.
+    - Keep quickFacts to at most 4 items.
+    - quickFacts must be plain text statements, not bullets or labels.
+    - Keep suggestedActions to at most 3 items.
+    - Keep sections to at most 4 items.
+    - Each section title must be 2 to 5 words, plain text only.
+    - Keep diagram nodes to at most 5 items.
+    - Each diagram node label must be 1 to 4 words, plain text only.
+    - Only use sourceSlug values from the candidate list.
+    - Ignore presentation wrappers from the original answer. Extract the semantic content only.
+    - If mode is map, prefer sections titled Product, Technical, Narrative.
+    - If mode is brief, prefer a decisive headline and compact executive framing.
+    - If mode is roast, keep the critique useful and evidence-grounded, not theatrical.
+    - If mode is mission, make suggestedActions concrete and immediate.
   `
 }
 
@@ -246,7 +370,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       : []
 
     const prompt = buildUserPrompt(sanitizedQuery, questContext, trickContext)
-    const generation = await generateHuggingFaceChat({
+    const answerMode = (trickContext.trick?.id ?? 'default') as ShipAnswerMode
+
+    res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-store')
+    res.setHeader('X-Accel-Buffering', 'no')
+
+    writeStreamEvent(res, {
+      type: 'instant-results',
+      question: sanitizedQuery,
+      items: getInstantResults(trickContext?.searchQuery || sanitizedQuery),
+    })
+
+    const instantResults = getInstantResults(trickContext?.searchQuery || sanitizedQuery)
+    let streamedAnswer = ''
+    let lastEmittedAnswer = ''
+    let pendingDelta = ''
+    let lastFlushAt = Date.now()
+
+    const flushPendingDelta = (force = false) => {
+      const elapsedMs = Date.now() - lastFlushAt
+      if (!force && !shouldFlushAnswerDelta(pendingDelta, elapsedMs)) {
+        return
+      }
+
+      if (!pendingDelta) {
+        return
+      }
+
+      writeStreamEvent(res, {
+        type: 'answer-delta',
+        question: sanitizedQuery,
+        delta: pendingDelta,
+        answer: lastEmittedAnswer,
+      })
+      pendingDelta = ''
+      lastFlushAt = Date.now()
+    }
+
+    const generation = await generateHuggingFaceChatStream({
       messages: [
         { role: 'system', content: shipPersona.systemPrompt },
         ...historyMessages,
@@ -254,13 +416,74 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ],
       maxNewTokens: 700,
       temperature: 0.78,
+      onDelta: (delta, answer) => {
+        streamedAnswer = answer
+        lastEmittedAnswer = answer
+        pendingDelta += delta
+        flushPendingDelta(false)
+      },
     })
 
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-    res.setHeader('Cache-Control', 'no-store')
+    flushPendingDelta(true)
+
+    const finalRawAnswer = streamedAnswer || generation.text
+    const { cleanMessage, signals } = extractShipSignals(finalRawAnswer)
+
+    let structuredAnswer = buildStructuredAnswer(cleanMessage, answerMode)
+
+    try {
+      const structuredGeneration = await generateHuggingFaceChat({
+        messages: [
+          {
+            role: 'system',
+            content: 'You convert answers into strict JSON for a UI renderer. Respond with JSON only.',
+          },
+          {
+            role: 'user',
+            content: buildStructuredAnswerPrompt(
+              sanitizedQuery,
+              cleanMessage,
+              instantResults,
+              answerMode,
+              trickContext.trick?.label,
+            ),
+          },
+        ],
+        maxNewTokens: 700,
+        temperature: 0.15,
+      })
+
+      structuredAnswer = parseStructuredAnswerResponse(
+        structuredGeneration.text,
+        cleanMessage,
+        instantResults,
+        answerMode,
+      )
+    } catch (error) {
+      console.error('[vector-search] Structured synthesis fallback:', error)
+    }
+
     res.setHeader('X-Ship-AI-Provider', `huggingface:${generation.model}`)
-    return res.status(200).send(generation.text)
+    writeStreamEvent(res, {
+      type: 'final-answer',
+      question: sanitizedQuery,
+      answer: cleanMessage,
+      structuredAnswer,
+      provider: `huggingface:${generation.model}`,
+      signals,
+    })
+    res.end()
+    return
   } catch (err: unknown) {
+    if (res.headersSent) {
+      writeStreamEvent(res, {
+        type: 'error',
+        message: err instanceof Error ? err.message : 'There was an error processing your request',
+      })
+      res.end()
+      return
+    }
+
     if (err instanceof UserError) {
       return res.status(400).json({
         error: err.message,

@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useJourney } from '@/components/contexts/JourneyContext';
 import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
+import {
+  buildStructuredAnswer,
+  createIdleAnswerState,
+  parseShipStreamEvent,
+  type ShipAnswerState,
+} from '@/lib/chat/shipAnswer';
 
 export const SHIP_AI_IDLE_MESSAGE = 'Ship AI online. Ask something worth answering.'
 export const SHIP_AI_LOADING_MESSAGE = 'Hang on. I\'m digging through the archive for something less useless than the average chatbot answer.'
@@ -18,10 +24,7 @@ export function isShipAiErrorMessage(message: string): boolean {
   return message === SHIP_AI_ERROR_MESSAGE
 }
 
-export interface ChatData {
-  question: string;
-  response: string;
-}
+export interface ChatData extends ShipAnswerState {}
 
 export interface ChatTurn {
   question: string;
@@ -30,8 +33,7 @@ export interface ChatTurn {
 
 export function useChat() {
   const [chatData, setChatData] = useState<ChatData>({
-    question: '',
-    response: SHIP_AI_IDLE_MESSAGE
+    ...createIdleAnswerState(SHIP_AI_IDLE_MESSAGE)
   });
 
   const [chatHistory, setChatHistory] = useState<ChatTurn[]>(() => {
@@ -63,7 +65,13 @@ export function useChat() {
 
     try {
       // Set initial state for new message
-      setChatData({ question, response: SHIP_AI_LOADING_MESSAGE });
+      setChatData({
+        question,
+        response: SHIP_AI_LOADING_MESSAGE,
+        instantResults: [],
+        structuredAnswer: null,
+        status: 'loading',
+      });
 
       const historyPayload = chatHistory
         .slice(-shipPersona.memory.maxInteractions)
@@ -98,27 +106,111 @@ export function useChat() {
       }
 
       const decoder = new TextDecoder();
-      let fullResponse = '';
+      let rawPayload = '';
+      let finalAnswer = '';
+      let structuredAnswer = null;
+      let provider: string | undefined;
+      let streamedSignalsApplied = false;
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        fullResponse += chunk;
+        rawPayload += chunk;
 
-        // Update response as it streams in
-        setChatData(prev => ({ ...prev, response: fullResponse }));
+        const lines = rawPayload.split('\n');
+        rawPayload = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          const event = parseShipStreamEvent(trimmed);
+          if (!event) {
+            finalAnswer += trimmed;
+            const { cleanMessage } = extractShipSignals(finalAnswer);
+            setChatData(prev => ({
+              ...prev,
+              response: cleanMessage,
+              structuredAnswer: cleanMessage ? buildStructuredAnswer(cleanMessage) : null,
+              status: 'loading',
+            }));
+            continue;
+          }
+
+          if (event.type === 'instant-results') {
+            setChatData(prev => ({
+              ...prev,
+              question: event.question,
+              instantResults: event.items,
+              status: 'loading',
+            }));
+          }
+
+          if (event.type === 'answer-delta') {
+            finalAnswer = event.answer;
+            const { cleanMessage } = extractShipSignals(event.answer);
+
+            setChatData(prev => ({
+              ...prev,
+              question: event.question,
+              response: cleanMessage,
+              structuredAnswer: cleanMessage ? buildStructuredAnswer(cleanMessage) : prev.structuredAnswer,
+              status: 'loading',
+            }));
+          }
+
+          if (event.type === 'final-answer') {
+            finalAnswer = event.answer;
+            structuredAnswer = event.structuredAnswer;
+            provider = event.provider;
+            if (event.signals?.length) {
+              applyAiSignals(event.signals);
+              streamedSignalsApplied = true;
+            }
+
+            setChatData(prev => ({
+              ...prev,
+              question: event.question,
+              response: event.answer,
+              structuredAnswer: event.structuredAnswer,
+              provider: event.provider,
+              status: 'complete',
+            }));
+          }
+
+          if (event.type === 'error') {
+            throw new Error(event.message);
+          }
+        }
       }
 
-      if (!fullResponse) {
-        setChatData(prev => ({ ...prev, response: 'No response received.' }));
+      if (rawPayload.trim()) {
+        finalAnswer += rawPayload.trim();
+      }
+
+      if (!finalAnswer) {
+        setChatData(prev => ({ ...prev, response: 'No response received.', status: 'error' }));
         return;
       }
 
-      const { cleanMessage, signals } = extractShipSignals(fullResponse);
-      setChatData({ question, response: cleanMessage });
-      applyAiSignals(signals);
+      const { cleanMessage, signals } = extractShipSignals(finalAnswer);
+      const cleanedStructuredAnswer = structuredAnswer ?? (cleanMessage
+        ? buildStructuredAnswer(cleanMessage)
+        : null);
+
+      setChatData(prev => ({
+        ...prev,
+        question,
+        response: cleanMessage,
+        structuredAnswer: cleanedStructuredAnswer,
+        provider,
+        status: 'complete',
+      }));
+      if (!streamedSignalsApplied) {
+        applyAiSignals(signals);
+      }
 
       setChatHistory(prev => {
         const updated = [...prev, { question, response: cleanMessage }];
@@ -128,7 +220,9 @@ export function useChat() {
       console.error('Failed to fetch response:', error);
       setChatData(prev => ({
         ...prev,
-        response: SHIP_AI_ERROR_MESSAGE
+        response: SHIP_AI_ERROR_MESSAGE,
+        structuredAnswer: null,
+        status: 'error',
       }));
     } finally {
       isProcessingRef.current = false;
