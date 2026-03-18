@@ -20,6 +20,15 @@ interface SatelliteNode {
   sourceSlug?: string
 }
 
+function createStoryPosition(index: number, total: number): [number, number, number] {
+  const spread = Math.max(total - 1, 1)
+  const normalized = spread === 0 ? 0 : index / spread
+  const x = -4.8 + normalized * 9.6
+  const arch = Math.sin(normalized * Math.PI) * 2.2
+  const z = -11.6 + Math.cos(normalized * Math.PI) * 0.9
+  return [x, 1.2 + arch, z]
+}
+
 function truncate(value: string, maxLength: number): string {
   return value.length > maxLength ? `${value.slice(0, maxLength - 1)}…` : value
 }
@@ -36,16 +45,26 @@ export default function AnswerConstellation({
 
   const nodes = useMemo<SatelliteNode[]>(() => {
     const diagramNodes = structuredAnswer?.diagram.nodes.slice(1, 6) ?? []
+    const isStory = structuredAnswer?.mode === 'story'
 
     return diagramNodes.map((node, index) => {
       const angle = (index / Math.max(diagramNodes.length, 1)) * Math.PI * 2
       const radius = 5 + index * 0.45
+      const position = isStory
+        ? createStoryPosition(index, diagramNodes.length)
+        : [Math.cos(angle) * radius, 1.6 + (index % 2) * 1.35, -11 + Math.sin(angle) * 1.8] as [number, number, number]
       return {
         id: node.id,
         label: truncate(node.label, 26),
         detail: truncate(node.detail, 84),
-        position: [Math.cos(angle) * radius, 1.6 + (index % 2) * 1.35, -11 + Math.sin(angle) * 1.8],
-        color: node.tone === 'supporting' ? '#ffd37a' : '#78e8ff',
+        position,
+        color: isStory
+          ? node.tone === 'supporting'
+            ? '#ffb266'
+            : '#ff7b72'
+          : node.tone === 'supporting'
+            ? '#ffd37a'
+            : '#78e8ff',
         sourceSlug: node.sourceSlug,
       }
     })
@@ -65,18 +84,32 @@ export default function AnswerConstellation({
   }
 
   const summary = structuredAnswer?.summary || 'Scanning the archive for the right answer.'
+  const isStory = structuredAnswer?.mode === 'story'
+  const coreColor = isStory ? '#ff9955' : '#60dfff'
+  const coreEmissive = isStory ? '#ff6a3d' : '#1ec8ff'
+  const auraColor = isStory ? '#ff8c4d' : '#4ed8ff'
 
   return (
     <group ref={groupRef} position={[0, 8, 0]}>
       <mesh position={[0, 0, -12]}>
         <sphereGeometry args={[0.95, 28, 28]} />
-        <meshStandardMaterial color="#60dfff" emissive="#1ec8ff" emissiveIntensity={1.4} metalness={0.25} roughness={0.25} />
+        <meshStandardMaterial color={coreColor} emissive={coreEmissive} emissiveIntensity={1.4} metalness={0.25} roughness={0.25} />
       </mesh>
 
       <mesh position={[0, 0, -12]} scale={1.8}>
         <sphereGeometry args={[1, 18, 18]} />
-        <meshBasicMaterial color="#4ed8ff" transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial color={auraColor} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
+
+      {isStory && nodes.length > 1 && (
+        <Line
+          points={nodes.map((node) => node.position)}
+          color="#ffb266"
+          lineWidth={1.2}
+          transparent
+          opacity={0.45}
+        />
+      )}
 
       <Billboard position={[0, 1.9, -12]}>
         <Text maxWidth={5.4} fontSize={0.34} lineHeight={1.35} color="#dff9ff" anchorX="center" textAlign="center" outlineColor="#06131b" outlineWidth={0.015}>

@@ -26,6 +26,15 @@ export function isShipAiErrorMessage(message: string): boolean {
 
 export interface ChatData extends ShipAnswerState {}
 
+export interface ArticleChatContext {
+  slug?: string;
+  title?: string;
+  articleType?: 'fiction' | 'research';
+  description?: string;
+  keywords?: string[];
+  content?: string;
+}
+
 export interface ChatTurn {
   question: string;
   response: string;
@@ -59,7 +68,7 @@ export function useChat() {
     }
   }, [chatHistory]);
 
-  const sendMessage = useCallback(async (question: string) => {
+  const sendMessage = useCallback(async (question: string, options?: { articleContext?: ArticleChatContext }) => {
     if (isProcessingRef.current) return;
     isProcessingRef.current = true;
 
@@ -85,6 +94,7 @@ export function useChat() {
         body: JSON.stringify({
           prompt: question,
           history: historyPayload,
+          articleContext: options?.articleContext,
           questContext: {
             currentQuest,
             currentPhase: progress.currentPhase,

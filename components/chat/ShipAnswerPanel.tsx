@@ -15,6 +15,7 @@ function SectionHeader({ label }: { label: string }) {
 
 const MODE_COPY = {
   default: { label: 'Ship AI', chip: 'border-cyan-400/20 bg-cyan-400/10 text-cyan-100' },
+  story: { label: 'Story Engine', chip: 'border-orange-300/25 bg-orange-400/10 text-orange-100' },
   brief: { label: 'Executive Brief', chip: 'border-amber-300/25 bg-amber-400/10 text-amber-100' },
   signal: { label: 'High Signal', chip: 'border-emerald-300/25 bg-emerald-400/10 text-emerald-100' },
   map: { label: 'Systems Map', chip: 'border-sky-300/25 bg-sky-400/10 text-sky-100' },
@@ -51,6 +52,9 @@ function factCardClass(mode: keyof typeof MODE_COPY, density: 'full' | 'compact'
   if (density === 'terminal') {
     return 'border border-[#233423] bg-[#101810] px-3 py-2 text-xs leading-5 text-[#c8f3c8]'
   }
+  if (mode === 'story') {
+    return 'rounded-[22px] border border-orange-300/18 bg-[linear-gradient(180deg,rgba(112,53,14,0.18),rgba(44,18,6,0.08))] px-4 py-3 text-sm leading-6 text-orange-50'
+  }
   if (mode === 'roast') {
     return 'rounded-2xl border border-rose-400/18 bg-[linear-gradient(180deg,rgba(96,21,33,0.18),rgba(58,12,24,0.08))] px-4 py-3 text-sm leading-6 text-rose-50'
   }
@@ -67,12 +71,16 @@ function factCardClass(mode: keyof typeof MODE_COPY, density: 'full' | 'compact'
 }
 
 function sectionGridClass(mode: keyof typeof MODE_COPY) {
+  if (mode === 'story') return 'grid gap-3 xl:grid-cols-2'
   if (mode === 'map') return 'grid gap-3 xl:grid-cols-4'
   if (mode === 'brief') return 'grid gap-3 xl:grid-cols-2'
   return 'grid gap-3 xl:grid-cols-2'
 }
 
 function sectionCardClass(mode: keyof typeof MODE_COPY) {
+  if (mode === 'story') {
+    return 'rounded-[24px] border border-orange-300/14 bg-[linear-gradient(180deg,rgba(64,31,10,0.85),rgba(18,10,6,0.82))] p-4'
+  }
   if (mode === 'map') {
     return 'rounded-[24px] border border-sky-400/14 bg-[linear-gradient(180deg,rgba(14,29,47,0.9),rgba(6,14,24,0.86))] p-4'
   }
@@ -90,6 +98,9 @@ function sectionCardClass(mode: keyof typeof MODE_COPY) {
 
 function summaryShellClass(mode: keyof typeof MODE_COPY, density: 'full' | 'compact' | 'terminal') {
   if (density === 'terminal') return 'space-y-3 rounded-xl border border-[#223322] bg-[#0f170f] p-3'
+  if (mode === 'story') {
+    return 'space-y-4 rounded-[26px] border border-orange-300/16 bg-[radial-gradient(circle_at_top_left,rgba(166,92,35,0.22),transparent_45%),linear-gradient(135deg,rgba(26,15,8,0.96),rgba(10,8,18,0.92))] p-5'
+  }
   if (mode === 'brief') {
     return 'space-y-4 rounded-[24px] border border-amber-300/16 bg-[linear-gradient(135deg,rgba(70,51,11,0.26),rgba(14,16,28,0.92))] p-5'
   }
@@ -197,7 +208,7 @@ export default function ShipAnswerPanel({
 
           {density !== 'terminal' && structuredAnswer.sections.length > 0 && (
             <motion.div className="space-y-3" variants={ITEM_VARIANTS}>
-              <SectionHeader label={mode === 'map' ? 'System lenses' : 'Expanded answer'} />
+              <SectionHeader label={mode === 'map' ? 'System lenses' : mode === 'story' ? 'Story lenses' : 'Expanded answer'} />
               <div className={sectionGridClass(mode)}>
                 {structuredAnswer.sections.slice(0, density === 'compact' ? 2 : 4).map((section) => (
                   <motion.div
@@ -210,6 +221,9 @@ export default function ShipAnswerPanel({
                       {mode === 'map' && (
                         <div className="rounded-full border border-sky-300/15 bg-sky-300/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-sky-100">lens</div>
                       )}
+                      {mode === 'story' && (
+                        <div className="rounded-full border border-orange-300/15 bg-orange-300/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-orange-100">beat</div>
+                      )}
                     </div>
                     <ShipMarkdown content={section.body} compact />
                   </motion.div>
@@ -220,17 +234,19 @@ export default function ShipAnswerPanel({
 
           {structuredAnswer.suggestedActions.length > 0 && density !== 'terminal' && (
             <motion.div className="space-y-2" variants={ITEM_VARIANTS}>
-              <SectionHeader label={mode === 'mission' ? 'Mission actions' : 'Next moves'} />
-              <div className={mode === 'mission' ? 'grid gap-3 md:grid-cols-3' : 'flex flex-wrap gap-2'}>
+              <SectionHeader label={mode === 'mission' ? 'Mission actions' : mode === 'story' ? 'Story moves' : 'Next moves'} />
+              <div className={mode === 'mission' || mode === 'story' ? 'grid gap-3 md:grid-cols-3' : 'flex flex-wrap gap-2'}>
                 {structuredAnswer.suggestedActions.slice(0, 3).map((action, index) => (
                   <motion.div
                     key={`${action}-${index}`}
                     className={mode === 'mission'
                       ? 'rounded-[22px] border border-fuchsia-300/18 bg-fuchsia-400/8 px-4 py-4 text-sm leading-6 text-fuchsia-50'
+                      : mode === 'story'
+                        ? 'rounded-[22px] border border-orange-300/18 bg-orange-400/8 px-4 py-4 text-sm leading-6 text-orange-50'
                       : 'rounded-full border border-amber-300/20 bg-amber-400/10 px-3 py-2 text-xs leading-5 text-amber-100'}
                     variants={ITEM_VARIANTS}
                   >
-                    {mode === 'mission' ? `${index + 1}. ${action}` : action}
+                    {mode === 'mission' || mode === 'story' ? `${index + 1}. ${action}` : action}
                   </motion.div>
                 ))}
               </div>

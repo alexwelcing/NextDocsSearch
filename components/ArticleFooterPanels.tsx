@@ -5,8 +5,11 @@ import Link from 'next/link'
 import styled, { keyframes, css } from 'styled-components'
 import { MessageSquare, User, ArrowRight, X, Send, ExternalLink } from 'lucide-react'
 import { SHIP_TRICKS } from '@/lib/ai/shipTricks'
-import { SHIP_AI_IDLE_MESSAGE, useChat } from '@/lib/hooks/useChat'
+import { SHIP_AI_IDLE_MESSAGE } from '@/lib/hooks/useChat'
 import ShipAnswerPanel from '@/components/chat/ShipAnswerPanel'
+import StoryCompanionPanel from '@/components/articles/StoryCompanionPanel'
+import { buildStoryCompanion } from '@/lib/articles/storyCompanion'
+import { useSupabaseData } from './contexts/SupabaseDataContext'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -553,14 +556,40 @@ const QUICK_PROMPTS = SHIP_TRICKS.slice(0, 4).map((trick) => trick.example)
 // Component
 // ---------------------------------------------------------------------------
 
-export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: string }) {
+export default function ArticleFooterPanels({
+  articleTitle,
+  articleSlug,
+  articleType,
+  articleDescription,
+  articleKeywords,
+  articleContent,
+}: {
+  articleTitle?: string
+  articleSlug?: string
+  articleType?: 'fiction' | 'research'
+  articleDescription?: string
+  articleKeywords?: string[]
+  articleContent?: string
+}) {
   const [expanded, setExpanded] = useState<ExpandedPanel>('none')
   const [chatInput, setChatInput] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const messagesRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { chatData, sendMessage, chatHistory } = useChat()
+  const { chatData, sendMessage } = useSupabaseData()
+  const storyCompanion = React.useMemo(() => {
+    if (articleType !== 'fiction' || !articleTitle) {
+      return null
+    }
+
+    return buildStoryCompanion({
+      title: articleTitle,
+      description: articleDescription,
+      keywords: articleKeywords,
+      content: articleContent,
+    })
+  }, [articleContent, articleDescription, articleKeywords, articleTitle, articleType])
 
   const hasConversation =
     chatData.status !== 'idle' ||
@@ -587,19 +616,41 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
     setChatInput('')
     setIsStreaming(true)
     try {
-      await sendMessage(msg)
+      await sendMessage(msg, {
+        articleContext: articleTitle
+          ? {
+              slug: articleSlug,
+              title: articleTitle,
+              articleType,
+              description: articleDescription,
+              keywords: articleKeywords,
+              content: articleContent,
+            }
+          : undefined,
+      })
     } finally {
       setIsStreaming(false)
     }
-  }, [chatInput, isStreaming, sendMessage])
+  }, [articleContent, articleDescription, articleKeywords, articleSlug, articleTitle, articleType, chatInput, isStreaming, sendMessage])
 
   const handleQuickPrompt = useCallback(
     (prompt: string) => {
       setChatInput('')
       setIsStreaming(true)
-      sendMessage(prompt).finally(() => setIsStreaming(false))
+      sendMessage(prompt, {
+        articleContext: articleTitle
+          ? {
+              slug: articleSlug,
+              title: articleTitle,
+              articleType,
+              description: articleDescription,
+              keywords: articleKeywords,
+              content: articleContent,
+            }
+          : undefined,
+      }).finally(() => setIsStreaming(false))
     },
-    [sendMessage],
+    [articleContent, articleDescription, articleKeywords, articleSlug, articleTitle, articleType, sendMessage],
   )
 
   const collapse = useCallback(() => setExpanded('none'), [])
@@ -632,6 +683,14 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
               </ExpandedHeader>
 
               <ChatContainer>
+                {storyCompanion && (
+                  <StoryCompanionPanel
+                    data={storyCompanion}
+                    onPromptSelect={handleQuickPrompt}
+                    disabled={isStreaming}
+                  />
+                )}
+
                 <ChatMessages ref={messagesRef}>
                   {hasConversation ? (
                     <>
@@ -649,7 +708,7 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
                     <ChatBubble $role="ai">
                       <BubbleLabel $role="ai">ship ai</BubbleLabel>
                       Ship AI online. Ask about Alex&apos;s work, this article
-                      {articleTitle ? ` ("${articleTitle}")` : ''}, or use a trick like /brief, /map, /roast, or /mission.
+                      {articleTitle ? ` ("${articleTitle}")` : ''}, or use a trick like /story, /brief, /map, /roast, or /mission.
                     </ChatBubble>
                   )}
                 </ChatMessages>
@@ -669,7 +728,7 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
                   </ChatSendBtn>
                 </ChatInputRow>
 
-                {!hasConversation && (
+                {!hasConversation && !storyCompanion && (
                   <QuickPrompts>
                     {QUICK_PROMPTS.map((prompt) => (
                       <QuickPrompt
@@ -691,11 +750,12 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
               </PanelIcon>
               <PanelTitle>Ask Ship AI</PanelTitle>
               <PanelDesc>
-                Chat with the AI that powers this site. Ask about this article, Alex&apos;s work, or
-                anything that sparks your curiosity.
+                {articleType === 'fiction'
+                  ? 'Turn this story into a systems map, sequel hook, alternate path, or worldbuilding pressure test.'
+                  : 'Chat with the AI that powers this site. Ask about this article, Alex\'s work, or anything that sparks your curiosity.'}
               </PanelDesc>
               <PanelCta $color="rgba(0, 212, 255, 0.8)">
-                Start a conversation <ArrowRight />
+                {articleType === 'fiction' ? 'Open story mode' : 'Start a conversation'} <ArrowRight />
               </PanelCta>
             </PanelPreview>
           )}

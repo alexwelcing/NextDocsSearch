@@ -1,6 +1,6 @@
 // SupabaseDataContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { useChat, ChatData, ChatTurn } from '../../lib/hooks/useChat';
+import { useChat, ChatData, ChatTurn, type ArticleChatContext } from '../../lib/hooks/useChat';
 
 interface SupabaseData {
   id: number;
@@ -18,7 +18,7 @@ interface SupabaseDataContextProps {
   chatData: ChatData;
   setChatData: React.Dispatch<React.SetStateAction<ChatData>>;
   chatHistory: ChatTurn[];
-  sendMessage: (question: string) => Promise<void>;
+  sendMessage: (question: string, options?: { articleContext?: ArticleChatContext }) => Promise<void>;
 }
 
 const SupabaseDataContext = createContext<SupabaseDataContextProps | undefined>(undefined);

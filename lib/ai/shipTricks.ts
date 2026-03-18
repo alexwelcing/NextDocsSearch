@@ -19,6 +19,16 @@ export interface ResolvedShipTrick {
 
 export const SHIP_TRICKS: ShipTrick[] = [
   {
+    id: 'story',
+    command: '/story',
+    label: 'Story Engine',
+    description: 'Treat the topic like a live story system: map the tension, preserve tone, and push the next scene or fork.',
+    directive: 'Analyze or extend the topic as a story system. Preserve tone, character pressure, and world logic while making the next move legible.',
+    responseShape: 'Use sections like Character Pressure, World Rule, Hidden Assumption, and Next Scene when relevant.',
+    defaultTopic: 'the story in this article',
+    example: '/story continue the current fiction piece with the most plausible next scene',
+  },
+  {
     id: 'brief',
     command: '/brief',
     label: 'Executive Brief',

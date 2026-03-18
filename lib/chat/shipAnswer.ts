@@ -2,6 +2,7 @@ import type { ShipSignal } from '@/lib/ai/shipPersona'
 
 export type ShipAnswerMode =
   | 'default'
+  | 'story'
   | 'brief'
   | 'signal'
   | 'map'
@@ -195,6 +196,9 @@ function fallbackSummary(
 }
 
 function createKicker(summary: string, mode: ShipAnswerMode): string {
+  if (mode === 'story') {
+    return 'Reading the piece as a live narrative system.'
+  }
   if (mode === 'roast') {
     return 'Pressure-testing the idea without padding.'
   }
@@ -211,6 +215,9 @@ function createKicker(summary: string, mode: ShipAnswerMode): string {
 }
 
 function canonicalSectionTitles(mode: ShipAnswerMode): string[] | null {
+  if (mode === 'story') {
+    return ['Character Pressure', 'World Rule', 'Hidden Assumption', 'Next Scene']
+  }
   if (mode === 'brief') {
     return ['Verdict', 'Key Signal', 'Why It Matters', 'Next Watchpoint']
   }
@@ -238,10 +245,10 @@ function normalizeSectionTitlesByMode(
 ): ShipAnswerSection[] {
   const canonical = canonicalSectionTitles(mode)
   if (!canonical) {
-    return sections
+    return sections.slice(0, 4)
   }
 
-  return sections.map((section, index) => ({
+  return sections.slice(0, canonical.length).map((section, index) => ({
     ...section,
     title: canonical[index] || section.title,
     id: createSlugId(canonical[index] || section.title, 'section', index),
@@ -250,6 +257,7 @@ function normalizeSectionTitlesByMode(
 
 function normalizeHeadlineByMode(headline: string, summary: string, mode: ShipAnswerMode): string {
   const cleaned = cleanPresentationText(headline)
+  if (mode === 'story') return 'Story Engine'
   if (mode === 'brief') return 'Executive Brief'
   if (mode === 'map') return 'Systems Map'
   if (mode === 'roast') return 'Pressure Test'
@@ -271,12 +279,12 @@ function normalizeNodeLabelsByMode(
   const summaryNode = nodes[0]
     ? {
         ...nodes[0],
-        label: mode === 'map' ? 'Core Thesis' : 'Summary',
-        id: createSlugId(mode === 'map' ? 'Core Thesis' : 'Summary', 'node', 0),
+        label: mode === 'map' ? 'Core Thesis' : mode === 'story' ? 'Premise' : 'Summary',
+        id: createSlugId(mode === 'map' ? 'Core Thesis' : mode === 'story' ? 'Premise' : 'Summary', 'node', 0),
       }
     : {
         id: 'node-summary',
-        label: mode === 'map' ? 'Core Thesis' : 'Summary',
+        label: mode === 'map' ? 'Core Thesis' : mode === 'story' ? 'Premise' : 'Summary',
         detail: sections[0]?.body || '',
         weight: 1,
         tone: 'core' as const,
@@ -324,7 +332,7 @@ function finalizeStructuredAnswer(answer: ShipStructuredAnswer, fallbackText: st
     quickFacts: normalizedFacts,
     diagram: {
       ...answer.diagram,
-      title: answer.mode === 'map' ? 'Systems Map' : answer.diagram.title,
+      title: answer.mode === 'map' ? 'Systems Map' : answer.mode === 'story' ? 'Story Constellation' : answer.diagram.title,
       nodes: normalizedNodes,
     },
   }
@@ -609,7 +617,7 @@ export function parseStructuredAnswerResponse(
       .filter((entry): entry is ShipAnswerDiagramNode => Boolean(entry))
 
     return finalizeStructuredAnswer({
-      mode: normalizeTone(parsed.mode, ['default', 'brief', 'signal', 'map', 'roast', 'compare', 'mission'] as const, mode),
+      mode: normalizeTone(parsed.mode, ['default', 'story', 'brief', 'signal', 'map', 'roast', 'compare', 'mission'] as const, mode),
       headline:
         typeof parsed.headline === 'string' && cleanPresentationText(parsed.headline)
           ? cleanPresentationText(parsed.headline)

@@ -33,6 +33,14 @@ interface VectorSearchRequest {
   prompt?: string
   history?: ChatHistoryEntry[]
   questContext?: QuestContext
+  articleContext?: {
+    slug?: string
+    title?: string
+    articleType?: 'fiction' | 'research'
+    description?: string
+    keywords?: string[]
+    content?: string
+  }
 }
 
 interface ArticleRecord {
@@ -201,7 +209,55 @@ function shouldFlushAnswerDelta(pendingDelta: string, elapsedMs: number): boolea
   return false
 }
 
-function buildUserPrompt(query: string, questContext?: QuestContext, trickContext?: ResolvedShipTrick): string {
+function buildArticleContextSection(articleContext?: VectorSearchRequest['articleContext']): string {
+  if (!articleContext?.title) {
+    return ''
+  }
+
+  const excerpt = normalizeWhitespace(articleContext.content || '').slice(0, 1400)
+
+  return codeBlock`
+    Current article:
+    Title: ${articleContext.title}
+    Slug: ${articleContext.slug || 'unknown'}
+    Type: ${articleContext.articleType || 'unknown'}
+    Description: ${articleContext.description || 'No description available.'}
+    Keywords: ${(articleContext.keywords || []).join(', ') || 'none'}
+    Excerpt: ${excerpt || 'No excerpt available.'}
+  `
+}
+
+function mergeInstantResults(
+  query: string,
+  articleContext?: VectorSearchRequest['articleContext'],
+  limit = 5,
+): InstantAnswerItem[] {
+  const ranked = getInstantResults(query, limit)
+
+  if (!articleContext?.title) {
+    return ranked
+  }
+
+  const currentArticle: InstantAnswerItem = {
+    slug: articleContext.slug || 'current-article',
+    title: articleContext.title,
+    description: articleContext.description || 'Current article context.',
+    snippet: extractSnippet(articleContext.content || articleContext.description || '', tokenize(query)),
+    articleType: articleContext.articleType,
+    score: ranked.length > 0 ? Math.max(ranked[0].score + 1, 100) : 100,
+    keywords: articleContext.keywords || [],
+    domains: [],
+  }
+
+  return [currentArticle, ...ranked.filter((item) => item.slug !== currentArticle.slug)].slice(0, limit)
+}
+
+function buildUserPrompt(
+  query: string,
+  questContext?: QuestContext,
+  trickContext?: ResolvedShipTrick,
+  articleContext?: VectorSearchRequest['articleContext'],
+): string {
   const sanitizedQuery = query.trim()
   const questDetails = questContext?.currentQuest
     ? `${questContext.currentQuest.title}: ${questContext.currentQuest.objective}`
@@ -222,6 +278,8 @@ function buildUserPrompt(query: string, questContext?: QuestContext, trickContex
     ${missionBrief}
     Active mode: ${trickLabel}
 
+    ${buildArticleContextSection(articleContext) || 'Current article: none'}
+
     Archive context:
     ${buildContextSections(trickContext?.searchQuery || sanitizedQuery)}
 
@@ -234,6 +292,8 @@ function buildUserPrompt(query: string, questContext?: QuestContext, trickContex
     - Lead with the answer.
     - Use specifics from the archive when you have them.
     - Avoid making up capabilities, dates, or facts.
+    - If current article context is provided, anchor the answer there before generalizing outward.
+    - If the active mode is /story and current article context is provided, treat that article as the primary canon.
     - If relevant, connect the answer to product strategy, systems thinking, fiction themes, or technical work.
     - ${trickContext?.styleInstruction || 'Keep the answer tight and high-signal.'}
   `
@@ -245,6 +305,7 @@ function buildStructuredAnswerPrompt(
   instantResults: InstantAnswerItem[],
   mode: ShipAnswerMode,
   trickLabel?: string,
+  articleContext?: VectorSearchRequest['articleContext'],
 ): string {
   const sources = instantResults
     .slice(0, 5)
@@ -263,12 +324,15 @@ function buildStructuredAnswerPrompt(
     Candidate source slugs:
     ${sources || 'none'}
 
+    Current article context:
+    ${articleContext?.title ? `${articleContext.title} | ${articleContext.slug || 'unknown'} | ${articleContext.articleType || 'unknown'}` : 'none'}
+
     Active mode:
     ${mode}${trickLabel ? ` (${trickLabel})` : ''}
 
     Return exactly one JSON object with this shape:
     {
-      "mode": "default" | "brief" | "signal" | "map" | "roast" | "compare" | "mission",
+      "mode": "default" | "story" | "brief" | "signal" | "map" | "roast" | "compare" | "mission",
       "headline": string,
       "kicker": string,
       "summary": string,
@@ -312,6 +376,8 @@ function buildStructuredAnswerPrompt(
     - Each diagram node label must be 1 to 4 words, plain text only.
     - Only use sourceSlug values from the candidate list.
     - Ignore presentation wrappers from the original answer. Extract the semantic content only.
+    - If mode is story, prefer sections titled Character Pressure, World Rule, Hidden Assumption, Next Scene.
+    - If mode is story, the diagram should feel like a narrative map: premise plus 3 to 4 beats or story forces.
     - If mode is map, prefer sections titled Product, Technical, Narrative.
     - If mode is brief, prefer a decisive headline and compact executive framing.
     - If mode is roast, keep the critique useful and evidence-grounded, not theatrical.
@@ -336,7 +402,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new UserError('Missing request data')
     }
 
-    const { prompt: query, history = [], questContext } = requestData
+    const { prompt: query, history = [], questContext, articleContext } = requestData
 
     if (!query) {
       throw new UserError('Missing query in request data')
@@ -369,8 +435,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       : []
 
-    const prompt = buildUserPrompt(sanitizedQuery, questContext, trickContext)
+    const prompt = buildUserPrompt(sanitizedQuery, questContext, trickContext, articleContext)
     const answerMode = (trickContext.trick?.id ?? 'default') as ShipAnswerMode
+    const instantResults = mergeInstantResults(trickContext?.searchQuery || sanitizedQuery, articleContext)
 
     res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8')
     res.setHeader('Cache-Control', 'no-store')
@@ -379,10 +446,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     writeStreamEvent(res, {
       type: 'instant-results',
       question: sanitizedQuery,
-      items: getInstantResults(trickContext?.searchQuery || sanitizedQuery),
+      items: instantResults,
     })
 
-    const instantResults = getInstantResults(trickContext?.searchQuery || sanitizedQuery)
     let streamedAnswer = ''
     let lastEmittedAnswer = ''
     let pendingDelta = ''
@@ -446,6 +512,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               instantResults,
               answerMode,
               trickContext.trick?.label,
+              articleContext,
             ),
           },
         ],

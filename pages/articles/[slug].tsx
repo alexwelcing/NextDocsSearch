@@ -31,12 +31,16 @@ import type { DepthStage } from '@/components/ui/ParallaxArtLayers';
 import { discoverArticleImages } from '@/lib/article-images';
 import { SITE_URL } from '@/lib/site-url';
 import type { MultiArtOption } from '@/lib/article-images';
+import { useSupabaseData } from '@/components/contexts/SupabaseDataContext';
+import { buildStoryCompanion } from '@/lib/articles/storyCompanion';
+import StoryConstellationPreview from '@/components/articles/StoryConstellationPreview';
 
 interface ArticleProps {
   title: string;
   date: string;
   author: string[];
   content: string;
+  articleType: 'fiction' | 'research';
   description?: string;
   keywords?: string[];
   ogImage?: string;
@@ -649,7 +653,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
   articleVideo,
   readingTime,
   relatedArticles,
-  slug
+  slug,
+  articleType,
 }) => {
   const siteUrl = SITE_URL;
   const articleUrl = `${siteUrl}/articles/${slug}`;
@@ -657,6 +662,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   const fullOgImage = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`) : defaultOgImage;
 
   const { openModal, setCurrentArticle } = useArticleDiscovery();
+  const { chatData, sendMessage } = useSupabaseData();
 
   useEffect(() => {
     setCurrentArticle({
@@ -670,9 +676,9 @@ const ArticlePage: NextPage<ArticleProps> = ({
       ogImage,
       readingTime,
       wordCount: content.split(/\s+/).length,
-      articleType: 'fiction',
+      articleType,
     });
-  }, [slug, title, date, author, description, keywords, ogImage, readingTime, content, setCurrentArticle]);
+  }, [slug, title, date, author, description, keywords, ogImage, readingTime, content, articleType, setCurrentArticle]);
 
   // Fetch article videos from Supabase media storage
   const [articleVideos, setArticleVideos] = useState<ArticleMediaWithUrl[]>([]);
@@ -766,6 +772,28 @@ const ArticlePage: NextPage<ArticleProps> = ({
       </HandwrittenNote>
     ),
   }), []);
+
+  const storyCompanion = useMemo(() => {
+    if (articleType !== 'fiction') {
+      return null
+    }
+
+    return buildStoryCompanion({
+      title,
+      description,
+      keywords,
+      content,
+    })
+  }, [articleType, content, description, keywords, title])
+
+  const articleChatContext = useMemo(() => ({
+    slug,
+    title,
+    articleType,
+    description,
+    keywords,
+    content,
+  }), [articleType, content, description, keywords, slug, title])
 
   return (
     <ArticleLayout>
@@ -1133,7 +1161,26 @@ const ArticlePage: NextPage<ArticleProps> = ({
       </DepthSection>
 
       <DepthSection depth={3}>
-        <ArticleFooterPanels articleTitle={title} />
+        {storyCompanion && (
+          <ArticleWrapper $depth={3}>
+            <StoryConstellationPreview
+              structuredAnswer={chatData.structuredAnswer}
+              storyCompanion={storyCompanion}
+              onPromptSelect={(prompt) => void sendMessage(prompt, { articleContext: articleChatContext })}
+            />
+          </ArticleWrapper>
+        )}
+      </DepthSection>
+
+      <DepthSection depth={3}>
+        <ArticleFooterPanels
+          articleTitle={title}
+          articleSlug={slug}
+          articleType={articleType}
+          articleDescription={description}
+          articleKeywords={keywords}
+          articleContent={content}
+        />
       </DepthSection>
     </ArticleLayout>
   );
@@ -1230,12 +1277,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const videoPath = `/images/article-videos/${slug}.mp4`;
   const videoExists = fs.existsSync(path.join(process.cwd(), 'public', videoPath));
+  const articleType = data.articleType === 'research' ? 'research' : 'fiction'
 
   return {
     props: {
       title: data.title as string,
       date: (data.date instanceof Date ? data.date.toISOString() : data.date) as string,
       author: Array.isArray(data.author) ? (data.author as string[]) : ([data.author] as string[]),
+      articleType,
       description: data.description || '',
       keywords: data.keywords || [],
       ogImage: resolvedOgImage,
