@@ -11,6 +11,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { X, Loader, Frown, CornerDownLeft, Search, ArrowLeftCircle } from 'lucide-react';
 import { useSupabaseData } from './contexts/SupabaseDataContext'; // Ensure this is the correct import path
+import { SHIP_TRICKS } from '@/lib/ai/shipTricks';
+import {
+  isShipAiErrorMessage,
+  isShipAiIdleMessage,
+  isShipAiLoadingMessage,
+} from '@/lib/hooks/useChat';
 
 type Question = {
   key: string;
@@ -49,8 +55,8 @@ export function SearchDialog() {
     Object.entries(QUESTIONS_TREE.root).map(([key, text]) => ({ key, text }))
   );
   const [showMoreOptions, setShowMoreOptions] = React.useState(false);
-  const isLoading = chatData.response.includes('great question');
-  const hasResponse = chatData.response && !chatData.response.includes('ready to chat whenever you are');
+  const isLoading = isShipAiLoadingMessage(chatData.response);
+  const hasResponse = Boolean(chatData.response) && !isShipAiIdleMessage(chatData.response);
 
   const handleModalToggle = React.useCallback(() => {
     setOpen(!open);
@@ -77,8 +83,16 @@ export function SearchDialog() {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    if (!query.trim()) return;
     sendMessage(query);
   };
+
+  const applyTrick = React.useCallback((command: string) => {
+    setQuery((prev) => {
+      const trimmed = prev.trim();
+      return trimmed ? `${command} ${trimmed}` : `${command} `;
+    });
+  }, []);
 
   function setQuestionsBasedOnSelection(selectedKey: string) {
     historyStack.push(selectedKey as QuestionKey);
@@ -138,9 +152,9 @@ min-w-[200px]"
           <DialogContent className={`sm:max-w-[850px] text-black  `}>
             {' '}
             <DialogHeader>
-              <DialogTitle>🚀 Let&apos;s Talk About Alex!</DialogTitle>
+              <DialogTitle>Ship AI</DialogTitle>
               <DialogDescription>
-                I&apos;m Ship AI, and I&apos;m excited to share Alex&apos;s amazing work with you! Ask me anything - let&apos;s explore together.
+                Ask a normal question, or use a slash trick if you want a sharper mode. Try /tricks to see the full list.
               </DialogDescription>
               <hr />
               <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
@@ -161,24 +175,24 @@ min-w-[200px]"
                   </div>
                 )}
 
-                {chatData.response.includes('circuits got a bit tangled') && (
+                {isShipAiErrorMessage(chatData.response) && (
                   <div className="flex items-center gap-2">
                     <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
                       <Frown width={18} />
                     </span>
                     <span className="text-slate-700 dark:text-slate-100">
-                      😅 Oops! My systems hiccuped there. Let&apos;s try that again - I&apos;m ready when you are!
+                      The model choked. Ask again and Ship AI will take another swing.
                     </span>
                   </div>
                 )}
 
-                {hasResponse ? (
+                {hasResponse && !isLoading ? (
                   <div className="flex items-center gap-4 dark:text-white">{chatData.response}</div>
                 ) : null}
 
                 <div className="relative">
                   <Input
-                    placeholder="What would you love to discover? ✨"
+                    placeholder="Ask a question or use /brief, /signal, /map, /roast..."
                     name="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -190,8 +204,21 @@ min-w-[200px]"
                   />
                 </div>
                 <div className="flex flex-wrap">
+                  {SHIP_TRICKS.map((trick) => (
+                    <button
+                      key={trick.id}
+                      type="button"
+                      className="px-2 py-1 m-2 bg-slate-950 text-slate-100 rounded border border-slate-700 hover:border-red-500 hover:text-red-200 transition-colors"
+                      onClick={() => applyTrick(trick.command)}
+                    >
+                      {trick.command}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-wrap">
                   {historyStack.length > 0 && (
                     <button
+                      type="button"
                       className="bg-teal-100 hover:bg-teal-200 text-teal-700 p-2 rounded m-2"
                       onClick={handleGoBack}
                     >
@@ -219,7 +246,7 @@ min-w-[200px]"
 
 
               <DialogFooter>
-                <Button type="submit" className="bg-red-500">
+                <Button type="submit" className="bg-red-500" disabled={!query.trim()}>
                   Ask
                 </Button>
               </DialogFooter>

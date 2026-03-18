@@ -2,6 +2,22 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useJourney } from '@/components/contexts/JourneyContext';
 import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
 
+export const SHIP_AI_IDLE_MESSAGE = 'Ship AI online. Ask something worth answering.'
+export const SHIP_AI_LOADING_MESSAGE = 'Hang on. I\'m digging through the archive for something less useless than the average chatbot answer.'
+export const SHIP_AI_ERROR_MESSAGE = 'The Hugging Face link coughed up a hairball. Ask again and I\'ll take another swing at it.'
+
+export function isShipAiIdleMessage(message: string): boolean {
+  return message === SHIP_AI_IDLE_MESSAGE
+}
+
+export function isShipAiLoadingMessage(message: string): boolean {
+  return message === SHIP_AI_LOADING_MESSAGE
+}
+
+export function isShipAiErrorMessage(message: string): boolean {
+  return message === SHIP_AI_ERROR_MESSAGE
+}
+
 export interface ChatData {
   question: string;
   response: string;
@@ -13,11 +29,11 @@ export interface ChatTurn {
 }
 
 export function useChat() {
-  const [chatData, setChatData] = useState<ChatData>({ 
-    question: '', 
-    response: '✨ Hi! I\'m Ship AI - ready to chat whenever you are!' 
+  const [chatData, setChatData] = useState<ChatData>({
+    question: '',
+    response: SHIP_AI_IDLE_MESSAGE
   });
-  
+
   const [chatHistory, setChatHistory] = useState<ChatTurn[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(shipPersona.memory.storageKey);
@@ -47,8 +63,8 @@ export function useChat() {
 
     try {
       // Set initial state for new message
-      setChatData({ question, response: '💭 Ooh, great question! Let me dive into that for you...' });
-      
+      setChatData({ question, response: SHIP_AI_LOADING_MESSAGE });
+
       const historyPayload = chatHistory
         .slice(-shipPersona.memory.maxInteractions)
         .filter(entry => entry.question && entry.response);
@@ -103,16 +119,16 @@ export function useChat() {
       const { cleanMessage, signals } = extractShipSignals(fullResponse);
       setChatData({ question, response: cleanMessage });
       applyAiSignals(signals);
-      
+
       setChatHistory(prev => {
         const updated = [...prev, { question, response: cleanMessage }];
         return updated.slice(-shipPersona.memory.maxInteractions);
       });
     } catch (error) {
       console.error('Failed to fetch response:', error);
-      setChatData(prev => ({ 
-        ...prev, 
-        response: '😅 Oops! My circuits got a bit tangled there. Mind giving that another shot? I promise I\'ll do better!' 
+      setChatData(prev => ({
+        ...prev,
+        response: SHIP_AI_ERROR_MESSAGE
       }));
     } finally {
       isProcessingRef.current = false;

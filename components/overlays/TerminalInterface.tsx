@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSupabaseData } from '../contexts/SupabaseDataContext';
 import { useJourney } from '../contexts/JourneyContext';
+import { SHIP_AI_IDLE_MESSAGE } from '@/lib/hooks/useChat';
 import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
 import WorldGallery from '../WorldGallery';
 
@@ -740,7 +741,7 @@ export default function TerminalInterface({
                   MISSION BRIEF — {currentQuest.title.toUpperCase()}
                 </div>
                 <div style={{ color: '#cfc', fontSize: isMobile ? '13px' : '12px', lineHeight: 1.6 }}>
-                  {currentMissionBrief || '✨ Ready when you are! Ask me anything and let\'s kick off this adventure together.'}
+                  {currentMissionBrief || 'Ship AI is standing by. Ask a question or use /mission if you want the next move spelled out.'}
                 </div>
               </div>
             )}
@@ -755,7 +756,7 @@ export default function TerminalInterface({
               fontSize: isMobile ? '14px' : '13px',
               lineHeight: 1.6,
             }}>
-              {chatData.response && !chatData.response.includes('ready to chat whenever you are') ? (
+              {chatData.response && chatData.response !== SHIP_AI_IDLE_MESSAGE ? (
                 <>
                   <div style={{ color: '#0f0', marginBottom: '12px' }}>
                     <span style={{ color: '#555' }}>you:</span> {chatData.question}
@@ -766,10 +767,9 @@ export default function TerminalInterface({
                 </>
               ) : (
                 <div style={{ color: '#8f8', lineHeight: 1.6 }}>
-                  🚀 Hey there! I&apos;m Ship AI, and I&apos;m genuinely excited to help you discover Alex&apos;s work!
+                  Ship AI online.
                   <br/><br/>
-                  Ask me anything - I love talking about Alex&apos;s projects, skills, experience, and the cool stuff he&apos;s built.
-                  Let&apos;s have a great conversation!
+                  Ask about Alex&apos;s projects, skills, systems, or the site itself. If you want a preloaded move, try /brief, /signal, /map, /roast, /compare, /mission, or /tricks.
                 </div>
               )}
             </div>
@@ -779,7 +779,7 @@ export default function TerminalInterface({
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleChatSubmit()}
-                placeholder="What would you love to know? 🚀"
+                placeholder="Ask anything, or type /tricks"
                 aria-label="Chat input"
                 autoFocus={!isMobile}
                 style={{

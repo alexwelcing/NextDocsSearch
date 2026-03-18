@@ -4,7 +4,8 @@ import React, { useState, useCallback, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import styled, { keyframes, css } from 'styled-components'
 import { MessageSquare, User, ArrowRight, X, Send, ExternalLink } from 'lucide-react'
-import { useChat } from '@/lib/hooks/useChat'
+import { SHIP_TRICKS } from '@/lib/ai/shipTricks'
+import { SHIP_AI_IDLE_MESSAGE, useChat } from '@/lib/hooks/useChat'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -545,12 +546,7 @@ const AboutPageLink = styled(Link)`
 // Quick prompt suggestions
 // ---------------------------------------------------------------------------
 
-const QUICK_PROMPTS = [
-  "What does Alex build?",
-  "Tell me about his AI experience",
-  "What's this site made with?",
-  "Product management background?",
-]
+const QUICK_PROMPTS = SHIP_TRICKS.slice(0, 4).map((trick) => trick.example)
 
 // ---------------------------------------------------------------------------
 // Component
@@ -565,8 +561,7 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
 
   const { chatData, sendMessage, chatHistory } = useChat()
 
-  const hasConversation =
-    chatData.response && !chatData.response.includes('ready to chat whenever you are')
+  const hasConversation = chatData.response && chatData.response !== SHIP_AI_IDLE_MESSAGE
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -649,8 +644,8 @@ export default function ArticleFooterPanels({ articleTitle }: { articleTitle?: s
                   ) : (
                     <ChatBubble $role="ai">
                       <BubbleLabel $role="ai">ship ai</BubbleLabel>
-                      Hey! I&apos;m Ship AI. Ask me anything about Alex&apos;s work, this article
-                      {articleTitle ? ` ("${articleTitle}")` : ''}, or the projects behind this site.
+                      Ship AI online. Ask about Alex&apos;s work, this article
+                      {articleTitle ? ` ("${articleTitle}")` : ''}, or use a trick like /brief, /map, /roast, or /mission.
                     </ChatBubble>
                   )}
                 </ChatMessages>

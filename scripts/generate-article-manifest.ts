@@ -42,6 +42,7 @@ interface EnhancedArticleData {
   thumbnail?: string;
   readingTime: number;
   wordCount: number;
+  searchText: string;
   horizon?: TimeHorizon;
   polarity?: OutcomePolarity;
   mechanics?: SystemMechanic[];
@@ -56,6 +57,22 @@ function resolveExistingPublicImage(candidate: unknown): string | undefined {
 
   const diskPath = path.join(process.cwd(), 'public', candidate.replace(/^\//, ''));
   return fs.existsSync(diskPath) ? candidate : undefined;
+}
+
+function normalizeWhitespace(value: string): string {
+  return value.replace(/\s+/g, ' ').trim();
+}
+
+function stripMdx(content: string): string {
+  return normalizeWhitespace(
+    content
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/`[^`]*`/g, ' ')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/[>#*_~|-]/g, ' ')
+  );
 }
 
 // ── Inference helpers (copied from pages/api/articles-enhanced.ts) ──
@@ -232,6 +249,7 @@ function main() {
     const slug = filename.replace('.mdx', '');
     const wordCount = content.split(/\s+/).filter(Boolean).length;
     const readingTime = Math.ceil(wordCount / 200);
+    const searchText = stripMdx(content).slice(0, 2400);
 
     const keywords = Array.isArray(data.keywords)
       ? data.keywords.filter((k: unknown): k is string => typeof k === 'string')
@@ -252,6 +270,7 @@ function main() {
       thumbnail: images.thumbnail || images.heroImage || undefined,
       readingTime,
       wordCount,
+      searchText,
       horizon: inferHorizon(slug, content),
       polarity: inferPolarity(slug, content),
       mechanics: inferMechanics(slug, content),
