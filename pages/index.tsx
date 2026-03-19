@@ -344,8 +344,40 @@ function HomeContent() {
                   Building intelligent systems and frameworks for emergent AI futures
                 </p>
 
+                {/* Recruiter badge */}
+                <Link 
+                  href="/hire-me"
+                  className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm hover:bg-emerald-500/20 transition"
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  Available for hire — View opportunities
+                </Link>
+
                 {/* Two clear paths */}
                 <div className="flex flex-col sm:flex-row gap-6 mt-12">
+                  <Link
+                    href="/hire-me"
+                    className="group relative px-8 py-4 overflow-hidden"
+                    style={{
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      border: '1px solid rgba(16, 185, 129, 0.4)',
+                      borderRadius: '2px',
+                    }}
+                  >
+                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                      Hire Me
+                    </span>
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{
+                        background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))',
+                      }}
+                    />
+                  </Link>
+
                   <Link
                     href="/articles"
                     className="group relative px-8 py-4 overflow-hidden"

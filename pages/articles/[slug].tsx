@@ -938,6 +938,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             <InternalLink $depth={0} href="/agent-futures">Agent Futures</InternalLink>
             <InternalLink $depth={0} href="/emergent-intelligence">Emergent Intelligence</InternalLink>
             <InternalLink $depth={0} href="/about">About</InternalLink>
+            <InternalLink $depth={0} href="/hire-me">Work With Me</InternalLink>
           </InternalLinks>
 
           <ArticleClassification {...inferClassificationFromSlug(slug)} />
@@ -1136,6 +1137,53 @@ const ArticlePage: NextPage<ArticleProps> = ({
               Share on LinkedIn
             </ShareButton>
           </ShareButtons>
+
+          {/* Author CTA - Subtle */}
+          <div style={{
+            margin: '48px 0 32px',
+            padding: '24px 32px',
+            background: 'rgba(255, 255, 255, 0.02)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderLeft: '3px solid rgba(0, 212, 255, 0.5)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+              <div style={{ 
+                width: '48px', 
+                height: '48px', 
+                borderRadius: '50%', 
+                background: 'linear-gradient(135deg, #06b6d4, #3b82f6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                fontSize: '18px'
+              }}>
+                AW
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ color: '#9ca3af', fontSize: '14px', margin: 0 }}>
+                  Written by <Link href="/about" style={{ color: '#fff', textDecoration: 'none' }}>Alex Welcing</Link>
+                </p>
+                <p style={{ color: '#6b7280', fontSize: '13px', margin: '4px 0 0' }}>
+                  AI Product Leader & Technical Strategist
+                </p>
+              </div>
+              <Link 
+                href="/hire-me"
+                style={{
+                  padding: '8px 16px',
+                  background: 'transparent',
+                  color: '#06b6d4',
+                  fontSize: '13px',
+                  textDecoration: 'none',
+                  border: '1px solid rgba(6, 182, 212, 0.3)',
+                  transition: 'all 0.2s'
+                }}
+              >
+                About
+              </Link>
+            </div>
+          </div>
 
           <DiscoverSection>
             <DiscoverContent>

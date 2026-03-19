@@ -62,6 +62,11 @@ module.exports = {
       priority = 0.9
       changefreq = 'monthly'
     }
+    // Hire me page - recruiter focused
+    else if (path === '/hire-me') {
+      priority = 0.95
+      changefreq = 'weekly'
+    }
     // Articles index
     else if (path === '/articles') {
       priority = 0.85

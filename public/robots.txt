@@ -1,26 +1,12 @@
-# Robots.txt for alexwelcing.com
-# Updated: 2026
-
 User-agent: *
 Allow: /
 
-# Crawl Budget Discipline
-Disallow: /api/
-Disallow: /drafts/
-Disallow: /experiments/
-Disallow: /_next/
-Disallow: /*?*
-
-# Block pagination variants
-Disallow: /*page=
-Disallow: /*sort=
-Disallow: /*filter=
-
-# Host
-Host: https://alexwelcing.com
-
-# Sitemaps
 Sitemap: https://alexwelcing.com/sitemap.xml
-Sitemap: https://alexwelcing.com/sitemap-core.xml
-Sitemap: https://alexwelcing.com/sitemap-articles.xml
-Sitemap: https://alexwelcing.com/video-sitemap.xml
+
+# Priority pages
+Allow: /hire-me
+Allow: /articles
+Allow: /about
+
+# Crawl rate
+Crawl-delay: 1
