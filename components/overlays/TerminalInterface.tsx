@@ -111,10 +111,10 @@ export default function TerminalInterface({
       if (isInput) return;
 
       const tabKeys: Record<string, ViewMode> = {
-        '1': 'explore',
-        '2': 'chat',
-        '3': 'game',
-        '4': 'scenery',
+        '1': 'scenery',
+        '2': 'explore',
+        '3': 'chat',
+        '4': 'game',
         '5': 'about',
       };
       if (tabKeys[e.key]) {
@@ -347,10 +347,10 @@ export default function TerminalInterface({
   if (!isOpen) return null;
 
   const tabs = [
-    { id: 'explore', label: 'EXPLORE', key: '1' },
-    { id: 'chat', label: 'CHAT', key: '2' },
-    { id: 'game', label: 'GAME', key: '3' },
-    { id: 'scenery', label: 'SCENE', key: '4' },
+    { id: 'scenery', label: 'SCENE', key: '1' },
+    { id: 'explore', label: 'EXPLORE', key: '2' },
+    { id: 'chat', label: 'CHAT', key: '3' },
+    { id: 'game', label: 'GAME', key: '4' },
     { id: 'about', label: 'ABOUT', key: '5' },
   ] as const;
 
