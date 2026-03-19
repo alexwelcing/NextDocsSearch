@@ -264,6 +264,67 @@ class MarkdownEmbeddingSource extends BaseEmbeddingSource {
 
 type EmbeddingSource = MarkdownEmbeddingSource
 
+const EMBEDDING_BATCH_SIZE = 16
+const EMBEDDING_MAX_RETRIES = 5
+const EMBEDDING_BASE_DELAY_MS = 1500
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function chunkArray<T>(items: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = []
+
+  for (let index = 0; index < items.length; index += chunkSize) {
+    chunks.push(items.slice(index, index + chunkSize))
+  }
+
+  return chunks
+}
+
+function getErrorStatus(error: unknown): number | undefined {
+  if (typeof error !== 'object' || error === null) {
+    return undefined
+  }
+
+  const maybeError = error as {
+    response?: {
+      status?: number
+    }
+  }
+
+  return maybeError.response?.status
+}
+
+async function createEmbeddingBatchWithRetry(
+  openai: OpenAIApi,
+  input: string[],
+  path: string,
+  attempt = 1
+) {
+  try {
+    return await openai.createEmbedding({
+      model: 'text-embedding-ada-002',
+      input,
+    })
+  } catch (error) {
+    const status = getErrorStatus(error)
+    const shouldRetry = attempt < EMBEDDING_MAX_RETRIES && (status === 429 || (status ?? 0) >= 500)
+
+    if (!shouldRetry) {
+      throw error
+    }
+
+    const delayMs = EMBEDDING_BASE_DELAY_MS * 2 ** (attempt - 1)
+    console.warn(
+      `[${path}] Embedding batch rate-limited (attempt ${attempt}/${EMBEDDING_MAX_RETRIES}). Retrying in ${delayMs}ms.`
+    )
+    await sleep(delayMs)
+
+    return createEmbeddingBatchWithRetry(openai, input, path, attempt + 1)
+  }
+}
+
 async function generateEmbeddings() {
   const argv = await yargs().option('refresh', {
     alias: 'r',
@@ -293,6 +354,11 @@ async function generateEmbeddings() {
       },
     }
   );
+
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_KEY,
+  })
+  const openai = new OpenAIApi(configuration)
 
   const embeddingSources: EmbeddingSource[] = [
     ...(await walk('pages'))
@@ -393,48 +459,60 @@ async function generateEmbeddings() {
       }
 
       console.log(`[${path}] Adding ${sections.length} page sections (with embeddings)`)
-      for (const { slug, heading, content } of sections) {
-        // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
-        const input = content.replace(/\n/g, ' ')
+      const sectionPayloads = sections.map(({ slug, heading, content }) => ({
+        slug,
+        heading,
+        content,
+        input: content.replace(/\n/g, ' '),
+      }))
 
+      for (const batch of chunkArray(sectionPayloads, EMBEDDING_BATCH_SIZE)) {
         try {
-          const configuration = new Configuration({
-            apiKey: process.env.OPENAI_KEY,
-          })
-          const openai = new OpenAIApi(configuration)
-
-          const embeddingResponse = await openai.createEmbedding({
-            model: 'text-embedding-ada-002',
-            input,
-          })
+          const embeddingResponse = await createEmbeddingBatchWithRetry(
+            openai,
+            batch.map(({ input }) => input),
+            path
+          )
 
           if (embeddingResponse.status !== 200) {
             throw new Error(inspect(embeddingResponse.data, false, 2))
           }
 
-          const [responseData] = embeddingResponse.data.data
+          const perSectionTokenCount = Math.ceil(
+            embeddingResponse.data.usage.total_tokens / Math.max(batch.length, 1)
+          )
 
-          const { error: insertPageSectionError, data: pageSection } = await supabaseClient
-            .from('nods_page_section')
-            .insert({
-              page_id: page.id,
-              slug,
-              heading,
-              content,
-              token_count: embeddingResponse.data.usage.total_tokens,
-              embedding: responseData.embedding,
-            })
-            .select()
-            .limit(1)
-            .single()
+          for (let index = 0; index < batch.length; index++) {
+            const section = batch[index]
+            const responseData = embeddingResponse.data.data[index]
 
-          if (insertPageSectionError) {
-            throw insertPageSectionError
+            if (!responseData) {
+              throw new Error(`Missing embedding data for batch item ${index}`)
+            }
+
+            const { error: insertPageSectionError } = await supabaseClient
+              .from('nods_page_section')
+              .insert({
+                page_id: page.id,
+                slug: section.slug,
+                heading: section.heading,
+                content: section.content,
+                token_count: perSectionTokenCount,
+                embedding: responseData.embedding,
+              })
+              .select()
+              .limit(1)
+              .single()
+
+            if (insertPageSectionError) {
+              throw insertPageSectionError
+            }
           }
         } catch (err) {
-          // TODO: decide how to better handle failed embeddings
+          const firstInput = batch[0]?.input ?? ''
+
           console.error(
-            `Failed to generate embeddings for '${path}' page section starting with '${input.slice(
+            `Failed to generate embeddings for '${path}' page section starting with '${firstInput.slice(
               0,
               40
             )}...'`

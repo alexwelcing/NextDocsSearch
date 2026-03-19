@@ -7,6 +7,7 @@ import articleManifest from '@/lib/generated/article-manifest.json'
 import { generateHuggingFaceChat, generateHuggingFaceChatStream, type HfChatMessage } from '@/lib/ai/huggingface'
 import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
 import { resolveShipTrick, type ResolvedShipTrick } from '@/lib/ai/shipTricks'
+import { queryLocalArchive } from '@/lib/chat/archiveQuery'
 import {
   buildStructuredAnswer,
   parseStructuredAnswerResponse,
@@ -305,6 +306,51 @@ function buildContextSections(query: string, semanticSections: SemanticPageSecti
   return buildLexicalContextSections(query)
 }
 
+function buildProfileContextSection(profileFacts: string[]): string {
+  if (!profileFacts.length) {
+    return ''
+  }
+
+  return [
+    'Owner profile evidence:',
+    ...profileFacts.map((fact, index) => `${index + 1}. ${fact}`),
+  ].join('\n')
+}
+
+function buildArchiveContextSections(
+  query: string,
+  semanticSections: SemanticPageSection[],
+  localArchiveContext: string,
+  profileFacts: string[] = [],
+  profileIntent = false,
+): string {
+  const sections: string[] = []
+  const profileContext = buildProfileContextSection(profileFacts)
+  const semanticContext = buildSemanticContextSections(semanticSections, tokenize(query))
+
+  if (profileContext) {
+    sections.push(profileContext)
+  }
+
+  if (localArchiveContext) {
+    sections.push(localArchiveContext)
+  }
+
+  if (semanticContext && !profileIntent) {
+    sections.push(semanticContext)
+  }
+
+  if (semanticContext && profileIntent) {
+    sections.push(semanticContext)
+  }
+
+  if (sections.length > 0) {
+    return sections.join('\n\n---\n\n')
+  }
+
+  return buildContextSections(query, semanticSections)
+}
+
 function getInstantResults(query: string, limit = 5): InstantAnswerItem[] {
   const articles = getManifestArticles()
   const queryTokens = tokenize(query)
@@ -439,6 +485,8 @@ function mergeInstantResults(
 function buildUserPrompt(
   query: string,
   archiveContext: string,
+  profileContext: string,
+  profileIntent: boolean,
   questContext?: QuestContext,
   trickContext?: ResolvedShipTrick,
   articleContext?: VectorSearchRequest['articleContext'],
@@ -465,6 +513,8 @@ function buildUserPrompt(
 
     ${buildArticleContextSection(articleContext) || 'Current article: none'}
 
+  ${profileContext || 'Owner profile evidence: none'}
+
     Archive context:
     ${archiveContext}
 
@@ -477,9 +527,12 @@ function buildUserPrompt(
     - Lead with the answer.
     - Use specifics from the archive when you have them.
     - Avoid making up capabilities, dates, or facts.
+    - Treat first-person identity questions about you or your as questions about Alex Welcing unless the user explicitly asks about Ship AI as a fiction layer.
+    - If owner profile evidence is provided, treat it as highest-confidence grounding for identity, location, work, and purpose.
     - If current article context is provided, anchor the answer there before generalizing outward.
     - If the active mode is /story and current article context is provided, treat that article as the primary canon.
     - If relevant, connect the answer to product strategy, systems thinking, fiction themes, or technical work.
+    - ${profileIntent ? 'This is a profile-style question. Prefer exact profile facts over broad thematic inference.' : 'Use the strongest grounded evidence available before generalizing.'}
     - ${trickContext?.styleInstruction || 'Keep the answer tight and high-signal.'}
   `
 }
@@ -621,11 +674,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       : []
 
-    const semanticSections = await getSemanticPageSections(retrievalQuery)
-    const archiveContext = buildContextSections(retrievalQuery, semanticSections)
+    const [semanticSections, localArchive] = await Promise.all([
+      getSemanticPageSections(retrievalQuery),
+      queryLocalArchive(retrievalQuery),
+    ])
+    const profileContext = buildProfileContextSection(localArchive.profileFacts)
+    const archiveContext = buildArchiveContextSections(
+      retrievalQuery,
+      semanticSections,
+      localArchive.context,
+      localArchive.profileFacts,
+      localArchive.profileIntent,
+    )
     const answerMode = (trickContext.trick?.id ?? 'default') as ShipAnswerMode
     const instantResults = mergeInstantResults(
       [
+        ...localArchive.instantResults,
         ...getSemanticInstantResults(retrievalQuery, semanticSections, 5),
         ...getInstantResults(retrievalQuery, 5),
       ],
@@ -634,6 +698,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const prompt = buildUserPrompt(
       sanitizedQuery,
       archiveContext,
+      profileContext,
+      localArchive.profileIntent,
       questContext,
       trickContext,
       articleContext,
@@ -681,7 +747,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         { role: 'user', content: prompt },
       ],
       maxNewTokens: 700,
-      temperature: 0.78,
+      temperature: localArchive.profileIntent ? 0.35 : 0.78,
       onDelta: (delta, answer) => {
         streamedAnswer = answer
         lastEmittedAnswer = answer

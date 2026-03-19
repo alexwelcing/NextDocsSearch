@@ -7,6 +7,7 @@ import { trackEvent } from '@/lib/google-analytics';
 import { JourneyProvider } from '@/components/contexts/JourneyContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { ArticleDiscoveryProvider } from '@/components/ArticleDiscoveryProvider';
+import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext';
 
 
 const GTM_ID = 'GTM-W24L468'
@@ -55,11 +56,13 @@ function App({ Component, pageProps }: AppProps) {
       </Script>
 
       <JourneyProvider>
-        <ArticleDiscoveryProvider>
-          <ErrorBoundary>
-            <Component {...pageProps} />
-          </ErrorBoundary>
-        </ArticleDiscoveryProvider>
+        <SupabaseDataProvider>
+          <ArticleDiscoveryProvider>
+            <ErrorBoundary>
+              <Component {...pageProps} />
+            </ErrorBoundary>
+          </ArticleDiscoveryProvider>
+        </SupabaseDataProvider>
       </JourneyProvider>
     </>
   )
