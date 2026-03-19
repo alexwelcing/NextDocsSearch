@@ -10,13 +10,16 @@ const nextConfig = {
 
   // Performance optimizations
   compress: true, // Enable gzip compression
+  
+  // Speed up static generation - don't wait for all pages
+  staticPageGenerationTimeout: 60,
 
-  // Image optimization
+  // Image optimization - reduced sizes for faster builds
   images: {
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    formats: ['image/webp'], // Remove avif - slower to generate
+    deviceSizes: [640, 1080, 1920], // Reduced from 8 sizes to 3
+    imageSizes: [64, 256, 384],
+    minimumCacheTTL: 86400, // 24 hours
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -32,7 +35,12 @@ const nextConfig = {
 
   // Experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', 'react-icons', '@react-three/fiber', '@react-three/drei'],
+    optimizePackageImports: ['lucide-react', 'react-icons', '@react-three/fiber', '@react-three/drei', 'three'],
+    // Use webpack build worker for parallel processing
+    webpackBuildWorker: true,
+    // Parallelize server compilation
+    parallelServerCompiles: true,
+    parallelServerBuildTraces: true,
   },
 
   // Prevent Vercel from bundling public/ assets into serverless functions
