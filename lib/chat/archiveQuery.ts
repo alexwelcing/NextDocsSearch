@@ -336,7 +336,7 @@ function buildContext(matches: PassageMatch[], profileFacts: string[]): string {
     }
   }
 
-  for (const match of uniqueMatches.values()) {
+  for (const match of Array.from(uniqueMatches.values())) {
     sections.push(
       [
         `Title: ${match.doc.title}`,

@@ -185,13 +185,6 @@ export default function SceneCanvas({
         // Scene defaults
         scene.background = new THREE.Color('#0a0a0f');
 
-        // Dev-mode scene inspector (three-inspect)
-        if (process.env.NODE_ENV === 'development') {
-          import('three-inspect/vanilla').then(({ createInspector }) => {
-            createInspector(gl.domElement.parentElement || document.body, { scene, camera: camera as any, renderer: gl });
-          }).catch(() => { /* three-inspect optional */ });
-        }
-
         // Callback
         onCreated?.(state);
       },

@@ -1,5 +1,7 @@
 import type { ShipAnswerState } from '@/lib/chat/shipAnswer'
-import { motion } from 'framer-motion'
+import type { ShipSignal } from '@/lib/ai/shipPersona'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Zap, Target, Map as MapIcon, Flame, GitCompare, Rocket, Terminal, Cpu } from 'lucide-react'
 import InstantAnswerResults from './InstantAnswerResults'
 import ShipMarkdown from './ShipMarkdown'
 
@@ -7,6 +9,7 @@ interface ShipAnswerPanelProps {
   chatData: Pick<ShipAnswerState, 'question' | 'response' | 'instantResults' | 'structuredAnswer' | 'status'>
   density?: 'full' | 'compact' | 'terminal'
   showQuestion?: boolean
+  onSignalAction?: (signal: ShipSignal) => void
 }
 
 function SectionHeader({ label }: { label: string }) {
@@ -14,14 +17,14 @@ function SectionHeader({ label }: { label: string }) {
 }
 
 const MODE_COPY = {
-  default: { label: 'Ship AI', chip: 'border-cyan-400/20 bg-cyan-400/10 text-cyan-100' },
-  story: { label: 'Story Engine', chip: 'border-orange-300/25 bg-orange-400/10 text-orange-100' },
-  brief: { label: 'Executive Brief', chip: 'border-amber-300/25 bg-amber-400/10 text-amber-100' },
-  signal: { label: 'High Signal', chip: 'border-emerald-300/25 bg-emerald-400/10 text-emerald-100' },
-  map: { label: 'Systems Map', chip: 'border-sky-300/25 bg-sky-400/10 text-sky-100' },
-  roast: { label: 'Brutal Critique', chip: 'border-rose-300/25 bg-rose-400/10 text-rose-100' },
-  compare: { label: 'Head To Head', chip: 'border-violet-300/25 bg-violet-400/10 text-violet-100' },
-  mission: { label: 'Next Move', chip: 'border-fuchsia-300/25 bg-fuchsia-400/10 text-fuchsia-100' },
+  default: { label: 'Ship AI', chip: 'border-cyan-400/20 bg-cyan-400/10 text-cyan-100', icon: Zap },
+  story: { label: 'Story Engine', chip: 'border-orange-300/25 bg-orange-400/10 text-orange-100', icon: Flame },
+  brief: { label: 'Executive Brief', chip: 'border-amber-300/25 bg-amber-400/10 text-amber-100', icon: Zap },
+  signal: { label: 'High Signal', chip: 'border-emerald-300/25 bg-emerald-400/10 text-emerald-100', icon: Target },
+  map: { label: 'Systems Map', chip: 'border-sky-300/25 bg-sky-400/10 text-sky-100', icon: MapIcon },
+  roast: { label: 'Brutal Critique', chip: 'border-rose-300/25 bg-rose-400/10 text-rose-100', icon: Flame },
+  compare: { label: 'Head To Head', chip: 'border-violet-300/25 bg-violet-400/10 text-violet-100', icon: GitCompare },
+  mission: { label: 'Next Move', chip: 'border-fuchsia-300/25 bg-fuchsia-400/10 text-fuchsia-100', icon: Rocket },
 } as const
 
 const PANEL_VARIANTS = {
@@ -39,6 +42,80 @@ const PANEL_VARIANTS = {
 const ITEM_VARIANTS = {
   hidden: { opacity: 0, y: 8 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.22 } },
+}
+
+function StreamingShimmer() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-cyan-400/20 bg-cyan-950/20 p-4">
+      <div className="flex items-center gap-3">
+        <Cpu className="h-4 w-4 animate-pulse text-cyan-400" />
+        <div className="flex-1 space-y-2">
+          <div className="h-2 w-3/4 rounded bg-gradient-to-r from-cyan-400/20 via-cyan-400/40 to-cyan-400/20 animate-[shimmer_1.5s_infinite]" />
+          <div className="h-2 w-1/2 rounded bg-gradient-to-r from-cyan-400/10 via-cyan-400/30 to-cyan-400/10 animate-[shimmer_1.5s_infinite_0.2s]" />
+        </div>
+      </div>
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
+function ModeBadge({ mode, density }: { mode: keyof typeof MODE_COPY; density: 'full' | 'compact' | 'terminal' }) {
+  const meta = MODE_COPY[mode]
+  const Icon = meta.icon
+
+  if (density === 'terminal') {
+    return (
+      <div className="flex items-center gap-2 font-mono text-xs text-[#7fdb7d]">
+        <Terminal className="h-3 w-3" />
+        <span>{meta.label}</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className={`flex items-center gap-2 rounded-full border px-3 py-1.5 ${meta.chip}`}>
+      <Icon className="h-3.5 w-3.5" />
+      <span className="text-[11px] font-medium uppercase tracking-[0.14em]">{meta.label}</span>
+    </div>
+  )
+}
+
+function StatusIndicator({ status }: { status: ShipAnswerState['status'] }) {
+  if (status === 'loading') {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-amber-200/80"
+      >
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400" />
+        </span>
+        Synthesizing
+      </motion.div>
+    )
+  }
+
+  if (status === 'complete') {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-emerald-200/80"
+      >
+        <span className="h-2 w-2 rounded-full bg-emerald-400" />
+        Complete
+      </motion.div>
+    )
+  }
+
+  return null
 }
 
 function factGridClass(mode: keyof typeof MODE_COPY, density: 'full' | 'compact' | 'terminal') {
@@ -124,12 +201,14 @@ export default function ShipAnswerPanel({
   const { question, response, instantResults, structuredAnswer, status } = chatData
   const isCompact = density !== 'full'
   const mode = structuredAnswer?.mode ?? 'default'
-  const modeMeta = MODE_COPY[mode]
   const shellClassName = density === 'terminal'
     ? 'space-y-4 rounded-xl border border-[#2b3b2b] bg-[#0b110b] p-4'
     : 'space-y-5 rounded-[28px] border border-white/10 bg-[linear-gradient(135deg,rgba(10,16,28,0.96),rgba(5,10,20,0.88))] p-5 shadow-[0_30px_80px_rgba(2,10,26,0.45)]'
 
-  if (!question && instantResults.length === 0 && !structuredAnswer && !response.trim()) {
+  const showEmptyState = !question && instantResults.length === 0 && !structuredAnswer && !response.trim()
+  const isStreaming = status === 'loading' && !structuredAnswer && response.trim()
+
+  if (showEmptyState) {
     return null
   }
 
@@ -154,25 +233,35 @@ export default function ShipAnswerPanel({
         <InstantAnswerResults items={instantResults} compact={isCompact} limit={density === 'terminal' ? 3 : 5} />
       </motion.div>
 
+      {/* Streaming state - show shimmer while building answer */}
+      <AnimatePresence>
+        {isStreaming && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            variants={ITEM_VARIANTS}
+          >
+            <StreamingShimmer />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {structuredAnswer && (
         <motion.section className="space-y-4" variants={ITEM_VARIANTS}>
           <motion.div className="flex items-center justify-between gap-3" variants={ITEM_VARIANTS}>
-            <SectionHeader label={density === 'terminal' ? 'Tactical summary' : 'Ship AI answer'} />
-            {status === 'loading' && (
-              <span className="text-[11px] uppercase tracking-[0.16em] text-amber-200/80">Synthesizing</span>
-            )}
+            <div className="flex items-center gap-3">
+              <ModeBadge mode={mode} density={density} />
+              {density !== 'terminal' && (
+                <div className="hidden sm:block text-xs uppercase tracking-[0.14em] text-slate-500">
+                  {structuredAnswer.headline}
+                </div>
+              )}
+            </div>
+            <StatusIndicator status={status} />
           </motion.div>
 
           <motion.div className={summaryShellClass(mode, density)} variants={ITEM_VARIANTS}>
-            <div className="flex flex-wrap items-center gap-3">
-              <div className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${modeMeta.chip}`}>
-                {modeMeta.label}
-              </div>
-              <div className={density === 'terminal' ? 'text-xs uppercase tracking-[0.14em] text-[#8fa98f]' : 'text-xs uppercase tracking-[0.14em] text-slate-400'}>
-                {structuredAnswer.headline}
-              </div>
-            </div>
-
             {structuredAnswer.kicker && (
               <div className={density === 'terminal' ? 'font-mono text-xs leading-5 text-[#b5d6b5]' : 'text-sm leading-6 text-slate-300'}>
                 {structuredAnswer.kicker}
@@ -193,6 +282,7 @@ export default function ShipAnswerPanel({
                     key={`${fact}-${index}`}
                     className={factCardClass(mode, density)}
                     variants={ITEM_VARIANTS}
+                    whileHover={density !== 'terminal' ? { scale: 1.01, transition: { duration: 0.15 } } : undefined}
                   >
                     {mode === 'brief' && density !== 'terminal' ? (
                       <div className="flex items-start gap-3">
@@ -210,11 +300,15 @@ export default function ShipAnswerPanel({
             <motion.div className="space-y-3" variants={ITEM_VARIANTS}>
               <SectionHeader label={mode === 'map' ? 'System lenses' : mode === 'story' ? 'Story lenses' : 'Expanded answer'} />
               <div className={sectionGridClass(mode)}>
-                {structuredAnswer.sections.slice(0, density === 'compact' ? 2 : 4).map((section) => (
+                {structuredAnswer.sections.slice(0, density === 'compact' ? 2 : 4).map((section, index) => (
                   <motion.div
                     key={section.id}
                     className={sectionCardClass(mode)}
                     variants={ITEM_VARIANTS}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.08 }}
+                    whileHover={{ scale: 1.01, transition: { duration: 0.15 } }}
                   >
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <div className="text-[11px] uppercase tracking-[0.16em] text-amber-200/75">{section.title}</div>
@@ -240,11 +334,13 @@ export default function ShipAnswerPanel({
                   <motion.div
                     key={`${action}-${index}`}
                     className={mode === 'mission'
-                      ? 'rounded-[22px] border border-fuchsia-300/18 bg-fuchsia-400/8 px-4 py-4 text-sm leading-6 text-fuchsia-50'
+                      ? 'rounded-[22px] border border-fuchsia-300/18 bg-fuchsia-400/8 px-4 py-4 text-sm leading-6 text-fuchsia-50 cursor-pointer hover:bg-fuchsia-400/12 transition-colors'
                       : mode === 'story'
-                        ? 'rounded-[22px] border border-orange-300/18 bg-orange-400/8 px-4 py-4 text-sm leading-6 text-orange-50'
-                      : 'rounded-full border border-amber-300/20 bg-amber-400/10 px-3 py-2 text-xs leading-5 text-amber-100'}
+                        ? 'rounded-[22px] border border-orange-300/18 bg-orange-400/8 px-4 py-4 text-sm leading-6 text-orange-50 cursor-pointer hover:bg-orange-400/12 transition-colors'
+                      : 'rounded-full border border-amber-300/20 bg-amber-400/10 px-3 py-2 text-xs leading-5 text-amber-100 cursor-pointer hover:bg-amber-400/15 transition-colors'}
                     variants={ITEM_VARIANTS}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     {mode === 'mission' || mode === 'story' ? `${index + 1}. ${action}` : action}
                   </motion.div>
@@ -255,7 +351,7 @@ export default function ShipAnswerPanel({
         </motion.section>
       )}
 
-      {!structuredAnswer && response.trim() && (
+      {!structuredAnswer && response.trim() && status !== 'loading' && (
         <motion.section className="space-y-2" variants={ITEM_VARIANTS}>
           <SectionHeader label="Ship AI answer" />
           <ShipMarkdown content={response} compact={density !== 'full'} />

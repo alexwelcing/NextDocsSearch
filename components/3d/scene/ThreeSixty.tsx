@@ -228,8 +228,10 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     const forceLowPower = perfMode === 'low';
     const forceHighPower = perfMode === 'high';
     const splatsDisabled = params.get('splats') === 'off';
+    const splatsForced = params.get('splats') === 'on';
 
-    const allowSplats = !splatsDisabled && (forceHighPower || (!forceLowPower && !isLowEndDevice));
+    // Allow splats if: forced on, OR not disabled AND (high power mode OR not low-end device)
+    const allowSplats = splatsForced || (!splatsDisabled && (forceHighPower || (!forceLowPower && !isLowEndDevice)));
 
     setPerformanceFlags({
       allowSplats,

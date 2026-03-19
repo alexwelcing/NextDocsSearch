@@ -293,10 +293,8 @@ function HomeContent() {
               />
             )}
 
-            <AchievementUnlock
-              achievement={currentAchievement}
-              onDismiss={() => setCurrentAchievement(null)}
-            />
+            {/* Achievement popups disabled - they were too intrusive */}
+            {/* <AchievementUnlock achievement={currentAchievement} onDismiss={() => setCurrentAchievement(null)} /> */}
           </main>
         ) : (
           <div

@@ -7,6 +7,7 @@ Place your Gaussian Splat files here to use them as 3D backgrounds in the applic
 - `.splat` - Gaussian Splat format
 - `.ply` - Point cloud format (often used for splats)
 - `.ksplat` - Compressed splat format
+- `.spz` - Splash/Marble Labs compressed format (smaller, faster loading)
 
 ## How to Get Splat Files
 
