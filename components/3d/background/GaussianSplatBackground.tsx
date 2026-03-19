@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react'
-import { useThree } from '@react-three/fiber'
-import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Euler, Quaternion } from 'three'
+import { DropInViewer, LogLevel, SceneRevealMode } from '@mkkellogg/gaussian-splats-3d'
 
 interface GaussianSplatBackgroundProps {
   splatUrl: string
@@ -9,9 +9,17 @@ interface GaussianSplatBackgroundProps {
   scale?: number
 }
 
+const toQuaternionArray = (rotation: [number, number, number]): [number, number, number, number] => {
+  const quaternion = new Quaternion().setFromEuler(new Euler(rotation[0], rotation[1], rotation[2], 'XYZ'))
+
+  return [quaternion.x, quaternion.y, quaternion.z, quaternion.w]
+}
+
 /**
- * Component to render a Gaussian Splat as a navigable 3D background
- * Uses @mkkellogg/gaussian-splats-3d for rendering
+ * R3F-compatible Gaussian splat renderer.
+ *
+ * Uses DropInViewer so splats are rendered inside the existing react-three-fiber
+ * scene/camera/render loop.
  */
 const GaussianSplatBackground: React.FC<GaussianSplatBackgroundProps> = ({
   splatUrl,
@@ -19,50 +27,65 @@ const GaussianSplatBackground: React.FC<GaussianSplatBackgroundProps> = ({
   rotation = [0, 0, 0],
   scale = 1,
 }) => {
-  const { scene, camera, gl } = useThree()
-  const viewerRef = useRef<any>(null)
-  const loadedRef = useRef(false)
+  const [ready, setReady] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  const viewer = useMemo(() => {
+    return new DropInViewer({
+      gpuAcceleratedSort: true,
+      sharedMemoryForWorkers: true,
+      integerBasedSort: false,
+      sceneRevealMode: SceneRevealMode.Instant,
+      logLevel: LogLevel.None,
+    })
+  }, [])
 
   useEffect(() => {
-    if (loadedRef.current) return
-    loadedRef.current = true
+    let cancelled = false
 
-    // Create a new Gaussian Splat Viewer
-    const viewer = new GaussianSplats3D.Viewer({
-      cameraUp: [0, 1, 0],
-      initialCameraPosition: position,
-      initialCameraLookAt: [0, 0, 0],
-      renderer: gl,
-      camera: camera,
-    })
+    setReady(false)
+    setError(null)
 
-    viewerRef.current = viewer
-
-    // Load the splat file
     viewer
       .addSplatScene(splatUrl, {
-        position: position,
-        rotation: rotation,
+        showLoadingUI: false,
+        position,
+        rotation: toQuaternionArray(rotation),
         scale: [scale, scale, scale],
       })
       .then(() => {
-        viewer.start()
+        if (!cancelled) {
+          setReady(true)
+        }
       })
-      .catch((error: Error) => {
-        console.error('Failed to load Gaussian Splat:', error)
+      .catch((loadError: Error) => {
+        if (!cancelled) {
+          console.error('Failed to load Gaussian Splat:', loadError)
+          setError(loadError)
+        }
       })
 
     return () => {
-      if (viewerRef.current) {
-        viewerRef.current.dispose()
-        viewerRef.current = null
-        loadedRef.current = false
+      cancelled = true
+      const sceneCount = viewer.getSceneCount()
+      if (sceneCount > 0) {
+        const sceneIndexes = Array.from({ length: sceneCount }, (_, index) => index)
+        void viewer.removeSplatScenes(sceneIndexes, false)
       }
     }
-  }, [splatUrl, scene, camera, gl, position, rotation, scale])
+  }, [viewer, splatUrl, position, rotation, scale])
 
-  // Render nothing - the viewer manages its own rendering
-  return null
+  useEffect(() => {
+    return () => {
+      void viewer.dispose()
+    }
+  }, [viewer])
+
+  if (error || !ready) {
+    return null
+  }
+
+  return <primitive object={viewer} />
 }
 
 export default GaussianSplatBackground
