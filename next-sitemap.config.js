@@ -37,6 +37,10 @@ module.exports = {
   exclude: [
     '/api/*',
     '/404',
+    '/admin/*',
+    '/chat',
+    '/drafts/*',
+    '/experiments/*',
   ],
   transform: async (config, path) => {
     // Custom priority for important pages based on SEO strategy
@@ -88,18 +92,4 @@ module.exports = {
   additionalSitemaps: [
     `${siteUrl}/video-sitemap.xml`,
   ],
-  robotsTxtOptions: {
-    policies: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/drafts/', '/experiments/', '/_next/'],
-      },
-    ],
-    additionalSitemaps: [
-      `${siteUrl}/sitemap-core.xml`,
-      `${siteUrl}/sitemap-articles.xml`,
-      `${siteUrl}/video-sitemap.xml`,
-    ],
-  },
 }

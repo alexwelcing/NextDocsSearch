@@ -67,6 +67,12 @@ const nextConfig = {
         destination: '/articles',
         permanent: true,
       },
+      // Fix for renamed article: ai-kill-switch → ai-kill-switch-postmortem
+      {
+        source: '/articles/ai-kill-switch',
+        destination: '/articles/ai-kill-switch-postmortem',
+        permanent: true,
+      },
     ];
   },
 
