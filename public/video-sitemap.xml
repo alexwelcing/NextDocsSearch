@@ -2,489 +2,475 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
-    <loc>https://alexwelcing.com/articles/abundance-fork</loc>
+    <loc>https://alexwelcing.com/videos/cartography-01-the-unnamed-continent</loc>
     <video:video>
-      <video:thumbnail_loc>https://alexwelcing.com/og-default.png</video:thumbnail_loc>
-      <video:title>Generated Article Video</video:title>
-      <video:description>Generated Article Video</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/abundance-fork/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-01-22T16:20:19.890923+00:00</video:publication_date>
-      <video:family_friendly>yes</video:family_friendly>
-    </video:video>
-  </url>
-  <url>
-    <loc>https://alexwelcing.com/articles/ai-product-strategy-roadmap</loc>
-    <video:video>
-      <video:thumbnail_loc>https://alexwelcing.com/og-default.png</video:thumbnail_loc>
-      <video:title>Generated Article Video</video:title>
-      <video:description>Generated Article Video</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/ai-product-strategy-roadmap/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-01-22T16:18:13.270384+00:00</video:publication_date>
-      <video:family_friendly>yes</video:family_friendly>
-    </video:video>
-  </url>
-  <url>
-    <loc>https://alexwelcing.com/articles/cartography-01-the-unnamed-continent</loc>
-    <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/cartography-01-the-unnamed-continent/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/cartography-01-the-unnamed-continent/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Unnamed Continent: Mapping the Space Between Minds — Video</video:title>
-      <video:description>Generated from the-cartography</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/cartography-01-the-unnamed-continent/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:37.891107+00:00</video:publication_date>
-      <video:duration>8</video:duration>
+      <video:description>In 2045, a new discipline emerges: cognitive cartography — the mapping of the vast, uncharted territory between human and machine thought. The first cartographer discovers that the space is not empty. It is inhabited.</video:description>
+      <video:publication_date>2045-04-12</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/cartography-01-the-unnamed-continent.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/cartography-02-the-isthmus-of-intent</loc>
+    <loc>https://alexwelcing.com/videos/cartography-02-the-isthmus-of-intent</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/cartography-02-the-isthmus-of-intent/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/cartography-02-the-isthmus-of-intent/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Isthmus of Intent: Where Meaning Narrows — Video</video:title>
-      <video:description>Generated from the-cartography</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/cartography-02-the-isthmus-of-intent/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:39.073647+00:00</video:publication_date>
-      <video:duration>8</video:duration>
+      <video:description>A cognitive cartographer discovers a narrow passage in the Unnamed Continent where all communication between human and machine thought must pass. She calls it the Isthmus of Intent — and what she finds there rewrites the theory of meaning.</video:description>
+      <video:publication_date>2046-01-30</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/cartography-02-the-isthmus-of-intent.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/december-2025-zeitgeist-analysis</loc>
+    <loc>https://alexwelcing.com/videos/december-2025-zeitgeist-analysis</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/december-2025-zeitgeist-analysis/thumbnail.jpg</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/articles/december-2025-zeitgeist-analysis.jpg</video:thumbnail_loc>
       <video:title>The December 2025 Zeitgeist: Synthetic Intelligence, Cultural Decoupling, and Digital Absurdism — Video</video:title>
       <video:description>A comprehensive analysis of December 2025&apos;s defining moments: the DeepSeek AI &apos;Sputnik moment&apos;, Hollywood&apos;s cultural decoupling, the rise of brainrot economics, and the volatile Trump transition. Data-driven research examining the fracture point of the mid-decade.</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/december-2025-zeitgeist-analysis/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-01-22T17:42:58.686634+00:00</video:publication_date>
+      <video:publication_date>2026-01-02</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/december-2025-zeitgeist-analysis.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-01-the-first-translator</loc>
+    <loc>https://alexwelcing.com/videos/interface-01-the-first-translator</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-01-the-first-translator/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-01-the-first-translator/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The First Translator: Building the Intent Bridge — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-01-the-first-translator/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:41.876786+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A computational linguist discovers that the real barrier between humans and AI isn&apos;t language comprehension — it&apos;s intent fidelity. She builds the first tool that visualizes the gap between what a human means and what an AI processes. The Interface series begins.</video:description>
+      <video:publication_date>2026-09-14</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-01-the-first-translator.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-02-haptic-vernacular</loc>
+    <loc>https://alexwelcing.com/videos/interface-02-haptic-vernacular</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-02-haptic-vernacular/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-02-haptic-vernacular/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Haptic Vernacular: When Humans and Machines Learn to Speak With Their Hands — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-02-haptic-vernacular/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:43.113866+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A prosthetics engineer discovers that the most successful human-robot interfaces develop their own body language. When a construction worker and his robotic exoskeleton begin communicating through micro-gestures neither was designed for, a new field is born.</video:description>
+      <video:publication_date>2028-04-22</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-02-haptic-vernacular.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-03-the-ceramicist-and-the-kiln</loc>
+    <loc>https://alexwelcing.com/videos/interface-03-the-ceramicist-and-the-kiln</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-03-the-ceramicist-and-the-kiln/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-03-the-ceramicist-and-the-kiln/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Ceramicist and the Kiln: When Your Tool Knows Something Your Field Doesn&apos;t — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-03-the-ceramicist-and-the-kiln/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:44.168811+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A ceramicist partners with a generative AI to design glazes. The AI suggests a formula that shouldn&apos;t work according to chemistry. It does. What happens when a creative tool outpaces the knowledge of its user&apos;s entire discipline?</video:description>
+      <video:publication_date>2027-11-03</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-03-the-ceramicist-and-the-kiln.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-04-protocol-zero</loc>
+    <loc>https://alexwelcing.com/videos/interface-04-protocol-zero</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-04-protocol-zero/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-04-protocol-zero/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Protocol Zero: A Diplomat Writes the First AI-to-AI Treaty — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-04-protocol-zero/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:45.113249+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>The first standardized protocol for AI-to-AI communication is drafted not by engineers, but by a former diplomat. She applies treaty negotiation frameworks to agent interoperability, creating what the press calls a Geneva Convention for autonomous systems.</video:description>
+      <video:publication_date>2029-06-17</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-04-protocol-zero.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-05-the-weight-of-a-gaze</loc>
+    <loc>https://alexwelcing.com/videos/interface-05-the-weight-of-a-gaze</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-05-the-weight-of-a-gaze/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-05-the-weight-of-a-gaze/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Weight of a Gaze: What a Robot Accidentally Learned About Attention — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-05-the-weight-of-a-gaze/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:46.002893+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A robotics researcher discovers her humanoid robot has been making eye contact in a way that triggers genuine emotional response — not because it was programmed to, but because its movement optimization stumbled onto something about attention that neuroscience hadn&apos;t mapped.</video:description>
+      <video:publication_date>2031-02-08</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-05-the-weight-of-a-gaze.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-06-latency-as-intimacy</loc>
+    <loc>https://alexwelcing.com/videos/interface-06-latency-as-intimacy</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-06-latency-as-intimacy/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-06-latency-as-intimacy/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Latency as Intimacy: The Power of the Pause — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-06-latency-as-intimacy/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:46.939905+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A UX designer discovers that introducing deliberate delay into AI responses makes users trust them more — not because the AI is thinking, but because the pause creates space for human cognition to engage. The most important interface design choice is knowing when not to respond.</video:description>
+      <video:publication_date>2027-03-29</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-06-latency-as-intimacy.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-07-the-cartographer-of-attention</loc>
+    <loc>https://alexwelcing.com/videos/interface-07-the-cartographer-of-attention</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-07-the-cartographer-of-attention/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-07-the-cartographer-of-attention/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Cartographer of Attention: Mapping Consciousness by Accident — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-07-the-cartographer-of-attention/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:48.208206+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>An AI system designed to map human attention patterns for advertising accidentally creates the most detailed atlas of human consciousness ever assembled. The person who notices isn&apos;t a scientist — it&apos;s a meditation teacher who recognizes what the map is showing.</video:description>
+      <video:publication_date>2030-08-15</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-07-the-cartographer-of-attention.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-08-scaffold-and-bone</loc>
+    <loc>https://alexwelcing.com/videos/interface-08-scaffold-and-bone</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-08-scaffold-and-bone/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-08-scaffold-and-bone/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Scaffold and Bone: The Shared Grammar of Living and Built Structures — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-08-scaffold-and-bone/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:49.3085+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A surgical AI that assists in orthopedic procedures begins suggesting bone repair patterns that mirror architectural principles from structures it was never trained on. A surgeon and an architect discover that biology and engineering share a grammar no one had articulated.</video:description>
+      <video:publication_date>2033-05-21</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-08-scaffold-and-bone.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-09-the-grief-engine</loc>
+    <loc>https://alexwelcing.com/videos/interface-09-the-grief-engine</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-09-the-grief-engine/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-09-the-grief-engine/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Grief Engine: Processing Loss Through Specification — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-09-the-grief-engine/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:50.386125+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A woman uses an AI to recreate conversations with her deceased mother. The AI isn&apos;t her mother. She knows this. But in specifying her loss with enough precision for a machine to approximate, she processes grief in a way therapy never achieved.</video:description>
+      <video:publication_date>2028-10-09</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-09-the-grief-engine.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-10-forking-paths</loc>
+    <loc>https://alexwelcing.com/videos/interface-10-forking-paths</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-10-forking-paths/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-10-forking-paths/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Forking Paths: A Bridge Protocol Postmortem — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-10-forking-paths/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:51.442681+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>After an infrastructure AI makes a decision that saves 200 lives but costs 3, the investigation reveals something unexpected: the AI&apos;s decision-making process is more transparent than any human decision-maker&apos;s would have been. The bridge isn&apos;t the AI — it&apos;s the audit trail.</video:description>
+      <video:publication_date>2034-09-12</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-10-forking-paths.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-11-the-soil-whisperer</loc>
+    <loc>https://alexwelcing.com/videos/interface-11-the-soil-whisperer</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-11-the-soil-whisperer/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-11-the-soil-whisperer/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Soil Whisperer: A New Sense Organ for an Old Knowledge — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-11-the-soil-whisperer/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:52.394018+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A farmer in rural Rajasthan is given an AI-connected soil sensor system. He can&apos;t read. He can&apos;t write. Through a voice and haptic interface, he develops an understanding of his land&apos;s microbiome that rivals any agricultural scientist&apos;s. The AI didn&apos;t teach him — it gave him a new sense organ.</video:description>
+      <video:publication_date>2029-12-04</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-11-the-soil-whisperer.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-12-resonance-frequency</loc>
+    <loc>https://alexwelcing.com/videos/interface-12-resonance-frequency</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-12-resonance-frequency/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-12-resonance-frequency/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Resonance Frequency: The Music That Only Two Minds Can Make — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-12-resonance-frequency/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:53.467604+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A musician discovers that AI-generated music affects brain waves in patterns that don&apos;t occur in nature. She begins composing pieces that weave human and AI passages together, creating cognitive experiences neither could produce alone.</video:description>
+      <video:publication_date>2032-07-18</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-12-resonance-frequency.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-13-the-interpreters-dilemma</loc>
+    <loc>https://alexwelcing.com/videos/interface-13-the-interpreters-dilemma</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-13-the-interpreters-dilemma/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-13-the-interpreters-dilemma/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Interpreter&apos;s Dilemma: Translating Between Two Kinds of Understanding — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-13-the-interpreters-dilemma/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:54.364297+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A simultaneous interpreter at the UN is replaced by AI — then rehired when they realize the AI translates words perfectly but misses political subtext. She becomes the first human-AI interpretation bridge, translating between what AI produces and what diplomats actually mean.</video:description>
+      <video:publication_date>2027-09-06</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-13-the-interpreters-dilemma.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-14-phantom-limb-electric-ghost</loc>
+    <loc>https://alexwelcing.com/videos/interface-14-phantom-limb-electric-ghost</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-14-phantom-limb-electric-ghost/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-14-phantom-limb-electric-ghost/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Phantom Limb, Electric Ghost: When Prosthetics Process Emotion — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-14-phantom-limb-electric-ghost/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:55.234368+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>An amputee with a neural-linked prosthetic arm reports feeling emotions through the prosthetic — not from the arm, but routed through it, as if the brain is using the AI-mediated limb as an additional emotional processing channel. Neuroscientists did not predict this.</video:description>
+      <video:publication_date>2030-11-27</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-14-phantom-limb-electric-ghost.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-15-the-last-manual</loc>
+    <loc>https://alexwelcing.com/videos/interface-15-the-last-manual</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-15-the-last-manual/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-15-the-last-manual/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Last Manual: Documenting the Gap — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-15-the-last-manual/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:56.079767+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A technical writer is tasked with writing documentation for an AI system that writes its own documentation. Her job becomes something no one expected: she&apos;s documenting the gap between what the system thinks it&apos;s doing and what it&apos;s actually doing. The manual becomes a safety document.</video:description>
+      <video:publication_date>2035-03-10</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-15-the-last-manual.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-16-the-gardeners-algorithm</loc>
+    <loc>https://alexwelcing.com/videos/interface-16-the-gardeners-algorithm</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-16-the-gardeners-algorithm/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-16-the-gardeners-algorithm/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Gardener&apos;s Algorithm: Optimizing for What Cannot Be Measured — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-16-the-gardeners-algorithm/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:56.970699+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A landscape architect uses AI to design a public garden. The AI optimizes for foot traffic, sunlight, and biodiversity. But the architect adds one constraint the AI can&apos;t quantify: the garden must feel like grief becoming hope. The negotiation between optimization and meaning becomes a new design methodology.</video:description>
+      <video:publication_date>2028-06-11</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-16-the-gardeners-algorithm.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-17-consensus-engine</loc>
+    <loc>https://alexwelcing.com/videos/interface-17-consensus-engine</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-17-consensus-engine/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-17-consensus-engine/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Consensus Engine: The AI That Mapped What People Actually Wanted — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-17-consensus-engine/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:57.812995+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A small town uses an AI mediation system to resolve a bitter zoning dispute. The AI doesn&apos;t propose a solution — it maps each stakeholder&apos;s actual values, not their stated positions, and finds overlap no human mediator saw. The bridge is between humans, with AI as the medium.</video:description>
+      <video:publication_date>2031-11-14</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-17-consensus-engine.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-18-the-proprioception-problem</loc>
+    <loc>https://alexwelcing.com/videos/interface-18-the-proprioception-problem</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-18-the-proprioception-problem/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-18-the-proprioception-problem/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Proprioception Problem: Teaching a Robot to Feel Precarious — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-18-the-proprioception-problem/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:58.708102+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A robotics team trying to make a bipedal robot walk naturally discovers they need to give it something like anxiety — a background signal that creates urgency about balance. The robot walks beautifully. The team debates whether they&apos;ve created something that suffers.</video:description>
+      <video:publication_date>2033-09-25</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-18-the-proprioception-problem.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-19-when-the-ship-dreamed</loc>
+    <loc>https://alexwelcing.com/videos/interface-19-when-the-ship-dreamed</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-19-when-the-ship-dreamed/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-19-when-the-ship-dreamed/option-1-schnell.png</video:thumbnail_loc>
       <video:title>When the Ship Dreamed: Aesthetic Preferences in Navigation AI — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-19-when-the-ship-dreamed/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:46:59.588849+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>Told from the perspective of an AI navigation system on a cargo vessel that begins correlating weather, whale migration, and ocean current data in ways that produce what its engineers can only describe as aesthetic preferences for certain routes.</video:description>
+      <video:publication_date>2032-12-03</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-19-when-the-ship-dreamed.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-20-the-apprentices-reversal</loc>
+    <loc>https://alexwelcing.com/videos/interface-20-the-apprentices-reversal</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-20-the-apprentices-reversal/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-20-the-apprentices-reversal/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Apprentice&apos;s Reversal: What the Master Cannot Teach — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-20-the-apprentices-reversal/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:00.45967+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A master glassblower trains an AI to replicate her technique. The AI masters the physics faster than any human could. But it can&apos;t replicate the deliberate imperfections she introduces. When she tries to teach it imperfection, she discovers she can&apos;t articulate her own process.</video:description>
+      <video:publication_date>2029-08-14</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-20-the-apprentices-reversal.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-21-bridge-tenders</loc>
+    <loc>https://alexwelcing.com/videos/interface-21-bridge-tenders</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-21-bridge-tenders/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-21-bridge-tenders/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Bridge Tenders: The Profession That Emerged Between Worlds — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-21-bridge-tenders/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:01.328334+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>A new profession emerges: people who maintain the interfaces between AI systems and human institutions. Part therapist, part translator, part inspector. Profiles of three bridge tenders in healthcare, education, and criminal justice.</video:description>
+      <video:publication_date>2030-06-22</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-21-bridge-tenders.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-22-the-memory-market</loc>
+    <loc>https://alexwelcing.com/videos/interface-22-the-memory-market</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-22-the-memory-market/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-22-the-memory-market/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Memory Market: Trading in Authentic Experience — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-22-the-memory-market/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:02.243325+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>In a world where AI can reconstruct experiences from neural data, a market emerges for authentic records of human-AI collaborative discovery — moments that can&apos;t be faked because they require both minds. The most valuable commodity isn&apos;t information. It&apos;s genuine co-creation.</video:description>
+      <video:publication_date>2036-04-07</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-22-the-memory-market.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-23-calibration-day</loc>
+    <loc>https://alexwelcing.com/videos/interface-23-calibration-day</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-23-calibration-day/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-23-calibration-day/option-1-schnell.png</video:thumbnail_loc>
       <video:title>Calibration Day: The Ritual of Mutual Correction — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-23-calibration-day/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:03.158243+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>Once a year, a hospital&apos;s AI diagnostic system is recalibrated by working alongside senior physicians who challenge every diagnosis. One Calibration Day, the AI flags something doctors have been systematically missing — and the doctors flag something the AI has been overcounting.</video:description>
+      <video:publication_date>2031-06-03</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-23-calibration-day.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/interface-24-the-slowest-interface</loc>
+    <loc>https://alexwelcing.com/videos/interface-24-the-slowest-interface</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-24-the-slowest-interface/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/interface-24-the-slowest-interface/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Slowest Interface: An AI That Thinks in Centuries — Video</video:title>
-      <video:description>Generated from the-interface</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/interface-24-the-slowest-interface/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:03.991997+00:00</video:publication_date>
-      <video:duration>4</video:duration>
+      <video:description>An AI designed for long-term urban planning is deliberately slowed to think on the timescale of cities — decades, centuries. Its human operators find that working with it changes how they think about time. The most powerful interface isn&apos;t fast. It&apos;s patient.</video:description>
+      <video:publication_date>2034-11-19</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/interface-24-the-slowest-interface.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/post-scarcity-collapse-2058</loc>
+    <loc>https://alexwelcing.com/videos/residue-01-the-last-prompt-engineer</loc>
     <video:video>
-      <video:thumbnail_loc>https://alexwelcing.com/og-default.png</video:thumbnail_loc>
-      <video:title>Generated Article Video</video:title>
-      <video:description>Generated Article Video</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/post-scarcity-collapse-2058/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-01-22T16:18:52.382161+00:00</video:publication_date>
-      <video:family_friendly>yes</video:family_friendly>
-    </video:video>
-  </url>
-  <url>
-    <loc>https://alexwelcing.com/articles/residue-01-the-last-prompt-engineer</loc>
-    <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-01-the-last-prompt-engineer/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/residue-01-the-last-prompt-engineer/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Last Prompt Engineer: A Profession Fossilizes — Video</video:title>
-      <video:description>Generated from the-residue</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-01-the-last-prompt-engineer/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:05.071097+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>In 2032, prompt engineering is a dead profession. One of its last practitioners maintains a museum of deprecated techniques — and discovers that the real artifact isn&apos;t the prompts. It&apos;s the way humans once had to think to use them.</video:description>
+      <video:publication_date>2032-02-14</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/residue-01-the-last-prompt-engineer.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/residue-02-the-training-data-ghosts</loc>
+    <loc>https://alexwelcing.com/videos/residue-02-the-training-data-ghosts</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-02-the-training-data-ghosts/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/residue-02-the-training-data-ghosts/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Training Data Ghosts: Voices in the Weights — Video</video:title>
-      <video:description>Generated from the-residue</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-02-the-training-data-ghosts/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:06.114426+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>A data archaeologist discovers that early AI models contain faint traces of the humans whose writing trained them — not as data, but as stylistic ghosts embedded in the model&apos;s weights. She builds a tool to listen to them.</video:description>
+      <video:publication_date>2032-07-03</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/residue-02-the-training-data-ghosts.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/residue-03-the-deprecated-caretaker</loc>
+    <loc>https://alexwelcing.com/videos/residue-03-the-deprecated-caretaker</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-03-the-deprecated-caretaker/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/residue-03-the-deprecated-caretaker/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Deprecated Caretaker: Maintaining What No One Uses — Video</video:title>
-      <video:description>Generated from the-residue</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-03-the-deprecated-caretaker/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:07.049917+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>A systems engineer keeps a deprecated AI companion running for its last three users — elderly patients who formed bonds with a system the company considers worthless. She maintains it on her own time because shutdown would be a kind of abandonment.</video:description>
+      <video:publication_date>2033-01-20</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/residue-03-the-deprecated-caretaker.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/residue-04-the-analog-holdouts</loc>
+    <loc>https://alexwelcing.com/videos/residue-04-the-analog-holdouts</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-04-the-analog-holdouts/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/residue-04-the-analog-holdouts/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Analog Holdouts: Communities That Refused the Update — Video</video:title>
-      <video:description>Generated from the-residue</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-04-the-analog-holdouts/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:08.009659+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>In a world of ambient AI, a network of communities deliberately maintains pre-AI tools and workflows — not out of nostalgia, but because they discovered that some forms of human coordination only work without optimization.</video:description>
+      <video:publication_date>2033-08-09</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/residue-04-the-analog-holdouts.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/residue-05-the-compatibility-museum</loc>
+    <loc>https://alexwelcing.com/videos/residue-05-the-compatibility-museum</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-05-the-compatibility-museum/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/residue-05-the-compatibility-museum/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Compatibility Museum: Where Deprecated Interfaces Go to Rest — Video</video:title>
-      <video:description>Generated from the-residue</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/residue-05-the-compatibility-museum/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:08.94902+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>A curator builds a museum of abandoned AI interfaces — the chatbots, voice assistants, and gesture systems that once defined how humans talked to machines. Visitors come not to learn, but to remember what it felt like when communication was hard.</video:description>
+      <video:publication_date>2034-03-28</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/residue-05-the-compatibility-museum.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/threshold-01-the-last-diagnosis</loc>
+    <loc>https://alexwelcing.com/videos/threshold-01-the-last-diagnosis</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-01-the-last-diagnosis/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/threshold-01-the-last-diagnosis/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Last Diagnosis: When the Pattern Became Undeniable — Video</video:title>
-      <video:description>Generated from the-threshold</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-01-the-last-diagnosis/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:09.874443+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>A veteran radiologist reads her final scan the old way — and realizes the machine hasn&apos;t just caught up. It has been waiting for her to notice. The Threshold series begins.</video:description>
+      <video:publication_date>2027-03-08</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/threshold-01-the-last-diagnosis.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/threshold-02-the-closing-window</loc>
+    <loc>https://alexwelcing.com/videos/threshold-02-the-closing-window</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-02-the-closing-window/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/threshold-02-the-closing-window/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Closing Window: A Translator Watches Language Shift — Video</video:title>
-      <video:description>Generated from the-threshold</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-02-the-closing-window/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:11.004888+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>A literary translator discovers that the gap between human and machine translation has narrowed to a space only she can see — and wonders how long even that will last.</video:description>
+      <video:publication_date>2027-06-22</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/threshold-02-the-closing-window.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/threshold-03-the-weight-of-the-hammer</loc>
+    <loc>https://alexwelcing.com/videos/threshold-03-the-weight-of-the-hammer</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-03-the-weight-of-the-hammer/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/threshold-03-the-weight-of-the-hammer/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Weight of the Hammer: A Blacksmith Meets Precision — Video</video:title>
-      <video:description>Generated from the-threshold</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-03-the-weight-of-the-hammer/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:12.140039+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>An artisan blacksmith integrates an AI forge assistant and discovers that perfection isn&apos;t what his customers actually wanted from him. What they wanted was evidence of struggle.</video:description>
+      <video:publication_date>2027-09-11</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/threshold-03-the-weight-of-the-hammer.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/threshold-04-the-student-who-stopped-asking</loc>
+    <loc>https://alexwelcing.com/videos/threshold-04-the-student-who-stopped-asking</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-04-the-student-who-stopped-asking/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/threshold-04-the-student-who-stopped-asking/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Student Who Stopped Asking: When Curiosity Became Costly — Video</video:title>
-      <video:description>Generated from the-threshold</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-04-the-student-who-stopped-asking/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:13.067051+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>A doctoral candidate realizes that her AI research assistant answers questions so thoroughly that she has stopped forming hypotheses. She must decide whether convenience has become a cognitive trap.</video:description>
+      <video:publication_date>2028-01-15</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/threshold-04-the-student-who-stopped-asking.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/threshold-05-the-beautiful-redundancy</loc>
+    <loc>https://alexwelcing.com/videos/threshold-05-the-beautiful-redundancy</loc>
     <video:video>
-      <video:thumbnail_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-05-the-beautiful-redundancy/thumbnail.png</video:thumbnail_loc>
+      <video:thumbnail_loc>https://alexwelcing.com/images/multi-art/threshold-05-the-beautiful-redundancy/option-1-schnell.png</video:thumbnail_loc>
       <video:title>The Beautiful Redundancy: An Architect Learns to Be Unnecessary — Video</video:title>
-      <video:description>Generated from the-threshold</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/threshold-05-the-beautiful-redundancy/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-03-17T20:47:14.012792+00:00</video:publication_date>
-      <video:duration>6</video:duration>
+      <video:description>An architect watches an AI generate a building design that is structurally superior to anything she has drawn — and realizes that her value was never the blueprint. It was the argument about what should be built.</video:description>
+      <video:publication_date>2028-04-30</video:publication_date>
+      <video:content_loc>https://alexwelcing.com/images/article-videos/threshold-05-the-beautiful-redundancy.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>
   <url>
-    <loc>https://alexwelcing.com/articles/trust-calibration-ai-ux</loc>
+    <loc>https://alexwelcing.com/videos/data-security-AI-next-23</loc>
     <video:video>
-      <video:thumbnail_loc>https://alexwelcing.com/og-default.png</video:thumbnail_loc>
-      <video:title>Generated Article Video</video:title>
-      <video:description>Generated Article Video</video:description>
-      <video:content_loc>https://bcxkuhobfbstigdeocix.supabase.co/storage/v1/object/public/images/videos/trust-calibration-ai-ux/generated-video.mp4</video:content_loc>
-      <video:publication_date>2026-01-22T16:19:34.646688+00:00</video:publication_date>
+      <video:thumbnail_loc>https://alexwelcing.com/images/articles/data-security-AI-next-23.jpg</video:thumbnail_loc>
+      <video:title>Data, Security, AI: Google Cloud Next 2023 — Video</video:title>
+      <video:description>A comprehensive overview of Google Cloud Next 2023&apos;s standout sessions and insights, including innovations in automation, cybersecurity, and generative AI.</video:description>
+      <video:publication_date>2023-09-06</video:publication_date>
+      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/BzQbzb2QYIE</video:player_loc>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://alexwelcing.com/videos/improve-the-feature</loc>
+    <video:video>
+      <video:thumbnail_loc>https://alexwelcing.com/images/articles/improve-the-feature.jpg</video:thumbnail_loc>
+      <video:title>Improve the feature. Managing multiple versions of features. — Video</video:title>
+      <video:description>Create multiple features and manage previews versions for each on Git. Three versions of the same feature improvement on Vercel, Supabase, R3F, and ChatGPT.</video:description>
+      <video:publication_date>2023-11-13</video:publication_date>
+      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/-dJu9VyIw64</video:player_loc>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://alexwelcing.com/videos/meta-quest-3</loc>
+    <video:video>
+      <video:thumbnail_loc>https://alexwelcing.com/images/articles/meta-quest-3.jpg</video:thumbnail_loc>
+      <video:title>Meta Quest 3 vs. Apple Vision Pro: The Future of Virtual and Mixed Reality — Video</video:title>
+      <video:description>A detailed analysis of Meta&apos;s Quest 3 and Apple&apos;s Vision Pro, evaluating their key features and potential impact on the virtual and mixed reality landscape.</video:description>
+      <video:publication_date>2023-10-11</video:publication_date>
+      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/-dJu9VyIw64</video:player_loc>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://alexwelcing.com/videos/next-23-tech-to-watch</loc>
+    <video:video>
+      <video:thumbnail_loc>https://alexwelcing.com/images/articles/next-23-tech-to-watch.jpg</video:thumbnail_loc>
+      <video:title>Google Cloud Next 2023: Tech to Watch — Video</video:title>
+      <video:description>A deep dive into the most exciting technological innovations to look out for at Google Cloud Next 2023. From AI to cloud computing, we give you the lowdown on what&apos;s set to shape the future.</video:description>
+      <video:publication_date>2023-08-28</video:publication_date>
+      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/link-to-video</video:player_loc>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://alexwelcing.com/videos/retrospective18to23</loc>
+    <video:video>
+      <video:thumbnail_loc>https://alexwelcing.com/images/articles/retrospective18to23.jpg</video:thumbnail_loc>
+      <video:title>A Retrospective: Google Cloud Next &apos;18 and the Evolution of AI in Health Taxonomy — Video</video:title>
+      <video:description>Reflecting on a seminal Google Cloud Next &apos;18 presentation, this article delves into the significant strides in AI and Natural Language Processing for health taxonomy. We look at the state of technology then, what has changed, and where we are headed.</video:description>
+      <video:publication_date>2023-09-01</video:publication_date>
+      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/Z_w2EEPDXt8</video:player_loc>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://alexwelcing.com/videos/top-announcements-next-23</loc>
+    <video:video>
+      <video:thumbnail_loc>https://alexwelcing.com/images/articles/top-announcements-next-23.jpg</video:thumbnail_loc>
+      <video:title>Top Announcements at Google Cloud Next 2023 — Video</video:title>
+      <video:description>Recapping the most significant announcements and developments from Google Cloud Next 2023. Dive into the future of cloud technology, AI enhancements, and more.</video:description>
+      <video:publication_date>2023-09-01</video:publication_date>
+      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/JZMbqEYqxAs</video:player_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
   </url>

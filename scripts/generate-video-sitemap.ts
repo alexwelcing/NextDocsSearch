@@ -15,6 +15,7 @@ import { createClient } from '@supabase/supabase-js'
 import { discoverArticleImages } from '../lib/article-images'
 import { SITE_URL } from '../lib/site-url'
 import { STORAGE_CONFIG } from '../types/article-media'
+import { buildArticleVideoReference } from '../lib/video-indexing'
 
 dotenv.config({ path: '.env.local' })
 dotenv.config()
@@ -37,11 +38,13 @@ interface VideoRow {
 
 interface SitemapVideoEntry {
   articleSlug: string
-  contentUrl: string
+  watchPageUrl: string
   thumbnailUrl: string
   title: string
   description: string
   publicationDate: string
+  contentUrl?: string
+  playerUrl?: string
   durationSeconds?: number | null
 }
 
@@ -49,12 +52,14 @@ function getLocalVideoEntries(siteUrl: string): SitemapVideoEntry[] {
   const videosDir = path.join(process.cwd(), 'public', 'images', 'article-videos')
   const articlesDir = path.join(process.cwd(), 'pages', 'docs', 'articles')
 
-  if (!fs.existsSync(videosDir) || !fs.existsSync(articlesDir)) {
+  if (!fs.existsSync(articlesDir)) {
     return []
   }
 
   const entries: SitemapVideoEntry[] = []
-  const files = fs.readdirSync(videosDir).filter((file) => file.endsWith('.mp4'))
+  const files = fs.existsSync(videosDir)
+    ? fs.readdirSync(videosDir).filter((file) => file.endsWith('.mp4'))
+    : []
 
   for (const file of files) {
     const slug = file.replace(/\.mp4$/, '')
@@ -67,6 +72,7 @@ function getLocalVideoEntries(siteUrl: string): SitemapVideoEntry[] {
     const { data } = matter(fs.readFileSync(articlePath, 'utf-8'))
     const images = discoverArticleImages(slug)
     const thumbnailPath = images.heroImage || images.ogImage || images.thumbnail || '/og-default.png'
+    const thumbnailUrl = thumbnailPath.startsWith('http') ? thumbnailPath : `${siteUrl}${thumbnailPath}`
     const publicationDate =
       typeof data.date === 'string'
         ? data.date
@@ -74,14 +80,77 @@ function getLocalVideoEntries(siteUrl: string): SitemapVideoEntry[] {
           ? data.date.toISOString()
           : new Date().toISOString()
 
-    entries.push({
-      articleSlug: slug,
-      contentUrl: `${siteUrl}/images/article-videos/${file}`,
-      thumbnailUrl: thumbnailPath.startsWith('http') ? thumbnailPath : `${siteUrl}${thumbnailPath}`,
-      title: (data.title as string) || `${slug} video`,
-      description: (data.description as string) || `Video for article ${slug}`,
-      publicationDate,
+    const reference = buildArticleVideoReference({
+      siteUrl,
+      slug,
+      title: ((data.title as string) || `${slug} video`) as string,
+      description: ((data.description as string) || `Video for article ${slug}`) as string,
+      articleVideo: `/images/article-videos/${file}`,
+      videoURL: (data.videoURL as string) || '',
+      thumbnailUrl,
+      uploadDate: publicationDate,
     })
+
+    if (reference) {
+      entries.push({
+        articleSlug: slug,
+        watchPageUrl: reference.watchPageUrl,
+        contentUrl: reference.contentUrl,
+        playerUrl: reference.embedUrl,
+        thumbnailUrl: reference.thumbnailUrl,
+        title: reference.name,
+        description: reference.description,
+        publicationDate,
+      })
+    }
+  }
+
+  const externalOnlyFiles = fs.readdirSync(articlesDir).filter((file) => file.endsWith('.mdx'))
+
+  for (const articleFile of externalOnlyFiles) {
+    const slug = articleFile.replace(/\.mdx$/, '')
+    if (entries.some((entry) => entry.articleSlug === slug)) {
+      continue
+    }
+
+    const { data } = matter(fs.readFileSync(path.join(articlesDir, articleFile), 'utf-8'))
+    if (!data.videoURL) {
+      continue
+    }
+
+    const images = discoverArticleImages(slug)
+    const thumbnailPath = images.heroImage || images.ogImage || images.thumbnail || '/og-default.png'
+    const thumbnailUrl = thumbnailPath.startsWith('http') ? thumbnailPath : `${siteUrl}${thumbnailPath}`
+    const publicationDate =
+      typeof data.date === 'string'
+        ? data.date
+        : data.date instanceof Date
+          ? data.date.toISOString()
+          : new Date().toISOString()
+
+    const reference = buildArticleVideoReference({
+      siteUrl,
+      slug,
+      title: ((data.title as string) || `${slug} video`) as string,
+      description: ((data.description as string) || `Video for article ${slug}`) as string,
+      articleVideo: '',
+      videoURL: data.videoURL as string,
+      thumbnailUrl,
+      uploadDate: publicationDate,
+    })
+
+    if (reference) {
+      entries.push({
+        articleSlug: slug,
+        watchPageUrl: reference.watchPageUrl,
+        contentUrl: reference.contentUrl,
+        playerUrl: reference.embedUrl,
+        thumbnailUrl: reference.thumbnailUrl,
+        title: reference.name,
+        description: reference.description,
+        publicationDate,
+      })
+    }
   }
 
   return entries
@@ -144,7 +213,9 @@ async function generateVideoSitemap() {
 
         remoteEntries.push({
           articleSlug: slug,
+          watchPageUrl: `${siteUrl}/videos/${slug}`,
           contentUrl,
+          playerUrl: `${siteUrl}/videos/${slug}`,
           thumbnailUrl,
           title: v.title || `${slug} video`,
           description: v.caption || v.title || `Video for article ${slug}`,
@@ -179,8 +250,6 @@ function writeSitemap(entriesInput: SitemapVideoEntry[]) {
 
   const entries: string[] = []
   for (const [slug, slugVideos] of bySlug) {
-    const articleUrl = `${siteUrl}/articles/${slug}`
-
     const videoEntries = slugVideos
       .map((v) => {
         const videoTitle = escapeXml(v.title || `${slug} video`)
@@ -188,20 +257,24 @@ function writeSitemap(entriesInput: SitemapVideoEntry[]) {
         const duration = v.durationSeconds
           ? `\n      <video:duration>${v.durationSeconds}</video:duration>`
           : ''
+        const videoLocation = v.contentUrl
+          ? `\n      <video:content_loc>${escapeXml(v.contentUrl)}</video:content_loc>`
+          : v.playerUrl
+            ? `\n      <video:player_loc allow_embed="yes">${escapeXml(v.playerUrl)}</video:player_loc>`
+            : ''
 
         return `    <video:video>
       <video:thumbnail_loc>${escapeXml(v.thumbnailUrl)}</video:thumbnail_loc>
       <video:title>${videoTitle}</video:title>
       <video:description>${videoDesc}</video:description>
-      <video:content_loc>${escapeXml(v.contentUrl)}</video:content_loc>
-      <video:publication_date>${v.publicationDate}</video:publication_date>${duration}
+      <video:publication_date>${v.publicationDate}</video:publication_date>${duration}${videoLocation}
       <video:family_friendly>yes</video:family_friendly>
     </video:video>`
       })
       .join('\n')
 
     entries.push(`  <url>
-    <loc>${articleUrl}</loc>
+    <loc>${slugVideos[0]?.watchPageUrl || `${siteUrl}/videos/${slug}`}</loc>
 ${videoEntries}
   </url>`)
   }

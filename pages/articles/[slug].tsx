@@ -29,6 +29,7 @@ import { useSupabaseData } from '@/components/contexts/SupabaseDataContext';
 import { buildStoryCompanion } from '@/lib/articles/storyCompanion';
 import StoryConstellationPreview from '@/components/articles/StoryConstellationPreview';
 import { getRelatedArticles } from '@/lib/articles/cache';
+import { buildArticleVideoReference } from '@/lib/video-indexing';
 
 interface ArticleProps {
   title: string;
@@ -667,19 +668,16 @@ const ArticlePage: NextPage<ArticleProps> = ({
   }, [slug]);
 
   const primaryVideo = articleVideos[0] || null;
-  const indexedVideo = primaryVideo || (articleVideo
-    ? {
-        title: `${title} - Video`,
-        caption: description || title,
-        public_url: `${siteUrl}${articleVideo}`,
-        thumbnail_url: heroImage ? `${siteUrl}${heroImage}` : fullOgImage,
-        mime_type: 'video/mp4',
-        width: undefined,
-        height: undefined,
-        duration_seconds: undefined,
-        created_at: date,
-      }
-    : null);
+  const seoVideo = buildArticleVideoReference({
+    siteUrl,
+    slug,
+    title,
+    description,
+    articleVideo,
+    videoURL,
+    thumbnailUrl: heroImage ? `${siteUrl}${heroImage}` : fullOgImage,
+    uploadDate: date,
+  });
 
   // Split content into sections for interleaving with images
   const contentChunks = useMemo(() => {
@@ -768,20 +766,27 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta property="article:published_time" content={date} />
         <meta property="article:author" content={author.join(', ')} />
 
-        {indexedVideo && (
+        {seoVideo && (
           <>
-            <meta property="og:video" content={indexedVideo.public_url} />
-            <meta property="og:video:type" content={indexedVideo.mime_type || 'video/mp4'} />
-            {indexedVideo.width && <meta property="og:video:width" content={String(indexedVideo.width)} />}
-            {indexedVideo.height && <meta property="og:video:height" content={String(indexedVideo.height)} />}
+            <meta property="og:video" content={seoVideo.contentUrl || seoVideo.embedUrl || seoVideo.watchPageUrl} />
+            {seoVideo.mimeType && <meta property="og:video:type" content={seoVideo.mimeType} />}
+            {seoVideo.width && <meta property="og:video:width" content={String(seoVideo.width)} />}
+            {seoVideo.height && <meta property="og:video:height" content={String(seoVideo.height)} />}
           </>
         )}
 
-        <meta name="twitter:card" content={indexedVideo ? "player" : "summary_large_image"} />
+        <meta name="twitter:card" content={seoVideo ? "player" : "summary_large_image"} />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description || `Read ${title}`} />
-        <meta name="twitter:image" content={indexedVideo?.thumbnail_url || fullOgImage} />
+        <meta name="twitter:image" content={seoVideo?.thumbnailUrl || fullOgImage} />
+        {seoVideo && (
+          <>
+            <meta name="twitter:player" content={seoVideo.watchPageUrl} />
+            <meta name="twitter:player:width" content={String(seoVideo.width || 1280)} />
+            <meta name="twitter:player:height" content={String(seoVideo.height || 720)} />
+          </>
+        )}
 
         <meta name="theme-color" content="#030308" />
         {heroImage && <link rel="preload" as="image" href={heroImage} />}
@@ -819,16 +824,18 @@ const ArticlePage: NextPage<ArticleProps> = ({
         }}
       />
 
-      {indexedVideo && (
+      {seoVideo && (
         <StructuredData
           type="VideoObject"
           data={createVideoSchema({
-            name: indexedVideo.title || `${title} — Video`,
-            description: indexedVideo.caption || description || title,
-            thumbnailUrl: indexedVideo.thumbnail_url || fullOgImage,
-            contentUrl: indexedVideo.public_url,
-            uploadDate: indexedVideo.created_at || date,
-            duration: indexedVideo.duration_seconds,
+            name: seoVideo.name,
+            description: seoVideo.description,
+            thumbnailUrl: seoVideo.thumbnailUrl || fullOgImage,
+            contentUrl: seoVideo.contentUrl,
+            embedUrl: seoVideo.embedUrl,
+            uploadDate: seoVideo.uploadDate,
+            duration: seoVideo.durationSeconds,
+            watchPageUrl: seoVideo.watchPageUrl,
             articleUrl,
           })}
         />
@@ -873,37 +880,58 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
         {/* Video if available */}
         {primaryVideo && (
-          <VideoComponent
-            videoSrc={primaryVideo.public_url}
-            poster={primaryVideo.thumbnail_url}
-            title={primaryVideo.title || `${title} — Video`}
-            description={primaryVideo.caption}
-            width={primaryVideo.width}
-            height={primaryVideo.height}
-          />
+          <>
+            <VideoComponent
+              videoSrc={primaryVideo.public_url}
+              poster={primaryVideo.thumbnail_url}
+              title={primaryVideo.title || `${title} — Video`}
+              description={primaryVideo.caption}
+              width={primaryVideo.width}
+              height={primaryVideo.height}
+            />
+            {seoVideo && (
+              <p>
+                <Link href={seoVideo.watchPagePath}>Open the dedicated video page</Link>
+              </p>
+            )}
+          </>
         )}
 
         {articleVideo && !primaryVideo && (
-          <video
-            src={articleVideo}
-            controls
-            style={{ width: '100%', margin: '32px 0', borderRadius: 0 }}
-          />
+          <>
+            <video
+              src={articleVideo}
+              controls
+              style={{ width: '100%', margin: '32px 0', borderRadius: 0 }}
+            />
+            {seoVideo && (
+              <p>
+                <Link href={seoVideo.watchPagePath}>Open the dedicated video page</Link>
+              </p>
+            )}
+          </>
         )}
 
         {videoURL && (
-          <div style={{ margin: '32px 0' }}>
-            <iframe
-              width="100%"
-              height="400"
-              src={videoURL.replace('watch?v=', 'embed/')}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title={`${title} — YouTube video`}
-              style={{ borderRadius: 0 }}
-            />
-          </div>
+          <>
+            <div style={{ margin: '32px 0' }}>
+              <iframe
+                width="100%"
+                height="400"
+                src={seoVideo?.embedUrl || videoURL.replace('watch?v=', 'embed/')}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={`${title} — YouTube video`}
+                style={{ borderRadius: 0 }}
+              />
+            </div>
+            {seoVideo && (
+              <p>
+                <Link href={seoVideo.watchPagePath}>Open the dedicated video page</Link>
+              </p>
+            )}
+          </>
         )}
 
         {/* Render interleaved content and images */}

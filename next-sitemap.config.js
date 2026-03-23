@@ -81,6 +81,10 @@ module.exports = {
       priority = 0.8
       changefreq = 'weekly'
     }
+    else if (path.startsWith('/videos/')) {
+      priority = 0.82
+      changefreq = 'weekly'
+    }
 
     return {
       loc: path,

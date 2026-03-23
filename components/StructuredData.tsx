@@ -124,24 +124,29 @@ export const createVideoSchema = ({
   name,
   description,
   thumbnailUrl,
-  contentUrl,
   uploadDate,
   duration,
+  watchPageUrl,
   articleUrl,
+  contentUrl,
+  embedUrl,
 }: {
   name: string
   description: string
   thumbnailUrl: string
-  contentUrl: string
   uploadDate: string
   duration?: number // seconds
-  articleUrl: string
+  watchPageUrl: string
+  articleUrl?: string
+  contentUrl?: string
+  embedUrl?: string
 }) => ({
   name,
   description,
   thumbnailUrl: [thumbnailUrl],
-  contentUrl,
   uploadDate,
+  ...(contentUrl && { contentUrl }),
+  ...(embedUrl && { embedUrl }),
   ...(duration && { duration: `PT${Math.floor(duration / 60)}M${duration % 60}S` }),
   publisher: {
     '@type': 'Organization',
@@ -152,13 +157,17 @@ export const createVideoSchema = ({
       url: `${siteUrl}/logo.png`,
     },
   },
-  url: articleUrl,
-  embedUrl: articleUrl,
-  mainEntityOfPage: articleUrl,
-  interactionStatistic: {
-    '@type': 'InteractionCounter',
-    interactionType: { '@type': 'WatchAction' },
-    userInteractionCount: 0,
+  url: watchPageUrl,
+  mainEntityOfPage: watchPageUrl,
+  ...(articleUrl && {
+    isPartOf: {
+      '@type': 'Article',
+      '@id': articleUrl,
+    },
+  }),
+  potentialAction: {
+    '@type': 'WatchAction',
+    target: watchPageUrl,
   },
 })
 
