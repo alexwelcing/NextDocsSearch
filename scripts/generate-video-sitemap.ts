@@ -194,6 +194,7 @@ function writeSitemap(entriesInput: SitemapVideoEntry[]) {
       <video:title>${videoTitle}</video:title>
       <video:description>${videoDesc}</video:description>
       <video:content_loc>${escapeXml(v.contentUrl)}</video:content_loc>
+      <video:player_loc>${articleUrl}</video:player_loc>
       <video:publication_date>${v.publicationDate}</video:publication_date>${duration}
       <video:family_friendly>yes</video:family_friendly>
     </video:video>`

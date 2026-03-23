@@ -30,6 +30,19 @@ import { buildStoryCompanion } from '@/lib/articles/storyCompanion';
 import StoryConstellationPreview from '@/components/articles/StoryConstellationPreview';
 import { getRelatedArticles } from '@/lib/articles/cache';
 
+/** SSR-safe video metadata for structured data and meta tags (serializable) */
+interface SSRVideoMeta {
+  title: string;
+  caption: string;
+  public_url: string;
+  thumbnail_url: string;
+  mime_type: string;
+  width?: number;
+  height?: number;
+  duration_seconds?: number;
+  created_at: string;
+}
+
 interface ArticleProps {
   title: string;
   date: string;
@@ -43,6 +56,7 @@ interface ArticleProps {
   multiArtImages: MultiArtOption[];
   videoURL?: string;
   articleVideo?: string;
+  ssrVideoMeta?: SSRVideoMeta | null;
   readingTime: number;
   relatedArticles: Array<{
     slug: string;
@@ -618,6 +632,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   multiArtImages,
   videoURL,
   articleVideo,
+  ssrVideoMeta,
   readingTime,
   relatedArticles,
   slug,
@@ -667,7 +682,9 @@ const ArticlePage: NextPage<ArticleProps> = ({
   }, [slug]);
 
   const primaryVideo = articleVideos[0] || null;
-  const indexedVideo = primaryVideo || (articleVideo
+  // Use SSR video metadata for initial render (visible to crawlers),
+  // then hydrate with client-side Supabase data when available
+  const indexedVideo = primaryVideo || ssrVideoMeta || (articleVideo
     ? {
         title: `${title} - Video`,
         caption: description || title,
@@ -771,6 +788,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
         {indexedVideo && (
           <>
             <meta property="og:video" content={indexedVideo.public_url} />
+            <meta property="og:video:secure_url" content={indexedVideo.public_url} />
             <meta property="og:video:type" content={indexedVideo.mime_type || 'video/mp4'} />
             {indexedVideo.width && <meta property="og:video:width" content={String(indexedVideo.width)} />}
             {indexedVideo.height && <meta property="og:video:height" content={String(indexedVideo.height)} />}
@@ -782,6 +800,13 @@ const ArticlePage: NextPage<ArticleProps> = ({
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description || `Read ${title}`} />
         <meta name="twitter:image" content={indexedVideo?.thumbnail_url || fullOgImage} />
+        {indexedVideo && (
+          <>
+            <meta name="twitter:player" content={articleUrl} />
+            <meta name="twitter:player:width" content={String(indexedVideo.width || 1280)} />
+            <meta name="twitter:player:height" content={String(indexedVideo.height || 720)} />
+          </>
+        )}
 
         <meta name="theme-color" content="#030308" />
         {heroImage && <link rel="preload" as="image" href={heroImage} />}
@@ -830,6 +855,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
             uploadDate: indexedVideo.created_at || date,
             duration: indexedVideo.duration_seconds,
             articleUrl,
+            width: indexedVideo.width,
+            height: indexedVideo.height,
           })}
         />
       )}
@@ -1072,6 +1099,57 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const videoExists = fs.existsSync(path.join(process.cwd(), 'public', videoPath));
   const articleType = data.articleType === 'research' ? 'research' : 'fiction';
 
+  // Fetch video metadata from Supabase at build time for SSR (Google crawlers need this)
+  let ssrVideoMeta: SSRVideoMeta | null = null;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (supabaseUrl && supabaseKey) {
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(supabaseUrl, supabaseKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+
+      const { data: videoRows } = await supabase
+        .from('article_media')
+        .select('title, caption, storage_path, thumbnail_path, mime_type, width, height, duration_seconds, created_at')
+        .eq('article_slug', slug)
+        .eq('media_type', 'video')
+        .eq('status', 'ready')
+        .order('display_order')
+        .limit(1);
+
+      if (videoRows && videoRows.length > 0) {
+        const v = videoRows[0];
+        const { data: urlData } = supabase.storage
+          .from('images')
+          .getPublicUrl(v.storage_path);
+        let thumbnailUrl = `${SITE_URL}/og-default.png`;
+        if (v.thumbnail_path) {
+          const { data: thumbData } = supabase.storage
+            .from('images')
+            .getPublicUrl(v.thumbnail_path);
+          thumbnailUrl = thumbData.publicUrl;
+        }
+
+        ssrVideoMeta = {
+          title: v.title || `${data.title} - Video`,
+          caption: v.caption || (data.description as string) || (data.title as string),
+          public_url: urlData.publicUrl,
+          thumbnail_url: thumbnailUrl,
+          mime_type: v.mime_type || 'video/mp4',
+          width: v.width || undefined,
+          height: v.height || undefined,
+          duration_seconds: v.duration_seconds || undefined,
+          created_at: v.created_at,
+        };
+      }
+    } catch {
+      // Supabase fetch is optional — local video fallback still works
+    }
+  }
+
   return {
     props: {
       title: data.title as string,
@@ -1085,6 +1163,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       multiArtImages: images.multiArt,
       videoURL: data.videoURL || '',
       articleVideo: videoExists ? videoPath : '',
+      ssrVideoMeta,
       content: escapedContent,
       readingTime: calculateReadingTime(content),
       relatedArticles,

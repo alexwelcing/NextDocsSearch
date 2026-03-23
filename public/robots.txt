@@ -7,6 +7,7 @@ Disallow: /experiments/
 Disallow: /_next/
 
 Sitemap: https://alexwelcing.com/sitemap.xml
+Sitemap: https://alexwelcing.com/video-sitemap.xml
 
 # Priority pages
 Allow: /hire-me

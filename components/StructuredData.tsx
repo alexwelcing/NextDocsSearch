@@ -120,6 +120,7 @@ export const createPersonSchema = ({
 });
 
 // Helper to create VideoObject schema for Google Video indexing
+// See: https://developers.google.com/search/docs/appearance/structured-data/video
 export const createVideoSchema = ({
   name,
   description,
@@ -128,6 +129,8 @@ export const createVideoSchema = ({
   uploadDate,
   duration,
   articleUrl,
+  width,
+  height,
 }: {
   name: string
   description: string
@@ -136,13 +139,19 @@ export const createVideoSchema = ({
   uploadDate: string
   duration?: number // seconds
   articleUrl: string
+  width?: number
+  height?: number
 }) => ({
   name,
   description,
   thumbnailUrl: [thumbnailUrl],
   contentUrl,
   uploadDate,
-  ...(duration && { duration: `PT${Math.floor(duration / 60)}M${duration % 60}S` }),
+  ...(duration && { duration: `PT${Math.floor(duration / 60)}M${Math.round(duration % 60)}S` }),
+  ...(width && { width }),
+  ...(height && { height }),
+  inLanguage: 'en',
+  isFamilyFriendly: true,
   publisher: {
     '@type': 'Organization',
     name: 'Alex Welcing',
@@ -154,11 +163,9 @@ export const createVideoSchema = ({
   },
   url: articleUrl,
   embedUrl: articleUrl,
-  mainEntityOfPage: articleUrl,
-  interactionStatistic: {
-    '@type': 'InteractionCounter',
-    interactionType: { '@type': 'WatchAction' },
-    userInteractionCount: 0,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': articleUrl,
   },
 })
 
