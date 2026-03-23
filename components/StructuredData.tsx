@@ -145,6 +145,7 @@ export const createVideoSchema = ({
   description,
   thumbnailUrl: [thumbnailUrl],
   uploadDate,
+  // Prefer the direct media file when available and include embedUrl only for true embeddable players.
   ...(contentUrl && { contentUrl }),
   ...(embedUrl && { embedUrl }),
   ...(duration && { duration: `PT${Math.floor(duration / 60)}M${duration % 60}S` }),

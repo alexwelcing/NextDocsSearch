@@ -195,16 +195,22 @@ const VideoPage: NextPage<VideoPageProps> = ({
         <meta property="og:description" content={seoVideo.description} />
         <meta property="og:url" content={seoVideo.watchPageUrl} />
         <meta property="og:image" content={seoVideo.thumbnailUrl} />
-        <meta property="og:video" content={seoVideo.contentUrl || seoVideo.embedUrl || seoVideo.watchPageUrl} />
+        {(seoVideo.contentUrl || seoVideo.embedUrl) && (
+          <meta property="og:video" content={seoVideo.contentUrl || seoVideo.embedUrl} />
+        )}
         {seoVideo.mimeType && <meta property="og:video:type" content={seoVideo.mimeType} />}
 
-        <meta name="twitter:card" content="player" />
+        <meta name="twitter:card" content={seoVideo.embedUrl ? 'player' : 'summary_large_image'} />
         <meta name="twitter:title" content={`${title} Video`} />
         <meta name="twitter:description" content={seoVideo.description} />
         <meta name="twitter:image" content={seoVideo.thumbnailUrl} />
-        <meta name="twitter:player" content={seoVideo.watchPageUrl} />
-        <meta name="twitter:player:width" content={String(seoVideo.width || 1280)} />
-        <meta name="twitter:player:height" content={String(seoVideo.height || 720)} />
+        {seoVideo.embedUrl && (
+          <>
+            <meta name="twitter:player" content={seoVideo.embedUrl} />
+            <meta name="twitter:player:width" content={String(seoVideo.width || 1280)} />
+            <meta name="twitter:player:height" content={String(seoVideo.height || 720)} />
+          </>
+        )}
       </Head>
 
       <StructuredData

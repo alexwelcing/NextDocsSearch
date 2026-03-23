@@ -775,14 +775,14 @@ const ArticlePage: NextPage<ArticleProps> = ({
           </>
         )}
 
-        <meta name="twitter:card" content={seoVideo ? "player" : "summary_large_image"} />
+        <meta name="twitter:card" content={seoVideo?.embedUrl ? "player" : "summary_large_image"} />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description || `Read ${title}`} />
         <meta name="twitter:image" content={seoVideo?.thumbnailUrl || fullOgImage} />
-        {seoVideo && (
+        {seoVideo?.embedUrl && (
           <>
-            <meta name="twitter:player" content={seoVideo.watchPageUrl} />
+            <meta name="twitter:player" content={seoVideo.embedUrl} />
             <meta name="twitter:player:width" content={String(seoVideo.width || 1280)} />
             <meta name="twitter:player:height" content={String(seoVideo.height || 720)} />
           </>
@@ -918,7 +918,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
               <iframe
                 width="100%"
                 height="400"
-                src={seoVideo?.embedUrl || videoURL.replace('watch?v=', 'embed/')}
+                src={seoVideo?.embedUrl}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

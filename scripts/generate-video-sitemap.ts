@@ -83,8 +83,8 @@ function getLocalVideoEntries(siteUrl: string): SitemapVideoEntry[] {
     const reference = buildArticleVideoReference({
       siteUrl,
       slug,
-      title: ((data.title as string) || `${slug} video`) as string,
-      description: ((data.description as string) || `Video for article ${slug}`) as string,
+      title: (data.title as string) || `${slug} video`,
+      description: (data.description as string) || `Video for article ${slug}`,
       articleVideo: `/images/article-videos/${file}`,
       videoURL: (data.videoURL as string) || '',
       thumbnailUrl,
@@ -131,8 +131,8 @@ function getLocalVideoEntries(siteUrl: string): SitemapVideoEntry[] {
     const reference = buildArticleVideoReference({
       siteUrl,
       slug,
-      title: ((data.title as string) || `${slug} video`) as string,
-      description: ((data.description as string) || `Video for article ${slug}`) as string,
+      title: (data.title as string) || `${slug} video`,
+      description: (data.description as string) || `Video for article ${slug}`,
       articleVideo: '',
       videoURL: data.videoURL as string,
       thumbnailUrl,
@@ -251,6 +251,7 @@ function writeSitemap(entriesInput: SitemapVideoEntry[]) {
   const entries: string[] = []
   for (const [slug, slugVideos] of bySlug) {
     const videoEntries = slugVideos
+      .filter((v) => v.contentUrl || v.playerUrl)
       .map((v) => {
         const videoTitle = escapeXml(v.title || `${slug} video`)
         const videoDesc = escapeXml(v.description || `Video for article ${slug}`)
@@ -272,6 +273,10 @@ function writeSitemap(entriesInput: SitemapVideoEntry[]) {
     </video:video>`
       })
       .join('\n')
+
+    if (!videoEntries) {
+      continue
+    }
 
     entries.push(`  <url>
     <loc>${slugVideos[0]?.watchPageUrl || `${siteUrl}/videos/${slug}`}</loc>

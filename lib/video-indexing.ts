@@ -100,7 +100,6 @@ export function buildArticleVideoReference({
       watchPageUrl,
       uploadDate,
       contentUrl,
-      embedUrl: watchPageUrl,
       mimeType: 'video/mp4',
       durationSeconds,
       width,

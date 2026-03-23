@@ -45,7 +45,6 @@ describe('video indexing helpers', () => {
       watchPagePath: '/videos/threshold-02-the-closing-window',
       watchPageUrl: 'https://alexwelcing.com/videos/threshold-02-the-closing-window',
       contentUrl: 'https://alexwelcing.com/images/article-videos/threshold-02-the-closing-window.mp4',
-      embedUrl: 'https://alexwelcing.com/videos/threshold-02-the-closing-window',
       mimeType: 'video/mp4',
     })
   })
