@@ -215,7 +215,6 @@ async function generateVideoSitemap() {
           articleSlug: slug,
           watchPageUrl: `${siteUrl}/videos/${slug}`,
           contentUrl,
-          playerUrl: `${siteUrl}/videos/${slug}`,
           thumbnailUrl,
           title: v.title || `${slug} video`,
           description: v.caption || v.title || `Video for article ${slug}`,
@@ -250,8 +249,13 @@ function writeSitemap(entriesInput: SitemapVideoEntry[]) {
 
   const entries: string[] = []
   for (const [slug, slugVideos] of bySlug) {
-    const videoEntries = slugVideos
-      .filter((v) => v.contentUrl || v.playerUrl)
+    const validVideos = slugVideos.filter((v) => v.contentUrl || v.playerUrl)
+
+    if (validVideos.length === 0) {
+      continue
+    }
+
+    const videoEntries = validVideos
       .map((v) => {
         const videoTitle = escapeXml(v.title || `${slug} video`)
         const videoDesc = escapeXml(v.description || `Video for article ${slug}`)
@@ -273,10 +277,6 @@ function writeSitemap(entriesInput: SitemapVideoEntry[]) {
     </video:video>`
       })
       .join('\n')
-
-    if (!videoEntries) {
-      continue
-    }
 
     entries.push(`  <url>
     <loc>${slugVideos[0]?.watchPageUrl || `${siteUrl}/videos/${slug}`}</loc>

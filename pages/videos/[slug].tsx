@@ -179,7 +179,16 @@ const VideoPage: NextPage<VideoPageProps> = ({
   })
 
   if (!seoVideo) {
-    return null
+    return (
+      <Page>
+        <Shell>
+          <Heading>Video unavailable</Heading>
+          <Actions>
+            <ActionLink href={articleUrl}>Read the full article</ActionLink>
+          </Actions>
+        </Shell>
+      </Page>
+    )
   }
 
   return (
@@ -244,7 +253,7 @@ const VideoPage: NextPage<VideoPageProps> = ({
         <Frame>
           {remoteVideo?.publicUrl || articleVideo ? (
             <VideoComponent
-              videoSrc={seoVideo.contentUrl || remoteVideo?.publicUrl || `${SITE_URL}${articleVideo}`}
+              videoSrc={seoVideo.contentUrl}
               poster={seoVideo.thumbnailUrl}
               title={seoVideo.name}
               description={seoVideo.description}

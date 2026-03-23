@@ -891,7 +891,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             />
             {seoVideo && (
               <p>
-                <Link href={seoVideo.watchPagePath}>Open the dedicated video page</Link>
+                <Link href={seoVideo.watchPagePath}>View video page</Link>
               </p>
             )}
           </>
@@ -906,13 +906,13 @@ const ArticlePage: NextPage<ArticleProps> = ({
             />
             {seoVideo && (
               <p>
-                <Link href={seoVideo.watchPagePath}>Open the dedicated video page</Link>
+                <Link href={seoVideo.watchPagePath}>View video page</Link>
               </p>
             )}
           </>
         )}
 
-        {videoURL && (
+        {videoURL && seoVideo?.embedUrl && (
           <>
             <div style={{ margin: '32px 0' }}>
               <iframe
@@ -928,7 +928,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
             </div>
             {seoVideo && (
               <p>
-                <Link href={seoVideo.watchPagePath}>Open the dedicated video page</Link>
+                <Link href={seoVideo.watchPagePath}>View video page</Link>
               </p>
             )}
           </>

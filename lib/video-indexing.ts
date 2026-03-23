@@ -42,7 +42,7 @@ export function getVideoEmbedUrl(videoUrl: string): string {
     const parsed = new URL(videoUrl)
 
     if (parsed.hostname === 'youtu.be') {
-      const id = parsed.pathname.replace(/^\/+/, '')
+      const id = parsed.pathname.match(/^\/([^/?]+)/)?.[1]
       return id ? `https://www.youtube.com/embed/${id}` : videoUrl
     }
 
@@ -53,7 +53,7 @@ export function getVideoEmbedUrl(videoUrl: string): string {
       }
 
       if (parsed.pathname.startsWith('/shorts/')) {
-        const id = parsed.pathname.split('/')[2]
+        const id = parsed.pathname.match(/\/shorts\/([^/?]+)/)?.[1]
         return id ? `https://www.youtube.com/embed/${id}` : videoUrl
       }
 
