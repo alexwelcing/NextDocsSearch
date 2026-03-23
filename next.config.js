@@ -27,7 +27,11 @@ const nextConfig = {
 
   // Compiler optimizations
   compiler: {
-    styledComponents: true,
+    styledComponents: {
+      ssr: true,
+      displayName: true,
+      fileName: true,
+    },
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
@@ -71,6 +75,12 @@ const nextConfig = {
       {
         source: '/articles/ai-kill-switch',
         destination: '/articles/ai-kill-switch-postmortem',
+        permanent: true,
+      },
+      // Redirect old hire-me page to current-work
+      {
+        source: '/hire-me',
+        destination: '/current-work',
         permanent: true,
       },
     ];

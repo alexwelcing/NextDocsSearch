@@ -57,7 +57,7 @@ export default function About() {
               <Link href="/" className="text-slate-400 hover:text-white transition">Portfolio</Link>
               <Link href="/articles" className="text-slate-400 hover:text-white transition">Writing</Link>
               <Link href="/about" className="text-cyan-400 font-medium">About</Link>
-              <Link href="/hire-me" className="text-emerald-400 font-medium">Hire Me</Link>
+              <Link href="/current-work" className="text-purple-400 font-medium">Current Work</Link>
             </div>
           </div>
         </nav>
@@ -73,7 +73,7 @@ export default function About() {
               <p className="text-xl text-slate-400 mb-4">AI Product Leader & Technical Strategist</p>
               <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> New York, NY</span>
-                <span className="flex items-center gap-1"><Briefcase className="w-4 h-4" /> Available for hire</span>
+                <span className="flex items-center gap-1"><Briefcase className="w-4 h-4" /> TPM — Legal Intelligence</span>
               </div>
               <div className="flex gap-4 mt-6">
                 <a href="mailto:alexwelcing@gmail.com" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition">
@@ -211,13 +211,13 @@ export default function About() {
 
           {/* CTA */}
           <section className="p-8 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-white/10 text-center">
-            <h2 className="text-2xl font-bold mb-4">Interested in working together?</h2>
-            <p className="text-slate-400 mb-6">I&apos;m currently available for full-time and advisory roles.</p>
+            <h2 className="text-2xl font-bold mb-4">Explore my work</h2>
+            <p className="text-slate-400 mb-6">Currently focused on AI product leadership in legal intelligence. Always open to meaningful conversations.</p>
             <Link 
-              href="/hire-me" 
+              href="/current-work" 
               className="inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-lg transition"
             >
-              View Opportunities
+              View Current Work
               <ArrowRight className="w-5 h-5" />
             </Link>
           </section>

@@ -41,6 +41,7 @@ module.exports = {
     '/chat',
     '/drafts/*',
     '/experiments/*',
+    '/hire-me',
   ],
   transform: async (config, path) => {
     // Custom priority for important pages based on SEO strategy
@@ -66,9 +67,14 @@ module.exports = {
       priority = 0.9
       changefreq = 'monthly'
     }
-    // Hire me page - recruiter focused
-    else if (path === '/hire-me') {
-      priority = 0.95
+    // Current work page - professional focus
+    else if (path === '/current-work') {
+      priority = 0.9
+      changefreq = 'weekly'
+    }
+    // Video pages
+    else if (path.startsWith('/videos/')) {
+      priority = 0.85
       changefreq = 'weekly'
     }
     // Articles index

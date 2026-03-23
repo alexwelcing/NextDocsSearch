@@ -16,6 +16,7 @@ import { SITE_URL } from '@/lib/site-url'
 import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
 import ArticleDisplayPanel from '@/components/3d/interactive/ArticleDisplayPanel'
 import type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
+import { Building2 } from 'lucide-react'
 
 // Dynamically import the 3D environment
 const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
@@ -346,34 +347,31 @@ function HomeContent() {
 
                 {/* Recruiter badge */}
                 <Link 
-                  href="/hire-me"
-                  className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm hover:bg-emerald-500/20 transition"
+                  href="/current-work"
+                  className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm hover:bg-purple-500/20 transition"
                 >
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
-                  Available for hire — View opportunities
+                  <Building2 className="w-4 h-4" />
+                  Currently building — View my work
                 </Link>
 
                 {/* Two clear paths */}
                 <div className="flex flex-col sm:flex-row gap-6 mt-12">
                   <Link
-                    href="/hire-me"
+                    href="/current-work"
                     className="group relative px-8 py-4 overflow-hidden"
                     style={{
-                      background: 'rgba(16, 185, 129, 0.1)',
-                      border: '1px solid rgba(16, 185, 129, 0.4)',
+                      background: 'rgba(168, 85, 247, 0.1)',
+                      border: '1px solid rgba(168, 85, 247, 0.4)',
                       borderRadius: '2px',
                     }}
                   >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                      Hire Me
+                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-purple-400 group-hover:text-purple-300 transition-colors">
+                      Current Work
                     </span>
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                       style={{
-                        background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))',
+                        background: 'linear-gradient(90deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.1))',
                       }}
                     />
                   </Link>

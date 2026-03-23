@@ -9,9 +9,13 @@ Disallow: /_next/
 Sitemap: https://alexwelcing.com/sitemap.xml
 
 # Priority pages
-Allow: /hire-me
+Allow: /current-work
 Allow: /articles
 Allow: /about
 Allow: /speculative-ai
 Allow: /agent-futures
 Allow: /emergent-intelligence
+Allow: /videos
+
+# Video sitemap for Google Video indexing
+Sitemap: https://alexwelcing.com/video-sitemap.xml

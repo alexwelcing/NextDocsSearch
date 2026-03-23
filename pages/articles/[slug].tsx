@@ -674,9 +674,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
         public_url: `${siteUrl}${articleVideo}`,
         thumbnail_url: heroImage ? `${siteUrl}${heroImage}` : fullOgImage,
         mime_type: 'video/mp4',
-        width: undefined,
-        height: undefined,
-        duration_seconds: undefined,
         created_at: date,
       }
     : null);
@@ -868,7 +865,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
           <NavPill href="/agent-futures">Agent Futures</NavPill>
           <NavPill href="/emergent-intelligence">Emergent Intelligence</NavPill>
           <NavPill href="/about">About</NavPill>
-          <NavPill href="/hire-me">Work With Me</NavPill>
+          <NavPill href="/current-work">Current Work</NavPill>
         </NavPills>
 
         {/* Video if available */}
@@ -956,8 +953,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
             <div className="name">Alex Welcing</div>
             <div className="title">AI Product Leader & Technical Strategist</div>
           </div>
-          <Link href="/hire-me" className="cta">
-            Work With Me
+          <Link href="/current-work" className="cta">
+            View Current Work
           </Link>
         </AuthorCard>
       </BodyContainer>
