@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useRoomStore } from '@/lib/rooms/store';
 import { RoomSceneRenderer, StaticLevelRenderer } from '@/components/3d/rooms/RoomRenderer';
 import { EnhancedRoomSceneRenderer } from '@/components/3d/rooms/AdvancedRoomRenderer';
+import { ThirdPersonController } from '@/components/3d/characters/ThirdPersonController';
 import { PhysicsWorld } from '@/components/3d/physics/PhysicsWorld';
 import { NavigationSystem } from '@/components/3d/navigation/NavigationSystem';
 import { 
@@ -325,12 +326,18 @@ const PreviewScene3D: React.FC<{ level: GeneratedLevel | null }> = ({ level }) =
   );
 };
 
-// Full scene for active level (uses EnhancedRoomSceneRenderer with camera spawn)
-const FullScene3D: React.FC = () => {
+// Full scene for active level with third-person character controller
+const FullScene3D: React.FC<{ levelId: string }> = ({ levelId }) => {
+  // Get spawn point based on level
+  const spawnPoint: [number, number, number] = 
+    levelId === 'cartographer' ? [0, 0, 0] :
+    levelId === 'mycelium' ? [0, 0, 0] :
+    [0, 0, 0];
+  
   return (
     <>
       {/* Ambient base lighting */}
-      <ambientLight intensity={0.2} />
+      <ambientLight intensity={0.3} />
       
       {/* Directional sun light with shadows */}
       <directionalLight 
@@ -345,12 +352,13 @@ const FullScene3D: React.FC = () => {
         shadow-camera-bottom={-30}
       />
       
-      {/* Enhanced renderer with textures, camera collision, and player spawn */}
-      <EnhancedRoomSceneRenderer 
-        enablePlayerControls={true}
-      />
+      {/* Enhanced room renderer */}
+      <EnhancedRoomSceneRenderer enablePlayerControls={false} />
       
-      {/* Instructions overlay would go here */}
+      {/* Third-person character controller */}
+      <ThirdPersonController 
+        spawnPoint={spawnPoint}
+      />
     </>
   );
 };
@@ -361,7 +369,7 @@ const FullScene3D: React.FC = () => {
 
 interface LevelCardProps {
   levelId: LevelId;
-  onLoad: (level: GeneratedLevel) => void;
+  onLoad: (level: GeneratedLevel, levelId: string) => void;
 }
 
 const LevelCardComponent: React.FC<LevelCardProps> = ({ levelId, onLoad }) => {
@@ -390,7 +398,7 @@ const LevelCardComponent: React.FC<LevelCardProps> = ({ levelId, onLoad }) => {
           break;
       }
       
-      onLoad(level);
+      onLoad(level, levelId);
       setIsLoading(false);
     }, 500);
   }, [levelId, onLoad]);
@@ -503,11 +511,13 @@ const LevelCardComponent: React.FC<LevelCardProps> = ({ levelId, onLoad }) => {
 
 export default function ArticleLevelsPage() {
   const [activeLevel, setActiveLevel] = useState<GeneratedLevel | null>(null);
+  const [activeLevelId, setActiveLevelId] = useState<string>('');
   const loadLevel = useRoomStore((state) => state.loadLevel);
   
-  const handleLoadLevel = useCallback((level: GeneratedLevel) => {
+  const handleLoadLevel = useCallback((level: GeneratedLevel, levelId: string) => {
     loadLevel(level);
     setActiveLevel(level);
+    setActiveLevelId(levelId);
   }, [loadLevel]);
   
   return (
@@ -558,7 +568,7 @@ export default function ArticleLevelsPage() {
             <Canvas camera={{ position: [15, 12, 15], fov: 60 }}>
               <color attach="background" args={['#030308']} />
               <fog attach="fog" args={['#030308', 10, 80]} />
-              <FullScene3D />
+              <FullScene3D levelId={activeLevelId} />
               <Grid
                 args={[50, 50]}
                 cellSize={1}
