@@ -11,6 +11,7 @@ import styled, { keyframes } from 'styled-components';
 import Link from 'next/link';
 import { useRoomStore } from '@/lib/rooms/store';
 import { RoomSceneRenderer, StaticLevelRenderer } from '@/components/3d/rooms/RoomRenderer';
+import { EnhancedRoomSceneRenderer } from '@/components/3d/rooms/AdvancedRoomRenderer';
 import { PhysicsWorld } from '@/components/3d/physics/PhysicsWorld';
 import { NavigationSystem } from '@/components/3d/navigation/NavigationSystem';
 import { 
@@ -92,6 +93,53 @@ const LevelGrid = styled.div`
   padding: 40px 24px;
   max-width: 1400px;
   margin: 0 auto;
+`;
+
+const ActiveLevelContainer = styled.div`
+  padding: 24px;
+  position: relative;
+`;
+
+const LevelHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 24px;
+`;
+
+const CanvasContainer = styled.div`
+  height: 70vh;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+`;
+
+const ClickToPlayOverlay = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 32px 48px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  
+  h3 {
+    margin: 0 0 12px 0;
+    font-size: 1.5rem;
+    color: white;
+  }
+  
+  p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+  }
 `;
 
 const LevelCard = styled.div<{ $theme?: 'blue' | 'green' | 'red' }>`
@@ -277,21 +325,33 @@ const PreviewScene3D: React.FC<{ level: GeneratedLevel | null }> = ({ level }) =
   );
 };
 
-// Full scene for active level (uses RoomSceneRenderer - reads from store)
+// Full scene for active level (uses EnhancedRoomSceneRenderer with camera spawn)
 const FullScene3D: React.FC = () => {
   return (
-    <PhysicsWorld enabled={true}>
-      <NavigationSystem autoGenerate={true}>
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[10, 20, 10]} intensity={1} castShadow />
-        <RoomSceneRenderer />
-        <OrbitControls 
-          enableZoom={true} 
-          enablePan={true}
-          autoRotate={false}
-        />
-      </NavigationSystem>
-    </PhysicsWorld>
+    <>
+      {/* Ambient base lighting */}
+      <ambientLight intensity={0.2} />
+      
+      {/* Directional sun light with shadows */}
+      <directionalLight 
+        position={[20, 30, 10]} 
+        intensity={0.8} 
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-far={100}
+        shadow-camera-left={-30}
+        shadow-camera-right={30}
+        shadow-camera-top={30}
+        shadow-camera-bottom={-30}
+      />
+      
+      {/* Enhanced renderer with textures, camera collision, and player spawn */}
+      <EnhancedRoomSceneRenderer 
+        enablePlayerControls={true}
+      />
+      
+      {/* Instructions overlay would go here */}
+    </>
   );
 };
 
@@ -471,14 +531,8 @@ export default function ArticleLevelsPage() {
       </Hero>
       
       {activeLevel ? (
-        <div style={{ padding: '24px' }}>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            marginBottom: '24px',
-            padding: '0 24px'
-          }}>
+        <ActiveLevelContainer>
+          <LevelHeader>
             <div>
               <h2 style={{ margin: 0, fontSize: '1.5rem' }}>{activeLevel.name}</h2>
               <p style={{ margin: '8px 0 0 0', color: 'rgba(255,255,255,0.5)' }}>
@@ -498,12 +552,12 @@ export default function ArticleLevelsPage() {
             >
               Choose Another Level
             </button>
-          </div>
+          </LevelHeader>
           
-          <div style={{ height: '70vh', borderRadius: '12px', overflow: 'hidden' }}>
+          <CanvasContainer>
             <Canvas camera={{ position: [15, 12, 15], fov: 60 }}>
               <color attach="background" args={['#030308']} />
-              <fog attach="fog" args={['#030308', 10, 50]} />
+              <fog attach="fog" args={['#030308', 10, 80]} />
               <FullScene3D />
               <Grid
                 args={[50, 50]}
@@ -514,8 +568,12 @@ export default function ArticleLevelsPage() {
                 infiniteGrid
               />
             </Canvas>
-          </div>
-        </div>
+            <ClickToPlayOverlay>
+              <h3>🎮 Click to Explore</h3>
+              <p>Use WASD to move, mouse to look around</p>
+            </ClickToPlayOverlay>
+          </CanvasContainer>
+        </ActiveLevelContainer>
       ) : (
         <LevelGrid>
           <LevelCardComponent 
