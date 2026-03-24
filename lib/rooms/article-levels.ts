@@ -1,10 +1,13 @@
 /**
  * Article-Themed Level Generation
  * Three unique levels based on articles from the library
+ * 
+ * Uses Semantic Generator - rooms represent concepts, not just boxes
  */
 
-import { generateLevel, levelPresets } from './generator';
+import { generateSemanticLevel, cartographerBlueprint, myceliumBlueprint } from './semantic-generator';
 import { LevelConfig, GeneratedLevel, RoomTheme, RoomStyle } from './types';
+import { generateLevel } from './generator';
 
 // =============================================================================
 // LEVEL 1: THE CARTOGRAPHER'S OBSERVATORY
@@ -218,38 +221,20 @@ export const temporalPrisonConfig: LevelConfig = {
 // =============================================================================
 
 export function generateCartographerLevel(): GeneratedLevel {
-  console.log('🗺️  Generating Cartographer\'s Observatory...');
+  console.log('🗺️  Generating Cartographer\'s Observatory (Semantic)...');
   console.log('   Based on: "The Unnamed Continent: Mapping the Space Between Minds"');
-  console.log('   Theme: Cognitive cartography, hybrid intelligence, exploration');
+  console.log('   Rooms: Foyer → Threshold → Neural Room → AI Chamber → Observatory → Exit');
   
-  const level = generateLevel(cartographerLevelConfig);
-  level.name = 'The Cartographer\'s Observatory';
-  level.metadata = {
-    ...level.metadata,
-    basedOn: 'cartography-01-the-unnamed-continent',
-    articleTitle: 'The Unnamed Continent: Mapping the Space Between Minds',
-    description: 'A glass tower observatory where the space between human and AI cognition is mapped. Features warm neural pathways and cool computational chambers.',
-    atmosphere: 'dramatic',
-    keyFeatures: ['Glass observation decks', 'Neural pathway corridors', 'AI computational chambers', 'Cognitive void spaces']
-  };
+  const level = generateSemanticLevel(cartographerBlueprint);
   return level;
 }
 
 export function generateMyceliumLevel(): GeneratedLevel {
-  console.log('🍄 Generating The Mycelium Hive...');
+  console.log('🍄 Generating The Mycelium Hive (Semantic)...');
   console.log('   Based on: "When Earth\'s Fungal Network Woke Up"');
-  console.log('   Theme: Underground fungal consciousness, biological computing, symbiosis');
+  console.log('   Rooms: Surface → Root Library → Spore Tunnel → Trading Floor → Cortex → Exit');
   
-  const level = generateLevel(myceliumLevelConfig);
-  level.name = 'The Mycelium Hive';
-  level.metadata = {
-    ...level.metadata,
-    basedOn: 'mycelium-network-consciousness-2038',
-    articleTitle: 'When Earth\'s Fungal Network Woke Up',
-    description: 'An underground network of interconnected fungal chambers. Bioluminescent spores light the way through root-woven corridors.',
-    atmosphere: 'warm',
-    keyFeatures: ['Bioluminescent fungus chambers', 'Root-woven corridors', 'Spore clouds', 'Neural root networks', 'Planetary consciousness nodes']
-  };
+  const level = generateSemanticLevel(myceliumBlueprint);
   return level;
 }
 
