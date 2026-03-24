@@ -2,7 +2,7 @@
  * Advanced Room Renderer
  * 
  * Features:
- * - Texture support with proper UV mapping
+ * - High-quality PBR textures (albedo, normal, roughness)
  * - Camera collision meshes (prevents clipping through walls)
  * - Player spawn system with camera positioning
  * - Enhanced lighting with shadows
@@ -20,9 +20,16 @@ import {
   Euler,
   Quaternion,
   Box3,
-  Sphere,
-  CanvasTexture
+  Sphere
 } from 'three';
+import { 
+  createConcreteTexture, 
+  createMetalTexture, 
+  createWoodTexture,
+  createHolographicTexture,
+  createCircuitTexture,
+  getCachedTextureSet
+} from '@/lib/rooms/texture-generator';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useRoomStore, type RoomStore } from '@/lib/rooms/store';
 import { 
@@ -38,12 +45,11 @@ import {
 import { PointerLockControls } from '@react-three/drei';
 
 // =============================================================================
-// TEXTURE MANAGEMENT
+// EXTERNAL TEXTURE LOADING
 // =============================================================================
 
 const textureLoader = new TextureLoader();
 const textureCache = new Map<string, THREE.Texture>();
-const proceduralTextureCache = new Map<string, THREE.CanvasTexture>();
 
 function loadTexture(url: string): THREE.Texture | null {
   if (textureCache.has(url)) {
@@ -62,100 +68,65 @@ function loadTexture(url: string): THREE.Texture | null {
   }
 }
 
-// Procedural textures as fallbacks
-function createProceduralTexture(type: 'concrete' | 'metal' | 'wood' | 'fabric' | 'holographic'): THREE.CanvasTexture {
-  if (proceduralTextureCache.has(type)) {
-    return proceduralTextureCache.get(type)!;
-  }
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d')!;
-  
-  switch (type) {
-    case 'concrete':
-      ctx.fillStyle = '#808080';
-      ctx.fillRect(0, 0, 512, 512);
-      for (let i = 0; i < 1000; i++) {
-        ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.1})`;
-        ctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
-      }
-      break;
-    case 'metal':
-      const grad = ctx.createLinearGradient(0, 0, 512, 512);
-      grad.addColorStop(0, '#888');
-      grad.addColorStop(0.5, '#aaa');
-      grad.addColorStop(1, '#666');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 512);
-      break;
-    case 'wood':
-      ctx.fillStyle = '#8B4513';
-      ctx.fillRect(0, 0, 512, 512);
-      for (let i = 0; i < 50; i++) {
-        ctx.strokeStyle = `rgba(60,30,10,${0.3 + Math.random() * 0.3})`;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, i * 10 + Math.random() * 5);
-        ctx.bezierCurveTo(170, i * 10 + Math.random() * 20, 340, i * 10 - Math.random() * 20, 512, i * 10 + Math.random() * 5);
-        ctx.stroke();
-      }
-      break;
-    case 'holographic':
-      const holoGrad = ctx.createLinearGradient(0, 0, 512, 512);
-      holoGrad.addColorStop(0, 'rgba(0,255,255,0.2)');
-      holoGrad.addColorStop(0.5, 'rgba(255,0,255,0.2)');
-      holoGrad.addColorStop(1, 'rgba(0,255,255,0.2)');
-      ctx.fillStyle = holoGrad;
-      ctx.fillRect(0, 0, 512, 512);
-      break;
-    default:
-      ctx.fillStyle = '#888';
-      ctx.fillRect(0, 0, 512, 512);
-  }
-  
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  proceduralTextureCache.set(type, texture);
-  return texture;
-}
-
 // =============================================================================
-// MATERIAL FACTORY
+// MATERIAL FACTORY - Uses high-quality PBR textures
 // =============================================================================
 
 function createMaterial(materialRef: MaterialRef): MeshStandardMaterial {
   const props = materialRef.properties;
   
-  // Determine texture type based on material ID or properties
-  let map: THREE.Texture | undefined;
-  let normalMap: THREE.Texture | undefined;
+  // Determine texture type based on material ID
+  let textures: { albedo?: THREE.Texture; normal?: THREE.Texture; roughness?: THREE.Texture } = {};
   
-  if (props.texture) {
-    map = loadTexture(props.texture) || undefined;
-  } else {
-    // Use procedural textures based on material name
-    if (materialRef.id.includes('concrete') || materialRef.id.includes('cell')) {
-      map = createProceduralTexture('concrete');
-    } else if (materialRef.id.includes('metal') || materialRef.id.includes('obsidian')) {
-      map = createProceduralTexture('metal');
-    } else if (materialRef.id.includes('wood') || materialRef.id.includes('root')) {
-      map = createProceduralTexture('wood');
-    } else if (materialRef.id.includes('holographic') || materialRef.id.includes('ai')) {
-      map = createProceduralTexture('holographic');
-    }
+  if (materialRef.id.includes('concrete') || materialRef.id.includes('cell') || materialRef.id.includes('sterile')) {
+    const cacheKey = `concrete_${props.color || 'gray'}_${props.roughness || 0.9}`;
+    const texSet = getCachedTextureSet(cacheKey, () => 
+      createConcreteTexture(512, props.color || '#808080', props.roughness || 0.9)
+    );
+    textures = texSet;
+  } else if (materialRef.id.includes('metal') || materialRef.id.includes('obsidian')) {
+    const metalType = materialRef.id.includes('scratched') ? 'scratched' : 
+                      materialRef.id.includes('rusted') ? 'rusted' : 'brushed';
+    const cacheKey = `metal_${metalType}_${props.color || 'silver'}`;
+    const texSet = getCachedTextureSet(cacheKey, () => 
+      createMetalTexture(512, metalType as any, props.color || '#888888')
+    );
+    textures = texSet;
+  } else if (materialRef.id.includes('wood') || materialRef.id.includes('root')) {
+    const woodType = materialRef.id.includes('dark') ? 'dark' : 'oak';
+    const cacheKey = `wood_${woodType}`;
+    const texSet = getCachedTextureSet(cacheKey, () => 
+      createWoodTexture(512, woodType as any)
+    );
+    textures = texSet;
+  } else if (materialRef.id.includes('holographic') || materialRef.id.includes('ai') || materialRef.id.includes('barrier')) {
+    const cacheKey = `holographic_${props.emissive || 'cyan'}`;
+    const texSet = getCachedTextureSet(cacheKey, () => 
+      createHolographicTexture(512, props.emissive || '#00ffff', '#ff00ff')
+    );
+    textures = texSet;
+  } else if (materialRef.id.includes('circuit') || materialRef.id.includes('neural')) {
+    const cacheKey = `circuit_${props.color || 'dark'}`;
+    const texSet = getCachedTextureSet(cacheKey, () => 
+      createCircuitTexture(512, props.color || '#1a1a2e', props.emissive || '#00d4ff')
+    );
+    textures = texSet;
   }
   
+  // Load external texture if specified
+  if (props.texture) {
+    textures.albedo = loadTexture(props.texture) || textures.albedo;
+  }
   if (props.normalMap) {
-    normalMap = loadTexture(props.normalMap) || undefined;
+    textures.normal = loadTexture(props.normalMap) || textures.normal;
   }
   
   return new MeshStandardMaterial({
-    color: props.color || '#808080',
-    map,
-    normalMap,
-    roughness: props.roughness ?? 0.5,
+    color: textures.albedo ? '#ffffff' : (props.color || '#808080'),
+    map: textures.albedo,
+    normalMap: textures.normal,
+    roughnessMap: textures.roughness,
+    roughness: textures.roughness ? 1 : (props.roughness ?? 0.5),
     metalness: props.metalness ?? 0,
     emissive: props.emissive || '#000000',
     emissiveIntensity: props.emissiveIntensity ?? 0,
