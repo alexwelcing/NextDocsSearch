@@ -183,6 +183,122 @@ const cartographerBlueprint: LevelBlueprint = {
   }
 };
 
+const temporalPrisonBlueprint: LevelBlueprint = {
+  name: "The Temporal Dungeon",
+  basedOn: "When Prisons Moved Into Your Mind",
+  narrativeArc: ['entry', 'concept', 'concept', 'transition', 'climax', 'exit'],
+  rooms: [
+    {
+      purpose: 'entry',
+      name: "The Induction Chamber",
+      description: "Sterile white. The last moment of external reality before incarceration moves inward.",
+      size: [6, 4, 6],
+      theme: {
+        materials: ['sterile-cell', 'isolation-white'],
+        lighting: 'neutral',
+        accentColor: '#e0e0e0'
+      },
+      features: [
+        { type: 'barrier', name: 'Processing Desk', description: 'Where identity is stripped and sentence begins', position: [0, 0, 2] }
+      ],
+      articleConcept: "The bureaucratic entry into mental incarceration"
+    },
+    {
+      purpose: 'concept',
+      name: "The Memory Cell",
+      description: "Your own memories become the walls. The ceiling shows moments you wish to forget.",
+      size: [7, 4, 7],
+      theme: {
+        materials: ['holographic-barrier', 'sterile-cell', 'time-fracture'],
+        lighting: 'cool',
+        accentColor: '#00ffff'
+      },
+      features: [
+        { type: 'display', name: 'Memory Projection', description: 'Your past displayed as holographic cells', position: [0, 2, 0] },
+        { type: 'terminal', name: 'Recollection Override', description: 'Attempt to edit traumatic memories', position: [-2, 0, 2] }
+      ],
+      articleConcept: "Prison as internalized memory - punishment becomes self-inflicted"
+    },
+    {
+      purpose: 'concept',
+      name: "The Time Dilation Wing",
+      description: "Seconds stretch to years. The walls pulse with distorted temporal flow.",
+      size: [8, 5, 8],
+      theme: {
+        materials: ['time-fracture', 'holographic-barrier', 'sterile-cell'],
+        lighting: 'dramatic',
+        accentColor: '#ff0000'
+      },
+      features: [
+        { type: 'display', name: 'Temporal Distortion', description: 'Time flows at different rates in each corner', position: [0, 1, 0] },
+        { type: 'portal', name: 'The Slow Zone', description: 'Enter and exit at different ages', position: [2, 0, -2] }
+      ],
+      articleConcept: "Time as punishment - subjective experience of endless duration"
+    },
+    {
+      purpose: 'transition',
+      name: "The Holographic Corridor",
+      description: "Walls flicker between solid and void. Reality itself becomes optional.",
+      size: [3, 3, 10],
+      theme: {
+        materials: ['holographic-barrier', 'time-fracture'],
+        lighting: 'dramatic',
+        accentColor: '#ff00ff'
+      },
+      features: [
+        { type: 'barrier', name: 'Phase Wall', description: 'Sometimes solid, sometimes pass-through', position: [0, 0, 3] },
+        { type: 'barrier', name: 'Reality Anchor', description: 'Moments of certainty in the flickering', position: [0, 0, 7] }
+      ],
+      articleConcept: "The dissolution of physical certainty in virtual confinement"
+    },
+    {
+      purpose: 'climax',
+      name: "The Panopticon Core",
+      description: "All prisoners see all other prisoners. Total visibility, total isolation. The ultimate prison.",
+      size: [12, 8, 12],
+      theme: {
+        materials: ['time-fracture', 'holographic-barrier', 'isolation-white', 'sterile-cell'],
+        lighting: 'dramatic',
+        accentColor: '#ff0000'
+      },
+      features: [
+        { type: 'platform', name: 'The Watch Floor', description: 'Center of the surveillance apparatus', position: [0, 0, 0] },
+        { type: 'display', name: 'The Infinite Cells', description: 'All prisoners, watching each other forever', position: [0, 4, 0] },
+        { type: 'artifact', name: 'The Eye of Judgment', description: 'Sees all, forgives nothing', position: [0, 2, 0] }
+      ],
+      articleConcept: "The Panopticon perfected - mental prisons require no guards"
+    },
+    {
+      purpose: 'exit',
+      name: "The Release Simulation",
+      description: "Are you really leaving? Or is this just another layer of the prison?",
+      size: [6, 4, 6],
+      theme: {
+        materials: ['holographic-barrier', 'sterile-cell', 'time-fracture'],
+        lighting: 'cool',
+        accentColor: '#00ffff'
+      },
+      features: [
+        { type: 'portal', name: 'Questionable Exit', description: 'Leads somewhere. Freedom or deeper confinement?', position: [0, 0, 0] },
+        { type: 'terminal', name: 'Exit Verification', description: 'System cannot confirm release is genuine', position: [2, 0, 2] }
+      ],
+      articleConcept: "Uncertainty of freedom - can one ever truly leave a mental prison?"
+    }
+  ],
+  globalTheme: {
+    primaryColor: '#0a0a0a',
+    secondaryColor: '#1a1a1a',
+    accentColor: '#ff0000',
+    materials: [
+      { id: 'sterile-cell', type: 'standard', properties: { color: '#e0e0e0', metalness: 0.3, roughness: 0.2 }},
+      { id: 'time-fracture', type: 'standard', properties: { color: '#000000', emissive: '#ff0000', emissiveIntensity: 0.8, roughness: 0.1 }},
+      { id: 'holographic-barrier', type: 'standard', properties: { color: '#00ffff', emissive: '#00ffff', emissiveIntensity: 0.4, transparent: true, opacity: 0.3 }},
+      { id: 'isolation-white', type: 'standard', properties: { color: '#ffffff', emissive: '#ffffff', emissiveIntensity: 0.1, roughness: 0.1 }}
+    ],
+    lighting: 'cool'
+  }
+};
+
 const myceliumBlueprint: LevelBlueprint = {
   name: "The Mycelium Hive",
   basedOn: "When Earth's Fungal Network Woke Up",
@@ -654,5 +770,5 @@ export function generateSemanticLevel(blueprint: LevelBlueprint): GeneratedLevel
 }
 
 // Export the blueprints for use
-export { cartographerBlueprint, myceliumBlueprint };
+export { cartographerBlueprint, myceliumBlueprint, temporalPrisonBlueprint };
 export type { LevelBlueprint, SemanticRoom, RoomPurpose };

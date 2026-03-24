@@ -5,7 +5,7 @@
  * Uses Semantic Generator - rooms represent concepts, not just boxes
  */
 
-import { generateSemanticLevel, cartographerBlueprint, myceliumBlueprint } from './semantic-generator';
+import { generateSemanticLevel, cartographerBlueprint, myceliumBlueprint, temporalPrisonBlueprint } from './semantic-generator';
 import { LevelConfig, GeneratedLevel, RoomTheme, RoomStyle } from './types';
 import { generateLevel } from './generator';
 
@@ -239,20 +239,11 @@ export function generateMyceliumLevel(): GeneratedLevel {
 }
 
 export function generateTemporalPrisonLevel(): GeneratedLevel {
-  console.log('⏱️  Generating The Temporal Dungeon...');
-  console.log('   Based on: "Holographic Prison System"');
-  console.log('   Theme: Time dilation, confinement, layered reality, isolation');
+  console.log('⏱️  Generating The Temporal Dungeon (Semantic)...');
+  console.log('   Based on: "When Prisons Moved Into Your Mind"');
+  console.log('   Rooms: Induction → Memory Cell → Time Wing → Holographic Corridor → Panopticon → Exit');
   
-  const level = generateLevel(temporalPrisonConfig);
-  level.name = 'The Temporal Dungeon';
-  level.metadata = {
-    ...level.metadata,
-    basedOn: 'holographic-prison-system-2038',
-    articleTitle: 'When Prisons Moved Into Your Mind',
-    description: 'A disorienting maze of sterile cells and holographic barriers where time flows differently in each chamber.',
-    atmosphere: 'sterile',
-    keyFeatures: ['Isolation cells', 'Time fracture zones', 'Holographic barriers', 'Reality distortion chambers', 'Temporal loops']
-  };
+  const level = generateSemanticLevel(temporalPrisonBlueprint);
   return level;
 }
 
