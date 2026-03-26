@@ -1,0 +1,125 @@
+{
+  "id": "nv-threshold-01-the-last-diagnosis-1774489007196",
+  "source": {
+    "type": "article",
+    "slug": "threshold-01-the-last-diagnosis"
+  },
+  "era": "threshold",
+  "segments": [
+    {
+      "id": "opening",
+      "type": "character",
+      "content": {
+        "description": "quiet competence — mastery in its last season",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "medium",
+        "cameraMovement": "static",
+        "mood": "contemplative",
+        "lighting": "warm golden hour, natural ambient, documentary"
+      }
+    },
+    {
+      "id": "establishing",
+      "type": "environmental",
+      "content": {
+        "description": "The Threshold: The moment before the door closes. intimate scale.",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "establishing",
+        "cameraMovement": "pan",
+        "mood": "expansive",
+        "lighting": "warm golden hour, natural ambient, documentary"
+      }
+    },
+    {
+      "id": "midpoint",
+      "type": "character",
+      "content": {
+        "description": "the specific moment of recognition — \"it does this better than I do\"",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "close-up",
+        "cameraMovement": "static",
+        "mood": "tense",
+        "lighting": "warm golden hour, natural ambient, documentary"
+      }
+    },
+    {
+      "id": "transition",
+      "type": "transition",
+      "content": {
+        "description": "Passage of time from 2027 to 2028",
+        "duration": 2
+      },
+      "visualDirection": {
+        "shotType": "wide",
+        "cameraMovement": "crane",
+        "mood": "transitional",
+        "lighting": "warm golden hour, natural ambient, documentary"
+      }
+    },
+    {
+      "id": "closing",
+      "type": "character",
+      "content": {
+        "description": "grief transmuted into something unnameable — not acceptance, not defeat",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "medium",
+        "cameraMovement": "track",
+        "mood": "resolute",
+        "lighting": "warm golden hour, natural ambient, documentary"
+      }
+    }
+  ],
+  "styleGuide": {
+    "aesthetic": "threshold-era film grain, slight warmth cast, analog tactility",
+    "palette": {
+      "primary": "#D4A574",
+      "secondary": "#8B6914",
+      "accent": "#F5DEB3",
+      "shadow": "#3D2B1F"
+    },
+    "colorTemperature": 0.8,
+    "lighting": "warm golden hour, natural ambient, documentary",
+    "camera": "handheld, eye-level, intimate 50mm",
+    "texture": "film grain, slight warmth cast, analog tactility",
+    "scale": "intimate"
+  },
+  "characters": [
+    {
+      "id": "protagonist-t",
+      "name": "Professional at the Threshold",
+      "appearance": {
+        "age": "middle-aged",
+        "build": "professional build",
+        "features": "expressive face showing quiet competence",
+        "hair": "well-kept, practical"
+      },
+      "attire": "professional clothing, warm amber tones",
+      "visualIdentifiers": [
+        "determined expression",
+        "practiced gestures"
+      ],
+      "voiceProfile": {
+        "tone": "measured",
+        "pace": "deliberate"
+      }
+    }
+  ],
+  "audioDesign": {
+    "ambient": "quiet room tone, occasional distant sounds",
+    "musicStyle": "minimal piano, subtle strings",
+    "soundEffects": [
+      "paper rustling",
+      "quiet typing",
+      "breathing"
+    ],
+    "voiceTreatment": "clean"
+  }
+}

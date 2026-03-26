@@ -1,0 +1,125 @@
+{
+  "id": "nv-cartography-01-the-unnamed-continent-1774489007197",
+  "source": {
+    "type": "article",
+    "slug": "cartography-01-the-unnamed-continent"
+  },
+  "era": "cartography",
+  "segments": [
+    {
+      "id": "opening",
+      "type": "character",
+      "content": {
+        "description": "awe — vastness of the unmapped",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "medium",
+        "cameraMovement": "static",
+        "mood": "contemplative",
+        "lighting": "luminous volumetric, bioluminescent, ethereal"
+      }
+    },
+    {
+      "id": "establishing",
+      "type": "environmental",
+      "content": {
+        "description": "The Cartography: Mapping the space between minds. vast scale.",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "establishing",
+        "cameraMovement": "pan",
+        "mood": "expansive",
+        "lighting": "luminous volumetric, bioluminescent, ethereal"
+      }
+    },
+    {
+      "id": "midpoint",
+      "type": "character",
+      "content": {
+        "description": "vertigo — the map dissolving into the territory",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "close-up",
+        "cameraMovement": "static",
+        "mood": "tense",
+        "lighting": "luminous volumetric, bioluminescent, ethereal"
+      }
+    },
+    {
+      "id": "transition",
+      "type": "transition",
+      "content": {
+        "description": "Passage of time from 2045 to 2050",
+        "duration": 2
+      },
+      "visualDirection": {
+        "shotType": "wide",
+        "cameraMovement": "crane",
+        "mood": "transitional",
+        "lighting": "luminous volumetric, bioluminescent, ethereal"
+      }
+    },
+    {
+      "id": "closing",
+      "type": "character",
+      "content": {
+        "description": "wonder tempered by loss — some things cannot be named without changing them",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "medium",
+        "cameraMovement": "track",
+        "mood": "resolute",
+        "lighting": "luminous volumetric, bioluminescent, ethereal"
+      }
+    }
+  ],
+  "styleGuide": {
+    "aesthetic": "cartography-era crystalline, translucent layers, particle drift",
+    "palette": {
+      "primary": "#6B46C1",
+      "secondary": "#3182CE",
+      "accent": "#D69E2E",
+      "shadow": "#1A1A2E"
+    },
+    "colorTemperature": 0.4,
+    "lighting": "luminous volumetric, bioluminescent, ethereal",
+    "camera": "slow crane, orbit, wide overhead reveals, 35mm",
+    "texture": "crystalline, translucent layers, particle drift",
+    "scale": "vast"
+  },
+  "characters": [
+    {
+      "id": "protagonist-c",
+      "name": "Explorer of New Territories",
+      "appearance": {
+        "age": "indeterminate",
+        "build": "adaptable",
+        "features": "awe and wonder visible",
+        "hair": "unaffected by conventional styling"
+      },
+      "attire": "functional gear for exploration",
+      "visualIdentifiers": [
+        "wide-eyed observation",
+        "gestures of discovery"
+      ],
+      "voiceProfile": {
+        "tone": "wondering",
+        "pace": "variable"
+      }
+    }
+  ],
+  "audioDesign": {
+    "ambient": "ethereal space tone, subtle particles",
+    "musicStyle": "orchestral swells, electronic textures",
+    "soundEffects": [
+      "shimmering",
+      "deep resonance",
+      "crystalline tones"
+    ],
+    "voiceTreatment": "processed"
+  }
+}

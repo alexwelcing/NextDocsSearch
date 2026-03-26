@@ -1,0 +1,125 @@
+{
+  "id": "nv-residue-01-the-last-prompt-engineer-1774489007196",
+  "source": {
+    "type": "article",
+    "slug": "residue-01-the-last-prompt-engineer"
+  },
+  "era": "residue",
+  "segments": [
+    {
+      "id": "opening",
+      "type": "character",
+      "content": {
+        "description": "melancholy inventory — cataloguing what was lost",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "medium",
+        "cameraMovement": "static",
+        "mood": "contemplative",
+        "lighting": "cool diffused, overcast, fluorescent practicals with warm pockets"
+      }
+    },
+    {
+      "id": "establishing",
+      "type": "environmental",
+      "content": {
+        "description": "The Residue: What AI left behind when it moved on. medium scale.",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "establishing",
+        "cameraMovement": "pan",
+        "mood": "expansive",
+        "lighting": "cool diffused, overcast, fluorescent practicals with warm pockets"
+      }
+    },
+    {
+      "id": "midpoint",
+      "type": "character",
+      "content": {
+        "description": "unexpected meaning found in abandoned things",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "close-up",
+        "cameraMovement": "static",
+        "mood": "tense",
+        "lighting": "cool diffused, overcast, fluorescent practicals with warm pockets"
+      }
+    },
+    {
+      "id": "transition",
+      "type": "transition",
+      "content": {
+        "description": "Passage of time from 2032 to 2034",
+        "duration": 2
+      },
+      "visualDirection": {
+        "shotType": "wide",
+        "cameraMovement": "crane",
+        "mood": "transitional",
+        "lighting": "cool diffused, overcast, fluorescent practicals with warm pockets"
+      }
+    },
+    {
+      "id": "closing",
+      "type": "character",
+      "content": {
+        "description": "quiet defiance — choosing to maintain what the world forgot",
+        "duration": 3
+      },
+      "visualDirection": {
+        "shotType": "medium",
+        "cameraMovement": "track",
+        "mood": "resolute",
+        "lighting": "cool diffused, overcast, fluorescent practicals with warm pockets"
+      }
+    }
+  ],
+  "styleGuide": {
+    "aesthetic": "residue-era desaturated, slight blue cast, post-industrial grain",
+    "palette": {
+      "primary": "#6B7B8D",
+      "secondary": "#4A5568",
+      "accent": "#D4A574",
+      "shadow": "#1A202C"
+    },
+    "colorTemperature": 0.3,
+    "lighting": "cool diffused, overcast, fluorescent practicals with warm pockets",
+    "camera": "wide shots, slow deliberate movement, 35mm",
+    "texture": "desaturated, slight blue cast, post-industrial grain",
+    "scale": "medium"
+  },
+  "characters": [
+    {
+      "id": "protagonist-r",
+      "name": "Curator of the Forgotten",
+      "appearance": {
+        "age": "varies",
+        "build": "adapted to work",
+        "features": "weathered by time and purpose",
+        "hair": "practical, possibly showing age"
+      },
+      "attire": "functional clothing in desaturated tones",
+      "visualIdentifiers": [
+        "careful movements",
+        "attentive to detail"
+      ],
+      "voiceProfile": {
+        "tone": "quiet",
+        "pace": "unhurried"
+      }
+    }
+  ],
+  "audioDesign": {
+    "ambient": "air circulation, faint mechanical hum",
+    "musicStyle": "ambient pads, occasional piano",
+    "soundEffects": [
+      "footsteps on concrete",
+      "switch clicks",
+      "distant traffic"
+    ],
+    "voiceTreatment": "spatial"
+  }
+}

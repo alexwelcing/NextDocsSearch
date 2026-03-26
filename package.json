@@ -44,7 +44,15 @@
     "narrative:graph": "tsx scripts/narrative-compose.ts graph",
     "narrative:arc": "tsx scripts/narrative-compose.ts arc",
     "narrative:bridges": "tsx scripts/narrative-compose.ts bridges",
-    "narrative:paths": "tsx scripts/narrative-compose.ts paths"
+    "narrative:paths": "tsx scripts/narrative-compose.ts paths",
+    "test:hf-mount": "tsx scripts/test-hf-mount.ts",
+    "test:davinci": "tsx scripts/test-davinci-magihuman.ts",
+    "test:narrative-video": "tsx scripts/test-narrative-video.ts",
+    "test:video:all": "npm run test:hf-mount && npm run test:davinci -- --dry-run && npm run test:narrative-video -- --dry-run",
+    "video:compose": "tsx scripts/test-narrative-video.ts --article",
+    "video:compose:dry-run": "tsx scripts/test-narrative-video.ts --dry-run",
+    "video:demo": "tsx scripts/demo-narrative-video.ts",
+    "video:demo:all": "npm run test:hf-mount && npm run video:demo"
   },
   "prettier": {
     "trailingComma": "es5",
