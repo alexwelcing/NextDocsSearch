@@ -105,6 +105,13 @@ export const EXTENDED_FEATURED: FeaturedArticle[] = [
     reason: 'Explores individual empowerment through AI agents. Optimistic counter-narrative to doom scenarios.',
     tags: ['agents', 'empowerment', 'optimistic', 'futures'],
   },
+  {
+    slug: 'tech-molecular-dynamics-simulation',
+    priority: 3,
+    category: 'research',
+    reason: 'Comprehensive MD guide from force fields to AI-accelerated workflows. Strong SEO for "molecular dynamics simulation", "GROMACS tutorial", "drug discovery MD". Cross-links bio/nano content.',
+    tags: ['molecular dynamics', 'computational chemistry', 'drug discovery', 'technical', 'simulation'],
+  },
 ];
 
 /**
@@ -177,6 +184,7 @@ export const ARTICLE_COLLECTIONS = {
     title: 'Technical Deep Dives',
     description: 'Implementation guides and technical research.',
     articles: [
+      'tech-molecular-dynamics-simulation',
       'tech-quantum-error-correction-qiskit',
       'tech-crispr-guide-rna-design',
       'tensorflow-pytorch-production-guide',
