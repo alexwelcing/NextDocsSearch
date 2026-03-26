@@ -456,7 +456,9 @@ ${this.formatBackgroundSound(request.backgroundSound)}`
     if (data && typeof data === 'object') {
       const obj = data as Record<string, unknown>
       if (obj.url) return obj.url as string
-      if (obj.video?.url) return (obj.video as { url: string }).url
+      if (obj.video && typeof obj.video === 'object' && obj.video !== null && 'url' in obj.video) {
+        return (obj.video as { url: string }).url
+      }
       if (obj.path) return `${this.spaceUrl}/gradio_api/file=${obj.path}`
     }
     

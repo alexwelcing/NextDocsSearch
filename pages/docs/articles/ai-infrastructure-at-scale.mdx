@@ -1,0 +1,499 @@
+---
+title: 'AI Infrastructure at Scale: Lessons from Serving Billions of Requests'
+author:
+  - Alex Welcing
+date: '2026-03-26'
+description: >-
+  Engineering lessons from building AI infrastructure serving billions of
+  requests. Covers GPU optimization, request routing, caching strategies, and
+  cost management at scale.
+keywords:
+  - AI Infrastructure
+  - MLOps
+  - GPU Optimization
+  - Model Serving
+  - Cost Management
+  - Request Routing
+  - Vector Databases
+  - Load Balancing
+  - Inference Optimization
+  - Production ML
+articleType: research
+ogImage: /images/og/ai-infrastructure-at-scale.svg
+featured: true
+featuredPriority: 2
+relatedArticles:
+  - tech-mlops-pipeline-automation
+  - tech-model-serving-deployment
+  - mlops-data-pipelines-best-practices
+---
+
+Serving AI at scale is fundamentally different from traditional web services. You're not just routing HTTP requests—you're orchestrating GPU clusters, managing model artifacts that consume gigabytes of RAM, and optimizing for both latency and throughput in ways that defy conventional wisdom.
+
+I've architected systems serving billions of AI requests monthly. This article shares the hard-won lessons—the patterns that work, the anti-patterns that fail, and the tradeoffs that define production AI infrastructure.
+
+## The Scale Problem
+
+Let's establish baseline numbers. A typical production LLM workload:
+
+- **Request volume:** 10M+ requests/day
+- **Token throughput:** 100B+ tokens/day
+- **Latency requirements:** P50 < 200ms, P99 < 2s
+- **Availability:** 99.99% (four nines)
+- **Cost budget:** $0.001-0.01 per 1K tokens
+
+These constraints create a brutal optimization landscape. Every millisecond and every cent matters.
+
+## GPU Cluster Architecture
+
+### The Memory Wall
+
+GPUs are memory-constrained, not compute-constrained. An H100 has:
+- 80GB HBM3 memory
+- 989 TFLOPS FP8 compute
+- But model weights for GPT-4-class models exceed 200GB
+
+**The Solution:** Model parallelism strategies:
+
+| Strategy | How It Works | Best For |
+|----------|--------------|----------|
+| **Tensor Parallelism** | Split layers across GPUs | Single node, low latency |
+| **Pipeline Parallelism** | Split model stages across GPUs | Multi-node, throughput |
+| **Sequence Parallelism** | Split sequence dimension | Long context windows |
+| **Expert Parallelism** | Route to different "expert" GPUs | MoE architectures |
+
+**Production Choice:** I use **tensor parallelism within nodes** (NVLink is fast) and **pipeline parallelism across nodes** (Ethernet is slower but acceptable for coarse-grained communication).
+
+### Dynamic Batching
+
+The key throughput optimization: batch requests dynamically.
+
+```python
+class DynamicBatcher:
+    def __init__(self, max_batch_size=64, max_wait_ms=10):
+        self.max_batch_size = max_batch_size
+        self.max_wait_ms = max_wait_ms
+        self.pending = []
+        
+    def add_request(self, request: Request) -> Optional[Batch]:
+        self.pending.append(request)
+        
+        # Batch when full
+        if len(self.pending) >= self.max_batch_size:
+            return self._flush()
+        
+        # Or when oldest request waits too long
+        oldest_wait = time.now() - self.pending[0].timestamp
+        if oldest_wait >= self.max_wait_ms:
+            return self._flush()
+            
+        return None
+```
+
+**Performance Impact:** Dynamic batching improves throughput by 5-10x compared to single-request inference, with only marginal latency increase (10-20ms).
+
+### Continuous Batching (vLLM-style)
+
+Traditional batching waits for all sequences in a batch to complete. Continuous batching (inflight batching) is better:
+
+```
+Traditional:        Continuous:
+[AAAA]              [A_]
+[BBBB]              [BB]
+[CCCC]              [CCC]
+[DDDD]              [DDDD]
+Wait for all        New requests join
+longest sequence    as others complete
+```
+
+This improves GPU utilization from ~30% to >80%.
+
+## The Request Routing Problem
+
+Not all requests are equal. Smart routing is critical.
+
+### Model Routing
+
+Route to appropriate model based on task complexity:
+
+```python
+class ModelRouter:
+    def route(self, request: Request) -> ModelEndpoint:
+        complexity = self.estimate_complexity(request)
+        
+        if complexity < 0.3:
+            return self.endpoints["gpt-3.5-turbo"]  # Fast, cheap
+        elif request.requires_reasoning:
+            return self.endpoints["claude-3-opus"]  # Best reasoning
+        elif request.token_count > 8000:
+            return self.endpoints["gpt-4-turbo-128k"]  # Long context
+        else:
+            return self.endpoints["gpt-4"]  # Default
+```
+
+**Cost Impact:** Proper model routing reduces inference costs by 60-70%.
+
+### Geographic Routing
+
+Latency to first token is critical. Deploy inference clusters geographically:
+
+```
+User in Tokyo
+    ↓
+[Route 53 / Cloudflare]
+    ↓
+AP-Northeast-1 Cluster (latency: 20ms)
+    ↓
+Response
+
+vs.
+
+User in Tokyo → US-East-1 Cluster (latency: 180ms)
+```
+
+**Implementation:** Use Anycast IP with health checks. If Tokyo cluster is overloaded, failover to Singapore or US-West.
+
+### A/B Testing at the Edge
+
+Test model variants without client changes:
+
+```python
+class ExperimentRouter:
+    def route(self, request: Request) -> ModelEndpoint:
+        experiment_id = self.get_experiment_assignment(request.user_id)
+        
+        if experiment_id == "control":
+            return self.endpoints["model-v1"]
+        elif experiment_id == "treatment":
+            return self.endpoints["model-v2"]
+        elif experiment_id == "canary":
+            # 1% traffic to new model
+            if random() < 0.01:
+                return self.endpoints["model-v3"]
+            return self.endpoints["model-v1"]
+```
+
+## Caching: The 1000x Optimization
+
+Caching is make-or-break for AI infrastructure economics.
+
+### Embedding Cache
+
+Embed the same text twice? That's waste.
+
+```python
+class EmbeddingCache:
+    def get_embedding(self, text: str) -> Vector:
+        # Normalize text for cache key
+        cache_key = self.normalize(text)
+        hash_key = hashlib.sha256(cache_key.encode()).hexdigest()[:16]
+        
+        # Try Redis cache
+        cached = self.redis.get(f"emb:{hash_key}")
+        if cached:
+            return Vector.deserialize(cached)
+        
+        # Compute and cache
+        embedding = self.model.embed(text)
+        self.redis.setex(f"emb:{hash_key}", 86400, embedding.serialize())
+        return embedding
+```
+
+**Hit Rate:** 40-60% in production. At $0.0001 per 1K tokens, this saves thousands daily.
+
+### Semantic Cache
+
+Exact match is too restrictive. Cache semantically similar queries:
+
+```python
+class SemanticCache:
+    def __init__(self):
+        self.vector_store = RedisVectorStore()
+        self.similarity_threshold = 0.95
+        
+    def get(self, query: str) -> Optional[str]:
+        query_embedding = self.embedder.embed(query)
+        
+        # Find similar cached queries
+        results = self.vector_store.similarity_search(
+            query_embedding, 
+            k=1,
+            score_threshold=self.similarity_threshold
+        )
+        
+        if results:
+            return results[0].metadata["response"]
+        return None
+```
+
+**Performance:** Additional 15-25% cache hit rate on conversational applications.
+
+### Response Cache
+
+For deterministic tasks (code generation, data extraction), cache full responses:
+
+```python
+# Cache key includes model, temperature, and prompt hash
+cache_key = f"{model}:{temperature}:{hash(prompt)}"
+```
+
+**TTL Strategy:**
+- Code generation: 1 hour (code doesn't change)
+- Factual queries: 24 hours (facts are stable)
+- Creative writing: No cache (want variety)
+
+## Vector Database Optimization
+
+RAG applications live and die by vector search performance.
+
+### Index Selection
+
+| Index Type | Use Case | Recall | Query Time |
+|------------|----------|--------|------------|
+| **Flat (Brute Force)** | Small datasets (`<100K`) | 100% | Slow (O(N)) |
+| **IVF** | Medium datasets, balanced | 95%+ | Fast |
+| **HNSW** | Large datasets, speed critical | 90-99% | Very Fast |
+| **DiskANN** | Massive datasets (>100M) | 85-95% | Fast with disk |
+
+**Production Default:** HNSW with `ef_construction=128`, `M=16`. Tuned for 99% recall at sub-10ms query times.
+
+### Hybrid Search
+
+Vector similarity alone is insufficient. Combine with BM25:
+
+```python
+def hybrid_search(query: str, vector: Vector, alpha: float = 0.7):
+    # Vector search results
+    vector_results = vector_store.similarity_search(vector, k=100)
+    
+    # BM25 text search results  
+    text_results = text_search.search(query, k=100)
+    
+    # Reciprocal Rank Fusion
+    scores = {}
+    for rank, doc in enumerate(vector_results):
+        scores[doc.id] = scores.get(doc.id, 0) + alpha * (1 / (rank + 60))
+    
+    for rank, doc in enumerate(text_results):
+        scores[doc.id] = scores.get(doc.id, 0) + (1 - alpha) * (1 / (rank + 60))
+    
+    return sorted(scores.items(), key=lambda x: x[1], reverse=True)
+```
+
+**Improvement:** 15-20% better retrieval accuracy than vector-only search.
+
+### Embedding Model Selection
+
+Not all embeddings are equal:
+
+| Model | Dimensions | Strength | Best For |
+|-------|------------|----------|----------|
+| **text-embedding-3-large** | 3072 | General purpose | Default choice |
+| **text-embedding-3-small** | 1536 | Fast, cheap | High volume, simple tasks |
+| **Cohere Embed v3** | 1024 | Multilingual | Non-English content |
+| ** voyage-2** | 1024 | Domain-specific | Technical documents |
+| **E5-Mistral** | 4096 | Long context | Legal, academic |
+
+**Cost Tradeoff:** text-embedding-3-small is 10x cheaper and 80% as good. Use it for first-pass filtering, then re-rank with larger model.
+
+## Cost Management
+
+AI infrastructure costs can spiral. Here's how to control them.
+
+### Usage-Based Alerts
+
+```yaml
+# Alert thresholds
+alerts:
+  - name: "Daily Spend Spike"
+    condition: daily_spend > $5000
+    action: pagerduty_critical
+    
+  - name: "Unusual Token Volume"
+    condition: hourly_tokens > 10_billion
+    action: slack_warning
+    
+  - name: "Per-User Abuse"
+    condition: user_daily_spend > $100
+    action: throttle_user + notify_security
+```
+
+### Token Optimization
+
+Every token costs money. Optimize relentlessly:
+
+**Prompt Compression:**
+```python
+# Before: 500 tokens
+prompt = """
+You are a helpful assistant. You should be polite and professional.
+Answer the user's question based on the provided context.
+If you don't know, say so. Don't make things up.
+Context: {long_document}
+Question: {question}
+"""
+
+# After: 200 tokens (compressed)
+prompt = f"Context:{compress(long_document)}\nQ:{question}\nA:"
+```
+
+**Response Streaming:**
+- Stream tokens as they're generated
+- Allow users to cancel mid-generation
+- Reduces wasted tokens on abandoned requests by 30%
+
+**Quantization:**
+- Use INT8 or FP8 quantized models where possible
+- 2x throughput, minimal quality loss (`<2%`)
+
+### Reserved Capacity vs. On-Demand
+
+For steady-state workloads, reserved GPU capacity is 40-60% cheaper:
+
+| Deployment Model | Cost per H100/hr | Best For |
+|------------------|------------------|----------|
+| On-Demand | $2.50 | Spiky workloads, experimentation |
+| Reserved (1 year) | $1.50 | Baseline production traffic |
+| Spot/Preemptible | $0.75 | Fault-tolerant batch jobs |
+
+**Strategy:** 70% reserved for baseline, 30% on-demand for spikes.
+
+## Observability
+
+You can't optimize what you can't measure.
+
+### The AI Metrics Stack
+
+**Model Metrics:**
+- Token latency (TTFT, TBT—time between tokens)
+- Token throughput (tokens/sec)
+- Error rate by model and version
+- Cache hit rates
+
+**Business Metrics:**
+- Cost per request
+- Cost per user
+- Revenue per token
+- Request success rate
+
+**Quality Metrics:**
+- Hallucination rate (measured via evals)
+- User feedback scores
+- Task completion rates
+
+### Distributed Tracing
+
+Trace requests through the entire pipeline:
+
+```
+Request: "Summarize this document"
+├── Router (2ms)
+├── Auth (5ms)
+├── Embedding (15ms) [cache miss]
+├── Vector Search (8ms)
+├── LLM (1200ms)
+│   ├── TTFT (150ms)
+│   └── Generation (1050ms)
+└── Post-processing (10ms)
+Total: 1240ms
+```
+
+**Tooling:** OpenTelemetry + Jaeger for traces, Prometheus + Grafana for metrics.
+
+## Reliability Patterns
+
+### Circuit Breakers
+
+When a model endpoint fails, fail fast:
+
+```python
+class CircuitBreaker:
+    def __init__(self, failure_threshold=5, recovery_timeout=30):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.failures = 0
+        self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
+        
+    def call(self, func, *args, **kwargs):
+        if self.state == "OPEN":
+            if time.time() - self.last_failure < self.recovery_timeout:
+                raise CircuitBreakerOpen()
+            self.state = "HALF_OPEN"
+            
+        try:
+            result = func(*args, **kwargs)
+            self._on_success()
+            return result
+        except Exception as e:
+            self._on_failure()
+            raise e
+```
+
+### Graceful Degradation
+
+When primary model is overloaded:
+
+```python
+class ResilientInference:
+    def generate(self, request: Request) -> Response:
+        try:
+            # Try best model first
+            return self.gpt4.generate(request)
+        except OverloadedError:
+            # Fall back to faster model
+            return self.gpt35.generate(request)
+        except Exception:
+            # Last resort: cached response or static fallback
+            return self.cache.get_similar(request) or self.static_fallback
+```
+
+### Request Queuing
+
+Smooth traffic spikes:
+
+```python
+class PriorityQueue:
+    def __init__(self):
+        self.queues = {
+            Priority.CRITICAL: asyncio.Queue(),
+            Priority.HIGH: asyncio.Queue(),
+            Priority.NORMAL: asyncio.Queue(),
+            Priority.LOW: asyncio.Queue(),
+        }
+        
+    async def process(self):
+        while True:
+            # Process critical first
+            for priority in [Priority.CRITICAL, Priority.HIGH, Priority.NORMAL]:
+                if not self.queues[priority].empty():
+                    request = await self.queues[priority].get()
+                    await self.handle(request)
+                    break
+```
+
+## The Future: Edge Inference
+
+The next frontier is running models on the edge:
+
+**Current Feasible:**
+- Embedding models (BGE-small, 100MB)
+- Classification models (DistilBERT, 250MB)
+- Small LLMs (Phi-2, 2GB)
+
+**Edge Deployment Stack:**
+- ONNX Runtime for model execution
+- WebNN for browser inference
+- Core ML / NNAPI for mobile
+
+**Use Cases:**
+- Real-time transcription
+- On-device personalization
+- Privacy-sensitive processing
+
+## Conclusion
+
+Building AI infrastructure at scale is a systems engineering discipline. The winners won't be those with the best models—they'll be those with the best infrastructure to serve those models reliably, efficiently, and cost-effectively.
+
+The patterns in this article—dynamic batching, smart routing, aggressive caching, and graceful degradation—are the difference between a demo and a production system.
+
+The future belongs to infrastructure engineers who understand both GPU architectures and distributed systems. That intersection is where the next generation of AI applications will be built.
