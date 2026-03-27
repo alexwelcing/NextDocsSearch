@@ -21,7 +21,7 @@ An immersive 3D content platform combining a portfolio and article system with i
 
 | Category | Technology |
 |----------|------------|
-| Framework | Next.js 15 (Pages Router), React 19, TypeScript (strict) |
+| Framework | Next.js 16 (Pages Router), React 19, TypeScript (strict) |
 | 3D | React Three Fiber, Drei, Cannon (physics), Postprocessing |
 | AI / ML | OpenAI embeddings, Vercel AI SDK, FAL AI image generation |
 | Database | Supabase (PostgreSQL + pgvector + storage) |
