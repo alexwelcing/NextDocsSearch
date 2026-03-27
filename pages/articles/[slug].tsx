@@ -15,7 +15,7 @@ import { escapeMdxContent } from '@/lib/utils';
 import MarkdownImage from '@/components/ui/MarkdownImage';
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Compass, Star, ArrowRight } from 'lucide-react';
+import { Compass, Star, ArrowRight, Wand2 } from 'lucide-react';
 import type { ArticleMediaWithUrl } from '@/types/article-media';
 import VideoComponent from '@/components/VideoComponent';
 import { createVideoSchema } from '@/components/StructuredData';
@@ -55,7 +55,7 @@ interface ArticleProps {
 }
 
 // =============================================================================
-// NEW EDITORIAL LAYOUT - Confident, cohesive design
+// EXCITING EDITORIAL LAYOUT - Dynamic, asymmetric, multiple art pieces
 // =============================================================================
 
 const ArticleLayout = styled.div`
@@ -64,15 +64,15 @@ const ArticleLayout = styled.div`
   overflow-x: hidden;
 `;
 
-// Hero Section - Bold cinematic opening
+// Hero Section - Bold cinematic opening with multiple art hint
 const HeroSection = styled.header<{ $hasImage: boolean }>`
   position: relative;
-  min-height: ${p => p.$hasImage ? '85vh' : '50vh'};
+  min-height: ${p => p.$hasImage ? '90vh' : '60vh'};
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 48px 24px 64px;
-  margin-bottom: 32px;
+  margin-bottom: 0;
 
   @media (min-width: 768px) {
     padding: 64px 48px 80px;
@@ -94,9 +94,10 @@ const HeroBackground = styled.div`
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgba(3, 3, 8, 0.2) 0%,
-      rgba(3, 3, 8, 0.5) 40%,
-      rgba(3, 3, 8, 0.85) 70%,
+      rgba(3, 3, 8, 0.3) 0%,
+      rgba(3, 3, 8, 0.5) 30%,
+      rgba(3, 3, 8, 0.7) 50%,
+      rgba(3, 3, 8, 0.9) 70%,
       #030308 100%
     );
   }
@@ -115,10 +116,10 @@ const HeroContent = styled.div`
 `;
 
 const ArticleTitle = styled.h1`
-  font-size: clamp(2.25rem, 7vw, 4.5rem);
+  font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  line-height: 1;
+  letter-spacing: -0.04em;
   color: #ffffff;
   margin: 0 0 24px;
   text-transform: uppercase;
@@ -126,10 +127,10 @@ const ArticleTitle = styled.h1`
   &::after {
     content: '';
     display: block;
-    width: 100px;
+    width: 120px;
     height: 4px;
-    background: linear-gradient(90deg, #00d4ff, #ffd700);
-    margin-top: 20px;
+    background: linear-gradient(90deg, #00d4ff, #ffd700, #ff006e);
+    margin-top: 24px;
   }
 `;
 
@@ -155,40 +156,198 @@ const ArticleMeta = styled.div`
   }
 `;
 
-// Body Content - Editorial typography
+// ============================================================================
+// ART GALLERY SECTION - Multiple pieces displayed dramatically
+// ============================================================================
+
+const ArtGallerySection = styled.section`
+  padding: 48px 24px 64px;
+  background: linear-gradient(180deg, #030308 0%, #0a0a14 50%, #030308 100%);
+  
+  @media (min-width: 768px) {
+    padding: 64px 48px 80px;
+  }
+  
+  @media (min-width: 1200px) {
+    padding: 80px 8vw 96px;
+  }
+`;
+
+const GalleryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.4);
+  
+  svg {
+    width: 16px;
+    height: 16px;
+    color: #ffd700;
+  }
+`;
+
+// Asymmetric mosaic grid for art pieces
+const ArtMosaic = styled.div<{ $count: number }>`
+  display: grid;
+  gap: 16px;
+  
+  ${p => {
+    if (p.$count <= 2) return css`
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    `;
+    if (p.$count === 3) return css`
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      
+      > *:first-child {
+        grid-row: 1 / -1;
+      }
+      
+      @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        > *:first-child { grid-row: auto; }
+      }
+    `;
+    if (p.$count === 4) return css`
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: 2fr 1fr;
+      
+      > *:nth-child(1) { grid-column: 1; grid-row: 1; }
+      > *:nth-child(2) { grid-column: 2; grid-row: 1; }
+      > *:nth-child(3) { grid-column: 1; grid-row: 2; }
+      > *:nth-child(4) { grid-column: 2; grid-row: 2; }
+      
+      @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 200px);
+        > * { grid-column: auto !important; grid-row: auto !important; }
+      }
+    `;
+    return css`
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 2fr 1fr;
+      
+      > *:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+      > *:nth-child(2) { grid-column: 3; grid-row: 1; }
+      > *:nth-child(3) { grid-column: 1; grid-row: 2; }
+      > *:nth-child(4) { grid-column: 2; grid-row: 2; }
+      > *:nth-child(5) { grid-column: 3; grid-row: 2; }
+      
+      @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 180px);
+        > *:nth-child(1) { grid-column: 1 / -1; grid-row: 1; }
+        > *:nth-child(2) { grid-column: 1; grid-row: 2; }
+        > *:nth-child(3) { grid-column: 2; grid-row: 2; }
+        > *:nth-child(4) { grid-column: 1; grid-row: 3; }
+        > *:nth-child(5) { grid-column: 2; grid-row: 3; }
+      }
+      
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, 200px);
+        > * { grid-column: 1 !important; }
+      }
+    `;
+  }}
+`;
+
+const ArtPiece = styled.div<{ $path: string; $index: number }>`
+  position: relative;
+  min-height: ${p => p.$index === 0 ? '400px' : '200px'};
+  border-radius: 4px;
+  overflow: hidden;
+  background-image: url(${p => p.$path});
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(3, 3, 8, 0.8) 0%,
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  &:hover {
+    transform: scale(1.02) translateY(-4px);
+    border-color: rgba(0, 212, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    
+    &::after { opacity: 1; }
+  }
+  
+  .art-label {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  
+  &:hover .art-label {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+// ============================================================================
+// BODY CONTENT - Editorial typography with exciting interruptions
+// ============================================================================
+
 const BodyContainer = styled.div`
   max-width: 680px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 48px 24px 0;
   font-size: 1.125rem;
   line-height: 1.75;
   color: #c8c8c8;
 
   @media (min-width: 768px) {
-    padding: 0 48px;
+    padding: 64px 48px 0;
   }
 
   @media (min-width: 1400px) {
     max-width: 720px;
   }
 
-  /* Typography scale */
   h2 {
     font-size: clamp(1.5rem, 3.5vw, 2.25rem);
     font-weight: 800;
-    margin: 56px 0 20px;
-    padding-left: 16px;
-    border-left: 3px solid #00d4ff;
+    margin: 64px 0 24px;
+    padding-left: 20px;
+    border-left: 4px solid #00d4ff;
     line-height: 1.2;
     letter-spacing: -0.02em;
     color: #ffffff;
   }
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    margin: 36px 0 14px;
-    color: #00d4ff;
+    margin: 40px 0 16px;
+    color: #ffd700;
     font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -198,12 +357,24 @@ const BodyContainer = styled.div`
     margin-bottom: 1.5rem;
   }
 
-  /* Lead paragraph */
   > p:first-of-type {
-    font-size: 1.2rem;
-    line-height: 1.65;
-    color: #e0e0e0;
+    font-size: 1.35rem;
+    line-height: 1.6;
+    color: #e8e8e8;
     font-weight: 400;
+    
+    &::first-letter {
+      font-size: 4rem;
+      float: left;
+      line-height: 1;
+      margin-right: 12px;
+      margin-top: -8px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00d4ff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
   }
 
   a {
@@ -228,13 +399,30 @@ const BodyContainer = styled.div`
   }
 
   blockquote {
-    margin: 40px 0;
-    padding: 24px 28px;
-    background: rgba(0, 212, 255, 0.03);
-    border-left: 3px solid #ffd700;
+    margin: 48px -24px;
+    padding: 32px 36px;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 215, 0, 0.03) 100%);
+    border-left: 4px solid #ffd700;
     font-style: italic;
-    font-size: 1.1rem;
-    color: #d8d8d8;
+    font-size: 1.2rem;
+    color: #e0e0e0;
+    position: relative;
+    
+    @media (max-width: 768px) {
+      margin: 48px -16px;
+      padding: 24px;
+    }
+
+    &::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      font-size: 6rem;
+      color: rgba(255, 215, 0, 0.1);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
 
     p:last-child {
       margin-bottom: 0;
@@ -271,7 +459,7 @@ const NavPills = styled.nav`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 32px 0 48px;
+  margin: 0 0 48px;
   padding-bottom: 32px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `;
@@ -295,99 +483,189 @@ const NavPill = styled(Link)`
   }
 `;
 
-// Full-width image that breaks container
-const WideImage = styled.figure`
-  margin: 56px calc(-50vw + 50%);
+// ============================================================================
+// EXCITING IMAGE LAYOUTS - Breaking the grid
+// ============================================================================
+
+// Full-bleed cinematic image
+const CinematicImage = styled.figure`
+  margin: 64px calc(-50vw + 50%);
   width: 100vw;
   position: relative;
-
+  
   @media (min-width: 1200px) {
-    margin: 64px calc(-50vw + 50% + 6vw);
+    margin: 80px calc(-50vw + 50% + 8vw);
+    width: calc(100vw - 16vw);
   }
 
   img {
     width: 100%;
     height: auto;
-    max-height: 70vh;
+    max-height: 80vh;
     object-fit: cover;
     display: block;
   }
 `;
 
-const WideImageCaption = styled.figcaption`
+// Offset image - breaks right
+const OffsetImageRight = styled.figure`
+  margin: 48px -48px 48px 24px;
+  position: relative;
+  
+  @media (max-width: 768px) {
+    margin: 48px -24px;
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: -16px;
+    right: 16px;
+    bottom: -16px;
+    border: 2px solid rgba(0, 212, 255, 0.2);
+    border-radius: 4px;
+    z-index: -1;
+  }
+`;
+
+// Offset image - breaks left  
+const OffsetImageLeft = styled.figure`
+  margin: 48px 24px 48px -48px;
+  position: relative;
+  
+  @media (max-width: 768px) {
+    margin: 48px -24px;
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: -16px;
+    bottom: -16px;
+    border: 2px solid rgba(255, 215, 0, 0.2);
+    border-radius: 4px;
+    z-index: -1;
+  }
+`;
+
+// Floating image with text wrap
+const FloatingImage = styled.figure<{ $side: 'left' | 'right' }>`
+  float: ${p => p.$side};
+  margin: 8px ${p => p.$side === 'left' ? '24px' : '0'} 16px ${p => p.$side === 'left' ? '0' : '24px'};
+  width: 45%;
+  
+  @media (max-width: 600px) {
+    float: none;
+    width: 100%;
+    margin: 32px -24px;
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+`;
+
+// Side-by-side comparison
+const DuoImage = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 48px -24px;
+  
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    margin: 48px -16px;
+  }
+  
+  img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+`;
+
+// Triptych
+const Triptych = styled.div`
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  margin: 48px -48px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px 150px;
+    margin: 48px -24px;
+  }
+  
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 180px);
+  }
+  
+  > *:first-child {
+    grid-row: 1 / -1;
+    
+    @media (max-width: 500px) {
+      grid-row: auto;
+    }
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+`;
+
+const ImageCaption = styled.figcaption`
   text-align: center;
   padding: 16px 24px;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 `;
 
-// Side-by-side image + text (cohesive, not disjointed)
-const SplitSection = styled.div<{ $reversed?: boolean }>`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  margin: 56px 0;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-
-  @media (min-width: 900px) {
-    grid-template-columns: ${p => p.$reversed ? '1fr 45%' : '45% 1fr'};
-    margin: 64px calc(-50vw + 50% + 6vw);
-    width: calc(100vw - 12vw);
-    max-width: 1400px;
-  }
-`;
-
-const SplitImage = styled.div<{ $bgImage: string }>`
-  min-height: 300px;
-  background-image: url(${p => p.$bgImage});
-  background-size: cover;
-  background-position: center;
-
-  @media (min-width: 900px) {
-    min-height: 400px;
-  }
-`;
-
-const SplitContent = styled.div`
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  @media (min-width: 900px) {
-    padding: 48px;
-  }
-
-  h3 {
-    margin-top: 0;
-    color: #ffd700;
-  }
-
-  p:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-// Section divider
+// Section divider with animation
 const SectionDivider = styled.hr`
   border: none;
-  height: 1px;
+  height: 2px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(0, 212, 255, 0.3) 30%,
-    rgba(255, 215, 0, 0.4) 50%,
-    rgba(0, 212, 255, 0.3) 70%,
+    #00d4ff 20%,
+    #ffd700 50%,
+    #ff006e 80%,
     transparent 100%
   );
-  margin: 64px auto;
-  max-width: 400px;
+  margin: 80px auto;
+  max-width: 200px;
   position: relative;
-
+  
   &::before {
     content: '◆';
     position: absolute;
@@ -396,9 +674,31 @@ const SectionDivider = styled.hr`
     transform: translate(-50%, -50%);
     background: #030308;
     padding: 0 16px;
-    color: rgba(255, 215, 0, 0.4);
-    font-size: 0.7rem;
+    color: #ffd700;
+    font-size: 0.8rem;
   }
+`;
+
+// Pull quote - dramatic interruption
+const PullQuote = styled.blockquote`
+  margin: 56px -48px;
+  padding: 40px 48px;
+  background: linear-gradient(135deg, rgba(255, 0, 110, 0.08) 0%, rgba(0, 212, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 0, 110, 0.2);
+  border-radius: 4px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.4;
+  
+  @media (max-width: 768px) {
+    margin: 56px -24px;
+    padding: 32px 24px;
+    font-size: 1.2rem;
+  }
+  
+  p { margin: 0; }
 `;
 
 // Author card
@@ -406,21 +706,22 @@ const AuthorCard = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 24px;
-  background: rgba(255, 255, 255, 0.02);
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  margin: 48px 0;
+  margin: 56px 0;
+  border-radius: 4px;
 
   .avatar {
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #00d4ff, #3b82f6);
+    background: linear-gradient(135deg, #00d4ff, #ff006e);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 20px;
+    font-weight: 800;
+    font-size: 24px;
     color: white;
     flex-shrink: 0;
   }
@@ -429,21 +730,22 @@ const AuthorCard = styled.div`
     flex: 1;
 
     .name {
-      font-weight: 600;
+      font-weight: 700;
       color: #fff;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      font-size: 1.1rem;
     }
 
     .title {
       color: rgba(255, 255, 255, 0.5);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
   }
 
   .cta {
-    padding: 10px 18px;
+    padding: 12px 20px;
     background: transparent;
-    border: 1px solid rgba(0, 212, 255, 0.3);
+    border: 1px solid rgba(0, 212, 255, 0.4);
     color: #00d4ff;
     font-size: 0.8rem;
     text-decoration: none;
@@ -452,6 +754,7 @@ const AuthorCard = styled.div`
     letter-spacing: 0.05em;
     transition: all 0.2s;
     white-space: nowrap;
+    border-radius: 4px;
 
     &:hover {
       background: rgba(0, 212, 255, 0.1);
@@ -468,8 +771,8 @@ const AuthorCard = styled.div`
 const ShareSection = styled.div`
   display: flex;
   gap: 12px;
-  margin: 40px 0;
-  padding: 24px 0;
+  margin: 48px 0;
+  padding: 28px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `;
@@ -478,21 +781,23 @@ const ShareButton = styled.a`
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 12px 20px;
   background: rgba(0, 212, 255, 0.05);
   border: 1px solid rgba(0, 212, 255, 0.2);
-  color: rgba(0, 212, 255, 0.8);
+  color: rgba(0, 212, 255, 0.9);
   text-decoration: none;
   font-size: 0.8rem;
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   transition: all 0.2s;
+  border-radius: 4px;
 
   &:hover {
     background: rgba(0, 212, 255, 0.1);
-    border-color: rgba(0, 212, 255, 0.4);
+    border-color: rgba(0, 212, 255, 0.5);
     color: #00d4ff;
+    transform: translateY(-2px);
   }
 
   svg {
@@ -503,10 +808,11 @@ const ShareButton = styled.a`
 
 // Discover section
 const DiscoverSection = styled.section`
-  margin: 48px 0;
-  padding: 32px;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%);
-  border: 1px solid rgba(0, 212, 255, 0.15);
+  margin: 56px 0;
+  padding: 36px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.06) 0%, rgba(255, 0, 110, 0.03) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 4px;
 `;
 
 const DiscoverContent = styled.div`
@@ -532,25 +838,26 @@ const DiscoverLeft = styled.div`
 `;
 
 const DiscoverIcon = styled.div`
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   background: linear-gradient(135deg, #00d4ff 0%, #ffd700 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  border-radius: 4px;
 
   svg {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     color: #030308;
   }
 `;
 
 const DiscoverText = styled.div`
   h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 800;
     color: #fff;
     margin: 0 0 6px 0;
     text-transform: uppercase;
@@ -568,17 +875,18 @@ const DiscoverButton = styled.button`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 24px;
+  padding: 16px 28px;
   background: linear-gradient(135deg, #00d4ff 0%, #ffd700 100%);
   border: none;
   color: #030308;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  border-radius: 4px;
 
   &:hover {
     transform: translateY(-2px);
@@ -678,53 +986,77 @@ const ArticlePage: NextPage<ArticleProps> = ({
       }
     : null);
 
-  // Split content into sections for interleaving with images
-  const contentChunks = useMemo(() => {
+  // Create exciting content sections with varied layouts
+  const contentSections = useMemo(() => {
     const parts = content.split(/(?=^## )/m);
-    return parts.filter(p => p.trim().length > 0);
-  }, [content]);
-
-  // Distribute images throughout content
-  const sections = useMemo(() => {
-    const result: Array<{
-      type: 'content' | 'wide-image' | 'split';
+    const sections: Array<{
+      type: 'content' | 'cinematic' | 'offset-right' | 'offset-left' | 'duo' | 'triptych' | 'pullquote';
       content?: string;
-      image?: MultiArtOption;
-      reversed?: boolean;
+      images?: MultiArtOption[];
     }> = [];
-
-    // First chunk always starts the article
-    if (contentChunks[0]) {
-      result.push({ type: 'content', content: contentChunks[0] });
-    }
-
-    // Interleave remaining content with images
-    let imageIndex = 0;
-    for (let i = 1; i < contentChunks.length; i++) {
-      // Every 2-3 sections, insert an image if available
-      if (imageIndex < multiArtImages.length && i % 2 === 0) {
-        const image = multiArtImages[imageIndex];
-        imageIndex++;
+    
+    let artIndex = 0;
+    
+    parts.forEach((part, i) => {
+      if (!part.trim()) return;
+      
+      // First section is always content
+      if (i === 0) {
+        sections.push({ type: 'content', content: part });
+        return;
+      }
+      
+      // Every few sections, insert an exciting image layout
+      if (artIndex < multiArtImages.length && i % 3 === 0) {
+        const remaining = multiArtImages.length - artIndex;
         
-        // Alternate between wide image and split layout
-        if (i % 4 === 0) {
-          result.push({ type: 'wide-image', image });
-        } else {
-          result.push({ 
-            type: 'split', 
-            image, 
-            content: contentChunks[i],
-            reversed: (i / 2) % 2 === 1
+        if (remaining >= 3 && i % 6 === 0) {
+          // Triptych for dramatic effect
+          sections.push({
+            type: 'triptych',
+            images: multiArtImages.slice(artIndex, artIndex + 3)
           });
-          continue; // Skip adding content separately
+          artIndex += 3;
+        } else if (remaining >= 2 && i % 4 === 0) {
+          // Duo comparison
+          sections.push({
+            type: 'duo',
+            images: multiArtImages.slice(artIndex, artIndex + 2)
+          });
+          artIndex += 2;
+        } else if (i % 5 === 0) {
+          // Offset image alternating sides
+          sections.push({
+            type: artIndex % 2 === 0 ? 'offset-right' : 'offset-left',
+            images: [multiArtImages[artIndex]],
+            content: part
+          });
+          artIndex += 1;
+          return; // Skip adding content separately
+        } else {
+          // Cinematic full-bleed
+          sections.push({
+            type: 'cinematic',
+            images: [multiArtImages[artIndex]]
+          });
+          artIndex += 1;
         }
       }
       
-      result.push({ type: 'content', content: contentChunks[i] });
-    }
-
-    return result;
-  }, [contentChunks, multiArtImages]);
+      // Pull quote every 4th section
+      if (i % 4 === 2 && part.length > 200) {
+        const lines = part.split('\n');
+        const quoteLine = lines.find(l => l.length > 50 && !l.startsWith('#') && !l.startsWith('-'));
+        if (quoteLine) {
+          sections.push({ type: 'pullquote', content: quoteLine.replace(/^[*\-]\s*/, '') });
+        }
+      }
+      
+      sections.push({ type: 'content', content: part });
+    });
+    
+    return sections;
+  }, [content, multiArtImages]);
 
   const mdComponents = useMemo(() => ({
     img: MarkdownImage as any,
@@ -858,6 +1190,23 @@ const ArticlePage: NextPage<ArticleProps> = ({
         </HeroContent>
       </HeroSection>
 
+      {/* ART GALLERY - Multiple art pieces displayed dramatically */}
+      {multiArtImages.length > 1 && (
+        <ArtGallerySection>
+          <GalleryHeader>
+            <Wand2 />
+            Visual Variations
+          </GalleryHeader>
+          <ArtMosaic $count={Math.min(multiArtImages.length, 5)}>
+            {multiArtImages.slice(0, 5).map((art, idx) => (
+              <ArtPiece key={idx} $path={art.path} $index={idx}>
+                <span className="art-label">{art.model.replace(/-/g, ' ')}</span>
+              </ArtPiece>
+            ))}
+          </ArtMosaic>
+        </ArtGallerySection>
+      )}
+
       {/* BODY CONTENT */}
       <BodyContainer>
         <NavPills aria-label="Related navigation">
@@ -865,7 +1214,6 @@ const ArticlePage: NextPage<ArticleProps> = ({
           <NavPill href="/agent-futures">Agent Futures</NavPill>
           <NavPill href="/emergent-intelligence">Emergent Intelligence</NavPill>
           <NavPill href="/about">About</NavPill>
-          <NavPill href="/current-work">Current Work</NavPill>
         </NavPills>
 
         {/* Video if available */}
@@ -884,7 +1232,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
           <video
             src={articleVideo}
             controls
-            style={{ width: '100%', margin: '32px 0', borderRadius: 0 }}
+            style={{ width: '100%', margin: '32px 0', borderRadius: 4 }}
           />
         )}
 
@@ -898,13 +1246,13 @@ const ArticlePage: NextPage<ArticleProps> = ({
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               title={`${title} — YouTube video`}
-              style={{ borderRadius: 0 }}
+              style={{ borderRadius: 4 }}
             />
           </div>
         )}
 
-        {/* Render interleaved content and images */}
-        {sections.map((section, idx) => {
+        {/* Render interleaved content with exciting layouts */}
+        {contentSections.map((section, idx) => {
           if (section.type === 'content' && section.content) {
             return (
               <React.Fragment key={idx}>
@@ -914,32 +1262,99 @@ const ArticlePage: NextPage<ArticleProps> = ({
               </React.Fragment>
             );
           }
-
-          if (section.type === 'wide-image' && section.image) {
+          
+          if (section.type === 'cinematic' && section.images?.[0]) {
             return (
-              <WideImage key={idx}>
+              <CinematicImage key={idx}>
                 <Image
-                  src={section.image.path}
-                  alt={`${section.image.model} artwork`}
+                  src={section.images[0].path}
+                  alt={`${section.images[0].model} artwork`}
                   width={1600}
                   height={900}
-                  style={{ width: '100%', height: 'auto', maxHeight: '70vh' }}
+                  style={{ width: '100%', height: 'auto' }}
                 />
-                <WideImageCaption>{section.image.model.replace(/-/g, ' ')}</WideImageCaption>
-              </WideImage>
+                <ImageCaption>{section.images[0].model.replace(/-/g, ' ')}</ImageCaption>
+              </CinematicImage>
             );
           }
-
-          if (section.type === 'split' && section.image && section.content) {
+          
+          if (section.type === 'offset-right' && section.images?.[0]) {
             return (
-              <SplitSection key={idx} $reversed={section.reversed}>
-                <SplitImage $bgImage={section.image.path} />
-                <SplitContent>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
-                    {section.content}
-                  </ReactMarkdown>
-                </SplitContent>
-              </SplitSection>
+              <OffsetImageRight key={idx}>
+                <Image
+                  src={section.images[0].path}
+                  alt={`${section.images[0].model} artwork`}
+                  width={800}
+                  height={600}
+                />
+                <ImageCaption>{section.images[0].model.replace(/-/g, ' ')}</ImageCaption>
+              </OffsetImageRight>
+            );
+          }
+          
+          if (section.type === 'offset-left' && section.images?.[0]) {
+            return (
+              <OffsetImageLeft key={idx}>
+                <Image
+                  src={section.images[0].path}
+                  alt={`${section.images[0].model} artwork`}
+                  width={800}
+                  height={600}
+                />
+                <ImageCaption>{section.images[0].model.replace(/-/g, ' ')}</ImageCaption>
+              </OffsetImageLeft>
+            );
+          }
+          
+          if (section.type === 'duo' && section.images && section.images.length >= 2) {
+            return (
+              <DuoImage key={idx}>
+                <Image
+                  src={section.images[0].path}
+                  alt={`${section.images[0].model} artwork`}
+                  width={600}
+                  height={400}
+                />
+                <Image
+                  src={section.images[1].path}
+                  alt={`${section.images[1].model} artwork`}
+                  width={600}
+                  height={400}
+                />
+              </DuoImage>
+            );
+          }
+          
+          if (section.type === 'triptych' && section.images && section.images.length >= 3) {
+            return (
+              <Triptych key={idx}>
+                <Image
+                  src={section.images[0].path}
+                  alt={`${section.images[0].model} artwork`}
+                  width={800}
+                  height={600}
+                />
+                <Image
+                  src={section.images[1].path}
+                  alt={`${section.images[1].model} artwork`}
+                  width={400}
+                  height={300}
+                />
+                <Image
+                  src={section.images[2].path}
+                  alt={`${section.images[2].model} artwork`}
+                  width={400}
+                  height={300}
+                />
+              </Triptych>
+            );
+          }
+          
+          if (section.type === 'pullquote' && section.content) {
+            return (
+              <PullQuote key={idx}>
+                <p>{section.content}</p>
+              </PullQuote>
             );
           }
 
@@ -951,10 +1366,10 @@ const ArticlePage: NextPage<ArticleProps> = ({
           <div className="avatar">AW</div>
           <div className="info">
             <div className="name">Alex Welcing</div>
-            <div className="title">AI Product Leader & Technical Strategist</div>
+            <div className="title">Technical Product Manager</div>
           </div>
-          <Link href="/current-work" className="cta">
-            View Current Work
+          <Link href="/about" className="cta">
+            About
           </Link>
         </AuthorCard>
       </BodyContainer>

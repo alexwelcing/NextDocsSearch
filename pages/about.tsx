@@ -1,9 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
 import { SITE_URL } from '@/lib/site-url';
-import { Mail, Linkedin, Github, MapPin, Briefcase, GraduationCap, Award, ArrowRight } from 'lucide-react';
+import { Mail, Linkedin, Github, MapPin, Briefcase, GraduationCap, ArrowRight, Code, BarChart3, Layers } from 'lucide-react';
 
 export default function About() {
   const siteUrl = SITE_URL;
@@ -11,13 +10,13 @@ export default function About() {
   return (
     <>
       <Head>
-        <title>About Alex Welcing | AI Product Leader & Technical Strategist</title>
-        <meta name="description" content="Alex Welcing is an AI product leader with 10+ years experience building enterprise AI products, LLM applications, and agent systems. Former technical product manager at leading tech companies." />
-        <meta name="keywords" content="Alex Welcing, AI product manager, technical product manager, AI product leader, product strategy, machine learning product, LLM product, AI portfolio" />
+        <title>About Alex Welcing | Technical Product Manager</title>
+        <meta name="description" content="Alex Welcing is a Technical Product Manager at ALM with 9+ years experience in SaaS, publishing tech, VR solutions, and legal technology." />
+        <meta name="keywords" content="Alex Welcing, Technical Product Manager, ALM, SaaS, VR, legal technology, Obsess, Manatt" />
         <link rel="canonical" href={`${siteUrl}/about`} />
         
-        <meta property="og:title" content="About Alex Welcing | AI Product Leader" />
-        <meta property="og:description" content="AI product leader specializing in LLMs, agent systems, and enterprise AI strategy. View my background and experience." />
+        <meta property="og:title" content="About Alex Welcing | Technical Product Manager" />
+        <meta property="og:description" content="Technical Product Manager with expertise in SaaS platforms, immersive VR, and legal technology." />
         <meta property="og:url" content={`${siteUrl}/about`} />
         <meta property="og:type" content="profile" />
         
@@ -27,20 +26,15 @@ export default function About() {
             "@type": "Person",
             "name": "Alex Welcing",
             "url": siteUrl,
-            "jobTitle": "AI Product Leader",
-            "description": "AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and enterprise AI.",
+            "jobTitle": "Technical Product Manager",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "ALM"
+            },
+            "description": "Technical Product Manager with 9+ years experience delivering scalable SaaS, publishing tech, and immersive VR solutions.",
             "sameAs": [
               "https://www.linkedin.com/in/alexwelcing",
-              "https://github.com/alexwelcing",
-              "https://x.com/alexwelcing"
-            ],
-            "knowsAbout": [
-              "Large Language Models",
-              "AI Product Management",
-              "Agent Systems",
-              "Enterprise AI Strategy",
-              "Technical Product Leadership",
-              "Machine Learning"
+              "https://github.com/alexwelcing"
             ]
           })
         }} />
@@ -57,7 +51,6 @@ export default function About() {
               <Link href="/" className="text-slate-400 hover:text-white transition">Portfolio</Link>
               <Link href="/articles" className="text-slate-400 hover:text-white transition">Writing</Link>
               <Link href="/about" className="text-cyan-400 font-medium">About</Link>
-              <Link href="/current-work" className="text-purple-400 font-medium">Current Work</Link>
             </div>
           </div>
         </nav>
@@ -70,10 +63,10 @@ export default function About() {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Alex Welcing</h1>
-              <p className="text-xl text-slate-400 mb-4">AI Product Leader & Technical Strategist</p>
+              <p className="text-xl text-slate-400 mb-4">Technical Product Manager</p>
               <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> New York, NY</span>
-                <span className="flex items-center gap-1"><Briefcase className="w-4 h-4" /> TPM — Legal Intelligence</span>
+                <span className="flex items-center gap-1"><Briefcase className="w-4 h-4" /> ALM</span>
               </div>
               <div className="flex gap-4 mt-6">
                 <a href="mailto:alexwelcing@gmail.com" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition">
@@ -93,40 +86,20 @@ export default function About() {
           <section className="mb-16">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
               <span className="w-8 h-px bg-cyan-500"></span>
-              Summary
+              About
             </h2>
             <p className="text-lg text-slate-300 leading-relaxed">
-              I&apos;m a product leader with deep technical expertise in AI/ML. I&apos;ve spent the last decade 
-              translating complex technical capabilities into market-winning products. My sweet spot is 
-              the intersection of LLMs, agent architectures, and enterprise software—where I bridge 
-              the gap between what AI can do and what businesses need.
+              I&apos;m a Technical Product Manager with 9+ years of experience delivering scalable SaaS, 
+              publishing technology, and immersive VR solutions. I currently steer product strategy 
+              and delivery at ALM, an integrated media company serving the legal and commercial real 
+              estate sectors.
             </p>
             <p className="text-lg text-slate-300 leading-relaxed mt-4">
-              Previously, I&apos;ve led product teams at startups and enterprises, shipping AI-powered 
-              features that moved key metrics. I&apos;m hands-on: I can code, architect systems, and 
-              communicate effectively with both engineers and executives.
+              My background spans both technical development and marketing strategy, with a track 
+              record of translating complex customer needs into measurable outcomes. I have 
+              hands-on experience building secure SaaS platforms, optimizing data pipelines, 
+              and launching AI-driven features in regulated industries.
             </p>
-          </section>
-
-          {/* Key Skills */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <span className="w-8 h-px bg-cyan-500"></span>
-              Key Skills
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {[
-                { category: "AI/ML", skills: "LLMs (GPT-4, Claude, Llama), RAG, Agent Systems, Vector Search, Fine-tuning" },
-                { category: "Product", skills: "Strategy, Roadmapping, User Research, Data Analysis, A/B Testing" },
-                { category: "Technical", skills: "React, TypeScript, Python, Node.js, SQL, Cloud Infrastructure" },
-                { category: "Leadership", skills: "Team Building, Cross-functional Collaboration, Stakeholder Management" }
-              ].map((item, i) => (
-                <div key={i} className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <h3 className="font-semibold text-cyan-400 mb-2">{item.category}</h3>
-                  <p className="text-sm text-slate-400">{item.skills}</p>
-                </div>
-              ))}
-            </div>
           </section>
 
           {/* Experience */}
@@ -138,41 +111,109 @@ export default function About() {
             <div className="space-y-8">
               <div className="border-l-2 border-white/10 pl-6">
                 <div className="flex flex-wrap justify-between items-baseline mb-2">
-                  <h3 className="text-xl font-semibold">AI Product Lead</h3>
-                  <span className="text-sm text-slate-500">2021 — Present</span>
-                </div>
-                <p className="text-cyan-400 text-sm mb-2">Independent Consultant</p>
-                <ul className="text-slate-400 space-y-1 list-disc list-inside">
-                  <li>Advising startups on AI product strategy and LLM implementation</li>
-                  <li>Building proof-of-concept agent systems and RAG applications</li>
-                  <li>Leading technical workshops on AI product development</li>
-                </ul>
-              </div>
-
-              <div className="border-l-2 border-white/10 pl-6">
-                <div className="flex flex-wrap justify-between items-baseline mb-2">
-                  <h3 className="text-xl font-semibold">Senior Product Manager</h3>
-                  <span className="text-sm text-slate-500">2018 — 2021</span>
-                </div>
-                <p className="text-cyan-400 text-sm mb-2">Enterprise Technology</p>
-                <ul className="text-slate-400 space-y-1 list-disc list-inside">
-                  <li>Led AI-powered feature development serving 10M+ users</li>
-                  <li>Managed roadmap for machine learning infrastructure</li>
-                  <li>Grew team from 3 to 12 engineers and designers</li>
-                </ul>
-              </div>
-
-              <div className="border-l-2 border-white/10 pl-6">
-                <div className="flex flex-wrap justify-between items-baseline mb-2">
                   <h3 className="text-xl font-semibold">Technical Product Manager</h3>
-                  <span className="text-sm text-slate-500">2015 — 2018</span>
+                  <span className="text-sm text-slate-500">Jan 2024 — Present</span>
                 </div>
-                <p className="text-cyan-400 text-sm mb-2">B2B SaaS Platform</p>
-                <ul className="text-slate-400 space-y-1 list-disc list-inside">
-                  <li>Shipped 0-to-1 products generating $2M+ ARR</li>
-                  <li>Transitioned from engineering to product management</li>
-                  <li>Built data pipeline processing 1B+ events daily</li>
+                <p className="text-cyan-400 text-sm mb-3">ALM</p>
+                <p className="text-slate-400 leading-relaxed">
+                  Steer product strategy and delivery for an integrated media company providing 
+                  specialized business information to the legal and commercial real estate sectors. 
+                  Translate complex customer needs into measurable outcomes.
+                </p>
+              </div>
+
+              <div className="border-l-2 border-white/10 pl-6">
+                <div className="flex flex-wrap justify-between items-baseline mb-2">
+                  <h3 className="text-xl font-semibold">Product Manager</h3>
+                  <span className="text-sm text-slate-500">Previous</span>
+                </div>
+                <p className="text-cyan-400 text-sm mb-3">Obsess</p>
+                <ul className="text-slate-400 space-y-2">
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 mt-1">•</span>
+                    <span>Launched cutting-edge SaaS platforms and immersive VR capabilities</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 mt-1">•</span>
+                    <span>Optimized data pipelines with Google Analytics 4 integration</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 mt-1">•</span>
+                    <span>Enabled real-time 3D rendering across mobile, headset, and desktop</span>
+                  </li>
                 </ul>
+              </div>
+
+              <div className="border-l-2 border-white/10 pl-6">
+                <div className="flex flex-wrap justify-between items-baseline mb-2">
+                  <h3 className="text-xl font-semibold">Developer</h3>
+                  <span className="text-sm text-slate-500">Previous</span>
+                </div>
+                <p className="text-cyan-400 text-sm mb-3">Manatt, Phelps & Phillips, LLP</p>
+                <ul className="text-slate-400 space-y-2">
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 mt-1">•</span>
+                    <span>Built a secure client SaaS platform for legal and regulatory analysis</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 mt-1">•</span>
+                    <span>Implemented AI-driven document scanning capabilities</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 mt-1">•</span>
+                    <span>Developed knowledge/training portal that delivered strong ROI</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="border-l-2 border-white/10 pl-6">
+                <div className="flex flex-wrap justify-between items-baseline mb-2">
+                  <h3 className="text-xl font-semibold">Developer</h3>
+                  <span className="text-sm text-slate-500">Previous</span>
+                </div>
+                <p className="text-cyan-400 text-sm mb-3">Arkadium</p>
+                <p className="text-slate-400">
+                  Drove business development in artificial intelligence and built NLP-powered 
+                  interactive content partnerships.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Skills */}
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <span className="w-8 h-px bg-cyan-500"></span>
+              Expertise
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                <div className="flex items-center gap-2 mb-2">
+                  <Layers className="w-5 h-5 text-cyan-400" />
+                  <h3 className="font-semibold text-white">SaaS Platforms</h3>
+                </div>
+                <p className="text-sm text-slate-400">Product strategy, platform development, and scaling B2B solutions</p>
+              </div>
+              <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                <div className="flex items-center gap-2 mb-2">
+                  <Code className="w-5 h-5 text-cyan-400" />
+                  <h3 className="font-semibold text-white">VR & 3D</h3>
+                </div>
+                <p className="text-sm text-slate-400">Immersive experiences, real-time rendering across mobile/headset/desktop</p>
+              </div>
+              <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="w-5 h-5 text-cyan-400" />
+                  <h3 className="font-semibold text-white">Data & Analytics</h3>
+                </div>
+                <p className="text-sm text-slate-400">Pipeline optimization, GA4 integration, data-driven product decisions</p>
+              </div>
+              <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                <div className="flex items-center gap-2 mb-2">
+                  <Briefcase className="w-5 h-5 text-cyan-400" />
+                  <h3 className="font-semibold text-white">Legal Tech</h3>
+                </div>
+                <p className="text-sm text-slate-400">Secure client platforms, regulatory analysis tools, AI-driven document processing</p>
               </div>
             </div>
           </section>
@@ -184,49 +225,64 @@ export default function About() {
               Education
             </h2>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-              <h3 className="font-semibold">BS Computer Science</h3>
-              <p className="text-slate-400">University focus on AI and distributed systems</p>
+              <h3 className="font-semibold">BS in Marketing</h3>
+              <p className="text-slate-400">Naveen Jindal School of Management, UT Dallas</p>
+              <p className="text-slate-500 text-sm mt-2">
+                Combined technical development expertise with marketing strategy and business fundamentals.
+              </p>
             </div>
           </section>
 
-          {/* Featured Writing */}
+          {/* Technical Background */}
           <section className="mb-16">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <Award className="w-6 h-6 text-cyan-400" />
-              Featured Writing
+              <Code className="w-6 h-6 text-cyan-400" />
+              Technical Background
             </h2>
-            <div className="space-y-4">
-              <Link href="/articles" className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-500/30 transition">
-                <h3 className="font-semibold mb-1">The Reaching</h3>
-                <p className="text-sm text-slate-400 mb-2">A speculative fiction series exploring AI futures and human-machine collaboration.</p>
-                <span className="text-xs text-cyan-400 flex items-center gap-1">Read articles <ArrowRight className="w-3 h-3" /></span>
-              </Link>
-              <Link href="/articles" className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-500/30 transition">
-                <h3 className="font-semibold mb-1">AI Product Strategy</h3>
-                <p className="text-sm text-slate-400 mb-2">Practical frameworks for shipping LLM-powered products in enterprise environments.</p>
-                <span className="text-xs text-cyan-400 flex items-center gap-1">Read articles <ArrowRight className="w-3 h-3" /></span>
-              </Link>
+            <p className="text-slate-300 leading-relaxed mb-4">
+              With 10+ years of coding experience and 8+ years as a software developer, I bring 
+              hands-on technical depth to product management. This site itself demonstrates my 
+              technical capabilities—built with Next.js, React Three Fiber, and AI integrations.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {['React', 'TypeScript', 'Node.js', 'Python', 'Next.js', 'Three.js', 'SQL', 'AWS'].map((skill) => (
+                <span key={skill} className="px-3 py-1 rounded-full bg-white/5 text-slate-400 text-sm">
+                  {skill}
+                </span>
+              ))}
             </div>
           </section>
 
           {/* CTA */}
           <section className="p-8 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-white/10 text-center">
-            <h2 className="text-2xl font-bold mb-4">Explore my work</h2>
-            <p className="text-slate-400 mb-6">Currently focused on AI product leadership in legal intelligence. Always open to meaningful conversations.</p>
-            <Link 
-              href="/current-work" 
-              className="inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-lg transition"
-            >
-              View Current Work
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+            <h2 className="text-2xl font-bold mb-4">Let&apos;s Connect</h2>
+            <p className="text-slate-400 mb-6">
+              Interested in product management, SaaS platforms, or immersive technology? 
+              I&apos;m always open to meaningful conversations.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <a 
+                href="mailto:alexwelcing@gmail.com" 
+                className="inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-lg transition"
+              >
+                Get in Touch
+                <ArrowRight className="w-5 h-5" />
+              </a>
+              <Link 
+                href="/articles" 
+                className="inline-flex items-center gap-2 px-8 py-4 border border-white/20 hover:border-white/40 rounded-lg transition"
+              >
+                Read Articles
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
           </section>
         </main>
 
         {/* Footer */}
         <footer className="border-t border-white/10 py-8">
           <div className="max-w-4xl mx-auto px-6 text-center text-slate-500 text-sm">
-            <p>© {new Date().getFullYear()} Alex Welcing. Built with Next.js and AI.</p>
+            <p>© {new Date().getFullYear()} Alex Welcing. Built with Next.js.</p>
           </div>
         </footer>
       </div>
