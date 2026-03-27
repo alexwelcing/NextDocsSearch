@@ -23,7 +23,7 @@ NextDocsSearch is an immersive 3D content platform built with Next.js, React Thr
 
 ### Framework & Routing
 
-- **Next.js 15** (Pages Router, not App Router) with React 19 and TypeScript
+- **Next.js 16** (Pages Router, not App Router) with React 19 and TypeScript
 - Pages in `pages/`, API routes in `pages/api/`
 - Path alias: `@/*` maps to project root (e.g., `@/components/`, `@/lib/`)
 

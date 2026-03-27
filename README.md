@@ -1,6 +1,6 @@
 # NextDocsSearch
 
-[![Next.js 15](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-R3F-000000?logo=three.js)](https://docs.pmnd.rs/react-three-fiber)
