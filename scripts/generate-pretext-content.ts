@@ -106,7 +106,7 @@ function writeStaticArticleHtml(
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-      { '@type': 'ListItem', position: 2, name: 'Articles', item: `${siteUrl}/` },
+      { '@type': 'ListItem', position: 2, name: 'Articles', item: `${siteUrl}/articles` },
       { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
     ],
   }
@@ -154,7 +154,7 @@ function writeStaticArticleHtml(
       <div class="meta">${escapeHtml(article.date)} · ${article.readingTime} min read · ${escapeHtml(article.author.join(', '))}</div>
       ${article.heroImage ? `<figure class="hero"><img src="${article.heroImage}" alt="${escapeHtml(article.title)}" loading="lazy" decoding="async" /></figure>` : ''}
       <p class="description">${escapeHtml(description)}</p>
-      <pre>${escapeHtml(article.content)}</pre>
+      <pre>${escapeHtml(article.plainText)}</pre>
     </main>
   </body>
 </html>`
@@ -280,7 +280,7 @@ function main() {
   const redirects = '/docs/articles/:slug /articles/:slug 301\n/docs/articles / 301\n'
   fs.writeFileSync(path.join(outDir, '_redirects'), redirects, 'utf8')
 
-  console.log(`Generated pretext content payloads: ${indexEntries.length} articles`) 
+  console.log(`Generated pretext content payloads: ${indexEntries.length} articles`)
 }
 
 main()

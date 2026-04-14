@@ -57,7 +57,16 @@ self.addEventListener('fetch', (event) => {
           cache.put(request, response.clone())
           return response
         } catch (error) {
-          return cached || Response.error()
+          return new Response(
+            JSON.stringify({
+              error: 'offline_data_unavailable',
+              url: request.url,
+            }),
+            {
+              status: 503,
+              headers: { 'content-type': 'application/json' },
+            }
+          )
         }
       })
     )

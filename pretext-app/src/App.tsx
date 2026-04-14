@@ -159,8 +159,8 @@ function AppRoutes() {
       try {
         const manifest = await fetch('/data/prefetch-manifest.json').then((res) => res.json())
         await Promise.all((manifest.chunks as string[]).map((chunkPath) => fetch(chunkPath, { cache: 'force-cache' })))
-      } catch {
-        // noop
+      } catch (error) {
+        console.warn('PreText text prefetch failed', error)
       }
     }, 2000)
 
