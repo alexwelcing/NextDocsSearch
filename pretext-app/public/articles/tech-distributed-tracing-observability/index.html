@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Distributed Tracing: Observability in Microservices | Alex Welcing</title>
+    <meta name="description" content="Implement OpenTelemetry tracing for debugging distributed systems—but trace explosion overwhelms storage" />
+    <meta name="keywords" content="distributed tracing, OpenTelemetry, Jaeger, observability, microservices debugging, trace context, span, service mesh, APM, performance monitoring, latency analysis" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/tech-distributed-tracing-observability" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Distributed Tracing: Observability in Microservices | Alex Welcing" />
+    <meta property="og:description" content="Implement OpenTelemetry tracing for debugging distributed systems—but trace explosion overwhelms storage" />
+    <meta property="og:url" content="https://alexwelcing.com/articles/tech-distributed-tracing-observability" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/tech-distributed-tracing-observability.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Distributed Tracing: Observability in Microservices | Alex Welcing" />
+    <meta name="twitter:description" content="Implement OpenTelemetry tracing for debugging distributed systems—but trace explosion overwhelms storage" />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/tech-distributed-tracing-observability.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Distributed Tracing: Observability in Microservices","datePublished":"2025-03-28","dateModified":"2025-03-28","author":[{"@type":"Person","name":"Jordan Lee"},{"@type":"Person","name":"DevOps Engineer"}],"description":"Implement OpenTelemetry tracing for debugging distributed systems—but trace explosion overwhelms storage","image":"https://alexwelcing.com/images/og/tech-distributed-tracing-observability.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/tech-distributed-tracing-observability"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Distributed Tracing: Observability in Microservices","item":"https://alexwelcing.com/articles/tech-distributed-tracing-observability"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Distributed Tracing: Observability in Microservices</h1>
+      <div class="meta">2025-03-28 · 1 min read · Jordan Lee, DevOps Engineer</div>
+      <figure class="hero"><img src="/images/articles/tech-distributed-tracing-observability.jpg" alt="Distributed Tracing: Observability in Microservices" loading="lazy" decoding="async" /></figure>
+      <p class="description">Implement OpenTelemetry tracing for debugging distributed systems—but trace explosion overwhelms storage</p>
+      <pre>
+Distributed tracing tracks requests across microservices. This guide implements OpenTelemetry for production observability.
+
+## OpenTelemetry Instrumentation
+
+Auto-instrument Python services:
+
+```python
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from flask import Flask
+import requests
+
+# Initialize tracer
+trace.set_tracer_provider(TracerProvider())
+tracer = trace.get_tracer(__name__)
+
+# Configure Jaeger exporter
+jaeger_exporter = JaegerExporter(
+    agent_host_name=&quot;localhost&quot;,
+    agent_port=6831,
+)
+
+span_processor = BatchSpanProcessor(jaeger_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
+
+# Create Flask app
+app = Flask(__name__)
+
+# Auto-instrument Flask and requests library
+FlaskInstrumentor().instrument_app(app)
+RequestsInstrumentor().instrument()
+
+@app.route(&quot;/api/order&quot;)
+def create_order():
+    &quot;&quot;&quot;Create order - calls multiple services&quot;&quot;&quot;
+    with tracer.start_as_current_span(&quot;create_order&quot;) as span:
+        span.set_attribute(&quot;order.id&quot;, 12345)
+
+        # Call inventory service
+        inventory_response = check_inventory()
+        span.set_attribute(&quot;inventory.available&quot;, inventory_response[&#039;available&#039;])
+
+        if not inventory_response[&#039;available&#039;]:
+            span.set_attribute(&quot;error&quot;, True)
+            span.add_event(&quot;Inventory unavailable&quot;)
+            return {&quot;error&quot;: &quot;Out of stock&quot;}, 400
+
+        # Call payment service
+        payment_result = process_payment()
+
+        # Call shipping service
+        shipping_result = schedule_shipping()
+
+        return {&quot;order_id&quot;: 12345, &quot;status&quot;: &quot;confirmed&quot;}
+
+def check_inventory():
+    &quot;&quot;&quot;Inventory service call&quot;&quot;&quot;
+    with tracer.start_as_current_span(&quot;check_inventory&quot;):
+        response = requests.get(&quot;http://inventory-service/check?item=123&quot;)
+        return response.json()
+
+def process_payment():
+    &quot;&quot;&quot;Payment service call&quot;&quot;&quot;
+    with tracer.start_as_current_span(&quot;process_payment&quot;) as span:
+        span.set_attribute(&quot;payment.amount&quot;, 99.99)
+        response = requests.post(&quot;http://payment-service/charge&quot;, json={&quot;amount&quot;: 99.99})
+        return response.json()
+
+def schedule_shipping():
+    &quot;&quot;&quot;Shipping service call&quot;&quot;&quot;
+    with tracer.start_as_current_span(&quot;schedule_shipping&quot;):
+        response = requests.post(&quot;http://shipping-service/schedule&quot;)
+        return response.json()
+
+if __name__ == &quot;__main__&quot;:
+    app.run(port=5000)
+```
+
+## Custom Span Instrumentation
+
+Add detailed tracing to critical paths:
+
+```python
+from opentelemetry import trace
+from opentelemetry.trace import Status, StatusCode
+import time
+
+tracer = trace.get_tracer(__name__)
+
+def complex_operation(user_id: int, data: dict):
+    &quot;&quot;&quot;Heavily instrumented business logic&quot;&quot;&quot;
+    with tracer.start_as_current_span(&quot;complex_operation&quot;) as span:
+        span.set_attribute(&quot;user.id&quot;, user_id)
+        span.set_attribute(&quot;data.size&quot;, len(data))
+
+        try:
+            # Step 1: Validate
+            with tracer.start_as_current_span(&quot;validate_input&quot;) as validate_span:
+                if not data:
+                    raise ValueError(&quot;Empty data&quot;)
+                validate_span.add_event(&quot;Validation passed&quot;)
+
+            # Step 2: Database query
+            with tracer.start_as_current_span(&quot;database_query&quot;) as db_span:
+                start = time.time()
+                results = query_database(user_id)
+                duration_ms = (time.time() - start) * 1000
+
+                db_span.set_attribute(&quot;db.statement&quot;, &quot;SELECT * FROM users WHERE id = ?&quot;)
+                db_span.set_attribute(&quot;db.rows_returned&quot;, len(results))
+                db_span.set_attribute(&quot;db.duration_ms&quot;, duration_ms)
+
+                # ⚠️ Slow query detection
+                if duration_ms &gt; 100:
+                    db_span.add_event(&quot;Slow query detected&quot;, {
+                        &quot;threshold_ms&quot;: 100,
+                        &quot;actual_ms&quot;: duration_ms
+                    })
+
+            # Step 3: Process data
+            with tracer.start_as_current_span(&quot;process_data&quot;) as process_span:
+                processed = heavy_computation(data)
+                process_span.set_attribute(&quot;output.size&quot;, len(processed))
+
+            span.set_status(Status(StatusCode.OK))
+            return processed
+
+        except Exception as e:
+            # Record exception in span
+            span.record_exception(e)
+            span.set_status(Status(StatusCode.ERROR, str(e)))
+            raise
+```
+
+## Trace Sampling
+
+Control trace volume:
+
+```python
+from opentelemetry.sdk.trace.sampling import (
+    TraceIdRatioBased,
+    ParentBased,
+    ALWAYS_ON,
+    ALWAYS_OFF
+)
+
+class AdaptiveSampler:
+    &quot;&quot;&quot;Dynamically adjust sampling based on system load&quot;&quot;&quot;
+    def __init__(self, base_rate=0.1, max_traces_per_sec=1000):
+        self.base_rate = base_rate
+        self.max_traces_per_sec = max_traces_per_sec
+        self.current_traces_per_sec = 0
+        self.last_reset = time.time()
+
+    def should_sample(self, trace_id) -&gt; bool:
+        &quot;&quot;&quot;Adaptive sampling decision&quot;&quot;&quot;
+        now = time.time()
+
+        # Reset counter every second
+        if now - self.last_reset &gt; 1.0:
+            self.current_traces_per_sec = 0
+            self.last_reset = now
+
+        # Always sample errors (assuming trace_id encodes error info)
+        if trace_id &amp; 0x1:  # Simplified: check LSB
+            return True
+
+        # Apply rate limit
+        if self.current_traces_per_sec &gt;= self.max_traces_per_sec:
+            return False
+
+        # Probabilistic sampling
+        import random
+        if random.random() &lt; self.base_rate:
+            self.current_traces_per_sec += 1
+            return True
+
+        return False
+
+# Use parent-based sampling (child spans inherit parent&#039;s decision)
+sampler = ParentBased(root=TraceIdRatioBased(0.1))  # Sample 10% of root spans
+```
+
+## Warnings ⚠️
+
+**Trace Explosion**: High-traffic systems generate millions of traces per second. Storage costs spiral. The 2035 &quot;Trace Storm&quot; accumulated 50PB of trace data, bankrupting startups.
+
+**Performance Overhead**: Tracing adds latency (typically 1-5ms per traced operation).
+
+**PII Leakage**: Traces often capture sensitive data in attributes. GDPR violations are common.
+
+**Related Chronicles**: [The Observability Collapse (2035)](/docs/articles/observability-collapse-2035)
+
+**Tools**: OpenTelemetry, Jaeger, Zipkin, Honeycomb, Datadog APM
+</pre>
+    </main>
+  </body>
+</html>

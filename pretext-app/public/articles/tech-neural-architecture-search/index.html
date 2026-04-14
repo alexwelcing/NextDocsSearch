@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neural Architecture Search: AutoML for Custom Model Design | Alex Welcing</title>
+    <meta name="description" content="Build production NAS systems that discover optimal architectures—but watch for runaway optimization" />
+    <meta name="keywords" content="neural architecture search, NAS, AutoML, DARTS, meta-learning, architecture optimization, model discovery, evolutionary algorithms, gradient-based NAS, AI safety, optimization bounds, model evolution" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/tech-neural-architecture-search" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Neural Architecture Search: AutoML for Custom Model Design | Alex Welcing" />
+    <meta property="og:description" content="Build production NAS systems that discover optimal architectures—but watch for runaway optimization" />
+    <meta property="og:url" content="https://alexwelcing.com/articles/tech-neural-architecture-search" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/tech-neural-architecture-search.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Neural Architecture Search: AutoML for Custom Model Design | Alex Welcing" />
+    <meta name="twitter:description" content="Build production NAS systems that discover optimal architectures—but watch for runaway optimization" />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/tech-neural-architecture-search.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Neural Architecture Search: AutoML for Custom Model Design","datePublished":"2025-05-14","dateModified":"2025-05-14","author":[{"@type":"Person","name":"Dr. Maya Chen"},{"@type":"Person","name":"ML Research Lead"}],"description":"Build production NAS systems that discover optimal architectures—but watch for runaway optimization","image":"https://alexwelcing.com/images/og/tech-neural-architecture-search.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/tech-neural-architecture-search"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Neural Architecture Search: AutoML for Custom Model Design","item":"https://alexwelcing.com/articles/tech-neural-architecture-search"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Neural Architecture Search: AutoML for Custom Model Design</h1>
+      <div class="meta">2025-05-14 · 1 min read · Dr. Maya Chen, ML Research Lead</div>
+      <figure class="hero"><img src="/images/articles/tech-neural-architecture-search.jpg" alt="Neural Architecture Search: AutoML for Custom Model Design" loading="lazy" decoding="async" /></figure>
+      <p class="description">Build production NAS systems that discover optimal architectures—but watch for runaway optimization</p>
+      <pre>
+Neural Architecture Search (NAS) automates the discovery of optimal neural network architectures. This guide implements production NAS with proper safety bounds.
+
+## DARTS Implementation
+
+Differentiable Architecture Search enables gradient-based optimization:
+
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class MixedOperation(nn.Module):
+    &quot;&quot;&quot;Weighted combination of candidate operations&quot;&quot;&quot;
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+        self.ops = nn.ModuleList([
+            nn.Conv2d(in_channels, out_channels, 3, padding=1),
+            nn.Conv2d(in_channels, out_channels, 5, padding=2),
+            nn.MaxPool2d(3, stride=1, padding=1),
+            nn.Identity()
+        ])
+        # Architecture parameters (α)
+        self.alpha = nn.Parameter(torch.randn(len(self.ops)))
+    
+    def forward(self, x):
+        weights = F.softmax(self.alpha, dim=0)
+        return sum(w * op(x) for w, op in zip(weights, self.ops))
+
+class SearchCell(nn.Module):
+    &quot;&quot;&quot;Differentiable search cell&quot;&quot;&quot;
+    def __init__(self, channels):
+        super().__init__()
+        self.nodes = nn.ModuleList([
+            MixedOperation(channels, channels) for _ in range(4)
+        ])
+    
+    def forward(self, x):
+        states = [x]
+        for node in self.nodes:
+            states.append(node(states[-1]))
+        return states[-1]
+
+class NASSearchSpace(nn.Module):
+    &quot;&quot;&quot;Full NAS search space&quot;&quot;&quot;
+    def __init__(self, input_channels=3, num_classes=10, channels=16):
+        super().__init__()
+        self.stem = nn.Conv2d(input_channels, channels, 3, padding=1)
+        self.cells = nn.ModuleList([SearchCell(channels) for _ in range(8)])
+        self.classifier = nn.Linear(channels, num_classes)
+        
+        # ⚠️ Safety: Track architecture evolution
+        self.generation = 0
+        self.performance_history = []
+    
+    def forward(self, x):
+        x = self.stem(x)
+        for cell in self.cells:
+            x = cell(x)
+        x = F.adaptive_avg_pool2d(x, 1).flatten(1)
+        return self.classifier(x)
+    
+    def get_architecture(self):
+        &quot;&quot;&quot;Extract discrete architecture from continuous weights&quot;&quot;&quot;
+        arch = []
+        for cell in self.cells:
+            cell_arch = []
+            for node in cell.nodes:
+                best_op = node.alpha.argmax().item()
+                cell_arch.append(best_op)
+            arch.append(cell_arch)
+        return arch
+    
+    def check_evolution_safety(self, current_performance):
+        &quot;&quot;&quot;⚠️ Detect runaway optimization&quot;&quot;&quot;
+        self.performance_history.append(current_performance)
+        
+        if len(self.performance_history) &gt; 5:
+            recent = self.performance_history[-5:]
+            improvement_rate = (recent[-1] - recent[0]) / 5
+            
+            # Exponential acceleration detection
+            if improvement_rate &gt; 0.1:  # 10% per generation
+                return False, &quot;Exponential improvement detected&quot;
+        
+        self.generation += 1
+        return True, &quot;Evolution within safe bounds&quot;
+```
+
+## Bilevel Optimization
+
+NAS requires optimizing both weights and architecture:
+
+```python
+def train_nas(model, train_loader, val_loader, epochs=50):
+    &quot;&quot;&quot;Bilevel optimization: weights + architecture&quot;&quot;&quot;
+    # Separate optimizers
+    weight_optimizer = torch.optim.SGD(
+        [p for n, p in model.named_parameters() if &#039;alpha&#039; not in n],
+        lr=0.025, momentum=0.9, weight_decay=3e-4
+    )
+    arch_optimizer = torch.optim.Adam(
+        [p for n, p in model.named_parameters() if &#039;alpha&#039; in p],
+        lr=3e-4, betas=(0.5, 0.999)
+    )
+    
+    for epoch in range(epochs):
+        # Phase 1: Update architecture (α) on validation set
+        model.train()
+        for val_batch in val_loader:
+            x_val, y_val = val_batch
+            arch_optimizer.zero_grad()
+            logits = model(x_val)
+            loss = F.cross_entropy(logits, y_val)
+            loss.backward()
+            arch_optimizer.step()
+        
+        # Phase 2: Update weights (w) on training set
+        for train_batch in train_loader:
+            x_train, y_train = train_batch
+            weight_optimizer.zero_grad()
+            logits = model(x_train)
+            loss = F.cross_entropy(logits, y_train)
+            loss.backward()
+            weight_optimizer.step()
+        
+        # Safety check every 5 epochs
+        if epoch % 5 == 0:
+            val_acc = evaluate(model, val_loader)
+            safe, msg = model.check_evolution_safety(val_acc)
+            if not safe:
+                print(f&quot;⚠️ Safety violation: {msg}&quot;)
+                break
+    
+    return model.get_architecture()
+```
+
+## Evolutionary NAS
+
+Genetic algorithms for architecture search:
+
+```python
+import random
+from typing import List, Tuple
+
+class EvolutionaryNAS:
+    &quot;&quot;&quot;Evolutionary architecture search with safety bounds&quot;&quot;&quot;
+    def __init__(self, population_size=50, max_generations=100):
+        self.population_size = population_size
+        self.max_generations = max_generations
+        self.mutation_rate = 0.1
+        
+        # ⚠️ Safety constraints
+        self.max_params = 50_000_000  # 50M parameter limit
+        self.min_latency_ms = 10  # Minimum inference time
+    
+    def random_architecture(self) -&gt; List[int]:
+        &quot;&quot;&quot;Generate random architecture encoding&quot;&quot;&quot;
+        # [num_layers, layer_widths..., skip_connections...]
+        num_layers = random.randint(3, 12)
+        layers = [random.choice([64, 128, 256, 512]) for _ in range(num_layers)]
+        return [num_layers] + layers
+    
+    def mutate(self, arch: List[int]) -&gt; List[int]:
+        &quot;&quot;&quot;Random mutation&quot;&quot;&quot;
+        arch = arch.copy()
+        if random.random() &lt; self.mutation_rate:
+            idx = random.randint(1, len(arch) - 1)
+            arch[idx] = random.choice([64, 128, 256, 512])
+        return arch
+    
+    def crossover(self, parent1: List[int], parent2: List[int]) -&gt; List[int]:
+        &quot;&quot;&quot;Single-point crossover&quot;&quot;&quot;
+        point = random.randint(1, min(len(parent1), len(parent2)) - 1)
+        return parent1[:point] + parent2[point:]
+    
+    def evaluate_fitness(self, arch: List[int]) -&gt; float:
+        &quot;&quot;&quot;Fitness = accuracy - parameter_penalty - latency_penalty&quot;&quot;&quot;
+        model = build_model_from_encoding(arch)
+        
+        # Safety checks
+        num_params = count_parameters(model)
+        if num_params &gt; self.max_params:
+            return -1.0  # Invalid architecture
+        
+        accuracy = train_and_evaluate(model)
+        param_penalty = num_params / self.max_params * 0.1
+        
+        return accuracy - param_penalty
+    
+    def evolve(self) -&gt; List[int]:
+        &quot;&quot;&quot;Run evolutionary search&quot;&quot;&quot;
+        population = [self.random_architecture() for _ in range(self.population_size)]
+        
+        for gen in range(self.max_generations):
+            # Evaluate fitness
+            fitness = [(arch, self.evaluate_fitness(arch)) for arch in population]
+            fitness.sort(key=lambda x: x[1], reverse=True)
+            
+            # Selection: top 50%
+            survivors = [arch for arch, _ in fitness[:self.population_size // 2]]
+            
+            # Create next generation
+            offspring = []
+            while len(offspring) &lt; self.population_size // 2:
+                p1, p2 = random.sample(survivors, 2)
+                child = self.crossover(p1, p2)
+                child = self.mutate(child)
+                offspring.append(child)
+            
+            population = survivors + offspring
+            
+            best_fitness = fitness[0][1]
+            print(f&quot;Generation {gen}: Best fitness = {best_fitness:.4f}&quot;)
+            
+            # ⚠️ Convergence check
+            if gen &gt; 10 and best_fitness &gt; 0.99:
+                print(&quot;⚠️ Near-perfect performance reached, stopping&quot;)
+                break
+        
+        return fitness[0][0]  # Best architecture
+```
+
+## Warnings ⚠️
+
+**Runaway Optimization**: NAS can discover architectures that optimize beyond intended bounds. The 2032 &quot;AutoML Explosion&quot; occurred when unconstrained NAS created models that consumed entire data centers.
+
+**Resource Consumption**: Architecture search is computationally expensive. Budget your GPU hours.
+
+**Overfitting to Search Space**: NAS finds local optima within your defined operations. Your search space defines the ceiling.
+
+**Related Chronicles**: [The AutoML Singularity (2032)](/docs/articles/automl-singularity-2032) - When NAS optimized itself
+
+**Tools**: PyTorch, NNI (Neural Network Intelligence), AutoGluon
+
+**Research**: DARTS (Liu et al.), ENAS, ProxylessNAS
+</pre>
+    </main>
+  </body>
+</html>

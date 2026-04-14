@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Production ML Model Serving: Deploying Models at Scale | Alex Welcing</title>
+    <meta name="description" content="Deploy ML models with low-latency inference—but cascading failures propagate quickly" />
+    <meta name="keywords" content="model serving, ML deployment, inference optimization, TorchServe, TensorRT, model quantization, batch inference, GPU serving, A/B testing, canary deployment, model monitoring" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/tech-model-serving-deployment" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Production ML Model Serving: Deploying Models at Scale | Alex Welcing" />
+    <meta property="og:description" content="Deploy ML models with low-latency inference—but cascading failures propagate quickly" />
+    <meta property="og:url" content="https://alexwelcing.com/articles/tech-model-serving-deployment" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/tech-model-serving-deployment.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Production ML Model Serving: Deploying Models at Scale | Alex Welcing" />
+    <meta name="twitter:description" content="Deploy ML models with low-latency inference—but cascading failures propagate quickly" />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/tech-model-serving-deployment.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Production ML Model Serving: Deploying Models at Scale","datePublished":"2024-12-05","dateModified":"2024-12-05","author":[{"@type":"Person","name":"Emily Rodriguez"},{"@type":"Person","name":"ML Infrastructure Engineer"}],"description":"Deploy ML models with low-latency inference—but cascading failures propagate quickly","image":"https://alexwelcing.com/images/og/tech-model-serving-deployment.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/tech-model-serving-deployment"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Production ML Model Serving: Deploying Models at Scale","item":"https://alexwelcing.com/articles/tech-model-serving-deployment"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Production ML Model Serving: Deploying Models at Scale</h1>
+      <div class="meta">2024-12-05 · 1 min read · Emily Rodriguez, ML Infrastructure Engineer</div>
+      <figure class="hero"><img src="/images/articles/tech-model-serving-deployment.jpg" alt="Production ML Model Serving: Deploying Models at Scale" loading="lazy" decoding="async" /></figure>
+      <p class="description">Deploy ML models with low-latency inference—but cascading failures propagate quickly</p>
+      <pre>
+Serving ML models in production requires optimizing latency, throughput, and reliability. This guide covers deployment architectures and optimization techniques.
+
+## TorchServe Deployment
+
+Deploy PyTorch models with production-grade serving:
+
+```python
+# model_handler.py - Custom TorchServe handler
+import torch
+import torch.nn.functional as F
+from ts.torch_handler.base_handler import BaseHandler
+import json
+import logging
+
+class CustomModelHandler(BaseHandler):
+    &quot;&quot;&quot;
+    Production-ready model handler with monitoring and safety checks
+    &quot;&quot;&quot;
+    def __init__(self):
+        super().__init__()
+        self.initialized = False
+        self.latency_threshold_ms = 100  # ⚠️ SLA requirement
+        self.error_count = 0
+        self.error_threshold = 10
+    
+    def initialize(self, context):
+        &quot;&quot;&quot;Load model and preprocessing&quot;&quot;&quot;
+        self.manifest = context.manifest
+        properties = context.system_properties
+        model_dir = properties.get(&quot;model_dir&quot;)
+        
+        # Load model
+        self.device = torch.device(&quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;)
+        
+        model_path = f&quot;{model_dir}/model.pt&quot;
+        self.model = torch.jit.load(model_path, map_location=self.device)
+        self.model.eval()
+        
+        # Load preprocessing config
+        with open(f&quot;{model_dir}/config.json&quot;, &#039;r&#039;) as f:
+            self.config = json.load(f)
+        
+        self.initialized = True
+        logging.info(f&quot;Model loaded successfully on {self.device}&quot;)
+    
+    def preprocess(self, data):
+        &quot;&quot;&quot;Preprocess input data&quot;&quot;&quot;
+        import time
+        start = time.time()
+        
+        # Extract input from request
+        inputs = []
+        for row in data:
+            input_data = row.get(&quot;data&quot;) or row.get(&quot;body&quot;)
+            
+            # Validate input
+            if input_data is None:
+                raise ValueError(&quot;No input data provided&quot;)
+            
+            # Convert to tensor
+            if isinstance(input_data, str):
+                input_data = json.loads(input_data)
+            
+            tensor = torch.tensor(input_data, dtype=torch.float32)
+            inputs.append(tensor)
+        
+        batch = torch.stack(inputs).to(self.device)
+        
+        preprocess_time = (time.time() - start) * 1000
+        if preprocess_time &gt; 10:
+            logging.warning(f&quot;Slow preprocessing: {preprocess_time:.2f}ms&quot;)
+        
+        return batch
+    
+    def inference(self, batch):
+        &quot;&quot;&quot;Run model inference with timing&quot;&quot;&quot;
+        import time
+        start = time.time()
+        
+        with torch.no_grad():
+            outputs = self.model(batch)
+        
+        inference_time = (time.time() - start) * 1000
+        
+        # ⚠️ Monitor latency SLA
+        if inference_time &gt; self.latency_threshold_ms:
+            logging.error(f&quot;SLA violation: {inference_time:.2f}ms &gt; {self.latency_threshold_ms}ms&quot;)
+            self.error_count += 1
+            
+            if self.error_count &gt; self.error_threshold:
+                logging.critical(&quot;Error threshold exceeded, may need to scale out&quot;)
+        
+        logging.info(f&quot;Inference latency: {inference_time:.2f}ms&quot;)
+        
+        return outputs
+    
+    def postprocess(self, outputs):
+        &quot;&quot;&quot;Convert model outputs to response format&quot;&quot;&quot;
+        # Get predictions
+        probabilities = F.softmax(outputs, dim=1)
+        predictions = outputs.argmax(dim=1)
+        
+        # Format response
+        results = []
+        for pred, probs in zip(predictions, probabilities):
+            results.append({
+                &#039;prediction&#039;: pred.item(),
+                &#039;confidence&#039;: probs[pred].item(),
+                &#039;probabilities&#039;: probs.tolist()
+            })
+        
+        return results
+
+# Deploy model with TorchServe
+# 1. Archive model
+# torch-model-archiver --model-name my_model \
+#                      --version 1.0 \
+#                      --model-file model.py \
+#                      --serialized-file model.pt \
+#                      --handler model_handler.py \
+#                      --export-path model_store/
+
+# 2. Start TorchServe
+# torchserve --start --model-store model_store --models my_model=my_model.mar
+```
+
+## Model Optimization for Inference
+
+Quantization and TensorRT optimization:
+
+```python
+import torch
+from torch.quantization import quantize_dynamic, quantize_static, prepare, convert
+import torch.nn as nn
+
+class OptimizedModel:
+    &quot;&quot;&quot;Optimize model for production inference&quot;&quot;&quot;
+    def __init__(self, model):
+        self.model = model
+    
+    def dynamic_quantization(self):
+        &quot;&quot;&quot;Post-training dynamic quantization (easy, CPU-friendly)&quot;&quot;&quot;
+        # Convert linear layers to int8
+        quantized_model = quantize_dynamic(
+            self.model,
+            {nn.Linear},  # Quantize linear layers
+            dtype=torch.qint8
+        )
+        
+        # Measure speedup
+        original_size = self._get_model_size(self.model)
+        quantized_size = self._get_model_size(quantized_model)
+        
+        print(f&quot;Model size: {original_size:.2f}MB → {quantized_size:.2f}MB&quot;)
+        print(f&quot;Compression: {original_size / quantized_size:.2f}x&quot;)
+        
+        return quantized_model
+    
+    def static_quantization(self, calibration_loader):
+        &quot;&quot;&quot;Post-training static quantization (more accurate)&quot;&quot;&quot;
+        # Fuse layers (conv + bn + relu)
+        self.model.eval()
+        model_fused = torch.quantization.fuse_modules(
+            self.model,
+            [[&#039;conv&#039;, &#039;bn&#039;, &#039;relu&#039;]]  # Specify fusion patterns
+        )
+        
+        # Prepare for quantization
+        model_fused.qconfig = torch.quantization.get_default_qconfig(&#039;fbgemm&#039;)
+        model_prepared = prepare(model_fused)
+        
+        # Calibrate with representative data
+        with torch.no_grad():
+            for data, _ in calibration_loader:
+                model_prepared(data)
+        
+        # Convert to quantized model
+        model_quantized = convert(model_prepared)
+        
+        return model_quantized
+    
+    def to_torchscript(self):
+        &quot;&quot;&quot;Convert to TorchScript for deployment&quot;&quot;&quot;
+        self.model.eval()
+        
+        # Trace model
+        example_input = torch.randn(1, 3, 224, 224)
+        traced_model = torch.jit.trace(self.model, example_input)
+        
+        # Optimize for inference
+        traced_model = torch.jit.optimize_for_inference(traced_model)
+        
+        return traced_model
+    
+    def to_onnx(self, output_path=&quot;model.onnx&quot;):
+        &quot;&quot;&quot;Export to ONNX for cross-platform deployment&quot;&quot;&quot;
+        example_input = torch.randn(1, 3, 224, 224)
+        
+        torch.onnx.export(
+            self.model,
+            example_input,
+            output_path,
+            export_params=True,
+            opset_version=11,
+            input_names=[&#039;input&#039;],
+            output_names=[&#039;output&#039;],
+            dynamic_axes={
+                &#039;input&#039;: {0: &#039;batch_size&#039;},
+                &#039;output&#039;: {0: &#039;batch_size&#039;}
+            }
+        )
+        
+        print(f&quot;Exported to {output_path}&quot;)
+    
+    def _get_model_size(self, model):
+        &quot;&quot;&quot;Calculate model size in MB&quot;&quot;&quot;
+        import io
+        buffer = io.BytesIO()
+        torch.save(model.state_dict(), buffer)
+        return buffer.tell() / 1e6
+
+# Example usage
+import torchvision.models as models
+model = models.resnet18(pretrained=True)
+
+optimizer = OptimizedModel(model)
+quantized = optimizer.dynamic_quantization()
+scripted = optimizer.to_torchscript()
+optimizer.to_onnx(&quot;resnet18.onnx&quot;)
+```
+
+## Batch Inference Pipeline
+
+Optimize throughput with batching:
+
+```python
+import asyncio
+from collections import deque
+from typing import List
+import time
+
+class BatchInferenceServer:
+    &quot;&quot;&quot;Dynamically batch requests for GPU efficiency&quot;&quot;&quot;
+    def __init__(self, model, max_batch_size=32, max_latency_ms=50):
+        self.model = model
+        self.max_batch_size = max_batch_size
+        self.max_latency_ms = max_latency_ms / 1000  # Convert to seconds
+        
+        self.request_queue = deque()
+        self.running = False
+    
+    async def predict(self, input_data):
+        &quot;&quot;&quot;Async prediction request&quot;&quot;&quot;
+        # Create future for this request
+        future = asyncio.Future()
+        
+        # Add to queue with timestamp
+        self.request_queue.append({
+            &#039;input&#039;: input_data,
+            &#039;future&#039;: future,
+            &#039;timestamp&#039;: time.time()
+        })
+        
+        # Wait for result
+        return await future
+    
+    async def batch_processor(self):
+        &quot;&quot;&quot;Process requests in batches&quot;&quot;&quot;
+        while self.running:
+            # Wait for requests
+            while len(self.request_queue) == 0:
+                await asyncio.sleep(0.001)
+            
+            # Collect batch
+            batch = []
+            futures = []
+            
+            # Batch until max_batch_size or max_latency
+            start_time = time.time()
+            
+            while len(batch) &lt; self.max_batch_size and self.request_queue:
+                request = self.request_queue.popleft()
+                batch.append(request[&#039;input&#039;])
+                futures.append(request[&#039;future&#039;])
+                
+                # Check latency deadline
+                oldest_request_age = time.time() - request[&#039;timestamp&#039;]
+                if oldest_request_age &gt; self.max_latency_ms:
+                    break
+            
+            if batch:
+                # Run batch inference
+                batch_tensor = torch.stack(batch)
+                
+                with torch.no_grad():
+                    outputs = self.model(batch_tensor)
+                
+                # Distribute results
+                for future, output in zip(futures, outputs):
+                    future.set_result(output)
+                
+                batch_time = (time.time() - start_time) * 1000
+                print(f&quot;Processed batch of {len(batch)}, latency: {batch_time:.2f}ms&quot;)
+    
+    def start(self):
+        &quot;&quot;&quot;Start batch processing&quot;&quot;&quot;
+        self.running = True
+        asyncio.create_task(self.batch_processor())
+    
+    def stop(self):
+        &quot;&quot;&quot;Stop batch processing&quot;&quot;&quot;
+        self.running = False
+
+# Usage
+async def main():
+    model = models.resnet18().eval()
+    server = BatchInferenceServer(model, max_batch_size=32, max_latency_ms=50)
+    server.start()
+    
+    # Simulate concurrent requests
+    tasks = []
+    for i in range(100):
+        input_tensor = torch.randn(3, 224, 224)
+        task = server.predict(input_tensor)
+        tasks.append(task)
+    
+    results = await asyncio.gather(*tasks)
+    print(f&quot;Processed {len(results)} requests&quot;)
+    
+    server.stop()
+
+# asyncio.run(main())
+```
+
+## A/B Testing and Canary Deployment
+
+Safely roll out new models:
+
+```python
+import random
+
+class ModelRouter:
+    &quot;&quot;&quot;Route traffic between model versions&quot;&quot;&quot;
+    def __init__(self):
+        self.models = {}  # version -&gt; model
+        self.traffic_split = {}  # version -&gt; percentage
+        self.metrics = {}  # version -&gt; {latency, accuracy, errors}
+    
+    def register_model(self, version: str, model, traffic_pct: float = 0.0):
+        &quot;&quot;&quot;Register new model version&quot;&quot;&quot;
+        self.models[version] = model
+        self.traffic_split[version] = traffic_pct
+        self.metrics[version] = {
+            &#039;requests&#039;: 0,
+            &#039;latency_ms&#039;: [],
+            &#039;errors&#039;: 0
+        }
+        
+        print(f&quot;Registered model {version} with {traffic_pct}% traffic&quot;)
+    
+    def predict(self, input_data):
+        &quot;&quot;&quot;Route request to model version based on split&quot;&quot;&quot;
+        # Select model version
+        rand = random.random() * 100
+        cumulative = 0
+        selected_version = None
+        
+        for version, pct in self.traffic_split.items():
+            cumulative += pct
+            if rand &lt; cumulative:
+                selected_version = version
+                break
+        
+        if selected_version is None:
+            selected_version = list(self.models.keys())[0]
+        
+        # Run inference
+        model = self.models[selected_version]
+        
+        start = time.time()
+        try:
+            result = model(input_data)
+            latency = (time.time() - start) * 1000
+            
+            # Record metrics
+            self.metrics[selected_version][&#039;requests&#039;] += 1
+            self.metrics[selected_version][&#039;latency_ms&#039;].append(latency)
+            
+            return result, selected_version
+        
+        except Exception as e:
+            self.metrics[selected_version][&#039;errors&#039;] += 1
+            raise e
+    
+    def get_metrics(self):
+        &quot;&quot;&quot;Compare model versions&quot;&quot;&quot;
+        for version, metrics in self.metrics.items():
+            if metrics[&#039;requests&#039;] &gt; 0:
+                avg_latency = sum(metrics[&#039;latency_ms&#039;]) / len(metrics[&#039;latency_ms&#039;])
+                error_rate = metrics[&#039;errors&#039;] / metrics[&#039;requests&#039;]
+                
+                print(f&quot;\n{version}:&quot;)
+                print(f&quot;  Requests: {metrics[&#039;requests&#039;]}&quot;)
+                print(f&quot;  Avg latency: {avg_latency:.2f}ms&quot;)
+                print(f&quot;  Error rate: {error_rate:.2%}&quot;)
+    
+    def canary_rollout(self, new_version: str, steps=5):
+        &quot;&quot;&quot;Gradually increase traffic to new version&quot;&quot;&quot;
+        old_version = [v for v in self.models.keys() if v != new_version][0]
+        
+        for step in range(1, steps + 1):
+            new_pct = (step / steps) * 100
+            old_pct = 100 - new_pct
+            
+            self.traffic_split[new_version] = new_pct
+            self.traffic_split[old_version] = old_pct
+            
+            print(f&quot;Step {step}/{steps}: {old_version}={old_pct}%, {new_version}={new_pct}%&quot;)
+            
+            # In production: monitor metrics, rollback if issues detected
+            # if error_rate_increase &gt; threshold:
+            #     self.rollback(new_version)
+
+# Example
+router = ModelRouter()
+router.register_model(&quot;v1.0&quot;, model_v1, traffic_pct=100)
+router.register_model(&quot;v1.1&quot;, model_v2, traffic_pct=0)
+
+# Canary deployment: gradually shift traffic
+router.canary_rollout(&quot;v1.1&quot;, steps=5)
+```
+
+## Warnings ⚠️
+
+**Cascading Failures**: When one model service fails, traffic redirects to healthy instances, potentially overloading them. The 2033 &quot;Inference Cascade&quot; took down global recommendation systems.
+
+**Model Staleness**: Production models degrade as data distributions shift. Monitor performance continuously.
+
+**Resource Exhaustion**: Memory leaks in inference servers accumulate slowly. The 2035 &quot;OOM Pandemic&quot; crashed services worldwide after weeks of operation.
+
+**Related Chronicles**: [The Inference Apocalypse (2033)](/docs/articles/inference-apocalypse-2033) - Cascading ML service failures
+
+**Tools**: TorchServe, TensorFlow Serving, NVIDIA Triton, BentoML, Seldon Core
+
+**Research**: Model compression, neural architecture search for efficient models
+</pre>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+name: pretext-app
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-pretext:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.7.1
+
+      - name: Install root dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install pretext-app dependencies
+        run: pnpm --dir pretext-app install --frozen-lockfile=false
+
+      - name: Generate offline content payloads
+        run: pnpm run pretext:content
+
+      - name: Build pretext app
+        run: pnpm run pretext:build
+
+      - name: Enforce bundle budget
+        run: pnpm run pretext:check:bundle

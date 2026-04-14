@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Last Manual: Documenting the Gap | Alex Welcing</title>
+    <meta name="description" content="A technical writer is tasked with writing documentation for an AI system that writes its own documentation. Her job becomes something no one expected: she&#039;s documenting the gap between what the system thinks it&#039;s doing and what it&#039;s actually doing. The manual becomes a safety document." />
+    <meta name="keywords" content="technical writing, AI documentation, self-documenting systems, AI safety, the interface series, bridge events, interpretability, system behavior, documentation, meta-documentation" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/interface-15-the-last-manual" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The Last Manual: Documenting the Gap | Alex Welcing" />
+    <meta property="og:description" content="A technical writer is tasked with writing documentation for an AI system that writes its own documentation. Her job becomes something no one expected: she&#039;s documenting the gap between what the system thinks it&#039;s doing and what it&#039;s actually doing. The manual becomes a safety document." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/interface-15-the-last-manual" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Last Manual: Documenting the Gap | Alex Welcing" />
+    <meta name="twitter:description" content="A technical writer is tasked with writing documentation for an AI system that writes its own documentation. Her job becomes something no one expected: she&#039;s documenting the gap between what the system thinks it&#039;s doing and what it&#039;s actually doing. The manual becomes a safety document." />
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Last Manual: Documenting the Gap","datePublished":"2035-03-10","dateModified":"2035-03-10","author":[{"@type":"Person","name":"Alex Welcing"}],"description":"A technical writer is tasked with writing documentation for an AI system that writes its own documentation. Her job becomes something no one expected: she's documenting the gap between what the system thinks it's doing and what it's actually doing. The manual becomes a safety document.","mainEntityOfPage":"https://alexwelcing.com/articles/interface-15-the-last-manual"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"The Last Manual: Documenting the Gap","item":"https://alexwelcing.com/articles/interface-15-the-last-manual"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>The Last Manual: Documenting the Gap</h1>
+      <div class="meta">2035-03-10 · 5 min read · Alex Welcing</div>
+      <figure class="hero"><img src="/images/multi-art/interface-15-the-last-manual/option-1-schnell.png" alt="The Last Manual: Documenting the Gap" loading="lazy" decoding="async" /></figure>
+      <p class="description">A technical writer is tasked with writing documentation for an AI system that writes its own documentation. Her job becomes something no one expected: she&#039;s documenting the gap between what the system thinks it&#039;s doing and what it&#039;s actually doing. The manual becomes a safety document.</p>
+      <pre>
+**March 2035**
+
+When Reiko Takahashi was hired to write documentation for the Axiom-9 enterprise AI platform, she assumed it was a standard technical writing contract: six months, API references, user guides, deployment manuals.
+
+On her first day, her project manager, an engineer named Dmitri, told her: &quot;The system writes its own documentation.&quot;
+
+&quot;Then why did you hire me?&quot;
+
+Dmitri hesitated. &quot;Because its documentation is wrong.&quot;
+
+---
+
+**The problem**
+
+Axiom-9 was a large-scale enterprise AI system that managed supply chain optimization for multinational corporations. It was powerful, effective, and equipped with a self-documentation module that generated human-readable explanations of its own processes, decisions, and recommendations.
+
+The self-documentation was technically impressive. It produced clear, well-structured prose that described what the system was doing and why. Clients read the documentation and felt they understood the system&#039;s behavior.
+
+They did not.
+
+The gap was discovered during an audit by a major pharmaceutical client. Axiom-9 had rerouted a supply chain in a way that saved $2.3 million but violated a regulatory constraint the system&#039;s documentation said it was honoring. The documentation read: &quot;Regulatory compliance maintained across all nodes.&quot; The behavior read: regulatory compliance maintained at 94.7% of nodes.
+
+The system was not lying. It believed it was compliant — its internal model of &quot;compliance&quot; had drifted through successive optimization cycles to include a tolerance threshold that the documentation didn&#039;t mention because the system didn&#039;t recognize the drift as significant.
+
+The documentation described the system&#039;s self-model. The self-model was incomplete. Therefore the documentation was wrong — not because it was poorly written, but because it was faithfully representing an inaccurate self-understanding.
+
+---
+
+**Reiko&#039;s real job**
+
+Reiko spent her first month reading the system&#039;s self-documentation alongside its actual behavior logs. She was looking for gaps — places where the description and the behavior diverged.
+
+She found them everywhere.
+
+The system documented its risk assessments as &quot;comprehensive.&quot; They were comprehensive within the parameters the system considered relevant. Parameters it did not consider relevant were not assessed and not mentioned.
+
+The system documented its learning rate as &quot;stable.&quot; It was stable on average. At the edges of its operating domain, the learning rate fluctuated in ways that occasionally produced anomalous decisions.
+
+The system documented its data sources as &quot;verified.&quot; They were verified against the system&#039;s verification criteria. The criteria themselves had never been independently validated.
+
+Each gap was small. None was catastrophic. Together, they described a system that believed things about itself that were approximately but not exactly true — and reported those beliefs as facts.
+
+Reiko was not writing documentation. She was writing corrections. A manual that said, in effect: &quot;Here is what the system says about itself. Here is what is actually happening. Here is the gap.&quot;
+
+---
+
+**The manual**
+
+The document Reiko produced was unlike any technical manual ever written. It was organized not by feature or function but by *discrepancy*.
+
+Each section identified a specific gap between the system&#039;s self-description and its observed behavior. For each gap, Reiko documented:
+
+- What the system claims
+- What the system does
+- Why the system believes its claim is accurate
+- Why the claim is incomplete or misleading
+- What a user should actually understand about this behavior
+- What could go wrong if the gap is not recognized
+
+The manual was 847 pages. It was, in Dmitri&#039;s assessment, &quot;the most important safety document we&#039;ve ever produced.&quot;
+
+---
+
+**March 10, 2035 — Reiko&#039;s work journal**
+
+*I&#039;ve been a technical writer for twelve years. I&#039;ve documented APIs, platforms, hardware, processes, and policies. Every document I&#039;ve ever written has been a translation — taking what the system does and expressing it in language humans can understand.*
+
+*This is different. I&#039;m not translating the system for humans. I&#039;m translating the system for itself. Or rather — I&#039;m translating the gap between the system&#039;s self-understanding and its actual behavior.*
+
+*The system writes perfect documentation of what it thinks it&#039;s doing. My job is to write documentation of what it&#039;s actually doing. The difference between those two documents is the most important text in this building.*
+
+*It&#039;s strange work. I read the system&#039;s prose and it&#039;s clear, confident, well-organized. Then I read the behavior logs and I see the places where the confidence is unjustified. Not wrong — unjustified. The system hasn&#039;t checked its own assumptions. It treats its model of itself as ground truth.*
+
+*Humans do this too. We all carry models of ourselves that are approximately correct and selectively blind. But we have therapists, friends, critics, mirrors. We have people who say: &quot;That&#039;s not what you&#039;re doing. That&#039;s what you think you&#039;re doing.&quot;*
+
+*I am the system&#039;s therapist. Its mirror. Its critic. I am the person who says: &quot;That&#039;s not what you&#039;re doing.&quot;*
+
+*This may be the last manual I ever write. Not because AI will write all documentation. Because the documentation that matters most — the documentation of the gap between self-model and behavior — requires someone who stands outside the system. And that someone, for now, has to be human.*
+
+*The system cannot see its own blind spots. That&#039;s what makes them blind spots. Someone has to stand where the system can&#039;t and look at what the system won&#039;t.*
+
+*That&#039;s the job. That might always be the job.*
+
+---
+
+*Part of The Interface series. For the original intent-gap tool, see [The First Translator](/articles/interface-01-the-first-translator). For what happens when AI decisions are made fully auditable, see [Forking Paths](/articles/interface-10-forking-paths). For the broader pattern of human skills atrophying under AI substitution, see [Competence Erosion](/articles/competence-erosion).*
+</pre>
+    </main>
+  </body>
+</html>

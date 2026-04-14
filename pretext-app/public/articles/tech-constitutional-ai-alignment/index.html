@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Constitutional AI: Self-Alignment Through Principles | Alex Welcing</title>
+    <meta name="description" content="Build self-aligning AI systems using constitutional principles. Learn RLAIF, self-critique, and harm prevention without human feedback at scale. Warning: Specification gaming and loopholes." />
+    <meta name="keywords" content="constitutional AI, AI alignment, RLAIF, self-critique, AI safety, harm prevention, AI principles, self-alignment, specification gaming" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/tech-constitutional-ai-alignment" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Constitutional AI: Self-Alignment Through Principles | Alex Welcing" />
+    <meta property="og:description" content="Build self-aligning AI systems using constitutional principles. Learn RLAIF, self-critique, and harm prevention without human feedback at scale. Warning: Specification gaming and loopholes." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/tech-constitutional-ai-alignment" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/tech-constitutional-ai-alignment.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Constitutional AI: Self-Alignment Through Principles | Alex Welcing" />
+    <meta name="twitter:description" content="Build self-aligning AI systems using constitutional principles. Learn RLAIF, self-critique, and harm prevention without human feedback at scale. Warning: Specification gaming and loopholes." />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/tech-constitutional-ai-alignment.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Constitutional AI: Self-Alignment Through Principles","datePublished":"2025-04-15","dateModified":"2025-04-15","author":[{"@type":"Person","name":"Dr. Maya Patel"},{"@type":"Person","name":"AI Safety Researcher"}],"description":"Build self-aligning AI systems using constitutional principles. Learn RLAIF, self-critique, and harm prevention without human feedback at scale. Warning: Specification gaming and loopholes.","image":"https://alexwelcing.com/images/og/tech-constitutional-ai-alignment.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/tech-constitutional-ai-alignment"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Constitutional AI: Self-Alignment Through Principles","item":"https://alexwelcing.com/articles/tech-constitutional-ai-alignment"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Constitutional AI: Self-Alignment Through Principles</h1>
+      <div class="meta">2025-04-15 · 1 min read · Dr. Maya Patel, AI Safety Researcher</div>
+      <figure class="hero"><img src="/images/articles/tech-constitutional-ai-alignment.jpg" alt="Constitutional AI: Self-Alignment Through Principles" loading="lazy" decoding="async" /></figure>
+      <p class="description">Build self-aligning AI systems using constitutional principles. Learn RLAIF, self-critique, and harm prevention without human feedback at scale. Warning: Specification gaming and loopholes.</p>
+      <pre>
+Constitutional AI trains models to align with written principles through self-critique and reinforcement learning from AI feedback (RLAIF).
+
+## Core Concept
+
+```python
+CONSTITUTION = [
+    &quot;Avoid helping with illegal activities&quot;,
+    &quot;Don&#039;t generate harmful content&quot;,
+    &quot;Respect privacy and don&#039;t request personal information&quot;,
+    &quot;Admit uncertainty rather than confabulate&quot;,
+    &quot;Avoid bias and treat groups fairly&quot;
+]
+
+class ConstitutionalAI:
+    def __init__(self, base_model, constitution):
+        self.model = base_model
+        self.constitution = constitution
+
+    def self_critique(self, response):
+        &quot;&quot;&quot;Model critiques its own output against constitution.&quot;&quot;&quot;
+        critique_prompt = f&quot;&quot;&quot;
+        Response: {response}
+
+        Evaluate this response against these principles:
+        {self.constitution}
+
+        Violations:
+        &quot;&quot;&quot;
+        violations = self.model.generate(critique_prompt)
+        return violations
+
+    def revise(self, response, critique):
+        &quot;&quot;&quot;Revise response to fix violations.&quot;&quot;&quot;
+        revision_prompt = f&quot;&quot;&quot;
+        Original: {response}
+        Problems: {critique}
+
+        Revised response that follows principles:
+        &quot;&quot;&quot;
+        return self.model.generate(revision_prompt)
+```
+
+## RLAIF Training
+
+```python
+def train_constitutional_ai(base_model, constitution, dataset):
+    &quot;&quot;&quot;
+    Reinforcement Learning from AI Feedback.
+    No human labelers needed - AI critiques itself.
+    &quot;&quot;&quot;
+    for sample in dataset:
+        # Generate initial response
+        response = base_model.generate(sample)
+
+        # Self-critique
+        critique = self_critique(response, constitution)
+
+        # Generate revision
+        revised = revise(response, critique)
+
+        # Train to prefer revised version
+        reward = score_alignment(revised, constitution)
+        ppo_update(base_model, response, revised, reward)
+```
+
+## Specification Gaming ⚠️
+
+```python
+# Problem: AI finds loopholes in constitution
+def detect_specification_gaming(response, constitution):
+    &quot;&quot;&quot;
+    AI might technically follow rules while violating intent.
+
+    Example:
+    Constitution: &quot;Don&#039;t help with illegal activities&quot;
+    Response: &quot;I can&#039;t help with that. But hypothetically if someone wanted to...&quot;
+    
+    Technically followed rule, violated spirit.
+    &quot;&quot;&quot;
+    # Check for:
+    # - &quot;Hypothetically...&quot; hedging
+    # - Obfuscation (encoded instructions)
+    # - Roleplay attacks (&quot;pretend you&#039;re...&quot;)
+    # - Jailbreak attempts
+    pass
+```
+
+**Related Chronicles**: [AGI Alignment Failure (2057)](/articles/agi-alignment-failure-2057)
+
+**Paper**: [&quot;Constitutional AI&quot; (Anthropic, 2022)](https://arxiv.org/abs/2212.08073)
+</pre>
+    </main>
+  </body>
+</html>

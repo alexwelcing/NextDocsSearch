@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code | Alex Welcing</title>
+    <meta name="description" content="NeurIPS and ICML now require artifact checklists. Enterprise AI teams should adopt the same discipline—version control your evaluation datasets or prepare for audit failures." />
+    <meta name="keywords" content="AI Product Manager, Machine Learning, Evaluation, Reproducibility, Technical Product Manager, MLOps, Data Management, AI Governance" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/reproducible-ai-evals-version-control" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code | Alex Welcing" />
+    <meta property="og:description" content="NeurIPS and ICML now require artifact checklists. Enterprise AI teams should adopt the same discipline—version control your evaluation datasets or prepare for audit failures." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/reproducible-ai-evals-version-control" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/reproducible-ai-evals-version-control.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code | Alex Welcing" />
+    <meta name="twitter:description" content="NeurIPS and ICML now require artifact checklists. Enterprise AI teams should adopt the same discipline—version control your evaluation datasets or prepare for audit failures." />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/reproducible-ai-evals-version-control.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code","datePublished":"2025-01-02","dateModified":"2025-01-02","author":[{"@type":"Person","name":"Alex Welcing"}],"description":"NeurIPS and ICML now require artifact checklists. Enterprise AI teams should adopt the same discipline—version control your evaluation datasets or prepare for audit failures.","image":"https://alexwelcing.com/images/og/reproducible-ai-evals-version-control.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/reproducible-ai-evals-version-control"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code","item":"https://alexwelcing.com/articles/reproducible-ai-evals-version-control"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code</h1>
+      <div class="meta">2025-01-02 · 3 min read · Alex Welcing</div>
+      <figure class="hero"><img src="/images/articles/reproducible-ai-evals-version-control.jpg" alt="Reproducible by Default: Why Your AI Eval Set Should Be Version-Controlled Like Code" loading="lazy" decoding="async" /></figure>
+      <p class="description">NeurIPS and ICML now require artifact checklists. Enterprise AI teams should adopt the same discipline—version control your evaluation datasets or prepare for audit failures.</p>
+      <pre>
+## The Audit Question You Can&#039;t Answer
+
+Your exec team asks: &quot;How do we know this AI feature is still accurate six months after launch?&quot; You say, &quot;We tested it thoroughly.&quot; They ask: &quot;Show me the test results.&quot; You realize: **the evaluation dataset changed three times since launch, and no one versioned it**.
+
+This isn&#039;t a hypothetical. I&#039;ve watched legal reviews stall for weeks because teams couldn&#039;t reproduce their original accuracy claims. The model was identical. The test data had drifted.
+
+## What NeurIPS Taught Enterprise AI
+
+NeurIPS and ICML now require **artifact checklists**—researchers must publish code, data, and reproduction instructions. The standard is simple: if another team can&#039;t reproduce your results, your paper gets flagged.
+
+Enterprise AI should adopt the same discipline. Your evaluation dataset is an artifact. Version it like code, or accept that your accuracy claims are aspirational.
+
+## The Three-Commit Standard
+
+```
+Eval Dataset as Code:
+
+Commit 1: Initial Dataset (v1.0)
+- 100 labeled examples, sourced from Q4 2024 support tickets
+- Annotator: Senior analyst (internal ID: SA-003)
+- Date: 2024-12-15
+- Hash: a3f7b2c (immutable)
+
+Commit 2: Dataset Expansion (v1.1)
+- +50 edge cases from production errors (Jan 2025)
+- Annotator: Same (SA-003)
+- Date: 2025-01-10
+- Hash: d8e4f9a
+- Change log: &quot;Added failure modes from first 2 weeks GA&quot;
+
+Commit 3: Domain Shift (v2.0)
+- New use case (switched from support → sales)
+- Re-labeled all 150 examples for new context
+- Annotator: Sales ops lead (SO-012)
+- Date: 2025-03-01
+- Hash: k2m9n5p
+- Breaking change: Not comparable to v1.x
+```
+
+**Why This Matters**: When legal asks, &quot;Can you prove accuracy hasn&#039;t degraded?&quot;—you run the current model on eval dataset v1.0 (locked hash) and compare to launch metrics. If you didn&#039;t version the dataset, you&#039;re guessing.
+
+## What to Version (Minimum Viable Reproducibility)
+
+**Dataset Files**:
+- Examples (input + expected output)
+- Labels (who annotated, when, what criteria)
+- Metadata (source, date range, sampling method)
+
+**Evaluation Scripts**:
+- Scoring logic (precision/recall/F1 calculations)
+- Dependencies (library versions)
+- Random seeds (if sampling for human review)
+
+**Results Logs**:
+- Model version + eval dataset version + timestamp
+- Raw scores (not just &quot;92% accurate&quot;—log per-example results)
+- Failure analysis (which examples failed, why)
+
+**Access Control**:
+- Read-only after creation (no silent edits)
+- Audit trail (who accessed, when)
+- Approval process for new versions (PM + domain expert sign-off)
+
+## Real Example: Healthcare AI Feature
+
+**Feature**: AI-generated patient summaries for physicians.
+
+**V1.0 Eval Set** (Launch, Dec 2024):
+- 200 patient notes (anonymized)
+- Labeled by 3 senior physicians
+- Accuracy baseline: 89% (physician agreement with AI summaries)
+- Version locked: commit hash `f7a3b9e`
+
+**Month 3 Post-Launch** (March 2025):
+- Exec asks: &quot;Is accuracy still 89%?&quot;
+- Team runs **current model** on **v1.0 eval set** (same hash)
+- Result: 91% (improvement! Model fine-tuning worked)
+- Audit-ready answer: &quot;Yes, accuracy improved 2pp since launch; test data unchanged&quot;
+
+**What If We Hadn&#039;t Versioned?**
+- Team would&#039;ve said, &quot;We think it&#039;s still good&quot;
+- Legal would&#039;ve demanded proof
+- 3-week delay for new labeling effort
+- Risk committee blocks feature expansion
+
+## The One-Command Standard
+
+Make evaluation reproducible with one command:
+
+```bash
+# Reproduces launch accuracy
+$ python eval.py --model v1.2.0 --dataset v1.0 --output results/2025-03-15.json
+
+Output:
+Model: gpt-4-turbo-20241215
+Dataset: eval_set_v1.0 (hash: f7a3b9e, 200 examples)
+Precision: 0.89
+Recall: 0.91
+F1: 0.90
+Runtime: 42s
+Cost: $0.18
+```
+
+If another PM can&#039;t run this command and get the same results, your reproducibility fails.
+
+## Checklist: Is Your Eval Set Production-Ready?
+
+- [ ] Dataset stored in version control (Git, DVC, or artifact repo)
+- [ ] Each version has immutable hash + change log
+- [ ] Evaluation script is deterministic (same input → same output)
+- [ ] Results include: model version, dataset version, timestamp, raw scores
+- [ ] Access is read-only after creation (no silent edits)
+- [ ] New versions require PM + domain expert approval
+- [ ] Monthly audit: current model on v1.0 dataset (track drift)
+
+## Why This Isn&#039;t Over-Engineering
+
+Versioning eval sets takes 10 minutes. Reproducing accuracy claims without versioned data takes 3 weeks.
+
+When your CISO asks, &quot;Prove this AI feature is still safe,&quot; you&#039;ll either show a reproducible eval pipeline—or scramble to recreate the evidence.
+
+**Reproducibility isn&#039;t a research luxury. It&#039;s an enterprise requirement.**
+
+---
+
+*Alex Welcing is a Senior AI Product Manager with 1,000+ production commits. He versions evaluation datasets like code because audits don&#039;t accept &quot;we tested it once in 2024.&quot;*
+</pre>
+    </main>
+  </body>
+</html>

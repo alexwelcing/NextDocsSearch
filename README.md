@@ -92,3 +92,22 @@ Generated data lands in `lib/generated/*.json` and is consumed at runtime by API
 | `pnpm type-check` | TypeScript check (`tsc --noEmit`) |
 | `pnpm validate` | Lint + type-check combined |
 | `pnpm format` | Prettier formatting |
+
+## Offline Rewrite (PreText + Vite + Bun)
+
+A parallel rewrite lives in `/pretext-app` and is focused on article discovery/reading only.
+
+### Commands
+
+```bash
+pnpm run pretext:content      # generate offline article payloads + sitemap/robots
+pnpm run pretext:dev          # regenerate payloads and run Vite dev server
+pnpm run pretext:build        # generate payloads and build static app
+pnpm run pretext:check:bundle # enforce JS/CSS bundle budget
+```
+
+### Offline behavior
+
+- Text content is generated into cacheable JSON chunks in `pretext-app/public/data/articles/*.json`
+- Service worker precaches shell + metadata and caches text/media on demand
+- After ~2 seconds in-app, the client prefetches all text chunks in the background

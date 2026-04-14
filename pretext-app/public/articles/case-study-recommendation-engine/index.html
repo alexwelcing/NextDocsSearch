@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: Scaling an AI Recommendation Engine to 100M Users | Alex Welcing</title>
+    <meta name="description" content="A deep dive into the architecture, challenges, and results of building a high-scale recommendation system." />
+    <meta name="keywords" content="Recommendation Engine, Case Study, Scalability, AI Architecture, Personalization, Machine Learning" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/case-study-recommendation-engine" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Case Study: Scaling an AI Recommendation Engine to 100M Users | Alex Welcing" />
+    <meta property="og:description" content="A deep dive into the architecture, challenges, and results of building a high-scale recommendation system." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/case-study-recommendation-engine" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/case-study-recommendation-engine.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Case Study: Scaling an AI Recommendation Engine to 100M Users | Alex Welcing" />
+    <meta name="twitter:description" content="A deep dive into the architecture, challenges, and results of building a high-scale recommendation system." />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/case-study-recommendation-engine.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Case Study: Scaling an AI Recommendation Engine to 100M Users","datePublished":"2025-12-17","dateModified":"2025-12-17","author":[{"@type":"Person","name":"Alex Welcing"}],"description":"A deep dive into the architecture, challenges, and results of building a high-scale recommendation system.","image":"https://alexwelcing.com/images/og/case-study-recommendation-engine.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/case-study-recommendation-engine"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Case Study: Scaling an AI Recommendation Engine to 100M Users","item":"https://alexwelcing.com/articles/case-study-recommendation-engine"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Case Study: Scaling an AI Recommendation Engine to 100M Users</h1>
+      <div class="meta">2025-12-17 · 3 min read · Alex Welcing</div>
+      <figure class="hero"><img src="/images/articles/case-study-recommendation-engine.jpg" alt="Case Study: Scaling an AI Recommendation Engine to 100M Users" loading="lazy" decoding="async" /></figure>
+      <p class="description">A deep dive into the architecture, challenges, and results of building a high-scale recommendation system.</p>
+      <pre>
+Personalization is no longer a &quot;nice to have&quot;—it is the primary driver of retention for modern digital platforms. This case study details the journey of re-architecting a legacy recommendation system for a media platform with 100 million monthly active users (MAU), moving from simple heuristics to a state-of-the-art deep learning pipeline.
+
+## Executive Summary
+
+*   **The Challenge:** A legacy rule-based system was failing to scale, resulting in stagnant engagement metrics and high churn among new users.
+*   **The Solution:** We built a hybrid &quot;Two-Tower&quot; recommendation architecture capable of processing billions of events in real-time.
+*   **The Outcome:** 42% increase in daily engagement, 15% boost in Day-30 retention, and a 35% lift in Click-Through Rate (CTR).
+
+## The Problem Space
+
+Our legacy system relied on &quot;Collaborative Filtering&quot; (Matrix Factorization) calculated once every 24 hours.
+1.  **Staleness:** If a user started watching a new genre in the morning, their recommendations wouldn&#039;t update until the next day.
+2.  **Scalability:** The matrix factorization job was taking 18 hours to run, threatening to exceed the 24-hour window.
+3.  **Latency:** The serving layer struggled to respond under 200ms during peak traffic.
+
+**Goal:** Build a real-time system with &amp;lt;50ms latency at P99.
+
+## Solution Architecture
+
+We adopted a classic **Retrieval &amp; Ranking** funnel, common in high-scale systems like YouTube and TikTok.
+
+### 1. Data Pipeline (The Nervous System)
+We moved from batch processing to streaming.
+*   **Ingestion:** Apache Kafka captures clickstream data (clicks, likes, dwell time).
+*   **Processing:** Apache Flink aggregates features in real-time (e.g., &quot;User X just watched 3 sci-fi videos in the last 10 minutes&quot;).
+*   **Feature Store:** Redis stores these real-time user features for low-latency access.
+
+### 2. Candidate Generation (Retrieval)
+The goal: Narrow down 10 million items to 500 candidates.
+*   **Architecture:** A &quot;Two-Tower&quot; Neural Network. One tower encodes User features, the other encodes Item features. The dot product of these vectors represents affinity.
+*   **Serving:** We used **Milvus** (a vector database) for Approximate Nearest Neighbor (ANN) search. This allowed us to retrieve relevant items in &amp;lt;10ms.
+
+### 3. Ranking Layer (Precision)
+The goal: Sort the 500 candidates to find the top 10 to show the user.
+*   **Model:** A Deep Learning Recommendation Model (DLRM) that takes into account complex interactions (e.g., &quot;User likes Sci-Fi, but only on weekends&quot;).
+*   **Optimization:** We used **NVIDIA Triton Inference Server** to serve the model, utilizing quantization (FP16) to speed up inference without losing accuracy.
+
+## Key Challenges &amp; Solutions
+
+### The Cold Start Problem
+New users have no history. Our collaborative filtering failed them.
+*   **Solution:** We implemented a **Multi-Armed Bandit** algorithm for new users. It explores different popular categories (Exploration) while slowly converging on what the user clicks (Exploitation). This improved new user activation by 20%.
+
+### Bias &amp; Echo Chambers
+The model became *too* good at giving users what they wanted, trapping them in feedback loops.
+*   **Solution:** We added a **Diversity Re-ranking** layer. If the top 10 results were all from the same category, the system would force-inject highly-rated items from adjacent categories to encourage discovery.
+
+## Results &amp; Impact
+
+The migration took 9 months, but the ROI was immediate.
+
+*   **Engagement:** Total time spent on platform increased by **42%**.
+*   **Latency:** P99 latency dropped from 200ms to **45ms**, despite the model being 10x more complex.
+*   **Cost:** By optimizing our vector search and using GPU inference, we actually **reduced** infrastructure spend by 30% per request.
+
+## Lessons Learned
+
+1.  **Data &gt; Models:** The biggest gains didn&#039;t come from tweaking the neural network architecture, but from engineering better real-time features (like &quot;time of day&quot; or &quot;device type&quot;).
+2.  **Progressive Delivery:** We didn&#039;t flip a switch. We used &quot;Shadow Deployment&quot; (running the new model in the background) to verify performance, then slowly ramped up traffic via A/B testing.
+3.  **Observability is Key:** Debugging a deep learning model is hard. We invested heavily in monitoring &quot;Feature Drift&quot; to know when our model was becoming stale.
+</pre>
+    </main>
+  </body>
+</html>

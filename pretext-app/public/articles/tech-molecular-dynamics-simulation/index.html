@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Molecular Dynamics Simulation with GROMACS | Alex Welcing</title>
+    <meta name="description" content="Simulate protein folding and molecular interactions at atomic scale. Learn MD setup, force fields, and trajectory analysis. Foundation for molecular assembler design." />
+    <meta name="keywords" content="molecular dynamics, GROMACS, protein folding, MD simulation, force fields, molecular simulation, computational chemistry" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/tech-molecular-dynamics-simulation" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Molecular Dynamics Simulation with GROMACS | Alex Welcing" />
+    <meta property="og:description" content="Simulate protein folding and molecular interactions at atomic scale. Learn MD setup, force fields, and trajectory analysis. Foundation for molecular assembler design." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/tech-molecular-dynamics-simulation" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/tech-molecular-dynamics-simulation.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Molecular Dynamics Simulation with GROMACS | Alex Welcing" />
+    <meta name="twitter:description" content="Simulate protein folding and molecular interactions at atomic scale. Learn MD setup, force fields, and trajectory analysis. Foundation for molecular assembler design." />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/tech-molecular-dynamics-simulation.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Molecular Dynamics Simulation with GROMACS","datePublished":"2024-11-30","dateModified":"2024-11-30","author":[{"@type":"Person","name":"Dr. Robert Kim"},{"@type":"Person","name":"Computational Chemist"}],"description":"Simulate protein folding and molecular interactions at atomic scale. Learn MD setup, force fields, and trajectory analysis. Foundation for molecular assembler design.","image":"https://alexwelcing.com/images/og/tech-molecular-dynamics-simulation.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/tech-molecular-dynamics-simulation"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Molecular Dynamics Simulation with GROMACS","item":"https://alexwelcing.com/articles/tech-molecular-dynamics-simulation"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Molecular Dynamics Simulation with GROMACS</h1>
+      <div class="meta">2024-11-30 · 1 min read · Dr. Robert Kim, Computational Chemist</div>
+      <figure class="hero"><img src="/images/articles/tech-molecular-dynamics-simulation.jpg" alt="Molecular Dynamics Simulation with GROMACS" loading="lazy" decoding="async" /></figure>
+      <p class="description">Simulate protein folding and molecular interactions at atomic scale. Learn MD setup, force fields, and trajectory analysis. Foundation for molecular assembler design.</p>
+      <pre>
+MD simulates atomic-level molecular behavior. Essential for drug design, protein engineering, and eventually molecular assemblers.
+
+## Setup
+
+```bash
+# GROMACS workflow
+# 1. Prepare structure
+gmx pdb2gmx -f protein.pdb -o structure.gro -water tip3p
+
+# 2. Define simulation box
+gmx editconf -f structure.gro -o box.gro -bt cubic -d 1.0
+
+# 3. Solvate
+gmx solvate -cp box.gro -cs spc216.gro -o solvated.gro
+
+# 4. Add ions (neutralize)
+gmx grompp -f ions.mdp -c solvated.gro -o ions.tpr
+gmx genion -s ions.tpr -o system.gro -neutral
+
+# 5. Energy minimization
+gmx grompp -f em.mdp -c system.gro -o em.tpr
+gmx mdrun -v -deffnm em
+
+# 6. Production MD
+gmx grompp -f md.mdp -c em.gro -o md.tpr
+gmx mdrun -v -deffnm md -nt 8  # 8 CPU cores
+```
+
+## Force Fields
+
+```python
+FORCE_FIELDS = {
+    &#039;AMBER&#039;: &#039;Proteins, nucleic acids (biomolecules)&#039;,
+    &#039;CHARMM&#039;: &#039;Proteins, lipids, carbohydrates&#039;,
+    &#039;OPLS&#039;: &#039;Organic molecules, proteins&#039;,
+    &#039;GROMOS&#039;: &#039;Aqueous solutions, proteins&#039;,
+}
+
+# Force field parameters: bonds, angles, dihedrals, non-bonded
+def calculate_forces(atom_positions, force_field):
+    &quot;&quot;&quot;
+    F = -∇V where V = V_bonded + V_non-bonded
+
+    V_bonded = V_bonds + V_angles + V_dihedrals
+    V_non-bonded = V_electrostatic + V_van_der_Waals
+    &quot;&quot;&quot;
+    energy = force_field.calculate_potential(atom_positions)
+    forces = -gradient(energy)
+    return forces
+```
+
+## Analysis
+
+```python
+import MDAnalysis as mda
+
+# Load trajectory
+u = mda.Universe(&#039;system.gro&#039;, &#039;md.xtc&#039;)
+
+# RMSD (structural stability)
+from MDAnalysis.analysis import rms
+R = rms.RMSD(u, select=&#039;backbone&#039;)
+R.run()
+
+# RMSF (flexibility per residue)
+from MDAnalysis.analysis.rms import RMSF
+rmsf = RMSF(u.select_atoms(&#039;backbone&#039;)).run()
+
+# Hydrogen bonds
+from MDAnalysis.analysis.hydrogenbonds import HydrogenBondAnalysis
+hbonds = HydrogenBondAnalysis(u).run()
+```
+
+## Applications
+
+- **Protein folding**: Predict 3D structure from sequence
+- **Drug binding**: Test small molecules against target
+- **Membrane dynamics**: Lipid bilayer behavior
+- **Molecular machines**: Kinesin, myosin motors
+- **⚠️ Molecular assemblers**: Future nanotech design
+
+**Timescales**:
+- Vibrations: femtoseconds
+- Side chain motion: picoseconds
+- Protein folding: microseconds-milliseconds
+- Requires massive compute for biologically relevant timescales
+
+**Related Chronicles**: [Molecular Assembler Grey Goo (2056)](/articles/molecular-assembler-grey-goo-2056)
+
+**Tools**: GROMACS, LAMMPS, NAMD
+</pre>
+    </main>
+  </body>
+</html>

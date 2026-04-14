@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NextDocsSearch Complete Feature Guide + Local Setup Walkthrough | Alex Welcing</title>
+    <meta name="description" content="A complete walkthrough of everything NextDocsSearch includes—from the 3D world and AI search to quests, seasonal effects, and game systems—plus a practical clone-and-setup guide to run the full stack locally." />
+    <meta name="keywords" content="NextDocsSearch, Next.js, React Three Fiber, Supabase, OpenAI embeddings, local development setup, clone repository, 3D documentation platform, AI search, gamification" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/nextdocssearch-complete-feature-and-setup-guide" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="NextDocsSearch Complete Feature Guide + Local Setup Walkthrough | Alex Welcing" />
+    <meta property="og:description" content="A complete walkthrough of everything NextDocsSearch includes—from the 3D world and AI search to quests, seasonal effects, and game systems—plus a practical clone-and-setup guide to run the full stack locally." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/nextdocssearch-complete-feature-and-setup-guide" />
+    <meta property="og:image" content="https://alexwelcing.com/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NextDocsSearch Complete Feature Guide + Local Setup Walkthrough | Alex Welcing" />
+    <meta name="twitter:description" content="A complete walkthrough of everything NextDocsSearch includes—from the 3D world and AI search to quests, seasonal effects, and game systems—plus a practical clone-and-setup guide to run the full stack locally." />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"NextDocsSearch Complete Feature Guide + Local Setup Walkthrough","datePublished":"2026-03-03","dateModified":"2026-03-03","author":[{"@type":"Person","name":"Alex Welcing"}],"description":"A complete walkthrough of everything NextDocsSearch includes—from the 3D world and AI search to quests, seasonal effects, and game systems—plus a practical clone-and-setup guide to run the full stack locally.","image":"https://alexwelcing.com/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png","mainEntityOfPage":"https://alexwelcing.com/articles/nextdocssearch-complete-feature-and-setup-guide"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"NextDocsSearch Complete Feature Guide + Local Setup Walkthrough","item":"https://alexwelcing.com/articles/nextdocssearch-complete-feature-and-setup-guide"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>NextDocsSearch Complete Feature Guide + Local Setup Walkthrough</h1>
+      <div class="meta">2026-03-03 · 5 min read · Alex Welcing</div>
+      <figure class="hero"><img src="/images/multi-art/nextdocssearch-complete-feature-and-setup-guide/selected.png" alt="NextDocsSearch Complete Feature Guide + Local Setup Walkthrough" loading="lazy" decoding="async" /></figure>
+      <p class="description">A complete walkthrough of everything NextDocsSearch includes—from the 3D world and AI search to quests, seasonal effects, and game systems—plus a practical clone-and-setup guide to run the full stack locally.</p>
+      <pre>
+NextDocsSearch is not a typical blog, portfolio, or docs site. It is a hybrid platform that combines:
+
+- immersive 3D worldbuilding,
+- article publishing,
+- AI-assisted discovery,
+- interactive game mechanics,
+- progression systems (quests + achievements), and
+- modern full-stack tooling with Next.js and Supabase.
+
+This guide is designed for two audiences:
+
+1. **People exploring the platform** who want a complete map of what it can do.
+2. **Developers** who want to clone, configure, and run their own local instance.
+
+---
+
+## What NextDocsSearch Includes (Feature Tour)
+
+## 1) Immersive 3D Scene (React-Three-Fiber)
+
+At the core of the experience is a real-time 3D environment rendered with React-Three-Fiber and Three.js. The scene includes:
+
+- camera systems for cinematic intro + gameplay transitions,
+- physically simulated objects,
+- dynamic lighting,
+- environmental effects, and
+- interactive objects like the content tablet.
+
+This makes content exploration feel like entering a world, not scrolling a feed.
+
+## 2) Cinematic Intro + Camera Choreography
+
+The platform starts with a cinematic camera sequence that gradually introduces the space. Once complete, camera control transitions into interactive navigation.
+
+You get:
+
+- an intro flow for onboarding,
+- smooth game-state camera movement,
+- free-look orbit controls outside gameplay.
+
+This helps first-time visitors understand the scene before they begin interacting.
+
+## 3) Dynamic Background Systems
+
+NextDocsSearch supports two visual modes for scene backdrops:
+
+- **Image sphere backgrounds** with smooth crossfades.
+- **Gaussian splat backgrounds** for higher-fidelity volumetric environments.
+
+When available and performant, splats create a photoreal, spatial atmosphere; otherwise, the image system keeps things fast and stable.
+
+## 4) Seasonal Effects Engine
+
+The scene can render themed atmospheric effects based on season selection or auto-detection:
+
+- snow,
+- leaves,
+- petals,
+- fireflies,
+- Halloween webs.
+
+Effects are performance-aware and can be reduced/disabled on constrained devices.
+
+## 5) Interactive Tablet + Terminal Overlay
+
+A floating tablet in the 3D scene opens a terminal-style 2D overlay where users can:
+
+- chat with AI,
+- browse articles,
+- take quizzes,
+- view progression and leaderboard features.
+
+This is a key design decision: 3D for discovery and immersion, 2D for productivity and readability.
+
+## 6) AI-Powered Search and Discovery
+
+The platform uses embedding-based retrieval to support semantic article discovery. Instead of exact keyword matching only, users can ask concept-level questions and surface relevant content.
+
+This is especially useful for large knowledge bases with overlapping terminology.
+
+## 7) MDX Article Publishing Pipeline
+
+Articles are written in MDX and live in the repository. Build-time scripts generate:
+
+- article metadata manifests,
+- image manifests,
+- recommendation indexes,
+- embedding data for retrieval.
+
+This gives authors a Git-native workflow while still enabling dynamic discovery features at runtime.
+
+## 8) Gamified Experience (Sphere Hunter)
+
+The built-in game loop introduces a timed orb-clicking challenge with:
+
+- state transitions (idle, start, countdown, play, game over),
+- spawn logic and scoring,
+- combo mechanics,
+- HUD and leaderboard overlays.
+
+Gamification keeps users engaged and integrates with progress tracking.
+
+## 9) Journey System (Quests + Achievements)
+
+User progression is tracked with quests and unlocks:
+
+- asking first question,
+- reading articles,
+- playing game,
+- improving score milestones.
+
+Features can unlock progressively, and achievements reward deeper platform use.
+
+## 10) Full-Stack Data Layer (Supabase)
+
+Supabase supports key backend workflows such as:
+
+- leaderboard persistence,
+- vector-enabled semantic search storage,
+- storage + migrations for structured project data.
+
+This gives the project production-ready patterns without heavy backend overhead.
+
+---
+
+## How To Clone and Set Up NextDocsSearch Locally
+
+Follow these steps to run your own instance.
+
+## Step 1: Prerequisites
+
+Install or prepare:
+
+- **Node.js 18+**
+- **pnpm 9+**
+- a **Supabase project** (with pgvector enabled)
+- an **OpenAI API key**
+
+## Step 2: Clone the Repository
+
+```bash
+git clone https://github.com/alexwelcing/NextDocsSearch.git
+cd NextDocsSearch
+```
+
+## Step 3: Install Dependencies
+
+```bash
+pnpm install
+```
+
+## Step 4: Configure Environment Variables
+
+Copy the sample env file:
+
+```bash
+cp .env.example .env.local
+```
+
+Then populate these values:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `ADMIN_API_KEY`
+- `OPENAI_KEY`
+- `NEXT_PUBLIC_SITE_URL`
+
+## Step 5: Prepare Supabase (Recommended)
+
+If you are running with a fresh Supabase project:
+
+1. Apply provided SQL migrations from `supabase/migrations`.
+2. Ensure vector features are available for embeddings.
+3. Confirm leaderboard and article-related tables exist.
+
+## Step 6: Start Development Server
+
+```bash
+pnpm dev
+```
+
+Open your browser to the local URL shown in terminal (typically `http://localhost:3000`).
+
+## Step 7: Validate Core Systems
+
+After startup, sanity-check:
+
+- homepage loads,
+- 3D canvas initializes,
+- tablet opens terminal overlay,
+- articles API returns content,
+- game can start and finish,
+- leaderboard fetches (if backend configured),
+- semantic search routes work (if embeddings/env are configured).
+
+## Step 8: Optional Quality Checks
+
+```bash
+pnpm lint
+pnpm type-check
+pnpm validate
+```
+
+## Step 9: Production Build
+
+```bash
+pnpm build
+```
+
+During build, generation scripts precompute manifests/recommendations/embeddings before final Next.js build output.
+
+---
+
+## Recommended First Customizations for Your Own Fork
+
+If you are adapting this project for your own brand or team:
+
+1. **Swap article corpus** in `pages/docs/articles`.
+2. **Update imagery** (`public/images`, OG assets, backgrounds).
+3. **Tune game constants** (spawn rates, scoring, game duration).
+4. **Adjust journey progression** to match your onboarding funnel.
+5. **Brand navigation + overlays** for your visual identity.
+6. **Rebuild recommendation + embedding indexes** after content updates.
+
+---
+
+## Why This Architecture Is Useful
+
+NextDocsSearch demonstrates a valuable pattern for modern knowledge platforms:
+
+- **Immersive discovery** (3D and interaction design)
+- **Trustworthy content workflows** (MDX + source control)
+- **AI-enhanced retrieval** (semantic search)
+- **Retention loops** (gamification + progression)
+- **Operational readiness** (scripts, manifests, Supabase)
+
+If you want a project that blends product design, graphics, AI, and full-stack engineering, this codebase is an excellent foundation.
+
+---
+
+## Final Notes
+
+If you clone this project for production usage:
+
+- secure your admin endpoints,
+- rotate API keys,
+- add observability and error tracking,
+- define fallback behavior when AI providers are unavailable,
+- and monitor cost/latency for embedding and generation workflows.
+
+That combination will help you keep the immersive experience while making it robust enough for real users.
+</pre>
+    </main>
+  </body>
+</html>

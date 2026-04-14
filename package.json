@@ -52,7 +52,12 @@
     "video:compose": "tsx scripts/test-narrative-video.ts --article",
     "video:compose:dry-run": "tsx scripts/test-narrative-video.ts --dry-run",
     "video:demo": "tsx scripts/demo-narrative-video.ts",
-    "video:demo:all": "npm run test:hf-mount && npm run video:demo"
+    "video:demo:all": "npm run test:hf-mount && npm run video:demo",
+    "pretext:content": "tsx scripts/generate-pretext-content.ts",
+    "pretext:dev": "pnpm run pretext:content && pnpm --dir pretext-app dev",
+    "pretext:build": "pnpm run pretext:content && pnpm --dir pretext-app build",
+    "pretext:preview": "pnpm --dir pretext-app preview",
+    "pretext:check:bundle": "pnpm --dir pretext-app check:bundle"
   },
   "prettier": {
     "trailingComma": "es5",

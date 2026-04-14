@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AAV Gene Therapy Vectors: Design and Production | Alex Welcing</title>
+    <meta name="description" content="Design and produce AAV vectors for gene therapy. Learn capsid engineering, titer optimization, and tropism selection. Warnings about integration risks and immune responses." />
+    <meta name="keywords" content="AAV vectors, gene therapy, viral vectors, capsid engineering, gene delivery, AAV production, gene therapy design" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/tech-gene-therapy-aav-vectors" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="AAV Gene Therapy Vectors: Design and Production | Alex Welcing" />
+    <meta property="og:description" content="Design and produce AAV vectors for gene therapy. Learn capsid engineering, titer optimization, and tropism selection. Warnings about integration risks and immune responses." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/tech-gene-therapy-aav-vectors" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/tech-gene-therapy-aav-vectors.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AAV Gene Therapy Vectors: Design and Production | Alex Welcing" />
+    <meta name="twitter:description" content="Design and produce AAV vectors for gene therapy. Learn capsid engineering, titer optimization, and tropism selection. Warnings about integration risks and immune responses." />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/tech-gene-therapy-aav-vectors.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"AAV Gene Therapy Vectors: Design and Production","datePublished":"2025-06-22","dateModified":"2025-06-22","author":[{"@type":"Person","name":"Dr. Lisa Chen"},{"@type":"Person","name":"Gene Therapy Engineer"}],"description":"Design and produce AAV vectors for gene therapy. Learn capsid engineering, titer optimization, and tropism selection. Warnings about integration risks and immune responses.","image":"https://alexwelcing.com/images/og/tech-gene-therapy-aav-vectors.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/tech-gene-therapy-aav-vectors"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"AAV Gene Therapy Vectors: Design and Production","item":"https://alexwelcing.com/articles/tech-gene-therapy-aav-vectors"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>AAV Gene Therapy Vectors: Design and Production</h1>
+      <div class="meta">2025-06-22 · 1 min read · Dr. Lisa Chen, Gene Therapy Engineer</div>
+      <figure class="hero"><img src="/images/articles/tech-gene-therapy-aav-vectors.jpg" alt="AAV Gene Therapy Vectors: Design and Production" loading="lazy" decoding="async" /></figure>
+      <p class="description">Design and produce AAV vectors for gene therapy. Learn capsid engineering, titer optimization, and tropism selection. Warnings about integration risks and immune responses.</p>
+      <pre>
+Adeno-Associated Virus (AAV) is the leading viral vector for gene therapy. Safe, effective, but with integration and immune response risks.
+
+## Vector Design
+
+```python
+class AAVVector:
+    &quot;&quot;&quot;
+    AAV vector components:
+    - ITRs (Inverted Terminal Repeats): Required for packaging
+    - Transgene: Your therapeutic gene
+    - Promoter: Tissue-specific expression
+    - Capsid: Determines which cells infected
+    &quot;&quot;&quot;
+
+    def __init__(self, transgene, promoter, capsid_serotype):
+        self.transgene = transgene  # e.g., &quot;Factor IX&quot; for hemophilia
+        self.promoter = promoter    # e.g., &quot;liver-specific&quot;
+        self.capsid = capsid_serotype  # AAV8 for liver, AAV9 for CNS
+
+    def design_vector(self):
+        &quot;&quot;&quot;
+        AAV genome (max 4.7 kb):
+        ITR-Promoter-Transgene-PolyA-ITR
+
+        ⚠️ Size limit: Must fit in 4.7kb including promoter + transgene
+        &quot;&quot;&quot;
+        return f&quot;ITR-{self.promoter}-{self.transgene}-PolyA-ITR&quot;
+```
+
+## Capsid Engineering
+
+```python
+# Different serotypes target different tissues
+CAPSID_TROPISM = {
+    &#039;AAV1&#039;: &#039;Muscle, heart&#039;,
+    &#039;AAV2&#039;: &#039;Liver, CNS, retina&#039;,
+    &#039;AAV5&#039;: &#039;CNS, lung&#039;,
+    &#039;AAV8&#039;: &#039;Liver (best for hepatic gene therapy)&#039;,
+    &#039;AAV9&#039;: &#039;CNS, heart (crosses blood-brain barrier)&#039;,
+    &#039;AAVrh10&#039;: &#039;Broad tropism&#039;,
+}
+
+def select_capsid(target_tissue):
+    &quot;&quot;&quot;Choose optimal AAV serotype for tissue.&quot;&quot;&quot;
+    if target_tissue == &#039;liver&#039;:
+        return &#039;AAV8&#039;  # 10-100x better liver transduction
+    elif target_tissue == &#039;brain&#039;:
+        return &#039;AAV9&#039;  # Crosses BBB after systemic injection
+    elif target_tissue == &#039;muscle&#039;:
+        return &#039;AAV1&#039;
+```
+
+## Production &amp; Titer
+
+```python
+class AAVProduction:
+    def produce_aav(self, vector_plasmid, helper_plasmids):
+        &quot;&quot;&quot;
+        Triple transfection method:
+        1. Vector plasmid (your gene)
+        2. AAV rep/cap plasmid (packaging genes)
+        3. Adenovirus helper plasmid
+        &quot;&quot;&quot;
+        # Transfect HEK293 cells
+        cells = HEK293T()
+        cells.transfect([vector_plasmid, rep_cap, helper])
+
+        # Harvest after 48-72 hours
+        lysate = cells.lyse()
+
+        # Purify AAV
+        purified_aav = self.purify_by_iodixanol_gradient(lysate)
+
+        # Titer (measure concentration)
+        titer = self.measure_genome_copies(purified_aav)
+        return purified_aav, titer
+
+    def measure_genome_copies(self, aav_prep):
+        &quot;&quot;&quot;
+        qPCR to quantify AAV genomes.
+        Typical: 10^13 - 10^14 vg/mL (genome copies per mL)
+        &quot;&quot;&quot;
+        return qpcr_quantification(aav_prep)
+```
+
+## Risks ⚠️
+
+```python
+def assess_aav_risks(vector):
+    risks = []
+
+    # 1. Integration (rare but possible)
+    if vector.has_homology_to_genome():
+        risks.append(&quot;Integration risk at AAVS1 locus&quot;)
+
+    # 2. Immune response
+    if patient.has_anti_aav_antibodies():
+        risks.append(&quot;Pre-existing immunity may neutralize vector&quot;)
+
+    # 3. Genotoxicity
+    if vector.transgene_is_oncogene():
+        risks.append(&quot;Insertional mutagenesis risk&quot;)
+
+    # 4. Off-target transduction
+    if not vector.is_tissue_specific():
+        risks.append(&quot;Non-target tissue expression&quot;)
+
+    return risks
+```
+
+**Dosing**: 10^12 - 10^14 vg/kg (patient weight-based)
+
+**Related Chronicles**: [Synthetic Blood Contamination (2032)](/articles/synthetic-blood-contamination-2032)
+
+**FDA Approved**: Luxturna (retina), Zolgensma (SMA)
+</pre>
+    </main>
+  </body>
+</html>

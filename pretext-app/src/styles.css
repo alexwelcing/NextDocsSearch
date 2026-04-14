@@ -1,0 +1,163 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: #090b10;
+  color: #eef2ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at 20% 0%, #151b2c 0%, #090b10 45%);
+}
+
+.header {
+  padding: 2.5rem 1.2rem 1.2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header h1 {
+  margin: 0;
+  line-height: 1.05;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+}
+
+.header p {
+  color: #90a2c6;
+  margin-top: 0.7rem;
+}
+
+.search {
+  margin-top: 1rem;
+  width: min(640px, 100%);
+  border: 1px solid #2d3854;
+  background: #0f1524;
+  color: #eef2ff;
+  padding: 0.8rem 0.95rem;
+  border-radius: 10px;
+}
+
+.masonry {
+  column-count: 1;
+  column-gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+@media (min-width: 700px) {
+  .masonry {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1050px) {
+  .masonry {
+    column-count: 3;
+  }
+}
+
+.card {
+  break-inside: avoid;
+  margin: 0 0 16px;
+  border: 1px solid #273450;
+  background: linear-gradient(180deg, #0f1729, #0b101c);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card-image {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 0.95rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #76bcff;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+}
+
+.card h2 {
+  margin: 0.4rem 0;
+  font-size: 1.2rem;
+}
+
+.card p {
+  margin: 0.3rem 0;
+  color: #b8c6e5;
+}
+
+.meta {
+  font-size: 0.8rem;
+  color: #8ea0c8;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 0.7rem;
+}
+
+.tags span {
+  border: 1px solid #2f4469;
+  color: #a8c8ff;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+}
+
+.reader {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.back {
+  color: #9ec6ff;
+  text-decoration: none;
+}
+
+.reader h1 {
+  margin-bottom: 0.5rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.hero {
+  width: 100%;
+  border-radius: 14px;
+  margin: 1rem 0;
+}
+
+.video {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 10px;
+  background: #000;
+}
+
+.description {
+  color: #bfd0f3;
+}
+
+.content {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  background: #0d1425;
+  border: 1px solid #223251;
+  border-radius: 12px;
+  padding: 1rem;
+  line-height: 1.75;
+}

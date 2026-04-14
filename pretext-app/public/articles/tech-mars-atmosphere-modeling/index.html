@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atmospheric Modeling for Mars Terraforming | Alex Welcing</title>
+    <meta name="description" content="Simulate Mars atmospheric dynamics for terraforming. GCM models, greenhouse effect, feedback loops." />
+    <meta name="keywords" content="Mars terraforming, atmospheric modeling, GCM, planetary engineering, greenhouse effect" />
+    <meta name="robots" content="index,follow" />
+    <meta name="generator" content="NextDocsSearch PreText Offline Build" />
+    <meta name="build-time" content="2026-04-14T04:38:06.972Z" />
+    <link rel="canonical" href="https://alexwelcing.com/articles/tech-mars-atmosphere-modeling" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Atmospheric Modeling for Mars Terraforming | Alex Welcing" />
+    <meta property="og:description" content="Simulate Mars atmospheric dynamics for terraforming. GCM models, greenhouse effect, feedback loops." />
+    <meta property="og:url" content="https://alexwelcing.com/articles/tech-mars-atmosphere-modeling" />
+    <meta property="og:image" content="https://alexwelcing.com/images/og/tech-mars-atmosphere-modeling.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Atmospheric Modeling for Mars Terraforming | Alex Welcing" />
+    <meta name="twitter:description" content="Simulate Mars atmospheric dynamics for terraforming. GCM models, greenhouse effect, feedback loops." />
+    <meta name="twitter:image" content="https://alexwelcing.com/images/og/tech-mars-atmosphere-modeling.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Atmospheric Modeling for Mars Terraforming","datePublished":"2026-05-15","dateModified":"2026-05-15","author":[{"@type":"Person","name":"Dr. Elena Rodriguez"}],"description":"Simulate Mars atmospheric dynamics for terraforming. GCM models, greenhouse effect, feedback loops.","image":"https://alexwelcing.com/images/og/tech-mars-atmosphere-modeling.jpg","mainEntityOfPage":"https://alexwelcing.com/articles/tech-mars-atmosphere-modeling"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alexwelcing.com"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://alexwelcing.com/"},{"@type":"ListItem","position":3,"name":"Atmospheric Modeling for Mars Terraforming","item":"https://alexwelcing.com/articles/tech-mars-atmosphere-modeling"}]}</script>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, sans-serif; background: #090b10; color: #eef2ff; }
+      main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; line-height: 1.75; }
+      h1 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 0.6rem; line-height: 1.1; }
+      .meta { color: #93a4c8; font-size: 0.9rem; margin-bottom: 2rem; }
+      .description { color: #c9d7f8; margin-bottom: 2rem; }
+      pre { white-space: pre-wrap; background: #0f1420; padding: 16px; border-radius: 10px; overflow-x: auto; }
+      .hero { margin: 0 0 2rem; border-radius: 14px; overflow: hidden; }
+      .hero img { width: 100%; display: block; }
+      a { color: #80c1ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a href="/" aria-label="Back to articles">← Back to stories</a>
+      <h1>Atmospheric Modeling for Mars Terraforming</h1>
+      <div class="meta">2026-05-15 · 1 min read · Dr. Elena Rodriguez</div>
+      <figure class="hero"><img src="/images/articles/tech-mars-atmosphere-modeling.jpg" alt="Atmospheric Modeling for Mars Terraforming" loading="lazy" decoding="async" /></figure>
+      <p class="description">Simulate Mars atmospheric dynamics for terraforming. GCM models, greenhouse effect, feedback loops.</p>
+      <pre>Model Mars atmosphere to plan terraforming. Predict greenhouse effects, temperature changes, feedback loops.
+## Climate Model
+\`\`\`python
+class MarsGCM:
+    &quot;&quot;&quot;Global Climate Model for Mars&quot;&quot;&quot;
+    def __init__(self):
+        self.pressure = 0.6  # kPa (0.6% Earth)
+        self.temp = -63  # °C average
+        self.co2_ice = 5_000_000  # km³ polar ice
+
+    def simulate_greenhouse(self, sf6_tons):
+        &quot;&quot;&quot;
+        Add SF6 greenhouse gas, simulate warming.
+
+        ⚠️ WARNING: Positive feedback loops can cause runaway!
+        &quot;&quot;&quot;
+        # Direct warming from SF6
+        temp_increase = sf6_tons * 0.001  # Simplified
+
+        # Feedback: Warmer → CO2 ice sublimates → More greenhouse
+        co2_released = self.sublimate_ice(temp_increase)
+        additional_warming = co2_released * 0.0001
+
+        # ⚠️ Runaway risk if feedback &gt; 1
+        if additional_warming / temp_increase &gt; 1.0:
+            print(&quot;WARNING: Positive feedback exceeds 1.0 - RUNAWAY RISK&quot;)
+
+        return temp_increase + additional_warming
+\`\`\`
+**Related**: [Terraforming Mars Disaster (2056)](/articles/terraforming-mars-disaster-2056)
+</pre>
+    </main>
+  </body>
+</html>
