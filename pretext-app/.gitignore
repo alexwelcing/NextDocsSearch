@@ -2,3 +2,7 @@ node_modules
 dist
 .DS_Store
 bun.lock
+public/data/**
+public/articles/**
+!public/data/.gitkeep
+!public/articles/.gitkeep
