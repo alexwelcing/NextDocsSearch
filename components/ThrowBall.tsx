@@ -25,9 +25,9 @@ interface ThrowBallProps {
 
 // ─── Physics constants ───────────────────────────────────────────────────
 
-const BALL_SIZE = 56;
-const BALL_REST_BOTTOM = 32;
-const BALL_REST_LEFT = 32;
+const BALL_SIZE = 76;
+const BALL_REST_BOTTOM = 40;
+const BALL_REST_LEFT = 40;
 const FLIGHT_DURATION = 350; // ms — snappy flight for fast throws
 const GRAVITY_ARC = 0.4; // arc height multiplier
 const MIN_DRAG_DISTANCE = 30; // px minimum to register a throw
@@ -317,6 +317,19 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
           }}
         />
 
+        {/* Outer pulsing halo — makes the ball obviously grabbable */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: '-22%',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.35) 0%, rgba(0, 212, 255, 0.08) 55%, transparent 75%)',
+            animation: isDragging || isFlying ? 'none' : 'ballHalo 2.4s ease-in-out infinite',
+            pointerEvents: 'none',
+            filter: 'blur(3px)',
+          }}
+        />
+
         {/* Glass ball body */}
         <div
           style={{
@@ -324,15 +337,16 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
             height: '100%',
             borderRadius: '50%',
             background: `
-              radial-gradient(ellipse 35% 35% at 35% 30%, rgba(255,255,255,0.7) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 70%),
-              radial-gradient(circle at 50% 50%, rgba(200, 230, 255, 0.25) 0%, rgba(100, 160, 220, 0.1) 50%, rgba(30, 60, 90, 0.3) 100%)
+              radial-gradient(ellipse 35% 35% at 35% 30%, rgba(255, 255, 255, 0.95) 0%, transparent 45%),
+              radial-gradient(ellipse 80% 80% at 50% 50%, rgba(125, 230, 255, 0.45) 0%, transparent 70%),
+              radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.85) 0%, rgba(30, 120, 200, 0.8) 55%, rgba(10, 40, 80, 0.9) 100%)
             `,
-            border: '1px solid rgba(255, 255, 255, 0.25)',
+            border: '2px solid rgba(180, 240, 255, 0.9)',
             boxShadow: `
-              inset 0 -3px 8px rgba(0, 0, 0, 0.3),
-              inset 0 2px 4px rgba(255, 255, 255, 0.2),
-              0 0 ${shadowBlur}px rgba(0, 212, 255, 0.2)
+              inset 0 -4px 10px rgba(0, 0, 0, 0.35),
+              inset 0 2px 5px rgba(255, 255, 255, 0.35),
+              0 0 ${14 + shadowBlur}px rgba(0, 212, 255, 0.65),
+              0 0 ${28 + shadowBlur * 1.5}px rgba(125, 230, 255, 0.35)
             `,
           }}
         />
@@ -341,12 +355,12 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
         <div
           style={{
             position: 'absolute',
-            top: '15%',
-            left: '25%',
-            width: '30%',
-            height: '20%',
+            top: '14%',
+            left: '22%',
+            width: '32%',
+            height: '22%',
             borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.6)',
+            background: 'rgba(255, 255, 255, 0.9)',
             filter: 'blur(2px)',
             transform: 'rotate(-30deg)',
           }}
@@ -361,25 +375,31 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
             left: BALL_REST_LEFT - 4,
             bottom: BALL_REST_BOTTOM + BALL_SIZE + 8,
             zIndex: 9999,
-            color: 'rgba(0, 212, 255, 0.6)',
-            fontSize: '11px',
+            color: 'rgba(125, 230, 255, 0.95)',
+            fontSize: '12px',
+            fontWeight: 600,
             fontFamily: "'Inter', sans-serif",
-            letterSpacing: '0.05em',
+            letterSpacing: '0.12em',
             textTransform: 'uppercase',
             pointerEvents: 'none',
             animation: 'ballHintPulse 2s ease-in-out infinite',
             textAlign: 'left',
             whiteSpace: 'nowrap',
+            textShadow: '0 0 8px rgba(0, 212, 255, 0.6)',
           }}
         >
-          Grab & throw
+          Grab &amp; throw
         </div>
       )}
 
       <style jsx>{`
         @keyframes ballHintPulse {
-          0%, 100% { opacity: 0.6; }
-          50% { opacity: 0.3; }
+          0%, 100% { opacity: 0.85; }
+          50% { opacity: 0.5; }
+        }
+        @keyframes ballHalo {
+          0%, 100% { transform: scale(1); opacity: 0.9; }
+          50%      { transform: scale(1.18); opacity: 0.55; }
         }
       `}</style>
     </>

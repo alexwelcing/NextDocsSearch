@@ -14,6 +14,7 @@ import Image from 'next/image';
 import GlassCrackOverlay from './GlassCrackOverlay';
 import GlassBreakEffect from './GlassBreakEffect';
 import ThrowBall from './ThrowBall';
+import HammerTool from './HammerTool';
 
 // ─── Grid constants ──────────────────────────────────────────────────────
 
@@ -91,8 +92,16 @@ function makeTileState(t: { src: string; alt: string }): TileState {
 
 // ─── Component ────────────────────────────────────────────────────────────
 
-export default function HeroMosaic() {
+interface HeroMosaicProps {
+  /** Fires once after every tile has been shattered. */
+  onAllBroken?: () => void;
+}
+
+export default function HeroMosaic({ onAllBroken }: HeroMosaicProps = {}) {
   const [mounted, setMounted] = useState(false);
+  const allBrokenFiredRef = useRef(false);
+  const onAllBrokenRef = useRef<(() => void) | undefined>(undefined);
+  onAllBrokenRef.current = onAllBroken;
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
   const containerRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -240,9 +249,65 @@ export default function HeroMosaic() {
   // ─── Shatter complete → mark tile as permanently gone ────────────
 
   const handleBreakComplete = useCallback((tileIndex: number) => {
-    setTiles(prev => prev.map((t, i) =>
-      i === tileIndex ? { ...t, breaking: false, shattered: true } : t
-    ));
+    setTiles(prev => {
+      const next = prev.map((t, i) =>
+        i === tileIndex ? { ...t, breaking: false, shattered: true } : t
+      );
+      if (!allBrokenFiredRef.current && next.every(t => t.shattered)) {
+        allBrokenFiredRef.current = true;
+        // Defer so React finishes committing the final "empty" grid
+        // before the parent transitions away.
+        setTimeout(() => onAllBrokenRef.current?.(), 350);
+      }
+      return next;
+    });
+  }, []);
+
+  // ─── Hammer strike — instant shatter (skip the 3-hit progression) ─
+
+  const handleHammerStrike = useCallback((viewportX: number, viewportY: number) => {
+    let hitIndex = -1;
+    let bestDist = Infinity;
+    let localX = 0.5;
+    let localY = 0.5;
+
+    tileRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const inside =
+        viewportX >= rect.left && viewportX <= rect.right &&
+        viewportY >= rect.top && viewportY <= rect.bottom;
+      const dist = Math.sqrt((viewportX - cx) ** 2 + (viewportY - cy) ** 2);
+      if (inside || dist < bestDist) {
+        if (dist < bestDist) {
+          bestDist = dist;
+          hitIndex = i;
+          localX = Math.max(0, Math.min(1, (viewportX - rect.left) / rect.width));
+          localY = Math.max(0, Math.min(1, (viewportY - rect.top) / rect.height));
+        }
+      }
+    });
+
+    if (hitIndex === -1) return;
+
+    setTiles(prev => {
+      const tile = prev[hitIndex];
+      if (tile.breaking || tile.shattered) return prev;
+      return prev.map((t, i) => {
+        if (i !== hitIndex) return t;
+        return {
+          ...t,
+          hits: 3,
+          breaking: true,
+          impactX: localX,
+          impactY: localY,
+          impactForce: 4,
+          flashKey: t.flashKey + 1,
+        };
+      });
+    });
   }, []);
 
   return (
@@ -419,6 +484,11 @@ export default function HeroMosaic() {
           disabled={false}
           containerRef={containerRef}
         />
+      )}
+
+      {/* Hammer tool — click to pick up, click a pane to instant-shatter */}
+      {mounted && (
+        <HammerTool onStrike={handleHammerStrike} />
       )}
 
       {/* Keyframe animations */}
