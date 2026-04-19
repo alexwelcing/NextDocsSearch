@@ -324,8 +324,12 @@ export default function HeroMosaic() {
         position: 'absolute',
         inset: 0,
         overflow: 'hidden',
-        zIndex: 0,
-        background: '#030308',
+        // zIndex: 1 sits above the text layer (z: 0) on pages/index.tsx
+        // so tiles fully obscure the hero H1 + subtitle until broken.
+        zIndex: 1,
+        // Transparent so the text layer behind this container becomes
+        // visible through any tile cell that has been shattered.
+        background: 'transparent',
       }}
     >
       {/* Grid lines */}
@@ -477,7 +481,8 @@ export default function HeroMosaic() {
         />
       )}
 
-      {/* Center vignette */}
+      {/* Center vignette — relaxed so the hero text layer behind this
+          container is still legible through broken tiles */}
       <div
         style={{
           position: 'absolute',
@@ -486,9 +491,9 @@ export default function HeroMosaic() {
           pointerEvents: 'none',
           background: `radial-gradient(
             ellipse 55% 50% at 50% 50%,
-            rgba(3, 3, 8, 0.92) 0%,
-            rgba(3, 3, 8, 0.6) 45%,
-            rgba(3, 3, 8, 0.15) 75%,
+            rgba(3, 3, 8, 0) 0%,
+            rgba(3, 3, 8, 0) 35%,
+            rgba(3, 3, 8, 0.35) 80%,
             transparent 100%
           )`,
         }}

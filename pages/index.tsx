@@ -4,7 +4,6 @@ import Link from 'next/link'
 import StructuredData from '@/components/StructuredData'
 import HeroMosaic from '@/components/HeroMosaic'
 import { SITE_URL } from '@/lib/site-url'
-import { Building2 } from 'lucide-react'
 
 export default function HomePage() {
   const siteUrl = SITE_URL
@@ -90,56 +89,64 @@ export default function HomePage() {
 
       <div className="min-h-screen text-white">
         {/* Hero - Immersive mosaic wall */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+        <section
+          className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+          style={{ background: '#030308' }}
+        >
+          {/*
+            Text layer — sits BEHIND the tile grid on the z-axis.
+            Rendered in the SSR'd HTML so crawlers see the H1 and subtitle,
+            but visually obscured by the opaque HeroMosaic tiles until the
+            user breaks them with the ball.
+          */}
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
+            style={{ zIndex: 0 }}
+            aria-hidden="false"
+          >
+            <div className="max-w-5xl">
+              <h1
+                className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
+                style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.05,
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  fontWeight: 800,
+                }}
+              >
+                <span style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>
+                  Writing on speculative AI and emergent intelligence.
+                </span>
+              </h1>
+              <p
+                className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2 mx-auto"
+                style={{
+                  fontFamily: "'Inter', -apple-system, sans-serif",
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  letterSpacing: '0.01em',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  maxWidth: '600px',
+                }}
+              >
+                Building AI products that survive contact with real people.
+              </p>
+            </div>
+          </div>
+
+          {/* Tile grid — sits ABOVE the text layer */}
           <HeroMosaic />
 
-          {/* Content overlay */}
-          <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
-            <h1
-              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
-              style={{
-                fontFamily: "'Inter', -apple-system, sans-serif",
-                letterSpacing: '-0.03em',
-                lineHeight: 1.05,
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                fontWeight: 800,
-              }}
-            >
-              <span style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}>
-                Writing on speculative AI and emergent intelligence.
-              </span>
-            </h1>
-            <p
-              className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2"
-              style={{
-                fontFamily: "'Inter', -apple-system, sans-serif",
-                color: 'rgba(255, 255, 255, 0.7)',
-                letterSpacing: '0.01em',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                maxWidth: '600px',
-              }}
-            >
-              Building AI products that survive contact with real people.
-            </p>
-
-            {/* Recruiter badge */}
-            <Link
-              href="/current-work"
-              className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm hover:bg-purple-500/20 transition"
-            >
-              <Building2 className="w-4 h-4" />
-              Currently building — View my work
-            </Link>
-
-            {/* Two clear paths */}
-            <div className="flex flex-col sm:flex-row gap-6 mt-12">
+          {/* CTAs — above tiles */}
+          <div className="relative z-20 flex flex-col items-center justify-end text-center px-6 max-w-5xl pb-16" style={{ marginTop: 'auto' }}>
+            <div className="flex flex-col sm:flex-row gap-6">
               <Link
                 href="/current-work"
                 className="group relative px-8 py-4 overflow-hidden"
@@ -204,7 +211,7 @@ export default function HomePage() {
 
           {/* Scroll indicator */}
           <div
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
             style={{
               animation: 'float 3s ease-in-out infinite',
             }}
