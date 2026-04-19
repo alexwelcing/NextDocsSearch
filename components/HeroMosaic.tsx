@@ -87,6 +87,7 @@ function makeTileState(t: { src: string; alt: string }): TileState {
 
 export default function HeroMosaic() {
   const [phase, setPhase] = useState<DescentPhase>('alive');
+  const [mounted, setMounted] = useState(false);
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
   const containerRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -123,6 +124,10 @@ export default function HeroMosaic() {
       });
     return () => { cancelled = true; };
   }, []);
+
+  // Flip mounted after hydration so window-dependent children (ThrowBall)
+  // only render client-side.
+  useEffect(() => { setMounted(true); }, []);
 
   // Mouse tracking
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -495,8 +500,8 @@ export default function HeroMosaic() {
         }}
       />
 
-      {/* Throwable ball */}
-      {isAlive && (
+      {/* Throwable ball — client-only (ThrowBall touches window at render) */}
+      {mounted && isAlive && (
         <ThrowBall
           onImpact={handleBallImpact}
           disabled={false}
