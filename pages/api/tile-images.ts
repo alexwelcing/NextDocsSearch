@@ -10,8 +10,19 @@ interface TileImage {
 
 const IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif']);
 
+const POOL_SIZE = 100;
+
 let cache: { images: { src: string; alt: string }[]; ts: number } | null = null;
 const CACHE_TTL = 60_000; // 1 minute
+
+function shuffle<T>(arr: T[]): T[] {
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
 
 function scanMultiArt(baseDir: string): TileImage[] {
   const results: TileImage[] = [];
@@ -71,11 +82,15 @@ export default function handler(_req: NextApiRequest, res: NextApiResponse) {
     const multiArt = scanMultiArt(path.join(publicDir, 'images', 'multi-art'));
     const articles = scanArticles(path.join(publicDir, 'images', 'articles'));
 
-    // Combine and sort newest first
-    const all = [...multiArt, ...articles].sort((a, b) => b.mtime - a.mtime);
+    // Bias toward newer artwork: take the top 150 by mtime, then shuffle
+    // and keep 100. Caps the pool the mosaic picks from at 100 while
+    // still refreshing what's in the pool when new art is added.
+    const sortedNewest = [...multiArt, ...articles].sort((a, b) => b.mtime - a.mtime);
+    const biasedWindow = sortedNewest.slice(0, Math.max(POOL_SIZE, Math.min(sortedNewest.length, POOL_SIZE + 50)));
+    const pool = shuffle(biasedWindow).slice(0, POOL_SIZE);
 
     // Strip mtime from response
-    const images = all.map(({ src, alt }) => ({ src, alt }));
+    const images = pool.map(({ src, alt }) => ({ src, alt }));
 
     cache = { images, ts: now };
     res.status(200).json(images);
