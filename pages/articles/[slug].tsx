@@ -1081,7 +1081,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
   return (
     <ArticleLayout>
       <Head>
-        <title>{title} | Alex Welcing</title>
+        <title>{`${title} | Alex Welcing`}</title>
         <meta name="title" content={title} />
         <meta name="description" content={description || `Read ${title} and more insights.`} />
         {keywords && <meta name="keywords" content={keywords.join(', ')} />}
