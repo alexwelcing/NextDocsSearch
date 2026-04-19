@@ -24,15 +24,15 @@ export default function CurrentWork() {
   return (
     <>
       <Head>
-        <title>Current Work | Alex Welcing — AI Product Expert</title>
-        <meta name="description" content="AI Product Expert for a portfolio company with global leadership in legal intelligence. Building AI products that survive contact with real users in regulated industries." />
-        <meta name="keywords" content="Alex Welcing, AI Product Expert, legal intelligence, enterprise AI, regulated AI, portfolio company" />
+        <title>Work — Alex Welcing</title>
+        <meta name="description" content="A partial list of what has my attention." />
+        <meta name="keywords" content="Alex Welcing, work, legal intelligence, regulated AI" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={`${siteUrl}/current-work`} />
 
         {/* Open Graph */}
-        <meta property="og:title" content="Current Work | Alex Welcing — AI Product Expert" />
-        <meta property="og:description" content="AI Product Expert building AI products for global legal intelligence. Real systems, real users, real constraints." />
+        <meta property="og:title" content="Work — Alex Welcing" />
+        <meta property="og:description" content="A partial list of what has my attention." />
         <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -42,8 +42,8 @@ export default function CurrentWork() {
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Current Work | Alex Welcing — AI Product Expert" />
-        <meta name="twitter:description" content="AI Product Expert for global legal intelligence. Building AI products that survive contact with real people." />
+        <meta name="twitter:title" content="Work — Alex Welcing" />
+        <meta name="twitter:description" content="A partial list of what has my attention." />
         <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
 
         {/* Profile Structured Data */}
@@ -54,8 +54,7 @@ export default function CurrentWork() {
             "mainEntity": {
               "@type": "Person",
               "name": "Alex Welcing",
-              "jobTitle": "AI Product Expert",
-              "description": "AI Product Expert building AI products for a portfolio company with global leadership in legal intelligence. Shipping AI in regulated industries.",
+              "description": "A partial list of what has my attention.",
               "url": siteUrl,
               "sameAs": [
                 "https://www.linkedin.com/in/alexwelcing",
@@ -70,12 +69,7 @@ export default function CurrentWork() {
                 "Regulated AI",
                 "Legal Technology",
                 "AI Governance"
-              ],
-              "worksFor": {
-                "@type": "Organization",
-                "name": "Portfolio Company — Legal Intelligence",
-                "description": "Global leadership in legal intelligence technology"
-              }
+              ]
             }
           })
         }} />
@@ -106,16 +100,13 @@ export default function CurrentWork() {
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              AI Product{' '}
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                Expert
-              </span>
+              Work
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-400 mb-8 leading-relaxed">
-              The AI Product Expert for a portfolio company with global leadership in
-              legal intelligence. Building AI products that survive contact with real
-              users in regulated industries.
+              A partial list of what has my attention right now. Working with a
+              portfolio company that leads in legal intelligence, and building AI
+              products that survive contact with real users in regulated industries.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -144,23 +135,21 @@ export default function CurrentWork() {
               <h2 className="text-3xl font-bold mb-6">Current Focus</h2>
               <div className="space-y-6 text-slate-300 text-lg leading-relaxed">
                 <p>
-                  I serve as the <strong className="text-white">AI Product Expert</strong> for a
-                  portfolio company operating at the forefront of legal intelligence. This organization
-                  maintains global leadership in transforming how legal professionals access, analyze,
-                  and leverage critical information.
+                  A partial list of what has my attention right now.
                 </p>
                 <p>
-                  In this role, I bridge the gap between cutting-edge AI capabilities and the rigorous 
-                  demands of legal technology. The work involves architecting systems that handle 
-                  sensitive legal data with precision, developing AI-powered research tools that 
-                  augment human expertise, and navigating the complex intersection of innovation 
-                  and regulatory compliance.
+                  Current day work: bridging AI capabilities and the rigorous demands
+                  of legal technology. Architecting systems that handle sensitive legal
+                  data with precision, developing AI-powered research tools that augment
+                  human expertise, and navigating the intersection of innovation and
+                  regulatory compliance.
                 </p>
                 <p>
-                  Legal intelligence presents unique challenges: high-stakes decision making, 
-                  strict accuracy requirements, complex data relationships, and the need for 
-                  explainable AI in a domain where transparency matters. Building products in 
-                  this space requires both technical depth and domain sensitivity.
+                  Legal intelligence presents unique challenges: high-stakes decision
+                  making, strict accuracy requirements, complex data relationships, and
+                  the need for explainable AI in a domain where transparency matters.
+                  Building products in this space requires both technical depth and
+                  domain sensitivity.
                 </p>
               </div>
             </div>
@@ -168,8 +157,8 @@ export default function CurrentWork() {
             <div className="space-y-6">
               <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
                 <div className="text-sm text-slate-500 mb-2">Role</div>
-                <div className="font-semibold text-white">AI Product Expert</div>
-                <div className="text-sm text-cyan-400 mt-1">Sole AI product lead for portfolio company</div>
+                <div className="font-semibold text-white">Product Manager</div>
+                <div className="text-sm text-cyan-400 mt-1">Portfolio company, legal intelligence</div>
               </div>
               
               <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
