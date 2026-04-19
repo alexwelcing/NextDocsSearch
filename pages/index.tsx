@@ -12,12 +12,12 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Alex Welcing | AI Strategy & Product Leadership</title>
+        <title>Alex Welcing | AI Product Expert</title>
         <meta
           name="description"
-          content="AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization. Research on speculative AI futures and emergent intelligence."
+          content="AI Product Expert building AI products that survive contact with real people. Writing on speculative AI, emergent intelligence, and what actually ships."
         />
-        <meta name="keywords" content="Alex Welcing, AI product manager, AI strategy, product leadership, LLM, AI agents, speculative AI, emergent intelligence, technical product manager, AI portfolio" />
+        <meta name="keywords" content="Alex Welcing, AI Product Expert, AI product, AI strategy, LLM, AI agents, speculative AI, emergent intelligence, AI portfolio" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={siteUrl} />
@@ -26,11 +26,11 @@ export default function HomePage() {
         {/* Open Graph Meta Tags */}
         <meta
           property="og:title"
-          content="Alex Welcing | AI Strategy & Product Leadership"
+          content="Alex Welcing | AI Product Expert"
         />
         <meta
           property="og:description"
-          content="AI product leader building intelligent systems and frameworks for emergent AI futures. Research on agent architectures, LLMs, and speculative intelligence."
+          content="AI Product Expert building AI products that survive contact with real people. Writing on speculative AI and emergent intelligence."
         />
         <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
@@ -41,8 +41,8 @@ export default function HomePage() {
         {/* X (Twitter) Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Alex Welcing | AI Strategy & Product Leadership" />
-        <meta name="twitter:description" content="AI product leader building intelligent systems and frameworks for emergent AI futures. Research on agent architectures, LLMs, and speculative intelligence." />
+        <meta name="twitter:title" content="Alex Welcing | AI Product Expert" />
+        <meta name="twitter:description" content="AI Product Expert building AI products that survive contact with real people. Writing on speculative AI and emergent intelligence." />
         <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
 
         {/* Performance and PWA hints */}
@@ -53,9 +53,9 @@ export default function HomePage() {
       <StructuredData
         type="Website"
         data={{
-          name: "Alex Welcing - AI Strategy & Product Leadership",
+          name: "Alex Welcing - AI Product Expert",
           url: siteUrl,
-          description: "AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization.",
+          description: "AI Product Expert building AI products that survive contact with real people. Writing on speculative AI and emergent intelligence.",
           author: { "@type": "Person", name: "Alex Welcing", url: `${siteUrl}/about` }
         }}
       />
@@ -65,8 +65,8 @@ export default function HomePage() {
         data={{
           name: "Alex Welcing",
           url: siteUrl,
-          jobTitle: "AI Product Leader",
-          description: "AI product leader building intelligent systems at the intersection of LLMs, agent architectures, and 3D visualization. Research on speculative AI futures and emergent intelligence.",
+          jobTitle: "AI Product Expert",
+          description: "AI Product Expert building AI products that survive contact with real people. Writing on speculative AI futures and emergent intelligence.",
           sameAs: [
             "https://www.linkedin.com/in/alexwelcing",
             "https://github.com/alexwelcing",
@@ -113,7 +113,7 @@ export default function HomePage() {
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
-                AI Strategy & Product Leadership
+                AI Product Expert writing on speculative AI and emergent intelligence.
               </span>
             </h1>
             <p
@@ -127,7 +127,7 @@ export default function HomePage() {
                 maxWidth: '600px',
               }}
             >
-              Building intelligent systems and frameworks for emergent AI futures
+              Building AI products that survive contact with real people.
             </p>
 
             {/* Recruiter badge */}

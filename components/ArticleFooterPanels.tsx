@@ -787,9 +787,9 @@ export default function ArticleFooterPanels({
                 <AboutCard>
                   <AboutLabel>{'// Who'}</AboutLabel>
                   <AboutName>Alex Welcing</AboutName>
-                  <AboutRole>AI Product Leader &middot; New York</AboutRole>
+                  <AboutRole>AI Product Expert &middot; New York</AboutRole>
                   <AboutBio>
-                    Results-driven product leader with 10+ years building intelligent systems.
+                    AI Product Expert with 10+ years building intelligent systems.
                     Specialized in LLMs, agent architectures, RAG pipelines, and platform
                     technologies across SaaS, legal, and healthcare.
                   </AboutBio>
@@ -843,7 +843,7 @@ export default function ArticleFooterPanels({
               </PanelIcon>
               <PanelTitle>About Alex</PanelTitle>
               <PanelDesc>
-                AI product leader building at the intersection of LLMs, agent architectures, and
+                AI Product Expert building at the intersection of LLMs, agent architectures, and
                 modern web technologies.
               </PanelDesc>
               <PanelCta $color="rgba(255, 215, 0, 0.8)">

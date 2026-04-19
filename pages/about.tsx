@@ -10,13 +10,13 @@ export default function About() {
   return (
     <>
       <Head>
-        <title>About Alex Welcing | Technical Product Manager</title>
-        <meta name="description" content="Alex Welcing is a Technical Product Manager at ALM with 9+ years experience in SaaS, publishing tech, VR solutions, and legal technology." />
-        <meta name="keywords" content="Alex Welcing, Technical Product Manager, ALM, SaaS, VR, legal technology, Obsess, Manatt" />
+        <title>About Alex Welcing | AI Product Expert</title>
+        <meta name="description" content="Alex Welcing is an AI Product Expert with 9+ years shipping AI features and SaaS platforms in regulated industries — legal tech, publishing, and immersive media." />
+        <meta name="keywords" content="Alex Welcing, AI Product Expert, AI product, ALM, SaaS, legal technology, regulated AI" />
         <link rel="canonical" href={`${siteUrl}/about`} />
-        
-        <meta property="og:title" content="About Alex Welcing | Technical Product Manager" />
-        <meta property="og:description" content="Technical Product Manager with expertise in SaaS platforms, immersive VR, and legal technology." />
+
+        <meta property="og:title" content="About Alex Welcing | AI Product Expert" />
+        <meta property="og:description" content="AI Product Expert shipping AI features in regulated industries — legal tech, publishing, and immersive media." />
         <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -25,8 +25,8 @@ export default function About() {
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="About Alex Welcing | Technical Product Manager" />
-        <meta name="twitter:description" content="Technical Product Manager with expertise in SaaS platforms, immersive VR, and legal technology." />
+        <meta name="twitter:title" content="About Alex Welcing | AI Product Expert" />
+        <meta name="twitter:description" content="AI Product Expert shipping AI features in regulated industries — legal tech, publishing, and immersive media." />
         <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{
@@ -35,12 +35,12 @@ export default function About() {
             "@type": "Person",
             "name": "Alex Welcing",
             "url": siteUrl,
-            "jobTitle": "Technical Product Manager",
+            "jobTitle": "AI Product Expert",
             "worksFor": {
               "@type": "Organization",
               "name": "ALM"
             },
-            "description": "Technical Product Manager with 9+ years experience delivering scalable SaaS, publishing tech, and immersive VR solutions.",
+            "description": "AI Product Expert with 9+ years shipping AI features and SaaS platforms in regulated industries.",
             "sameAs": [
               "https://www.linkedin.com/in/alexwelcing",
               "https://github.com/alexwelcing"
@@ -72,7 +72,7 @@ export default function About() {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Alex Welcing</h1>
-              <p className="text-xl text-slate-400 mb-4">Technical Product Manager</p>
+              <p className="text-xl text-slate-400 mb-4">AI Product Expert</p>
               <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> New York, NY</span>
                 <span className="flex items-center gap-1"><Briefcase className="w-4 h-4" /> ALM</span>
@@ -98,10 +98,10 @@ export default function About() {
               About
             </h2>
             <p className="text-lg text-slate-300 leading-relaxed">
-              I&apos;m a Technical Product Manager with 9+ years of experience delivering scalable SaaS, 
-              publishing technology, and immersive VR solutions. I currently steer product strategy 
-              and delivery at ALM, an integrated media company serving the legal and commercial real 
-              estate sectors.
+              I&apos;m an AI Product Expert with 9+ years shipping AI features and SaaS
+              platforms in regulated industries. I currently steer product strategy
+              and delivery at ALM, an integrated media company serving the legal and
+              commercial real estate sectors.
             </p>
             <p className="text-lg text-slate-300 leading-relaxed mt-4">
               My background spans both technical development and marketing strategy, with a track 
@@ -120,7 +120,7 @@ export default function About() {
             <div className="space-y-8">
               <div className="border-l-2 border-white/10 pl-6">
                 <div className="flex flex-wrap justify-between items-baseline mb-2">
-                  <h3 className="text-xl font-semibold">Technical Product Manager</h3>
+                  <h3 className="text-xl font-semibold">AI Product Expert</h3>
                   <span className="text-sm text-slate-500">Jan 2024 — Present</span>
                 </div>
                 <p className="text-cyan-400 text-sm mb-3">ALM</p>
