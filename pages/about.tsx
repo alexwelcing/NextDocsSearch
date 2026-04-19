@@ -17,9 +17,18 @@ export default function About() {
         
         <meta property="og:title" content="About Alex Welcing | Technical Product Manager" />
         <meta property="og:description" content="Technical Product Manager with expertise in SaaS platforms, immersive VR, and legal technology." />
+        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content={`${siteUrl}/about`} />
         <meta property="og:type" content="profile" />
-        
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
+        <meta name="twitter:title" content="About Alex Welcing | Technical Product Manager" />
+        <meta name="twitter:description" content="Technical Product Manager with expertise in SaaS platforms, immersive VR, and legal technology." />
+        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
+
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
