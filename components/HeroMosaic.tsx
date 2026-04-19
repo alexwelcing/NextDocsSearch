@@ -1,17 +1,12 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * HERO MOSAIC — Interactive image tile wall with progressive glass-break
+ * HERO MOSAIC — Interactive image tile wall with glass-break reveal
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * A grid of curated AI artwork tiles that:
- * 1. Start dark and reveal progressively over ~6s (the "descent")
- * 2. React to mouse with parallax + spotlight
- * 3. Take PROGRESSIVE DAMAGE from a throwable glass ball:
- *      Hit 1 → Hairline cracks (GlassCrackOverlay)
- *      Hit 2 → Major cracks with branches
- *      Hit 3 → Full shatter (GlassBreakEffect)
- * 4. After shatter: column tiles shift down mechanically,
- *    new tile slides in from the top
+ * A 4×3 grid of 12 randomly-selected AI artwork tiles. Tiles are fully
+ * opaque so they obscure the H1/subtitle in the page layer behind.
+ * Breaking a tile with the ball permanently removes it, revealing the
+ * text underneath. There is no replacement — every break uncovers more.
  */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
@@ -25,13 +20,12 @@ import ThrowBall from './ThrowBall';
 const GRID_COLS = 4;
 const GRID_ROWS = 3;
 const TILE_COUNT = GRID_COLS * GRID_ROWS; // 12
-const REPLACE_DELAY = 2000;       // ms after shatter before column shift
-const COLUMN_ANIM_DURATION = 700; // ms for the column-shift animation
+const TILE_FILL_COLOR = '#030308';
 
-// ─── Image pools ─────────────────────────────────────────────────────────
-// Dynamic images are fetched from /api/tile-images at mount.
-// These hardcoded lists serve as instant fallback while the API loads
-// (or if it fails), so the mosaic is never empty on first paint.
+// ─── Image pool ──────────────────────────────────────────────────────────
+// Dynamic images are fetched from /api/tile-images at mount and merged
+// with the fallback list. The combined, deduped pool is shuffled and
+// 12 random entries are selected for this pageload.
 
 const FALLBACK_TILES: { src: string; alt: string }[] = [
   { src: '/images/multi-art/gravitational-wave-communication-breach-2040/option-1-fast-sdxl.png', alt: 'Abstract vortex' },
@@ -48,26 +42,38 @@ const FALLBACK_TILES: { src: string; alt: string }[] = [
   { src: '/images/multi-art/backstory-19-the-realization-2030-03/option-3-pixart-sigma.png', alt: 'Digital awakening' },
 ];
 
-// ─── Types ───────────────────────────────────────────────────────────────
+function shuffle<T>(arr: T[]): T[] {
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
 
-type DescentPhase = 'void' | 'grid' | 'shapes' | 'color' | 'alive';
+function dedupeBySrc<T extends { src: string }>(arr: T[]): T[] {
+  const seen = new Set<string>();
+  return arr.filter(item => {
+    if (seen.has(item.src)) return false;
+    seen.add(item.src);
+    return true;
+  });
+}
+
+// ─── Types ───────────────────────────────────────────────────────────────
 
 interface TileState {
   src: string;
   alt: string;
-  hits: number;                            // 0-3
+  hits: number;                             // 0-3
   crackImpacts: { x: number; y: number }[]; // impact points for cracks (up to 2)
-  breaking: boolean;                        // true during final shatter
+  breaking: boolean;                        // true during final shatter animation
+  shattered: boolean;                       // true after shatter completes — cell is now empty
   impactX: number;                          // last impact point (for shatter)
   impactY: number;
   impactForce: number;
-  dropping: boolean;                        // true during column-shift animation
-  dropDelay: number;                        // stagger delay (ms) for cascade
-  dropVersion: number;                      // increment to force React remount → restart animation
   flashKey: number;                         // increment to restart impact flash
 }
-
-// ─── Component ────────────────────────────────────────────────────────────
 
 function makeTileState(t: { src: string; alt: string }): TileState {
   return {
@@ -75,54 +81,63 @@ function makeTileState(t: { src: string; alt: string }): TileState {
     hits: 0,
     crackImpacts: [],
     breaking: false,
+    shattered: false,
     impactX: 0.5,
     impactY: 0.5,
     impactForce: 3,
-    dropping: false,
-    dropDelay: 0,
-    dropVersion: 0,
     flashKey: 0,
   };
 }
 
+// ─── Component ────────────────────────────────────────────────────────────
+
 export default function HeroMosaic() {
-  const [phase, setPhase] = useState<DescentPhase>('alive');
   const [mounted, setMounted] = useState(false);
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
   const containerRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const replacementPoolRef = useRef<{ src: string; alt: string }[]>([]);
-  const replacementIndexRef = useRef(0);
+  const initialSelectionDoneRef = useRef(false);
 
-  // Start with fallback tiles — replaced by API results on mount
+  // SSR-safe initial: first 12 fallback tiles. Client reshuffles on mount,
+  // and that shuffle stays locked for the rest of the session so mid-game
+  // reshuffles don't wipe out user progress.
   const [tiles, setTiles] = useState<TileState[]>(
-    FALLBACK_TILES.slice(0, TILE_COUNT).map(makeTileState)
+    () => FALLBACK_TILES.slice(0, TILE_COUNT).map(makeTileState)
   );
 
-  // Fetch newest images from both public/images/articles & multi-art
+  // Pick the 12 random tiles for this pageload (once).
   useEffect(() => {
     let cancelled = false;
+
+    const selectInitial = (pool: { src: string; alt: string }[]) => {
+      if (cancelled || initialSelectionDoneRef.current) return;
+      initialSelectionDoneRef.current = true;
+      const chosen = shuffle(dedupeBySrc(pool)).slice(0, TILE_COUNT);
+      setTiles(chosen.map(makeTileState));
+    };
+
+    // If the API is slow, fall back to the local shuffle quickly so tiles
+    // never look "frozen" in their SSR positions.
+    const timeoutId = setTimeout(() => selectInitial(FALLBACK_TILES), 400);
+
     fetch('/api/tile-images')
       .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then((images: { src: string; alt: string }[]) => {
-        if (cancelled || images.length === 0) return;
-
-        // First TILE_COUNT images → initial grid, rest → replacement pool
-        const initial = images.slice(0, TILE_COUNT);
-        const pool = images.slice(TILE_COUNT);
-        replacementPoolRef.current = pool;
-        replacementIndexRef.current = 0;
-
-        setTiles(prev => initial.map((img, i) => ({
-          ...(prev[i] ?? makeTileState(img)),
-          src: img.src,
-          alt: img.alt,
-        })));
+        clearTimeout(timeoutId);
+        const pool = images.length > 0
+          ? [...images, ...FALLBACK_TILES]
+          : FALLBACK_TILES;
+        selectInitial(pool);
       })
       .catch(() => {
-        // API failed — stick with fallback tiles, no replacement pool needed
+        clearTimeout(timeoutId);
+        selectInitial(FALLBACK_TILES);
       });
-    return () => { cancelled = true; };
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   // Flip mounted after hydration so window-dependent children (ThrowBall)
@@ -137,21 +152,6 @@ export default function HeroMosaic() {
       x: (e.clientX - rect.left) / rect.width,
       y: (e.clientY - rect.top) / rect.height,
     });
-  }, []);
-
-  // ─── Replacement pool ────────────────────────────────────────────
-
-  const getNextReplacement = useCallback(() => {
-    const pool = replacementPoolRef.current;
-    if (pool.length === 0) {
-      // No dynamic pool loaded — cycle through fallback tiles
-      const idx = replacementIndexRef.current % FALLBACK_TILES.length;
-      replacementIndexRef.current++;
-      return FALLBACK_TILES[idx];
-    }
-    const idx = replacementIndexRef.current % pool.length;
-    replacementIndexRef.current++;
-    return pool[idx];
   }, []);
 
   // ─── Ball impact — progressive damage ────────────────────────────
@@ -203,8 +203,8 @@ export default function HeroMosaic() {
 
     setTiles(prev => {
       const tile = prev[hitIndex];
-      // Skip tiles that are already shattering, shifting, or fully broken
-      if (tile.breaking || tile.dropping || tile.hits >= 3) return prev;
+      // Skip tiles that are already shattering or fully gone
+      if (tile.breaking || tile.shattered) return prev;
 
       return prev.map((t, i) => {
         if (i !== hitIndex) return t;
@@ -237,73 +237,13 @@ export default function HeroMosaic() {
     });
   }, []);
 
-  // ─── Shatter complete → column shift ─────────────────────────────
+  // ─── Shatter complete → mark tile as permanently gone ────────────
 
   const handleBreakComplete = useCallback((tileIndex: number) => {
-    setTimeout(() => {
-      const col = tileIndex % GRID_COLS;
-      const row = Math.floor(tileIndex / GRID_COLS);
-
-      setTiles(prev => {
-        const next = prev.map(t => ({ ...t }));
-        const replacement = getNextReplacement();
-
-        // Shift images DOWN within the column: rows [row-1, row-2, ..., 0]
-        // Row N gets image from row N-1, row 0 gets a fresh replacement
-        for (let r = row; r > 0; r--) {
-          const dstIdx = col + r * GRID_COLS;
-          const srcIdx = col + (r - 1) * GRID_COLS;
-          next[dstIdx].src = prev[srcIdx].src;
-          next[dstIdx].alt = prev[srcIdx].alt;
-        }
-
-        // Top of column gets new image
-        next[col].src = replacement.src;
-        next[col].alt = replacement.alt;
-
-        // Reset state + set drop animation for all affected tiles (rows 0..row)
-        for (let r = 0; r <= row; r++) {
-          const idx = col + r * GRID_COLS;
-          next[idx].hits = 0;
-          next[idx].crackImpacts = [];
-          next[idx].breaking = false;
-          next[idx].dropping = true;
-          next[idx].dropDelay = r * 90; // cascade from top
-          next[idx].dropVersion = prev[idx].dropVersion + 1;
-        }
-
-        return next;
-      });
-
-      // Clear dropping state after animation completes
-      setTimeout(() => {
-        setTiles(prev => prev.map(t =>
-          t.dropping ? { ...t, dropping: false, dropDelay: 0 } : t
-        ));
-      }, COLUMN_ANIM_DURATION + 200);
-    }, REPLACE_DELAY);
-  }, [getNextReplacement]);
-
-  // ─── Computed phase styles ───────────────────────────────────────
-
-  const gridOpacity =
-    phase === 'void' ? 0 :
-    phase === 'grid' ? 0.15 :
-    phase === 'shapes' ? 0.4 :
-    phase === 'color' ? 0.7 :
-    1.0;
-
-  const gridFilter =
-    phase === 'void' ? 'grayscale(1) brightness(0)' :
-    phase === 'grid' ? 'grayscale(1) brightness(0.3) contrast(1.5)' :
-    phase === 'shapes' ? 'grayscale(0.8) brightness(0.4) contrast(1.2)' :
-    phase === 'color' ? 'grayscale(0.3) brightness(0.5) saturate(1.2)' :
-    'grayscale(0) saturate(1.3)';
-
-  const isAlive = phase === 'alive';
-  // Ball is never globally disabled — handleBallImpact skips
-  // tiles that are already breaking/dropping, so the user can
-  // rapid-fire throws at different tiles without waiting.
+    setTiles(prev => prev.map((t, i) =>
+      i === tileIndex ? { ...t, breaking: false, shattered: true } : t
+    ));
+  }, []);
 
   return (
     <div
@@ -314,21 +254,19 @@ export default function HeroMosaic() {
         inset: 0,
         overflow: 'hidden',
         // zIndex: 1 sits above the text layer (z: 0) on pages/index.tsx
-        // so tiles fully obscure the hero H1 + subtitle until broken.
+        // so intact tiles fully obscure the hero H1 + subtitle.
         zIndex: 1,
-        // Transparent so the text layer behind this container becomes
-        // visible through any tile cell that has been shattered.
+        // Transparent so shattered tiles reveal the text layer behind.
         background: 'transparent',
       }}
     >
-      {/* Grid lines */}
+      {/* Grid lines — subtle at rest */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           zIndex: 1,
-          opacity: phase === 'void' ? 0 : phase === 'grid' ? 0.3 : phase === 'shapes' ? 0.15 : 0.06,
-          transition: 'opacity 1.5s ease',
+          opacity: 0.06,
           backgroundImage:
             'linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),' +
             'linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)',
@@ -337,7 +275,7 @@ export default function HeroMosaic() {
         }}
       />
 
-      {/* Tile grid */}
+      {/* Tile grid — no container background; each tile fills its own cell */}
       <div
         style={{
           position: 'absolute',
@@ -346,11 +284,7 @@ export default function HeroMosaic() {
           gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
           gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
           gap: 0,
-          backgroundColor: '#030308',
-          opacity: gridOpacity,
-          filter: gridFilter,
-          transition: 'opacity 2s ease, filter 2.5s ease',
-          willChange: 'opacity, filter',
+          filter: 'grayscale(0) saturate(1.3)',
           transform: `translate(${(mouse.x - 0.5) * -12}px, ${(mouse.y - 0.5) * -12}px)`,
         }}
       >
@@ -362,10 +296,22 @@ export default function HeroMosaic() {
           const dx = mouse.x - tileCenterX;
           const dy = mouse.y - tileCenterY;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const proximityBoost = isAlive ? Math.max(0, 1 - dist * 2.2) : 0;
-          const stagger = (row * GRID_COLS + col) * 120;
+          const proximityBoost = !tile.shattered && !tile.breaking
+            ? Math.max(0, 1 - dist * 2.2)
+            : 0;
 
-          // Crack intensity visual — slight red tint as damage increases
+          // Shattered tile: empty cell. The text layer behind shows through.
+          if (tile.shattered) {
+            return (
+              <div
+                key={`tile-${i}`}
+                ref={el => { tileRefs.current[i] = el; }}
+                style={{ position: 'relative' }}
+                aria-hidden="true"
+              />
+            );
+          }
+
           const crackTint = tile.hits > 0 && !tile.breaking
             ? `brightness(${1 - tile.hits * 0.05})`
             : '';
@@ -377,42 +323,39 @@ export default function HeroMosaic() {
               style={{
                 position: 'relative',
                 overflow: 'hidden',
-                filter: isAlive && !tile.breaking
+                // Each intact tile carries its own opaque background so no
+                // text leaks through image transparency or image loading.
+                backgroundColor: tile.breaking ? 'transparent' : TILE_FILL_COLOR,
+                filter: !tile.breaking
                   ? `brightness(${1 + proximityBoost * 0.8}) saturate(${1 + proximityBoost * 1.2}) ${crackTint}`
-                  : crackTint || 'none',
-                transition: 'filter 0.4s ease, transform 0.6s ease',
-                transitionDelay: phase === 'shapes' ? `${stagger}ms` : '0ms',
-                transform: isAlive && !tile.breaking
+                  : 'none',
+                transition: 'filter 0.4s ease, transform 0.6s ease, background-color 0.15s ease',
+                transform: !tile.breaking
                   ? `scale(${1 + proximityBoost * 0.04})`
                   : 'none',
               }}
             >
-              {/* Image layer — hidden during shatter, animated during column drop */}
-              <div
-                key={`img-${tile.dropVersion}`}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  opacity: tile.breaking ? 0 : 1,
-                  transition: tile.breaking ? 'opacity 0.1s ease' : undefined,
-                  // Column drop animation
-                  ...(tile.dropping ? {
-                    animation: `columnSlotIn 0.55s cubic-bezier(0.22, 1.2, 0.36, 1) ${tile.dropDelay}ms both`,
-                  } : {}),
-                }}
-              >
-                <Image
-                  src={tile.src}
-                  alt={tile.alt}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="25vw"
-                  priority={i < 4}
-                />
-              </div>
+              {/* Image — hidden during shatter */}
+              {!tile.breaking && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                  }}
+                >
+                  <Image
+                    src={tile.src}
+                    alt={tile.alt}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="25vw"
+                    priority={i < 4}
+                  />
+                </div>
+              )}
 
               {/* Crack overlay — visible for hits 1 and 2 */}
-              {tile.hits > 0 && tile.hits < 3 && !tile.breaking && !tile.dropping && (
+              {tile.hits > 0 && tile.hits < 3 && !tile.breaking && (
                 <GlassCrackOverlay
                   width={tileRefs.current[i]?.offsetWidth ?? 300}
                   height={tileRefs.current[i]?.offsetHeight ?? 250}
@@ -434,7 +377,7 @@ export default function HeroMosaic() {
               )}
 
               {/* Impact flash — on every hit */}
-              {tile.hits > 0 && !tile.dropping && (
+              {tile.hits > 0 && (
                 <div
                   key={`flash-${tile.flashKey}`}
                   style={{
@@ -454,54 +397,23 @@ export default function HeroMosaic() {
       </div>
 
       {/* Mouse spotlight */}
-      {isAlive && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 2,
-            pointerEvents: 'none',
-            background: `radial-gradient(
-              ellipse 35% 40% at ${mouse.x * 100}% ${mouse.y * 100}%,
-              rgba(255, 255, 255, 0.06) 0%,
-              transparent 100%
-            )`,
-            transition: 'background 0.1s ease',
-          }}
-        />
-      )}
-
-      {/* Center vignette — relaxed so the hero text layer behind this
-          container is still legible through broken tiles */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          zIndex: 3,
+          zIndex: 2,
           pointerEvents: 'none',
           background: `radial-gradient(
-            ellipse 55% 50% at 50% 50%,
-            rgba(3, 3, 8, 0) 0%,
-            rgba(3, 3, 8, 0) 35%,
-            rgba(3, 3, 8, 0.35) 80%,
+            ellipse 35% 40% at ${mouse.x * 100}% ${mouse.y * 100}%,
+            rgba(255, 255, 255, 0.06) 0%,
             transparent 100%
           )`,
-        }}
-      />
-
-      {/* Edge fade */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 4,
-          pointerEvents: 'none',
-          boxShadow: 'inset 0 0 120px 60px #030308, inset 0 0 250px 100px rgba(3, 3, 8, 0.5)',
+          transition: 'background 0.1s ease',
         }}
       />
 
       {/* Throwable ball — client-only (ThrowBall touches window at render) */}
-      {mounted && isAlive && (
+      {mounted && (
         <ThrowBall
           onImpact={handleBallImpact}
           disabled={false}
@@ -514,28 +426,6 @@ export default function HeroMosaic() {
         @keyframes impactFlash {
           0% { opacity: 0.9; transform: scale(1); }
           100% { opacity: 0; transform: scale(1.4); }
-        }
-        @keyframes columnSlotIn {
-          0% {
-            transform: translateY(-90px);
-            opacity: 0;
-            filter: brightness(1.6) blur(2px);
-          }
-          35% {
-            opacity: 1;
-          }
-          70% {
-            transform: translateY(5px);
-            filter: brightness(1.1) blur(0px);
-          }
-          85% {
-            transform: translateY(-2px);
-          }
-          100% {
-            transform: translateY(0);
-            opacity: 1;
-            filter: brightness(1) blur(0px);
-          }
         }
       `}</style>
     </div>
