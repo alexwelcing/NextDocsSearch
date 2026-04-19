@@ -1,156 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext'
-import { JourneyProvider, useJourney } from '@/components/contexts/JourneyContext'
-import AchievementUnlock from '@/components/AchievementUnlock'
-import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
 import HeroMosaic from '@/components/HeroMosaic'
-import GameHUD from '@/components/overlays/GameHUD'
-import GameLeaderboard from '@/components/overlays/GameLeaderboard'
-import styles from '@/styles/Home.module.css'
-import { getRandomBackgroundImage } from '@/lib/backgroundImages'
 import { SITE_URL } from '@/lib/site-url'
-import InteractiveTablet from '@/components/3d/interactive/InteractiveTablet'
-import ArticleDisplayPanel from '@/components/3d/interactive/ArticleDisplayPanel'
-import type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
 import { Building2 } from 'lucide-react'
 
-// Dynamically import the 3D environment
-const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
-  ssr: false,
-  loading: () => <StylishFallback />,
-})
-
-function HomeContent() {
+export default function HomePage() {
   const siteUrl = SITE_URL
-  const [currentImage, setCurrentImage] = useState<string | null>(null)
-  const [articles, setArticles] = useState<any[]>([])
-  const [isIn3DMode, setIsIn3DMode] = useState<boolean>(true)
-  const [cinematicComplete] = useState(true)
-  const [isEntering] = useState(false)
-  const [isArticleDisplayOpen, setIsArticleDisplayOpen] = useState(false)
-
-  // Game state (mirrors ThreeSixty's game management)
-  const [gameState, setGameState] = useState<GameState>('IDLE')
-  const [score, setScore] = useState(0)
-  const [timeRemaining, setTimeRemaining] = useState(30)
-  const [combo, setCombo] = useState(0)
-  const [countdown, setCountdown] = useState(3)
-  const [gameStats, setGameStats] = useState<GameStats>({
-    score: 0, comboMax: 0, accuracy: 0, totalClicks: 0, successfulClicks: 0,
-  })
-
-  const { achievements, completeQuest, updateStats, currentQuest } = useJourney()
-  const [currentAchievement, setCurrentAchievement] = useState<typeof achievements[0] | null>(null)
-
-  useEffect(() => {
-    const unlockedAchievements = achievements.filter(a => a.unlocked)
-    if (unlockedAchievements.length > 0) {
-      const latest = unlockedAchievements[unlockedAchievements.length - 1]
-      setCurrentAchievement(latest)
-    }
-  }, [achievements])
-
-  const getRandomImage = useCallback(() => {
-    setCurrentImage(getRandomBackgroundImage())
-  }, [])
-
-  async function fetchArticles() {
-    try {
-      const response = await fetch('/api/articles')
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      const data = await response.json()
-      setArticles(data)
-    } catch (error) {
-      console.error('Failed to fetch articles:', error)
-    }
-  }
-
-  // On initial mount, fetch a random background for the 3D environment
-  useEffect(() => {
-    getRandomImage()
-    fetchArticles()
-  }, [getRandomImage])
-
-  const handleEnter3D = useCallback(() => {
-    setIsIn3DMode(true)
-  }, [])
-
-  const handleToggle3D = useCallback(() => {
-    setIsIn3DMode(prev => !prev)
-  }, [])
-
-  // Game handlers (matching ThreeSixty's game flow)
-  const handleStartGame = useCallback(() => {
-    setGameState('COUNTDOWN')
-    setCountdown(3)
-    setScore(0)
-    setCombo(0)
-
-    const countdownInterval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval)
-          setTimeout(() => {
-            setGameState('PLAYING')
-            setTimeRemaining(30)
-          }, 500)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-  }, [])
-
-  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
-    setScore(finalScore)
-    setGameStats(stats)
-    setGameState('GAME_OVER')
-    updateStats('highestGameScore', finalScore)
-    if (currentQuest?.id === 'play-game') completeQuest('play-game')
-    if (finalScore >= 5000) completeQuest('leaderboard-rank')
-  }, [updateStats, currentQuest, completeQuest])
-
-  const handlePlayAgain = useCallback(() => {
-    setGameState('IDLE')
-    setTimeout(() => handleStartGame(), 100)
-  }, [handleStartGame])
-
-  // Scenery switching
-  const handleChangeImage = useCallback((newImage: string) => {
-    setCurrentImage(newImage)
-  }, [])
-
-  const sceneryOptions = useMemo(() => {
-    const options: { id: string; name: string; type: 'image' | 'splat'; path: string }[] = []
-    if (currentImage) {
-      options.push({ id: 'current-panorama', name: 'Default Panorama', type: 'image', path: currentImage })
-    }
-    return options
-  }, [currentImage])
-
-  const handleSceneryChange = useCallback((scenery: { type: string; path: string }) => {
-    if (scenery.type === 'image') {
-      setCurrentImage(scenery.path)
-    }
-  }, [])
-
-  // Build world config from random image
-  const worldConfig = React.useMemo(() => {
-    if (!currentImage) return 'default';
-    return {
-      id: 'dynamic-home',
-      name: 'Dynamic Home',
-      assets: {
-        fallbackPanorama: currentImage
-      }
-    } as any;
-  }, [currentImage]);
 
   return (
     <>
@@ -232,226 +89,143 @@ function HomeContent() {
         }}
       />
 
-        {isIn3DMode ? (
-          <main className={`${styles.main} ${styles.gradientbg}`}>
-            <Scene3D
-              world={worldConfig}
-              articles={articles}
-              onGameStateChange={(state: string) => setGameState(state as GameState)}
-              gameState={gameState}
-              onStartGame={handleStartGame}
-              onGameEnd={handleGameEnd}
-              onScoreUpdate={setScore}
-              onComboUpdate={setCombo}
-              onTimeUpdate={setTimeRemaining}
+      <div className="min-h-screen text-white">
+        {/* Hero - Immersive mosaic wall */}
+        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+          <HeroMosaic />
+
+          {/* Content overlay */}
+          <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
+            <h1
+              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
+              style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                letterSpacing: '-0.03em',
+                lineHeight: 1.05,
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                fontWeight: 800,
+              }}
             >
-              <ArticleDisplayPanel
-                isOpen={isArticleDisplayOpen}
-                onClose={() => setIsArticleDisplayOpen(false)}
-              />
-            </Scene3D>
-
-            {/* InteractiveTablet — full-featured HUD (matches a1d8fbb ThreeSixty) */}
-            <InteractiveTablet
-              isGamePlaying={gameState === 'PLAYING' || gameState === 'COUNTDOWN'}
-              articles={articles}
-              onStartGame={handleStartGame}
-              onChangeScenery={handleSceneryChange}
-              availableScenery={sceneryOptions}
-              currentScenery={currentImage ?? undefined}
-              onToggleArticleDisplay={() => setIsArticleDisplayOpen(prev => !prev)}
-              isArticleDisplayOpen={isArticleDisplayOpen}
-              onExitToLanding={handleToggle3D}
-            />
-
-            {/* Game countdown overlay */}
-            {gameState === 'COUNTDOWN' && (
-              <div style={{
-                position: 'fixed', inset: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(0, 0, 0, 0.7)', zIndex: 1000,
+              <span style={{
+                background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}>
-                <div style={{
-                  fontSize: '120px', fontWeight: 'bold', color: '#0f0', fontFamily: 'monospace',
-                }}>
-                  {countdown || 'GO'}
-                </div>
-              </div>
-            )}
+                AI Strategy & Product Leadership
+              </span>
+            </h1>
+            <p
+              className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2"
+              style={{
+                fontFamily: "'Inter', -apple-system, sans-serif",
+                color: 'rgba(255, 255, 255, 0.7)',
+                letterSpacing: '0.01em',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                maxWidth: '600px',
+              }}
+            >
+              Building intelligent systems and frameworks for emergent AI futures
+            </p>
 
-            {/* Game HUD */}
-            {gameState === 'PLAYING' && (
-              <GameHUD score={score} timeRemaining={timeRemaining} combo={combo} isPlaying={true} />
-            )}
+            {/* Recruiter badge */}
+            <Link
+              href="/current-work"
+              className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm hover:bg-purple-500/20 transition"
+            >
+              <Building2 className="w-4 h-4" />
+              Currently building — View my work
+            </Link>
 
-            {/* Game Over leaderboard */}
-            {gameState === 'GAME_OVER' && (
-              <GameLeaderboard
-                playerScore={score}
-                playerStats={gameStats}
-                onPlayAgain={handlePlayAgain}
-                onClose={() => setGameState('IDLE')}
-              />
-            )}
-
-            {/* Achievement popups disabled - they were too intrusive */}
-            {/* <AchievementUnlock achievement={currentAchievement} onDismiss={() => setCurrentAchievement(null)} /> */}
-          </main>
-        ) : (
-          <div
-            className="min-h-screen text-white"
-            style={{
-              opacity: isEntering ? 0 : 1,
-              transition: 'opacity 0.3s ease-out',
-            }}
-          >
-            {/* Hero - Immersive mosaic wall */}
-            <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-              <HeroMosaic />
-
-              {/* Content overlay */}
-              <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
-                <h1
-                  className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
-                  style={{
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    letterSpacing: '-0.03em',
-                    lineHeight: 1.05,
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    fontWeight: 800,
-                  }}
-                >
-                  <span style={{
-                    background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}>
-                    AI Strategy & Product Leadership
-                  </span>
-                </h1>
-                <p
-                  className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2"
-                  style={{
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    letterSpacing: '0.01em',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    maxWidth: '600px',
-                  }}
-                >
-                  Building intelligent systems and frameworks for emergent AI futures
-                </p>
-
-                {/* Recruiter badge */}
-                <Link 
-                  href="/current-work"
-                  className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm hover:bg-purple-500/20 transition"
-                >
-                  <Building2 className="w-4 h-4" />
-                  Currently building — View my work
-                </Link>
-
-                {/* Two clear paths */}
-                <div className="flex flex-col sm:flex-row gap-6 mt-12">
-                  <Link
-                    href="/current-work"
-                    className="group relative px-8 py-4 overflow-hidden"
-                    style={{
-                      background: 'rgba(168, 85, 247, 0.1)',
-                      border: '1px solid rgba(168, 85, 247, 0.4)',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-purple-400 group-hover:text-purple-300 transition-colors">
-                      Current Work
-                    </span>
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.1))',
-                      }}
-                    />
-                  </Link>
-
-                  <Link
-                    href="/articles"
-                    className="group relative px-8 py-4 overflow-hidden"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-white/80 group-hover:text-white transition-colors">
-                      Read Articles
-                    </span>
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(255, 215, 0, 0.05))',
-                      }}
-                    />
-                  </Link>
-
-                  <button
-                    onClick={handleEnter3D}
-                    className="group relative px-8 py-4 overflow-hidden cursor-pointer"
-                    style={{
-                      background: 'rgba(0, 212, 255, 0.08)',
-                      border: '1px solid rgba(0, 212, 255, 0.3)',
-                      borderRadius: '2px',
-                    }}
-                  >
-                    <span className="relative z-10 text-sm font-medium tracking-widest uppercase" style={{ color: 'rgba(0, 212, 255, 0.9)' }}>
-                      3D Experience
-                    </span>
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05))',
-                      }}
-                    />
-                  </button>
-                </div>
-              </div>
-
-              {/* Scroll indicator */}
-              <div
-                className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            {/* Two clear paths */}
+            <div className="flex flex-col sm:flex-row gap-6 mt-12">
+              <Link
+                href="/current-work"
+                className="group relative px-8 py-4 overflow-hidden"
                 style={{
-                  animation: 'float 3s ease-in-out infinite',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  border: '1px solid rgba(168, 85, 247, 0.4)',
+                  borderRadius: '2px',
                 }}
               >
+                <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-purple-400 group-hover:text-purple-300 transition-colors">
+                  Current Work
+                </span>
                 <div
-                  className="w-px h-16 opacity-30"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
+                    background: 'linear-gradient(90deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.1))',
                   }}
                 />
-              </div>
+              </Link>
 
-              <style jsx>{`
-                @keyframes float {
-                  0%, 100% { transform: translateX(-50%) translateY(0); }
-                  50% { transform: translateX(-50%) translateY(8px); }
-                }
-              `}</style>
-            </section>
+              <Link
+                href="/articles"
+                className="group relative px-8 py-4 overflow-hidden"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '2px',
+                }}
+              >
+                <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-white/80 group-hover:text-white transition-colors">
+                  Read Articles
+                </span>
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(255, 215, 0, 0.05))',
+                  }}
+                />
+              </Link>
+
+              <Link
+                href="/explore"
+                className="group relative px-8 py-4 overflow-hidden"
+                style={{
+                  background: 'rgba(0, 212, 255, 0.08)',
+                  border: '1px solid rgba(0, 212, 255, 0.3)',
+                  borderRadius: '2px',
+                }}
+              >
+                <span className="relative z-10 text-sm font-medium tracking-widest uppercase" style={{ color: 'rgba(0, 212, 255, 0.9)' }}>
+                  3D Experience
+                </span>
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05))',
+                  }}
+                />
+              </Link>
+            </div>
           </div>
-        )}
-    </>
-  )
-}
 
-export default function HomePage() {
-  return (
-    <SupabaseDataProvider>
-      <JourneyProvider>
-        <HomeContent />
-      </JourneyProvider>
-    </SupabaseDataProvider>
+          {/* Scroll indicator */}
+          <div
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            style={{
+              animation: 'float 3s ease-in-out infinite',
+            }}
+          >
+            <div
+              className="w-px h-16 opacity-30"
+              style={{
+                background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
+              }}
+            />
+          </div>
+
+          <style jsx>{`
+            @keyframes float {
+              0%, 100% { transform: translateX(-50%) translateY(0); }
+              50% { transform: translateX(-50%) translateY(8px); }
+            }
+          `}</style>
+        </section>
+      </div>
+    </>
   )
 }

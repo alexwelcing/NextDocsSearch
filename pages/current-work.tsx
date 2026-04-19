@@ -33,13 +33,18 @@ export default function CurrentWork() {
         {/* Open Graph */}
         <meta property="og:title" content="Current Work | Alex Welcing — AI Product Leadership" />
         <meta property="og:description" content="Technical Product Manager building intelligent systems for global legal intelligence. Exploring emergent AI futures." />
+        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content={`${siteUrl}/current-work`} />
         <meta property="og:type" content="profile" />
-        
+
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Current Work | Alex Welcing — AI Product Leadership" />
         <meta name="twitter:description" content="Technical Product Manager for global legal intelligence. Building emergent AI systems." />
+        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
         
         {/* Profile Structured Data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{
