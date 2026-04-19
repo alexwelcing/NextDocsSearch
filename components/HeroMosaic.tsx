@@ -302,7 +302,7 @@ export default function HeroMosaic() {
     phase === 'grid' ? 0.15 :
     phase === 'shapes' ? 0.4 :
     phase === 'color' ? 0.7 :
-    0.85;
+    1.0;
 
   const gridFilter =
     phase === 'void' ? 'grayscale(1) brightness(0)' :
