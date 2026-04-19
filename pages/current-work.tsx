@@ -2,37 +2,31 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { SITE_URL } from '@/lib/site-url';
-import { 
-  Zap, 
-  Target, 
-  Users, 
-  Lightbulb, 
-  ArrowRight, 
-  Mail, 
-  Linkedin, 
-  Github, 
+import {
+  ArrowRight,
+  Mail,
+  Linkedin,
+  Github,
   Building2,
-  Brain,
-  Lock,
-  Clock,
-  Star
 } from 'lucide-react';
 
 export default function CurrentWork() {
   const siteUrl = SITE_URL;
-  
+  const description =
+    'Four research areas: coordination across model providers, agent authentication and security, UX development with AI, and materials science and molecular dynamics.';
+
   return (
     <>
       <Head>
         <title>Work — Alex Welcing</title>
-        <meta name="description" content="A partial list of what has my attention." />
-        <meta name="keywords" content="Alex Welcing, work, legal intelligence, regulated AI" />
+        <meta name="description" content={description} />
+        <meta name="keywords" content="Alex Welcing, work, multi-provider agents, agent authentication, AI UX, materials science, molecular dynamics, glimPSE, lupine" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={`${siteUrl}/current-work`} />
 
         {/* Open Graph */}
         <meta property="og:title" content="Work — Alex Welcing" />
-        <meta property="og:description" content="A partial list of what has my attention." />
+        <meta property="og:description" content={description} />
         <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -43,7 +37,7 @@ export default function CurrentWork() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Work — Alex Welcing" />
-        <meta name="twitter:description" content="A partial list of what has my attention." />
+        <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
 
         {/* Profile Structured Data */}
@@ -54,7 +48,7 @@ export default function CurrentWork() {
             "mainEntity": {
               "@type": "Person",
               "name": "Alex Welcing",
-              "description": "A partial list of what has my attention.",
+              "description": description,
               "url": siteUrl,
               "sameAs": [
                 "https://www.linkedin.com/in/alexwelcing",
@@ -98,27 +92,31 @@ export default function CurrentWork() {
               <Building2 className="w-4 h-4" />
               Currently Building
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
               Work
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-400 mb-8 leading-relaxed">
-              A partial list of what has my attention right now. Working with a
-              portfolio company that leads in legal intelligence, and building AI
-              products that survive contact with real users in regulated industries.
+              Four threads, one shared premise: the interesting problems in AI
+              right now aren&apos;t inside the model — they&apos;re in the coordination
+              layer around it. Between providers. Between the agent and the person
+              authorizing it. Between the model&apos;s confidence and the human&apos;s
+              trust. Between the simulation and the experiment. The gap between
+              what a model can do and what it can do <em>for you</em> is where I
+              spend my time.
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <a 
-                href="mailto:alexwelcing@gmail.com" 
+              <a
+                href="mailto:alexwelcing@gmail.com"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-lg transition"
               >
                 <Mail className="w-5 h-5" />
                 Get in Touch
               </a>
-              <Link 
-                href="/articles" 
+              <Link
+                href="/articles"
                 className="inline-flex items-center gap-2 px-8 py-4 border border-white/20 hover:border-white/40 rounded-lg transition"
               >
                 Read My Research
@@ -128,212 +126,193 @@ export default function CurrentWork() {
           </div>
         </section>
 
-        {/* Current Role */}
+        {/* Section 1 — Coordination */}
         <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/10">
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="md:col-span-2">
-              <h2 className="text-3xl font-bold mb-6">Current Focus</h2>
-              <div className="space-y-6 text-slate-300 text-lg leading-relaxed">
-                <p>
-                  A partial list of what has my attention right now.
-                </p>
-                <p>
-                  Current day work: bridging AI capabilities and the rigorous demands
-                  of legal technology. Architecting systems that handle sensitive legal
-                  data with precision, developing AI-powered research tools that augment
-                  human expertise, and navigating the intersection of innovation and
-                  regulatory compliance.
-                </p>
-                <p>
-                  Legal intelligence presents unique challenges: high-stakes decision
-                  making, strict accuracy requirements, complex data relationships, and
-                  the need for explainable AI in a domain where transparency matters.
-                  Building products in this space requires both technical depth and
-                  domain sensitivity.
-                </p>
-              </div>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-sm text-slate-500 mb-2">Role</div>
-                <div className="font-semibold text-white">Product Manager</div>
-                <div className="text-sm text-cyan-400 mt-1">Portfolio company, legal intelligence</div>
-              </div>
-              
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-sm text-slate-500 mb-2">Domain</div>
-                <div className="font-semibold text-white">Legal Intelligence</div>
-                <div className="text-sm text-cyan-400 mt-1">Global market leadership</div>
-              </div>
-              
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-sm text-slate-500 mb-2">Focus Areas</div>
-                <ul className="text-sm text-slate-300 space-y-1 mt-2">
-                  <li>• AI-powered legal research</li>
-                  <li>• Enterprise data systems</li>
-                  <li>• Regulatory compliance</li>
-                  <li>• Human-AI collaboration</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Core Competencies */}
-        <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/10">
-          <h2 className="text-3xl font-bold mb-12 text-center">Core Competencies</h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Zap,
-                title: "LLM Expertise",
-                description: "Deep experience with GPT-4, Claude, and open-source models. Built production RAG systems and agent architectures for enterprise contexts."
-              },
-              {
-                icon: Target,
-                title: "Product Strategy",
-                description: "Translating technical capabilities into market-winning products. Experience across startup and enterprise environments."
-              },
-              {
-                icon: Users,
-                title: "Team Leadership",
-                description: "Leading cross-functional teams of engineers, designers, and researchers. Building AI products from 0 to 1 in complex domains."
-              },
-              {
-                icon: Lightbulb,
-                title: "Technical Depth",
-                description: "Former developer turned PM. Can code, architect systems, and communicate effectively with both engineers and executives."
-              }
-            ].map((item, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-500/30 transition">
-                <item.icon className="w-10 h-10 text-cyan-400 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Proof of Work */}
-        <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/10">
-          <h2 className="text-3xl font-bold mb-12 text-center">Proof of Work</h2>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/10">
-              <div className="text-4xl font-bold text-cyan-400 mb-2">3D</div>
-              <p className="text-slate-300 mb-4">Interactive AI Interface</p>
-              <p className="text-slate-400 text-sm">Built immersive 3D environment for AI interaction using React Three Fiber, Gaussian Splats, and real-time LLM integration.</p>
-            </div>
-            
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-white/10">
-              <div className="text-4xl font-bold text-purple-400 mb-2">RAG</div>
-              <p className="text-slate-300 mb-4">Semantic Search System</p>
-              <p className="text-slate-400 text-sm">Implemented vector search with OpenAI embeddings, Supabase pgvector, and hybrid lexical+semantic retrieval.</p>
-            </div>
-            
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-white/10">
-              <div className="text-4xl font-bold text-emerald-400 mb-2">AI</div>
-              <p className="text-slate-300 mb-4">Agent Architecture</p>
-              <p className="text-slate-400 text-sm">Designed multi-modal AI agents with tool use, memory systems, and structured output parsing.</p>
-            </div>
-          </div>
-          
-          <div className="text-center mt-8">
-            <Link 
-              href="/" 
-              className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition"
-            >
-              Explore full portfolio <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </section>
-
-        {/* Dot Dot Dot — Stealth Tech */}
-        <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/10">
-          <div className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-slate-900/50 via-purple-950/20 to-slate-900/50 border border-white/10 overflow-hidden">
-            {/* Animated background elements */}
-            <div className="absolute inset-0 opacity-30">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-            </div>
-            
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20">
-                  <Star className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm text-purple-400 font-medium">In Development</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-white/10">
-                  <Lock className="w-4 h-4 text-slate-500" />
-                  <span className="text-sm text-slate-500">Stealth Mode</span>
-                </div>
-              </div>
-              
-              <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                <span className="text-slate-600">.</span>
-                <span className="text-slate-500">.</span>
-                <span className="text-slate-400">.</span>
-              </h2>
-              
-              <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mb-8 leading-relaxed">
-                There are projects in development that push beyond current boundaries. 
-                Work that explores the edges of what&apos;s possible with emergent intelligence, 
-                autonomous systems, and the future of human-AI collaboration.
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-bold mb-6">Coordination across model providers for long-running research</h2>
+            <div className="space-y-6 text-slate-300 text-lg leading-relaxed">
+              <p>
+                No single model provider runs a 48-hour research job well. Claude
+                has the reasoning, Gemini has the context window, local models have
+                the rate-limit headroom, a specialized model has the domain
+                knowledge. The actual research workflow inevitably crosses
+                provider boundaries, and every crossing today is a manual
+                handoff — copy a transcript, paste it into the next interface,
+                re-explain the goal, hope the next model catches the thread.
               </p>
-              
-              <div className="flex flex-wrap gap-6 text-sm text-slate-500">
-                <div className="flex items-center gap-2">
-                  <Brain className="w-4 h-4" />
-                  <span>Autonomous agents</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <span>Temporal reasoning</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Star className="w-4 h-4" />
-                  <span>Emergent behaviors</span>
-                </div>
-              </div>
-              
-              <div className="mt-12 pt-8 border-t border-white/10">
-                <p className="text-slate-400 italic">
-                  &ldquo;The most interesting work happens in the spaces between what&apos;s 
-                  documented and what&apos;s discovered.&rdquo;
-                </p>
-              </div>
+              <p>
+                The Hermitage is my attempt to do that coordination
+                programmatically. A dedicated VM running an Agent Manager UI
+                that dispatches tasks to Claude, Gemini, and local models based
+                on which one is best for the subtask, and a Covenant dashboard
+                that tracks which agent is holding which piece of state.
+                It&apos;s a crude first draft of something that, done right,
+                would be worth the whole current model-wrapper app category put
+                together.
+              </p>
+              <p>
+                The interesting technical question isn&apos;t &ldquo;which model
+                is smartest.&rdquo; It&apos;s: how does state — memory, open
+                questions, partial conclusions, sources, corrections — survive
+                a handoff between providers that don&apos;t know about each
+                other? Whoever builds that layer cleanly gets to run research
+                jobs the scale of a small lab out of a single laptop.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Writing & Research */}
+        {/* Section 2 — Auth and security */}
         <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/10">
-          <h2 className="text-3xl font-bold mb-12">Writing & Research</h2>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <Link 
-              href="/articles" 
-              className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-500/30 transition group"
-            >
-              <h3 className="text-xl font-semibold mb-3 group-hover:text-cyan-400 transition">Speculative AI Futures</h3>
-              <p className="text-slate-400 mb-4">Exploring the edges of AI possibility through narrative and technical analysis. The Reaching series and research on emergent intelligence.</p>
-              <span className="text-cyan-400 text-sm flex items-center gap-2">
-                Read articles <ArrowRight className="w-4 h-4" />
-              </span>
-            </Link>
-            
-            <Link 
-              href="/agent-futures" 
-              className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-500/30 transition group"
-            >
-              <h3 className="text-xl font-semibold mb-3 group-hover:text-cyan-400 transition">Agent Architectures</h3>
-              <p className="text-slate-400 mb-4">Technical deep-dives into building autonomous systems, memory architectures, and the infrastructure of agent-based applications.</p>
-              <span className="text-cyan-400 text-sm flex items-center gap-2">
-                Explore research <ArrowRight className="w-4 h-4" />
-              </span>
-            </Link>
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-bold mb-6">User and agent authentication and security</h2>
+            <div className="space-y-6 text-slate-300 text-lg leading-relaxed">
+              <p>
+                Existing auth was built assuming a human is at the endpoint.
+                OAuth screens, SMS 2FA, &ldquo;click approve on your
+                phone&rdquo; — the consent ceremony is sized to match a single
+                human action. Agents break that in both directions: they need
+                credentials to do useful work, and they need to prove to third
+                parties that they&apos;re acting inside a scope the user
+                authorized.
+              </p>
+              <p>
+                My first startup, LBR, was identity and access work. The
+                problems I hit with agents now are the same category, one
+                abstraction layer up. I run my personal agents on a Compute
+                Engine VM via Chrome Remote Desktop specifically to sidestep
+                credential delegation — the agent acts through my actual
+                logged-in browser, so there&apos;s no &ldquo;give Claude my API
+                token&rdquo; moment. That&apos;s not a solution; it&apos;s
+                evidence that the tooling is bad enough that operating a remote
+                desktop is the least-bad available option.
+              </p>
+              <p>
+                What I&apos;m watching for: scoped, revocable, time-bounded
+                credentials built for agents instead of humans. Tokens that say
+                &ldquo;this agent can read my Gmail for the next 4 hours,
+                cannot send, cannot delete, and emits an audit trail I can
+                review.&rdquo; That primitive doesn&apos;t exist yet, and
+                it&apos;s the thing that unlocks everything downstream —
+                agent-to-agent delegation, marketplaces, third-party agent
+                integrations — without the whole system collapsing into a
+                trust bankruptcy the first time an agent gets prompt-injected.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 3 — UX with AI */}
+        <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/10">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-bold mb-6">UX development with AI</h2>
+            <div className="space-y-6 text-slate-300 text-lg leading-relaxed">
+              <p>
+                Most AI UX today is a chat box wrapped around a model.
+                That&apos;s not design; it&apos;s exposure. Real design shows
+                up in the moments the chat box handles badly: when the model is
+                uncertain and doesn&apos;t say so, when the user wants to
+                interrupt and there&apos;s no way, when the answer is partially
+                right and the interface offers no tool for correction, when
+                trust is violated and there&apos;s no recovery path.
+              </p>
+              <p>
+                Trust calibration is the through-line. I wrote about it in{' '}
+                <Link
+                  href="/articles/trust-calibration-ai-ux"
+                  className="text-cyan-400 hover:text-cyan-300 underline italic"
+                >
+                  trust-calibration-ai-ux
+                </Link>{' '}
+                because it&apos;s the UX problem I kept hitting at Manatt —
+                lawyers needed document-AI outputs to be <em>useful</em> and{' '}
+                <em>distrustable in the right proportion</em>. Too confident,
+                and they stopped reading critically; too hedged, and they
+                stopped using it. The interface has to carry signals the model
+                itself doesn&apos;t know how to emit.
+              </p>
+              <p>
+                The{' '}
+                <Link href="/explore" className="text-cyan-400 hover:text-cyan-300 underline">
+                  /explore
+                </Link>{' '}
+                routes on this site are me poking at adjacent shapes: what if
+                the narrative context for AI-generated content were spatial?
+                What if the reader could walk around inside the essay instead
+                of scrolling past it? Not a claim these are the answer — a
+                claim that the chat-box default deserves actual competition.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4 — Materials science and MD */}
+        <section className="max-w-6xl mx-auto px-6 py-20 border-t border-white/10">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-bold mb-6">Materials science and molecular dynamics</h2>
+            <div className="space-y-6 text-slate-300 text-lg leading-relaxed">
+              <p>
+                The current build is{' '}
+                <a
+                  href="https://lupine.science"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold text-white hover:text-cyan-300 underline"
+                >
+                  glimPSE
+                </a>
+                {' '}— a WebGPU-powered web app for LAMMPS molecular dynamics
+                visualization. Drag a dump file into the browser, first frame
+                renders in under two seconds, rotate around millions of atoms
+                at 60fps, export a 4K publication image or an MP4 without
+                installing anything. The competitive field right now is OVITO
+                (desktop, paid-per-seat for the features researchers actually
+                need for papers), VMD (1990s-era UI that routinely explodes to
+                220GB of RAM on a 4GB trajectory), and 50-line matplotlib
+                scripts that only produce 2D plots. Nobody else has built a
+                WebGPU-native molecular visualization tool for materials
+                science, and they should have.
+              </p>
+              <p>
+                glimPSE is the wedge for <strong className="text-white">glim</strong> — a
+                longer-horizon open-source platform meant to unify DFT
+                (VASP-compatible plane-wave PAW), classical and reactive
+                molecular dynamics (LAMMPS-compatible), and an ML interatomic
+                potential pipeline into one stack. The current research tooling
+                landscape is a chain of specialized command-line programs with
+                incompatible file formats, duplicated UIs, and paywalls at the
+                quality-matters boundary. It&apos;s the same meta-problem from
+                the first section: the capability already exists; the
+                coordination layer around it is missing.
+              </p>
+              <p>
+                The materials-science version of the coordination problem is
+                especially tangible — a DFT simulation produces training data
+                for an ML potential, which enables a much larger MD simulation,
+                which reveals a structural motif worth refining with more DFT.
+                Nothing about that loop has to be hand-wired by a grad student,
+                and nothing about the visualization layer has to cost per-seat
+                per-year. Live at{' '}
+                <a
+                  href="https://lupine.science"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-cyan-300 underline"
+                >
+                  lupine.science
+                </a>
+                ; code, product plan, and research notes are public in the{' '}
+                <a
+                  href="https://github.com/alexwelcing/lupine"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-cyan-300 underline"
+                >
+                  lupine repo
+                </a>
+                .
+              </p>
+            </div>
           </div>
         </section>
 
@@ -342,20 +321,20 @@ export default function CurrentWork() {
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Let&apos;s Connect</h2>
             <p className="text-slate-400 mb-8">
-              Interested in AI product strategy, legal tech, or exploring emergent intelligence? 
-              I&apos;m always open to meaningful conversations.
+              Interested in any of these threads? I&apos;m always open to
+              meaningful conversations.
             </p>
-            
+
             <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <a 
-                href="mailto:alexwelcing@gmail.com" 
+              <a
+                href="mailto:alexwelcing@gmail.com"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition"
               >
                 <Mail className="w-5 h-5" />
                 alexwelcing@gmail.com
               </a>
-              <a 
-                href="https://www.linkedin.com/in/alexwelcing" 
+              <a
+                href="https://www.linkedin.com/in/alexwelcing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition"
@@ -363,8 +342,8 @@ export default function CurrentWork() {
                 <Linkedin className="w-5 h-5" />
                 LinkedIn
               </a>
-              <a 
-                href="https://github.com/alexwelcing" 
+              <a
+                href="https://github.com/alexwelcing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition"
