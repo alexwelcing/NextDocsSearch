@@ -67,14 +67,6 @@ interface TileState {
   flashKey: number;                         // increment to restart impact flash
 }
 
-const PHASE_TIMING: Record<DescentPhase, number> = {
-  void: 0,
-  grid: 800,
-  shapes: 2000,
-  color: 4000,
-  alive: 6000,
-};
-
 // ─── Component ────────────────────────────────────────────────────────────
 
 function makeTileState(t: { src: string; alt: string }): TileState {
@@ -94,7 +86,7 @@ function makeTileState(t: { src: string; alt: string }): TileState {
 }
 
 export default function HeroMosaic() {
-  const [phase, setPhase] = useState<DescentPhase>('void');
+  const [phase, setPhase] = useState<DescentPhase>('alive');
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
   const containerRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -130,14 +122,6 @@ export default function HeroMosaic() {
         // API failed — stick with fallback tiles, no replacement pool needed
       });
     return () => { cancelled = true; };
-  }, []);
-
-  // Phase progression
-  useEffect(() => {
-    const timers = (Object.entries(PHASE_TIMING) as [DescentPhase, number][])
-      .filter(([p]) => p !== 'void')
-      .map(([p, delay]) => setTimeout(() => setPhase(p), delay));
-    return () => timers.forEach(clearTimeout);
   }, []);
 
   // Mouse tracking
@@ -309,7 +293,7 @@ export default function HeroMosaic() {
     phase === 'grid' ? 'grayscale(1) brightness(0.3) contrast(1.5)' :
     phase === 'shapes' ? 'grayscale(0.8) brightness(0.4) contrast(1.2)' :
     phase === 'color' ? 'grayscale(0.3) brightness(0.5) saturate(1.2)' :
-    'grayscale(0) brightness(0.55) saturate(1.3)';
+    'grayscale(0) saturate(1.3)';
 
   const isAlive = phase === 'alive';
   // Ball is never globally disabled — handleBallImpact skips
@@ -356,7 +340,8 @@ export default function HeroMosaic() {
           display: 'grid',
           gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
           gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
-          gap: '2px',
+          gap: 0,
+          backgroundColor: '#030308',
           opacity: gridOpacity,
           filter: gridFilter,
           transition: 'opacity 2s ease, filter 2.5s ease',
