@@ -89,7 +89,7 @@ module.exports = {
     }
     // Explore landing — primary entry to interactive layer
     else if (path === '/explore') {
-      priority = 0.85
+      priority = 0.7
       changefreq = 'weekly'
     }
     // Explore sub-routes
