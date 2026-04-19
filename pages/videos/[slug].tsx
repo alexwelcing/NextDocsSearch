@@ -462,7 +462,7 @@ const VideoPage: NextPage<VideoPageProps> = ({
   return (
     <PageLayout>
       <Head>
-        <title>{title} | Video | Alex Welcing</title>
+        <title>{`${title} | Video | Alex Welcing`}</title>
         <meta name="description" content={description} />
         <meta name="robots" content="index, follow, max-video-preview: -1" />
         <link rel="canonical" href={videoUrl} />
