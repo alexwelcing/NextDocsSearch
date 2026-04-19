@@ -146,63 +146,66 @@ export default function HomePage() {
 
           {/* CTAs — above tiles */}
           <div className="relative z-20 flex flex-col items-center justify-end text-center px-6 max-w-5xl pb-16" style={{ marginTop: 'auto' }}>
-            <div className="flex flex-col sm:flex-row gap-6">
+            <div className="flex flex-col sm:flex-row gap-5">
               <Link
                 href="/current-work"
-                className="group relative px-8 py-4 overflow-hidden"
+                className="group relative px-8 py-4 overflow-hidden transition-transform hover:-translate-y-0.5"
                 style={{
-                  background: 'rgba(168, 85, 247, 0.1)',
-                  border: '1px solid rgba(168, 85, 247, 0.4)',
-                  borderRadius: '2px',
+                  background: 'rgba(168, 85, 247, 0.9)',
+                  border: '2px solid rgba(216, 180, 254, 0.9)',
+                  borderRadius: '6px',
+                  boxShadow: '0 8px 24px rgba(168, 85, 247, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25)',
                 }}
               >
-                <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-purple-400 group-hover:text-purple-300 transition-colors">
+                <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-white drop-shadow-sm">
                   Current Work
                 </span>
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.1))',
+                    background: 'linear-gradient(90deg, rgba(216, 180, 254, 0.25), rgba(168, 85, 247, 0.15))',
                   }}
                 />
               </Link>
 
               <Link
                 href="/articles"
-                className="group relative px-8 py-4 overflow-hidden"
+                className="group relative px-8 py-4 overflow-hidden transition-transform hover:-translate-y-0.5"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '2px',
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  border: '2px solid rgba(255, 255, 255, 1)',
+                  borderRadius: '6px',
+                  boxShadow: '0 8px 24px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
                 }}
               >
-                <span className="relative z-10 text-sm font-medium tracking-widest uppercase text-white/80 group-hover:text-white transition-colors">
+                <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-slate-950">
                   Read Articles
                 </span>
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(255, 215, 0, 0.05))',
+                    background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.18), rgba(255, 215, 0, 0.12))',
                   }}
                 />
               </Link>
 
               <Link
                 href="/explore"
-                className="group relative px-8 py-4 overflow-hidden"
+                className="group relative px-8 py-4 overflow-hidden transition-transform hover:-translate-y-0.5"
                 style={{
-                  background: 'rgba(0, 212, 255, 0.08)',
-                  border: '1px solid rgba(0, 212, 255, 0.3)',
-                  borderRadius: '2px',
+                  background: 'rgba(0, 212, 255, 0.92)',
+                  border: '2px solid rgba(125, 230, 255, 1)',
+                  borderRadius: '6px',
+                  boxShadow: '0 8px 24px rgba(0, 212, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
                 }}
               >
-                <span className="relative z-10 text-sm font-medium tracking-widest uppercase" style={{ color: 'rgba(0, 212, 255, 0.9)' }}>
+                <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-slate-950">
                   3D Experience
                 </span>
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05))',
+                    background: 'linear-gradient(90deg, rgba(125, 230, 255, 0.35), rgba(0, 212, 255, 0.2))',
                   }}
                 />
               </Link>
