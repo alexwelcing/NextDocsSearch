@@ -1,12 +1,46 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import StructuredData from '@/components/StructuredData'
 import HeroMosaic from '@/components/HeroMosaic'
+import HeroMaterialBackground from '@/components/HeroMaterialBackground'
 import { SITE_URL } from '@/lib/site-url'
+
+// Grid geometry (must match HeroMosaic constants so the fragments line up).
+const GRID_COLS = 4
+const GRID_ROWS = 3
+
+// Copy split across the 4×3 grid. Each cell holds a fragment of the line
+// "Building with AI products that help people survive." plus a decorative
+// byline on the bottom row. One fragment per tile — breaking a tile reveals
+// that fragment.
+const HERO_FRAGMENTS: { text: string; emphasis?: boolean; byline?: boolean }[] = [
+  // Row 1 — opening clause
+  { text: 'Building', emphasis: true },
+  { text: 'with' },
+  { text: 'AI',       emphasis: true },
+  { text: 'products' },
+  // Row 2 — closing clause
+  { text: 'that' },
+  { text: 'help' },
+  { text: 'people' },
+  { text: 'survive.', emphasis: true },
+  // Row 3 — byline / decorative
+  { text: '·',              byline: true },
+  { text: '— Alex Welcing', byline: true },
+  { text: '—',              byline: true },
+  { text: '·',              byline: true },
+]
 
 export default function HomePage() {
   const siteUrl = SITE_URL
+  const router = useRouter()
+
+  const handleAllBroken = useCallback(() => {
+    // Every pane has been shattered → reward: ship the visitor to /explore.
+    router.push('/explore')
+  }, [router])
 
   return (
     <>
@@ -14,7 +48,7 @@ export default function HomePage() {
         <title>Alex Welcing</title>
         <meta
           name="description"
-          content="Essays on speculative AI and emergent intelligence."
+          content="Essays on speculative AI and emergent intelligence. Building with AI products that help people survive."
         />
         <meta name="keywords" content="Alex Welcing, speculative AI, emergent intelligence, LLM, AI agents, essays" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,13 +57,10 @@ export default function HomePage() {
         <link rel="icon" href="/favicon.ico" />
 
         {/* Open Graph Meta Tags */}
-        <meta
-          property="og:title"
-          content="Alex Welcing"
-        />
+        <meta property="og:title" content="Alex Welcing" />
         <meta
           property="og:description"
-          content="Essays on speculative AI and emergent intelligence."
+          content="Building with AI products that help people survive. Essays on speculative AI and emergent intelligence."
         />
         <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
@@ -41,7 +72,10 @@ export default function HomePage() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Alex Welcing" />
-        <meta name="twitter:description" content="Essays on speculative AI and emergent intelligence." />
+        <meta
+          name="twitter:description"
+          content="Building with AI products that help people survive. Essays on speculative AI and emergent intelligence."
+        />
         <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
 
         {/* Performance and PWA hints */}
@@ -52,100 +86,143 @@ export default function HomePage() {
       <StructuredData
         type="Website"
         data={{
-          name: "Alex Welcing",
+          name: 'Alex Welcing',
           url: siteUrl,
-          description: "Essays on speculative AI and emergent intelligence.",
-          author: { "@type": "Person", name: "Alex Welcing", url: `${siteUrl}/about` }
+          description:
+            'Building with AI products that help people survive. Essays on speculative AI and emergent intelligence.',
+          author: { '@type': 'Person', name: 'Alex Welcing', url: `${siteUrl}/about` },
         }}
       />
 
       <StructuredData
         type="Person"
         data={{
-          name: "Alex Welcing",
+          name: 'Alex Welcing',
           url: siteUrl,
-          description: "Writing on speculative AI and emergent intelligence.",
+          description:
+            'Building with AI products that help people survive. Writing on speculative AI and emergent intelligence.',
           sameAs: [
-            "https://www.linkedin.com/in/alexwelcing",
-            "https://github.com/alexwelcing",
-            "https://x.com/alexwelcing"
+            'https://www.linkedin.com/in/alexwelcing',
+            'https://github.com/alexwelcing',
+            'https://x.com/alexwelcing',
           ],
           knowsAbout: [
-            "Large Language Models",
-            "AI Agent Systems",
-            "Retrieval-Augmented Generation",
-            "Vector Databases",
-            "AI Product Management",
-            "Prompt Engineering",
-            "AI Safety & Alignment",
-            "3D Visualization",
-            "System Architecture",
-            "TypeScript",
-            "React",
-            "Next.js"
-          ]
+            'Large Language Models',
+            'AI Agent Systems',
+            'Retrieval-Augmented Generation',
+            'Vector Databases',
+            'AI Product Management',
+            'Prompt Engineering',
+            'AI Safety & Alignment',
+            '3D Visualization',
+            'System Architecture',
+            'TypeScript',
+            'React',
+            'Next.js',
+          ],
         }}
       />
 
       <div className="min-h-screen text-white">
-        {/* Hero - Immersive mosaic wall */}
+        {/* Hero — Immersive mosaic wall */}
         <section
           className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
           style={{ background: '#030308' }}
         >
+          {/* Layer 0 — mathematical material field (behind everything) */}
+          <HeroMaterialBackground zIndex={0} />
+
           {/*
-            Text layer — sits BEHIND the tile grid on the z-axis.
-            Rendered in the SSR'd HTML so crawlers see the H1 and subtitle,
-            but visually obscured by the opaque HeroMosaic tiles until the
-            user breaks them with the ball.
+            Layer 0.5 — SEO H1. Visually hidden but present in SSR HTML so
+            search engines see the canonical heading. The per-tile copy
+            below is decorative.
+          */}
+          <h1
+            style={{
+              position: 'absolute',
+              width: 1,
+              height: 1,
+              padding: 0,
+              margin: -1,
+              overflow: 'hidden',
+              clip: 'rect(0, 0, 0, 0)',
+              whiteSpace: 'nowrap',
+              border: 0,
+            }}
+          >
+            Alex Welcing — Building with AI products that help people survive.
+          </h1>
+
+          {/*
+            Layer 1 — decorative copy fragments, one per tile. Matches the
+            HeroMosaic tile grid (4×3 with inset: -5%) so each fragment
+            sits behind a specific tile and is uncovered when that tile
+            shatters.
           */}
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
-            style={{ zIndex: 0 }}
-            aria-hidden="false"
+            aria-hidden="true"
+            className="pointer-events-none"
+            style={{
+              position: 'absolute',
+              inset: '-5%',
+              display: 'grid',
+              gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
+              gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
+              gap: 0,
+              zIndex: 1,
+              padding: '0 12px',
+            }}
           >
-            <div className="max-w-5xl">
-              <h1
-                className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4"
+            {HERO_FRAGMENTS.map((frag, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-center text-center"
                 style={{
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  letterSpacing: '-0.03em',
-                  lineHeight: 1.05,
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  fontWeight: 800,
+                  padding: '12px',
                 }}
               >
-                <span style={{
-                  background: 'linear-gradient(135deg, #ffffff 0%, #00d4ff 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                  Writing on speculative AI and emergent intelligence.
+                <span
+                  style={{
+                    fontFamily: "'Inter', -apple-system, sans-serif",
+                    fontSize: frag.byline
+                      ? 'clamp(0.9rem, 1.2vw, 1.3rem)'
+                      : frag.emphasis
+                      ? 'clamp(2rem, 5.5vw, 5.5rem)'
+                      : 'clamp(1.6rem, 4vw, 4rem)',
+                    fontWeight: frag.byline ? 400 : frag.emphasis ? 800 : 600,
+                    letterSpacing: frag.byline ? '0.15em' : '-0.02em',
+                    lineHeight: 1.05,
+                    textTransform: frag.byline ? 'uppercase' : 'none',
+                    color: frag.byline
+                      ? 'rgba(125, 230, 255, 0.75)'
+                      : 'rgba(255, 255, 255, 0.92)',
+                    background: frag.emphasis
+                      ? 'linear-gradient(135deg, #ffffff 0%, #7de6ff 50%, #c882ff 100%)'
+                      : undefined,
+                    WebkitBackgroundClip: frag.emphasis ? 'text' : undefined,
+                    WebkitTextFillColor: frag.emphasis ? 'transparent' : undefined,
+                    backgroundClip: frag.emphasis ? 'text' : undefined,
+                    textShadow: frag.byline
+                      ? '0 0 6px rgba(0, 212, 255, 0.35)'
+                      : '0 2px 14px rgba(0, 0, 0, 0.6)',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                  }}
+                >
+                  {frag.text}
                 </span>
-              </h1>
-              <p
-                className="text-lg md:text-xl lg:text-2xl font-light mt-6 mb-2 mx-auto"
-                style={{
-                  fontFamily: "'Inter', -apple-system, sans-serif",
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  letterSpacing: '0.01em',
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  maxWidth: '600px',
-                }}
-              >
-                Building AI products that survive contact with real people.
-              </p>
-            </div>
+              </div>
+            ))}
           </div>
 
-          {/* Tile grid — sits ABOVE the text layer */}
-          <HeroMosaic />
+          {/* Layer 2 — tile grid (obscures the copy until broken) */}
+          <HeroMosaic onAllBroken={handleAllBroken} />
 
-          {/* CTAs — above tiles */}
-          <div className="relative z-20 flex flex-col items-center justify-end text-center px-6 max-w-5xl pb-16" style={{ marginTop: 'auto' }}>
+          {/* Layer 20 — CTAs, pinned to the bottom of the hero */}
+          <div
+            className="relative z-20 flex flex-col items-center justify-end text-center px-6 max-w-5xl pb-16"
+            style={{ marginTop: 'auto' }}
+          >
             <div className="flex flex-col sm:flex-row gap-5">
               <Link
                 href="/current-work"
@@ -154,7 +231,8 @@ export default function HomePage() {
                   background: 'rgba(168, 85, 247, 0.9)',
                   border: '2px solid rgba(216, 180, 254, 0.9)',
                   borderRadius: '6px',
-                  boxShadow: '0 8px 24px rgba(168, 85, 247, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25)',
+                  boxShadow:
+                    '0 8px 24px rgba(168, 85, 247, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25)',
                 }}
               >
                 <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-white drop-shadow-sm">
@@ -163,7 +241,8 @@ export default function HomePage() {
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(216, 180, 254, 0.25), rgba(168, 85, 247, 0.15))',
+                    background:
+                      'linear-gradient(90deg, rgba(216, 180, 254, 0.25), rgba(168, 85, 247, 0.15))',
                   }}
                 />
               </Link>
@@ -175,7 +254,8 @@ export default function HomePage() {
                   background: 'rgba(255, 255, 255, 0.95)',
                   border: '2px solid rgba(255, 255, 255, 1)',
                   borderRadius: '6px',
-                  boxShadow: '0 8px 24px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+                  boxShadow:
+                    '0 8px 24px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
                 }}
               >
                 <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-slate-950">
@@ -184,7 +264,8 @@ export default function HomePage() {
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(0, 212, 255, 0.18), rgba(255, 215, 0, 0.12))',
+                    background:
+                      'linear-gradient(90deg, rgba(0, 212, 255, 0.18), rgba(255, 215, 0, 0.12))',
                   }}
                 />
               </Link>
@@ -196,7 +277,8 @@ export default function HomePage() {
                   background: 'rgba(0, 212, 255, 0.92)',
                   border: '2px solid rgba(125, 230, 255, 1)',
                   borderRadius: '6px',
-                  boxShadow: '0 8px 24px rgba(0, 212, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
+                  boxShadow:
+                    '0 8px 24px rgba(0, 212, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
                 }}
               >
                 <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-slate-950">
@@ -205,7 +287,8 @@ export default function HomePage() {
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(125, 230, 255, 0.35), rgba(0, 212, 255, 0.2))',
+                    background:
+                      'linear-gradient(90deg, rgba(125, 230, 255, 0.35), rgba(0, 212, 255, 0.2))',
                   }}
                 />
               </Link>
@@ -222,15 +305,21 @@ export default function HomePage() {
             <div
               className="w-px h-16 opacity-30"
               style={{
-                background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
+                background:
+                  'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
               }}
             />
           </div>
 
           <style jsx>{`
             @keyframes float {
-              0%, 100% { transform: translateX(-50%) translateY(0); }
-              50% { transform: translateX(-50%) translateY(8px); }
+              0%,
+              100% {
+                transform: translateX(-50%) translateY(0);
+              }
+              50% {
+                transform: translateX(-50%) translateY(8px);
+              }
             }
           `}</style>
         </section>
