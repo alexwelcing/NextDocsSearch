@@ -144,7 +144,7 @@ const ArticleMeta = styled.div`
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.6);
 
-  span {
+  > span {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -900,7 +900,7 @@ const DiscoverButton = styled.button`
 `;
 
 // Footer wrapper
-const FooterWrapper = styled.div`
+const FooterWrapper = styled.footer`
   max-width: 720px;
   margin: 0 auto;
   padding: 0 24px 64px;
@@ -1165,6 +1165,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
 
       <CircleNav />
 
+      <main id="main-content">
+        <article itemScope itemType="https://schema.org/Article">
       {/* HERO SECTION */}
       <HeroSection $hasImage={!!heroImage}>
         {heroImage && (
@@ -1181,10 +1183,14 @@ const ArticlePage: NextPage<ArticleProps> = ({
         )}
         <HeroContent>
           <ArticleClassification {...inferClassificationFromSlug(slug)} />
-          <ArticleTitle>{title}</ArticleTitle>
+          <ArticleTitle itemProp="headline">{title}</ArticleTitle>
           <ArticleMeta>
-            <span>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            <span>{author.join(', ')}</span>
+            <span itemProp="datePublished" content={date}>
+              {new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </span>
+            <span itemProp="author" itemScope itemType="https://schema.org/Person">
+              <span itemProp="name">{author.join(', ')}</span>
+            </span>
             <span>{readingTime} min read</span>
           </ArticleMeta>
         </HeroContent>
@@ -1437,6 +1443,8 @@ const ArticlePage: NextPage<ArticleProps> = ({
         articleKeywords={keywords}
         articleContent={content}
       />
+        </article>
+      </main>
     </ArticleLayout>
   );
 };
