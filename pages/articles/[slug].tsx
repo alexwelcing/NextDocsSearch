@@ -144,7 +144,7 @@ const ArticleMeta = styled.div`
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.6);
 
-  span {
+  > span {
     display: flex;
     align-items: center;
     gap: 8px;
