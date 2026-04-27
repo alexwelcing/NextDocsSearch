@@ -64,6 +64,7 @@
     "sqlKeywordCase": "lower"
   },
   "dependencies": {
+    "@chenglou/pretext": "^0.0.3",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@mkkellogg/gaussian-splats-3d": "^0.4.7",
@@ -78,6 +79,8 @@
     "@react-three/xr": "^6.6.28",
     "@supabase/ssr": "^0.0.9",
     "@supabase/supabase-js": "^2.45.1",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.23",
     "@types/react-dom": "^19.0.2",
     "ai": "^2.2.37",
     "axios": "^1.7.4",
