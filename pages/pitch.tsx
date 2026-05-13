@@ -231,8 +231,6 @@ export default function Pitch({ featured }: Props) {
                 <Github className="w-4 h-4" />
                 GitHub
               </a>
-              {/* TODO(you): drop a PDF at public/resume.pdf and uncomment this. */}
-              {/*
               <a
                 href="/resume.pdf"
                 className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 hover:border-white/40 rounded-lg transition"
@@ -240,7 +238,6 @@ export default function Pitch({ featured }: Props) {
                 <FileText className="w-4 h-4" />
                 Resume
               </a>
-              */}
             </div>
           </section>
 
