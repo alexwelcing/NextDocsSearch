@@ -10,11 +10,11 @@ import {
   Linkedin,
   Github,
   ArrowRight,
-  ArrowUpRight,
-  Sparkles,
+  ExternalLink,
+  Wand2,
   Search,
-  Boxes,
-  Gauge,
+  Box,
+  BarChart3,
   Layers,
   FileText,
 } from 'lucide-react';
@@ -32,7 +32,7 @@ const FEATURED_SLUGS = [
 
 const PILLARS: Array<{ icon: keyof typeof ICONS; title: string; body: string }> = [
   {
-    icon: 'Gauge',
+    icon: 'BarChart3',
     title: 'Evals & quality',
     body: 'Reproducible eval suites, regression gates, and the discipline to ship behind them.',
   },
@@ -42,12 +42,12 @@ const PILLARS: Array<{ icon: keyof typeof ICONS; title: string; body: string }> 
     body: 'Vector search, chunking, recall metrics — the parts of LLM systems that quietly decide outcomes.',
   },
   {
-    icon: 'Boxes',
+    icon: 'Box',
     title: 'Observability',
     body: 'Tracing, telemetry, and the feedback loops that turn model behavior into product signal.',
   },
   {
-    icon: 'Sparkles',
+    icon: 'Wand2',
     title: 'Product judgment',
     body: 'Translating fuzzy AI capability into roadmaps, runbooks, and risks a team can actually decide on.',
   },
@@ -56,7 +56,7 @@ const PILLARS: Array<{ icon: keyof typeof ICONS; title: string; body: string }> 
 const DEMOS: Array<{ href: string; icon: keyof typeof ICONS; title: string; body: string }> = [
   {
     href: '/chat',
-    icon: 'Sparkles',
+    icon: 'Wand2',
     title: 'Talk to Ship AI',
     body: 'Persona-driven chat with memory, streamed responses, and a system prompt that holds.',
   },
@@ -68,17 +68,17 @@ const DEMOS: Array<{ href: string; icon: keyof typeof ICONS; title: string; body
   },
   {
     href: '/',
-    icon: 'Boxes',
+    icon: 'Box',
     title: 'Step into the 3D scene',
     body: 'React Three Fiber, physics, post-processing — a real-time UI surface, not a screenshot.',
   },
 ];
 
 const ICONS = {
-  Gauge,
+  BarChart3,
   Search,
-  Boxes,
-  Sparkles,
+  Box,
+  Wand2,
   Layers,
   FileText,
 };
@@ -286,7 +286,7 @@ export default function Pitch({ featured }: Props) {
             </div>
             <div className="grid md:grid-cols-3 gap-4">
               {DEMOS.map(({ href, icon, title, body }) => {
-                const Icon = ICONS[icon] ?? Sparkles;
+                const Icon = ICONS[icon] ?? Wand2;
                 return (
                   <Link
                     key={href}
@@ -297,7 +297,7 @@ export default function Pitch({ featured }: Props) {
                       <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
                         <Icon className="w-5 h-5 text-cyan-400" />
                       </div>
-                      <ArrowUpRight className="w-5 h-5 text-slate-500 group-hover:text-cyan-400 transition" />
+                      <ExternalLink className="w-5 h-5 text-slate-500 group-hover:text-cyan-400 transition" />
                     </div>
                     <h3 className="font-semibold mb-2">{title}</h3>
                     <p className="text-sm text-slate-400 leading-relaxed">{body}</p>
