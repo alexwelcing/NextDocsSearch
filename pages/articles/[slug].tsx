@@ -1372,7 +1372,7 @@ const ArticlePage: NextPage<ArticleProps> = ({
           <div className="avatar">AW</div>
           <div className="info">
             <div className="name">Alex Welcing</div>
-            <div className="title">AI Product Expert</div>
+            <div className="title">Northeast AI Product Leader</div>
           </div>
           <Link href="/about" className="cta">
             About

@@ -6,17 +6,17 @@ import { Mail, Linkedin, Github, MapPin, Briefcase, GraduationCap, ArrowRight, C
 
 export default function About() {
   const siteUrl = SITE_URL;
-  
+
   return (
     <>
       <Head>
-        <title>About — Alex Welcing</title>
-        <meta name="description" content="Short biography and experience." />
-        <meta name="keywords" content="Alex Welcing, about, biography, New York, ALM" />
+        <title>Alex Welcing — Northeast AI Product Leader in New York</title>
+        <meta name="description" content="Alex Welcing is a New York-based Northeast AI product leader with 15 years of experience shipping enterprise AI, LegalTech, HealthTech, SaaS, and immersive product systems." />
+        <meta name="keywords" content="Alex Welcing, Northeast AI product leader, AI product leader New York, AI product leader NYC, enterprise AI, LegalTech AI, HealthTech AI, regulated AI, ALM" />
         <link rel="canonical" href={`${siteUrl}/about`} />
 
-        <meta property="og:title" content="About — Alex Welcing" />
-        <meta property="og:description" content="Short biography and experience." />
+        <meta property="og:title" content="Alex Welcing — Northeast AI Product Leader" />
+        <meta property="og:description" content="New York-based AI product leader with 15 years of experience across enterprise AI, regulated SaaS, LegalTech, HealthTech, and immersive product systems." />
         <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -25,8 +25,8 @@ export default function About() {
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="About — Alex Welcing" />
-        <meta name="twitter:description" content="Short biography and experience." />
+        <meta name="twitter:title" content="Alex Welcing — Northeast AI Product Leader" />
+        <meta name="twitter:description" content="New York-based AI product leader with 15 years of experience across enterprise AI, regulated SaaS, LegalTech, HealthTech, and immersive product systems." />
         <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{
@@ -35,12 +35,12 @@ export default function About() {
             "@type": "Person",
             "name": "Alex Welcing",
             "url": siteUrl,
-            "jobTitle": "Product Manager",
+            "jobTitle": "Northeast AI Product Leader",
             "worksFor": {
               "@type": "Organization",
               "name": "ALM"
             },
-            "description": "Short biography and experience.",
+            "description": "New York-based Northeast AI product leader with 15 years of experience shipping enterprise AI, LegalTech AI, HealthTech AI, regulated SaaS, and immersive product systems.",
             "sameAs": [
               "https://www.linkedin.com/in/alexwelcing",
               "https://github.com/alexwelcing"
@@ -72,7 +72,7 @@ export default function About() {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Alex Welcing</h1>
-              <p className="text-xl text-slate-400 mb-4">Writing on speculative AI and emergent intelligence.</p>
+              <p className="text-xl text-slate-400 mb-4">Northeast AI product leader with 15 years of experience shipping enterprise AI, regulated SaaS, and immersive product systems.</p>
               <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> New York, NY</span>
                 <span className="flex items-center gap-1"><Briefcase className="w-4 h-4" /> ALM</span>
@@ -98,14 +98,15 @@ export default function About() {
               About
             </h2>
             <p className="text-lg text-slate-300 leading-relaxed">
-              Nine-plus years shipping AI features and SaaS platforms in regulated
-              industries. Currently at ALM, an integrated media company serving the
-              legal and commercial real estate sectors.
+              15 years of experience shipping AI features, enterprise SaaS platforms, and
+              regulated product systems across New York and the Northeast. Currently
+              at ALM, an integrated media company serving the legal and commercial
+              real estate sectors.
             </p>
             <p className="text-lg text-slate-300 leading-relaxed mt-4">
-              My background spans both technical development and marketing strategy, with a track 
-              record of translating complex customer needs into measurable outcomes. I have 
-              hands-on experience building secure SaaS platforms, optimizing data pipelines, 
+              My background spans both technical development and marketing strategy, with a track
+              record of translating complex customer needs into measurable outcomes. I have
+              hands-on experience building secure SaaS platforms, optimizing data pipelines,
               and launching AI-driven features in regulated industries.
             </p>
           </section>
@@ -124,8 +125,8 @@ export default function About() {
                 </div>
                 <p className="text-cyan-400 text-sm mb-3">ALM</p>
                 <p className="text-slate-400 leading-relaxed">
-                  Steer product strategy and delivery for an integrated media company providing 
-                  specialized business information to the legal and commercial real estate sectors. 
+                  Steer product strategy and delivery for an integrated media company providing
+                  specialized business information to the legal and commercial real estate sectors.
                   Translate complex customer needs into measurable outcomes.
                 </p>
               </div>
@@ -181,7 +182,7 @@ export default function About() {
                 </div>
                 <p className="text-cyan-400 text-sm mb-3">Arkadium</p>
                 <p className="text-slate-400">
-                  Drove business development in artificial intelligence and built NLP-powered 
+                  Drove business development in artificial intelligence and built NLP-powered
                   interactive content partnerships.
                 </p>
               </div>
@@ -248,8 +249,8 @@ export default function About() {
               Technical Background
             </h2>
             <p className="text-slate-300 leading-relaxed mb-4">
-              With 10+ years of coding experience and 8+ years as a software developer, I bring 
-              hands-on technical depth to product management. This site itself demonstrates my 
+              With 15 years of experience across product, coding, software development, and AI-enabled
+              platform work, I bring hands-on technical depth to product leadership. This site itself demonstrates my
               technical capabilities—built with Next.js, React Three Fiber, and AI integrations.
             </p>
             <div className="flex flex-wrap gap-2">
@@ -265,19 +266,19 @@ export default function About() {
           <section className="p-8 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-white/10 text-center">
             <h2 className="text-2xl font-bold mb-4">Let&apos;s Connect</h2>
             <p className="text-slate-400 mb-6">
-              Interested in product management, SaaS platforms, or immersive technology? 
+              Interested in AI product leadership, enterprise SaaS platforms, or immersive technology?
               I&apos;m always open to meaningful conversations.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a 
-                href="mailto:alexwelcing@gmail.com" 
+              <a
+                href="mailto:alexwelcing@gmail.com"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-lg transition"
               >
                 Get in Touch
                 <ArrowRight className="w-5 h-5" />
               </a>
-              <Link 
-                href="/articles" 
+              <Link
+                href="/articles"
                 className="inline-flex items-center gap-2 px-8 py-4 border border-white/20 hover:border-white/40 rounded-lg transition"
               >
                 Read Articles
