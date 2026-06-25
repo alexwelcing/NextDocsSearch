@@ -1,407 +1,374 @@
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * THROW BALL — Draggable projectile with 3D arc trajectory
- * ═══════════════════════════════════════════════════════════════════════════
+ * CARNIVAL CANNON — obvious projectile launcher for the glass-image wall.
  *
- * A glass ball sitting in the bottom-left corner that:
- * 1. Can be grabbed (mouse or touch) and dragged
- * 2. Shows a trajectory arc while dragging (slingshot style)
- * 3. When released, flies along a 3D parabolic arc toward the tiles
- * 4. Reports impact position for glass-break collision detection
- * 5. Has a satisfying 3D scale/shadow effect during flight
- *
- * Props:
- *   onImpact(x, y) — called with viewport coordinates when ball hits
- *   disabled        — prevents interaction during active break animation
+ * This keeps the existing ThrowBall component name/API so HeroMosaic does not
+ * need a wider rename, but the interaction is now the clown-face knock-down
+ * game metaphor: aim the cannon, fire balls at the panels, break the glass.
  */
 
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 interface ThrowBallProps {
-  onImpact: (x: number, y: number, force: number) => void;
-  disabled?: boolean;
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  onImpact: (x: number, y: number, force: number) => void
+  disabled?: boolean
+  containerRef: React.RefObject<HTMLDivElement | null>
 }
 
-// ─── Physics constants ───────────────────────────────────────────────────
-
-const BALL_SIZE = 76;
-const BALL_REST_BOTTOM = 40;
-const BALL_REST_LEFT = 40;
-const FLIGHT_DURATION = 350; // ms — snappy flight for fast throws
-const GRAVITY_ARC = 0.4; // arc height multiplier
-const MIN_DRAG_DISTANCE = 30; // px minimum to register a throw
-
-// ─── Component ───────────────────────────────────────────────────────────
+const BALL_SIZE = 34
+const FLIGHT_DURATION = 320
+const CANNON_WIDTH = 220
+const CANNON_HEIGHT = 120
 
 export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBallProps) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [isFlying, setIsFlying] = useState(false);
-  const [ballPos, setBallPos] = useState<{ x: number; y: number } | null>(null);
-  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
-  const [flyProgress, setFlyProgress] = useState(0);
-  const [isRespawning, setIsRespawning] = useState(false);
-  const ballRef = useRef<HTMLDivElement>(null);
-  const flyAnimRef = useRef<number>(0);
+  const [aim, setAim] = useState<{ x: number; y: number } | null>(null)
+  const [ballPos, setBallPos] = useState<{ x: number; y: number } | null>(null)
+  const [flyProgress, setFlyProgress] = useState(0)
+  const [isFlying, setIsFlying] = useState(false)
+  const [recoilKey, setRecoilKey] = useState(0)
+  const [hintVisible, setHintVisible] = useState(true)
+  const flyAnimRef = useRef<number>(0)
+  const cannonRef = useRef<HTMLDivElement>(null)
 
-  // Rest position (bottom-left corner of container)
-  const getRestPos = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return { x: BALL_REST_LEFT + BALL_SIZE / 2, y: window.innerHeight - BALL_REST_BOTTOM - BALL_SIZE / 2 };
-    const rect = container.getBoundingClientRect();
+  const getCannonBase = useCallback(() => {
+    const container = containerRef.current
+    if (!container) {
+      return { x: window.innerWidth / 2, y: window.innerHeight - 64 }
+    }
+    const rect = container.getBoundingClientRect()
     return {
-      x: rect.left + BALL_REST_LEFT + BALL_SIZE / 2,
-      y: rect.bottom - BALL_REST_BOTTOM - BALL_SIZE / 2,
-    };
-  }, [containerRef]);
-
-  // ─── Drag handling (mouse + touch) ─────────────────────────────────
-
-  const handleDragStart = useCallback((clientX: number, clientY: number) => {
-    if (disabled || isFlying || isRespawning) return;
-    setIsDragging(true);
-    setDragStart({ x: clientX, y: clientY });
-    setBallPos({ x: clientX, y: clientY });
-  }, [disabled, isFlying, isRespawning]);
-
-  const handleDragMove = useCallback((clientX: number, clientY: number) => {
-    if (!isDragging) return;
-    setBallPos({ x: clientX, y: clientY });
-  }, [isDragging]);
-
-  const handleDragEnd = useCallback(() => {
-    if (!isDragging || !ballPos || !dragStart) {
-      setIsDragging(false);
-      return;
+      x: rect.left + rect.width / 2,
+      y: rect.bottom - 58,
     }
+  }, [containerRef])
 
-    const rest = getRestPos();
-    const dx = ballPos.x - rest.x;
-    const dy = ballPos.y - rest.y;
-    const dragDist = Math.sqrt(dx * dx + dy * dy);
-
-    if (dragDist < MIN_DRAG_DISTANCE) {
-      // Too short — snap back
-      setIsDragging(false);
-      setBallPos(null);
-      setDragStart(null);
-      return;
-    }
-
-    // Calculate throw target — slingshot: ball flies in the direction it was dragged
-    // The further you drag, the further it goes
-    const force = Math.min(dragDist / 200, 1.5);
-    const targetX = rest.x + dx * 2.5;
-    const targetY = rest.y + dy * 2.5;
-
-    // Clamp target to container bounds
-    const container = containerRef.current;
-    const rect = container?.getBoundingClientRect();
-    const clampedX = rect ? Math.max(rect.left, Math.min(rect.right, targetX)) : targetX;
-    const clampedY = rect ? Math.max(rect.top, Math.min(rect.bottom, targetY)) : targetY;
-
-    setIsDragging(false);
-    setIsFlying(true);
-
-    // Animate flight
-    const startTime = performance.now();
-    const startX = ballPos.x;
-    const startY = ballPos.y;
-    const midX = (startX + clampedX) / 2;
-    const arcHeight = Math.abs(startY - clampedY) * GRAVITY_ARC + 140;
-
-    const animateFlight = (now: number) => {
-      const t = Math.min(1, (now - startTime) / FLIGHT_DURATION);
-      // Ease-in for acceleration feel
-      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
-      // Parabolic arc — quadratic bezier
-      const oneMinusT = 1 - eased;
-      const px = oneMinusT * oneMinusT * startX + 2 * oneMinusT * eased * midX + eased * eased * clampedX;
-      const controlY = Math.min(startY, clampedY) - arcHeight;
-      const py = oneMinusT * oneMinusT * startY + 2 * oneMinusT * eased * controlY + eased * eased * clampedY;
-
-      setBallPos({ x: px, y: py });
-      setFlyProgress(eased);
-
-      if (t < 1) {
-        flyAnimRef.current = requestAnimationFrame(animateFlight);
-      } else {
-        // Impact!
-        setIsFlying(false);
-        setBallPos(null);
-        setFlyProgress(0);
-        onImpact(clampedX, clampedY, force);
-
-        // Quick respawn for fast interactivity
-        setIsRespawning(true);
-        setTimeout(() => setIsRespawning(false), 250);
+  const clampToContainer = useCallback(
+    (x: number, y: number) => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return { x, y }
+      return {
+        x: Math.max(rect.left + 8, Math.min(rect.right - 8, x)),
+        y: Math.max(rect.top + 8, Math.min(rect.bottom - 8, y)),
       }
-    };
+    },
+    [containerRef]
+  )
 
-    flyAnimRef.current = requestAnimationFrame(animateFlight);
-  }, [isDragging, ballPos, dragStart, getRestPos, onImpact, containerRef]);
+  const currentAim = useMemo(() => {
+    if (aim) return aim
+    const base = getCannonBase()
+    return { x: base.x, y: base.y - 360 }
+  }, [aim, getCannonBase])
 
-  // Mouse events
-  const onMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    handleDragStart(e.clientX, e.clientY);
-  }, [handleDragStart]);
+  const fireAt = useCallback(
+    (targetX: number, targetY: number) => {
+      if (disabled || isFlying) return
 
-  // Touch events
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    if (e.touches.length !== 1) return;
-    handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
-  }, [handleDragStart]);
+      const target = clampToContainer(targetX, targetY)
+      const base = getCannonBase()
+      const dx = target.x - base.x
+      const dy = target.y - base.y
+      const dist = Math.hypot(dx, dy)
+      if (dist < 36) return
 
-  // Global move/end listeners
+      setHintVisible(false)
+      setRecoilKey((k) => k + 1)
+      setIsFlying(true)
+
+      const angle = Math.atan2(dy, dx)
+      const muzzleX = base.x + Math.cos(angle) * 76
+      const muzzleY = base.y + Math.sin(angle) * 76
+      const startTime = performance.now()
+      const arcHeight = Math.min(210, Math.max(80, dist * 0.18))
+
+      const animateFlight = (now: number) => {
+        const t = Math.min(1, (now - startTime) / FLIGHT_DURATION)
+        const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
+        const oneMinusT = 1 - eased
+        const midX = (muzzleX + target.x) / 2
+        const controlY = Math.min(muzzleY, target.y) - arcHeight
+        const px =
+          oneMinusT * oneMinusT * muzzleX + 2 * oneMinusT * eased * midX + eased * eased * target.x
+        const py =
+          oneMinusT * oneMinusT * muzzleY +
+          2 * oneMinusT * eased * controlY +
+          eased * eased * target.y
+
+        setBallPos({ x: px, y: py })
+        setFlyProgress(eased)
+
+        if (t < 1) {
+          flyAnimRef.current = requestAnimationFrame(animateFlight)
+        } else {
+          setIsFlying(false)
+          setBallPos(null)
+          setFlyProgress(0)
+          onImpact(target.x, target.y, Math.min(1.6, Math.max(0.75, dist / 520)))
+        }
+      }
+
+      flyAnimRef.current = requestAnimationFrame(animateFlight)
+    },
+    [clampToContainer, disabled, getCannonBase, isFlying, onImpact]
+  )
+
   useEffect(() => {
-    if (!isDragging) return;
-
-    const onMouseMove = (e: MouseEvent) => handleDragMove(e.clientX, e.clientY);
-    const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 1) handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
-    };
-    const onMouseUp = () => handleDragEnd();
-    const onTouchEnd = () => handleDragEnd();
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('mouseup', onMouseUp);
-    window.addEventListener('touchend', onTouchEnd);
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('mouseup', onMouseUp);
-      window.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [isDragging, handleDragMove, handleDragEnd]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (flyAnimRef.current) cancelAnimationFrame(flyAnimRef.current);
-    };
-  }, []);
-
-  // ─── Computed styles ───────────────────────────────────────────────
-
-  const rest = getRestPos();
-  const currentX = ballPos?.x ?? rest.x;
-  const currentY = ballPos?.y ?? rest.y;
-
-  // 3D scale effect — ball swells BIG at mid-arc like it's flying toward the viewer
-  const arcSin = Math.sin(flyProgress * Math.PI);
-  const flyScale = isFlying
-    ? 1 + arcSin * 1.1
-    : isDragging ? 1.15 : 1;
-
-  // Shadow stretches dramatically during flight to sell the depth
-  const shadowBlur = isFlying
-    ? 10 + arcSin * 50
-    : isDragging ? 15 : 8;
-
-  const shadowOpacity = isFlying
-    ? 0.3 + arcSin * 0.5
-    : isDragging ? 0.4 : 0.3;
-
-  // ─── Trajectory line (while dragging) ──────────────────────────────
-
-  const renderTrajectory = () => {
-    if (!isDragging || !ballPos) return null;
-
-    const dx = ballPos.x - rest.x;
-    const dy = ballPos.y - rest.y;
-    const targetX = rest.x + dx * 2.5;
-    const targetY = rest.y + dy * 2.5;
-    const arcHeight = Math.abs(ballPos.y - targetY) * GRAVITY_ARC + 80;
-
-    // Generate arc points
-    const points: { x: number; y: number }[] = [];
-    const steps = 20;
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const oneMinusT = 1 - t;
-      const midX = (ballPos.x + targetX) / 2;
-      const controlY = Math.min(ballPos.y, targetY) - arcHeight;
-      const px = oneMinusT * oneMinusT * ballPos.x + 2 * oneMinusT * t * midX + t * t * targetX;
-      const py = oneMinusT * oneMinusT * ballPos.y + 2 * oneMinusT * t * controlY + t * t * targetY;
-      points.push({ x: px, y: py });
+    const handlePointerMove = (e: PointerEvent) => {
+      setAim(clampToContainer(e.clientX, e.clientY))
     }
 
-    return (
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target?.closest('[data-cannon-control="true"], a, button')) return
+      setAim(clampToContainer(e.clientX, e.clientY))
+      fireAt(e.clientX, e.clientY)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [clampToContainer, containerRef, fireAt])
+
+  useEffect(() => {
+    return () => {
+      if (flyAnimRef.current) cancelAnimationFrame(flyAnimRef.current)
+    }
+  }, [])
+
+  const base = getCannonBase()
+  const angleRad = Math.atan2(currentAim.y - base.y, currentAim.x - base.x)
+  const angleDeg = (angleRad * 180) / Math.PI
+  const arcSin = Math.sin(flyProgress * Math.PI)
+
+  return (
+    <>
       <svg
+        aria-hidden="true"
         style={{
           position: 'fixed',
           inset: 0,
           width: '100%',
           height: '100%',
           pointerEvents: 'none',
-          zIndex: 9998,
+          zIndex: 9997,
         }}
       >
         <defs>
-          <linearGradient id="trajectoryGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(0, 212, 255, 0.6)" />
-            <stop offset="100%" stopColor="rgba(0, 212, 255, 0)" />
+          <linearGradient id="cannonTrajectory" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(255, 216, 92, 0.75)" />
+            <stop offset="100%" stopColor="rgba(0, 212, 255, 0.05)" />
           </linearGradient>
         </defs>
-        <path
-          d={`M ${points.map(p => `${p.x},${p.y}`).join(' L ')}`}
-          fill="none"
-          stroke="url(#trajectoryGradient)"
+        <line
+          x1={base.x + Math.cos(angleRad) * 82}
+          y1={base.y + Math.sin(angleRad) * 82}
+          x2={currentAim.x}
+          y2={currentAim.y}
+          stroke="url(#cannonTrajectory)"
           strokeWidth="2"
-          strokeDasharray="6,4"
-          opacity={0.7}
+          strokeDasharray="8 8"
+          opacity={disabled || isFlying ? 0.25 : 0.7}
         />
-        {/* Target crosshair */}
         <circle
-          cx={targetX}
-          cy={targetY}
-          r={12}
+          cx={currentAim.x}
+          cy={currentAim.y}
+          r="16"
           fill="none"
-          stroke="rgba(0, 212, 255, 0.3)"
+          stroke="rgba(255, 216, 92, 0.55)"
+          strokeWidth="2"
+        />
+        <path
+          d={`M ${currentAim.x - 8} ${currentAim.y} L ${currentAim.x + 8} ${currentAim.y} M ${
+            currentAim.x
+          } ${currentAim.y - 8} L ${currentAim.x} ${currentAim.y + 8}`}
+          stroke="rgba(255, 245, 210, 0.65)"
           strokeWidth="1.5"
         />
-        <circle
-          cx={targetX}
-          cy={targetY}
-          r={3}
-          fill="rgba(0, 212, 255, 0.5)"
-        />
       </svg>
-    );
-  };
 
-  return (
-    <>
-      {renderTrajectory()}
-
-      {/* The ball */}
-      <div
-        ref={ballRef}
-        onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}
-        style={{
-          position: 'fixed',
-          left: currentX - BALL_SIZE / 2,
-          top: currentY - BALL_SIZE / 2,
-          width: BALL_SIZE,
-          height: BALL_SIZE,
-          zIndex: 9999,
-          cursor: disabled || isFlying || isRespawning ? 'default' : 'grab',
-          touchAction: 'none',
-          userSelect: 'none',
-          WebkitUserSelect: 'none',
-          // 3D transform
-          transform: `scale(${flyScale})`,
-          transition: isDragging || isFlying ? 'none' : 'transform 0.3s ease, opacity 0.4s ease',
-          opacity: isRespawning ? 0 : 1,
-          pointerEvents: isFlying ? 'none' : 'auto',
-        }}
-      >
-        {/* Shadow (on the "ground plane") */}
+      {ballPos && (
         <div
-          style={{
-            position: 'absolute',
-            bottom: -4,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: BALL_SIZE * 0.7,
-            height: 6,
-            borderRadius: '50%',
-            background: `rgba(0, 0, 0, ${shadowOpacity})`,
-            filter: `blur(${shadowBlur}px)`,
-            transition: isDragging || isFlying ? 'none' : 'all 0.3s ease',
-          }}
-        />
-
-        {/* Outer pulsing halo — makes the ball obviously grabbable */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: '-22%',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.35) 0%, rgba(0, 212, 255, 0.08) 55%, transparent 75%)',
-            animation: isDragging || isFlying ? 'none' : 'ballHalo 2.4s ease-in-out infinite',
-            pointerEvents: 'none',
-            filter: 'blur(3px)',
-          }}
-        />
-
-        {/* Glass ball body */}
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '50%',
-            background: `
-              radial-gradient(ellipse 35% 35% at 35% 30%, rgba(255, 255, 255, 0.95) 0%, transparent 45%),
-              radial-gradient(ellipse 80% 80% at 50% 50%, rgba(125, 230, 255, 0.45) 0%, transparent 70%),
-              radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.85) 0%, rgba(30, 120, 200, 0.8) 55%, rgba(10, 40, 80, 0.9) 100%)
-            `,
-            border: '2px solid rgba(180, 240, 255, 0.9)',
-            boxShadow: `
-              inset 0 -4px 10px rgba(0, 0, 0, 0.35),
-              inset 0 2px 5px rgba(255, 255, 255, 0.35),
-              0 0 ${14 + shadowBlur}px rgba(0, 212, 255, 0.65),
-              0 0 ${28 + shadowBlur * 1.5}px rgba(125, 230, 255, 0.35)
-            `,
-          }}
-        />
-
-        {/* Specular highlight */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '14%',
-            left: '22%',
-            width: '32%',
-            height: '22%',
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.9)',
-            filter: 'blur(2px)',
-            transform: 'rotate(-30deg)',
-          }}
-        />
-      </div>
-
-      {/* "Grab & throw" hint text — only shown briefly */}
-      {!isDragging && !isFlying && !disabled && !isRespawning && (
-        <div
+          aria-hidden="true"
           style={{
             position: 'fixed',
-            left: BALL_REST_LEFT - 4,
-            bottom: BALL_REST_BOTTOM + BALL_SIZE + 8,
+            left: ballPos.x - BALL_SIZE / 2,
+            top: ballPos.y - BALL_SIZE / 2,
+            width: BALL_SIZE,
+            height: BALL_SIZE,
+            borderRadius: '50%',
             zIndex: 9999,
-            color: 'rgba(125, 230, 255, 0.95)',
-            fontSize: '12px',
-            fontWeight: 600,
+            pointerEvents: 'none',
+            transform: `scale(${1 + arcSin * 0.9})`,
+            background:
+              'radial-gradient(circle at 35% 28%, #fff8d0 0%, #ffd85c 18%, #e05a25 52%, #4b1608 100%)',
+            border: '1px solid rgba(255, 245, 210, 0.7)',
+            boxShadow: `0 0 ${
+              18 + arcSin * 34
+            }px rgba(255, 116, 48, 0.65), inset -5px -7px 10px rgba(0,0,0,0.35)`,
+          }}
+        />
+      )}
+
+      <div
+        ref={cannonRef}
+        data-cannon-control="true"
+        style={{
+          position: 'fixed',
+          left: base.x - CANNON_WIDTH / 2,
+          top: base.y - CANNON_HEIGHT / 2,
+          width: CANNON_WIDTH,
+          height: CANNON_HEIGHT,
+          zIndex: 9998,
+          pointerEvents: 'auto',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: 2,
+            transform: 'translateX(-50%)',
+            width: 154,
+            height: 42,
+            borderRadius: '50% 50% 18px 18px',
+            background: 'linear-gradient(180deg, #f8c04d, #8a3d10 72%, #311305)',
+            border: '2px solid rgba(255, 233, 154, 0.65)',
+            boxShadow: '0 14px 28px rgba(0,0,0,0.45), inset 0 8px 16px rgba(255,255,255,0.18)',
+          }}
+        />
+
+        <div
+          key={recoilKey}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: 34,
+            width: 142,
+            height: 38,
+            transformOrigin: '18px 50%',
+            transform: `translateX(-18px) rotate(${angleDeg}deg)`,
+            animation: 'cannonRecoil 0.22s ease-out',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '28px 42px 42px 28px',
+              background: 'linear-gradient(180deg, #ffef9f 0%, #e84f24 46%, #6f1f0f 100%)',
+              border: '2px solid rgba(255, 240, 176, 0.8)',
+              boxShadow:
+                'inset 10px 8px 16px rgba(255,255,255,0.25), inset -10px -8px 14px rgba(0,0,0,0.35), 0 0 22px rgba(255, 89, 33, 0.35)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              right: -7,
+              top: -5,
+              width: 28,
+              height: 48,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle at 35% 35%, #fff4bb, #c62f17 48%, #260b05 100%)',
+              border: '2px solid rgba(255, 232, 153, 0.8)',
+            }}
+          />
+        </div>
+
+        <button
+          data-cannon-control="true"
+          type="button"
+          disabled={disabled || isFlying}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            fireAt(currentAim.x, currentAim.y)
+          }}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: -30,
+            transform: 'translateX(-50%)',
+            padding: '8px 18px',
+            borderRadius: 999,
+            border: '1px solid rgba(255, 232, 153, 0.7)',
+            background:
+              disabled || isFlying
+                ? 'rgba(80, 50, 24, 0.72)'
+                : 'linear-gradient(180deg, #ffe28a, #e85a24 62%, #7b210d)',
+            color: '#210b02',
+            fontSize: 12,
+            fontWeight: 900,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            cursor: disabled || isFlying ? 'default' : 'pointer',
+            boxShadow: '0 10px 24px rgba(0,0,0,0.42)',
+          }}
+        >
+          Fire
+        </button>
+      </div>
+
+      {hintVisible && !disabled && !isFlying && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'fixed',
+            left: '50%',
+            bottom: 164,
+            transform: 'translateX(-50%)',
+            zIndex: 9998,
+            padding: '9px 13px',
+            borderRadius: 999,
+            background: 'rgba(5, 8, 16, 0.68)',
+            border: '1px solid rgba(255, 216, 92, 0.35)',
+            color: 'rgba(255, 245, 210, 0.82)',
+            fontSize: 11,
             fontFamily: "'Inter', sans-serif",
+            fontWeight: 800,
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             pointerEvents: 'none',
-            animation: 'ballHintPulse 2s ease-in-out infinite',
-            textAlign: 'left',
+            animation: 'cannonHintPulse 1.7s ease-in-out infinite',
             whiteSpace: 'nowrap',
-            textShadow: '0 0 8px rgba(0, 212, 255, 0.6)',
           }}
         >
-          Grab &amp; throw
+          Click a glass image or press Fire
         </div>
       )}
 
       <style jsx>{`
-        @keyframes ballHintPulse {
-          0%, 100% { opacity: 0.85; }
-          50% { opacity: 0.5; }
+        @keyframes cannonHintPulse {
+          0%,
+          100% {
+            opacity: 0.82;
+            transform: translateX(-50%) translateY(0);
+          }
+          50% {
+            opacity: 0.45;
+            transform: translateX(-50%) translateY(5px);
+          }
         }
-        @keyframes ballHalo {
-          0%, 100% { transform: scale(1); opacity: 0.9; }
-          50%      { transform: scale(1.18); opacity: 0.55; }
+        @keyframes cannonRecoil {
+          0% {
+            translate: 0 0;
+            filter: brightness(1.45);
+          }
+          45% {
+            translate: -16px 0;
+            filter: brightness(1.15);
+          }
+          100% {
+            translate: 0 0;
+            filter: brightness(1);
+          }
         }
       `}</style>
     </>
-  );
+  )
 }

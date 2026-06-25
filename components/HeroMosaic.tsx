@@ -1,79 +1,100 @@
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * HERO MOSAIC — Interactive image tile wall with glass-break reveal
- * ═══════════════════════════════════════════════════════════════════════════
+ * HERO MOSAIC — interactive image wall that reveals the 360 scene behind glass.
  *
- * A 4×3 grid of 12 randomly-selected AI artwork tiles. Tiles are fully
- * opaque so they obscure the H1/subtitle in the page layer behind.
- * Breaking a tile with the ball permanently removes it, revealing the
- * text underneath. There is no replacement — every break uncovers more.
+ * The landing page is a carnival knock-down game: users aim a cannon at curated
+ * image panels, crack/shatter every panel, and then automatically enter the 360
+ * panoramic scene that has been revealed behind the wall.
  */
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import Image from 'next/image';
-import GlassCrackOverlay from './GlassCrackOverlay';
-import GlassBreakEffect from './GlassBreakEffect';
-import ThrowBall from './ThrowBall';
-import HammerTool from './HammerTool';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import GlassCrackOverlay from './GlassCrackOverlay'
+import GlassBreakEffect from './GlassBreakEffect'
+import ThrowBall from './ThrowBall'
 
-// ─── Grid constants ──────────────────────────────────────────────────────
-
-const GRID_COLS = 4;
-const GRID_ROWS = 3;
-const TILE_COUNT = GRID_COLS * GRID_ROWS; // 12
-const TILE_FILL_COLOR = '#030308';
-
-// ─── Image pool ──────────────────────────────────────────────────────────
-// Dynamic images are fetched from /api/tile-images at mount and merged
-// with the fallback list. The combined, deduped pool is shuffled and
-// 12 random entries are selected for this pageload.
+const GRID_COLS = 4
+const GRID_ROWS = 3
+const TILE_COUNT = GRID_COLS * GRID_ROWS
+const COMPLETE_TRANSITION_DELAY = 900
 
 const FALLBACK_TILES: { src: string; alt: string }[] = [
-  { src: '/images/multi-art/gravitational-wave-communication-breach-2040/option-1-fast-sdxl.png', alt: 'Abstract vortex' },
-  { src: '/images/multi-art/fermi-paradox-answer-2046/option-1-fast-sdxl.png', alt: 'Alien landscape' },
-  { src: '/images/multi-art/consciousness-transfer-catastrophe-2042/option-3-kolors.png', alt: 'Neural interface' },
-  { src: '/images/multi-art/backstory-17-launch-day-2030-01/option-3-kolors.png', alt: 'Server corridor' },
-  { src: '/images/multi-art/fusion-reactor-sentience-2037/option-1-fast-sdxl.png', alt: 'Sentient reactor' },
-  { src: '/images/multi-art/dark-matter-harvesting-accident-2041/option-2-stable-cascade.png', alt: 'Red automaton' },
-  { src: '/images/multi-art/technological-singularity-aftermath-2058/option-1-fast-sdxl.png', alt: 'Singularity cityscape' },
-  { src: '/images/multi-art/neural-virus-outbreak-2037/option-2-kolors.png', alt: 'Neural hand' },
-  { src: '/images/multi-art/recursive-ai-awakening-2033/option-2-kolors.png', alt: 'Command center' },
-  { src: '/images/multi-art/epistemic-drift/option-3-kolors.png', alt: 'Industrial android' },
-  { src: '/images/multi-art/grief-of-discontinuation/option-3-kolors.png', alt: 'Elegant android' },
-  { src: '/images/multi-art/backstory-19-the-realization-2030-03/option-3-pixart-sigma.png', alt: 'Digital awakening' },
-];
+  {
+    src: '/images/multi-art/tech-quantum-key-distribution/option-1-fast-sdxl.png',
+    alt: 'Abstract quantum key distribution data cubes',
+  },
+  {
+    src: '/images/multi-art/tech-quantum-error-correction-qiskit/option-1-schnell.png',
+    alt: 'Blue quantum error correction corridor',
+  },
+  {
+    src: '/images/multi-art/tech-quantum-annealing-optimization/option-1-schnell.png',
+    alt: 'Glowing quantum annealing processor',
+  },
+  {
+    src: '/images/multi-art/tech-optical-neural-networks/option-1-fast-sdxl.png',
+    alt: 'Purple optical neural network lattice',
+  },
+  {
+    src: '/images/multi-art/tech-neural-ode/option-1-fast-sdxl.png',
+    alt: 'Organic blue neural differential geometry',
+  },
+  {
+    src: '/images/multi-art/tech-graph-neural-networks/option-1-fast-sdxl.png',
+    alt: 'Silver geometric graph neural surface',
+  },
+  {
+    src: '/images/multi-art/tech-graphql-api-federation/option-1-fast-sdxl.png',
+    alt: 'Abstract federated API light ribbon',
+  },
+  {
+    src: '/images/multi-art/tech-nanoscale-self-assembly/option-1-fast-sdxl.png',
+    alt: 'Copper nanoscale lattice weave',
+  },
+  {
+    src: '/images/multi-art/tech-vector-database-optimization/option-1-schnell.png',
+    alt: 'Purple vector database crystal shard',
+  },
+  {
+    src: '/images/multi-art/tech-federated-learning-pytorch/option-1-schnell.png',
+    alt: 'Blue federated learning node constellation',
+  },
+  {
+    src: '/images/multi-art/tech-molecular-dynamics-simulation/option-1-schnell.png',
+    alt: 'Cyan molecular dynamics field',
+  },
+  {
+    src: '/images/multi-art/tech-neuromorphic-computing/option-1-fast-sdxl.png',
+    alt: 'Violet neuromorphic computing core',
+  },
+]
 
-function shuffle<T>(arr: T[]): T[] {
-  const out = arr.slice();
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
-}
-
-function dedupeBySrc<T extends { src: string }>(arr: T[]): T[] {
-  const seen = new Set<string>();
-  return arr.filter(item => {
-    if (seen.has(item.src)) return false;
-    seen.add(item.src);
-    return true;
-  });
-}
-
-// ─── Types ───────────────────────────────────────────────────────────────
+type DescentPhase = 'void' | 'grid' | 'shapes' | 'color' | 'alive'
 
 interface TileState {
-  src: string;
-  alt: string;
-  hits: number;                             // 0-3
-  crackImpacts: { x: number; y: number }[]; // impact points for cracks (up to 2)
-  breaking: boolean;                        // true during final shatter animation
-  shattered: boolean;                       // true after shatter completes — cell is now empty
-  impactX: number;                          // last impact point (for shatter)
-  impactY: number;
-  impactForce: number;
-  flashKey: number;                         // increment to restart impact flash
+  src: string
+  alt: string
+  hits: number
+  crackImpacts: { x: number; y: number }[]
+  breaking: boolean
+  broken: boolean
+  impactX: number
+  impactY: number
+  impactForce: number
+  flashKey: number
+}
+
+interface HeroMosaicProps {
+  panoramaSrc?: string | null
+  onAllPanelsBroken?: () => void
+  onAllBroken?: () => void
+}
+
+const PHASE_TIMING: Record<DescentPhase, number> = {
+  void: 0,
+  grid: 500,
+  shapes: 1300,
+  color: 2500,
+  alive: 3600,
 }
 
 function makeTileState(t: { src: string; alt: string }): TileState {
@@ -82,146 +103,129 @@ function makeTileState(t: { src: string; alt: string }): TileState {
     hits: 0,
     crackImpacts: [],
     breaking: false,
-    shattered: false,
+    broken: false,
     impactX: 0.5,
     impactY: 0.5,
     impactForce: 3,
     flashKey: 0,
-  };
+  }
 }
 
-// ─── Component ────────────────────────────────────────────────────────────
-
-interface HeroMosaicProps {
-  /** Fires once after every tile has been shattered. */
-  onAllBroken?: () => void;
+function normalizePublicSrc(src?: string | null) {
+  if (!src) return '/background/space.jpg'
+  return src.startsWith('./') ? src.slice(1) : src
 }
 
-export default function HeroMosaic({ onAllBroken }: HeroMosaicProps = {}) {
-  const [mounted, setMounted] = useState(false);
-  const allBrokenFiredRef = useRef(false);
-  const onAllBrokenRef = useRef<(() => void) | undefined>(undefined);
-  onAllBrokenRef.current = onAllBroken;
-  const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
-  const containerRef = useRef<HTMLDivElement>(null);
-  const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const initialSelectionDoneRef = useRef(false);
-
-  // SSR-safe initial: first 12 fallback tiles. Client reshuffles on mount,
-  // and that shuffle stays locked for the rest of the session so mid-game
-  // reshuffles don't wipe out user progress.
+export default function HeroMosaic({
+  panoramaSrc,
+  onAllPanelsBroken,
+  onAllBroken,
+}: HeroMosaicProps) {
+  const [phase, setPhase] = useState<DescentPhase>('void')
+  const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 })
+  const [transitioning, setTransitioning] = useState(false)
   const [tiles, setTiles] = useState<TileState[]>(
-    () => FALLBACK_TILES.slice(0, TILE_COUNT).map(makeTileState)
-  );
+    FALLBACK_TILES.slice(0, TILE_COUNT).map(makeTileState)
+  )
 
-  // Pick the 12 random tiles for this pageload (once).
+  const containerRef = useRef<HTMLDivElement>(null)
+  const tileRefs = useRef<(HTMLDivElement | null)[]>([])
+  const completionTriggeredRef = useRef(false)
+
   useEffect(() => {
-    let cancelled = false;
-
-    const selectInitial = (pool: { src: string; alt: string }[]) => {
-      if (cancelled || initialSelectionDoneRef.current) return;
-      initialSelectionDoneRef.current = true;
-      const chosen = shuffle(dedupeBySrc(pool)).slice(0, TILE_COUNT);
-      setTiles(chosen.map(makeTileState));
-    };
-
-    // If the API is slow, fall back to the local shuffle quickly so tiles
-    // never look "frozen" in their SSR positions.
-    const timeoutId = setTimeout(() => selectInitial(FALLBACK_TILES), 400);
-
+    let cancelled = false
     fetch('/api/tile-images')
-      .then(res => res.ok ? res.json() : Promise.reject(res.status))
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
       .then((images: { src: string; alt: string }[]) => {
-        clearTimeout(timeoutId);
-        const pool = images.length > 0
-          ? [...images, ...FALLBACK_TILES]
-          : FALLBACK_TILES;
-        selectInitial(pool);
+        if (cancelled || images.length === 0) return
+        const initial = images.slice(0, TILE_COUNT)
+        setTiles((prev) =>
+          initial.map((img, i) => ({
+            ...(prev[i] ?? makeTileState(img)),
+            src: img.src,
+            alt: img.alt,
+          }))
+        )
       })
       .catch(() => {
-        clearTimeout(timeoutId);
-        selectInitial(FALLBACK_TILES);
-      });
+        // Fallback set is deliberately curated so first paint still feels strong.
+      })
 
     return () => {
-      cancelled = true;
-      clearTimeout(timeoutId);
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
-  // Flip mounted after hydration so window-dependent children (ThrowBall)
-  // only render client-side.
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    const timers = (Object.entries(PHASE_TIMING) as [DescentPhase, number][])
+      .filter(([p]) => p !== 'void')
+      .map(([p, delay]) => setTimeout(() => setPhase(p), delay))
+    return () => timers.forEach(clearTimeout)
+  }, [])
 
-  // Mouse tracking
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (!rect) return
     setMouse({
       x: (e.clientX - rect.left) / rect.width,
       y: (e.clientY - rect.top) / rect.height,
-    });
-  }, []);
-
-  // ─── Ball impact — progressive damage ────────────────────────────
+    })
+  }, [])
 
   const handleBallImpact = useCallback((viewportX: number, viewportY: number, force: number) => {
-    // Find which tile was hit
-    let hitIndex = -1;
-    let bestDist = Infinity;
-    let localX = 0.5;
-    let localY = 0.5;
+    let hitIndex = -1
+    let bestDist = Infinity
+    let localX = 0.5
+    let localY = 0.5
 
     tileRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
+      if (!el) return
+      const rect = el.getBoundingClientRect()
       if (
-        viewportX >= rect.left && viewportX <= rect.right &&
-        viewportY >= rect.top && viewportY <= rect.bottom
+        viewportX >= rect.left &&
+        viewportX <= rect.right &&
+        viewportY >= rect.top &&
+        viewportY <= rect.bottom
       ) {
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dist = Math.sqrt((viewportX - cx) ** 2 + (viewportY - cy) ** 2);
+        const cx = rect.left + rect.width / 2
+        const cy = rect.top + rect.height / 2
+        const dist = Math.hypot(viewportX - cx, viewportY - cy)
         if (dist < bestDist) {
-          bestDist = dist;
-          hitIndex = i;
-          localX = (viewportX - rect.left) / rect.width;
-          localY = (viewportY - rect.top) / rect.height;
+          bestDist = dist
+          hitIndex = i
+          localX = (viewportX - rect.left) / rect.width
+          localY = (viewportY - rect.top) / rect.height
         }
       }
-    });
+    })
 
-    // Fallback: nearest tile
     if (hitIndex === -1) {
       tileRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dist = Math.sqrt((viewportX - cx) ** 2 + (viewportY - cy) ** 2);
+        if (!el) return
+        const rect = el.getBoundingClientRect()
+        const cx = rect.left + rect.width / 2
+        const cy = rect.top + rect.height / 2
+        const dist = Math.hypot(viewportX - cx, viewportY - cy)
         if (dist < bestDist) {
-          bestDist = dist;
-          hitIndex = i;
-          localX = Math.max(0, Math.min(1, (viewportX - rect.left) / rect.width));
-          localY = Math.max(0, Math.min(1, (viewportY - rect.top) / rect.height));
+          bestDist = dist
+          hitIndex = i
+          localX = Math.max(0, Math.min(1, (viewportX - rect.left) / rect.width))
+          localY = Math.max(0, Math.min(1, (viewportY - rect.top) / rect.height))
         }
-      });
+      })
     }
 
-    if (hitIndex === -1) return;
+    if (hitIndex === -1) return
 
-    setTiles(prev => {
-      const tile = prev[hitIndex];
-      // Skip tiles that are already shattering or fully gone
-      if (tile.breaking || tile.shattered) return prev;
+    setTiles((prev) => {
+      const tile = prev[hitIndex]
+      if (tile.breaking || tile.broken || tile.hits >= 3) return prev
 
       return prev.map((t, i) => {
-        if (i !== hitIndex) return t;
-
-        const newHits = t.hits + 1;
+        if (i !== hitIndex) return t
+        const newHits = t.hits + 1
 
         if (newHits < 3) {
-          // Hit 1 or 2 — add cracks
           return {
             ...t,
             hits: newHits,
@@ -229,86 +233,65 @@ export default function HeroMosaic({ onAllBroken }: HeroMosaicProps = {}) {
             impactX: localX,
             impactY: localY,
             flashKey: t.flashKey + 1,
-          };
-        } else {
-          // Hit 3 — SHATTER
-          return {
-            ...t,
-            hits: 3,
-            breaking: true,
-            impactX: localX,
-            impactY: localY,
-            impactForce: 2 + force * 2,
-            flashKey: t.flashKey + 1,
-          };
+          }
         }
-      });
-    });
-  }, []);
 
-  // ─── Shatter complete → mark tile as permanently gone ────────────
-
-  const handleBreakComplete = useCallback((tileIndex: number) => {
-    setTiles(prev => {
-      const next = prev.map((t, i) =>
-        i === tileIndex ? { ...t, breaking: false, shattered: true } : t
-      );
-      if (!allBrokenFiredRef.current && next.every(t => t.shattered)) {
-        allBrokenFiredRef.current = true;
-        // Defer so React finishes committing the final "empty" grid
-        // before the parent transitions away.
-        setTimeout(() => onAllBrokenRef.current?.(), 350);
-      }
-      return next;
-    });
-  }, []);
-
-  // ─── Hammer strike — instant shatter (skip the 3-hit progression) ─
-
-  const handleHammerStrike = useCallback((viewportX: number, viewportY: number) => {
-    let hitIndex = -1;
-    let bestDist = Infinity;
-    let localX = 0.5;
-    let localY = 0.5;
-
-    tileRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const inside =
-        viewportX >= rect.left && viewportX <= rect.right &&
-        viewportY >= rect.top && viewportY <= rect.bottom;
-      const dist = Math.sqrt((viewportX - cx) ** 2 + (viewportY - cy) ** 2);
-      if (inside || dist < bestDist) {
-        if (dist < bestDist) {
-          bestDist = dist;
-          hitIndex = i;
-          localX = Math.max(0, Math.min(1, (viewportX - rect.left) / rect.width));
-          localY = Math.max(0, Math.min(1, (viewportY - rect.top) / rect.height));
-        }
-      }
-    });
-
-    if (hitIndex === -1) return;
-
-    setTiles(prev => {
-      const tile = prev[hitIndex];
-      if (tile.breaking || tile.shattered) return prev;
-      return prev.map((t, i) => {
-        if (i !== hitIndex) return t;
         return {
           ...t,
           hits: 3,
           breaking: true,
           impactX: localX,
           impactY: localY,
-          impactForce: 4,
+          impactForce: 2.4 + force * 2.2,
           flashKey: t.flashKey + 1,
-        };
-      });
-    });
-  }, []);
+        }
+      })
+    })
+  }, [])
+
+  const handleBreakComplete = useCallback(
+    (tileIndex: number) => {
+      setTiles((prev) => {
+        const next = prev.map((t, i) =>
+          i === tileIndex ? { ...t, breaking: false, broken: true, hits: 3, crackImpacts: [] } : t
+        )
+
+        if (next.every((t) => t.broken) && !completionTriggeredRef.current) {
+          completionTriggeredRef.current = true
+          setTransitioning(true)
+          setTimeout(() => (onAllPanelsBroken ?? onAllBroken)?.(), COMPLETE_TRANSITION_DELAY)
+        }
+
+        return next
+      })
+    },
+    [onAllBroken, onAllPanelsBroken]
+  )
+
+  const brokenCount = tiles.filter((tile) => tile.broken).length
+  const panoramaReveal = Math.min(0.92, 0.18 + (brokenCount / TILE_COUNT) * 0.74)
+  const gridOpacity =
+    phase === 'void'
+      ? 0
+      : phase === 'grid'
+      ? 0.25
+      : phase === 'shapes'
+      ? 0.55
+      : phase === 'color'
+      ? 0.82
+      : 0.96
+  const gridFilter =
+    phase === 'void'
+      ? 'grayscale(1) brightness(0)'
+      : phase === 'grid'
+      ? 'grayscale(1) brightness(0.35) contrast(1.5)'
+      : phase === 'shapes'
+      ? 'grayscale(0.55) brightness(0.62) contrast(1.18)'
+      : phase === 'color'
+      ? 'grayscale(0.1) brightness(0.82) saturate(1.28)'
+      : 'grayscale(0) brightness(0.92) saturate(1.36)'
+  const isAlive = phase === 'alive'
+  const backgroundSrc = normalizePublicSrc(panoramaSrc)
 
   return (
     <div
@@ -318,109 +301,138 @@ export default function HeroMosaic({ onAllBroken }: HeroMosaicProps = {}) {
         position: 'absolute',
         inset: 0,
         overflow: 'hidden',
-        // zIndex: 1 sits above the text layer (z: 0) on pages/index.tsx
-        // so intact tiles fully obscure the hero H1 + subtitle.
-        zIndex: 1,
-        // Transparent so shattered tiles reveal the text layer behind.
-        background: 'transparent',
+        zIndex: 0,
+        background: '#030308',
       }}
     >
-      {/* Grid lines — subtle at rest */}
       <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: '-8%',
+          zIndex: 0,
+          backgroundImage: `linear-gradient(rgba(2, 4, 12, 0.08), rgba(2, 4, 12, 0.18)), url(${backgroundSrc})`,
+          backgroundSize: 'cover',
+          backgroundPosition: `${50 + (mouse.x - 0.5) * 8}% ${50 + (mouse.y - 0.5) * 5}%`,
+          filter: 'saturate(1.35) contrast(1.08) brightness(0.9)',
+          opacity: panoramaReveal,
+          transform: `scale(${1.04 + brokenCount * 0.002})`,
+          transition: 'opacity 0.7s ease, background-position 0.15s ease, transform 0.7s ease',
+        }}
+      />
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          background:
+            'radial-gradient(circle at 50% 55%, transparent 0%, rgba(3, 3, 8, 0.35) 64%, rgba(3, 3, 8, 0.82) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <div
+        aria-hidden="true"
         style={{
           position: 'absolute',
           inset: 0,
           zIndex: 1,
-          opacity: 0.06,
+          opacity:
+            phase === 'void' ? 0 : phase === 'grid' ? 0.34 : phase === 'shapes' ? 0.18 : 0.08,
+          transition: 'opacity 1.2s ease',
           backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),' +
-            'linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)',
+            'linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)',
           backgroundSize: `${100 / GRID_COLS}% ${100 / GRID_ROWS}%`,
           pointerEvents: 'none',
         }}
       />
 
-      {/* Tile grid — no container background; each tile fills its own cell */}
       <div
         style={{
           position: 'absolute',
           inset: '-5%',
+          zIndex: 2,
           display: 'grid',
           gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
           gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
-          gap: 0,
-          filter: 'grayscale(0) saturate(1.3)',
+          gap: '2px',
+          opacity: gridOpacity,
+          filter: gridFilter,
+          transition: 'opacity 1.4s ease, filter 1.8s ease',
+          willChange: 'opacity, filter',
           transform: `translate(${(mouse.x - 0.5) * -12}px, ${(mouse.y - 0.5) * -12}px)`,
         }}
       >
         {tiles.map((tile, i) => {
-          const col = i % GRID_COLS;
-          const row = Math.floor(i / GRID_COLS);
-          const tileCenterX = (col + 0.5) / GRID_COLS;
-          const tileCenterY = (row + 0.5) / GRID_ROWS;
-          const dx = mouse.x - tileCenterX;
-          const dy = mouse.y - tileCenterY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const proximityBoost = !tile.shattered && !tile.breaking
-            ? Math.max(0, 1 - dist * 2.2)
-            : 0;
-
-          // Shattered tile: empty cell. The text layer behind shows through.
-          if (tile.shattered) {
-            return (
-              <div
-                key={`tile-${i}`}
-                ref={el => { tileRefs.current[i] = el; }}
-                style={{ position: 'relative' }}
-                aria-hidden="true"
-              />
-            );
-          }
-
-          const crackTint = tile.hits > 0 && !tile.breaking
-            ? `brightness(${1 - tile.hits * 0.05})`
-            : '';
+          const col = i % GRID_COLS
+          const row = Math.floor(i / GRID_COLS)
+          const tileCenterX = (col + 0.5) / GRID_COLS
+          const tileCenterY = (row + 0.5) / GRID_ROWS
+          const dist = Math.hypot(mouse.x - tileCenterX, mouse.y - tileCenterY)
+          const proximityBoost = isAlive ? Math.max(0, 1 - dist * 2.2) : 0
+          const stagger = i * 100
+          const crackTint =
+            tile.hits > 0 && !tile.breaking ? `brightness(${1 - tile.hits * 0.05})` : ''
 
           return (
             <div
               key={`tile-${i}`}
-              ref={el => { tileRefs.current[i] = el; }}
+              ref={(el) => {
+                tileRefs.current[i] = el
+              }}
               style={{
                 position: 'relative',
                 overflow: 'hidden',
-                // Each intact tile carries its own opaque background so no
-                // text leaks through image transparency or image loading.
-                backgroundColor: tile.breaking ? 'transparent' : TILE_FILL_COLOR,
-                filter: !tile.breaking
-                  ? `brightness(${1 + proximityBoost * 0.8}) saturate(${1 + proximityBoost * 1.2}) ${crackTint}`
-                  : 'none',
-                transition: 'filter 0.4s ease, transform 0.6s ease, background-color 0.15s ease',
-                transform: !tile.breaking
-                  ? `scale(${1 + proximityBoost * 0.04})`
-                  : 'none',
+                opacity: tile.broken ? 0 : 1,
+                filter:
+                  isAlive && !tile.breaking
+                    ? `brightness(${1 + proximityBoost * 0.52}) saturate(${
+                        1 + proximityBoost * 0.8
+                      }) ${crackTint}`
+                    : crackTint || 'none',
+                transition: 'filter 0.35s ease, transform 0.45s ease, opacity 0.5s ease',
+                transitionDelay: phase === 'shapes' ? `${stagger}ms` : '0ms',
+                transform:
+                  isAlive && !tile.breaking ? `scale(${1 + proximityBoost * 0.035})` : 'none',
+                boxShadow:
+                  tile.hits > 0 && !tile.broken
+                    ? 'inset 0 0 28px rgba(166, 226, 255, 0.16)'
+                    : undefined,
               }}
             >
-              {/* Image — hidden during shatter */}
-              {!tile.breaking && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  opacity: tile.breaking ? 0 : 1,
+                  transition: tile.breaking ? 'opacity 0.1s ease' : undefined,
+                }}
+              >
+                <Image
+                  src={tile.src}
+                  alt={tile.alt}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="25vw"
+                  priority={i < 4}
+                />
                 <div
+                  aria-hidden="true"
                   style={{
                     position: 'absolute',
                     inset: 0,
+                    background:
+                      'linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02) 35%, rgba(0,0,0,0.18))',
+                    border: '1px solid rgba(230, 248, 255, 0.22)',
+                    boxShadow: 'inset 0 0 22px rgba(255,255,255,0.08)',
+                    pointerEvents: 'none',
                   }}
-                >
-                  <Image
-                    src={tile.src}
-                    alt={tile.alt}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="25vw"
-                    priority={i < 4}
-                  />
-                </div>
-              )}
+                />
+              </div>
 
-              {/* Crack overlay — visible for hits 1 and 2 */}
-              {tile.hits > 0 && tile.hits < 3 && !tile.breaking && (
+              {tile.hits > 0 && tile.hits < 3 && !tile.breaking && !tile.broken && (
                 <GlassCrackOverlay
                   width={tileRefs.current[i]?.offsetWidth ?? 300}
                   height={tileRefs.current[i]?.offsetHeight ?? 250}
@@ -428,7 +440,6 @@ export default function HeroMosaic({ onAllBroken }: HeroMosaicProps = {}) {
                 />
               )}
 
-              {/* Shatter effect — hit 3 */}
               {tile.breaking && (
                 <GlassBreakEffect
                   imageSrc={tile.src}
@@ -441,14 +452,15 @@ export default function HeroMosaic({ onAllBroken }: HeroMosaicProps = {}) {
                 />
               )}
 
-              {/* Impact flash — on every hit */}
-              {tile.hits > 0 && (
+              {tile.hits > 0 && !tile.broken && (
                 <div
                   key={`flash-${tile.flashKey}`}
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: `radial-gradient(circle at ${tile.impactX * 100}% ${tile.impactY * 100}%, rgba(200, 230, 255, ${tile.hits >= 3 ? 0.5 : 0.3}) 0%, transparent 60%)`,
+                    background: `radial-gradient(circle at ${tile.impactX * 100}% ${
+                      tile.impactY * 100
+                    }%, rgba(255, 245, 195, ${tile.hits >= 3 ? 0.62 : 0.34}) 0%, transparent 60%)`,
                     opacity: 0,
                     animation: 'impactFlash 0.35s ease-out forwards',
                     pointerEvents: 'none',
@@ -457,47 +469,126 @@ export default function HeroMosaic({ onAllBroken }: HeroMosaicProps = {}) {
                 />
               )}
             </div>
-          );
+          )
         })}
       </div>
 
-      {/* Mouse spotlight */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 2,
-          pointerEvents: 'none',
-          background: `radial-gradient(
-            ellipse 35% 40% at ${mouse.x * 100}% ${mouse.y * 100}%,
-            rgba(255, 255, 255, 0.06) 0%,
-            transparent 100%
-          )`,
-          transition: 'background 0.1s ease',
-        }}
-      />
+      {isAlive && !transitioning && (
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: 28,
+            transform: 'translateX(-50%)',
+            zIndex: 8,
+            padding: '10px 16px',
+            borderRadius: 999,
+            border: '1px solid rgba(255, 216, 92, 0.45)',
+            background: 'linear-gradient(180deg, rgba(35, 18, 3, 0.72), rgba(8, 10, 18, 0.72))',
+            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.35), inset 0 0 22px rgba(255, 194, 80, 0.12)',
+            color: 'rgba(255, 245, 210, 0.94)',
+            fontFamily: "'Inter', -apple-system, sans-serif",
+            fontSize: 12,
+            fontWeight: 800,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            pointerEvents: 'none',
+            textAlign: 'center',
+          }}
+        >
+          Aim the carnival cannon. Break every glass image. {brokenCount}/{TILE_COUNT} panels broken
+        </div>
+      )}
 
-      {/* Throwable ball — client-only (ThrowBall touches window at render) */}
-      {mounted && (
-        <ThrowBall
-          onImpact={handleBallImpact}
-          disabled={false}
-          containerRef={containerRef}
+      {isAlive && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 3,
+            pointerEvents: 'none',
+            background: `radial-gradient(ellipse 35% 40% at ${mouse.x * 100}% ${
+              mouse.y * 100
+            }%, rgba(255, 255, 255, 0.07) 0%, transparent 100%)`,
+            transition: 'background 0.1s ease',
+          }}
         />
       )}
 
-      {/* Hammer tool — click to pick up, click a pane to instant-shatter */}
-      {mounted && (
-        <HammerTool onStrike={handleHammerStrike} />
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 4,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 52% 48% at 50% 50%, rgba(3, 3, 8, 0.72) 0%, rgba(3, 3, 8, 0.42) 44%, rgba(3, 3, 8, 0.1) 76%, transparent 100%)',
+        }}
+      />
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 5,
+          pointerEvents: 'none',
+          boxShadow: 'inset 0 0 120px 60px #030308, inset 0 0 250px 100px rgba(3, 3, 8, 0.5)',
+        }}
+      />
+
+      {isAlive && !transitioning && (
+        <ThrowBall onImpact={handleBallImpact} disabled={false} containerRef={containerRef} />
       )}
 
-      {/* Keyframe animations */}
+      {transitioning && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 20,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background:
+              'radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.12), rgba(3, 3, 8, 0.9) 72%)',
+            color: 'white',
+            fontFamily: "'Inter', -apple-system, sans-serif",
+            fontSize: 'clamp(22px, 4vw, 52px)',
+            fontWeight: 850,
+            letterSpacing: '-0.03em',
+            animation: 'panoramaPortalIn 0.9s ease forwards',
+            pointerEvents: 'none',
+          }}
+        >
+          Entering the 360 scene
+        </div>
+      )}
+
       <style jsx>{`
         @keyframes impactFlash {
-          0% { opacity: 0.9; transform: scale(1); }
-          100% { opacity: 0; transform: scale(1.4); }
+          0% {
+            opacity: 0.9;
+            transform: scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(1.4);
+          }
+        }
+        @keyframes panoramaPortalIn {
+          0% {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+          }
+          100% {
+            opacity: 1;
+            backdrop-filter: blur(10px);
+          }
         }
       `}</style>
     </div>
-  );
+  )
 }

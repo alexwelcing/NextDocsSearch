@@ -4,34 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import StructuredData from '@/components/StructuredData'
 import HeroMosaic from '@/components/HeroMosaic'
-import HeroMaterialBackground from '@/components/HeroMaterialBackground'
 import { SITE_URL } from '@/lib/site-url'
-
-// Grid geometry (must match HeroMosaic constants so the fragments line up).
-const GRID_COLS = 4
-const GRID_ROWS = 3
-
-// Copy split across the 4×3 grid. Each cell holds a fragment of the line
-// "Building with AI products that help people survive." plus a decorative
-// byline on the bottom row. One fragment per tile — breaking a tile reveals
-// that fragment.
-const HERO_FRAGMENTS: { text: string; emphasis?: boolean; byline?: boolean }[] = [
-  // Row 1 — opening clause
-  { text: 'Building', emphasis: true },
-  { text: 'with' },
-  { text: 'AI',       emphasis: true },
-  { text: 'products' },
-  // Row 2 — closing clause
-  { text: 'that' },
-  { text: 'help' },
-  { text: 'people' },
-  { text: 'survive.', emphasis: true },
-  // Row 3 — byline / decorative
-  { text: '·',              byline: true },
-  { text: '— Alex Welcing', byline: true },
-  { text: '—',              byline: true },
-  { text: '·',              byline: true },
-]
 
 export default function HomePage() {
   const siteUrl = SITE_URL
@@ -50,7 +23,10 @@ export default function HomePage() {
           name="description"
           content="Essays on speculative AI and emergent intelligence. Building with AI products that help people survive."
         />
-        <meta name="keywords" content="Alex Welcing, speculative AI, emergent intelligence, LLM, AI agents, essays" />
+        <meta
+          name="keywords"
+          content="Alex Welcing, speculative AI, emergent intelligence, LLM, AI agents, essays"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={siteUrl} />
@@ -129,9 +105,6 @@ export default function HomePage() {
           className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
           style={{ background: '#030308' }}
         >
-          {/* Layer 0 — mathematical material field (behind everything) */}
-          <HeroMaterialBackground zIndex={0} />
-
           {/*
             Layer 0.5 — SEO H1. Visually hidden but present in SSR HTML so
             search engines see the canonical heading. The per-tile copy
@@ -153,69 +126,7 @@ export default function HomePage() {
             Alex Welcing — Building with AI products that help people survive.
           </h1>
 
-          {/*
-            Layer 1 — decorative copy fragments, one per tile. Matches the
-            HeroMosaic tile grid (4×3 with inset: -5%) so each fragment
-            sits behind a specific tile and is uncovered when that tile
-            shatters.
-          */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none"
-            style={{
-              position: 'absolute',
-              inset: '-5%',
-              display: 'grid',
-              gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
-              gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
-              gap: 0,
-              zIndex: 1,
-              padding: '0 12px',
-            }}
-          >
-            {HERO_FRAGMENTS.map((frag, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-center text-center"
-                style={{
-                  padding: '12px',
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Inter', -apple-system, sans-serif",
-                    fontSize: frag.byline
-                      ? 'clamp(0.9rem, 1.2vw, 1.3rem)'
-                      : frag.emphasis
-                      ? 'clamp(2rem, 5.5vw, 5.5rem)'
-                      : 'clamp(1.6rem, 4vw, 4rem)',
-                    fontWeight: frag.byline ? 400 : frag.emphasis ? 800 : 600,
-                    letterSpacing: frag.byline ? '0.15em' : '-0.02em',
-                    lineHeight: 1.05,
-                    textTransform: frag.byline ? 'uppercase' : 'none',
-                    color: frag.byline
-                      ? 'rgba(125, 230, 255, 0.75)'
-                      : 'rgba(255, 255, 255, 0.92)',
-                    background: frag.emphasis
-                      ? 'linear-gradient(135deg, #ffffff 0%, #7de6ff 50%, #c882ff 100%)'
-                      : undefined,
-                    WebkitBackgroundClip: frag.emphasis ? 'text' : undefined,
-                    WebkitTextFillColor: frag.emphasis ? 'transparent' : undefined,
-                    backgroundClip: frag.emphasis ? 'text' : undefined,
-                    textShadow: frag.byline
-                      ? '0 0 6px rgba(0, 212, 255, 0.35)'
-                      : '0 2px 14px rgba(0, 0, 0, 0.6)',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                  }}
-                >
-                  {frag.text}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Layer 2 — tile grid (obscures the copy until broken) */}
+          {/* Layer 1 — glass image grid with panorama reveal */}
           <HeroMosaic onAllBroken={handleAllBroken} />
 
           {/* Layer 20 — CTAs, pinned to the bottom of the hero */}
