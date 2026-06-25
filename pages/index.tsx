@@ -1,19 +1,17 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
+import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
-import HeroMosaic from '@/components/HeroMosaic'
 import { SITE_URL } from '@/lib/site-url'
+
+const Interactive3DExperience = dynamic(() => import('@/components/3d/Interactive3DExperience'), {
+  ssr: false,
+  loading: () => <StylishFallback />,
+})
 
 export default function HomePage() {
   const siteUrl = SITE_URL
-  const router = useRouter()
-
-  const handleAllBroken = useCallback(() => {
-    // Every pane has been shattered → reward: ship the visitor to /explore.
-    router.push('/explore')
-  }, [router])
 
   return (
     <>
@@ -21,22 +19,21 @@ export default function HomePage() {
         <title>Alex Welcing</title>
         <meta
           name="description"
-          content="Essays on speculative AI and emergent intelligence. Building with AI products that help people survive."
+          content="Explore Alex Welcing's interactive 360 scene, essays on speculative AI, and emergent intelligence research."
         />
         <meta
           name="keywords"
-          content="Alex Welcing, speculative AI, emergent intelligence, LLM, AI agents, essays"
+          content="Alex Welcing, speculative AI, emergent intelligence, LLM, AI agents, essays, 3D visualization"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={siteUrl} />
         <link rel="icon" href="/favicon.ico" />
 
-        {/* Open Graph Meta Tags */}
         <meta property="og:title" content="Alex Welcing" />
         <meta
           property="og:description"
-          content="Building with AI products that help people survive. Essays on speculative AI and emergent intelligence."
+          content="Interactive 360 scene and essays on speculative AI and emergent intelligence."
         />
         <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
         <meta property="og:image:width" content="1200" />
@@ -44,19 +41,15 @@ export default function HomePage() {
         <meta property="og:url" content={siteUrl} />
         <meta property="og:type" content="website" />
 
-        {/* X (Twitter) Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
         <meta name="twitter:title" content="Alex Welcing" />
         <meta
           name="twitter:description"
-          content="Building with AI products that help people survive. Essays on speculative AI and emergent intelligence."
+          content="Interactive 360 scene and essays on speculative AI and emergent intelligence."
         />
         <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
-
-        {/* Performance and PWA hints */}
         <meta name="theme-color" content="#0a0a0a" />
-        <link rel="preload" as="image" href="/social-preview.png" />
       </Head>
 
       <StructuredData
@@ -65,7 +58,7 @@ export default function HomePage() {
           name: 'Alex Welcing',
           url: siteUrl,
           description:
-            'Building with AI products that help people survive. Essays on speculative AI and emergent intelligence.',
+            'Interactive 360 scene and essays on speculative AI and emergent intelligence.',
           author: { '@type': 'Person', name: 'Alex Welcing', url: `${siteUrl}/about` },
         }}
       />
@@ -99,142 +92,23 @@ export default function HomePage() {
         }}
       />
 
-      <div className="min-h-screen text-white">
-        {/* Hero — Immersive mosaic wall */}
-        <section
-          className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: '#030308' }}
-        >
-          {/*
-            Layer 0.5 — SEO H1. Visually hidden but present in SSR HTML so
-            search engines see the canonical heading. The per-tile copy
-            below is decorative.
-          */}
-          <h1
-            style={{
-              position: 'absolute',
-              width: 1,
-              height: 1,
-              padding: 0,
-              margin: -1,
-              overflow: 'hidden',
-              clip: 'rect(0, 0, 0, 0)',
-              whiteSpace: 'nowrap',
-              border: 0,
-            }}
-          >
-            Alex Welcing — Building with AI products that help people survive.
-          </h1>
+      <h1
+        style={{
+          position: 'absolute',
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: -1,
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          whiteSpace: 'nowrap',
+          border: 0,
+        }}
+      >
+        Alex Welcing — Interactive 360 AI scene.
+      </h1>
 
-          {/* Layer 1 — glass image grid with panorama reveal */}
-          <HeroMosaic onAllBroken={handleAllBroken} />
-
-          {/* Layer 20 — CTAs, pinned to the bottom of the hero */}
-          <div
-            className="relative z-20 flex flex-col items-center justify-end text-center px-6 max-w-5xl pb-16"
-            style={{ marginTop: 'auto' }}
-          >
-            <div className="flex flex-col sm:flex-row gap-5">
-              <Link
-                href="/current-work"
-                className="group relative px-8 py-4 overflow-hidden transition-transform hover:-translate-y-0.5"
-                style={{
-                  background: 'rgba(168, 85, 247, 0.9)',
-                  border: '2px solid rgba(216, 180, 254, 0.9)',
-                  borderRadius: '6px',
-                  boxShadow:
-                    '0 8px 24px rgba(168, 85, 247, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25)',
-                }}
-              >
-                <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-white drop-shadow-sm">
-                  Current Work
-                </span>
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{
-                    background:
-                      'linear-gradient(90deg, rgba(216, 180, 254, 0.25), rgba(168, 85, 247, 0.15))',
-                  }}
-                />
-              </Link>
-
-              <Link
-                href="/articles"
-                className="group relative px-8 py-4 overflow-hidden transition-transform hover:-translate-y-0.5"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  border: '2px solid rgba(255, 255, 255, 1)',
-                  borderRadius: '6px',
-                  boxShadow:
-                    '0 8px 24px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-                }}
-              >
-                <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-slate-950">
-                  Read Articles
-                </span>
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{
-                    background:
-                      'linear-gradient(90deg, rgba(0, 212, 255, 0.18), rgba(255, 215, 0, 0.12))',
-                  }}
-                />
-              </Link>
-
-              <Link
-                href="/explore"
-                className="group relative px-8 py-4 overflow-hidden transition-transform hover:-translate-y-0.5"
-                style={{
-                  background: 'rgba(0, 212, 255, 0.92)',
-                  border: '2px solid rgba(125, 230, 255, 1)',
-                  borderRadius: '6px',
-                  boxShadow:
-                    '0 8px 24px rgba(0, 212, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
-                }}
-              >
-                <span className="relative z-10 text-sm font-bold tracking-widest uppercase text-slate-950">
-                  3D Experience
-                </span>
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{
-                    background:
-                      'linear-gradient(90deg, rgba(125, 230, 255, 0.35), rgba(0, 212, 255, 0.2))',
-                  }}
-                />
-              </Link>
-            </div>
-          </div>
-
-          {/* Scroll indicator */}
-          <div
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
-            style={{
-              animation: 'float 3s ease-in-out infinite',
-            }}
-          >
-            <div
-              className="w-px h-16 opacity-30"
-              style={{
-                background:
-                  'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
-              }}
-            />
-          </div>
-
-          <style jsx>{`
-            @keyframes float {
-              0%,
-              100% {
-                transform: translateX(-50%) translateY(0);
-              }
-              50% {
-                transform: translateX(-50%) translateY(8px);
-              }
-            }
-          `}</style>
-        </section>
-      </div>
+      <Interactive3DExperience />
     </>
   )
 }

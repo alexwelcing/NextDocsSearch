@@ -30,7 +30,11 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
   const [combo, setCombo] = useState(0)
   const [countdown, setCountdown] = useState(3)
   const [gameStats, setGameStats] = useState<GameStats>({
-    score: 0, comboMax: 0, accuracy: 0, totalClicks: 0, successfulClicks: 0,
+    score: 0,
+    comboMax: 0,
+    accuracy: 0,
+    totalClicks: 0,
+    successfulClicks: 0,
   })
 
   const { completeQuest, updateStats, currentQuest } = useJourney()
@@ -54,7 +58,20 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
 
   useEffect(() => {
     getRandomImage()
-    fetchArticles()
+
+    const loadArticles = () => fetchArticles()
+    const idleId =
+      typeof window !== 'undefined' && 'requestIdleCallback' in window
+        ? window.requestIdleCallback(loadArticles, { timeout: 2500 })
+        : globalThis.setTimeout(loadArticles, 1000)
+
+    return () => {
+      if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId as number)
+      } else {
+        globalThis.clearTimeout(idleId as number)
+      }
+    }
   }, [getRandomImage])
 
   const handleStartGame = useCallback(() => {
@@ -78,14 +95,17 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
     }, 1000)
   }, [])
 
-  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
-    setScore(finalScore)
-    setGameStats(stats)
-    setGameState('GAME_OVER')
-    updateStats('highestGameScore', finalScore)
-    if (currentQuest?.id === 'play-game') completeQuest('play-game')
-    if (finalScore >= 5000) completeQuest('leaderboard-rank')
-  }, [updateStats, currentQuest, completeQuest])
+  const handleGameEnd = useCallback(
+    (finalScore: number, stats: GameStats) => {
+      setScore(finalScore)
+      setGameStats(stats)
+      setGameState('GAME_OVER')
+      updateStats('highestGameScore', finalScore)
+      if (currentQuest?.id === 'play-game') completeQuest('play-game')
+      if (finalScore >= 5000) completeQuest('leaderboard-rank')
+    },
+    [updateStats, currentQuest, completeQuest]
+  )
 
   const handlePlayAgain = useCallback(() => {
     setGameState('IDLE')
@@ -95,7 +115,12 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
   const sceneryOptions = useMemo(() => {
     const options: { id: string; name: string; type: 'image' | 'splat'; path: string }[] = []
     if (currentImage) {
-      options.push({ id: 'current-panorama', name: 'Default Panorama', type: 'image', path: currentImage })
+      options.push({
+        id: 'current-panorama',
+        name: 'Default Panorama',
+        type: 'image',
+        path: currentImage,
+      })
     }
     return options
   }, [currentImage])
@@ -121,6 +146,7 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
     <main className={`${styles.main} ${styles.gradientbg}`}>
       <Scene3D
         world={worldConfig}
+        quality="medium"
         articles={articles}
         onGameStateChange={(state: string) => setGameState(state as GameState)}
         gameState={gameState}
@@ -143,20 +169,31 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
         onChangeScenery={handleSceneryChange}
         availableScenery={sceneryOptions}
         currentScenery={currentImage ?? undefined}
-        onToggleArticleDisplay={() => setIsArticleDisplayOpen(prev => !prev)}
+        onToggleArticleDisplay={() => setIsArticleDisplayOpen((prev) => !prev)}
         isArticleDisplayOpen={isArticleDisplayOpen}
         onExitToLanding={onExit}
       />
 
       {gameState === 'COUNTDOWN' && (
-        <div style={{
-          position: 'fixed', inset: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(0, 0, 0, 0.7)', zIndex: 1000,
-        }}>
-          <div style={{
-            fontSize: '120px', fontWeight: 'bold', color: '#0f0', fontFamily: 'monospace',
-          }}>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0, 0, 0, 0.7)',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              fontSize: '120px',
+              fontWeight: 'bold',
+              color: '#0f0',
+              fontFamily: 'monospace',
+            }}
+          >
             {countdown || 'GO'}
           </div>
         </div>

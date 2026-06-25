@@ -11,52 +11,52 @@
  * - Marble Labs integration ready
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { createXRStore, XR, XROrigin } from '@react-three/xr';
-import { Stats } from '@react-three/drei';
-import styled from 'styled-components';
-import { ArticleData } from '@/types/api';
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { createXRStore, XR, XROrigin } from '@react-three/xr'
+import { Stats } from '@react-three/drei'
+import styled from 'styled-components'
+import { ArticleData } from '@/types/api'
 
-import SceneCanvas, { useSceneCapabilities } from './SceneCanvas';
-import SceneEnvironment from './SceneEnvironment';
-import SceneBackground from './SceneBackground';
-import SceneCamera from './SceneCamera';
+import SceneCanvas, { useSceneCapabilities } from './SceneCanvas'
+import SceneEnvironment from './SceneEnvironment'
+import SceneBackground from './SceneBackground'
+import SceneCamera from './SceneCamera'
 
-import PostProcessingEffects from '@/components/3d/atmosphere/PostProcessingEffects';
-import ClickingGame from '@/components/3d/game/ClickingGame';
-import type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
-import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types';
-import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader';
+import PostProcessingEffects from '@/components/3d/atmosphere/PostProcessingEffects'
+import ClickingGame from '@/components/3d/game/ClickingGame'
+import type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
+import type { WorldConfig, CameraMode, QualityLevel } from '@/lib/worlds/types'
+import { loadWorld, DEFAULT_WORLD } from '@/lib/worlds/loader'
 
 // Re-export game types for convenience
-export type { GameState, GameStats } from '@/components/3d/game/ClickingGame';
+export type { GameState, GameStats } from '@/components/3d/game/ClickingGame'
 
 interface Scene3DProps {
   /** World ID or configuration */
-  world?: string | WorldConfig;
+  world?: string | WorldConfig
   /** Force a specific quality level */
-  quality?: QualityLevel;
+  quality?: QualityLevel
   /** Enable XR/VR mode */
-  enableXR?: boolean;
+  enableXR?: boolean
   /** Show performance stats (dev mode) */
-  showStats?: boolean;
+  showStats?: boolean
   /** Articles data for the idea experience */
-  articles?: ArticleData[];
+  articles?: ArticleData[]
   /** Children to render in the scene */
-  children?: React.ReactNode;
+  children?: React.ReactNode
   /** Callback when scene is ready */
-  onReady?: () => void;
+  onReady?: () => void
   /** Callback for camera mode changes */
-  onCameraModeChange?: (mode: CameraMode) => void;
+  onCameraModeChange?: (mode: CameraMode) => void
   /** Callback for game state changes */
-  onGameStateChange?: (state: string) => void;
+  onGameStateChange?: (state: string) => void
   /** Game props (for ClickingGame inside Canvas) */
-  gameState?: GameState | string;
-  onStartGame?: () => void;
-  onGameEnd?: (score: number, stats: GameStats) => void;
-  onScoreUpdate?: (score: number) => void;
-  onComboUpdate?: (combo: number) => void;
-  onTimeUpdate?: (timeRemaining: number) => void;
+  gameState?: GameState | string
+  onStartGame?: () => void
+  onGameEnd?: (score: number, stats: GameStats) => void
+  onScoreUpdate?: (score: number) => void
+  onComboUpdate?: (combo: number) => void
+  onTimeUpdate?: (timeRemaining: number) => void
 }
 
 export function mergeWorldConfig(world: Partial<WorldConfig>): WorldConfig {
@@ -83,7 +83,7 @@ export function mergeWorldConfig(world: Partial<WorldConfig>): WorldConfig {
       ...DEFAULT_WORLD.atmosphere,
       ...world.atmosphere,
     },
-  };
+  }
 }
 
 const Container = styled.div`
@@ -93,7 +93,7 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 4;
-`;
+`
 
 // Physics removed - no current consumers use cannon.js through Scene3D.
 // Game physics lives in the legacy ThreeSixty.tsx system.
@@ -119,58 +119,52 @@ export default function Scene3D({
   onTimeUpdate,
 }: Scene3DProps) {
   // Scene state
-  const [worldConfig, setWorldConfig] = useState<WorldConfig>(DEFAULT_WORLD);
-  const [cameraMode, setCameraMode] = useState<CameraMode>('orbit');
+  const [worldConfig, setWorldConfig] = useState<WorldConfig>(DEFAULT_WORLD)
+  const [cameraMode, setCameraMode] = useState<CameraMode>('orbit')
 
   // XR store
-  const xrStore = useMemo(() => createXRStore(), []);
+  const xrStore = useMemo(() => createXRStore(), [])
 
   // Load world configuration
   useEffect(() => {
     async function load() {
       try {
-        let config: WorldConfig;
+        let config: WorldConfig
         if (typeof worldProp === 'string') {
-          config = await loadWorld(worldProp);
+          config = await loadWorld(worldProp)
         } else if (worldProp) {
-          config = mergeWorldConfig(worldProp);
+          config = mergeWorldConfig(worldProp)
         } else {
-          config = DEFAULT_WORLD;
+          config = DEFAULT_WORLD
         }
-        setWorldConfig(config);
+        setWorldConfig(config)
       } catch (error) {
-        console.error('Failed to load world:', error);
-        setWorldConfig(DEFAULT_WORLD);
+        console.error('Failed to load world:', error)
+        setWorldConfig(DEFAULT_WORLD)
       } finally {
-        onReady?.();
+        onReady?.()
       }
     }
-    load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [worldProp, onReady]);
+    load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [worldProp, onReady])
 
   // Handle camera mode changes
   const handleSetCameraMode = useCallback(
     (mode: CameraMode) => {
-      setCameraMode(mode);
-      onCameraModeChange?.(mode);
+      setCameraMode(mode)
+      onCameraModeChange?.(mode)
     },
     [onCameraModeChange]
-  );
+  )
 
   return (
     <Container>
-      <SceneCanvas
-        quality={qualityOverride}
-        shadows={worldConfig.lighting?.shadowsEnabled}
-      >
+      <SceneCanvas quality={qualityOverride} shadows={worldConfig.lighting?.shadowsEnabled}>
         {enableXR ? (
           <XR store={xrStore}>
             <XROrigin position={[0, 0, 0]}>
-              <SceneContent
-                worldConfig={worldConfig}
-                cameraMode={cameraMode}
-              >
+              <SceneContent worldConfig={worldConfig} cameraMode={cameraMode}>
                 {children}
               </SceneContent>
             </XROrigin>
@@ -193,7 +187,7 @@ export default function Scene3D({
         {showStats && <Stats />}
       </SceneCanvas>
     </Container>
-  );
+  )
 }
 
 /**
@@ -210,17 +204,20 @@ function SceneContent({
   onTimeUpdate,
   children,
 }: {
-  worldConfig: WorldConfig;
-  cameraMode: CameraMode;
-  gameState?: GameState;
-  onStartGame?: () => void;
-  onGameEnd?: (score: number, stats: GameStats) => void;
-  onScoreUpdate?: (score: number) => void;
-  onComboUpdate?: (combo: number) => void;
-  onTimeUpdate?: (timeRemaining: number) => void;
-  children?: React.ReactNode;
+  worldConfig: WorldConfig
+  cameraMode: CameraMode
+  gameState?: GameState
+  onStartGame?: () => void
+  onGameEnd?: (score: number, stats: GameStats) => void
+  onScoreUpdate?: (score: number) => void
+  onComboUpdate?: (combo: number) => void
+  onTimeUpdate?: (timeRemaining: number) => void
+  children?: React.ReactNode
 }) {
-  const capabilities = useSceneCapabilities();
+  const capabilities = useSceneCapabilities()
+  const effectsEnabled =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('effects') === 'on'
 
   return (
     <>
@@ -232,21 +229,15 @@ function SceneContent({
       />
 
       {/* Environment lighting */}
-      <SceneEnvironment
-        lighting={worldConfig.lighting}
-        envMapPath={worldConfig.assets.skybox}
-      />
+      <SceneEnvironment lighting={worldConfig.lighting} envMapPath={worldConfig.assets.skybox} />
 
       {/* Camera system */}
-      <SceneCamera
-        mode={cameraMode}
-        config={worldConfig.camera}
-      />
+      <SceneCamera mode={cameraMode} config={worldConfig.camera} />
 
       {/* Post-processing effects */}
       <PostProcessingEffects
         quality={capabilities.qualityLevel}
-        enabled={capabilities.qualityLevel !== 'low'}
+        enabled={effectsEnabled}
         isMobile={capabilities.isMobile}
       />
 
@@ -265,21 +256,21 @@ function SceneContent({
       {/* Scene children */}
       {children}
     </>
-  );
+  )
 }
 
 /**
  * Context for scene state access
  */
 export interface SceneContextValue {
-  worldConfig: WorldConfig;
-  cameraMode: CameraMode;
-  setCameraMode: (mode: CameraMode) => void;
-  capabilities: ReturnType<typeof useSceneCapabilities>;
+  worldConfig: WorldConfig
+  cameraMode: CameraMode
+  setCameraMode: (mode: CameraMode) => void
+  capabilities: ReturnType<typeof useSceneCapabilities>
 }
 
 /**
  * Hook exports for convenience
  */
-export { useSceneCapabilities } from './SceneCanvas';
-export { useCameraControl } from './SceneCamera';
+export { useSceneCapabilities } from './SceneCanvas'
+export { useCameraControl } from './SceneCamera'
