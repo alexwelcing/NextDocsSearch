@@ -630,24 +630,42 @@ const VideoPage: NextPage<VideoPageProps> = ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles');
   const filenames = fs.readdirSync(articleFolderPath);
-  
-  // Find all articles that have videos
-  const paths: { params: { slug: string } }[] = [];
-  
-  for (const filename of filenames) {
-    if (!filename.endsWith('.mdx')) continue;
-    
-    const slug = filename.replace('.mdx', '');
-    const videoPath = `/images/article-videos/${slug}.mp4`;
-    const videoExists = fs.existsSync(path.join(process.cwd(), 'public', videoPath));
-    
-    // Also check for Supabase videos via a marker or just generate for all
-    // For now, generate paths for articles that have local videos
-    if (videoExists) {
-      paths.push({ params: { slug } });
-    }
-  }
-  
+
+  const videoArticles = filenames
+    .filter((filename) => filename.endsWith('.mdx'))
+    .map((filename) => {
+      const slug = filename.replace('.mdx', '');
+      const videoPath = `/images/article-videos/${slug}.mp4`;
+      const videoExists = fs.existsSync(path.join(process.cwd(), 'public', videoPath));
+
+      if (!videoExists) return null;
+
+      try {
+        const fileContents = fs.readFileSync(path.join(articleFolderPath, filename), 'utf8');
+        const { data } = matter(fileContents);
+        const dateValue = data.date instanceof Date ? data.date.getTime() : Date.parse(data.date || '');
+        return { slug, timestamp: Number.isFinite(dateValue) ? dateValue : 0 };
+      } catch {
+        return { slug, timestamp: 0 };
+      }
+    })
+    .filter((article): article is { slug: string; timestamp: number } => Boolean(article))
+    .sort((a, b) => b.timestamp - a.timestamp);
+
+  const shouldPrebuildAll = process.env.PREBUILD_ALL_VIDEOS === 'true';
+  const defaultPrebuildCount = 8;
+  const configuredPrebuildCount = Number.parseInt(
+    process.env.PREBUILD_VIDEO_COUNT || `${defaultPrebuildCount}`,
+    10
+  );
+  const prebuildCount = Number.isFinite(configuredPrebuildCount)
+    ? Math.max(0, configuredPrebuildCount)
+    : defaultPrebuildCount;
+
+  const paths = (shouldPrebuildAll ? videoArticles : videoArticles.slice(0, prebuildCount)).map(
+    ({ slug }) => ({ params: { slug } })
+  );
+
   return { paths, fallback: 'blocking' };
 };
 
@@ -731,6 +749,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         articleSlug: slug,
         relatedVideos,
       },
+      revalidate: 86400,
     };
   } catch (error) {
     console.error('Error generating video page:', error);
