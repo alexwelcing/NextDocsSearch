@@ -15,7 +15,6 @@
     "generate:art": "tsx lib/generate-article-art.ts",
     "generate:multi-art": "tsx scripts/generate-multi-art.ts",
     "generate:series-images": "tsx scripts/generate-series-images.ts",
-    "generate:series-videos": "tsx scripts/generate-series-videos.ts",
     "narrative": "tsx scripts/narrative-compose.ts",
     "postinstall": "pnpm run repair:client-only",
     "repair:client-only": "node scripts/repair-client-only-package.cjs"
@@ -45,15 +44,12 @@
     "clsx": "^1.2.1",
     "cmdk": "^0.2.1",
     "common-tags": "^1.8.2",
-    "crashcat": "^0.0.3",
     "framer-motion": "^12.23.26",
     "gray-matter": "^4.0.3",
     "hover.css": "^2.3.2",
     "immer": "^11.1.4",
     "lucide-react": "^0.128.0",
-    "navcat": "^0.2.0",
     "next": "16.2.9",
-    "next-mdx-remote": "^6.0.0",
     "openai-edge": "^1.2.2",
     "postprocessing": "^6.38.2",
     "react": "^19.0.0",
@@ -62,9 +58,7 @@
     "remark-gfm": "^4.0.1",
     "sharp": "^0.34.4",
     "styled-components": "^6.1.12",
-    "styled-jsx": "^5.1.7",
     "tailwind-merge": "^1.14.0",
-    "tailwindcss-animate": "^1.0.7",
     "three": "^0.183.2",
     "three-stdlib": "^2.36.1",
     "zustand": "^5.0.12"
@@ -104,13 +98,6 @@
   },
   "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247",
   "pnpm": {
-    "packageExtensions": {
-      "styled-jsx@*": {
-        "dependencies": {
-          "client-only": "0.0.1"
-        }
-      }
-    },
     "overrides": {
       "vite": "7.3.5",
       "axios": "1.18.1",
