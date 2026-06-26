@@ -3,11 +3,11 @@
   "version": "0.1.2",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "tsx scripts/generate-image-manifest.ts && tsx scripts/generate-article-manifest.ts && tsx scripts/generate-recommendation-index.ts && pnpm run embeddings && next build",
+    "dev": "next dev --webpack",
+    "build": "tsx scripts/generate-image-manifest.ts && tsx scripts/generate-article-manifest.ts && tsx scripts/generate-recommendation-index.ts && pnpm run embeddings && pnpm run repair:client-only && next build --webpack",
     "postbuild": "tsx scripts/generate-video-sitemap.ts && next-sitemap",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "validate": "pnpm run lint && pnpm run type-check",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
@@ -52,7 +52,9 @@
     "video:compose": "tsx scripts/test-narrative-video.ts --article",
     "video:compose:dry-run": "tsx scripts/test-narrative-video.ts --dry-run",
     "video:demo": "tsx scripts/demo-narrative-video.ts",
-    "video:demo:all": "npm run test:hf-mount && npm run video:demo"
+    "video:demo:all": "npm run test:hf-mount && npm run video:demo",
+    "postinstall": "pnpm run repair:client-only",
+    "repair:client-only": "node scripts/repair-client-only-package.cjs"
   },
   "prettier": {
     "trailingComma": "es5",
@@ -80,13 +82,13 @@
     "@supabase/supabase-js": "^2.45.1",
     "@types/react-dom": "^19.0.2",
     "ai": "^2.2.37",
-    "axios": "^1.7.4",
+    "axios": "^1.18.1",
     "class-variance-authority": "^0.4.0",
+    "client-only": "^0.0.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.1",
     "common-tags": "^1.8.2",
     "crashcat": "^0.0.3",
-    "eslint": "^8.57.0",
     "eslint-config-next": "16.2.1",
     "framer-motion": "^12.23.26",
     "github-slugger": "^2.0.0",
@@ -102,7 +104,7 @@
     "mdast-util-to-string": "^3.2.0",
     "micromark-extension-mdxjs": "^1.0.1",
     "navcat": "^0.2.0",
-    "next": "16.2.1",
+    "next": "16.2.9",
     "next-mdx-remote": "^6.0.0",
     "next-sitemap": "^4.2.3",
     "openai": "^3.3.0",
@@ -119,7 +121,7 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.183.2",
     "three-stdlib": "^2.36.1",
-    "undici": "^7.22.0",
+    "undici": "^7.28.0",
     "unist-builder": "^3.0.1",
     "unist-util-filter": "^4.0.1",
     "yargs": "^17.7.2",
@@ -140,6 +142,7 @@
     "autoprefixer": "^10.4.20",
     "babel-plugin-styled-components": "^2.1.4",
     "dotenv": "^16.4.5",
+    "eslint": "^9.39.4",
     "jsdom": "^27.4.0",
     "playwright": "^1.57.0",
     "postcss": "^8.4.41",
@@ -148,7 +151,23 @@
     "tailwindcss": "^3.4.10",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",
-    "vitest": "^4.0.16"
+    "vite": "7.3.5",
+    "vitest": "^4.1.9"
   },
-  "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
+  "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247",
+  "pnpm": {
+    "packageExtensions": {
+      "styled-jsx@*": {
+        "dependencies": {
+          "client-only": "0.0.1"
+        }
+      }
+    },
+    "overrides": {
+      "vite": "7.3.5",
+      "axios": "1.18.1",
+      "form-data": "4.0.6",
+      "ws": "8.21.0"
+    }
+  }
 }

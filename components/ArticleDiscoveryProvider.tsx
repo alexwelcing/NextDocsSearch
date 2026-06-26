@@ -1,10 +1,19 @@
-'use client';
+'use client'
 
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
-import { Compass } from 'lucide-react';
-import styled, { keyframes } from 'styled-components';
-import ArticleRecommendationModal from './ArticleRecommendationModal';
-import type { EnhancedArticleData } from '@/pages/api/articles-enhanced';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  ReactNode,
+} from 'react'
+import { useRouter } from 'next/router'
+import { Compass } from 'lucide-react'
+import styled, { keyframes } from 'styled-components'
+import ArticleRecommendationModal from './ArticleRecommendationModal'
+import type { EnhancedArticleData } from '@/pages/api/articles-enhanced'
 
 // Animation keyframes
 const pulseGlow = keyframes`
@@ -14,12 +23,12 @@ const pulseGlow = keyframes`
   50% {
     box-shadow: 0 4px 30px rgba(0, 212, 255, 0.5), 0 0 60px rgba(0, 212, 255, 0.25);
   }
-`;
+`
 
 const bounce = keyframes`
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
-`;
+`
 
 const slideIn = keyframes`
   from {
@@ -30,7 +39,7 @@ const slideIn = keyframes`
     opacity: 1;
     transform: translateX(0) scale(1);
   }
-`;
+`
 
 const FloatingButtonContainer = styled.div<{ $visible: boolean }>`
   position: fixed;
@@ -42,24 +51,24 @@ const FloatingButtonContainer = styled.div<{ $visible: boolean }>`
   align-items: flex-end;
   gap: 12px;
   transition: all 0.3s ease;
-  opacity: ${props => props.$visible ? 1 : 0};
-  pointer-events: ${props => props.$visible ? 'auto' : 'none'};
-  transform: ${props => props.$visible ? 'translateY(0)' : 'translateY(20px)'};
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
+  pointer-events: ${(props) => (props.$visible ? 'auto' : 'none')};
+  transform: ${(props) => (props.$visible ? 'translateY(0)' : 'translateY(20px)')};
 
   @media (max-width: 768px) {
     bottom: 16px;
     right: 16px;
   }
-`;
+`
 
 const FloatingButton = styled.button<{ $expanded?: boolean }>`
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: ${props => props.$expanded ? '16px 28px' : '18px'};
+  padding: ${(props) => (props.$expanded ? '16px 28px' : '18px')};
   background: rgba(0, 30, 50, 0.9);
   border: 2px solid rgba(0, 212, 255, 0.4);
-  border-radius: ${props => props.$expanded ? '8px' : '50%'};
+  border-radius: ${(props) => (props.$expanded ? '8px' : '50%')};
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
@@ -102,12 +111,12 @@ const FloatingButton = styled.button<{ $expanded?: boolean }>`
     flex-shrink: 0;
     color: #00d4ff;
   }
-`;
+`
 
 const ButtonText = styled.span`
   white-space: nowrap;
   animation: ${slideIn} 0.3s ease;
-`;
+`
 
 const NotificationBadge = styled.span`
   position: absolute;
@@ -126,7 +135,7 @@ const NotificationBadge = styled.span`
   justify-content: center;
   border: 2px solid #0f0f18;
   animation: ${bounce} 2s ease-in-out infinite;
-`;
+`
 
 const Tooltip = styled.div<{ $visible: boolean }>`
   position: absolute;
@@ -140,8 +149,8 @@ const Tooltip = styled.div<{ $visible: boolean }>`
   color: #fff;
   font-size: 0.875rem;
   white-space: nowrap;
-  opacity: ${props => props.$visible ? 1 : 0};
-  transform: ${props => props.$visible ? 'translateY(0)' : 'translateY(8px)'};
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
+  transform: ${(props) => (props.$visible ? 'translateY(0)' : 'translateY(8px)')};
   transition: all 0.2s ease;
   pointer-events: none;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -158,74 +167,77 @@ const Tooltip = styled.div<{ $visible: boolean }>`
     border-bottom: 1px solid rgba(0, 212, 255, 0.2);
     transform: rotate(45deg);
   }
-`;
+`
 
 const TooltipHighlight = styled.span`
   color: #00d4ff;
   font-weight: 600;
-`;
+`
 
 // Context types
 interface ArticleDiscoveryContextType {
-  isModalOpen: boolean;
-  openModal: (article?: EnhancedArticleData) => void;
-  closeModal: () => void;
-  currentArticle: EnhancedArticleData | undefined;
-  setCurrentArticle: (article: EnhancedArticleData | undefined) => void;
-  showFloatingButton: boolean;
-  setShowFloatingButton: (show: boolean) => void;
+  isModalOpen: boolean
+  openModal: (article?: EnhancedArticleData) => void
+  closeModal: () => void
+  currentArticle: EnhancedArticleData | undefined
+  setCurrentArticle: (article: EnhancedArticleData | undefined) => void
+  showFloatingButton: boolean
+  setShowFloatingButton: (show: boolean) => void
 }
 
-const ArticleDiscoveryContext = createContext<ArticleDiscoveryContextType | null>(null);
+const ArticleDiscoveryContext = createContext<ArticleDiscoveryContextType | null>(null)
 
 export function useArticleDiscovery() {
-  const context = useContext(ArticleDiscoveryContext);
+  const context = useContext(ArticleDiscoveryContext)
   if (!context) {
-    throw new Error('useArticleDiscovery must be used within ArticleDiscoveryProvider');
+    throw new Error('useArticleDiscovery must be used within ArticleDiscoveryProvider')
   }
-  return context;
+  return context
 }
 
 interface ArticleDiscoveryProviderProps {
-  children: ReactNode;
-  initialShowButton?: boolean;
+  children: ReactNode
+  initialShowButton?: boolean
 }
 
 export function ArticleDiscoveryProvider({
   children,
   initialShowButton = true,
 }: ArticleDiscoveryProviderProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentArticle, setCurrentArticle] = useState<EnhancedArticleData | undefined>();
-  const [showFloatingButton, setShowFloatingButton] = useState(initialShowButton);
-  const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentArticle, setCurrentArticle] = useState<EnhancedArticleData | undefined>()
+  const [showFloatingButton, setShowFloatingButton] = useState(initialShowButton)
+  const [isHovered, setIsHovered] = useState(false)
 
   // Pre-fetch and cache all articles
-  const [allArticles, setAllArticles] = useState<EnhancedArticleData[]>([]);
-  const fetchedRef = useRef(false);
+  const [allArticles, setAllArticles] = useState<EnhancedArticleData[]>([])
+  const fetchedRef = useRef(false)
+  const floatingButtonVisible = showFloatingButton && !isModalOpen && router.pathname !== '/'
 
   useEffect(() => {
-    if (fetchedRef.current) return;
-    fetchedRef.current = true;
+    if (!floatingButtonVisible && !isModalOpen) return
+    if (fetchedRef.current) return
+    fetchedRef.current = true
 
     fetch('/api/articles-enhanced')
-      .then(res => res.json())
+      .then((res) => res.json())
       .then((data: EnhancedArticleData[]) => {
-        setAllArticles(data);
+        setAllArticles(data)
       })
-      .catch(console.error);
-  }, []);
+      .catch(console.error)
+  }, [floatingButtonVisible, isModalOpen])
 
   const openModal = useCallback((article?: EnhancedArticleData) => {
     if (article) {
-      setCurrentArticle(article);
+      setCurrentArticle(article)
     }
-    setIsModalOpen(true);
-  }, []);
+    setIsModalOpen(true)
+  }, [])
 
   const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
+    setIsModalOpen(false)
+  }, [])
 
   const value: ArticleDiscoveryContextType = {
     isModalOpen,
@@ -235,34 +247,34 @@ export function ArticleDiscoveryProvider({
     setCurrentArticle,
     showFloatingButton,
     setShowFloatingButton,
-  };
+  }
 
   return (
     <ArticleDiscoveryContext.Provider value={value}>
       {children}
 
       {/* Floating Discovery Button */}
-      <FloatingButtonContainer $visible={showFloatingButton && !isModalOpen}>
-        {/* Tooltip */}
-        <Tooltip $visible={isHovered}>
-          Discover <TooltipHighlight>related articles</TooltipHighlight> and explore the archive
-        </Tooltip>
+      {floatingButtonVisible && (
+        <FloatingButtonContainer $visible>
+          {/* Tooltip */}
+          <Tooltip $visible={isHovered}>
+            Discover <TooltipHighlight>related articles</TooltipHighlight> and explore the archive
+          </Tooltip>
 
-        {/* Main button */}
-        <FloatingButton
-          $expanded={isHovered}
-          onClick={() => openModal()}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          aria-label="Discover Articles"
-        >
-          <Compass />
-          {isHovered && <ButtonText>Discover Articles</ButtonText>}
-          {!isHovered && currentArticle && (
-            <NotificationBadge>!</NotificationBadge>
-          )}
-        </FloatingButton>
-      </FloatingButtonContainer>
+          {/* Main button */}
+          <FloatingButton
+            $expanded={isHovered}
+            onClick={() => openModal()}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            aria-label="Discover Articles"
+          >
+            <Compass />
+            {isHovered && <ButtonText>Discover Articles</ButtonText>}
+            {!isHovered && currentArticle && <NotificationBadge>!</NotificationBadge>}
+          </FloatingButton>
+        </FloatingButtonContainer>
+      )}
 
       {/* The Modal */}
       <ArticleRecommendationModal
@@ -272,7 +284,7 @@ export function ArticleDiscoveryProvider({
         allArticles={allArticles}
       />
     </ArticleDiscoveryContext.Provider>
-  );
+  )
 }
 
-export default ArticleDiscoveryProvider;
+export default ArticleDiscoveryProvider

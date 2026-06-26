@@ -567,7 +567,7 @@ export default function HeroMosaic({
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         @keyframes impactFlash {
           0% {
             opacity: 0.9;

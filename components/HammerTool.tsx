@@ -193,7 +193,7 @@ export default function HammerTool({ onStrike }: HammerToolProps) {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         @keyframes hammerIdlePulse {
           0%, 100% { transform: rotate(-8deg) scale(1); }
           50%      { transform: rotate(-4deg) scale(1.06); }
