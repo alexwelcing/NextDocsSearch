@@ -17,7 +17,6 @@
 
 // Main orchestrator
 export { default as Scene3D } from './Scene3D';
-export type { SceneContextValue } from './Scene3D';
 
 // Individual components (for advanced usage)
 export { default as SceneCanvas, useSceneCapabilities } from './SceneCanvas';

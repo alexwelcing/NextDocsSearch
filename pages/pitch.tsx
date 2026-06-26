@@ -55,10 +55,10 @@ const PILLARS: Array<{ icon: keyof typeof ICONS; title: string; body: string }> 
 
 const DEMOS: Array<{ href: string; icon: keyof typeof ICONS; title: string; body: string }> = [
   {
-    href: '/chat',
+    href: '/articles',
     icon: 'Wand2',
-    title: 'Talk to Ship AI',
-    body: 'Persona-driven chat with memory, streamed responses, and a system prompt that holds.',
+    title: 'Explore the archive',
+    body: 'A deep essay archive with semantic search and article-aware answer surfaces.',
   },
   {
     href: '/articles',
