@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import StylishFallback from '@/components/StylishFallback'
 import StructuredData from '@/components/StructuredData'
@@ -12,19 +13,42 @@ const Interactive3DExperience = dynamic(() => import('@/components/3d/Interactiv
   loading: () => <StylishFallback />,
 })
 
+// When the glass-cannon landing shatters every pane it sends the visitor here
+// with ?enter=1. We read that synchronously so the 3D scene mounts on the very
+// first client render — the marketing landing below never paints, so there is
+// no flash of the intermediate page between the break and the 360 scene.
+function enteredFromCannon(): boolean {
+  if (typeof window === 'undefined') return false
+  return new URLSearchParams(window.location.search).get('enter') === '1'
+}
+
 export default function ExploreLandingPage() {
   const siteUrl = SITE_URL
   const pageUrl = `${siteUrl}/explore`
-  const [launched, setLaunched] = useState(false)
+  const router = useRouter()
+  const [launched, setLaunched] = useState(enteredFromCannon)
+
+  // Cover the case where the query becomes available after hydration (e.g. a
+  // client-side route change rather than a fresh load).
+  useEffect(() => {
+    if (!router.isReady) return
+    if (router.query.enter === '1') setLaunched(true)
+  }, [router.isReady, router.query.enter])
 
   if (launched) {
+    // Visitors who shattered the wall expect "back" to return them home, not to
+    // the marketing gateway they intentionally bypassed.
+    const handleExit = enteredFromCannon()
+      ? () => router.push('/')
+      : () => setLaunched(false)
+
     return (
       <>
         <Head>
           <title>Explore the Interactive Layer | Alex Welcing</title>
           <meta name="robots" content="noindex, follow" />
         </Head>
-        <Interactive3DExperience onExit={() => setLaunched(false)} />
+        <Interactive3DExperience onExit={handleExit} />
       </>
     )
   }

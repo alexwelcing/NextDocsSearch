@@ -17,8 +17,10 @@ export default function HomePage() {
   }, [setShowFloatingButton])
 
   const handleAllBroken = useCallback(() => {
-    // Every pane has been shattered → reward: ship the visitor to /explore.
-    router.push('/explore')
+    // Every pane has been shattered → drop the visitor straight into the 360
+    // scene revealed behind the glass. The ?enter=1 flag tells /explore to mount
+    // the 3D experience immediately and skip its marketing gateway entirely.
+    router.push('/explore?enter=1')
   }, [router])
 
   return (

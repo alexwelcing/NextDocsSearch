@@ -102,7 +102,9 @@ function generateShards(
         const maxDist = Math.sqrt(w * w + h * h);
         const normalizedDist = dist / maxDist;
         const angle = Math.atan2(dy, dx);
-        const speed = impactForce * (1.8 - normalizedDist) * (0.6 + Math.random() * 0.8);
+        // Punchier dispersal: shards closest to impact launch hardest, with a
+        // stronger outward kick so the wall blows apart instead of sagging.
+        const speed = impactForce * (2.4 - normalizedDist) * (0.7 + Math.random() * 0.9);
 
         const relativeVerts = tri.map(p => ({ x: p.x - cx, y: p.y - cy }));
 
@@ -110,16 +112,20 @@ function generateShards(
           vertices: relativeVerts,
           cx: Math.max(0, Math.min(w, cx)),
           cy: Math.max(0, Math.min(h, cy)),
-          vx: Math.cos(angle) * speed * (2 + Math.random()) + (Math.random() - 0.5) * 2,
-          vy: Math.sin(angle) * speed * (1.5 + Math.random()) - Math.random() * impactForce * 1.5,
+          vx: Math.cos(angle) * speed * (2.6 + Math.random()) + (Math.random() - 0.5) * 2.5,
+          vy:
+            Math.sin(angle) * speed * (1.9 + Math.random()) -
+            Math.random() * impactForce * 1.8,
           angle: 0,
-          angularVel: (Math.random() - 0.5) * 0.3 * impactForce,
+          angularVel: (Math.random() - 0.5) * 0.42 * impactForce,
           texOffsetX: cx,
           texOffsetY: cy,
           opacity: 1,
-          delay: normalizedDist * 120,
+          // Tight stagger — the shatter reads as one decisive burst rather than
+          // a slow domino, which is what made the old break feel mushy.
+          delay: normalizedDist * 55,
           active: false,
-          scale: 1 + (1 - normalizedDist) * 0.15,
+          scale: 1 + (1 - normalizedDist) * 0.18,
         });
       }
     }
@@ -155,13 +161,52 @@ export default function GlassBreakEffect({
   const animate = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    // img may be null if the source failed to load — the shatter still plays
+    // using a frosted-glass fill so the break always completes and the page can
+    // advance into the 360 scene.
     const img = imageRef.current;
-    if (!canvas || !ctx || !img) return;
 
     const now = performance.now();
     const elapsed = now - startTimeRef.current;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Paint one clipped shard with either the source texture or a glass fill.
+    const paintShard = (s: Shard) => {
+      if (img) {
+        ctx.drawImage(img, -s.texOffsetX, -s.texOffsetY, width, height);
+      } else {
+        ctx.fillStyle = 'rgba(150, 200, 235, 0.5)';
+        ctx.fillRect(-s.texOffsetX, -s.texOffsetY, width, height);
+      }
+    };
+
+    // ── Impact burst: a bright flash + expanding shockwave ring for the first
+    // ~160ms sells the moment of contact before the shards scatter.
+    const ix = impactX * width;
+    const iy = impactY * height;
+    const burstT = elapsed / 160;
+    if (burstT < 1) {
+      const flash = Math.pow(1 - burstT, 2);
+      const flashRadius = Math.max(width, height) * (0.12 + burstT * 0.55);
+      const grad = ctx.createRadialGradient(ix, iy, 0, ix, iy, flashRadius);
+      grad.addColorStop(0, `rgba(255, 252, 235, ${0.85 * flash})`);
+      grad.addColorStop(0.4, `rgba(190, 230, 255, ${0.4 * flash})`);
+      grad.addColorStop(1, 'rgba(190, 230, 255, 0)');
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+      // Shockwave ring travelling outward from the impact point.
+      const ringR = Math.max(width, height) * burstT * 0.9;
+      ctx.beginPath();
+      ctx.arc(ix, iy, ringR, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255, 255, 255, ${0.5 * flash})`;
+      ctx.lineWidth = 2 + 4 * flash;
+      ctx.stroke();
+      ctx.restore();
+    }
 
     const gravity = 0.35;
     let allDone = true;
@@ -181,7 +226,7 @@ export default function GlassBreakEffect({
           });
           ctx.closePath();
           ctx.clip();
-          ctx.drawImage(img, -shard.texOffsetX, -shard.texOffsetY, width, height);
+          paintShard(shard);
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
           ctx.lineWidth = 0.5;
           ctx.stroke();
@@ -220,7 +265,7 @@ export default function GlassBreakEffect({
       ctx.closePath();
       ctx.clip();
 
-      ctx.drawImage(img, -shard.texOffsetX, -shard.texOffsetY, width, height);
+      paintShard(shard);
 
       const gradient = ctx.createLinearGradient(-30, -30, 30, 30);
       gradient.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
@@ -243,22 +288,37 @@ export default function GlassBreakEffect({
     }
 
     animationRef.current = requestAnimationFrame(animate);
-  }, [width, height]); // *** FIX: no onComplete in deps ***
+    // onComplete is intentionally excluded (read via ref) to avoid restart loops;
+    // impactX/impactY are stable for a given break instance.
+  }, [width, height, impactX, impactY]);
 
   useEffect(() => {
-    const img = new window.Image();
-    img.crossOrigin = 'anonymous';
-    img.src = imageSrc;
-
-    img.onload = () => {
-      imageRef.current = img;
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
       shardsRef.current = generateShards(width, height, impactX, impactY, impactForce);
       startTimeRef.current = performance.now();
       completedRef.current = false;
       animationRef.current = requestAnimationFrame(animate);
     };
 
+    const img = new window.Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      imageRef.current = img;
+      start();
+    };
+    // Never let a missing texture strand the shatter — start anyway so the
+    // pane still breaks and the completion handler fires.
+    img.onerror = () => start();
+    img.src = imageSrc;
+
+    // Safety net for caches/decoders that resolve without firing onload.
+    const fallbackTimer = window.setTimeout(start, 220);
+
     return () => {
+      window.clearTimeout(fallbackTimer);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, [imageSrc, width, height, impactX, impactY, impactForce, animate]);

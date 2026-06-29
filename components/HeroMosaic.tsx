@@ -385,14 +385,21 @@ export default function HeroMosaic({
               style={{
                 position: 'relative',
                 overflow: 'hidden',
+                // Once a pane is broken it stays gone — the shatter canvas has
+                // already revealed the panorama behind it, so there is nothing
+                // left to fade. Collapsing instantly avoids the ghost-image
+                // flash that happened when the tile briefly re-rendered opaque.
                 opacity: tile.broken ? 0 : 1,
+                visibility: tile.broken ? 'hidden' : 'visible',
                 filter:
                   isAlive && !tile.breaking
                     ? `brightness(${1 + proximityBoost * 0.52}) saturate(${
                         1 + proximityBoost * 0.8
                       }) ${crackTint}`
                     : crackTint || 'none',
-                transition: 'filter 0.35s ease, transform 0.45s ease, opacity 0.5s ease',
+                transition: tile.broken
+                  ? 'none'
+                  : 'filter 0.35s ease, transform 0.45s ease',
                 transitionDelay: phase === 'shapes' ? `${stagger}ms` : '0ms',
                 transform:
                   isAlive && !tile.breaking ? `scale(${1 + proximityBoost * 0.035})` : 'none',
@@ -406,8 +413,12 @@ export default function HeroMosaic({
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  opacity: tile.breaking ? 0 : 1,
-                  transition: tile.breaking ? 'opacity 0.1s ease' : undefined,
+                  // Hide the source image the instant a shatter starts AND keep
+                  // it hidden after it completes. Previously this only checked
+                  // `breaking`, so the pristine image flashed back for a frame
+                  // when the tile transitioned breaking → broken.
+                  opacity: tile.breaking || tile.broken ? 0 : 1,
+                  transition: tile.breaking ? 'opacity 0.08s ease' : undefined,
                 }}
               >
                 <Image
