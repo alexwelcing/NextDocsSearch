@@ -167,7 +167,7 @@ export default function HeroMaterialBackground({ zIndex = 0 }: HeroMaterialBackg
           pointerEvents: 'none',
         }}
       />
-      <style jsx>{`
+      <style>{`
         @keyframes materialCaustic {
           0%   { transform: translate(0px, 0px) scale(1); }
           50%  { transform: translate(20px, -12px) scale(1.06); }

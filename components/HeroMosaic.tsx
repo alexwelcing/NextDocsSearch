@@ -559,7 +559,7 @@ export default function HeroMosaic({ panoramaSrc, onAllPanelsBroken }: HeroMosai
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         @keyframes impactFlash {
           0% {
             opacity: 0.9;

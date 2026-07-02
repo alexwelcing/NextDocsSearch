@@ -31,16 +31,3 @@ export interface VectorSearchRequest {
     missionBrief?: string;
   };
 }
-
-export interface GameLeaderboardEntry {
-  id: number;
-  player_name: string;
-  score: number;
-  combo_max: number;
-  accuracy: number;
-  created_at: string;
-}
-
-export interface LeaderboardResponse {
-  leaderboard: GameLeaderboardEntry[];
-}

@@ -7,6 +7,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import AnimatedCannon from './landing/AnimatedCannon'
 
 interface ThrowBallProps {
   onImpact: (x: number, y: number, force: number) => void
@@ -27,6 +28,8 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
   const [recoilKey, setRecoilKey] = useState(0)
   const [hintVisible, setHintVisible] = useState(true)
   const flyAnimRef = useRef<number>(0)
+  const aimAnimRef = useRef<number>(0)
+  const pendingAimRef = useRef<{ x: number; y: number } | null>(null)
   const cannonRef = useRef<HTMLDivElement>(null)
 
   const getCannonBase = useCallback(() => {
@@ -58,6 +61,19 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
     const base = getCannonBase()
     return { x: base.x, y: base.y - 360 }
   }, [aim, getCannonBase])
+
+  const scheduleAim = useCallback(
+    (x: number, y: number) => {
+      pendingAimRef.current = clampToContainer(x, y)
+      if (aimAnimRef.current) return
+
+      aimAnimRef.current = requestAnimationFrame(() => {
+        aimAnimRef.current = 0
+        if (pendingAimRef.current) setAim(pendingAimRef.current)
+      })
+    },
+    [clampToContainer]
+  )
 
   const fireAt = useCallback(
     (targetX: number, targetY: number) => {
@@ -113,13 +129,13 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
 
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
-      setAim(clampToContainer(e.clientX, e.clientY))
+      scheduleAim(e.clientX, e.clientY)
     }
 
     const handlePointerDown = (e: PointerEvent) => {
       const target = e.target as HTMLElement | null
       if (target?.closest('[data-cannon-control="true"], a, button')) return
-      setAim(clampToContainer(e.clientX, e.clientY))
+      scheduleAim(e.clientX, e.clientY)
       fireAt(e.clientX, e.clientY)
     }
 
@@ -130,11 +146,12 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
       window.removeEventListener('pointermove', handlePointerMove)
       window.removeEventListener('pointerdown', handlePointerDown)
     }
-  }, [clampToContainer, containerRef, fireAt])
+  }, [fireAt, scheduleAim])
 
   useEffect(() => {
     return () => {
       if (flyAnimRef.current) cancelAnimationFrame(flyAnimRef.current)
+      if (aimAnimRef.current) cancelAnimationFrame(aimAnimRef.current)
     }
   }, [])
 
@@ -227,91 +244,13 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
           WebkitUserSelect: 'none',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            bottom: 2,
-            transform: 'translateX(-50%)',
-            width: 154,
-            height: 42,
-            borderRadius: '50% 50% 18px 18px',
-            background: 'linear-gradient(180deg, #f8c04d, #8a3d10 72%, #311305)',
-            border: '2px solid rgba(255, 233, 154, 0.65)',
-            boxShadow: '0 14px 28px rgba(0,0,0,0.45), inset 0 8px 16px rgba(255,255,255,0.18)',
-          }}
+        <AnimatedCannon
+          angleDeg={angleDeg}
+          recoilKey={recoilKey}
+          disabled={disabled}
+          isFlying={isFlying}
+          onFire={() => fireAt(currentAim.x, currentAim.y)}
         />
-
-        <div
-          key={recoilKey}
-          style={{
-            position: 'absolute',
-            left: '50%',
-            bottom: 34,
-            width: 142,
-            height: 38,
-            transformOrigin: '18px 50%',
-            transform: `translateX(-18px) rotate(${angleDeg}deg)`,
-            animation: 'cannonRecoil 0.22s ease-out',
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: '28px 42px 42px 28px',
-              background: 'linear-gradient(180deg, #ffef9f 0%, #e84f24 46%, #6f1f0f 100%)',
-              border: '2px solid rgba(255, 240, 176, 0.8)',
-              boxShadow:
-                'inset 10px 8px 16px rgba(255,255,255,0.25), inset -10px -8px 14px rgba(0,0,0,0.35), 0 0 22px rgba(255, 89, 33, 0.35)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              right: -7,
-              top: -5,
-              width: 28,
-              height: 48,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle at 35% 35%, #fff4bb, #c62f17 48%, #260b05 100%)',
-              border: '2px solid rgba(255, 232, 153, 0.8)',
-            }}
-          />
-        </div>
-
-        <button
-          data-cannon-control="true"
-          type="button"
-          disabled={disabled || isFlying}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            fireAt(currentAim.x, currentAim.y)
-          }}
-          style={{
-            position: 'absolute',
-            left: '50%',
-            bottom: -30,
-            transform: 'translateX(-50%)',
-            padding: '8px 18px',
-            borderRadius: 999,
-            border: '1px solid rgba(255, 232, 153, 0.7)',
-            background:
-              disabled || isFlying
-                ? 'rgba(80, 50, 24, 0.72)'
-                : 'linear-gradient(180deg, #ffe28a, #e85a24 62%, #7b210d)',
-            color: '#210b02',
-            fontSize: 12,
-            fontWeight: 900,
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            cursor: disabled || isFlying ? 'default' : 'pointer',
-            boxShadow: '0 10px 24px rgba(0,0,0,0.42)',
-          }}
-        >
-          Fire
-        </button>
       </div>
 
       {hintVisible && !disabled && !isFlying && (
@@ -338,11 +277,11 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
             whiteSpace: 'nowrap',
           }}
         >
-          Click a glass image or press Fire
+          Click a glass image to fire the cannon
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         @keyframes cannonHintPulse {
           0%,
           100% {
@@ -352,20 +291,6 @@ export default function ThrowBall({ onImpact, disabled, containerRef }: ThrowBal
           50% {
             opacity: 0.45;
             transform: translateX(-50%) translateY(5px);
-          }
-        }
-        @keyframes cannonRecoil {
-          0% {
-            translate: 0 0;
-            filter: brightness(1.45);
-          }
-          45% {
-            translate: -16px 0;
-            filter: brightness(1.15);
-          }
-          100% {
-            translate: 0 0;
-            filter: brightness(1);
           }
         }
       `}</style>

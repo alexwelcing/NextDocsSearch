@@ -488,10 +488,37 @@ const ArticlePage: NextPage<ArticleProps> = ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles');
   const filenames = fs.readdirSync(articleFolderPath);
-  const paths = filenames
+  const articleFiles = filenames
     .filter((filename) => filename.endsWith('.mdx'))
-    .map((filename) => ({ params: { slug: filename.replace('.mdx', '') } }));
-  return { paths, fallback: false };
+    .map((filename) => {
+      const filePath = path.join(articleFolderPath, filename);
+      try {
+        const { data } = matter(fs.readFileSync(filePath, 'utf8'));
+        const dateValue = data.date instanceof Date ? data.date.getTime() : Date.parse(data.date || '');
+        return { filename, timestamp: Number.isFinite(dateValue) ? dateValue : 0 };
+      } catch {
+        return { filename, timestamp: 0 };
+      }
+    })
+    .sort((a, b) => b.timestamp - a.timestamp);
+
+  const shouldPrebuildAll = process.env.PREBUILD_ALL_ARTICLES === 'true';
+  const defaultPrebuildCount = 48;
+  const configuredPrebuildCount = Number.parseInt(
+    process.env.PREBUILD_ARTICLE_COUNT || `${defaultPrebuildCount}`,
+    10
+  );
+  const prebuildCount = Number.isFinite(configuredPrebuildCount)
+    ? Math.max(0, configuredPrebuildCount)
+    : defaultPrebuildCount;
+
+  const paths = (shouldPrebuildAll ? articleFiles : articleFiles.slice(0, prebuildCount)).map(
+    ({ filename }) => ({
+      params: { slug: filename.replace('.mdx', '') },
+    })
+  );
+
+  return { paths, fallback: 'blocking' };
 };
 
 function calculateReadingTime(content: string): number {
@@ -524,6 +551,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params as { slug: string };
   const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles');
   const articleFilePath = path.join(articleFolderPath, `${slug}.mdx`);
+
+  if (!fs.existsSync(articleFilePath)) {
+    return { notFound: true };
+  }
+
   const fileContents = fs.readFileSync(articleFilePath, 'utf8');
   const { data, content } = matter(fileContents);
   const escapedContent = escapeMdxContent(content);
@@ -574,6 +606,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       relatedArticles,
       slug,
     },
+    revalidate: 86400,
   };
 };
 

@@ -54,7 +54,7 @@ function StreamingShimmer() {
           <div className="h-2 w-1/2 rounded bg-gradient-to-r from-cyan-400/10 via-cyan-400/30 to-cyan-400/10 animate-[shimmer_1.5s_infinite_0.2s]" />
         </div>
       </div>
-      <style jsx>{`
+      <style>{`
         @keyframes shimmer {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }

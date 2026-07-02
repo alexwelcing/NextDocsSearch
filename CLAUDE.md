@@ -1,94 +1,101 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with this repository.
 
-## Project Overview
+## Project overview
 
-NextDocsSearch is an immersive 3D content platform built with Next.js, React Three Fiber, and OpenAI. It combines a portfolio/article system with interactive 3D visualization, AI-powered semantic search, and gamification.
+NextDocsSearch is a focused Next.js content/portfolio site with:
+
+- a cannon/glass-tile landing page
+- a lightweight React Three Fiber scene launched from `/explore`
+- an article archive with semantic search and recommendation surfaces
+- selected video/article SEO pages
+
+Old experimental labs have been removed: ProGen, procedural rooms, article levels, galaxy view, game/leaderboard/tablet terminal, admin media upload, and generation-only APIs.
 
 ## Commands
 
 | Command | Purpose |
 |---------|---------|
 | `pnpm dev` | Start development server |
-| `pnpm build` | Full build (generates manifests, embeddings, then `next build` + sitemap) |
+| `pnpm build` | Full build: manifests, recommendations, embeddings, repair, Next build, sitemap |
 | `pnpm lint` | Run ESLint |
-| `pnpm type-check` | TypeScript check (`tsc --noEmit`) |
-| `pnpm validate` | Lint + type-check combined |
 | `pnpm format` | Prettier formatting |
-| `pnpm test:visual` | Run Playwright visual tests |
-| `pnpm test:visual:full` | Enhanced visual tests + analysis |
+
+Use `pnpm run lint` and `pnpm run build` as the real gates before pushing.
 
 ## Architecture
 
-### Framework & Routing
+### Framework and routing
 
-- **Next.js 16** (Pages Router, not App Router) with React 19 and TypeScript
-- Pages in `pages/`, API routes in `pages/api/`
-- Path alias: `@/*` maps to project root (e.g., `@/components/`, `@/lib/`)
+- Next.js 16 Pages Router with React 19 and TypeScript.
+- Pages live in `pages/`.
+- API routes live in `pages/api/`.
+- Path alias: `@/*` maps to project root.
 
-### Build Pipeline
+### Active product routes
 
-The build (`pnpm build`) runs a multi-stage pipeline before `next build`:
-1. `scripts/generate-image-manifest.ts` — maps article slugs to image paths, avoiding bundling ~650MB of assets into serverless functions
-2. `scripts/generate-article-manifest.ts` — extracts article metadata from MDX frontmatter
-3. `scripts/generate-recommendation-index.ts` — precomputes article recommendations
-4. `lib/generate-embeddings.ts` — generates OpenAI embeddings for semantic search
+- `/`
+- `/explore`
+- `/articles`
+- `/articles/[slug]`
+- `/videos/[slug]`
+- `/about`
+- `/current-work`
+- `/pitch`
+- `/speculative-ai`
+- `/agent-futures`
+- `/emergent-intelligence`
+- `/the-interface`
 
-Generated data lands in `lib/generated/*.json` and is consumed at runtime by API routes.
+### Build pipeline
 
-### Content System
+`pnpm build` runs:
 
-- Articles are MDX files in `pages/docs/articles/` with `gray-matter` frontmatter
-- Article detail pages use SSG (`getStaticPaths` + `getStaticProps` with `revalidate: 60`)
-- Featured articles and collections defined in `lib/featured-articles.ts`
-- Image resolution at runtime via `lib/article-images.ts` reading from the generated image manifest
+1. `scripts/generate-image-manifest.ts`
+2. `scripts/generate-article-manifest.ts`
+3. `scripts/generate-recommendation-index.ts`
+4. `lib/generate-embeddings.ts`
+5. `scripts/repair-client-only-package.cjs`
+6. `next build --webpack`
+7. postbuild video sitemap + `next-sitemap`
 
-### 3D Layer (React Three Fiber)
+Generated data lives in `lib/generated/*.json` and is consumed by runtime APIs. Prefer generated manifests over request-time filesystem scans.
 
-- Main scene: `components/3d/scene/` (Scene3D, SceneCanvas, SceneCamera, SceneBackground, SceneEnvironment)
-- Interactive elements: `components/3d/interactive/` (tablet, article display panels)
-- Physics: `@react-three/cannon`; post-processing: `@react-three/postprocessing`
-- Scene3D is dynamically imported with `ssr: false`
-- Performance utilities in `lib/3d/performanceUtils.ts` (geometry/material/texture caching, LOD, frustum culling, instancing)
+### Content system
 
-### AI & Search
+- Articles are MDX files in `pages/docs/articles/`.
+- Article pages use SSG with fallback blocking and capped prebuilds.
+- Article metadata/image/recommendation APIs should read generated manifests.
 
-- OpenAI embeddings stored in Supabase vector DB for semantic search (`/api/vector-search`)
-- AI chat persona defined in `lib/ai/shipPersona.ts`
-- FAL AI image generation via `/api/fal/generate`
-- Uses `openai-edge` and Vercel `ai` SDK for streaming responses
+### 3D layer
 
-### Data Layer
+Active scene path:
 
-- **Supabase**: PostgreSQL + vector search + media storage + game leaderboard
-- **Supabase client**: initialized in `lib/supabaseClient.ts`
-- **Admin auth**: API key–based via `lib/auth/admin-auth.ts`
+- `components/3d/Interactive3DExperience.tsx`
+- `components/scene/Scene3D.tsx`
+- `components/scene/SceneCanvas.tsx`
+- `components/scene/SceneBackground.tsx`
+- `components/scene/SceneCamera.tsx`
+- `components/scene/SceneEnvironment.tsx`
 
-### Context Providers
+The active 3D layer is presentation-only. Do not re-add cannon physics, game/leaderboard state, tablet terminal UI, or XR unless explicitly requested.
 
-App-level providers in `pages/_app.tsx`:
-- `JourneyContext` — quest/achievement/gamification state (persisted to localStorage)
-- `ArticleDiscoveryProvider` — article browsing state
-- `SupabaseDataContext` — shared Supabase data
+### AI and search
 
-### Key UI Components
+- Semantic/article answer surfaces use `/api/vector-search` and `lib/chat/*`.
+- `openai-edge` remains for vector search.
+- Removed generation-only UI/API paths should stay removed unless explicitly requested.
 
-- `components/ui/` — Button, Dialog, ArticleCard, CircleNav, SearchDialog, etc.
-- `components/overlays/` — GameHUD, Leaderboard, QuestNotification
-- Styling: Tailwind CSS + Styled Components + CSS Modules (in `styles/`)
+## Code style
 
-## Environment Variables
+- Prettier: single quotes, no semicolons, 100 char width, 2-space indentation, trailing commas where configured.
+- ESLint is the primary lint gate.
+- Package manager: pnpm.
 
-Required (see `.env.example`):
-- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
-- `SUPABASE_SERVICE_ROLE_KEY` — Supabase service role key
-- `ADMIN_API_KEY` — admin endpoint authentication
-- `OPENAI_KEY` — OpenAI API key
-- `NEXT_PUBLIC_SITE_URL` — canonical site URL
+## Cleanup guidance
 
-## Code Style
-
-- Prettier config in `package.json`: single quotes, no semicolons, 100 char width, 2-space tabs, trailing commas (es5)
-- ESLint extends `next/core-web-vitals`
-- Package manager: **pnpm** (v9.7.1)
+- Keep the route/API surface small.
+- Delete unused labs instead of preserving compatibility shims.
+- Avoid adding new custom validators/test harnesses.
+- Keep homepage first-arrival behavior as the tile/glass cannon landing page; users enter 3D from CTA/completion.
