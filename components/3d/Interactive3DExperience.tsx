@@ -42,7 +42,7 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
             onClick={handleExit}
             className="rounded-md border border-white/15 bg-black/45 px-4 py-2 text-sm text-white/75 backdrop-blur hover:bg-white/10 hover:text-white"
           >
-            Back to Explore
+            Back to Home
           </button>
         )}
         <Link
