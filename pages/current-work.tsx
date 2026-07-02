@@ -233,10 +233,10 @@ export default function CurrentWork() {
               </p>
               <p>
                 The{' '}
-                <Link href="/explore" className="text-cyan-400 hover:text-cyan-300 underline">
-                  /explore
+                <Link href="/" className="text-cyan-400 hover:text-cyan-300 underline">
+                  interactive layer on the home page
                 </Link>{' '}
-                routes on this site are me poking at adjacent shapes: what if
+                is me poking at an adjacent shape: what if
                 the narrative context for AI-generated content were spatial?
                 What if the reader could walk around inside the essay instead
                 of scrolling past it? Not a claim these are the answer — a

@@ -12,9 +12,10 @@ const Scene3D = dynamic(() => import('@/components/scene/Scene3D'), {
 
 interface Interactive3DExperienceProps {
   onExit?: () => void
+  exitLabel?: string
 }
 
-export default function Interactive3DExperience({ onExit }: Interactive3DExperienceProps) {
+export default function Interactive3DExperience({ onExit, exitLabel = 'Back to Home' }: Interactive3DExperienceProps) {
   const [currentImage] = useState(() => getRandomBackgroundImage())
 
   const worldConfig = useMemo(
@@ -42,7 +43,7 @@ export default function Interactive3DExperience({ onExit }: Interactive3DExperie
             onClick={handleExit}
             className="rounded-md border border-white/15 bg-black/45 px-4 py-2 text-sm text-white/75 backdrop-blur hover:bg-white/10 hover:text-white"
           >
-            Back to Home
+            {exitLabel}
           </button>
         )}
         <Link

@@ -1,14 +1,18 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 import StructuredData from '@/components/StructuredData'
 import HeroMosaic from '@/components/HeroMosaic'
 import { SITE_URL } from '@/lib/site-url'
 import { useArticleDiscovery } from '@/components/ArticleDiscoveryProvider'
 
+const Interactive3DExperience = dynamic(() => import('@/components/3d/Interactive3DExperience'), {
+  ssr: false,
+})
+
 export default function HomePage() {
   const siteUrl = SITE_URL
-  const router = useRouter()
+  const [entered, setEntered] = useState(false)
   const { setShowFloatingButton } = useArticleDiscovery()
 
   useEffect(() => {
@@ -17,9 +21,9 @@ export default function HomePage() {
   }, [setShowFloatingButton])
 
   const handleAllBroken = useCallback(() => {
-    // Every pane has been shattered → reward: ship the visitor to /explore.
-    router.push('/explore')
-  }, [router])
+    // Every pane has been shattered → reward: drop straight into the 3D scene.
+    setEntered(true)
+  }, [])
 
   return (
     <>
@@ -105,71 +109,78 @@ export default function HomePage() {
         }}
       />
 
-      <div className="min-h-screen text-white">
-        {/* Hero — Immersive mosaic wall */}
-        <section
-          className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: '#030308' }}
-        >
-          {/*
-            Layer 0.5 — SEO H1. Visually hidden but present in SSR HTML so
-            search engines see the canonical heading. The per-tile copy
-            below is decorative.
-          */}
-          <h1
-            style={{
-              position: 'absolute',
-              width: 1,
-              height: 1,
-              padding: 0,
-              margin: -1,
-              overflow: 'hidden',
-              clip: 'rect(0, 0, 0, 0)',
-              whiteSpace: 'nowrap',
-              border: 0,
-            }}
+      {entered ? (
+        <Interactive3DExperience
+          onExit={() => setEntered(false)}
+          exitLabel="Back to the Wall"
+        />
+      ) : (
+        <div className="min-h-screen text-white">
+          {/* Hero — Immersive mosaic wall */}
+          <section
+            className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+            style={{ background: '#030308' }}
           >
-            Alex Welcing — Building with AI products that help people survive.
-          </h1>
-
-          {/* Layer 1 — glass image grid with panorama reveal */}
-          <HeroMosaic onAllPanelsBroken={handleAllBroken} />
-
-          {/*
-            Layer 20 intentionally removed for the major release: first-arrival
-            visitors should see no visible menu items or CTA buttons. The Rive
-            cannon/glass wall is the sole visible entry instrument.
-          */}
-
-          {/* Scroll indicator */}
-          <div
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
-            style={{
-              animation: 'float 3s ease-in-out infinite',
-            }}
-          >
-            <div
-              className="w-px h-16 opacity-30"
+            {/*
+              Layer 0.5 — SEO H1. Visually hidden but present in SSR HTML so
+              search engines see the canonical heading. The per-tile copy
+              below is decorative.
+            */}
+            <h1
               style={{
-                background:
-                  'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
+                position: 'absolute',
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: 'hidden',
+                clip: 'rect(0, 0, 0, 0)',
+                whiteSpace: 'nowrap',
+                border: 0,
               }}
-            />
-          </div>
+            >
+              Alex Welcing — Building with AI products that help people survive.
+            </h1>
 
-          <style>{`
-            @keyframes float {
-              0%,
-              100% {
-                transform: translateX(-50%) translateY(0);
+            {/* Layer 1 — glass image grid with panorama reveal */}
+            <HeroMosaic onAllPanelsBroken={handleAllBroken} />
+
+            {/*
+              Layer 20 intentionally removed for the major release: first-arrival
+              visitors should see no visible menu items or CTA buttons. The Rive
+              cannon/glass wall is the sole visible entry instrument.
+            */}
+
+            {/* Scroll indicator */}
+            <div
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+              style={{
+                animation: 'float 3s ease-in-out infinite',
+              }}
+            >
+              <div
+                className="w-px h-16 opacity-30"
+                style={{
+                  background:
+                    'linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent)',
+                }}
+              />
+            </div>
+
+            <style>{`
+              @keyframes float {
+                0%,
+                100% {
+                  transform: translateX(-50%) translateY(0);
+                }
+                50% {
+                  transform: translateX(-50%) translateY(8px);
+                }
               }
-              50% {
-                transform: translateX(-50%) translateY(8px);
-              }
-            }
-          `}</style>
-        </section>
-      </div>
+            `}</style>
+          </section>
+        </div>
+      )}
     </>
   )
 }

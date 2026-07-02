@@ -62,6 +62,12 @@ const nextConfig = {
   // Redirects for SEO: fix broken /docs/articles/ URLs and normalize domain
   async redirects() {
     return [
+      // /explore was retired: the 3D experience now starts directly from /
+      {
+        source: '/explore',
+        destination: '/',
+        permanent: true,
+      },
       // Root Cause #3: Redirect old /docs/articles/ URLs to /articles/
       {
         source: '/docs/articles/:slug',
