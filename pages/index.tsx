@@ -133,7 +133,7 @@ export default function HomePage() {
           </h1>
 
           {/* Layer 1 — glass image grid with panorama reveal */}
-          <HeroMosaic onAllBroken={handleAllBroken} />
+          <HeroMosaic onAllPanelsBroken={handleAllBroken} />
 
           {/*
             Layer 20 intentionally removed for the major release: first-arrival
