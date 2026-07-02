@@ -108,7 +108,4 @@ module.exports = {
   additionalPaths: async (config) => [
     await config.transform(config, '/explore'),
   ],
-  additionalSitemaps: [
-    `${siteUrl}/video-sitemap.xml`,
-  ],
 }
