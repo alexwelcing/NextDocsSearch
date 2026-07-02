@@ -93,7 +93,19 @@ function getArticleList(): ArticleMetadata[] {
  * Get single article by slug
  */
 function getArticleBySlug(slug: string): { article: ArticleMetadata; content: string } | null {
+  // Reject any path separators or parent-directory references
+  if (slug.includes('/') || slug.includes('\\') || slug.includes('..')) {
+    return null;
+  }
+
   const filePath = path.join(KNOWLEDGE_DIR, `${slug}.mdx`);
+
+  // Ensure the resolved path stays inside the knowledge directory
+  const resolvedPath = path.resolve(filePath);
+  const resolvedBase = path.resolve(KNOWLEDGE_DIR);
+  if (!resolvedPath.startsWith(resolvedBase + path.sep) && resolvedPath !== resolvedBase) {
+    return null;
+  }
 
   if (!fs.existsSync(filePath)) {
     return null;

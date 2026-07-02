@@ -30,11 +30,23 @@ export default function handler(
     return res.status(400).json({ error: 'filename parameter is required' });
   }
 
+  // Reject any path separators or parent-directory references
+  if (filename.includes('/') || filename.includes('\\') || filename.includes('..')) {
+    return res.status(400).json({ error: 'Invalid filename' });
+  }
+
   const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles');
-  
+
   // Read the target article
   const targetFilePath = path.join(articleFolderPath, filename);
-  
+
+  // Ensure the resolved path stays inside the articles directory
+  const resolvedPath = path.resolve(targetFilePath);
+  const resolvedBase = path.resolve(articleFolderPath);
+  if (!resolvedPath.startsWith(resolvedBase + path.sep) && resolvedPath !== resolvedBase) {
+    return res.status(400).json({ error: 'Invalid filename' });
+  }
+
   if (!fs.existsSync(targetFilePath)) {
     return res.status(404).json({ error: 'Article not found' });
   }
