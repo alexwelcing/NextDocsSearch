@@ -3,8 +3,8 @@
   "version": "0.1.2",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "tsx scripts/generate-image-manifest.ts && tsx scripts/generate-article-manifest.ts && tsx scripts/generate-recommendation-index.ts && next build",
+    "dev": "next dev --webpack",
+    "build": "tsx scripts/generate-image-manifest.ts && tsx scripts/generate-article-manifest.ts && tsx scripts/generate-recommendation-index.ts && next build --webpack",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint .",
@@ -37,8 +37,8 @@
     "embeddings": "tsx lib/generate-embeddings.ts",
     "embeddings:refresh": "tsx lib/generate-embeddings.ts --refresh",
     "bun:install": "bun install",
-    "bun:dev": "bun run next dev",
-    "bun:build": "bun run scripts/generate-image-manifest.ts && bun run scripts/generate-article-manifest.ts && bun run scripts/generate-recommendation-index.ts && bun run next build",
+    "bun:dev": "bun run next dev --webpack",
+    "bun:build": "bun run scripts/generate-image-manifest.ts && bun run scripts/generate-article-manifest.ts && bun run scripts/generate-recommendation-index.ts && bun run next build --webpack",
     "bun:start": "bun run next start",
     "postinstall": "pnpm run repair:client-only",
     "repair:client-only": "node scripts/repair-client-only-package.cjs"
