@@ -2,9 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { createXRStore, XR, XROrigin, useXRSessionModeSupported } from '@react-three/xr';
 import styled from 'styled-components';
-import { Physics } from '@react-three/cannon';
 import { OrbitControls, Stats } from '@react-three/drei';
-import PhysicsGround from './PhysicsGround';
 import BackgroundSphere from '../background/BackgroundSphere';
 import type { ArticleData } from '../interactive/GlowingArticleDisplay';
 import GaussianSplatBackground from '../background/GaussianSplatBackground';
@@ -50,24 +48,6 @@ const mapToLibraryArticle = (article: EnhancedArticleData) => ({
   category: article.domains?.[0] ?? article.articleType,
   relatedTo: [], // Could be enhanced with actual relations
 });
-
-const PhysicsEnvironment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <Physics
-      gravity={[0, -9.81, 0]}
-      iterations={5}
-      tolerance={0.01}
-      allowSleep={true}
-      broadphase="SAP"
-      defaultContactMaterial={{
-        friction: 0.1,
-        restitution: 0.7,
-      }}
-    >
-      {children}
-    </Physics>
-  );
-};
 
 const VRButtonStyled = styled.button`
   position: absolute;
@@ -140,6 +120,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   const [useGaussianSplat, setUseGaussianSplat] = useState(false);
   const [availableSplats, setAvailableSplats] = useState<SplatFile[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
+  const [activeImage, setActiveImage] = useState<string>(currentImage);
   const [hasSplats, setHasSplats] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isLowEndDevice, setIsLowEndDevice] = useState(false);
@@ -303,12 +284,13 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       setSelectedSplat(scenery.path);
     } else {
       setUseGaussianSplat(false);
+      setActiveImage(scenery.path);
       onChangeImage(scenery.path);
     }
   }, [onChangeImage, performanceFlags.allowSplats]);
 
   // Get current scenery path for tablet display
-  const currentSceneryPath = useGaussianSplat ? selectedSplat : currentImage;
+  const currentSceneryPath = useGaussianSplat ? selectedSplat : activeImage;
 
   // Detect VR capability - only show VR button if device supports it
   const isVRSupported = useXRSessionModeSupported('immersive-vr');
@@ -478,9 +460,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
       >
         <XR store={store}>
           <XROrigin position={[0, 0, 0]}>
-            <PhysicsEnvironment>
-              <PhysicsGround />
-
               {/* Camera controller for smooth game transitions */}
               <CameraController gameState={gameState} />
 
@@ -530,7 +509,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
                       scale={1}
                     />
                   ) : (
-                    <BackgroundSphere imageUrl={currentImage} transitionDuration={0.5} />
+                    <BackgroundSphere imageUrl={activeImage} transitionDuration={0.5} />
                   )}
                 </>
               )}
@@ -568,7 +547,6 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
               {/* Dynamic Scene Lighting */}
               <SceneLighting />
-            </PhysicsEnvironment>
           </XROrigin>
         </XR>
         {/* Performance monitoring - visible in development */}
