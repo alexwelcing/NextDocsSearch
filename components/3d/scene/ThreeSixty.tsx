@@ -624,10 +624,11 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
           zIndex: 1000,
         }}>
           <div style={{
-            fontSize: '120px',
+            fontSize: 'clamp(48px, 15vw, 120px)',
             fontWeight: 'bold',
             color: '#0f0',
             fontFamily: 'monospace',
+            textAlign: 'center',
           }}>
             {countdown || 'GO'}
           </div>

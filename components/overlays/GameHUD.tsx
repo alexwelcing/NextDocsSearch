@@ -42,6 +42,12 @@ const ScoreDisplay = styled.div`
   border-radius: 8px;
   border: 2px solid rgba(0, 212, 255, 0.5);
   backdrop-filter: blur(10px);
+
+  @media (max-width: 768px) {
+    top: 12px;
+    left: 12px;
+    padding: 12px 18px;
+  }
 `;
 
 const ScoreLabel = styled.div`
@@ -57,6 +63,10 @@ const ScoreValue = styled.div`
   font-size: 48px;
   font-weight: bold;
   text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+
+  @media (max-width: 768px) {
+    font-size: 32px;
+  }
 `;
 
 const TimerDisplay = styled.div<{ warning: boolean }>`
@@ -84,6 +94,10 @@ const TimerValue = styled.div<{ warning: boolean }>`
   font-size: 48px;
   font-weight: bold;
   text-shadow: 0 0 10px ${props => props.warning ? 'rgba(255, 68, 68, 0.8)' : 'rgba(0, 212, 255, 0.6)'};
+
+  @media (max-width: 768px) {
+    font-size: 32px;
+  }
 `;
 
 const ComboDisplay = styled.div<{ visible: boolean; highCombo: boolean }>`
@@ -110,6 +124,10 @@ const ComboText = styled.div`
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const MultiplierBadge = styled.div`
@@ -122,6 +140,12 @@ const MultiplierBadge = styled.div`
   font-weight: bold;
   margin-left: 15px;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    padding: 3px 10px;
+    margin-left: 8px;
+  }
 `;
 
 const GameHUD: React.FC<GameHUDProps> = ({ score, timeRemaining, combo, isPlaying }) => {

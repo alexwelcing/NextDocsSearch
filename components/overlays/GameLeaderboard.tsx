@@ -54,6 +54,12 @@ const ContentBox = styled.div`
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+    border-radius: 16px;
+    width: 95%;
+  }
 `;
 
 const Title = styled.h1`
@@ -64,6 +70,10 @@ const Title = styled.h1`
   text-align: center;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
 `;
 
 const ScoreSummary = styled.div`
@@ -81,6 +91,10 @@ const FinalScore = styled.div`
   font-weight: bold;
   text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
   margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    font-size: 42px;
+  }
 `;
 
 const StatsGrid = styled.div`
@@ -119,6 +133,10 @@ const SectionTitle = styled.h2`
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 2px;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const LeaderboardList = styled.div`
@@ -152,6 +170,12 @@ const LeaderboardEntry = styled.div<{ isPlayer?: boolean; rank?: number }>`
       : 'rgba(255, 255, 255, 0.1)'};
     transform: translateX(5px);
   }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 36px 1fr 80px;
+    gap: 8px;
+    padding: 10px;
+  }
 `;
 
 const Rank = styled.div<{ rank: number }>`
@@ -169,6 +193,10 @@ const Rank = styled.div<{ rank: number }>`
 const PlayerName = styled.div`
   font-size: 18px;
   font-weight: bold;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const Score = styled.div`
@@ -176,6 +204,10 @@ const Score = styled.div`
   font-weight: bold;
   text-align: right;
   color: #FFD700;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const NameInputSection = styled.div`
