@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -15,33 +15,34 @@ const GameOrb: React.FC<GameOrbProps> = ({
   onHit,
   onMiss,
   isGolden = false,
-  lifetime = 3, // Default 3 seconds lifetime
+  lifetime = 3,
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const timeAliveRef = useRef(0);
-  const [isVisible, setIsVisible] = useState(true);
+  const hitRef = useRef(false);
+  const missedRef = useRef(false);
 
   // Randomize initial phase for pulsing animation
   const initialPhase = useMemo(() => Math.random() * Math.PI * 2, []);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    if (!isVisible) return;
+    if (hitRef.current) return;
+    hitRef.current = true;
 
     const points = isGolden ? 30 : 10;
     onHit(points);
-    setIsVisible(false);
   };
 
   useFrame((state, delta) => {
-    if (!meshRef.current || !isVisible) return;
+    if (!meshRef.current || hitRef.current) return;
 
     // Track lifetime
     timeAliveRef.current += delta;
 
-    // Despawn after lifetime expires
-    if (timeAliveRef.current >= lifetime) {
-      setIsVisible(false);
+    // Despawn after lifetime expires - call onMiss once and let parent unmount
+    if (timeAliveRef.current >= lifetime && !missedRef.current) {
+      missedRef.current = true;
       onMiss();
       return;
     }
@@ -58,13 +59,11 @@ const GameOrb: React.FC<GameOrbProps> = ({
 
     // Fade out in last 0.5 seconds
     if (timeAliveRef.current > lifetime - 0.5) {
-      const fadeProgress = (lifetime - timeAliveRef.current) / 0.5;
+      const fadeProgress = Math.max(0, (lifetime - timeAliveRef.current) / 0.5);
       const material = meshRef.current.material as THREE.MeshStandardMaterial;
       material.opacity = fadeProgress;
     }
   });
-
-  if (!isVisible) return null;
 
   return (
     <mesh ref={meshRef} position={position} onClick={handleClick}>

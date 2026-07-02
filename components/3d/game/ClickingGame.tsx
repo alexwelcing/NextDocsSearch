@@ -55,6 +55,7 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
   const timeElapsedRef = useRef(0);
   const nextSpawnTimeRef = useRef(0);
   const orbIdCounterRef = useRef(0);
+  const lastReportedTimeRef = useRef<number | null>(null);
 
   const gameDuration = 30; // 30 seconds
   const maxOrbs = isMobile ? 3 : 6; // Limit concurrent orbs on mobile
@@ -95,6 +96,7 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
     timeElapsedRef.current = 0;
     nextSpawnTimeRef.current = 0;
     orbIdCounterRef.current = 0;
+    lastReportedTimeRef.current = null;
   }, []);
 
   // Spawn idle orbs (for IDLE state visual)
@@ -191,7 +193,11 @@ const ClickingGame: React.FC<ClickingGameProps> = ({
     // Update timer
     timeElapsedRef.current += delta;
     const timeRemaining = Math.max(0, gameDuration - timeElapsedRef.current);
-    onTimeUpdate?.(timeRemaining);
+    const reportedTime = Math.ceil(timeRemaining);
+    if (reportedTime !== lastReportedTimeRef.current) {
+      lastReportedTimeRef.current = reportedTime;
+      onTimeUpdate?.(timeRemaining);
+    }
 
     // Check if game ended
     if (timeElapsedRef.current >= gameDuration) {
