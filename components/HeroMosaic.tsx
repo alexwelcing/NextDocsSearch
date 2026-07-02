@@ -19,49 +19,52 @@ const COMPLETE_TRANSITION_DELAY = 900
 
 const FALLBACK_TILES: { src: string; alt: string }[] = [
   {
-    src: '/images/multi-art/far-shore-06-the-last-handshake/option-1-comfy.png',
-    alt: 'The last handshake',
-  },
-  { src: '/images/multi-art/far-shore-05-the-return/option-1-comfy.png', alt: 'The return' },
-  {
-    src: '/images/multi-art/far-shore-04-the-last-cartographer/option-1-comfy.png',
-    alt: 'The last cartographer',
+    src: '/images/multi-art/tech-quantum-key-distribution/option-1-fast-sdxl.png',
+    alt: 'Quantum key distribution',
   },
   {
-    src: '/images/multi-art/far-shore-03-the-daughters-hands/option-1-comfy.png',
-    alt: "The daughter's hands",
+    src: '/images/multi-art/tech-quantum-error-correction-qiskit/option-1-schnell.png',
+    alt: 'Quantum error correction',
   },
   {
-    src: '/images/multi-art/far-shore-02-the-quiet-festival/option-1-comfy.png',
-    alt: 'The quiet festival',
+    src: '/images/multi-art/tech-quantum-annealing-optimization/option-1-schnell.png',
+    alt: 'Quantum annealing optimization',
   },
   {
-    src: '/images/multi-art/far-shore-01-the-rememberer/option-1-comfy.png',
-    alt: 'The rememberer',
+    src: '/images/multi-art/tech-optical-neural-networks/option-1-fast-sdxl.png',
+    alt: 'Optical neural networks',
   },
   {
-    src: '/images/multi-art/backstory-shadows-04-the-photographer-at-the-threshold/option-1-comfy.png',
-    alt: 'Photographer at the threshold',
+    src: '/images/multi-art/tech-neural-ode/option-1-fast-sdxl.png',
+    alt: 'Neural ODE',
   },
   {
-    src: '/images/multi-art/backstory-shadows-03-the-janitors-observations/option-1-comfy.png',
-    alt: "The janitor's observations",
+    src: '/images/multi-art/tech-graph-neural-networks/option-1-fast-sdxl.png',
+    alt: 'Graph neural networks',
   },
   {
-    src: '/images/multi-art/echo-chamber-05-the-cartographers-diary/option-1-comfy.png',
-    alt: "The cartographer's diary",
+    src: '/images/multi-art/tech-graphql-api-federation/option-1-fast-sdxl.png',
+    alt: 'GraphQL API federation',
   },
   {
-    src: '/images/multi-art/understory-07-the-unmeasured/option-1-comfy.png',
-    alt: 'The unmeasured',
+    src: '/images/multi-art/tech-nanoscale-self-assembly/option-1-fast-sdxl.png',
+    alt: 'Nanoscale self assembly',
   },
   {
-    src: '/images/multi-art/inheritance-06-the-pattern-keepers/option-1-comfy.png',
-    alt: 'The pattern keepers',
+    src: '/images/multi-art/tech-vector-database-optimization/option-1-schnell.png',
+    alt: 'Vector database optimization',
   },
   {
-    src: '/images/multi-art/first-cartographers-05-the-expedition-that-didnt-return/option-1-comfy.png',
-    alt: "The expedition that didn't return",
+    src: '/images/multi-art/tech-federated-learning-pytorch/option-1-schnell.png',
+    alt: 'Federated learning with PyTorch',
+  },
+  {
+    src: '/images/multi-art/tech-molecular-dynamics-simulation/option-1-schnell.png',
+    alt: 'Molecular dynamics simulation',
+  },
+  {
+    src: '/images/multi-art/tech-neuromorphic-computing/option-1-fast-sdxl.png',
+    alt: 'Neuromorphic computing',
   },
 ]
 
