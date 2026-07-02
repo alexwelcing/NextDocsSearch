@@ -110,10 +110,7 @@ export default function HomePage() {
       />
 
       {entered ? (
-        <Interactive3DExperience
-          onExit={() => setEntered(false)}
-          exitLabel="Back to the Wall"
-        />
+        <Interactive3DExperience onExit={() => setEntered(false)} />
       ) : (
         <div className="min-h-screen text-white">
           {/* Hero — Immersive mosaic wall */}
