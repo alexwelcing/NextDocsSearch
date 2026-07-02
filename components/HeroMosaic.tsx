@@ -11,62 +11,15 @@ import Image from 'next/image'
 import GlassCrackOverlay from './GlassCrackOverlay'
 import GlassBreakEffect from './GlassBreakEffect'
 import ThrowBall from './ThrowBall'
+import tilePool from '@/lib/generated/tile-pool.json'
 
 const GRID_COLS = 4
 const GRID_ROWS = 3
 const TILE_COUNT = GRID_COLS * GRID_ROWS
 const COMPLETE_TRANSITION_DELAY = 900
 
-const FALLBACK_TILES: { src: string; alt: string }[] = [
-  {
-    src: '/images/multi-art/tech-byzantine-fault-tolerance/option-2-stable-diffusion-v35-large.png',
-    alt: 'Byzantine fault tolerance',
-  },
-  {
-    src: '/images/multi-art/tech-cellular-automata-computing/option-2-stable-diffusion-v35-large.png',
-    alt: 'Cellular automata computing',
-  },
-  {
-    src: '/images/multi-art/tech-nanoscale-self-assembly/option-2-stable-diffusion-v35-large.png',
-    alt: 'Nanoscale self assembly',
-  },
-  {
-    src: '/images/multi-art/tech-quantum-error-correction-qiskit/option-2-stable-diffusion-v35-large.png',
-    alt: 'Quantum error correction',
-  },
-  {
-    src: '/images/multi-art/tech-secrets-management-vault/option-2-stable-diffusion-v35-large.png',
-    alt: 'Secrets management vault',
-  },
-  {
-    src: '/images/multi-art/tech-thermal-imaging-detection/option-2-stable-diffusion-v35-large.png',
-    alt: 'Thermal imaging detection',
-  },
-  {
-    src: '/images/multi-art/tech-time-series-database-prometheus/option-2-stable-diffusion-v35-large.png',
-    alt: 'Time series database Prometheus',
-  },
-  {
-    src: '/images/multi-art/tech-tokamak-plasma-control/option-2-stable-diffusion-v35-large.png',
-    alt: 'Tokamak plasma control',
-  },
-  {
-    src: '/images/multi-art/tech-blockchain-smart-contracts/option-3-stable-cascade.png',
-    alt: 'Blockchain smart contracts',
-  },
-  {
-    src: '/images/multi-art/tech-dna-data-storage/option-3-stable-cascade.png',
-    alt: 'DNA data storage',
-  },
-  {
-    src: '/images/multi-art/tech-optical-neural-networks/option-3-stable-cascade.png',
-    alt: 'Optical neural networks',
-  },
-  {
-    src: '/images/multi-art/tech-swarm-robotics-coordination/option-3-stable-cascade.png',
-    alt: 'Swarm robotics coordination',
-  },
-]
+// Curated, manually verified pool: abstract tech renders, no people.
+const FALLBACK_TILES: { src: string; alt: string }[] = tilePool.slice(0, TILE_COUNT)
 
 type DescentPhase = 'void' | 'grid' | 'shapes' | 'color' | 'alive'
 
