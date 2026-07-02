@@ -7,7 +7,8 @@ import BackgroundSphere from '../background/BackgroundSphere';
 import type { ArticleData } from '../interactive/GlowingArticleDisplay';
 import GaussianSplatBackground from '../background/GaussianSplatBackground';
 import InteractiveTablet from '../interactive/InteractiveTablet';
-import ClickingGame, { GameStats } from '../game/ClickingGame';
+import ClickingGame from '../game/ClickingGame';
+import { useGameStore, type GameState } from '@/stores/gameStore';
 import GameHUD from '../../overlays/GameHUD';
 import GameLeaderboard from '../../overlays/GameLeaderboard';
 import PerformanceMonitor from '../../PerformanceMonitor';
@@ -24,9 +25,6 @@ import HelpButton from '../../ui/HelpButton';
 import WASDControls from '../controls/WASDControls';
 import { useSupabaseData } from '../../contexts/SupabaseDataContext';
 import AnswerConstellation from '../interactive/AnswerConstellation';
-
-// Re-export GameState type for compatibility
-export type GameState = 'IDLE' | 'STARTING' | 'COUNTDOWN' | 'PLAYING' | 'GAME_OVER';
 
 // Map polarity string to number for InfiniteLibrary
 const polarityToNumber = (polarity?: string): number => {
@@ -130,19 +128,19 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
   });
 
 
-  // Game state
-  const [gameState, setGameState] = useState<GameState>('IDLE');
-  const [score, setScore] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(30);
-  const [combo, setCombo] = useState(0);
-  const [countdown, setCountdown] = useState(3);
-  const [gameStats, setGameStats] = useState<GameStats>({
-    score: 0,
-    comboMax: 0,
-    accuracy: 0,
-    totalClicks: 0,
-    successfulClicks: 0,
-  });
+  // Game state from store
+  const gameState = useGameStore((state) => state.gameState);
+  const score = useGameStore((state) => state.score);
+  const timeRemaining = useGameStore((state) => state.timeRemaining);
+  const combo = useGameStore((state) => state.combo);
+  const countdown = useGameStore((state) => state.countdown);
+  const gameStats = useGameStore((state) => state.gameStats);
+  const startGame = useGameStore((state) => state.startGame);
+  const beginCountdown = useGameStore((state) => state.beginCountdown);
+  const tickCountdown = useGameStore((state) => state.tickCountdown);
+  const startPlaying = useGameStore((state) => state.startPlaying);
+  const endGame = useGameStore((state) => state.endGame);
+  const resetGame = useGameStore((state) => state.resetGame);
 
   // 3D Exploration state
   const [is3DExploreActive, setIs3DExploreActive] = useState(false);
@@ -371,30 +369,24 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
 
   // Game handlers - start game directly from terminal
   const handleStartGame = useCallback(() => {
-    setGameState('COUNTDOWN');
-    setCountdown(3);
-    setScore(0);
-    setCombo(0);
+    startGame();
+    beginCountdown();
 
     const countdownInterval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval);
-          setTimeout(() => {
-            setGameState('PLAYING');
-            setTimeRemaining(30);
-          }, 500);
-          return 0;
-        }
-        return prev - 1;
-      });
+      tickCountdown();
+      const store = useGameStore.getState();
+      if (store.countdown <= 1) {
+        clearInterval(countdownInterval);
+        setTimeout(() => {
+          startPlaying();
+        }, 500);
+      }
     }, 1000);
-  }, []);
+  }, [startGame, beginCountdown, tickCountdown, startPlaying]);
 
-  const handleGameEnd = useCallback((finalScore: number, stats: GameStats) => {
-    setScore(finalScore);
-    setGameStats(stats);
-    setGameState('GAME_OVER');
+  const handleGameEnd = useCallback(() => {
+    endGame();
+    const finalScore = useGameStore.getState().score;
 
     updateStats('highestGameScore', finalScore);
 
@@ -405,18 +397,18 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
     if (finalScore >= 5000) {
       completeQuest('leaderboard-rank');
     }
-  }, [updateStats, currentQuest, completeQuest]);
+  }, [endGame, updateStats, currentQuest, completeQuest]);
 
   const handlePlayAgain = useCallback(() => {
-    setGameState('IDLE');
+    resetGame();
     setTimeout(() => {
       handleStartGame();
     }, 100);
-  }, [handleStartGame]);
+  }, [resetGame, handleStartGame]);
 
   const handleCloseLeaderboard = useCallback(() => {
-    setGameState('IDLE');
-  }, []);
+    resetGame();
+  }, [resetGame]);
 
   // 3D Exploration handlers
   const handleToggle3DExplore = useCallback(() => {
@@ -486,14 +478,7 @@ const ThreeSixty: React.FC<ThreeSixtyProps> = ({ currentImage, isDialogOpen, onC
               )}
 
               {/* Sphere Hunter Game */}
-              <ClickingGame
-                gameState={gameState}
-                onGameStart={handleStartGame}
-                onGameEnd={handleGameEnd}
-                onScoreUpdate={setScore}
-                onComboUpdate={setCombo}
-                onTimeUpdate={setTimeRemaining}
-              />
+              <ClickingGame onGameEnd={handleGameEnd} />
 
               {/* Background: Use Gaussian Splat if enabled and not on mobile/playing, otherwise use sphere */}
               {!is3DExploreActive && (
