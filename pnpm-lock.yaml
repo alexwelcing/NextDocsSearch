@@ -26,9 +26,6 @@ importers:
       '@radix-ui/react-label':
         specifier: ^2.1.0
         version: 2.1.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@react-three/cannon':
-        specifier: ^6.6.0
-        version: 6.6.0(@react-three/fiber@9.5.0(@types/react@19.2.2)(immer@11.1.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.183.2))(react@19.2.0)(three@0.183.2)(typescript@5.5.4)
       '@react-three/drei':
         specifier: ^10.7.7
         version: 10.7.7(@react-three/fiber@9.5.0(@types/react@19.2.2)(immer@11.1.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.183.2))(@types/react@19.2.2)(@types/three@0.183.1)(immer@11.1.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.183.2)
@@ -1273,11 +1270,6 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@pmndrs/cannon-worker-api@2.4.0':
-    resolution: {integrity: sha512-oJA1Bboc+WObksRaGDKJG0Wna9Q75xi1MdXVAZ9qXzBOyPsadmAnrmiKOEF0R8v/4zsuJElvscNZmyo3msbZjA==}
-    peerDependencies:
-      three: '>=0.139'
-
   '@pmndrs/handle@6.6.30':
     resolution: {integrity: sha512-KPutdaLpCNPZoqXX2HvlRc+cQMETXdHTF0nKqFHMrJrne34apqELRVig53lO469rJhheedsRVepfdyo4g9Rukw==}
 
@@ -1547,13 +1539,6 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
-
-  '@react-three/cannon@6.6.0':
-    resolution: {integrity: sha512-lP9rJoVHQi0w+dYF8FJAm2xr5eLfNEckb04j72kjqndUkuOPr26N4rSBhQbHl5b5N3tEnhQaIMungAvHkcY8/A==}
-    peerDependencies:
-      '@react-three/fiber': '>=8'
-      react: '>=18'
-      three: '>=0.139'
 
   '@react-three/drei@10.7.7':
     resolution: {integrity: sha512-ff+J5iloR0k4tC++QtD/j9u3w5fzfgFAWDtAGQah9pF2B1YgOq/5JxqY0/aVoQG5r3xSZz0cv5tk2YuBob4xEQ==}
@@ -2323,19 +2308,6 @@ packages:
 
   caniuse-lite@1.0.30001799:
     resolution: {integrity: sha512-hG1bReV+OUU+MOqK4t/ZWI0tZOyz3rqS9XuhOUz1cIcbwBKjOyJEJuw9ER5JuNyqxNk8u/JUVbGibBOL1yrjFw==}
-
-  cannon-es-debugger@1.0.0:
-    resolution: {integrity: sha512-sE9lDOBAYFKlh+0w+cvWKwUhJef8HYnUSVPWPL0jD15MAuVRQKno4QYZSGxgOoJkMR3mQqxL4bxys2b3RSWH8g==}
-    peerDependencies:
-      cannon-es: 0.x
-      three: 0.x
-      typescript: '>=3.8'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  cannon-es@0.20.0:
-    resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
 
   case-anything@2.1.13:
     resolution: {integrity: sha512-zlOQ80VrQ2Ue+ymH5OuM/DlDq64mEm+B9UTdHULv5osUMD6HalNTblf2b1u/m6QecjsnOkBpqVZ+XPwIVsy7Ng==}
@@ -5766,10 +5738,6 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@pmndrs/cannon-worker-api@2.4.0(three@0.183.2)':
-    dependencies:
-      three: 0.183.2
-
   '@pmndrs/handle@6.6.30(@types/react@19.2.2)(immer@11.1.4)(react@19.2.0)':
     dependencies:
       '@pmndrs/pointer-events': 6.6.30
@@ -6057,17 +6025,6 @@ snapshots:
       react: 19.2.0
     optionalDependencies:
       '@types/react': 19.2.2
-
-  '@react-three/cannon@6.6.0(@react-three/fiber@9.5.0(@types/react@19.2.2)(immer@11.1.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.183.2))(react@19.2.0)(three@0.183.2)(typescript@5.5.4)':
-    dependencies:
-      '@pmndrs/cannon-worker-api': 2.4.0(three@0.183.2)
-      '@react-three/fiber': 9.5.0(@types/react@19.2.2)(immer@11.1.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.183.2)
-      cannon-es: 0.20.0
-      cannon-es-debugger: 1.0.0(cannon-es@0.20.0)(three@0.183.2)(typescript@5.5.4)
-      react: 19.2.0
-      three: 0.183.2
-    transitivePeerDependencies:
-      - typescript
 
   '@react-three/drei@10.7.7(@react-three/fiber@9.5.0(@types/react@19.2.2)(immer@11.1.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.183.2))(@types/react@19.2.2)(@types/three@0.183.1)(immer@11.1.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.183.2)':
     dependencies:
@@ -6877,15 +6834,6 @@ snapshots:
   caniuse-lite@1.0.30001651: {}
 
   caniuse-lite@1.0.30001799: {}
-
-  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.183.2)(typescript@5.5.4):
-    dependencies:
-      cannon-es: 0.20.0
-      three: 0.183.2
-    optionalDependencies:
-      typescript: 5.5.4
-
-  cannon-es@0.20.0: {}
 
   case-anything@2.1.13: {}
 
