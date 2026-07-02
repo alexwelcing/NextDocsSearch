@@ -34,7 +34,7 @@ class VisualTestRunner {
   private screenshotDir: string;
   private results: TestResult[] = [];
 
-  constructor(baseUrl = 'http://localhost:3000', screenshotDir = './test-screenshots') {
+  constructor(baseUrl = 'http://localhost:7342', screenshotDir = './test-screenshots') {
     this.baseUrl = baseUrl;
     this.screenshotDir = screenshotDir;
   }

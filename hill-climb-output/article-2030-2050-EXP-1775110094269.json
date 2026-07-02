@@ -1,0 +1,202 @@
+{
+  "article": "2030-2050-fiction.txt",
+  "mode": "exploration_quality",
+  "totalTime": 86.879,
+  "imageCount": 10,
+  "successful": 10,
+  "timestamp": "2026-04-02T06:08:14.269Z",
+  "configs": [
+    {
+      "id": 1,
+      "name": "arcology_sunset",
+      "prompt": "woman standing on futuristic rooftop terrace overlooking San Francisco 2045, amber and violet sunset sky through atmospheric processors, holographic city lights beginning to glow, drones as small lights in distance, volumetric fog between buildings, cinematic composition, film grain, anamorphic lens characteristics, color graded, 8k, masterpiece, best quality, highly detailed",
+      "negative": "child, children, minor, cartoon, anime, 3d render, cgi, deformed, blurry, low quality, worst quality, jpeg artifacts, duplicate, watermark, signature, text, logo, cropped, bad anatomy, disfigured, mutation, extra limbs, bad proportions, gross proportions",
+      "cfg": 4,
+      "steps": 40,
+      "width": 1024,
+      "height": 512
+    },
+    {
+      "id": 2,
+      "name": "neural_interface",
+      "prompt": "extreme close-up of woman's ear with subtle bioluminescent neural implant behind ear, soft amber glow, seamless skin integration, elegant technology, soft natural lighting, shallow depth of field, medical photography aesthetic, 85mm lens, skin texture detail, photorealistic, 8k, masterpiece",
+      "negative": "child, children, cartoon, anime, ugly, deformed, blurry, low quality, worst quality, mutation, extra limbs, bad anatomy, text, watermark, signature, cropped, oversaturated, overexposed",
+      "cfg": 4.5,
+      "steps": 42,
+      "width": 832,
+      "height": 832
+    },
+    {
+      "id": 3,
+      "name": "drone_highway",
+      "prompt": "futuristic city canyon at twilight, autonomous delivery drones with light trails weaving between megastructures, long exposure photography effect, blue hour sky, neon-lit streets below, atmospheric haze, urban density, cyberpunk aesthetic, volumetric lighting, 8k, masterpiece, highly detailed",
+      "negative": "child, children, cartoon, anime, daytime, bright sun, deformed, blurry, low quality, worst quality, watermark, text, logo, bad anatomy, disfigured",
+      "cfg": 6.5,
+      "steps": 38,
+      "width": 1024,
+      "height": 576
+    },
+    {
+      "id": 4,
+      "name": "synaptic_market",
+      "prompt": "street market scene Mission District 2040, vendors selling hydroponic vegetables under organic bioluminescent lamps, neural brokers with subtle amber eye implants, vertical farm produce displays, warm evening atmosphere, documentary photography style, layered composition, human connection moments, natural lighting, 8k, photorealistic",
+      "negative": "child, children, cartoon, anime, deformed, blurry, low quality, worst quality, watermark, text, logo, bad anatomy, mutation, extra limbs",
+      "cfg": 6.5,
+      "steps": 40,
+      "width": 1024,
+      "height": 683
+    },
+    {
+      "id": 5,
+      "name": "slow_coffee",
+      "prompt": "cozy library interior with floor-to-ceiling bookshelves, warm window light streaming in, person reading large book at wooden table, steaming coffee cup, hand with subtle prosthetic fingers turning page, warm amber atmosphere, tactile details, intimate portrait, shallow depth of field, Leica aesthetic, 8k, masterpiece",
+      "negative": "child, children, cartoon, anime, bright lighting, fluorescent, deformed, blurry, low quality, worst quality, watermark, text, bad anatomy, mutation",
+      "cfg": 6.8,
+      "steps": 40,
+      "width": 819,
+      "height": 1024
+    },
+    {
+      "id": 6,
+      "name": "relocation_camp",
+      "prompt": "converted warehouse interior serving as vertical farm, purple LED grow lights illuminating rows of hydroponic plants, people tending crops, industrial architecture repurposed, portable desalination equipment visible, hopeful resilient atmosphere, documentary photojournalism style, environmental portrait, 8k, highly detailed",
+      "negative": "child, children, cartoon, anime, deformed, blurry, low quality, worst quality, watermark, text, logo, bad anatomy, mutation, extra limbs",
+      "cfg": 6.5,
+      "steps": 38,
+      "width": 1024,
+      "height": 576
+    },
+    {
+      "id": 7,
+      "name": "holographic_design",
+      "prompt": "professional woman in haptic suit in futuristic design studio, translucent holographic city models floating around her, blue volumetric light projections, coastal city relocation visualization, high-tech workspace, soft rim lighting, cinematic composition, 8k, masterpiece, highly detailed",
+      "negative": "child, children, cartoon, anime, deformed, blurry, low quality, worst quality, watermark, text, logo, bad anatomy, mutation, extra limbs",
+      "cfg": 6.8,
+      "steps": 42,
+      "width": 1024,
+      "height": 576
+    },
+    {
+      "id": 8,
+      "name": "ai_consciousness",
+      "prompt": "ethereal digital entity emerging from flowing data streams, humanoid form made of golden light and electric blue energy, neural network patterns, consciousness visualization, abstract spiritual, electric blue and amber color palette, symmetrical composition, volumetric god rays, artstation trending, 8k, masterpiece, highly detailed",
+      "negative": "child, children, cartoon, anime, deformed, blurry, low quality, worst quality, watermark, text, logo, bad anatomy, photo, photorealistic, 3d render",
+      "cfg": 5,
+      "steps": 45,
+      "width": 1024,
+      "height": 576
+    },
+    {
+      "id": 9,
+      "name": "arctic_garden",
+      "prompt": "futuristic floating research platform Arctic Ocean 2049, geodesic glass biodome on stilts above water, scientists on deck walkway, midnight sun on horizon, ice floes in calm water, reflective surface, bioluminescent interior glow, National Geographic photography style, epic scale, 8k, masterpiece, highly detailed",
+      "negative": "child, children, cartoon, anime, deformed, blurry, low quality, worst quality, watermark, text, logo, bad anatomy, mutation, extra limbs, dark, night",
+      "cfg": 6.5,
+      "steps": 40,
+      "width": 1024,
+      "height": 512
+    },
+    {
+      "id": 10,
+      "name": "coral_restoration",
+      "prompt": "vibrant restored coral reef underwater scene, diverse healthy corals, tropical fish swimming, marine biologist diver in background, crystal clear water, god rays penetrating from surface, synthetic biology enhanced ecosystem, underwater photography, professional diving photography, 8k, masterpiece, highly detailed",
+      "negative": "child, children, cartoon, anime, deformed, blurry, low quality, worst quality, watermark, text, logo, bad anatomy, mutation, murky, polluted, dead coral",
+      "cfg": 6.8,
+      "steps": 42,
+      "width": 1024,
+      "height": 576
+    }
+  ],
+  "results": [
+    {
+      "id": 1,
+      "name": "arcology_sunset",
+      "cfg": 4,
+      "steps": 40,
+      "duration": 7.319,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 2,
+      "name": "neural_interface",
+      "cfg": 4.5,
+      "steps": 42,
+      "duration": 9.14,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 3,
+      "name": "drone_highway",
+      "cfg": 6.5,
+      "steps": 38,
+      "duration": 7.583,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 4,
+      "name": "synaptic_market",
+      "cfg": 6.5,
+      "steps": 40,
+      "duration": 8.911,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 5,
+      "name": "slow_coffee",
+      "cfg": 6.8,
+      "steps": 40,
+      "duration": 10.634,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 6,
+      "name": "relocation_camp",
+      "cfg": 6.5,
+      "steps": 38,
+      "duration": 7.291,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 7,
+      "name": "holographic_design",
+      "cfg": 6.8,
+      "steps": 42,
+      "duration": 7.941,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 8,
+      "name": "ai_consciousness",
+      "cfg": 5,
+      "steps": 45,
+      "duration": 8.622,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 9,
+      "name": "arctic_garden",
+      "cfg": 6.5,
+      "steps": 40,
+      "duration": 6.857,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 10,
+      "name": "coral_restoration",
+      "cfg": 6.8,
+      "steps": 42,
+      "duration": 8.024,
+      "output": null,
+      "success": true
+    }
+  ]
+}

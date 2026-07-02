@@ -3,12 +3,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import { GetStaticProps } from 'next'
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
 import CircleNav from '@/components/ui/CircleNav'
 import StructuredData from '@/components/StructuredData'
-import { SITE_URL } from '@/lib/site-url'
+import { scanArticles, filterArticlesByKeywords, sortArticlesByDate } from '@/lib/articles'
 
 interface Article {
   slug: string
@@ -50,8 +47,6 @@ const themes = [
 ]
 
 export default function AgentFuturesHub({ articles }: AgentFuturesHubProps) {
-  const siteUrl = SITE_URL
-  const pageUrl = `${siteUrl}/agent-futures`
   return (
     <div style={{ minHeight: '100vh', background: '#030308', color: '#e5e5e5' }}>
       <Head>
@@ -66,17 +61,17 @@ export default function AgentFuturesHub({ articles }: AgentFuturesHubProps) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={pageUrl} />
+        <link rel="canonical" href="https://www.alexwelcing.com/agent-futures" />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="Agent Futures | Alex Welcing" />
         <meta
           property="og:description"
           content="Research on autonomous AI agents, swarm intelligence, and multi-agent systems. Exploring how agent civilizations emerge and coordinate."
         />
-        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
+        <meta property="og:image" content="https://www.alexwelcing.com/social-preview.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content={pageUrl} />
+        <meta property="og:url" content="https://www.alexwelcing.com/agent-futures" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
@@ -85,14 +80,14 @@ export default function AgentFuturesHub({ articles }: AgentFuturesHubProps) {
           name="twitter:description"
           content="Research on autonomous AI agents, swarm intelligence, and multi-agent systems."
         />
-        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
+        <meta name="twitter:image" content="https://www.alexwelcing.com/social-preview.png" />
       </Head>
 
       <StructuredData
         type="Website"
         data={{
           name: 'Agent Futures - Alex Welcing',
-          url: pageUrl,
+          url: 'https://www.alexwelcing.com/agent-futures',
           description:
             'Research hub for autonomous AI agents, swarm intelligence, and multi-agent system dynamics.',
           author: { '@type': 'Person', name: 'Alex Welcing' },
@@ -533,57 +528,17 @@ function HubArticleCard({
   )
 }
 
-function resolveHeroImage(slug: string): string {
-  const extensions = ['.png', '.jpg', '.svg']
-  for (const ext of extensions) {
-    const imgPath = path.join(process.cwd(), 'public', 'images', 'articles', `${slug}${ext}`)
-    if (fs.existsSync(imgPath)) {
-      return `/images/articles/${slug}${ext}`
-    }
-  }
-  return ''
-}
-
 export const getStaticProps: GetStaticProps = async () => {
-  const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles')
-  const filenames = fs.readdirSync(articleFolderPath)
-
   const agentKeywords = [
     'agent', 'autonomous', 'swarm', 'robot', 'factory', 'vehicle',
     'drone', 'satellite', 'constellation', 'coordination', 'cartel',
     'monopoly', 'smart-city', 'nanobot', 'assembler',
   ]
 
-  const articles = filenames
-    .filter((filename) => filename.endsWith('.mdx'))
-    .map((filename) => {
-      const filePath = path.join(articleFolderPath, filename)
-      const fileContents = fs.readFileSync(filePath, 'utf8')
-      const { data } = matter(fileContents)
-      const slug = filename.replace('.mdx', '')
-
-      return {
-        slug,
-        title: (data.title as string) || slug,
-        description: (data.description as string) || '',
-        date: (data.date as string) || '',
-        heroImage: resolveHeroImage(slug),
-      }
-    })
-    .filter((article) => {
-      const slugLower = article.slug.toLowerCase()
-      const titleLower = article.title.toLowerCase()
-      const descLower = article.description.toLowerCase()
-
-      return agentKeywords.some(
-        (keyword) =>
-          slugLower.includes(keyword) ||
-          titleLower.includes(keyword) ||
-          descLower.includes(keyword)
-      )
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 20)
+  const articles = sortArticlesByDate(
+    filterArticlesByKeywords(scanArticles(), agentKeywords),
+    20
+  )
 
   return {
     props: { articles },

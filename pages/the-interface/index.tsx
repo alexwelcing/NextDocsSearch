@@ -3,12 +3,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import { GetStaticProps } from 'next'
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
 import CircleNav from '@/components/ui/CircleNav'
 import StructuredData from '@/components/StructuredData'
-import { SITE_URL } from '@/lib/site-url'
+import { getArticlesBySlugs } from '@/lib/articles'
 
 interface InterfaceArticle {
   slug: string
@@ -24,8 +21,6 @@ interface InterfacePageProps {
 }
 
 export default function TheInterfacePage({ articles }: InterfacePageProps) {
-  const siteUrl = SITE_URL
-  const pageUrl = `${siteUrl}/the-interface`
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   // Pick a few highlight images for the hero mosaic
@@ -51,7 +46,7 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={pageUrl} />
+        <link rel="canonical" href="https://www.alexwelcing.com/the-interface" />
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="The Interface — A 24-Part Series | Alex Welcing" />
         <meta
@@ -60,11 +55,11 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         />
         <meta
           property="og:image"
-          content={`${siteUrl}/images/articles/interface-01-the-first-translator.png`}
+          content="https://www.alexwelcing.com/images/articles/interface-01-the-first-translator.png"
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content={pageUrl} />
+        <meta property="og:url" content="https://www.alexwelcing.com/the-interface" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@alexwelcing" />
@@ -75,7 +70,7 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         />
         <meta
           name="twitter:image"
-          content={`${siteUrl}/images/articles/interface-01-the-first-translator.png`}
+          content="https://www.alexwelcing.com/images/articles/interface-01-the-first-translator.png"
         />
       </Head>
 
@@ -83,7 +78,7 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
         type="Website"
         data={{
           name: 'The Interface — A 24-Part Series',
-          url: pageUrl,
+          url: 'https://www.alexwelcing.com/the-interface',
           description:
             'A 24-part fiction series exploring bridge events between human and artificial intelligence.',
           author: {
@@ -403,77 +398,40 @@ export default function TheInterfacePage({ articles }: InterfacePageProps) {
   )
 }
 
+const INTERFACE_SLUGS = [
+  'interface-01-the-first-translator',
+  'interface-02-haptic-vernacular',
+  'interface-03-the-ceramicist-and-the-kiln',
+  'interface-04-protocol-zero',
+  'interface-05-the-weight-of-a-gaze',
+  'interface-06-latency-as-intimacy',
+  'interface-07-the-cartographer-of-attention',
+  'interface-08-scaffold-and-bone',
+  'interface-09-the-grief-engine',
+  'interface-10-forking-paths',
+  'interface-11-the-soil-whisperer',
+  'interface-12-resonance-frequency',
+  'interface-13-the-interpreters-dilemma',
+  'interface-14-phantom-limb-electric-ghost',
+  'interface-15-the-last-manual',
+  'interface-16-the-gardeners-algorithm',
+  'interface-17-consensus-engine',
+  'interface-18-the-proprioception-problem',
+  'interface-19-when-the-ship-dreamed',
+  'interface-20-the-apprentices-reversal',
+  'interface-21-bridge-tenders',
+  'interface-22-the-memory-market',
+  'interface-23-calibration-day',
+  'interface-24-the-slowest-interface',
+]
+
 export const getStaticProps: GetStaticProps = async () => {
-  const articleFolderPath = path.join(process.cwd(), 'pages', 'docs', 'articles')
-  const filenames = fs.readdirSync(articleFolderPath)
-
-  const interfaceSlugs = [
-    'interface-01-the-first-translator',
-    'interface-02-haptic-vernacular',
-    'interface-03-the-ceramicist-and-the-kiln',
-    'interface-04-protocol-zero',
-    'interface-05-the-weight-of-a-gaze',
-    'interface-06-latency-as-intimacy',
-    'interface-07-the-cartographer-of-attention',
-    'interface-08-scaffold-and-bone',
-    'interface-09-the-grief-engine',
-    'interface-10-forking-paths',
-    'interface-11-the-soil-whisperer',
-    'interface-12-resonance-frequency',
-    'interface-13-the-interpreters-dilemma',
-    'interface-14-phantom-limb-electric-ghost',
-    'interface-15-the-last-manual',
-    'interface-16-the-gardeners-algorithm',
-    'interface-17-consensus-engine',
-    'interface-18-the-proprioception-problem',
-    'interface-19-when-the-ship-dreamed',
-    'interface-20-the-apprentices-reversal',
-    'interface-21-bridge-tenders',
-    'interface-22-the-memory-market',
-    'interface-23-calibration-day',
-    'interface-24-the-slowest-interface',
-  ]
-
-  const articles: InterfaceArticle[] = interfaceSlugs
-    .map((slug) => {
-      const filename = `${slug}.mdx`
-      if (!filenames.includes(filename)) return null
-
-      const filePath = path.join(articleFolderPath, filename)
-      const fileContents = fs.readFileSync(filePath, 'utf8')
-      const { data } = matter(fileContents)
-
-      // Check for hero image - Nano Banana 2 generates PNGs
-      const possibleImages = [
-        `/images/articles/${slug}.png`,
-        `/images/articles/${slug}.jpg`,
-        `/images/articles/${slug}.svg`,
-      ]
-
-      let heroImage = ''
-      for (const img of possibleImages) {
-        const imgPath = path.join(process.cwd(), 'public', img)
-        if (fs.existsSync(imgPath)) {
-          heroImage = img
-          break
-        }
-      }
-
-      return {
-        slug,
-        title: data.title || slug,
-        description: data.description || '',
-        date: data.date || '',
-        seriesOrder: data.seriesOrder || parseInt(slug.match(/interface-(\d+)/)?.[1] || '0', 10),
-        heroImage: heroImage || (data.ogImage as string) || '',
-      }
-    })
-    .filter((a): a is InterfaceArticle => a !== null)
-    .sort((a, b) => a.seriesOrder - b.seriesOrder)
+  const articles = getArticlesBySlugs(INTERFACE_SLUGS, true).map((a) => ({
+    ...a,
+    seriesOrder: a.seriesOrder || parseInt(a.slug.match(/interface-(\d+)/)?.[1] || '0', 10),
+  }))
 
   return {
-    props: {
-      articles,
-    },
+    props: { articles },
   }
 }

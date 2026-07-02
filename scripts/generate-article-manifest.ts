@@ -40,6 +40,7 @@ interface EnhancedArticleData {
   ogImage?: string;
   heroImage?: string;
   thumbnail?: string;
+  teaserVideo?: string;
   readingTime: number;
   wordCount: number;
   searchText: string;
@@ -268,6 +269,7 @@ function main() {
       ogImage: frontmatterOgImage || images.heroImage || images.thumbnail || images.ogImage || undefined,
       heroImage: images.heroImage || images.thumbnail || undefined,
       thumbnail: images.thumbnail || images.heroImage || undefined,
+      teaserVideo: data.teaserVideo || undefined,
       readingTime,
       wordCount,
       searchText,

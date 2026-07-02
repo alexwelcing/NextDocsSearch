@@ -1,0 +1,336 @@
+{
+  "timestamp": "2026-04-02T06:23:02.130Z",
+  "totalTime": 356.558,
+  "totalImages": 40,
+  "successfulImages": 40,
+  "results": {
+    "2030-2050-climate.txt": [
+      {
+        "name": "phoenix_heat",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 7.541,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "floating_rotterdam",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 6.751,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "bangladesh_migration",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 7.927,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "new_agriculture",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 8.812,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "carbon_capture",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 7.92,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "mangrove_restoration",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 7.594,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "abandoned_venice",
+        "cfg": 4.5,
+        "steps": 40,
+        "duration": 6.77,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "climate_scientist",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 10.171,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "siberian_farmland",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 6.794,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "new_miami",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 7.948,
+        "output": null,
+        "success": true
+      }
+    ],
+    "2030-2050-fiction.txt": [
+      {
+        "name": "arcology_sunset",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 6.968,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "neural_interface",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 9.093,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "drone_highway",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 7.246,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "synaptic_market",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 8.833,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "slow_coffee",
+        "cfg": 4.5,
+        "steps": 40,
+        "duration": 10.542,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "relocation_camp",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 7.27,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "holographic_design",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 8.023,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "ai_consciousness",
+        "cfg": 5,
+        "steps": 45,
+        "duration": 8.564,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "arctic_garden",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 6.831,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "coral_restoration",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 7.993,
+        "output": null,
+        "success": true
+      }
+    ],
+    "2030-2050-society.txt": [
+      {
+        "name": "diplomat_ceremony",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 8.937,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "detroit_cooperative",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 8.412,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "synthetic_church",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 8.031,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "craft_practitioner",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 10.593,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "last_human_series",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 8.016,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "multiple_citizenship",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 10.134,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "generational_dinner",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 8.851,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "indonesian_separation",
+        "cfg": 4.5,
+        "steps": 40,
+        "duration": 7.626,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "korean_reunification",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 8.877,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "future_storytelling",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 9.327,
+        "output": null,
+        "success": true
+      }
+    ],
+    "2030-2050-technology.txt": [
+      {
+        "name": "media_lab",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 8.026,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "neural_lace_surgery",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 8.231,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "laced_communion",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 10.675,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "harmonia_symphony",
+        "cfg": 4.5,
+        "steps": 40,
+        "duration": 8.182,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "human_ai_collaboration",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 9.181,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "great_pause_protest",
+        "cfg": 4,
+        "steps": 38,
+        "duration": 7.3,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "ai_ethics_court",
+        "cfg": 4.5,
+        "steps": 42,
+        "duration": 7.954,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "consciousness_conference",
+        "cfg": 4,
+        "steps": 40,
+        "duration": 6.859,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "ai_childhood",
+        "cfg": 4.5,
+        "steps": 40,
+        "duration": 8.914,
+        "output": null,
+        "success": true
+      },
+      {
+        "name": "machine_curiosity",
+        "cfg": 5,
+        "steps": 45,
+        "duration": 8.571,
+        "output": null,
+        "success": true
+      }
+    ]
+  }
+}

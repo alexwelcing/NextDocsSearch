@@ -1,0 +1,726 @@
+{
+  "iteration": 5,
+  "index": 7,
+  "results": [
+    {
+      "iter": 1,
+      "i": 0,
+      "structure": "architecture",
+      "controlStrength": 1,
+      "controlStart": 0.2,
+      "controlEnd": 0.9,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.096,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00001_.png",
+        "seed_iter1_v1_00001_.png",
+        "seed_iter1_v2_00001_.png",
+        "seed_iter1_v3_00001_.png"
+      ]
+    },
+    {
+      "iter": 1,
+      "i": 1,
+      "structure": "perspective",
+      "controlStrength": 0.7,
+      "controlStart": 0.2,
+      "controlEnd": 1,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00002_.png",
+        "seed_iter1_v1_00002_.png",
+        "seed_iter1_v2_00002_.png",
+        "seed_iter1_v3_00002_.png"
+      ]
+    },
+    {
+      "iter": 1,
+      "i": 2,
+      "structure": "depth layers",
+      "controlStrength": 0.6,
+      "controlStart": 0.2,
+      "controlEnd": 0.9,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00003_.png",
+        "seed_iter1_v1_00003_.png",
+        "seed_iter1_v2_00003_.png",
+        "seed_iter1_v3_00003_.png"
+      ]
+    },
+    {
+      "iter": 1,
+      "i": 3,
+      "structure": "natural depth",
+      "controlStrength": 0.7,
+      "controlStart": 0.1,
+      "controlEnd": 1,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.209,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00004_.png",
+        "seed_iter1_v1_00004_.png",
+        "seed_iter1_v2_00004_.png",
+        "seed_iter1_v3_00004_.png"
+      ]
+    },
+    {
+      "iter": 1,
+      "i": 4,
+      "structure": "urban perspective",
+      "controlStrength": 0.9,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00005_.png",
+        "seed_iter1_v1_00005_.png",
+        "seed_iter1_v2_00005_.png",
+        "seed_iter1_v3_00005_.png"
+      ]
+    },
+    {
+      "iter": 1,
+      "i": 5,
+      "structure": "architectural depth",
+      "controlStrength": 0.7,
+      "controlStart": 0,
+      "controlEnd": 1,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 14.108,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00006_.png",
+        "seed_iter1_v1_00006_.png",
+        "seed_iter1_v2_00006_.png",
+        "seed_iter1_v3_00006_.png"
+      ]
+    },
+    {
+      "iter": 1,
+      "i": 6,
+      "structure": "geometric depth",
+      "controlStrength": 0.8,
+      "controlStart": 0,
+      "controlEnd": 0.8,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00007_.png",
+        "seed_iter1_v1_00007_.png",
+        "seed_iter1_v2_00007_.png",
+        "seed_iter1_v3_00007_.png"
+      ]
+    },
+    {
+      "iter": 1,
+      "i": 7,
+      "structure": "linear perspective",
+      "controlStrength": 0.9,
+      "controlStart": 0.1,
+      "controlEnd": 0.9,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.103,
+      "success": true,
+      "images": [
+        "seed_iter1_v0_00008_.png",
+        "seed_iter1_v1_00008_.png",
+        "seed_iter1_v2_00008_.png",
+        "seed_iter1_v3_00008_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 0,
+      "structure": "architecture",
+      "controlStrength": 0.6,
+      "controlStart": 0.1,
+      "controlEnd": 0.9,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 14.164,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00001_.png",
+        "seed_iter2_v1_00001_.png",
+        "seed_iter2_v2_00001_.png",
+        "seed_iter2_v3_00001_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 1,
+      "structure": "perspective",
+      "controlStrength": 0.6,
+      "controlStart": 0.1,
+      "controlEnd": 1,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00002_.png",
+        "seed_iter2_v1_00002_.png",
+        "seed_iter2_v2_00002_.png",
+        "seed_iter2_v3_00002_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 2,
+      "structure": "depth layers",
+      "controlStrength": 0.9,
+      "controlStart": 0.2,
+      "controlEnd": 0.8,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00003_.png",
+        "seed_iter2_v1_00003_.png",
+        "seed_iter2_v2_00003_.png",
+        "seed_iter2_v3_00003_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 3,
+      "structure": "natural depth",
+      "controlStrength": 0.8,
+      "controlStart": 0.1,
+      "controlEnd": 0.9,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 16.121,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00004_.png",
+        "seed_iter2_v1_00004_.png",
+        "seed_iter2_v2_00004_.png",
+        "seed_iter2_v3_00004_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 4,
+      "structure": "urban perspective",
+      "controlStrength": 0.9,
+      "controlStart": 0.1,
+      "controlEnd": 0.8,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00005_.png",
+        "seed_iter2_v1_00005_.png",
+        "seed_iter2_v2_00005_.png",
+        "seed_iter2_v3_00005_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 5,
+      "structure": "architectural depth",
+      "controlStrength": 0.8,
+      "controlStart": 0.1,
+      "controlEnd": 0.9,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00006_.png",
+        "seed_iter2_v1_00006_.png",
+        "seed_iter2_v2_00006_.png",
+        "seed_iter2_v3_00006_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 6,
+      "structure": "geometric depth",
+      "controlStrength": 0.9,
+      "controlStart": 0.1,
+      "controlEnd": 0.8,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00007_.png",
+        "seed_iter2_v1_00007_.png",
+        "seed_iter2_v2_00007_.png",
+        "seed_iter2_v3_00007_.png"
+      ]
+    },
+    {
+      "iter": 2,
+      "i": 7,
+      "structure": "linear perspective",
+      "controlStrength": 0.8,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.155,
+      "success": true,
+      "images": [
+        "seed_iter2_v0_00008_.png",
+        "seed_iter2_v1_00008_.png",
+        "seed_iter2_v2_00008_.png",
+        "seed_iter2_v3_00008_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 0,
+      "structure": "architecture",
+      "controlStrength": 0.6,
+      "controlStart": 0,
+      "controlEnd": 1,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00001_.png",
+        "seed_iter3_v1_00001_.png",
+        "seed_iter3_v2_00001_.png",
+        "seed_iter3_v3_00001_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 1,
+      "structure": "perspective",
+      "controlStrength": 1,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00002_.png",
+        "seed_iter3_v1_00002_.png",
+        "seed_iter3_v2_00002_.png",
+        "seed_iter3_v3_00002_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 2,
+      "structure": "depth layers",
+      "controlStrength": 0.7,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00003_.png",
+        "seed_iter3_v1_00003_.png",
+        "seed_iter3_v2_00003_.png",
+        "seed_iter3_v3_00003_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 3,
+      "structure": "natural depth",
+      "controlStrength": 0.9,
+      "controlStart": 0.1,
+      "controlEnd": 0.9,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00004_.png",
+        "seed_iter3_v1_00004_.png",
+        "seed_iter3_v2_00004_.png",
+        "seed_iter3_v3_00004_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 4,
+      "structure": "urban perspective",
+      "controlStrength": 1,
+      "controlStart": 0,
+      "controlEnd": 0.8,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.175,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00005_.png",
+        "seed_iter3_v1_00005_.png",
+        "seed_iter3_v2_00005_.png",
+        "seed_iter3_v3_00005_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 5,
+      "structure": "architectural depth",
+      "controlStrength": 0.7,
+      "controlStart": 0.1,
+      "controlEnd": 0.9,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 16.106,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00006_.png",
+        "seed_iter3_v1_00006_.png",
+        "seed_iter3_v2_00006_.png",
+        "seed_iter3_v3_00006_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 6,
+      "structure": "geometric depth",
+      "controlStrength": 0.8,
+      "controlStart": 0.1,
+      "controlEnd": 1,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.349,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00007_.png",
+        "seed_iter3_v1_00007_.png",
+        "seed_iter3_v2_00007_.png",
+        "seed_iter3_v3_00007_.png"
+      ]
+    },
+    {
+      "iter": 3,
+      "i": 7,
+      "structure": "linear perspective",
+      "controlStrength": 0.8,
+      "controlStart": 0,
+      "controlEnd": 1,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.346,
+      "success": true,
+      "images": [
+        "seed_iter3_v0_00008_.png",
+        "seed_iter3_v1_00008_.png",
+        "seed_iter3_v2_00008_.png",
+        "seed_iter3_v3_00008_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 0,
+      "structure": "architecture",
+      "controlStrength": 1,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.493,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00001_.png",
+        "seed_iter4_v1_00001_.png",
+        "seed_iter4_v2_00001_.png",
+        "seed_iter4_v3_00001_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 1,
+      "structure": "perspective",
+      "controlStrength": 1,
+      "controlStart": 0.2,
+      "controlEnd": 0.9,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 16.121,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00002_.png",
+        "seed_iter4_v1_00002_.png",
+        "seed_iter4_v2_00002_.png",
+        "seed_iter4_v3_00002_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 2,
+      "structure": "depth layers",
+      "controlStrength": 0.6,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00003_.png",
+        "seed_iter4_v1_00003_.png",
+        "seed_iter4_v2_00003_.png",
+        "seed_iter4_v3_00003_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 3,
+      "structure": "natural depth",
+      "controlStrength": 0.7,
+      "controlStart": 0.2,
+      "controlEnd": 0.9,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.092,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00004_.png",
+        "seed_iter4_v1_00004_.png",
+        "seed_iter4_v2_00004_.png",
+        "seed_iter4_v3_00004_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 4,
+      "structure": "urban perspective",
+      "controlStrength": 0.6,
+      "controlStart": 0,
+      "controlEnd": 1,
+      "seedStep": 10,
+      "variations": 4,
+      "duration": 14.108,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00005_.png",
+        "seed_iter4_v1_00005_.png",
+        "seed_iter4_v2_00005_.png",
+        "seed_iter4_v3_00005_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 5,
+      "structure": "architectural depth",
+      "controlStrength": 0.8,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00006_.png",
+        "seed_iter4_v1_00006_.png",
+        "seed_iter4_v2_00006_.png",
+        "seed_iter4_v3_00006_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 6,
+      "structure": "geometric depth",
+      "controlStrength": 0.6,
+      "controlStart": 0.2,
+      "controlEnd": 1,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.092,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00007_.png",
+        "seed_iter4_v1_00007_.png",
+        "seed_iter4_v2_00007_.png",
+        "seed_iter4_v3_00007_.png"
+      ]
+    },
+    {
+      "iter": 4,
+      "i": 7,
+      "structure": "linear perspective",
+      "controlStrength": 0.7,
+      "controlStart": 0.2,
+      "controlEnd": 0.8,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter4_v0_00008_.png",
+        "seed_iter4_v1_00008_.png",
+        "seed_iter4_v2_00008_.png",
+        "seed_iter4_v3_00008_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 0,
+      "structure": "architecture",
+      "controlStrength": 1,
+      "controlStart": 0,
+      "controlEnd": 0.9,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00001_.png",
+        "seed_iter5_v1_00001_.png",
+        "seed_iter5_v2_00001_.png",
+        "seed_iter5_v3_00001_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 1,
+      "structure": "perspective",
+      "controlStrength": 0.7,
+      "controlStart": 0,
+      "controlEnd": 0.8,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00002_.png",
+        "seed_iter5_v1_00002_.png",
+        "seed_iter5_v2_00002_.png",
+        "seed_iter5_v3_00002_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 2,
+      "structure": "depth layers",
+      "controlStrength": 0.7,
+      "controlStart": 0.1,
+      "controlEnd": 0.9,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.092,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00003_.png",
+        "seed_iter5_v1_00003_.png",
+        "seed_iter5_v2_00003_.png",
+        "seed_iter5_v3_00003_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 3,
+      "structure": "natural depth",
+      "controlStrength": 0.9,
+      "controlStart": 0.2,
+      "controlEnd": 1,
+      "seedStep": 5,
+      "variations": 4,
+      "duration": 14.106,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00004_.png",
+        "seed_iter5_v1_00004_.png",
+        "seed_iter5_v2_00004_.png",
+        "seed_iter5_v3_00004_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 4,
+      "structure": "urban perspective",
+      "controlStrength": 0.7,
+      "controlStart": 0.2,
+      "controlEnd": 1,
+      "seedStep": 1,
+      "variations": 4,
+      "duration": 14.279,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00005_.png",
+        "seed_iter5_v1_00005_.png",
+        "seed_iter5_v2_00005_.png",
+        "seed_iter5_v3_00005_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 5,
+      "structure": "architectural depth",
+      "controlStrength": 0.7,
+      "controlStart": 0.2,
+      "controlEnd": 0.8,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00006_.png",
+        "seed_iter5_v1_00006_.png",
+        "seed_iter5_v2_00006_.png",
+        "seed_iter5_v3_00006_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 6,
+      "structure": "geometric depth",
+      "controlStrength": 0.7,
+      "controlStart": 0,
+      "controlEnd": 1,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00007_.png",
+        "seed_iter5_v1_00007_.png",
+        "seed_iter5_v2_00007_.png",
+        "seed_iter5_v3_00007_.png"
+      ]
+    },
+    {
+      "iter": 5,
+      "i": 7,
+      "structure": "linear perspective",
+      "controlStrength": 0.8,
+      "controlStart": 0,
+      "controlEnd": 0.8,
+      "seedStep": 2,
+      "variations": 4,
+      "duration": 14.107,
+      "success": true,
+      "images": [
+        "seed_iter5_v0_00008_.png",
+        "seed_iter5_v1_00008_.png",
+        "seed_iter5_v2_00008_.png",
+        "seed_iter5_v3_00008_.png"
+      ]
+    }
+  ]
+}

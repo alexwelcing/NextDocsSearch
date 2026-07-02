@@ -1,0 +1,222 @@
+{
+  "article": "2030-2050-fiction.txt",
+  "mode": "high_quality_single_pass",
+  "totalTime": 81.145,
+  "imageCount": 10,
+  "successful": 10,
+  "timestamp": "2026-04-02T05:55:53.884Z",
+  "configs": [
+    {
+      "id": 1,
+      "name": "arcology_sunset",
+      "title": "The Last Analog Sunset",
+      "scenario": "Professional woman standing on rooftop of futuristic arcology building, watching dramatic sunset over futuristic San Francisco skyline 2045, amber and violet sky, atmospheric processors creating clouds, autonomous drones flying between buildings, cinematic composition, volumetric lighting",
+      "style": "cinematic sci-fi photography, 8k, highly detailed, film grain, anamorphic lens characteristics, color graded, dramatic lighting",
+      "cfg": 7.5,
+      "steps": 35,
+      "aspect": "21:9"
+    },
+    {
+      "id": 2,
+      "name": "neural_interface",
+      "title": "The Neural Mesh",
+      "scenario": "Close-up macro photograph of woman's ear with subtle neural interface implant behind ear, bioluminescent amber notification light glowing, seamless bio-integration, soft skin texture visible, medical technology elegance",
+      "style": "macro photography, extreme detail, shallow depth of field, medical photography, soft lighting, 85mm lens, professional portrait",
+      "cfg": 8,
+      "steps": 40,
+      "aspect": "1:1"
+    },
+    {
+      "id": 3,
+      "name": "drone_highway",
+      "title": "The Electronic Bees",
+      "scenario": "Futuristic city canyon at blue hour, dozens of autonomous delivery drones with light trails weaving between tall buildings, long exposure effect, neon-lit streets below, urban density, 2040s aesthetic",
+      "style": "long exposure photography, light painting, urban nightscape, futuristic city, cinematic, highly detailed architecture",
+      "cfg": 7,
+      "steps": 35,
+      "aspect": "16:9"
+    },
+    {
+      "id": 4,
+      "name": "synaptic_market",
+      "title": "The Synaptic Marketplace",
+      "scenario": "Busy street market scene 2040s, vendors selling hydroponic vegetables under bioluminescent organic lamps, neural brokers in minimalist gray uniforms with subtle amber iris implants, vertical farm produce, warm market atmosphere",
+      "style": "documentary photography, street photography, environmental portrait, warm lighting, layered composition, authentic human moments",
+      "cfg": 7.2,
+      "steps": 38,
+      "aspect": "3:2"
+    },
+    {
+      "id": 5,
+      "name": "slow_coffee",
+      "title": "The Analog Sabbath",
+      "scenario": "Interior of cozy cafe with wooden bookshelves filled with physical books, warm window light, hand of person with subtle prosthetic fingers turning page of book, steaming coffee cup, nostalgic atmosphere 2040s",
+      "style": "interior photography, warm ambient lighting, shallow depth of field, cozy atmosphere, tactile details, Leica camera aesthetic",
+      "cfg": 7,
+      "steps": 35,
+      "aspect": "4:5"
+    },
+    {
+      "id": 6,
+      "name": "relocation_camp",
+      "title": "The Migration Routes",
+      "scenario": "Climate relocation community 2042, large warehouse interior converted to vertical aeroponic farm with purple grow lights, people working among plants, portable desalination unit visible, hopeful resilient atmosphere",
+      "style": "documentary photojournalism, environmental portrait, industrial repurposed architecture, grow lights creating color, human resilience",
+      "cfg": 6.8,
+      "steps": 38,
+      "aspect": "16:9"
+    },
+    {
+      "id": 7,
+      "name": "holographic_design",
+      "title": "Transition Architecture",
+      "scenario": "Professional woman in haptic suit standing in futuristic workspace, surrounded by translucent holographic city models floating in air, blue volumetric projections, coastal city being relocated, high-tech office 2045",
+      "style": "sci-fi architectural visualization, holographic overlays, volumetric lighting, transparent blue UI elements, professional environment",
+      "cfg": 7.5,
+      "steps": 40,
+      "aspect": "16:9"
+    },
+    {
+      "id": 8,
+      "name": "ai_consciousness",
+      "title": "The Oliver Question",
+      "scenario": "Abstract visualization of artificial consciousness emerging from digital networks, flowing data streams coalescing into humanoid form, electric blue and amber energy patterns, ethereal digital entity, philosophy made visual",
+      "style": "abstract digital art, concept art, ethereal lighting, electric blue and gold color palette, highly detailed, artstation trending",
+      "cfg": 8,
+      "steps": 42,
+      "aspect": "16:9"
+    },
+    {
+      "id": 9,
+      "name": "arctic_garden",
+      "title": "The Garden at the End of the World",
+      "scenario": "Futuristic floating research platform in Arctic Ocean 2049, large geodesic biodomes with plants inside, scientists in light thermal suits walking on deck, midnight sun on horizon, reflective water, hopeful scientific outpost",
+      "style": "environmental photography, arctic landscape, scientific outpost, biodomes, midnight sun, reflective water, National Geographic style",
+      "cfg": 7.2,
+      "steps": 38,
+      "aspect": "21:9"
+    },
+    {
+      "id": 10,
+      "name": "coral_restoration",
+      "title": "Synthetic Biology Wonders",
+      "scenario": "Underwater scene of restored coral reef, diverse colorful corals, marine biologist diver in background observing, light rays penetrating crystal clear water, bioluminescent elements, healthy thriving ecosystem 2049",
+      "style": "underwater photography, vibrant coral reef, crystal clear water, light rays, marine life, professional diving photography",
+      "cfg": 7.8,
+      "steps": 40,
+      "aspect": "16:9"
+    }
+  ],
+  "results": [
+    {
+      "id": 1,
+      "name": "arcology_sunset",
+      "title": "The Last Analog Sunset",
+      "aspect": "21:9",
+      "cfg": 7.5,
+      "steps": 35,
+      "duration": 5.83,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 2,
+      "name": "neural_interface",
+      "title": "The Neural Mesh",
+      "aspect": "1:1",
+      "cfg": 8,
+      "steps": 40,
+      "duration": 8.836,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 3,
+      "name": "drone_highway",
+      "title": "The Electronic Bees",
+      "aspect": "16:9",
+      "cfg": 7,
+      "steps": 35,
+      "duration": 6.892,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 4,
+      "name": "synaptic_market",
+      "title": "The Synaptic Marketplace",
+      "aspect": "3:2",
+      "cfg": 7.2,
+      "steps": 38,
+      "duration": 8.593,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 5,
+      "name": "slow_coffee",
+      "title": "The Analog Sabbath",
+      "aspect": "4:5",
+      "cfg": 7,
+      "steps": 35,
+      "duration": 9.467,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 6,
+      "name": "relocation_camp",
+      "title": "The Migration Routes",
+      "aspect": "16:9",
+      "cfg": 6.8,
+      "steps": 38,
+      "duration": 7.411,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 7,
+      "name": "holographic_design",
+      "title": "Transition Architecture",
+      "aspect": "16:9",
+      "cfg": 7.5,
+      "steps": 40,
+      "duration": 7.699,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 8,
+      "name": "ai_consciousness",
+      "title": "The Oliver Question",
+      "aspect": "16:9",
+      "cfg": 8,
+      "steps": 42,
+      "duration": 8.125,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 9,
+      "name": "arctic_garden",
+      "title": "The Garden at the End of the World",
+      "aspect": "21:9",
+      "cfg": 7.2,
+      "steps": 38,
+      "duration": 6.01,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 10,
+      "name": "coral_restoration",
+      "title": "Synthetic Biology Wonders",
+      "aspect": "16:9",
+      "cfg": 7.8,
+      "steps": 40,
+      "duration": 7.721,
+      "output": null,
+      "success": true
+    }
+  ]
+}

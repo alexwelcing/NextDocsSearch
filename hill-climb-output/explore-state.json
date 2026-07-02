@@ -1,0 +1,856 @@
+{
+  "iteration": 5,
+  "index": 9,
+  "results": [
+    {
+      "iteration": 1,
+      "index": 0,
+      "prompt": "worm eye view from ground, abandoned industrial machinery, hard midday shadows, broken symmetry tension composition, melancholic solitude mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "worm",
+        "hard",
+        "abandoned",
+        "broken symmetry tension",
+        "melancholic solitude"
+      ],
+      "steps": 21,
+      "cfg": 7,
+      "success": true,
+      "filename": "explore_iter1_00001_.png",
+      "duration": 37.289
+    },
+    {
+      "iteration": 1,
+      "index": 1,
+      "prompt": "split level half underwater, extreme weather phenomena, single source dramatic, circular radial balance composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "split",
+        "single",
+        "extreme",
+        "circular radial balance",
+        "isolated minimal"
+      ],
+      "steps": 23,
+      "cfg": 7.1,
+      "success": true,
+      "filename": "explore_iter1_00002_.png",
+      "duration": 8.23
+    },
+    {
+      "iteration": 1,
+      "index": 2,
+      "prompt": "aerial drone perspective, macro organic textures, practical lights only, symmetrical centered composition, ethereal floating mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "aerial",
+        "practical",
+        "macro",
+        "symmetrical centered",
+        "ethereal floating"
+      ],
+      "steps": 24,
+      "cfg": 7.2,
+      "success": true,
+      "filename": "explore_iter1_00003_.png",
+      "duration": 9.069
+    },
+    {
+      "iteration": 1,
+      "index": 3,
+      "prompt": "extreme low angle looking up, vintage technology closeup, chiaroscuro dramatic shadows, rule of thirds offset composition, serene contemplation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "chiaroscuro",
+        "vintage",
+        "rule of thirds offset",
+        "serene contemplation"
+      ],
+      "steps": 26,
+      "cfg": 7.3,
+      "success": true,
+      "filename": "explore_iter1_00004_.png",
+      "duration": 9.108
+    },
+    {
+      "iteration": 1,
+      "index": 4,
+      "prompt": "extreme closeup macro, architectural decay details, blue hour twilight, layered depth planes composition, tense anticipation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "blue",
+        "architectural",
+        "layered depth planes",
+        "tense anticipation"
+      ],
+      "steps": 27,
+      "cfg": 7.4,
+      "success": true,
+      "filename": "explore_iter1_00005_.png",
+      "duration": 9.345
+    },
+    {
+      "iteration": 1,
+      "index": 5,
+      "prompt": "extreme low angle looking up, natural erosion patterns, blue hour twilight, diagonal dynamic tension composition, gritty raw texture mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "blue",
+        "natural",
+        "diagonal dynamic tension",
+        "gritty raw texture"
+      ],
+      "steps": 29,
+      "cfg": 7.5,
+      "success": true,
+      "filename": "explore_iter1_00006_.png",
+      "duration": 10.076
+    },
+    {
+      "iteration": 1,
+      "index": 6,
+      "prompt": "wide establishing shot, extreme weather phenomena, single source dramatic, rule of thirds offset composition, melancholic solitude mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "wide",
+        "single",
+        "extreme",
+        "rule of thirds offset",
+        "melancholic solitude"
+      ],
+      "steps": 30,
+      "cfg": 7.6,
+      "success": true,
+      "filename": "explore_iter1_00007_.png",
+      "duration": 10.285
+    },
+    {
+      "iteration": 1,
+      "index": 7,
+      "prompt": "dutch angle tilted, natural erosion patterns, single source dramatic, layered depth planes composition, tense anticipation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "dutch",
+        "single",
+        "natural",
+        "layered depth planes",
+        "tense anticipation"
+      ],
+      "steps": 32,
+      "cfg": 7.7,
+      "success": true,
+      "filename": "explore_iter1_00008_.png",
+      "duration": 11.084
+    },
+    {
+      "iteration": 1,
+      "index": 8,
+      "prompt": "high angle bird eye view, urban exploration interiors, soft overcast diffused, diagonal dynamic tension composition, gritty raw texture mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "high",
+        "soft",
+        "urban",
+        "diagonal dynamic tension",
+        "gritty raw texture"
+      ],
+      "steps": 33,
+      "cfg": 7.8,
+      "success": true,
+      "filename": "explore_iter1_00009_.png",
+      "duration": 11.344
+    },
+    {
+      "iteration": 1,
+      "index": 9,
+      "prompt": "worm eye view from ground, architectural decay details, volumetric god rays, diagonal dynamic tension composition, tense anticipation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "worm",
+        "volumetric",
+        "architectural",
+        "diagonal dynamic tension",
+        "tense anticipation"
+      ],
+      "steps": 35,
+      "cfg": 7.9,
+      "success": true,
+      "filename": "explore_iter1_00010_.png",
+      "duration": 12.091
+    },
+    {
+      "iteration": 2,
+      "index": 0,
+      "prompt": "aerial drone perspective, macro organic textures, chiaroscuro dramatic shadows, negative space minimal composition, gritty raw texture mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "aerial",
+        "chiaroscuro",
+        "macro",
+        "negative space minimal",
+        "gritty raw texture"
+      ],
+      "steps": 23,
+      "cfg": 8,
+      "success": true,
+      "filename": "explore_iter2_00001_.png",
+      "duration": 8.205
+    },
+    {
+      "iteration": 2,
+      "index": 1,
+      "prompt": "over the shoulder shot, mechanical clockwork details, neon noir cyberpunk glow, symmetrical centered composition, ethereal floating mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "over",
+        "neon",
+        "mechanical",
+        "symmetrical centered",
+        "ethereal floating"
+      ],
+      "steps": 24,
+      "cfg": 8.1,
+      "success": true,
+      "filename": "explore_iter2_00002_.png",
+      "duration": 8.588
+    },
+    {
+      "iteration": 2,
+      "index": 2,
+      "prompt": "over the shoulder shot, weathered hands holding antique object, hard midday shadows, symmetrical centered composition, serene contemplation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "over",
+        "hard",
+        "weathered",
+        "symmetrical centered",
+        "serene contemplation"
+      ],
+      "steps": 26,
+      "cfg": 8.2,
+      "success": true,
+      "filename": "explore_iter2_00003_.png",
+      "duration": 9.205
+    },
+    {
+      "iteration": 2,
+      "index": 3,
+      "prompt": "dutch angle tilted, weathered hands holding antique object, hard midday shadows, frame within frame composition, oppressive heavy mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "dutch",
+        "hard",
+        "weathered",
+        "frame within frame",
+        "oppressive heavy"
+      ],
+      "steps": 27,
+      "cfg": 8.3,
+      "success": true,
+      "filename": "explore_iter2_00004_.png",
+      "duration": 9.488
+    },
+    {
+      "iteration": 2,
+      "index": 4,
+      "prompt": "dutch angle tilted, macro organic textures, silhouette rim lighting, rule of thirds offset composition, serene contemplation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "dutch",
+        "silhouette",
+        "macro",
+        "rule of thirds offset",
+        "serene contemplation"
+      ],
+      "steps": 29,
+      "cfg": 8.4,
+      "success": true,
+      "filename": "explore_iter2_00005_.png",
+      "duration": 10.119
+    },
+    {
+      "iteration": 2,
+      "index": 5,
+      "prompt": "extreme low angle looking up, extreme weather phenomena, soft overcast diffused, frame within frame composition, tense anticipation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "soft",
+        "extreme",
+        "frame within frame",
+        "tense anticipation"
+      ],
+      "steps": 30,
+      "cfg": 6,
+      "success": true,
+      "filename": "explore_iter2_00006_.png",
+      "duration": 10.326
+    },
+    {
+      "iteration": 2,
+      "index": 6,
+      "prompt": "extreme closeup macro, abandoned industrial machinery, volumetric god rays, rule of thirds offset composition, ethereal floating mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "volumetric",
+        "abandoned",
+        "rule of thirds offset",
+        "ethereal floating"
+      ],
+      "steps": 32,
+      "cfg": 6.1,
+      "success": true,
+      "filename": "explore_iter2_00007_.png",
+      "duration": 11.163
+    },
+    {
+      "iteration": 2,
+      "index": 7,
+      "prompt": "extreme closeup macro, natural erosion patterns, single source dramatic, symmetrical centered composition, ethereal floating mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "single",
+        "natural",
+        "symmetrical centered",
+        "ethereal floating"
+      ],
+      "steps": 33,
+      "cfg": 6.2,
+      "success": true,
+      "filename": "explore_iter2_00008_.png",
+      "duration": 11.306
+    },
+    {
+      "iteration": 2,
+      "index": 8,
+      "prompt": "high angle bird eye view, architectural decay details, practical lights only, golden ratio spiral composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "high",
+        "practical",
+        "architectural",
+        "golden ratio spiral",
+        "isolated minimal"
+      ],
+      "steps": 35,
+      "cfg": 6.3,
+      "success": true,
+      "filename": "explore_iter2_00009_.png",
+      "duration": 12.091
+    },
+    {
+      "iteration": 2,
+      "index": 9,
+      "prompt": "over the shoulder shot, weathered hands holding antique object, single source dramatic, leading lines converging composition, timeless classical mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "over",
+        "single",
+        "weathered",
+        "leading lines converging",
+        "timeless classical"
+      ],
+      "steps": 36,
+      "cfg": 6.4,
+      "success": true,
+      "filename": "explore_iter2_00010_.png",
+      "duration": 12.215
+    },
+    {
+      "iteration": 3,
+      "index": 0,
+      "prompt": "extreme low angle looking up, macro organic textures, volumetric god rays, rule of thirds offset composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "volumetric",
+        "macro",
+        "rule of thirds offset",
+        "isolated minimal"
+      ],
+      "steps": 24,
+      "cfg": 6.5,
+      "success": true,
+      "filename": "explore_iter3_00001_.png",
+      "duration": 9.071
+    },
+    {
+      "iteration": 3,
+      "index": 1,
+      "prompt": "through foreground framing, extreme weather phenomena, golden hour warm sidelight, symmetrical centered composition, timeless classical mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "through",
+        "golden",
+        "extreme",
+        "symmetrical centered",
+        "timeless classical"
+      ],
+      "steps": 26,
+      "cfg": 6.6,
+      "success": true,
+      "filename": "explore_iter3_00002_.png",
+      "duration": 9.238
+    },
+    {
+      "iteration": 3,
+      "index": 2,
+      "prompt": "extreme closeup macro, architectural decay details, golden hour warm sidelight, broken symmetry tension composition, gritty raw texture mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "golden",
+        "architectural",
+        "broken symmetry tension",
+        "gritty raw texture"
+      ],
+      "steps": 27,
+      "cfg": 6.7,
+      "success": true,
+      "filename": "explore_iter3_00003_.png",
+      "duration": 9.544
+    },
+    {
+      "iteration": 3,
+      "index": 3,
+      "prompt": "over the shoulder shot, urban exploration interiors, soft overcast diffused, golden ratio spiral composition, serene contemplation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "over",
+        "soft",
+        "urban",
+        "golden ratio spiral",
+        "serene contemplation"
+      ],
+      "steps": 29,
+      "cfg": 6.8,
+      "success": true,
+      "filename": "explore_iter3_00004_.png",
+      "duration": 10.143
+    },
+    {
+      "iteration": 3,
+      "index": 4,
+      "prompt": "through foreground framing, vintage technology closeup, single source dramatic, diagonal dynamic tension composition, tense anticipation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "through",
+        "single",
+        "vintage",
+        "diagonal dynamic tension",
+        "tense anticipation"
+      ],
+      "steps": 30,
+      "cfg": 6.9,
+      "success": true,
+      "filename": "explore_iter3_00005_.png",
+      "duration": 10.289
+    },
+    {
+      "iteration": 3,
+      "index": 5,
+      "prompt": "high angle bird eye view, natural erosion patterns, soft overcast diffused, frame within frame composition, tense anticipation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "high",
+        "soft",
+        "natural",
+        "frame within frame",
+        "tense anticipation"
+      ],
+      "steps": 32,
+      "cfg": 7,
+      "success": true,
+      "filename": "explore_iter3_00006_.png",
+      "duration": 11.084
+    },
+    {
+      "iteration": 3,
+      "index": 6,
+      "prompt": "extreme low angle looking up, urban exploration interiors, hard midday shadows, negative space minimal composition, timeless classical mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "hard",
+        "urban",
+        "negative space minimal",
+        "timeless classical"
+      ],
+      "steps": 33,
+      "cfg": 7.1,
+      "success": true,
+      "filename": "explore_iter3_00007_.png",
+      "duration": 11.084
+    },
+    {
+      "iteration": 3,
+      "index": 7,
+      "prompt": "worm eye view from ground, mechanical clockwork details, soft overcast diffused, frame within frame composition, oppressive heavy mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "worm",
+        "soft",
+        "mechanical",
+        "frame within frame",
+        "oppressive heavy"
+      ],
+      "steps": 35,
+      "cfg": 7.2,
+      "success": true,
+      "filename": "explore_iter3_00008_.png",
+      "duration": 12.091
+    },
+    {
+      "iteration": 3,
+      "index": 8,
+      "prompt": "extreme low angle looking up, extreme weather phenomena, golden hour warm sidelight, broken symmetry tension composition, melancholic solitude mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "golden",
+        "extreme",
+        "broken symmetry tension",
+        "melancholic solitude"
+      ],
+      "steps": 36,
+      "cfg": 7.3,
+      "success": true,
+      "filename": "explore_iter3_00009_.png",
+      "duration": 12.091
+    },
+    {
+      "iteration": 3,
+      "index": 9,
+      "prompt": "dutch angle tilted,  botanical specimens isolated, chiaroscuro dramatic shadows, negative space minimal composition, nostalgic faded mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "dutch",
+        "chiaroscuro",
+        "",
+        "negative space minimal",
+        "nostalgic faded"
+      ],
+      "steps": 38,
+      "cfg": 7.4,
+      "success": true,
+      "filename": "explore_iter3_00010_.png",
+      "duration": 13.114
+    },
+    {
+      "iteration": 4,
+      "index": 0,
+      "prompt": "extreme low angle looking up, mechanical clockwork details, practical lights only, circular radial balance composition, mysterious obscured mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "practical",
+        "mechanical",
+        "circular radial balance",
+        "mysterious obscured"
+      ],
+      "steps": 26,
+      "cfg": 7.5,
+      "success": true,
+      "filename": "explore_iter4_00001_.png",
+      "duration": 9.069
+    },
+    {
+      "iteration": 4,
+      "index": 1,
+      "prompt": "over the shoulder shot, urban exploration interiors, volumetric god rays, golden ratio spiral composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "over",
+        "volumetric",
+        "urban",
+        "golden ratio spiral",
+        "isolated minimal"
+      ],
+      "steps": 27,
+      "cfg": 7.6,
+      "success": true,
+      "filename": "explore_iter4_00002_.png",
+      "duration": 9.263
+    },
+    {
+      "iteration": 4,
+      "index": 2,
+      "prompt": "extreme low angle looking up, vintage technology closeup, soft overcast diffused, circular radial balance composition, gritty raw texture mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "soft",
+        "vintage",
+        "circular radial balance",
+        "gritty raw texture"
+      ],
+      "steps": 29,
+      "cfg": 7.7,
+      "success": true,
+      "filename": "explore_iter4_00003_.png",
+      "duration": 10.075
+    },
+    {
+      "iteration": 4,
+      "index": 3,
+      "prompt": "wide establishing shot, extreme weather phenomena, volumetric god rays, broken symmetry tension composition, melancholic solitude mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "wide",
+        "volumetric",
+        "extreme",
+        "broken symmetry tension",
+        "melancholic solitude"
+      ],
+      "steps": 30,
+      "cfg": 7.8,
+      "success": true,
+      "filename": "explore_iter4_00004_.png",
+      "duration": 10.177
+    },
+    {
+      "iteration": 4,
+      "index": 4,
+      "prompt": "split level half underwater, extreme weather phenomena, blue hour twilight, circular radial balance composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "split",
+        "blue",
+        "extreme",
+        "circular radial balance",
+        "isolated minimal"
+      ],
+      "steps": 32,
+      "cfg": 7.9,
+      "success": true,
+      "filename": "explore_iter4_00005_.png",
+      "duration": 11.084
+    },
+    {
+      "iteration": 4,
+      "index": 5,
+      "prompt": "worm eye view from ground, architectural decay details, golden hour warm sidelight, broken symmetry tension composition, mysterious obscured mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "worm",
+        "golden",
+        "architectural",
+        "broken symmetry tension",
+        "mysterious obscured"
+      ],
+      "steps": 33,
+      "cfg": 8,
+      "success": true,
+      "filename": "explore_iter4_00006_.png",
+      "duration": 11.083
+    },
+    {
+      "iteration": 4,
+      "index": 6,
+      "prompt": "wide establishing shot, macro organic textures, blue hour twilight, diagonal dynamic tension composition, tense anticipation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "wide",
+        "blue",
+        "macro",
+        "diagonal dynamic tension",
+        "tense anticipation"
+      ],
+      "steps": 35,
+      "cfg": 8.1,
+      "success": true,
+      "filename": "explore_iter4_00007_.png",
+      "duration": 12.091
+    },
+    {
+      "iteration": 4,
+      "index": 7,
+      "prompt": "worm eye view from ground,  botanical specimens isolated, neon noir cyberpunk glow, leading lines converging composition, nostalgic faded mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "worm",
+        "neon",
+        "",
+        "leading lines converging",
+        "nostalgic faded"
+      ],
+      "steps": 36,
+      "cfg": 8.2,
+      "success": true,
+      "filename": "explore_iter4_00008_.png",
+      "duration": 12.095
+    },
+    {
+      "iteration": 4,
+      "index": 8,
+      "prompt": "dutch angle tilted, natural erosion patterns, golden hour warm sidelight, diagonal dynamic tension composition, oppressive heavy mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "dutch",
+        "golden",
+        "natural",
+        "diagonal dynamic tension",
+        "oppressive heavy"
+      ],
+      "steps": 38,
+      "cfg": 8.3,
+      "success": true,
+      "filename": "explore_iter4_00009_.png",
+      "duration": 13.098
+    },
+    {
+      "iteration": 4,
+      "index": 9,
+      "prompt": "wide establishing shot, mechanical clockwork details, silhouette rim lighting, circular radial balance composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "wide",
+        "silhouette",
+        "mechanical",
+        "circular radial balance",
+        "isolated minimal"
+      ],
+      "steps": 39,
+      "cfg": 8.4,
+      "success": true,
+      "filename": "explore_iter4_00010_.png",
+      "duration": 13.099
+    },
+    {
+      "iteration": 5,
+      "index": 0,
+      "prompt": "worm eye view from ground, extreme weather phenomena, single source dramatic, frame within frame composition, timeless classical mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "worm",
+        "single",
+        "extreme",
+        "frame within frame",
+        "timeless classical"
+      ],
+      "steps": 27,
+      "cfg": 6,
+      "success": true,
+      "filename": "explore_iter5_00001_.png",
+      "duration": 9.272
+    },
+    {
+      "iteration": 5,
+      "index": 1,
+      "prompt": "high angle bird eye view, extreme weather phenomena, chiaroscuro dramatic shadows, symmetrical centered composition, nostalgic faded mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "high",
+        "chiaroscuro",
+        "extreme",
+        "symmetrical centered",
+        "nostalgic faded"
+      ],
+      "steps": 29,
+      "cfg": 6.1,
+      "success": true,
+      "filename": "explore_iter5_00002_.png",
+      "duration": 10.076
+    },
+    {
+      "iteration": 5,
+      "index": 2,
+      "prompt": "aerial drone perspective,  botanical specimens isolated, golden hour warm sidelight, layered depth planes composition, oppressive heavy mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "aerial",
+        "golden",
+        "",
+        "layered depth planes",
+        "oppressive heavy"
+      ],
+      "steps": 30,
+      "cfg": 6.2,
+      "success": true,
+      "filename": "explore_iter5_00003_.png",
+      "duration": 10.161
+    },
+    {
+      "iteration": 5,
+      "index": 3,
+      "prompt": "through foreground framing, mechanical clockwork details, silhouette rim lighting, negative space minimal composition, oppressive heavy mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "through",
+        "silhouette",
+        "mechanical",
+        "negative space minimal",
+        "oppressive heavy"
+      ],
+      "steps": 32,
+      "cfg": 6.3,
+      "success": true,
+      "filename": "explore_iter5_00004_.png",
+      "duration": 11.083
+    },
+    {
+      "iteration": 5,
+      "index": 4,
+      "prompt": "dutch angle tilted,  botanical specimens isolated, volumetric god rays, frame within frame composition, nostalgic faded mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "dutch",
+        "volumetric",
+        "",
+        "frame within frame",
+        "nostalgic faded"
+      ],
+      "steps": 33,
+      "cfg": 6.4,
+      "success": true,
+      "filename": "explore_iter5_00005_.png",
+      "duration": 11.084
+    },
+    {
+      "iteration": 5,
+      "index": 5,
+      "prompt": "high angle bird eye view, abandoned industrial machinery, chiaroscuro dramatic shadows, symmetrical centered composition, serene contemplation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "high",
+        "chiaroscuro",
+        "abandoned",
+        "symmetrical centered",
+        "serene contemplation"
+      ],
+      "steps": 35,
+      "cfg": 6.5,
+      "success": true,
+      "filename": "explore_iter5_00006_.png",
+      "duration": 12.092
+    },
+    {
+      "iteration": 5,
+      "index": 6,
+      "prompt": "over the shoulder shot, macro organic textures, single source dramatic, golden ratio spiral composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "over",
+        "single",
+        "macro",
+        "golden ratio spiral",
+        "isolated minimal"
+      ],
+      "steps": 36,
+      "cfg": 6.6,
+      "success": true,
+      "filename": "explore_iter5_00007_.png",
+      "duration": 12.091
+    },
+    {
+      "iteration": 5,
+      "index": 7,
+      "prompt": "extreme closeup macro, macro organic textures, silhouette rim lighting, rule of thirds offset composition, serene contemplation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "silhouette",
+        "macro",
+        "rule of thirds offset",
+        "serene contemplation"
+      ],
+      "steps": 38,
+      "cfg": 6.7,
+      "success": true,
+      "filename": "explore_iter5_00008_.png",
+      "duration": 13.099
+    },
+    {
+      "iteration": 5,
+      "index": 8,
+      "prompt": "extreme low angle looking up, vintage technology closeup, hard midday shadows, symmetrical centered composition, serene contemplation mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "extreme",
+        "hard",
+        "vintage",
+        "symmetrical centered",
+        "serene contemplation"
+      ],
+      "steps": 39,
+      "cfg": 6.8,
+      "success": true,
+      "filename": "explore_iter5_00009_.png",
+      "duration": 13.197
+    },
+    {
+      "iteration": 5,
+      "index": 9,
+      "prompt": "dutch angle tilted, mechanical clockwork details, chiaroscuro dramatic shadows, golden ratio spiral composition, isolated minimal mood, photorealistic, cinematic, 8k, highly detailed",
+      "tags": [
+        "dutch",
+        "chiaroscuro",
+        "mechanical",
+        "golden ratio spiral",
+        "isolated minimal"
+      ],
+      "steps": 41,
+      "cfg": 6.9,
+      "success": true,
+      "filename": "explore_iter5_00010_.png",
+      "duration": 14.106
+    }
+  ]
+}

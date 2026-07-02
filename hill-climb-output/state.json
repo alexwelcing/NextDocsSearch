@@ -1,0 +1,511 @@
+{
+  "started": "2026-04-02T03:11:51.670Z",
+  "currentIteration": 5,
+  "currentIndex": 9,
+  "results": [
+    {
+      "iteration": 1,
+      "index": 0,
+      "prompt": "rooftop garden golden hour lavender plants soft am",
+      "steps": 21,
+      "cfg": 6,
+      "success": true,
+      "filename": "hillclimb_iter1_00001_.png",
+      "duration": 8.078
+    },
+    {
+      "iteration": 1,
+      "index": 1,
+      "prompt": "software developer computer dim room 3am monitor g",
+      "steps": 22,
+      "cfg": 6.2,
+      "success": true,
+      "filename": "hillclimb_iter1_00002_.png",
+      "duration": 8.059
+    },
+    {
+      "iteration": 1,
+      "index": 2,
+      "prompt": "night janitor research laboratory corridor 2am flu",
+      "steps": 24,
+      "cfg": 6.4,
+      "success": true,
+      "filename": "hillclimb_iter1_00003_.png",
+      "duration": 8.476
+    },
+    {
+      "iteration": 1,
+      "index": 3,
+      "prompt": "blacksmith forge hammer glowing steel sparks tradi",
+      "steps": 25,
+      "cfg": 6.6,
+      "success": true,
+      "filename": "hillclimb_iter1_00004_.png",
+      "duration": 9.067
+    },
+    {
+      "iteration": 1,
+      "index": 4,
+      "prompt": "children wooden blocks crayons natural light warm ",
+      "steps": 26,
+      "cfg": 6.8,
+      "success": true,
+      "filename": "hillclimb_iter1_00005_.png",
+      "duration": 9.067
+    },
+    {
+      "iteration": 1,
+      "index": 5,
+      "prompt": "radiologist reading CT scan 2am medical monitor bl",
+      "steps": 28,
+      "cfg": 7,
+      "success": true,
+      "filename": "hillclimb_iter1_00006_.png",
+      "duration": 10.091
+    },
+    {
+      "iteration": 1,
+      "index": 6,
+      "prompt": "translator desk window harbor fog warm interior ph",
+      "steps": 29,
+      "cfg": 7.2,
+      "success": true,
+      "filename": "hillclimb_iter1_00007_.png",
+      "duration": 10.075
+    },
+    {
+      "iteration": 1,
+      "index": 7,
+      "prompt": "HR director corporate conference room natural ligh",
+      "steps": 30,
+      "cfg": 7.4,
+      "success": true,
+      "filename": "hillclimb_iter1_00008_.png",
+      "duration": 10.257
+    },
+    {
+      "iteration": 1,
+      "index": 8,
+      "prompt": "young apprentice blacksmithing forge fire mentor g",
+      "steps": 32,
+      "cfg": 7.6,
+      "success": true,
+      "filename": "hillclimb_iter1_00009_.png",
+      "duration": 11.084
+    },
+    {
+      "iteration": 1,
+      "index": 9,
+      "prompt": "documentary photographer camera research facility ",
+      "steps": 33,
+      "cfg": 7.8,
+      "success": true,
+      "filename": "hillclimb_iter1_00010_.png",
+      "duration": 11.241
+    },
+    {
+      "iteration": 2,
+      "index": 0,
+      "prompt": "rooftop garden golden hour lavender plants soft am",
+      "steps": 22,
+      "cfg": 6,
+      "success": true,
+      "filename": "hillclimb_iter2_00001_.png",
+      "duration": 8.06
+    },
+    {
+      "iteration": 2,
+      "index": 1,
+      "prompt": "software developer computer dim room 3am monitor g",
+      "steps": 24,
+      "cfg": 6.2,
+      "success": true,
+      "filename": "hillclimb_iter2_00002_.png",
+      "duration": 8.439
+    },
+    {
+      "iteration": 2,
+      "index": 2,
+      "prompt": "night janitor research laboratory corridor 2am flu",
+      "steps": 25,
+      "cfg": 6.4,
+      "success": true,
+      "filename": "hillclimb_iter2_00003_.png",
+      "duration": 9.068
+    },
+    {
+      "iteration": 2,
+      "index": 3,
+      "prompt": "blacksmith forge hammer glowing steel sparks tradi",
+      "steps": 26,
+      "cfg": 6.6,
+      "success": true,
+      "filename": "hillclimb_iter2_00004_.png",
+      "duration": 9.067
+    },
+    {
+      "iteration": 2,
+      "index": 4,
+      "prompt": "children wooden blocks crayons natural light warm ",
+      "steps": 28,
+      "cfg": 6.8,
+      "success": true,
+      "filename": "hillclimb_iter2_00005_.png",
+      "duration": 10.088
+    },
+    {
+      "iteration": 2,
+      "index": 5,
+      "prompt": "radiologist reading CT scan 2am medical monitor bl",
+      "steps": 29,
+      "cfg": 7,
+      "success": true,
+      "filename": "hillclimb_iter2_00006_.png",
+      "duration": 10.158
+    },
+    {
+      "iteration": 2,
+      "index": 6,
+      "prompt": "translator desk window harbor fog warm interior ph",
+      "steps": 30,
+      "cfg": 7.2,
+      "success": true,
+      "filename": "hillclimb_iter2_00007_.png",
+      "duration": 10.242
+    },
+    {
+      "iteration": 2,
+      "index": 7,
+      "prompt": "HR director corporate conference room natural ligh",
+      "steps": 32,
+      "cfg": 7.4,
+      "success": true,
+      "filename": "hillclimb_iter2_00008_.png",
+      "duration": 11.083
+    },
+    {
+      "iteration": 2,
+      "index": 8,
+      "prompt": "young apprentice blacksmithing forge fire mentor g",
+      "steps": 33,
+      "cfg": 7.6,
+      "success": true,
+      "filename": "hillclimb_iter2_00009_.png",
+      "duration": 11.083
+    },
+    {
+      "iteration": 2,
+      "index": 9,
+      "prompt": "documentary photographer camera research facility ",
+      "steps": 34,
+      "cfg": 7.8,
+      "success": true,
+      "filename": "hillclimb_iter2_00010_.png",
+      "duration": 11.336
+    },
+    {
+      "iteration": 3,
+      "index": 0,
+      "prompt": "rooftop garden golden hour lavender plants soft am",
+      "steps": 24,
+      "cfg": 6,
+      "success": true,
+      "filename": "hillclimb_iter3_00001_.png",
+      "duration": 9.067
+    },
+    {
+      "iteration": 3,
+      "index": 1,
+      "prompt": "software developer computer dim room 3am monitor g",
+      "steps": 25,
+      "cfg": 6.2,
+      "success": true,
+      "filename": "hillclimb_iter3_00002_.png",
+      "duration": 11.083
+    },
+    {
+      "iteration": 3,
+      "index": 2,
+      "prompt": "night janitor research laboratory corridor 2am flu",
+      "steps": 26,
+      "cfg": 6.4,
+      "success": true,
+      "filename": "hillclimb_iter3_00003_.png",
+      "duration": 10.077
+    },
+    {
+      "iteration": 3,
+      "index": 3,
+      "prompt": "blacksmith forge hammer glowing steel sparks tradi",
+      "steps": 28,
+      "cfg": 6.6,
+      "success": true,
+      "filename": "hillclimb_iter3_00004_.png",
+      "duration": 10.076
+    },
+    {
+      "iteration": 3,
+      "index": 4,
+      "prompt": "children wooden blocks crayons natural light warm ",
+      "steps": 29,
+      "cfg": 6.8,
+      "success": true,
+      "filename": "hillclimb_iter3_00005_.png",
+      "duration": 10.233
+    },
+    {
+      "iteration": 3,
+      "index": 5,
+      "prompt": "radiologist reading CT scan 2am medical monitor bl",
+      "steps": 30,
+      "cfg": 7,
+      "success": true,
+      "filename": "hillclimb_iter3_00006_.png",
+      "duration": 10.511
+    },
+    {
+      "iteration": 3,
+      "index": 6,
+      "prompt": "translator desk window harbor fog warm interior ph",
+      "steps": 32,
+      "cfg": 7.2,
+      "success": true,
+      "filename": "hillclimb_iter3_00007_.png",
+      "duration": 11.086
+    },
+    {
+      "iteration": 3,
+      "index": 7,
+      "prompt": "HR director corporate conference room natural ligh",
+      "steps": 33,
+      "cfg": 7.4,
+      "success": true,
+      "filename": "hillclimb_iter3_00008_.png",
+      "duration": 11.339
+    },
+    {
+      "iteration": 3,
+      "index": 8,
+      "prompt": "young apprentice blacksmithing forge fire mentor g",
+      "steps": 34,
+      "cfg": 7.6,
+      "success": true,
+      "filename": "hillclimb_iter3_00009_.png",
+      "duration": 12.09
+    },
+    {
+      "iteration": 3,
+      "index": 9,
+      "prompt": "documentary photographer camera research facility ",
+      "steps": 36,
+      "cfg": 7.8,
+      "success": true,
+      "filename": "hillclimb_iter3_00010_.png",
+      "duration": 12.091
+    },
+    {
+      "iteration": 4,
+      "index": 0,
+      "prompt": "rooftop garden golden hour lavender plants soft am",
+      "steps": 25,
+      "cfg": 6,
+      "success": true,
+      "filename": "hillclimb_iter4_00001_.png",
+      "duration": 9.07
+    },
+    {
+      "iteration": 4,
+      "index": 1,
+      "prompt": "software developer computer dim room 3am monitor g",
+      "steps": 26,
+      "cfg": 6.2,
+      "success": true,
+      "filename": "hillclimb_iter4_00002_.png",
+      "duration": 9.067
+    },
+    {
+      "iteration": 4,
+      "index": 2,
+      "prompt": "night janitor research laboratory corridor 2am flu",
+      "steps": 28,
+      "cfg": 6.4,
+      "success": true,
+      "filename": "hillclimb_iter4_00003_.png",
+      "duration": 10.078
+    },
+    {
+      "iteration": 4,
+      "index": 3,
+      "prompt": "blacksmith forge hammer glowing steel sparks tradi",
+      "steps": 29,
+      "cfg": 6.6,
+      "success": true,
+      "filename": "hillclimb_iter4_00004_.png",
+      "duration": 10.076
+    },
+    {
+      "iteration": 4,
+      "index": 4,
+      "prompt": "children wooden blocks crayons natural light warm ",
+      "steps": 30,
+      "cfg": 6.8,
+      "success": true,
+      "filename": "hillclimb_iter4_00005_.png",
+      "duration": 10.24
+    },
+    {
+      "iteration": 4,
+      "index": 5,
+      "prompt": "radiologist reading CT scan 2am medical monitor bl",
+      "steps": 32,
+      "cfg": 7,
+      "success": true,
+      "filename": "hillclimb_iter4_00006_.png",
+      "duration": 11.084
+    },
+    {
+      "iteration": 4,
+      "index": 6,
+      "prompt": "translator desk window harbor fog warm interior ph",
+      "steps": 33,
+      "cfg": 7.2,
+      "success": true,
+      "filename": "hillclimb_iter4_00007_.png",
+      "duration": 11.082
+    },
+    {
+      "iteration": 4,
+      "index": 7,
+      "prompt": "HR director corporate conference room natural ligh",
+      "steps": 34,
+      "cfg": 7.4,
+      "success": true,
+      "filename": "hillclimb_iter4_00008_.png",
+      "duration": 11.464
+    },
+    {
+      "iteration": 4,
+      "index": 8,
+      "prompt": "young apprentice blacksmithing forge fire mentor g",
+      "steps": 36,
+      "cfg": 7.6,
+      "success": true,
+      "filename": "hillclimb_iter4_00009_.png",
+      "duration": 12.194
+    },
+    {
+      "iteration": 4,
+      "index": 9,
+      "prompt": "documentary photographer camera research facility ",
+      "steps": 37,
+      "cfg": 7.8,
+      "success": true,
+      "filename": "hillclimb_iter4_00010_.png",
+      "duration": 12.528
+    },
+    {
+      "iteration": 5,
+      "index": 0,
+      "prompt": "rooftop garden golden hour lavender plants soft am",
+      "steps": 26,
+      "cfg": 6,
+      "success": true,
+      "filename": "hillclimb_iter5_00001_.png",
+      "duration": 10.089
+    },
+    {
+      "iteration": 5,
+      "index": 1,
+      "prompt": "software developer computer dim room 3am monitor g",
+      "steps": 28,
+      "cfg": 6.2,
+      "success": true,
+      "filename": "hillclimb_iter5_00002_.png",
+      "duration": 11.334
+    },
+    {
+      "iteration": 5,
+      "index": 2,
+      "prompt": "night janitor research laboratory corridor 2am flu",
+      "steps": 29,
+      "cfg": 6.4,
+      "success": true,
+      "filename": "hillclimb_iter5_00003_.png",
+      "duration": 21.266
+    },
+    {
+      "iteration": 5,
+      "index": 3,
+      "prompt": "blacksmith forge hammer glowing steel sparks tradi",
+      "steps": 30,
+      "cfg": 6.6,
+      "success": true,
+      "filename": "hillclimb_iter5_00004_.png",
+      "duration": 17.129
+    },
+    {
+      "iteration": 5,
+      "index": 4,
+      "prompt": "children wooden blocks crayons natural light warm ",
+      "steps": 32,
+      "cfg": 6.8,
+      "success": true,
+      "filename": "hillclimb_iter5_00005_.png",
+      "duration": 22.48
+    },
+    {
+      "iteration": 5,
+      "index": 5,
+      "prompt": "radiologist reading CT scan 2am medical monitor bl",
+      "steps": 33,
+      "cfg": 7,
+      "success": true,
+      "filename": "hillclimb_iter5_00006_.png",
+      "duration": 15.109
+    },
+    {
+      "iteration": 5,
+      "index": 6,
+      "prompt": "translator desk window harbor fog warm interior ph",
+      "steps": 34,
+      "cfg": 7.2,
+      "success": true,
+      "filename": "hillclimb_iter5_00007_.png",
+      "duration": 12.503
+    },
+    {
+      "iteration": 5,
+      "index": 7,
+      "prompt": "HR director corporate conference room natural ligh",
+      "steps": 36,
+      "cfg": 7.4,
+      "success": true,
+      "filename": "hillclimb_iter5_00008_.png",
+      "duration": 19.428
+    },
+    {
+      "iteration": 5,
+      "index": 8,
+      "prompt": "young apprentice blacksmithing forge fire mentor g",
+      "steps": 37,
+      "cfg": 7.6,
+      "success": true,
+      "filename": "hillclimb_iter5_00009_.png",
+      "duration": 16.118
+    },
+    {
+      "iteration": 5,
+      "index": 9,
+      "prompt": "documentary photographer camera research facility ",
+      "steps": 38,
+      "cfg": 7.8,
+      "success": true,
+      "filename": "hillclimb_iter5_00010_.png",
+      "duration": 13.097
+    }
+  ],
+  "modelConfig": {
+    "checkpoint": "juggernautXL_ragnarokBy.safetensors",
+    "type": "sdxl"
+  }
+}

@@ -10,16 +10,13 @@ const nextConfig = {
 
   // Performance optimizations
   compress: true, // Enable gzip compression
-  
-  // Speed up static generation - don't wait for all pages
-  staticPageGenerationTimeout: 60,
 
-  // Image optimization - reduced sizes for faster builds
+  // Image optimization
   images: {
-    formats: ['image/webp'], // Remove avif - slower to generate
-    deviceSizes: [640, 1080, 1920], // Reduced from 8 sizes to 3
-    imageSizes: [64, 256, 384],
-    minimumCacheTTL: 86400, // 24 hours
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -27,11 +24,7 @@ const nextConfig = {
 
   // Compiler optimizations
   compiler: {
-    styledComponents: {
-      ssr: true,
-      displayName: true,
-      fileName: true,
-    },
+    styledComponents: true,
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
@@ -39,12 +32,22 @@ const nextConfig = {
 
   // Experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', 'react-icons', '@react-three/fiber', '@react-three/drei', 'three'],
-    // Use webpack build worker for parallel processing
-    webpackBuildWorker: true,
-    // Parallelize server compilation
-    parallelServerCompiles: true,
-    parallelServerBuildTraces: true,
+    optimizePackageImports: ['lucide-react', '@react-three/fiber', '@react-three/drei'],
+  },
+  
+  // Bun runtime optimizations (moved from experimental in Next.js 15)
+  serverExternalPackages: ['sharp'],
+  
+  // Bun-specific optimizations
+  webpack: (config, { isServer }) => {
+    // Optimize for Bun runtime
+    if (process.env.BUN_RUNTIME) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'node:stream': 'stream-browserify',
+      };
+    }
+    return config;
   },
 
   // Prevent Vercel from bundling public/ assets into serverless functions
@@ -71,41 +74,12 @@ const nextConfig = {
         destination: '/articles',
         permanent: true,
       },
-      // Fix for renamed article: ai-kill-switch → ai-kill-switch-postmortem
-      {
-        source: '/articles/ai-kill-switch',
-        destination: '/articles/ai-kill-switch-postmortem',
-        permanent: true,
-      },
-      // Redirect old hire-me page to current-work
-      {
-        source: '/hire-me',
-        destination: '/current-work',
-        permanent: true,
-      },
     ];
   },
 
   // Headers for caching and security
   async headers() {
-    const securityHeaders = [
-      { key: 'X-Frame-Options', value: 'DENY' },
-      { key: 'X-Content-Type-Options', value: 'nosniff' },
-      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-      { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-    ];
-
     return [
-      {
-        source: '/:path*',
-        headers: securityHeaders,
-      },
-      {
-        source: '/api/:path*',
-        headers: [
-          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
-        ],
-      },
       {
         source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
         headers: [

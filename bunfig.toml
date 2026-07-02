@@ -1,0 +1,23 @@
+# Bun Configuration for NextDocsSearch Film Bridge
+
+[install]
+# Use exact versions for reproducibility
+exact = true
+
+[run]
+# Auto-install dependencies when running scripts
+auto-install = false
+
+[test]
+# Test configuration
+coverage = true
+
+# Environment-specific settings
+[env]
+NEXT_TELEMETRY_DISABLED = "1"
+NODE_ENV = "development"
+
+# Windows-specific settings (Bun on Windows is experimental)
+[windows]
+# Use native Windows APIs where possible
+native = true

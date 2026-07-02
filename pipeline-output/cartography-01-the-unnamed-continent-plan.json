@@ -1,0 +1,104 @@
+{
+  "articleSlug": "cartography-01-the-unnamed-continent",
+  "articleType": "general",
+  "totalClips": 6,
+  "estimatedDurationS": 42,
+  "hookLine": {
+    "text": "Amara was explaining her discovery over pepper soup — trying to simplify it, failing — when Adaeze said: \"So it's like finding a continent that was always there but nobody had a boat.\"",
+    "score": 3,
+    "sectionHeading": "Introduction",
+    "reasons": [
+      "expresses risk/warning/high stakes"
+    ]
+  },
+  "closeLine": {
+    "text": "Read the full article: The Unnamed Continent: Mapping the Space Between Minds",
+    "score": 0,
+    "sectionHeading": "",
+    "reasons": [
+      "fallback to CTA"
+    ]
+  },
+  "clips": [
+    {
+      "sceneId": "S01_hook",
+      "clipIndex": 0,
+      "role": "hook",
+      "durationS": 6,
+      "captionText": "Amara was explaining her discovery over pepper soup — trying to simplify it, failing — when Adaeze said: \"So it's like finding a continent that was always there but nobody had a boat.\"",
+      "voiceoverText": "Amara was explaining her discovery over pepper soup — trying to simplify it, failing — when Adaeze said: \"So it's like finding a continent that was always there but nobody had a boat.\"",
+      "sourceSection": "Introduction",
+      "sourceTextSpan": "# The Unnamed Continent",
+      "ltxMode": "T2V",
+      "promptTemplate": "hook"
+    },
+    {
+      "sceneId": "S02_why_it_matters",
+      "clipIndex": 1,
+      "role": "why_it_matters",
+      "durationS": 7,
+      "captionText": "# The Unnamed Continent",
+      "voiceoverText": "# The Unnamed Continent",
+      "sourceSection": "Introduction",
+      "sourceTextSpan": "# The Unnamed Continent",
+      "ltxMode": "T2V",
+      "promptTemplate": "why_it_matters"
+    },
+    {
+      "sceneId": "S03_key_concept",
+      "clipIndex": 2,
+      "role": "key_concept",
+      "durationS": 7,
+      "captionText": "# The Unnamed Continent",
+      "voiceoverText": "# The Unnamed Continent",
+      "sourceSection": "Introduction",
+      "sourceTextSpan": "# The Unnamed Continent",
+      "ltxMode": "T2V",
+      "promptTemplate": "key_concept"
+    },
+    {
+      "sceneId": "S04_example",
+      "clipIndex": 3,
+      "role": "example",
+      "durationS": 7,
+      "captionText": "# The Unnamed Continent",
+      "voiceoverText": "# The Unnamed Continent",
+      "sourceSection": "Introduction",
+      "sourceTextSpan": "# The Unnamed Continent",
+      "ltxMode": "T2V",
+      "promptTemplate": "example"
+    },
+    {
+      "sceneId": "S05_recommendation",
+      "clipIndex": 4,
+      "role": "recommendation",
+      "durationS": 7,
+      "captionText": "# The Unnamed Continent",
+      "voiceoverText": "# The Unnamed Continent",
+      "sourceSection": "Introduction",
+      "sourceTextSpan": "# The Unnamed Continent",
+      "ltxMode": "T2V",
+      "promptTemplate": "recommendation"
+    },
+    {
+      "sceneId": "S06_cta",
+      "clipIndex": 5,
+      "role": "cta",
+      "durationS": 8,
+      "captionText": "Read the full article at alexwelcing.com/articles/cartography-01-the-unnamed-continent",
+      "voiceoverText": "Read the full article: The Unnamed Continent: Mapping the Space Between Minds",
+      "sourceSection": "Introduction",
+      "sourceTextSpan": "# The Unnamed Continent",
+      "ltxMode": "T2V",
+      "promptTemplate": "cta"
+    }
+  ],
+  "voiceoverScript": [
+    "[S01_hook] Amara was explaining her discovery over pepper soup — trying to simplify it, failing — when Adaeze said: \"So it's like finding a continent that was always there but nobody had a boat.\"",
+    "[S02_why_it_matters] # The Unnamed Continent",
+    "[S03_key_concept] # The Unnamed Continent",
+    "[S04_example] # The Unnamed Continent",
+    "[S05_recommendation] # The Unnamed Continent",
+    "[S06_cta] Read the full article: The Unnamed Continent: Mapping the Space Between Minds"
+  ]
+}

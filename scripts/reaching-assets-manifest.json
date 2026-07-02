@@ -1,0 +1,359 @@
+{
+  "generated": "2026-04-02T07:15:09.646Z",
+  "total": 31,
+  "success": 0,
+  "failed": 31,
+  "duration": "0.3 minutes",
+  "categories": [
+    "environment",
+    "abstract",
+    "artifact",
+    "technology",
+    "symbolic",
+    "temporal",
+    "emotional"
+  ],
+  "assets": [
+    {
+      "id": "landscape-cognitive-boundary-01",
+      "category": "environment",
+      "filename": "asset_landscape-cognitive-boundary-01_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "landscape-cognitive-boundary-02",
+      "category": "environment",
+      "filename": "asset_landscape-cognitive-boundary-02_00001_.png",
+      "params": {
+        "cfg": 7.5,
+        "steps": 42,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "landscape-delft-institute",
+      "category": "environment",
+      "filename": "asset_landscape-delft-institute_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "landscape-future-city-2029",
+      "category": "environment",
+      "filename": "asset_landscape-future-city-2029_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "landscape-future-city-2045",
+      "category": "environment",
+      "filename": "asset_landscape-future-city-2045_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "landscape-norwegian-coast",
+      "category": "environment",
+      "filename": "asset_landscape-norwegian-coast_00001_.png",
+      "params": {
+        "cfg": 7.2,
+        "steps": 40,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "abstract-threshold-moment",
+      "category": "abstract",
+      "filename": "asset_abstract-threshold-moment_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 832,
+        "height": 1024
+      }
+    },
+    {
+      "id": "abstract-human-ai-merge",
+      "category": "abstract",
+      "filename": "asset_abstract-human-ai-merge_00001_.png",
+      "params": {
+        "cfg": 7.5,
+        "steps": 42,
+        "width": 1024,
+        "height": 1024
+      }
+    },
+    {
+      "id": "abstract-orphaned-gestures",
+      "category": "abstract",
+      "filename": "asset_abstract-orphaned-gestures_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "abstract-vocational-grief",
+      "category": "abstract",
+      "filename": "asset_abstract-vocational-grief_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "object-blank-map",
+      "category": "artifact",
+      "filename": "asset_object-blank-map_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "object-pocket-notebook",
+      "category": "artifact",
+      "filename": "asset_object-pocket-notebook_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "object-framed-certificate",
+      "category": "artifact",
+      "filename": "asset_object-framed-certificate_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 832,
+        "height": 1024
+      }
+    },
+    {
+      "id": "object-blacksmith-tools",
+      "category": "artifact",
+      "filename": "asset_object-blacksmith-tools_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "object-handwritten-letters",
+      "category": "artifact",
+      "filename": "asset_object-handwritten-letters_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "object-recording-equipment",
+      "category": "artifact",
+      "filename": "asset_object-recording-equipment_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "tech-neural-interface",
+      "category": "technology",
+      "filename": "asset_tech-neural-interface_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "tech-ai-terminal",
+      "category": "technology",
+      "filename": "asset_tech-ai-terminal_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "tech-cognitive-mapping",
+      "category": "technology",
+      "filename": "asset_tech-cognitive-mapping_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "tech-data-center",
+      "category": "technology",
+      "filename": "asset_tech-data-center_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "symbolic-reaching-hands",
+      "category": "symbolic",
+      "filename": "asset_symbolic-reaching-hands_00001_.png",
+      "params": {
+        "cfg": 7.5,
+        "steps": 42,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "symbolic-last-handshake",
+      "category": "symbolic",
+      "filename": "asset_symbolic-last-handshake_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "symbolic-competence-callus",
+      "category": "symbolic",
+      "filename": "asset_symbolic-competence-callus_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "symbolic-silence-presence",
+      "category": "symbolic",
+      "filename": "asset_symbolic-silence-presence_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "temporal-amber-dusk",
+      "category": "temporal",
+      "filename": "asset_temporal-amber-dusk_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "temporal-blue-hour",
+      "category": "temporal",
+      "filename": "asset_temporal-blue-hour_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "temporal-long-passage",
+      "category": "temporal",
+      "filename": "asset_temporal-long-passage_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 576
+      }
+    },
+    {
+      "id": "emotion-vocational-grief",
+      "category": "emotional",
+      "filename": "asset_emotion-vocational-grief_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "emotion-discovery-wonder",
+      "category": "emotional",
+      "filename": "asset_emotion-discovery-wonder_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "emotion-intergenerational",
+      "category": "emotional",
+      "filename": "asset_emotion-intergenerational_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "id": "emotion-peaceful-coexistence",
+      "category": "emotional",
+      "filename": "asset_emotion-peaceful-coexistence_00001_.png",
+      "params": {
+        "cfg": 7,
+        "steps": 38,
+        "width": 1024,
+        "height": 768
+      }
+    }
+  ]
+}

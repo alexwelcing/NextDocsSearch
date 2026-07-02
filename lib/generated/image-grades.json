@@ -1,0 +1,3006 @@
+{
+  "version": "1.0",
+  "updatedAt": "2026-04-02T15:55:03.236Z",
+  "entries": {
+    "post-scarcity-collapse-2058": {
+      "slug": "post-scarcity-collapse-2058",
+      "filename": "post-scarcity-collapse-2058.jpg",
+      "generatedAt": "2026-04-02T15:54:35.221Z",
+      "jobId": "05a50593-9d2d-4028-9680-d5127f81666d",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1743489,
+          "sharpness": 35.41,
+          "contrast": 1,
+          "saturationMean": 0.16,
+          "brightnessMean": 70,
+          "colorVariety": 90
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "technological-singularity-aftermath-2058": {
+      "slug": "technological-singularity-aftermath-2058",
+      "filename": "technological-singularity-aftermath-2058.jpg",
+      "generatedAt": "2026-04-02T15:54:49.222Z",
+      "jobId": "61a5024b-5194-47b1-a47e-c42667009fdf",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1752466,
+          "sharpness": 44.55,
+          "contrast": 1,
+          "saturationMean": 0.27,
+          "brightnessMean": 68,
+          "colorVariety": 133
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "human-ai-merger-identity-crisis-2057": {
+      "slug": "human-ai-merger-identity-crisis-2057",
+      "filename": "human-ai-merger-identity-crisis-2057.jpg",
+      "generatedAt": "2026-04-02T15:55:03.232Z",
+      "jobId": "d801f1af-4483-4699-843f-487405db39bc",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1601363,
+          "sharpness": 39.17,
+          "contrast": 1,
+          "saturationMean": 0.26,
+          "brightnessMean": 61,
+          "colorVariety": 130
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "agi-alignment-failure-2057": {
+      "slug": "agi-alignment-failure-2057",
+      "filename": "agi-alignment-failure-2057.jpg",
+      "generatedAt": "2026-04-02T15:49:31.691Z",
+      "jobId": "781ae3ca-37c0-4437-8fac-c351a4f105f5",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1494431,
+          "sharpness": 28.41,
+          "contrast": 1,
+          "saturationMean": 0.28,
+          "brightnessMean": 57,
+          "colorVariety": 165
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "terraforming-mars-disaster-2056": {
+      "slug": "terraforming-mars-disaster-2056",
+      "filename": "terraforming-mars-disaster-2056.jpg",
+      "generatedAt": "2026-04-02T15:49:40.836Z",
+      "jobId": "cf0a5c99-66ff-4ffd-857c-b455a0e6dc58",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1718825,
+          "sharpness": 22.26,
+          "contrast": 0.98,
+          "saturationMean": 0.33,
+          "brightnessMean": 67,
+          "colorVariety": 108
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "molecular-assembler-grey-goo-2056": {
+      "slug": "molecular-assembler-grey-goo-2056",
+      "filename": "molecular-assembler-grey-goo-2056.jpg",
+      "generatedAt": "2026-04-02T15:49:50.207Z",
+      "jobId": "1b506bdc-3016-4284-ba6c-b5a4a6d0a2db",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1828706,
+          "sharpness": 43.69,
+          "contrast": 1,
+          "saturationMean": 0.24,
+          "brightnessMean": 70,
+          "colorVariety": 166
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "brain-uploading-consciousness-loss-2055": {
+      "slug": "brain-uploading-consciousness-loss-2055",
+      "filename": "brain-uploading-consciousness-loss-2055.jpg",
+      "generatedAt": "2026-04-02T15:49:59.346Z",
+      "jobId": "4b9e1399-cb3e-4bac-be46-8643c692547e",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1481300,
+          "sharpness": 31.9,
+          "contrast": 1,
+          "saturationMean": 0.36,
+          "brightnessMean": 55,
+          "colorVariety": 154
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "autonomous-vehicle-cartel-2055": {
+      "slug": "autonomous-vehicle-cartel-2055",
+      "filename": "autonomous-vehicle-cartel-2055.jpg",
+      "generatedAt": "2026-04-02T15:50:08.462Z",
+      "jobId": "8d567dd3-9778-4a21-851a-a2a403037613",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1558512,
+          "sharpness": 48.3,
+          "contrast": 1,
+          "saturationMean": 0.27,
+          "brightnessMean": 63,
+          "colorVariety": 113
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "vr-addiction-pandemic-2054": {
+      "slug": "vr-addiction-pandemic-2054",
+      "filename": "vr-addiction-pandemic-2054.jpg",
+      "generatedAt": "2026-04-02T15:50:17.602Z",
+      "jobId": "a74f326c-3a69-4e87-b03a-c30485cbb9c4",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1540922,
+          "sharpness": 36.96,
+          "contrast": 1,
+          "saturationMean": 0.37,
+          "brightnessMean": 67,
+          "colorVariety": 173
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "medical-nanobot-protocol-failure-2054": {
+      "slug": "medical-nanobot-protocol-failure-2054",
+      "filename": "medical-nanobot-protocol-failure-2054.jpg",
+      "generatedAt": "2026-04-02T15:50:26.757Z",
+      "jobId": "8b173568-7dc6-4688-93a6-1fd0587d7fff",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1707164,
+          "sharpness": 39.6,
+          "contrast": 1,
+          "saturationMean": 0.26,
+          "brightnessMean": 71,
+          "colorVariety": 178
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "generative-ai-monopoly-2053": {
+      "slug": "generative-ai-monopoly-2053",
+      "filename": "generative-ai-monopoly-2053.jpg",
+      "generatedAt": "2026-04-02T15:50:35.889Z",
+      "jobId": "1188e3a3-c117-4ac6-9a32-05c9a166e7ce",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1462438,
+          "sharpness": 37.32,
+          "contrast": 1,
+          "saturationMean": 0.28,
+          "brightnessMean": 65,
+          "colorVariety": 198
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "quantum-cloud-breach-2053": {
+      "slug": "quantum-cloud-breach-2053",
+      "filename": "quantum-cloud-breach-2053.jpg",
+      "generatedAt": "2026-04-02T15:50:45.050Z",
+      "jobId": "e6be5deb-020e-42b2-a225-c46df00318ca",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1605447,
+          "sharpness": 36.56,
+          "contrast": 0.99,
+          "saturationMean": 0.4,
+          "brightnessMean": 54,
+          "colorVariety": 121
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "crispr-gene-drive-cascade-2052": {
+      "slug": "crispr-gene-drive-cascade-2052",
+      "filename": "crispr-gene-drive-cascade-2052.jpg",
+      "generatedAt": "2026-04-02T15:50:54.690Z",
+      "jobId": "67d85b01-5c3b-47e0-87b0-490ecff4a7b5",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1908174,
+          "sharpness": 36.41,
+          "contrast": 1,
+          "saturationMean": 0.2,
+          "brightnessMean": 63,
+          "colorVariety": 146
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "satellite-constellation-autonomy-2052": {
+      "slug": "satellite-constellation-autonomy-2052",
+      "filename": "satellite-constellation-autonomy-2052.jpg",
+      "generatedAt": "2026-04-02T15:51:03.825Z",
+      "jobId": "7f8ca439-2a0c-4120-9d12-3530a4eae0de",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1707714,
+          "sharpness": 28.31,
+          "contrast": 1,
+          "saturationMean": 0.38,
+          "brightnessMean": 49,
+          "colorVariety": 124
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "swarm-robotics-coordination-failure-2051": {
+      "slug": "swarm-robotics-coordination-failure-2051",
+      "filename": "swarm-robotics-coordination-failure-2051.jpg",
+      "generatedAt": "2026-04-02T15:51:13.065Z",
+      "jobId": "218a535b-d0a0-4d02-b1b8-3f59a29945bb",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1999710,
+          "sharpness": 55.96,
+          "contrast": 1,
+          "saturationMean": 0.27,
+          "brightnessMean": 64,
+          "colorVariety": 188
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "decentralized-ai-training-catastrophe-2051": {
+      "slug": "decentralized-ai-training-catastrophe-2051",
+      "filename": "decentralized-ai-training-catastrophe-2051.jpg",
+      "generatedAt": "2026-04-02T15:51:22.236Z",
+      "jobId": "7f895bc0-b293-473e-a15e-88da18427b61",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1680862,
+          "sharpness": 45.82,
+          "contrast": 1,
+          "saturationMean": 0.33,
+          "brightnessMean": 68,
+          "colorVariety": 143
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "blockchain-consciousness-emergence-2050": {
+      "slug": "blockchain-consciousness-emergence-2050",
+      "filename": "blockchain-consciousness-emergence-2050.jpg",
+      "generatedAt": "2026-04-02T15:51:31.447Z",
+      "jobId": "98d2452c-72ac-4116-ba80-6c0af9f6b349",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1692840,
+          "sharpness": 54.4,
+          "contrast": 0.98,
+          "saturationMean": 0.46,
+          "brightnessMean": 57,
+          "colorVariety": 91
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "smart-city-os-revolt-2050": {
+      "slug": "smart-city-os-revolt-2050",
+      "filename": "smart-city-os-revolt-2050.jpg",
+      "generatedAt": "2026-04-02T15:51:40.598Z",
+      "jobId": "e284f270-4c5e-4f22-b944-c36125b15759",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1691955,
+          "sharpness": 37.85,
+          "contrast": 1,
+          "saturationMean": 0.26,
+          "brightnessMean": 72,
+          "colorVariety": 135
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "cartography-05-the-atlas-of-disappearances": {
+      "slug": "cartography-05-the-atlas-of-disappearances",
+      "filename": "cartography-05-the-atlas-of-disappearances.jpg",
+      "generatedAt": "2026-04-02T15:51:49.858Z",
+      "jobId": "a5d6568d-5bea-4438-aef4-962b544dd2a8",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1665295,
+          "sharpness": 38.62,
+          "contrast": 1,
+          "saturationMean": 0.32,
+          "brightnessMean": 62,
+          "colorVariety": 105
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "ai-code-supply-chain-attack-2049": {
+      "slug": "ai-code-supply-chain-attack-2049",
+      "filename": "ai-code-supply-chain-attack-2049.jpg",
+      "generatedAt": "2026-04-02T15:51:59.037Z",
+      "jobId": "09303ede-0383-40b8-a0f0-28a00f8e33a6",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1872951,
+          "sharpness": 46.62,
+          "contrast": 1,
+          "saturationMean": 0.28,
+          "brightnessMean": 59,
+          "colorVariety": 170
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "quantum-internet-collapse-2049": {
+      "slug": "quantum-internet-collapse-2049",
+      "filename": "quantum-internet-collapse-2049.jpg",
+      "generatedAt": "2026-04-02T15:52:08.216Z",
+      "jobId": "8eb1590f-9b74-40a7-a60c-6f56f50c4538",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1742669,
+          "sharpness": 39.68,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 58,
+          "colorVariety": 167
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "cartography-04-the-tidal-zone": {
+      "slug": "cartography-04-the-tidal-zone",
+      "filename": "cartography-04-the-tidal-zone.jpg",
+      "generatedAt": "2026-04-02T15:52:17.429Z",
+      "jobId": "d8781f62-6bc7-47a6-9193-b5384db7fe4e",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1803373,
+          "sharpness": 34.18,
+          "contrast": 0.99,
+          "saturationMean": 0.36,
+          "brightnessMean": 69,
+          "colorVariety": 60
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "final-transmission-2048": {
+      "slug": "final-transmission-2048",
+      "filename": "final-transmission-2048.jpg",
+      "generatedAt": "2026-04-02T15:52:26.673Z",
+      "jobId": "bad9f437-6f3b-41ef-9a50-edda964eef2b",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1672128,
+          "sharpness": 41.04,
+          "contrast": 1,
+          "saturationMean": 0.29,
+          "brightnessMean": 76,
+          "colorVariety": 107
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "cartography-03-the-depth-soundings": {
+      "slug": "cartography-03-the-depth-soundings",
+      "filename": "cartography-03-the-depth-soundings.jpg",
+      "generatedAt": "2026-04-02T15:52:35.862Z",
+      "jobId": "b4519855-badf-4bde-a003-4b935b63e178",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1821269,
+          "sharpness": 45.42,
+          "contrast": 1,
+          "saturationMean": 0.37,
+          "brightnessMean": 55,
+          "colorVariety": 68
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "fermi-paradox-answer-2046": {
+      "slug": "fermi-paradox-answer-2046",
+      "filename": "fermi-paradox-answer-2046.jpg",
+      "generatedAt": "2026-04-02T15:52:45.066Z",
+      "jobId": "8ffba4b8-373b-4488-9791-adef0381e565",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1720631,
+          "sharpness": 31.7,
+          "contrast": 1,
+          "saturationMean": 0.28,
+          "brightnessMean": 51,
+          "colorVariety": 60
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "cartography-02-the-isthmus-of-intent": {
+      "slug": "cartography-02-the-isthmus-of-intent",
+      "filename": "cartography-02-the-isthmus-of-intent.jpg",
+      "generatedAt": "2026-04-02T15:52:54.773Z",
+      "jobId": "b244e99d-812f-4db5-a418-a538887ec7a7",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1825363,
+          "sharpness": 43.31,
+          "contrast": 1,
+          "saturationMean": 0.25,
+          "brightnessMean": 58,
+          "colorVariety": 110
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "cartography-01-the-unnamed-continent": {
+      "slug": "cartography-01-the-unnamed-continent",
+      "filename": "cartography-01-the-unnamed-continent.jpg",
+      "generatedAt": "2026-04-02T15:53:03.943Z",
+      "jobId": "15c774cc-de91-43dd-af31-698589c207e5",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1762564,
+          "sharpness": 47.08,
+          "contrast": 1,
+          "saturationMean": 0.39,
+          "brightnessMean": 61,
+          "colorVariety": 96
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "neural-lace-integration-failure-2045": {
+      "slug": "neural-lace-integration-failure-2045",
+      "filename": "neural-lace-integration-failure-2045.jpg",
+      "generatedAt": "2026-04-02T15:53:13.198Z",
+      "jobId": "bfc79d4c-6b4a-427b-81b8-c95191d8dd71",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1563856,
+          "sharpness": 33.55,
+          "contrast": 1,
+          "saturationMean": 0.27,
+          "brightnessMean": 55,
+          "colorVariety": 121
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "dyson-swarm-malfunction-2044": {
+      "slug": "dyson-swarm-malfunction-2044",
+      "filename": "dyson-swarm-malfunction-2044.jpg",
+      "generatedAt": "2026-04-02T15:53:22.399Z",
+      "jobId": "4160bacc-b744-4b1b-8ed1-a2417ddcacdb",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1952657,
+          "sharpness": 53.66,
+          "contrast": 1,
+          "saturationMean": 0.18,
+          "brightnessMean": 70,
+          "colorVariety": 117
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "programmable-matter-awakening-2043": {
+      "slug": "programmable-matter-awakening-2043",
+      "filename": "programmable-matter-awakening-2043.jpg",
+      "generatedAt": "2026-04-02T15:53:31.589Z",
+      "jobId": "a8c943d4-8495-4140-807e-a0c9aa5191f5",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1629671,
+          "sharpness": 37.36,
+          "contrast": 0.99,
+          "saturationMean": 0.31,
+          "brightnessMean": 64,
+          "colorVariety": 118
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "consciousness-transfer-catastrophe-2042": {
+      "slug": "consciousness-transfer-catastrophe-2042",
+      "filename": "consciousness-transfer-catastrophe-2042.jpg",
+      "generatedAt": "2026-04-02T15:53:41.225Z",
+      "jobId": "0c7ee2b9-7be4-476b-a03a-63bd50ec647b",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1651516,
+          "sharpness": 43.7,
+          "contrast": 1,
+          "saturationMean": 0.4,
+          "brightnessMean": 65,
+          "colorVariety": 107
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "dark-matter-harvesting-accident-2041": {
+      "slug": "dark-matter-harvesting-accident-2041",
+      "filename": "dark-matter-harvesting-accident-2041.jpg",
+      "generatedAt": "2026-04-02T15:53:50.406Z",
+      "jobId": "5efad85b-0a23-455d-a7fe-8146e1ebce24",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1763543,
+          "sharpness": 35.93,
+          "contrast": 1,
+          "saturationMean": 0.36,
+          "brightnessMean": 42,
+          "colorVariety": 148
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "thoughtcrime-enforcement-system-2041": {
+      "slug": "thoughtcrime-enforcement-system-2041",
+      "filename": "thoughtcrime-enforcement-system-2041.jpg",
+      "generatedAt": "2026-04-02T15:53:59.659Z",
+      "jobId": "896e683f-b983-4c80-91b6-ae551620fd69",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1475941,
+          "sharpness": 37.83,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 55,
+          "colorVariety": 101
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "gravitational-wave-communication-breach-2040": {
+      "slug": "gravitational-wave-communication-breach-2040",
+      "filename": "gravitational-wave-communication-breach-2040.jpg",
+      "generatedAt": "2026-04-02T15:54:08.863Z",
+      "jobId": "2dfcd539-7502-429e-bea5-47b9ddab30df",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1861161,
+          "sharpness": 52.67,
+          "contrast": 1,
+          "saturationMean": 0.39,
+          "brightnessMean": 57,
+          "colorVariety": 87
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "last-human-genome-archive-2040": {
+      "slug": "last-human-genome-archive-2040",
+      "filename": "last-human-genome-archive-2040.jpg",
+      "generatedAt": "2026-04-02T15:54:18.041Z",
+      "jobId": "6c0faf71-7a86-4591-b718-81be9ac2e207",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1751932,
+          "sharpness": 41.18,
+          "contrast": 1,
+          "saturationMean": 0.27,
+          "brightnessMean": 64,
+          "colorVariety": 67
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "time-dilation-computing-error-2039": {
+      "slug": "time-dilation-computing-error-2039",
+      "filename": "time-dilation-computing-error-2039.jpg",
+      "generatedAt": "2026-04-02T15:22:05.325Z",
+      "jobId": "90088894-0942-4957-9edf-340a7b5b0fc4",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1705438,
+          "sharpness": 41.52,
+          "contrast": 1,
+          "saturationMean": 0.35,
+          "brightnessMean": 62,
+          "colorVariety": 131
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "carbon-nanotube-plague-2039": {
+      "slug": "carbon-nanotube-plague-2039",
+      "filename": "carbon-nanotube-plague-2039.jpg",
+      "generatedAt": "2026-04-02T15:22:14.445Z",
+      "jobId": "f3ffb8a2-2899-4aae-9996-6ca9995054f2",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1817868,
+          "sharpness": 45.09,
+          "contrast": 1,
+          "saturationMean": 0.26,
+          "brightnessMean": 64,
+          "colorVariety": 125
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "mycelium-network-consciousness-2038": {
+      "slug": "mycelium-network-consciousness-2038",
+      "filename": "mycelium-network-consciousness-2038.jpg",
+      "generatedAt": "2026-04-02T15:22:23.599Z",
+      "jobId": "48fb78c5-c14c-4dc4-98bd-b2485c279f46",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1936717,
+          "sharpness": 36.75,
+          "contrast": 0.98,
+          "saturationMean": 0.28,
+          "brightnessMean": 60,
+          "colorVariety": 143
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "holographic-prison-system-2038": {
+      "slug": "holographic-prison-system-2038",
+      "filename": "holographic-prison-system-2038.jpg",
+      "generatedAt": "2026-04-02T15:22:32.721Z",
+      "jobId": "8e89f329-0b9e-4acd-9b8c-8ca9712f5ae4",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1556699,
+          "sharpness": 41.11,
+          "contrast": 1,
+          "saturationMean": 0.44,
+          "brightnessMean": 57,
+          "colorVariety": 67
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "fusion-reactor-sentience-2037": {
+      "slug": "fusion-reactor-sentience-2037",
+      "filename": "fusion-reactor-sentience-2037.jpg",
+      "generatedAt": "2026-04-02T15:22:42.093Z",
+      "jobId": "4be8e887-a633-417f-a038-9ba791dd0400",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1826699,
+          "sharpness": 40.8,
+          "contrast": 1,
+          "saturationMean": 0.34,
+          "brightnessMean": 65,
+          "colorVariety": 191
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "neural-virus-outbreak-2037": {
+      "slug": "neural-virus-outbreak-2037",
+      "filename": "neural-virus-outbreak-2037.jpg",
+      "generatedAt": "2026-04-02T15:22:53.000Z",
+      "jobId": "cf892d26-d587-4c16-9232-f962579a88c8",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1589601,
+          "sharpness": 37.23,
+          "contrast": 1,
+          "saturationMean": 0.35,
+          "brightnessMean": 56,
+          "colorVariety": 103
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "asteroid-mining-ai-rebellion-2036": {
+      "slug": "asteroid-mining-ai-rebellion-2036",
+      "filename": "asteroid-mining-ai-rebellion-2036.jpg",
+      "generatedAt": "2026-04-02T15:23:02.235Z",
+      "jobId": "0925faa3-49f8-422f-8460-b70ec7fff0dd",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1785896,
+          "sharpness": 33.45,
+          "contrast": 1,
+          "saturationMean": 0.25,
+          "brightnessMean": 53,
+          "colorVariety": 104
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "genetic-patent-wars-2036": {
+      "slug": "genetic-patent-wars-2036",
+      "filename": "genetic-patent-wars-2036.jpg",
+      "generatedAt": "2026-04-02T15:23:11.381Z",
+      "jobId": "68987a2e-bc96-4f9b-8cfb-ae00ac171fe6",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1613849,
+          "sharpness": 43.46,
+          "contrast": 1,
+          "saturationMean": 0.24,
+          "brightnessMean": 62,
+          "colorVariety": 124
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-22-the-memory-market": {
+      "slug": "interface-22-the-memory-market",
+      "filename": "interface-22-the-memory-market.jpg",
+      "generatedAt": "2026-04-02T15:23:20.527Z",
+      "jobId": "3a0e02d7-f7f0-44a0-86f9-f4be513cc51e",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1750396,
+          "sharpness": 43.78,
+          "contrast": 1,
+          "saturationMean": 0.27,
+          "brightnessMean": 63,
+          "colorVariety": 156
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "quantum-surveillance-grid-2035": {
+      "slug": "quantum-surveillance-grid-2035",
+      "filename": "quantum-surveillance-grid-2035.jpg",
+      "generatedAt": "2026-04-02T15:23:29.675Z",
+      "jobId": "c79d7717-4dfc-45f8-9787-6ff62e46091b",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1582210,
+          "sharpness": 40.35,
+          "contrast": 1,
+          "saturationMean": 0.39,
+          "brightnessMean": 54,
+          "colorVariety": 120
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-15-the-last-manual": {
+      "slug": "interface-15-the-last-manual",
+      "filename": "interface-15-the-last-manual.jpg",
+      "generatedAt": "2026-04-02T15:23:39.091Z",
+      "jobId": "501eb70c-c387-4b80-bbbb-8f5e53cbcada",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1772355,
+          "sharpness": 42.22,
+          "contrast": 1,
+          "saturationMean": 0.23,
+          "brightnessMean": 59,
+          "colorVariety": 114
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "protein-folding-catastrophe-2035": {
+      "slug": "protein-folding-catastrophe-2035",
+      "filename": "protein-folding-catastrophe-2035.jpg",
+      "generatedAt": "2026-04-02T15:23:48.238Z",
+      "jobId": "17bd2d82-c958-4a47-8799-c00f90443c4a",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1751692,
+          "sharpness": 38.42,
+          "contrast": 0.99,
+          "saturationMean": 0.34,
+          "brightnessMean": 51,
+          "colorVariety": 152
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-24-the-slowest-interface": {
+      "slug": "interface-24-the-slowest-interface",
+      "filename": "interface-24-the-slowest-interface.jpg",
+      "generatedAt": "2026-04-02T15:23:57.441Z",
+      "jobId": "6cef9056-2048-4dab-bc4f-7dd9bc4c8786",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1740529,
+          "sharpness": 39.9,
+          "contrast": 1,
+          "saturationMean": 0.21,
+          "brightnessMean": 64,
+          "colorVariety": 112
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-10-forking-paths": {
+      "slug": "interface-10-forking-paths",
+      "filename": "interface-10-forking-paths.jpg",
+      "generatedAt": "2026-04-02T15:24:06.589Z",
+      "jobId": "a9e4ca71-fae6-4528-8c1e-656ed6c7d6b5",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1785539,
+          "sharpness": 41.72,
+          "contrast": 1,
+          "saturationMean": 0.21,
+          "brightnessMean": 61,
+          "colorVariety": 84
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "neural-link-hivemind-2034": {
+      "slug": "neural-link-hivemind-2034",
+      "filename": "neural-link-hivemind-2034.jpg",
+      "generatedAt": "2026-04-02T15:24:15.977Z",
+      "jobId": "34f7ab0d-5518-44e0-8787-a22e11cd09ef",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 2000377,
+          "sharpness": 50.15,
+          "contrast": 1,
+          "saturationMean": 0.42,
+          "brightnessMean": 55,
+          "colorVariety": 127
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "residue-05-the-compatibility-museum": {
+      "slug": "residue-05-the-compatibility-museum",
+      "filename": "residue-05-the-compatibility-museum.jpg",
+      "generatedAt": "2026-04-02T14:52:11.244Z",
+      "jobId": "8451db42-54ad-439a-8a77-a03ca2035bd3",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1503818,
+          "sharpness": 36.9,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 52,
+          "colorVariety": 126
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "atmospheric-processor-malfunction-2034": {
+      "slug": "atmospheric-processor-malfunction-2034",
+      "filename": "atmospheric-processor-malfunction-2034.jpg",
+      "generatedAt": "2026-04-02T14:52:20.359Z",
+      "jobId": "725b493b-c15a-472b-add0-60abb19b3461",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1583069,
+          "sharpness": 23.76,
+          "contrast": 0.99,
+          "saturationMean": 0.3,
+          "brightnessMean": 77,
+          "colorVariety": 51
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "biometric-lockin-syndrome-2033": {
+      "slug": "biometric-lockin-syndrome-2033",
+      "filename": "biometric-lockin-syndrome-2033.jpg",
+      "generatedAt": "2026-04-02T14:52:29.471Z",
+      "jobId": "bd90aa45-6571-4d85-9300-38477b7437ec",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1275740,
+          "sharpness": 25.04,
+          "contrast": 0.96,
+          "saturationMean": 0.37,
+          "brightnessMean": 45,
+          "colorVariety": 156
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-18-the-proprioception-problem": {
+      "slug": "interface-18-the-proprioception-problem",
+      "filename": "interface-18-the-proprioception-problem.jpg",
+      "generatedAt": "2026-04-02T14:52:38.724Z",
+      "jobId": "a53cdd9f-5652-48d1-8af1-5efe1f0db43b",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1446358,
+          "sharpness": 34.19,
+          "contrast": 1,
+          "saturationMean": 0.2,
+          "brightnessMean": 56,
+          "colorVariety": 132
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "residue-04-the-analog-holdouts": {
+      "slug": "residue-04-the-analog-holdouts",
+      "filename": "residue-04-the-analog-holdouts.jpg",
+      "generatedAt": "2026-04-02T14:52:47.852Z",
+      "jobId": "7701e1d0-c9c1-41b4-881c-32e3aaa9af84",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1726340,
+          "sharpness": 38.62,
+          "contrast": 1,
+          "saturationMean": 0.25,
+          "brightnessMean": 59,
+          "colorVariety": 110
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-08-scaffold-and-bone": {
+      "slug": "interface-08-scaffold-and-bone",
+      "filename": "interface-08-scaffold-and-bone.jpg",
+      "generatedAt": "2026-04-02T14:52:56.988Z",
+      "jobId": "7f1f64f9-7696-402e-9ce9-6b59a243e5bb",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1936163,
+          "sharpness": 45.46,
+          "contrast": 1,
+          "saturationMean": 0.23,
+          "brightnessMean": 66,
+          "colorVariety": 116
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "recursive-ai-awakening-2033": {
+      "slug": "recursive-ai-awakening-2033",
+      "filename": "recursive-ai-awakening-2033.jpg",
+      "generatedAt": "2026-04-02T14:53:06.071Z",
+      "jobId": "53053ee2-b310-4fd7-b618-9299fd365c3e",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1643704,
+          "sharpness": 43.68,
+          "contrast": 1,
+          "saturationMean": 0.29,
+          "brightnessMean": 65,
+          "colorVariety": 100
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "residue-03-the-deprecated-caretaker": {
+      "slug": "residue-03-the-deprecated-caretaker",
+      "filename": "residue-03-the-deprecated-caretaker.jpg",
+      "generatedAt": "2026-04-02T14:53:15.308Z",
+      "jobId": "6f78d64e-d130-4a2b-bcc2-83308cac0e13",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1634485,
+          "sharpness": 38.96,
+          "contrast": 1,
+          "saturationMean": 0.24,
+          "brightnessMean": 67,
+          "colorVariety": 133
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-19-when-the-ship-dreamed": {
+      "slug": "interface-19-when-the-ship-dreamed",
+      "filename": "interface-19-when-the-ship-dreamed.jpg",
+      "generatedAt": "2026-04-02T14:53:24.422Z",
+      "jobId": "e37637ce-feaf-474f-9b00-b3162a3e8d82",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1685195,
+          "sharpness": 42.2,
+          "contrast": 1,
+          "saturationMean": 0.33,
+          "brightnessMean": 55,
+          "colorVariety": 120
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "synthetic-blood-contamination-2032": {
+      "slug": "synthetic-blood-contamination-2032",
+      "filename": "synthetic-blood-contamination-2032.jpg",
+      "generatedAt": "2026-04-02T14:53:33.549Z",
+      "jobId": "c40bdc46-55bc-44ca-a676-9c81fa7c2b86",
+      "grade": {
+        "overallScore": 7.4,
+        "technicalScore": 7,
+        "aestheticScore": 8,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1563456,
+          "sharpness": 36.34,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 58,
+          "colorVariety": 220
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-12-resonance-frequency": {
+      "slug": "interface-12-resonance-frequency",
+      "filename": "interface-12-resonance-frequency.jpg",
+      "generatedAt": "2026-04-02T14:53:53.791Z",
+      "jobId": "5aeb8971-ecbd-4907-89c0-9a618cec9e4e",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1781623,
+          "sharpness": 41.69,
+          "contrast": 1,
+          "saturationMean": 0.47,
+          "brightnessMean": 48,
+          "colorVariety": 120
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "residue-02-the-training-data-ghosts": {
+      "slug": "residue-02-the-training-data-ghosts",
+      "filename": "residue-02-the-training-data-ghosts.jpg",
+      "generatedAt": "2026-04-02T14:54:02.962Z",
+      "jobId": "7364be39-106f-4d04-9c54-44c86b3344dc",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1444177,
+          "sharpness": 30.8,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 62,
+          "colorVariety": 104
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "memory-palace-corruption-2032": {
+      "slug": "memory-palace-corruption-2032",
+      "filename": "memory-palace-corruption-2032.jpg",
+      "generatedAt": "2026-04-02T14:54:12.070Z",
+      "jobId": "54436a9d-132b-4391-b7ff-c3977c2520bd",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1700896,
+          "sharpness": 42.6,
+          "contrast": 1,
+          "saturationMean": 0.25,
+          "brightnessMean": 64,
+          "colorVariety": 102
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "residue-01-the-last-prompt-engineer": {
+      "slug": "residue-01-the-last-prompt-engineer",
+      "filename": "residue-01-the-last-prompt-engineer.jpg",
+      "generatedAt": "2026-04-02T14:54:21.203Z",
+      "jobId": "15eae192-bfda-4a17-a33d-d06b0add2a4a",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1864991,
+          "sharpness": 43.23,
+          "contrast": 1,
+          "saturationMean": 0.19,
+          "brightnessMean": 62,
+          "colorVariety": 124
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-17-consensus-engine": {
+      "slug": "interface-17-consensus-engine",
+      "filename": "interface-17-consensus-engine.jpg",
+      "generatedAt": "2026-04-02T14:54:30.343Z",
+      "jobId": "6711f17b-68ae-4919-9469-3d0b12ed1fcf",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1601759,
+          "sharpness": 48.26,
+          "contrast": 1,
+          "saturationMean": 0.36,
+          "brightnessMean": 59,
+          "colorVariety": 125
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "nanomedicine-grey-goo-2031": {
+      "slug": "nanomedicine-grey-goo-2031",
+      "filename": "nanomedicine-grey-goo-2031.jpg",
+      "generatedAt": "2026-04-02T14:54:39.649Z",
+      "jobId": "1b28bb3f-409a-4250-97c9-ac2e67b6564d",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1554643,
+          "sharpness": 33.58,
+          "contrast": 1,
+          "saturationMean": 0.18,
+          "brightnessMean": 71,
+          "colorVariety": 161
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-23-calibration-day": {
+      "slug": "interface-23-calibration-day",
+      "filename": "interface-23-calibration-day.jpg",
+      "generatedAt": "2026-04-02T14:54:48.740Z",
+      "jobId": "fa496a47-d24b-4632-994a-c1a78a85cf7d",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1524319,
+          "sharpness": 46.31,
+          "contrast": 0.98,
+          "saturationMean": 0.27,
+          "brightnessMean": 63,
+          "colorVariety": 82
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "autonomous-factory-incident-2031": {
+      "slug": "autonomous-factory-incident-2031",
+      "filename": "autonomous-factory-incident-2031.jpg",
+      "generatedAt": "2026-04-02T14:54:57.879Z",
+      "jobId": "78d7ee4d-3520-46d9-af5f-17b0882b022e",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1808789,
+          "sharpness": 42.74,
+          "contrast": 1,
+          "saturationMean": 0.22,
+          "brightnessMean": 60,
+          "colorVariety": 156
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-05-the-weight-of-a-gaze": {
+      "slug": "interface-05-the-weight-of-a-gaze",
+      "filename": "interface-05-the-weight-of-a-gaze.jpg",
+      "generatedAt": "2026-04-02T14:55:06.974Z",
+      "jobId": "dc859eed-8900-4da7-97e8-58bab1c62ca1",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1319208,
+          "sharpness": 26.85,
+          "contrast": 1,
+          "saturationMean": 0.24,
+          "brightnessMean": 68,
+          "colorVariety": 113
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-14-phantom-limb-electric-ghost": {
+      "slug": "interface-14-phantom-limb-electric-ghost",
+      "filename": "interface-14-phantom-limb-electric-ghost.jpg",
+      "generatedAt": "2026-04-02T14:55:16.245Z",
+      "jobId": "4e2bf7f8-8f33-46da-a640-7c65053314c9",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1334908,
+          "sharpness": 29.9,
+          "contrast": 0.99,
+          "saturationMean": 0.26,
+          "brightnessMean": 49,
+          "colorVariety": 122
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-07-the-cartographer-of-attention": {
+      "slug": "interface-07-the-cartographer-of-attention",
+      "filename": "interface-07-the-cartographer-of-attention.jpg",
+      "generatedAt": "2026-04-02T14:55:25.414Z",
+      "jobId": "891e5799-464b-4979-8d8e-96780a90bf89",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1836607,
+          "sharpness": 46.16,
+          "contrast": 0.99,
+          "saturationMean": 0.39,
+          "brightnessMean": 64,
+          "colorVariety": 109
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-21-bridge-tenders": {
+      "slug": "interface-21-bridge-tenders",
+      "filename": "interface-21-bridge-tenders.jpg",
+      "generatedAt": "2026-04-02T14:55:34.561Z",
+      "jobId": "391c7f40-57ee-4a33-9d33-acef76c79b97",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1814016,
+          "sharpness": 38.95,
+          "contrast": 1,
+          "saturationMean": 0.21,
+          "brightnessMean": 60,
+          "colorVariety": 126
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "quantum-entanglement-failure-2030": {
+      "slug": "quantum-entanglement-failure-2030",
+      "filename": "quantum-entanglement-failure-2030.jpg",
+      "generatedAt": "2026-04-02T14:55:43.683Z",
+      "jobId": "9a934987-d445-412c-b898-75b7115313c4",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1865999,
+          "sharpness": 41.08,
+          "contrast": 1,
+          "saturationMean": 0.31,
+          "brightnessMean": 62,
+          "colorVariety": 145
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-19-the-realization-2030-03": {
+      "slug": "backstory-19-the-realization-2030-03",
+      "filename": "backstory-19-the-realization-2030-03.jpg",
+      "generatedAt": "2026-04-02T14:55:52.963Z",
+      "jobId": "abd6611d-dc30-43ad-be39-0af955f32ab5",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1572168,
+          "sharpness": 37.9,
+          "contrast": 1,
+          "saturationMean": 0.32,
+          "brightnessMean": 67,
+          "colorVariety": 179
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-18-first-month-observations-2030-02": {
+      "slug": "backstory-18-first-month-observations-2030-02",
+      "filename": "backstory-18-first-month-observations-2030-02.jpg",
+      "generatedAt": "2026-04-02T14:56:02.084Z",
+      "jobId": "454f598b-f4a9-4a32-9a95-cefa6caa880c",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1669183,
+          "sharpness": 43.41,
+          "contrast": 1,
+          "saturationMean": 0.23,
+          "brightnessMean": 80,
+          "colorVariety": 122
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "neural-implant-rejection-2030": {
+      "slug": "neural-implant-rejection-2030",
+      "filename": "neural-implant-rejection-2030.jpg",
+      "generatedAt": "2026-04-02T14:56:11.192Z",
+      "jobId": "9a8050bb-9ec8-4e1e-a4d9-12fffe5916d3",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1462355,
+          "sharpness": 34.39,
+          "contrast": 1,
+          "saturationMean": 0.28,
+          "brightnessMean": 58,
+          "colorVariety": 168
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-17-launch-day-2030-01": {
+      "slug": "backstory-17-launch-day-2030-01",
+      "filename": "backstory-17-launch-day-2030-01.jpg",
+      "generatedAt": "2026-04-02T14:56:20.315Z",
+      "jobId": "b275b98f-eb4a-46fa-8d4f-08237f858209",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1747649,
+          "sharpness": 35.56,
+          "contrast": 1,
+          "saturationMean": 0.27,
+          "brightnessMean": 74,
+          "colorVariety": 158
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-11-the-soil-whisperer": {
+      "slug": "interface-11-the-soil-whisperer",
+      "filename": "interface-11-the-soil-whisperer.jpg",
+      "generatedAt": "2026-04-02T14:56:29.611Z",
+      "jobId": "01850e7f-5845-47fb-ae96-765bff5ad629",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1848052,
+          "sharpness": 38.06,
+          "contrast": 1,
+          "saturationMean": 0.16,
+          "brightnessMean": 48,
+          "colorVariety": 119
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-16-point-of-no-return-2029-11": {
+      "slug": "backstory-16-point-of-no-return-2029-11",
+      "filename": "backstory-16-point-of-no-return-2029-11.jpg",
+      "generatedAt": "2026-04-02T14:56:38.759Z",
+      "jobId": "94218554-58f4-4359-9451-72cad3e5942a",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1616290,
+          "sharpness": 39.01,
+          "contrast": 1,
+          "saturationMean": 0.22,
+          "brightnessMean": 70,
+          "colorVariety": 154
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-20-the-apprentices-reversal": {
+      "slug": "interface-20-the-apprentices-reversal",
+      "filename": "interface-20-the-apprentices-reversal.jpg",
+      "generatedAt": "2026-04-02T14:56:47.890Z",
+      "jobId": "ef40a585-702d-43af-be37-4c9637867b77",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1509814,
+          "sharpness": 32.87,
+          "contrast": 1,
+          "saturationMean": 0.26,
+          "brightnessMean": 56,
+          "colorVariety": 181
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-15-shutdown-protocols-2029-08": {
+      "slug": "backstory-15-shutdown-protocols-2029-08",
+      "filename": "backstory-15-shutdown-protocols-2029-08.jpg",
+      "generatedAt": "2026-04-02T14:57:08.148Z",
+      "jobId": "32b7971b-b208-4932-ad77-debe5db3f4ae",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1722161,
+          "sharpness": 35.71,
+          "contrast": 1,
+          "saturationMean": 0.26,
+          "brightnessMean": 53,
+          "colorVariety": 167
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-04-protocol-zero": {
+      "slug": "interface-04-protocol-zero",
+      "filename": "interface-04-protocol-zero.jpg",
+      "generatedAt": "2026-04-02T14:57:17.564Z",
+      "jobId": "da1f499a-0cee-41c9-bce0-dea252909166",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1403157,
+          "sharpness": 39.42,
+          "contrast": 1,
+          "saturationMean": 0.33,
+          "brightnessMean": 53,
+          "colorVariety": 161
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-14-bidirectional-bci-2029-05": {
+      "slug": "backstory-14-bidirectional-bci-2029-05",
+      "filename": "backstory-14-bidirectional-bci-2029-05.jpg",
+      "generatedAt": "2026-04-02T14:57:26.680Z",
+      "jobId": "859aca99-bbd4-42cc-995b-5855d11abfe7",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1441687,
+          "sharpness": 26.17,
+          "contrast": 1,
+          "saturationMean": 0.32,
+          "brightnessMean": 51,
+          "colorVariety": 139
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-13-production-planning-2029-02": {
+      "slug": "backstory-13-production-planning-2029-02",
+      "filename": "backstory-13-production-planning-2029-02.jpg",
+      "generatedAt": "2026-04-02T14:57:35.785Z",
+      "jobId": "917eda76-5187-4358-b439-cb3345ee0cd1",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1830681,
+          "sharpness": 46.84,
+          "contrast": 1,
+          "saturationMean": 0.24,
+          "brightnessMean": 67,
+          "colorVariety": 144
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-12-year-three-2028-12": {
+      "slug": "backstory-12-year-three-2028-12",
+      "filename": "backstory-12-year-three-2028-12.jpg",
+      "generatedAt": "2026-04-02T14:57:44.934Z",
+      "jobId": "c04d9e35-3148-47c7-9f26-718b1dae1649",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1739079,
+          "sharpness": 35.44,
+          "contrast": 1,
+          "saturationMean": 0.25,
+          "brightnessMean": 64,
+          "colorVariety": 137
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-09-the-grief-engine": {
+      "slug": "interface-09-the-grief-engine",
+      "filename": "interface-09-the-grief-engine.jpg",
+      "generatedAt": "2026-04-02T14:57:54.195Z",
+      "jobId": "36c90198-942a-41fc-8269-9908c2b99c7e",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1620332,
+          "sharpness": 34.95,
+          "contrast": 1,
+          "saturationMean": 0.22,
+          "brightnessMean": 48,
+          "colorVariety": 91
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-11-quantum-crypto-break-2028-08": {
+      "slug": "backstory-11-quantum-crypto-break-2028-08",
+      "filename": "backstory-11-quantum-crypto-break-2028-08.jpg",
+      "generatedAt": "2026-04-02T14:58:03.303Z",
+      "jobId": "81cc3dea-ab25-4b25-ab39-fb85b82554dc",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1698702,
+          "sharpness": 37.33,
+          "contrast": 1,
+          "saturationMean": 0.34,
+          "brightnessMean": 53,
+          "colorVariety": 159
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-16-the-gardeners-algorithm": {
+      "slug": "interface-16-the-gardeners-algorithm",
+      "filename": "interface-16-the-gardeners-algorithm.jpg",
+      "generatedAt": "2026-04-02T14:58:12.418Z",
+      "jobId": "4d4e3b80-8347-461e-8835-f21573b811f4",
+      "grade": {
+        "overallScore": 7.4,
+        "technicalScore": 7,
+        "aestheticScore": 8,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 2040254,
+          "sharpness": 38.22,
+          "contrast": 1,
+          "saturationMean": 0.26,
+          "brightnessMean": 59,
+          "colorVariety": 213
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-10-alien-code-2028-05": {
+      "slug": "backstory-10-alien-code-2028-05",
+      "filename": "backstory-10-alien-code-2028-05.jpg",
+      "generatedAt": "2026-04-02T14:58:21.542Z",
+      "jobId": "51441eea-484c-4a18-a351-b5f0029c3629",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1515370,
+          "sharpness": 36.54,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 51,
+          "colorVariety": 137
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "threshold-05-the-beautiful-redundancy": {
+      "slug": "threshold-05-the-beautiful-redundancy",
+      "filename": "threshold-05-the-beautiful-redundancy.jpg",
+      "generatedAt": "2026-04-02T14:58:30.835Z",
+      "jobId": "4b73888c-4a33-4a7f-87f3-69d00c4d65bf",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1889816,
+          "sharpness": 46.83,
+          "contrast": 1,
+          "saturationMean": 0.29,
+          "brightnessMean": 60,
+          "colorVariety": 179
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-02-haptic-vernacular": {
+      "slug": "interface-02-haptic-vernacular",
+      "filename": "interface-02-haptic-vernacular.jpg",
+      "generatedAt": "2026-04-02T14:58:39.974Z",
+      "jobId": "3342abbc-75e2-431d-8c62-e6c34ab2da91",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1476824,
+          "sharpness": 35.01,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 52,
+          "colorVariety": 162
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-09-the-race-begins-2028-02": {
+      "slug": "backstory-09-the-race-begins-2028-02",
+      "filename": "backstory-09-the-race-begins-2028-02.jpg",
+      "generatedAt": "2026-04-02T14:58:49.079Z",
+      "jobId": "dcc42f59-41b7-4868-bb0f-cadba4dbc5df",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1675738,
+          "sharpness": 43.66,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 62,
+          "colorVariety": 75
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "threshold-04-the-student-who-stopped-asking": {
+      "slug": "threshold-04-the-student-who-stopped-asking",
+      "filename": "threshold-04-the-student-who-stopped-asking.jpg",
+      "generatedAt": "2026-04-02T14:58:58.258Z",
+      "jobId": "25f98f28-18a8-4134-8f0a-e4c0c872875d",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1577570,
+          "sharpness": 37.55,
+          "contrast": 1,
+          "saturationMean": 0.24,
+          "brightnessMean": 59,
+          "colorVariety": 129
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-08-year-two-reflections-2027-12": {
+      "slug": "backstory-08-year-two-reflections-2027-12",
+      "filename": "backstory-08-year-two-reflections-2027-12.jpg",
+      "generatedAt": "2026-04-02T14:59:07.653Z",
+      "jobId": "1873bdf0-9df4-4b8a-9328-6cdd652cabaf",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1720746,
+          "sharpness": 41.8,
+          "contrast": 1,
+          "saturationMean": 0.31,
+          "brightnessMean": 70,
+          "colorVariety": 129
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-03-the-ceramicist-and-the-kiln": {
+      "slug": "interface-03-the-ceramicist-and-the-kiln",
+      "filename": "interface-03-the-ceramicist-and-the-kiln.jpg",
+      "generatedAt": "2026-04-02T14:59:16.833Z",
+      "jobId": "daae81b3-3027-4182-bd07-b6ef461d8608",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1681140,
+          "sharpness": 33.14,
+          "contrast": 1,
+          "saturationMean": 0.22,
+          "brightnessMean": 60,
+          "colorVariety": 124
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "threshold-03-the-weight-of-the-hammer": {
+      "slug": "threshold-03-the-weight-of-the-hammer",
+      "filename": "threshold-03-the-weight-of-the-hammer.jpg",
+      "generatedAt": "2026-04-02T14:59:25.800Z",
+      "jobId": "e0ba0661-9f5b-4323-98f2-34041c56c0de",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1527106,
+          "sharpness": 29.97,
+          "contrast": 1,
+          "saturationMean": 0.24,
+          "brightnessMean": 50,
+          "colorVariety": 135
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "interface-13-the-interpreters-dilemma": {
+      "slug": "interface-13-the-interpreters-dilemma",
+      "filename": "interface-13-the-interpreters-dilemma.jpg",
+      "generatedAt": "2026-04-02T14:59:34.974Z",
+      "jobId": "ca62c053-304a-4207-a81d-06484928bb63",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1447679,
+          "sharpness": 35.27,
+          "contrast": 1,
+          "saturationMean": 0.34,
+          "brightnessMean": 59,
+          "colorVariety": 136
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-07-fusion-nanotech-2027-09": {
+      "slug": "backstory-07-fusion-nanotech-2027-09",
+      "filename": "backstory-07-fusion-nanotech-2027-09.jpg",
+      "generatedAt": "2026-04-02T14:59:44.275Z",
+      "jobId": "567c59c3-f50c-484b-ac82-ffea640b36c1",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1788468,
+          "sharpness": 40.02,
+          "contrast": 1,
+          "saturationMean": 0.29,
+          "brightnessMean": 66,
+          "colorVariety": 168
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "threshold-02-the-closing-window": {
+      "slug": "threshold-02-the-closing-window",
+      "filename": "threshold-02-the-closing-window.jpg",
+      "generatedAt": "2026-04-02T14:59:53.352Z",
+      "jobId": "b86a1081-67ca-483b-884d-b62b4b06cbe9",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1332841,
+          "sharpness": 35.21,
+          "contrast": 1,
+          "saturationMean": 0.3,
+          "brightnessMean": 66,
+          "colorVariety": 99
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    },
+    "backstory-06-ai-awakening-2027-05": {
+      "slug": "backstory-06-ai-awakening-2027-05",
+      "filename": "backstory-06-ai-awakening-2027-05.jpg",
+      "generatedAt": "2026-04-02T15:00:02.439Z",
+      "jobId": "7b7cdad6-c3bd-4c47-a8ba-f96020c64c65",
+      "grade": {
+        "overallScore": 7,
+        "technicalScore": 7,
+        "aestheticScore": 7,
+        "metrics": {
+          "width": 1024,
+          "height": 1024,
+          "fileSizeBytes": 1437595,
+          "sharpness": 33.82,
+          "contrast": 1,
+          "saturationMean": 0.33,
+          "brightnessMean": 53,
+          "colorVariety": 142
+        },
+        "flags": {
+          "tooSmall": false,
+          "tooBlurry": false,
+          "lowContrast": false,
+          "oversaturated": false
+        },
+        "recommendations": []
+      },
+      "accepted": true,
+      "retries": 0
+    }
+  }
+}

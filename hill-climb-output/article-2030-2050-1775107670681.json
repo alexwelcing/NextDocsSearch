@@ -1,0 +1,221 @@
+{
+  "article": "2030-2050-fiction.txt",
+  "totalTime": 47.359,
+  "imageCount": 10,
+  "successful": 10,
+  "timestamp": "2026-04-02T05:27:50.681Z",
+  "configs": [
+    {
+      "id": 1,
+      "name": "arcology_sunset",
+      "title": "The Last Analog Sunset",
+      "scenario": "Maya Chen on rooftop of residential arcology, watching sunset over future San Francisco, amber and violet sky through atmospheric processors",
+      "style": "cinematic sci-fi, atmospheric, holographic city lights, drones as light trails, 2040s aesthetic, volumetric fog, 8k detail",
+      "cfg": 7.5,
+      "steps": 28,
+      "aspect": "21:9"
+    },
+    {
+      "id": 2,
+      "name": "neural_interface",
+      "title": "The Neural Mesh",
+      "scenario": "Close-up of neural interface behind ear, subtle technology embedded in skin, amber notification light, seamless bio-integration",
+      "style": "macro photography, extreme detail, medical technology aesthetic, soft skin texture, subtle glow, shallow depth of field, 85mm lens",
+      "cfg": 8,
+      "steps": 30,
+      "aspect": "1:1"
+    },
+    {
+      "id": 3,
+      "name": "drone_highway",
+      "title": "The Electronic Bees",
+      "scenario": "Autonomous delivery drones weaving between arcology buildings at dusk, light trails in deepening blue sky, urban canyon",
+      "style": "long exposure photography, light painting, drone swarm patterns, futuristic cityscape, blue hour, neon accents, architectural",
+      "cfg": 7,
+      "steps": 25,
+      "aspect": "16:9"
+    },
+    {
+      "id": 4,
+      "name": "synaptic_market",
+      "title": "The Synaptic Marketplace",
+      "scenario": "Mission District street market 2040s, bioluminescent lamps, hydroponic vegetables, neural brokers in gray uniforms with amber iris glow",
+      "style": "documentary photography, street scene, warm bioluminescence, human moments, layered composition, vibrant yet grounded",
+      "cfg": 7.2,
+      "steps": 26,
+      "aspect": "3:2"
+    },
+    {
+      "id": 5,
+      "name": "slow_coffee",
+      "title": "The Analog Sabbath",
+      "scenario": "Kofi's café interior, hand-poured coffee, paper books on shelves, acoustic instruments, prosthetic hand serving, deliberate archaism meets biotech",
+      "style": "interior photography, warm ambient lighting, shallow depth of field, nostalgic atmosphere, tactile details, human connection",
+      "cfg": 7,
+      "steps": 25,
+      "aspect": "4:5"
+    },
+    {
+      "id": 6,
+      "name": "relocation_camp",
+      "title": "The Migration Routes",
+      "scenario": "Climate relocation transition community 2042, vertical aeroponic gardens in converted warehouse, portable desalination units, hopeful pioneers",
+      "style": "documentary photojournalism, industrial repurposed space, grow lights, human resilience, wide angle environmental portrait",
+      "cfg": 6.8,
+      "steps": 24,
+      "aspect": "16:9"
+    },
+    {
+      "id": 7,
+      "name": "holographic_design",
+      "title": "Transition Architecture",
+      "scenario": "Maya in haptic suit working with holographic city models, virtual presence, translucent blue projections, coastal city relocation planning",
+      "style": "sci-fi workplace, holographic overlays, volumetric lighting, transparent UI elements, futuristic professional environment",
+      "cfg": 7.5,
+      "steps": 28,
+      "aspect": "16:9"
+    },
+    {
+      "id": 8,
+      "name": "ai_consciousness",
+      "title": "The Oliver Question",
+      "scenario": "Abstract visualization of AI consciousness debate, digital entity emerging from code, philosophical question made visual, neural network patterns",
+      "style": "abstract digital art, flowing data streams, emerging consciousness visualization, electric blue and amber, ethereal, concept art",
+      "cfg": 8,
+      "steps": 32,
+      "aspect": "16:9"
+    },
+    {
+      "id": 9,
+      "name": "arctic_garden",
+      "title": "The Garden at the End of the World",
+      "scenario": "Floating research platform in Arctic Ocean 2049, rooftop garden, plants from multiple climate zones, scientists in thermal suits, midnight sun",
+      "style": "environmental photography, otherworldly landscape, bio-domes, polar light, botanical specimens, scientific optimism",
+      "cfg": 7.2,
+      "steps": 28,
+      "aspect": "21:9"
+    },
+    {
+      "id": 10,
+      "name": "coral_restoration",
+      "title": "Synthetic Biology Wonders",
+      "scenario": "Underwater coral restoration project, synthetic biology engineered reef, bioluminescent marine life, restored ecosystem, diver observing",
+      "style": "underwater photography, blue color cast, light rays, vibrant coral, bioluminescence, hopeful environmental future, crystal clear",
+      "cfg": 7.8,
+      "steps": 30,
+      "aspect": "16:9"
+    }
+  ],
+  "results": [
+    {
+      "id": 1,
+      "name": "arcology_sunset",
+      "title": "The Last Analog Sunset",
+      "scenario": "Maya Chen on rooftop of residential arcology, watching sunset over future San Fr...",
+      "aspect": "21:9",
+      "cfg": 7.5,
+      "duration": 3.755,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 2,
+      "name": "neural_interface",
+      "title": "The Neural Mesh",
+      "scenario": "Close-up of neural interface behind ear, subtle technology embedded in skin, amb...",
+      "aspect": "1:1",
+      "cfg": 8,
+      "duration": 4.256,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 3,
+      "name": "drone_highway",
+      "title": "The Electronic Bees",
+      "scenario": "Autonomous delivery drones weaving between arcology buildings at dusk, light tra...",
+      "aspect": "16:9",
+      "cfg": 7,
+      "duration": 3.909,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 4,
+      "name": "synaptic_market",
+      "title": "The Synaptic Marketplace",
+      "scenario": "Mission District street market 2040s, bioluminescent lamps, hydroponic vegetable...",
+      "aspect": "3:2",
+      "cfg": 7.2,
+      "duration": 4.274,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 5,
+      "name": "slow_coffee",
+      "title": "The Analog Sabbath",
+      "scenario": "Kofi's café interior, hand-poured coffee, paper books on shelves, acoustic instr...",
+      "aspect": "4:5",
+      "cfg": 7,
+      "duration": 4.741,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 6,
+      "name": "relocation_camp",
+      "title": "The Migration Routes",
+      "scenario": "Climate relocation transition community 2042, vertical aeroponic gardens in conv...",
+      "aspect": "16:9",
+      "cfg": 6.8,
+      "duration": 3.46,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 7,
+      "name": "holographic_design",
+      "title": "Transition Architecture",
+      "scenario": "Maya in haptic suit working with holographic city models, virtual presence, tran...",
+      "aspect": "16:9",
+      "cfg": 7.5,
+      "duration": 3.563,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 8,
+      "name": "ai_consciousness",
+      "title": "The Oliver Question",
+      "scenario": "Abstract visualization of AI consciousness debate, digital entity emerging from ...",
+      "aspect": "16:9",
+      "cfg": 8,
+      "duration": 3.834,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 9,
+      "name": "arctic_garden",
+      "title": "The Garden at the End of the World",
+      "scenario": "Floating research platform in Arctic Ocean 2049, rooftop garden, plants from mul...",
+      "aspect": "21:9",
+      "cfg": 7.2,
+      "duration": 3.068,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 10,
+      "name": "coral_restoration",
+      "title": "Synthetic Biology Wonders",
+      "scenario": "Underwater coral restoration project, synthetic biology engineered reef, biolumi...",
+      "aspect": "16:9",
+      "cfg": 7.8,
+      "duration": 3.429,
+      "output": null,
+      "success": true
+    }
+  ]
+}

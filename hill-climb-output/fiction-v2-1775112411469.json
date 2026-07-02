@@ -1,0 +1,97 @@
+{
+  "article": "2030-2050-fiction",
+  "mode": "story_driven",
+  "totalTime": 83.395,
+  "results": [
+    {
+      "id": 1,
+      "name": "last_analog_sunset",
+      "cfg": 7,
+      "steps": 38,
+      "duration": 6.585,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 2,
+      "name": "three_continents",
+      "cfg": 7.2,
+      "steps": 40,
+      "duration": 6.799,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 3,
+      "name": "kofis_cafe",
+      "cfg": 7,
+      "steps": 36,
+      "duration": 9.469,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 4,
+      "name": "bioluminescent_market",
+      "cfg": 6.8,
+      "steps": 36,
+      "duration": 8.004,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 5,
+      "name": "transition_camp_children",
+      "cfg": 7,
+      "steps": 38,
+      "duration": 8.448,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 6,
+      "name": "oliver_awakening",
+      "cfg": 7.5,
+      "steps": 42,
+      "duration": 11.151,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 7,
+      "name": "maya_and_oliver",
+      "cfg": 7.2,
+      "steps": 38,
+      "duration": 7.316,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 8,
+      "name": "restored_reef",
+      "cfg": 7,
+      "steps": 38,
+      "duration": 7.343,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 9,
+      "name": "arctic_disconnection",
+      "cfg": 7,
+      "steps": 40,
+      "duration": 6.856,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": 10,
+      "name": "world_being_born",
+      "cfg": 7.2,
+      "steps": 40,
+      "duration": 6.863,
+      "output": null,
+      "success": true
+    }
+  ]
+}

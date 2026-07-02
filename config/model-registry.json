@@ -1,0 +1,164 @@
+{
+  "checkpoints": {
+    "512-inpainting-ema.safetensors": {
+      "filename": "512-inpainting-ema.safetensors",
+      "path": "models\\checkpoints\\512-inpainting-ema.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "ace_step_v1_3.5b.safetensors": {
+      "filename": "ace_step_v1_3.5b.safetensors",
+      "path": "models\\checkpoints\\ace_step_v1_3.5b.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "DreamShaper_8_pruned.safetensors": {
+      "filename": "DreamShaper_8_pruned.safetensors",
+      "path": "models\\checkpoints\\DreamShaper_8_pruned.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "epicrealismXL_vxviLastfameRealism.safetensors": {
+      "filename": "epicrealismXL_vxviLastfameRealism.safetensors",
+      "path": "models\\checkpoints\\epicrealismXL_vxviLastfameRealism.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "hunyuan3d-dit-v2-mv_fp16.safetensors": {
+      "filename": "hunyuan3d-dit-v2-mv_fp16.safetensors",
+      "path": "models\\checkpoints\\hunyuan3d-dit-v2-mv_fp16.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "hunyuan3d-dit-v2_fp16.safetensors": {
+      "filename": "hunyuan3d-dit-v2_fp16.safetensors",
+      "path": "models\\checkpoints\\hunyuan3d-dit-v2_fp16.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "hunyuan_3d_v2.1.safetensors": {
+      "filename": "hunyuan_3d_v2.1.safetensors",
+      "path": "models\\checkpoints\\hunyuan_3d_v2.1.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "lazymixRealAmateur_v40.safetensors": {
+      "filename": "lazymixRealAmateur_v40.safetensors",
+      "path": "models\\checkpoints\\lazymixRealAmateur_v40.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "lotus-depth-d-v1-1.safetensors": {
+      "filename": "lotus-depth-d-v1-1.safetensors",
+      "path": "models\\checkpoints\\lotus-depth-d-v1-1.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "ltx-2-19b-distilled-fp8.safetensors": {
+      "filename": "ltx-2-19b-distilled-fp8.safetensors",
+      "path": "models\\checkpoints\\LTX2\\ltx-2-19b-distilled-fp8.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "ltx-2-19b-distilled-lora-384.safetensors": {
+      "filename": "ltx-2-19b-distilled-lora-384.safetensors",
+      "path": "models\\checkpoints\\LTX2\\ltx-2-19b-distilled-lora-384.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "ltx-2-spatial-upscaler-x2-1.0.safetensors": {
+      "filename": "ltx-2-spatial-upscaler-x2-1.0.safetensors",
+      "path": "models\\checkpoints\\LTX2\\ltx-2-spatial-upscaler-x2-1.0.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "ltx-2-temporal-upscaler-x2-1.0.safetensors": {
+      "filename": "ltx-2-temporal-upscaler-x2-1.0.safetensors",
+      "path": "models\\checkpoints\\LTX2\\ltx-2-temporal-upscaler-x2-1.0.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "Qwen-Image-InstantX-ControlNet-Union.safetensors": {
+      "filename": "Qwen-Image-InstantX-ControlNet-Union.safetensors",
+      "path": "models\\checkpoints\\Qwen-Image-InstantX-ControlNet-Union.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "Qwen-Image-Lightning-4steps-V1.0.safetensors": {
+      "filename": "Qwen-Image-Lightning-4steps-V1.0.safetensors",
+      "path": "models\\checkpoints\\Qwen-Image-Lightning-4steps-V1.0.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "qwen_2.5_vl_7b_fp8_scaled.safetensors": {
+      "filename": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "path": "models\\checkpoints\\qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "v1-5-pruned-emaonly-fp16.safetensors": {
+      "filename": "v1-5-pruned-emaonly-fp16.safetensors",
+      "path": "models\\checkpoints\\v1-5-pruned-emaonly-fp16.safetensors",
+      "type": "checkpoint",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    }
+  },
+  "loras": {
+    "chest_closeup_zimgV1_000001500.safetensors": {
+      "filename": "chest_closeup_zimgV1_000001500.safetensors",
+      "path": "models\\loras\\chest_closeup_zimgV1_000001500.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "grainscape_zimage.safetensors": {
+      "filename": "grainscape_zimage.safetensors",
+      "path": "models\\loras\\grainscape_zimage.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "HI8.safetensors": {
+      "filename": "HI8.safetensors",
+      "path": "models\\loras\\HI8.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "lenovo_z.safetensors": {
+      "filename": "lenovo_z.safetensors",
+      "path": "models\\loras\\lenovo_z.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "Photov3-000008.safetensors": {
+      "filename": "Photov3-000008.safetensors",
+      "path": "models\\loras\\Photov3-000008.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "pixel_art_style_z_image_turbo.safetensors": {
+      "filename": "pixel_art_style_z_image_turbo.safetensors",
+      "path": "models\\loras\\pixel_art_style_z_image_turbo.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "QwenSnofs1_1.safetensors": {
+      "filename": "QwenSnofs1_1.safetensors",
+      "path": "models\\loras\\QwenSnofs1_1.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "Technically_Color_Z_Image_Turbo_v1_renderartist_2000.safetensors": {
+      "filename": "Technically_Color_Z_Image_Turbo_v1_renderartist_2000.safetensors",
+      "path": "models\\loras\\Technically_Color_Z_Image_Turbo_v1_renderartist_2000.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    },
+    "zy_CinematicShot_zit.safetensors": {
+      "filename": "zy_CinematicShot_zit.safetensors",
+      "path": "models\\loras\\zy_CinematicShot_zit.safetensors",
+      "type": "lora",
+      "last_scanned": "2026-01-11T17:13:10.561Z"
+    }
+  },
+  "embeddings": {},
+  "vae": {}
+}

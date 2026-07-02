@@ -5,25 +5,25 @@
  * from ThreeSixty.tsx with modern patterns and better defaults.
  */
 
-import React, { useMemo, useEffect, useState, Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
+import React, { useMemo, useEffect, useState, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
 // Preload removed — forces eager GPU upload of all assets, causing multi-second stall
-import * as THREE from 'three'
-import type { QualityLevel, DeviceCapabilities } from '@/lib/worlds/types'
+import * as THREE from 'three';
+import type { QualityLevel, DeviceCapabilities } from '@/lib/worlds/types';
 
 interface SceneCanvasProps {
-  children: React.ReactNode
-  quality?: QualityLevel
-  shadows?: boolean
-  onCreated?: (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene }) => void
+  children: React.ReactNode;
+  quality?: QualityLevel;
+  shadows?: boolean;
+  onCreated?: (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene }) => void;
 }
 
 /**
  * Detect device capabilities for adaptive quality (cached at module level)
  */
-let _cachedCapabilities: DeviceCapabilities | null = null
+let _cachedCapabilities: DeviceCapabilities | null = null;
 function detectCapabilities(): DeviceCapabilities {
-  if (_cachedCapabilities) return _cachedCapabilities
+  if (_cachedCapabilities) return _cachedCapabilities;
   if (typeof window === 'undefined') {
     return {
       qualityLevel: 'medium',
@@ -32,22 +32,28 @@ function detectCapabilities(): DeviceCapabilities {
       maxTextureSize: 4096,
       isMobile: false,
       pixelRatio: 1,
-    }
+    };
   }
 
   const isMobile =
     window.innerWidth < 768 ||
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
 
   // Check GPU capabilities via canvas
-  const canvas = document.createElement('canvas')
-  const gl = canvas.getContext('webgl2') || canvas.getContext('webgl')
-  const maxTextureSize = gl ? gl.getParameter(gl.MAX_TEXTURE_SIZE) : 4096
+  const canvas = document.createElement('canvas');
+  const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+  const maxTextureSize = gl ? gl.getParameter(gl.MAX_TEXTURE_SIZE) : 4096;
 
   // Determine quality level
-  let qualityLevel: QualityLevel = 'medium'
+  let qualityLevel: QualityLevel = 'medium';
   if (isMobile) {
-    qualityLevel = 'low'
+    qualityLevel = 'low';
+  } else if (maxTextureSize >= 16384 && window.devicePixelRatio >= 2) {
+    qualityLevel = 'ultra';
+  } else if (maxTextureSize >= 8192) {
+    qualityLevel = 'high';
   }
 
   const result: DeviceCapabilities = {
@@ -57,9 +63,9 @@ function detectCapabilities(): DeviceCapabilities {
     maxTextureSize,
     isMobile,
     pixelRatio: Math.min(window.devicePixelRatio, isMobile ? 2 : 3),
-  }
-  _cachedCapabilities = result
-  return result
+  };
+  _cachedCapabilities = result;
+  return result;
 }
 
 /**
@@ -68,11 +74,11 @@ function detectCapabilities(): DeviceCapabilities {
 const QUALITY_SETTINGS: Record<
   QualityLevel,
   {
-    dpr: [number, number]
-    antialias: boolean
-    shadows: boolean
-    shadowMapSize: number
-    performance: { min: number }
+    dpr: [number, number];
+    antialias: boolean;
+    shadows: boolean;
+    shadowMapSize: number;
+    performance: { min: number };
   }
 > = {
   low: {
@@ -83,33 +89,33 @@ const QUALITY_SETTINGS: Record<
     performance: { min: 0.2 },
   },
   medium: {
-    dpr: [0.6, 1],
+    dpr: [0.75, 1.5],
     antialias: false,
     shadows: false,
     shadowMapSize: 1024,
     performance: { min: 0.3 },
   },
   high: {
-    dpr: [0.75, 1.25],
+    dpr: [1, 1.5],
     antialias: false,
     shadows: false,
     shadowMapSize: 2048,
     performance: { min: 0.5 },
   },
   ultra: {
-    dpr: [1, 1.5],
+    dpr: [1, 2],
     antialias: false,
     shadows: false,
     shadowMapSize: 4096,
     performance: { min: 0.7 },
   },
-}
+};
 
 /**
  * Loading fallback component
  */
 function LoadingFallback() {
-  return null // Canvas handles loading internally
+  return null; // Canvas handles loading internally
 }
 
 /**
@@ -121,16 +127,16 @@ export default function SceneCanvas({
   shadows: shadowsOverride,
   onCreated,
 }: SceneCanvasProps) {
-  const [capabilities, setCapabilities] = useState<DeviceCapabilities | null>(null)
+  const [capabilities, setCapabilities] = useState<DeviceCapabilities | null>(null);
 
   // Detect capabilities on mount
   useEffect(() => {
-    setCapabilities(detectCapabilities())
-  }, [])
+    setCapabilities(detectCapabilities());
+  }, []);
 
   // Determine quality settings
-  const quality = qualityOverride ?? capabilities?.qualityLevel ?? 'medium'
-  const settings = QUALITY_SETTINGS[quality]
+  const quality = qualityOverride ?? capabilities?.qualityLevel ?? 'medium';
+  const settings = QUALITY_SETTINGS[quality];
 
   // GL configuration - optimized for r182
   const glConfig = useMemo(
@@ -147,7 +153,7 @@ export default function SceneCanvas({
       outputColorSpace: THREE.SRGBColorSpace,
     }),
     [settings.antialias]
-  )
+  );
 
   // Camera configuration
   const cameraConfig = useMemo(
@@ -158,31 +164,32 @@ export default function SceneCanvas({
       far: 1000,
     }),
     [capabilities?.isMobile]
-  )
+  );
 
   // Handle canvas creation
   const handleCreated = useMemo(
-    () => (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.Camera }) => {
-      const { gl, scene, camera } = state
+    () =>
+      (state: { gl: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.Camera }) => {
+        const { gl, scene, camera } = state;
 
-      // r182: Configure renderer
-      gl.toneMapping = THREE.ACESFilmicToneMapping
-      gl.toneMappingExposure = 1
+        // r182: Configure renderer
+        gl.toneMapping = THREE.ACESFilmicToneMapping;
+        gl.toneMappingExposure = 1;
 
-      // Shadow configuration (if enabled)
-      if (shadowsOverride ?? settings.shadows) {
-        gl.shadowMap.enabled = true
-        gl.shadowMap.type = THREE.PCFSoftShadowMap
-      }
+        // Shadow configuration (if enabled)
+        if (shadowsOverride ?? settings.shadows) {
+          gl.shadowMap.enabled = true;
+          gl.shadowMap.type = THREE.PCFSoftShadowMap;
+        }
 
-      // Scene defaults
-      scene.background = new THREE.Color('#0a0a0f')
+        // Scene defaults
+        scene.background = new THREE.Color('#0a0a0f');
 
-      // Callback
-      onCreated?.(state)
-    },
+        // Callback
+        onCreated?.(state);
+      },
     [settings.shadows, shadowsOverride, onCreated]
-  )
+  );
 
   // Don't render until capabilities are detected
   if (!capabilities) {
@@ -199,7 +206,7 @@ export default function SceneCanvas({
       >
         <div style={{ color: '#666', fontSize: '14px' }}>Initializing...</div>
       </div>
-    )
+    );
   }
 
   return (
@@ -219,9 +226,11 @@ export default function SceneCanvas({
         zIndex: 4,
       }}
     >
-      <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
+      <Suspense fallback={<LoadingFallback />}>
+        {children}
+      </Suspense>
     </Canvas>
-  )
+  );
 }
 
 /**
@@ -229,5 +238,5 @@ export default function SceneCanvas({
  */
 export function useSceneCapabilities(): DeviceCapabilities {
   // Uses module-level cache — no useState/useEffect needed
-  return detectCapabilities()
+  return detectCapabilities();
 }

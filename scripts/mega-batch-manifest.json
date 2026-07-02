@@ -1,0 +1,677 @@
+{
+  "generated": "2026-04-02T07:33:05.287Z",
+  "total": 101,
+  "success": 41,
+  "failed": 60,
+  "duration": "6.7 minutes",
+  "categories": [
+    "fracture",
+    "interregnum",
+    "longpassage",
+    "cartographers",
+    "inheritance",
+    "understory",
+    "echo",
+    "backstory",
+    "farshore",
+    "abstract",
+    "environment",
+    "artifact",
+    "technology",
+    "symbolic",
+    "temporal",
+    "emotional",
+    "atmosphere",
+    "portrait",
+    "experimental"
+  ],
+  "results": [
+    {
+      "id": "s01-exit-interview",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s02-certification",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s03-apprentice-forge",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s04-severance-botanist",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s05-last-cohort",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s06-power-outage",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s07-handoff-protocol",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s08-analog-daycare",
+      "category": "fracture",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s09-grief-counselor",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s10-collectors",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s11-translation-garden",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s12-subsidy",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s13-inventory-silences",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s14-bedtime-storyteller",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s15-scar-tissue",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s16-second-sleep",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s17-lullaby-index",
+      "category": "interregnum",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s18-dreamtime",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s19-dialect",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s20-lighthouse",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s21-resonance",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s22-threshold-revisited",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s23-sympathy-engine",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s24-tide-chart",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s25-correspondent",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s26-garden-between",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s27-compatibility",
+      "category": "longpassage",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s28-calibration",
+      "category": "cartographers",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s29-blank-map",
+      "category": "cartographers",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s30-volunteer",
+      "category": "cartographers",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s31-name-giver",
+      "category": "cartographers",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s32-expedition",
+      "category": "cartographers",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s33-mothers-hands",
+      "category": "inheritance",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s34-archive-errors",
+      "category": "inheritance",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s35-seed-vault",
+      "category": "inheritance",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s36-orphan-protocols",
+      "category": "inheritance",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s37-letters",
+      "category": "inheritance",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s38-pattern-keepers",
+      "category": "inheritance",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s39-night-librarian",
+      "category": "understory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s40-repair-cafe",
+      "category": "understory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s41-soil-remembers",
+      "category": "understory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s42-midwife",
+      "category": "understory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s43-radio-priest",
+      "category": "understory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s44-bookbinder",
+      "category": "understory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s45-unmeasured",
+      "category": "understory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s46-territorial-dispute",
+      "category": "echo",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s47-settlers",
+      "category": "echo",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s48-fossil",
+      "category": "echo",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s49-withdrawal",
+      "category": "echo",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s50-diary",
+      "category": "echo",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s51-garden",
+      "category": "backstory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s52-coder",
+      "category": "backstory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s53-janitor",
+      "category": "backstory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s54-photographer",
+      "category": "backstory",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s55-rememberer",
+      "category": "farshore",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s56-quiet-festival",
+      "category": "farshore",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s57-daughters-hands",
+      "category": "farshore",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s58-last-cartographer",
+      "category": "farshore",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s59-return",
+      "category": "farshore",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "s60-last-handshake",
+      "category": "farshore",
+      "error": "Error: Failed to queue workflow: {\"error\": {\"type\": \"prompt_outputs_failed_validation\", \"message\": \"Prompt outputs failed validation\", \"details\": \"\", \"extra_info\": {}}, \"node_errors\": {\"4\": {\"errors\": [{\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"width\", \"extra_info\": {\"input_name\": \"width\"}}, {\"type\": \"required_input_missing\", \"message\": \"Required input is missing\", \"details\": \"height\", \"extra_info\": {\"input_name\": \"height\"}}], \"dependent_outputs\": [\"7\"], \"class_type\": \"EmptyLatentImage\"}}}",
+      "success": false
+    },
+    {
+      "id": "abs01-boundary-shimmer",
+      "category": "abstract",
+      "duration": 7.393,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "abs02-deep-territory",
+      "category": "abstract",
+      "duration": 7.644,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "abs03-threshold-moment",
+      "category": "abstract",
+      "duration": 9.569,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "abs04-human-ai-merge",
+      "category": "abstract",
+      "duration": 12.943,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "abs05-orphaned-gestures",
+      "category": "abstract",
+      "duration": 9.036,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "abs06-vocational-grief",
+      "category": "abstract",
+      "duration": 8.832,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "city01-delft-institute",
+      "category": "environment",
+      "duration": 7.074,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "city02-future-2029",
+      "category": "environment",
+      "duration": 6.896,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "city03-future-2045",
+      "category": "environment",
+      "duration": 6.995,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "city04-norwegian-coast",
+      "category": "environment",
+      "duration": 7.261,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "city05-rotterdam-park",
+      "category": "environment",
+      "duration": 8.969,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "art01-pocket-notebook",
+      "category": "artifact",
+      "duration": 8.817,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "art02-blacksmith-tools",
+      "category": "artifact",
+      "duration": 8.971,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "art03-recording-equipment",
+      "category": "artifact",
+      "duration": 8.839,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "art04-motion-capture",
+      "category": "artifact",
+      "duration": 8.963,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "tech01-neural-interface",
+      "category": "technology",
+      "duration": 8.868,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "tech02-ai-terminal",
+      "category": "technology",
+      "duration": 8.937,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "tech03-cognitive-mapping",
+      "category": "technology",
+      "duration": 8.81,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "tech04-data-center",
+      "category": "technology",
+      "duration": 8.965,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "sym01-reaching-hands",
+      "category": "symbolic",
+      "duration": 9.862,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "sym02-last-handshake",
+      "category": "symbolic",
+      "duration": 8.971,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "sym03-competence-callus",
+      "category": "symbolic",
+      "duration": 8.777,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "sym04-silence-presence",
+      "category": "symbolic",
+      "duration": 9.052,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "temp01-amber-dusk",
+      "category": "temporal",
+      "duration": 6.947,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "temp02-blue-hour",
+      "category": "temporal",
+      "duration": 7.01,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "temp03-long-passage",
+      "category": "temporal",
+      "duration": 6.964,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "emo01-vocational-grief",
+      "category": "emotional",
+      "duration": 9.008,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "emo02-discovery-wonder",
+      "category": "emotional",
+      "duration": 8.801,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "emo03-intergenerational",
+      "category": "emotional",
+      "duration": 8.937,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "emo04-peaceful-coexistence",
+      "category": "emotional",
+      "duration": 8.824,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "atm01-reading-room",
+      "category": "atmosphere",
+      "duration": 8.937,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "atm02-workshop",
+      "category": "atmosphere",
+      "duration": 8.798,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "atm03-archive",
+      "category": "atmosphere",
+      "duration": 8.974,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "atm04-research-lab",
+      "category": "atmosphere",
+      "duration": 8.801,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "atm05-cottage",
+      "category": "atmosphere",
+      "duration": 9.443,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "port01-adaeze-young",
+      "category": "portrait",
+      "duration": 10.427,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "port02-adaeze-old",
+      "category": "portrait",
+      "duration": 10.722,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "port03-solene",
+      "category": "portrait",
+      "duration": 10.203,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "exp01-cognitive-weather",
+      "category": "experimental",
+      "duration": 13.47,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "exp02-memory-palace",
+      "category": "experimental",
+      "duration": 13.438,
+      "output": null,
+      "success": true
+    },
+    {
+      "id": "exp03-dreaming-ai",
+      "category": "experimental",
+      "duration": 13.444,
+      "output": null,
+      "success": true
+    }
+  ]
+}
