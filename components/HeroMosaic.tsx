@@ -19,52 +19,52 @@ const COMPLETE_TRANSITION_DELAY = 900
 
 const FALLBACK_TILES: { src: string; alt: string }[] = [
   {
-    src: '/images/multi-art/tech-quantum-key-distribution/option-1-fast-sdxl.png',
-    alt: 'Quantum key distribution',
+    src: '/images/multi-art/tech-byzantine-fault-tolerance/option-2-stable-diffusion-v35-large.png',
+    alt: 'Byzantine fault tolerance',
   },
   {
-    src: '/images/multi-art/tech-quantum-error-correction-qiskit/option-1-schnell.png',
-    alt: 'Quantum error correction',
+    src: '/images/multi-art/tech-cellular-automata-computing/option-2-stable-diffusion-v35-large.png',
+    alt: 'Cellular automata computing',
   },
   {
-    src: '/images/multi-art/tech-quantum-annealing-optimization/option-1-schnell.png',
-    alt: 'Quantum annealing optimization',
-  },
-  {
-    src: '/images/multi-art/tech-optical-neural-networks/option-1-fast-sdxl.png',
-    alt: 'Optical neural networks',
-  },
-  {
-    src: '/images/multi-art/tech-neural-ode/option-1-fast-sdxl.png',
-    alt: 'Neural ODE',
-  },
-  {
-    src: '/images/multi-art/tech-graph-neural-networks/option-1-fast-sdxl.png',
-    alt: 'Graph neural networks',
-  },
-  {
-    src: '/images/multi-art/tech-graphql-api-federation/option-1-fast-sdxl.png',
-    alt: 'GraphQL API federation',
-  },
-  {
-    src: '/images/multi-art/tech-nanoscale-self-assembly/option-1-fast-sdxl.png',
+    src: '/images/multi-art/tech-nanoscale-self-assembly/option-2-stable-diffusion-v35-large.png',
     alt: 'Nanoscale self assembly',
   },
   {
-    src: '/images/multi-art/tech-vector-database-optimization/option-1-schnell.png',
-    alt: 'Vector database optimization',
+    src: '/images/multi-art/tech-quantum-error-correction-qiskit/option-2-stable-diffusion-v35-large.png',
+    alt: 'Quantum error correction',
   },
   {
-    src: '/images/multi-art/tech-federated-learning-pytorch/option-1-schnell.png',
-    alt: 'Federated learning with PyTorch',
+    src: '/images/multi-art/tech-secrets-management-vault/option-2-stable-diffusion-v35-large.png',
+    alt: 'Secrets management vault',
   },
   {
-    src: '/images/multi-art/tech-molecular-dynamics-simulation/option-1-schnell.png',
-    alt: 'Molecular dynamics simulation',
+    src: '/images/multi-art/tech-thermal-imaging-detection/option-2-stable-diffusion-v35-large.png',
+    alt: 'Thermal imaging detection',
   },
   {
-    src: '/images/multi-art/tech-neuromorphic-computing/option-1-fast-sdxl.png',
-    alt: 'Neuromorphic computing',
+    src: '/images/multi-art/tech-time-series-database-prometheus/option-2-stable-diffusion-v35-large.png',
+    alt: 'Time series database Prometheus',
+  },
+  {
+    src: '/images/multi-art/tech-tokamak-plasma-control/option-2-stable-diffusion-v35-large.png',
+    alt: 'Tokamak plasma control',
+  },
+  {
+    src: '/images/multi-art/tech-blockchain-smart-contracts/option-3-stable-cascade.png',
+    alt: 'Blockchain smart contracts',
+  },
+  {
+    src: '/images/multi-art/tech-dna-data-storage/option-3-stable-cascade.png',
+    alt: 'DNA data storage',
+  },
+  {
+    src: '/images/multi-art/tech-optical-neural-networks/option-3-stable-cascade.png',
+    alt: 'Optical neural networks',
+  },
+  {
+    src: '/images/multi-art/tech-swarm-robotics-coordination/option-3-stable-cascade.png',
+    alt: 'Swarm robotics coordination',
   },
 ]
 

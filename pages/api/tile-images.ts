@@ -30,8 +30,14 @@ function scanTechMultiArt(baseDir: string): TileImage[] {
       .filter((f) => IMAGE_EXTS.has(path.extname(f).toLowerCase()))
     if (files.length === 0) continue
 
-    const pick = files.find((f) => f.toLowerCase().includes('option-1-fast-sdxl'))
-      ?? files.find((f) => f.toLowerCase().includes('option-1'))
+    // Prefer the highest-quality render available, avoiding the fast/speed
+    // options. Order: SD 3.5 Large > Stable Cascade > SDXL/Kolors/V2 > first.
+    const pick = files.find((f) => f.toLowerCase().includes('stable-diffusion-v35-large'))
+      ?? files.find((f) => f.toLowerCase().includes('stable-cascade'))
+      ?? files.find((f) => f.toLowerCase().includes('fast-sdxl'))
+      ?? files.find((f) => f.toLowerCase().includes('schnell'))
+      ?? files.find((f) => f.toLowerCase().includes('kolors'))
+      ?? files.find((f) => f.toLowerCase().includes('v2'))
       ?? files[0]
     const fullPath = path.join(folderPath, pick)
     const stat = fs.statSync(fullPath)
