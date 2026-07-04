@@ -189,6 +189,9 @@ importers:
       openai:
         specifier: ^3.3.0
         version: 3.3.0
+      opentype.js:
+        specifier: ^2.0.0
+        version: 2.0.0
       playwright:
         specifier: ^1.57.0
         version: 1.61.1
@@ -3808,6 +3811,10 @@ packages:
 
   openai@3.3.0:
     resolution: {integrity: sha512-uqxI/Au+aPRnsaQRe8CojU0eCR7I0mBiKjD3sNMzY6DaC1ZVrc85u98mtJW6voDug8fgGN+DIZmTDxTthxb7dQ==}
+
+  opentype.js@2.0.0:
+    resolution: {integrity: sha512-kCyjv6xdDY1W/jLWZ/L3QhhTlKUqDZMQ5+Jdlw12b3dXkKNpYBqqlMMj0YDQPShWFTMwgZI1hG14kN3XUDSg/A==}
+    hasBin: true
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -8885,6 +8892,8 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - supports-color
+
+  opentype.js@2.0.0: {}
 
   optionator@0.9.4:
     dependencies:
