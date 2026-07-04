@@ -24,9 +24,12 @@ const BLOOM_STRENGTH = 0.32
 const BLOOM_RADIUS = 0.25
 const BLOOM_THRESHOLD = 0.78
 // CA reads as lens character at the frame edge, defect in the middle: tiny scale step, and the
-// default center (screen middle) means zero shift where the dock and reading surfaces live.
-const CA_STRENGTH = 0.55
-const CA_SCALE = 1.012
+// screen-center anchor means zero shift where the reading surfaces usually live. Tuned down on
+// real hardware: the dock parks well off-center whenever a modal owns the middle, and at scale
+// 1.012 its text doubled into red/blue ghosts at that eccentricity. 1.005 keeps the rack-light
+// shimmer at the frame edge while leaving off-center windfoil text legible.
+const CA_STRENGTH = 0.4
+const CA_SCALE = 1.005
 const GRAIN = 0.11
 
 export function PostFX() {
