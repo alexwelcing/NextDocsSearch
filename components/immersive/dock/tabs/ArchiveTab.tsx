@@ -8,6 +8,7 @@ import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
 import { loadArchive, type ArcRecord } from '@/lib/immersive/archive'
+import { prefetchRecord } from '@/lib/immersive/prefetch'
 import { openModal } from '@/lib/immersive/navigation'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
@@ -76,6 +77,10 @@ export function ArchiveTab({ active, width }: { active: boolean; width: number }
   })
 
   const selected = records[sel]
+
+  useEffect(() => {
+    if (selected) prefetchRecord(selected.slug)
+  }, [selected])
 
   return (
     <group>

@@ -2,15 +2,37 @@
 // canvas, and keeps the URL and store in sync (deep links <-> modals/dock). Rendered once from
 // _app.tsx so the scene persists across route changes.
 
-import { useEffect } from 'react'
+import { Component, type ReactNode, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { routeToState } from '@/lib/immersive/navigation'
+import { loadFontAtlas } from '@/lib/windfoil/atlas'
+import { loadArchive } from '@/lib/immersive/archive'
 import { BootSequence } from './BootSequence'
 import { TerminalFallback } from './TerminalFallback'
 
 const ImmersiveCanvas = dynamic(() => import('./ImmersiveCanvas'), { ssr: false })
+
+// navigator.gpu existing does not guarantee a working adapter (blocklisted GPUs, headless,
+// remote sessions). If the renderer's init throws inside the canvas tree, downgrade to the
+// compatibility feed instead of a dead black viewport.
+class CanvasFailureBoundary extends Component<
+  { onFailure: () => void; children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false }
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+  componentDidCatch(error: unknown) {
+    console.error('[arc] renderer failed, dropping to compatibility mode:', error)
+    this.props.onFailure()
+  }
+  render() {
+    return this.state.failed ? null : this.props.children
+  }
+}
 
 export default function ImmersiveApp() {
   const bootPhase = useImmersiveStore((s) => s.bootPhase)
@@ -28,6 +50,13 @@ export default function ImmersiveApp() {
   useEffect(() => {
     const gpu = (navigator as Navigator & { gpu?: unknown }).gpu
     setBootPhase(gpu ? 'booting' : 'unsupported')
+    if (gpu) {
+      // Warm the critical caches behind the boot sequence so the dock and reader open instantly.
+      const swallow = () => undefined
+      loadFontAtlas('vt323').catch(swallow)
+      loadFontAtlas('share-tech-mono').catch(swallow)
+      loadArchive().catch(swallow)
+    }
   }, [setBootPhase])
 
   // Reduced motion + coarse quality heuristics.
@@ -68,7 +97,9 @@ export default function ImmersiveApp() {
 
   return (
     <>
-      <ImmersiveCanvas />
+      <CanvasFailureBoundary onFailure={() => setBootPhase('unsupported')}>
+        <ImmersiveCanvas />
+      </CanvasFailureBoundary>
       {bootPhase === 'booting' && <BootSequence />}
     </>
   )

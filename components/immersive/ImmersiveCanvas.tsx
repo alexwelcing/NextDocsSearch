@@ -30,7 +30,23 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
           antialias: true,
           powerPreference: 'high-performance',
         })
-        await renderer.init()
+        try {
+          await renderer.init()
+          // three silently falls back to a WebGL2 backend when no adapter is grantable; the
+          // windfoil text engine is WGSL-only, so that fallback is unusable here.
+          const backend = (renderer as unknown as { backend?: { isWebGPUBackend?: boolean } })
+            .backend
+          if (!backend?.isWebGPUBackend) {
+            throw new Error('WebGPU adapter unavailable (WebGL2 fallback refused)')
+          }
+        } catch (err) {
+          // navigator.gpu can exist while no adapter/device is grantable (blocklists, remote
+          // sessions). Async rejections never reach React error boundaries, so downgrade the
+          // store directly — ImmersiveApp unmounts this canvas and shows the flat feed.
+          console.error('[arc] WebGPU init failed, compatibility mode:', err)
+          useImmersiveStore.getState().setBootPhase('unsupported')
+          throw err
+        }
         renderer.toneMapping = THREE.ACESFilmicToneMapping
         renderer.toneMappingExposure = 1.05
         return renderer

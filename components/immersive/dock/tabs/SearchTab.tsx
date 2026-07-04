@@ -9,6 +9,7 @@ import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
 import { loadArchive, searchArchive, type ArcRecord } from '@/lib/immersive/archive'
+import { prefetchRecord } from '@/lib/immersive/prefetch'
 import { openModal } from '@/lib/immersive/navigation'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
@@ -49,6 +50,10 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
 
   const results = useMemo(() => searchArchive(records, query, 40), [records, query])
   useEffect(() => setSel(0), [query])
+  useEffect(() => {
+    const rec = results[sel]
+    if (rec) prefetchRecord(rec.slug)
+  }, [results, sel])
 
   const activate = (index: number) => {
     const rec = results[index]
