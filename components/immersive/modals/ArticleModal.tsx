@@ -199,6 +199,10 @@ export function ArticleModal({ slug }: { slug: string }) {
             position={[p.col * (COL_W + COL_GAP), -p.y, 0]}
             maxWidth={COL_W}
             lineHeight={LINE_HEIGHT}
+            // Fresh blocks every page turn (key changes with `page`) — the record "decodes in"
+            // block by block, staggered slightly by reading order.
+            revealDuration={420}
+            revealDelay={Math.min(i * 18, 260)}
           >
             {p.block.t === 'h' ? p.block.x.toUpperCase() : p.block.x}
           </WindfoilText>

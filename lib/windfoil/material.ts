@@ -9,9 +9,10 @@ import * as THREE from 'three/webgpu'
 import {
   code,
   float,
+  instanceIndex,
   instancedBufferAttribute,
-  mix,
   positionGeometry,
+  smoothstep,
   storage,
   uniform,
   varying,
@@ -69,7 +70,17 @@ export interface WindfoilTextOptions {
 export interface WindfoilTextMesh extends THREE.Mesh {
   /** Per-mesh fade multiplier (uniform, animatable without relayout). */
   wfOpacity: { value: number }
+  /** Per-mesh materialize-in progress, 0..1 (see WindfoilText's revealDuration prop). Defaults
+   *  to a sentinel past 1 so text with no reveal driver renders fully in, unanimated. */
+  wfReveal: { value: number }
 }
+
+// Width of each glyph's individual fade-in window, in normalized reveal-progress units. Multiple
+// glyphs fade concurrently within this band, reading as a soft cascading materialize rather than
+// one glyph at a time.
+const REVEAL_WINDOW = 0.14
+// Past 1 + REVEAL_WINDOW, every glyph's smoothstep saturates to 1 — the "fully revealed" rest state.
+const REVEAL_DONE = 1 + REVEAL_WINDOW
 
 /**
  * Build a renderable text mesh from a TextLayout. Local space: block top-left at the origin,
@@ -131,6 +142,7 @@ export function createTextMesh(
   // --- material ------------------------------------------------------------------------------
   const material = new THREE.NodeMaterial()
   const opacity = uniform(1)
+  const reveal = uniform(REVEAL_DONE)
 
   // Explicit <'vec4'> type argument: the plain 'vec4' string argument alone widens to `string` in
   // generic inference (literal inference only kicks in for the type PARAMETER position, not a
@@ -159,6 +171,16 @@ export function createTextMesh(
   const vColor = varying(vec4(color))
   const vFill = varying(place.w)
 
+  // Materialize-in: instanceIndex is emission order (reading order — line by line, char by char,
+  // per layoutText), a vertex-stage-only WGSL builtin, so the ordinal and its fade window are
+  // computed here and carried to the fragment stage as a varying like everything else above.
+  const revealDenom = Math.max(layout.glyphCount - 1, 1)
+  const ordinal = float(instanceIndex).div(revealDenom)
+  // Each glyph is 0% revealed at reveal===ordinal, ramping to 100% by ordinal+REVEAL_WINDOW — NOT
+  // the mirrored [ordinal-window, ordinal] form, which would put glyph 0's window entirely at or
+  // below reveal=0 and pop it in fully formed instead of fading it in with the rest.
+  const vReveal = varying(smoothstep(ordinal, ordinal.add(REVEAL_WINDOW), reveal))
+
   if (options.debug === 'solid') {
     material.fragmentNode = vec4(0, 1, 0, 1)
   } else if (options.debug === 'rc') {
@@ -180,7 +202,7 @@ export function createTextMesh(
       curves,
       rows,
     }) as unknown as Parameters<typeof float>[0]
-    const a = vColor.w.mul(float(cov)).mul(opacity)
+    const a = vColor.w.mul(float(cov)).mul(opacity).mul(vReveal)
     material.fragmentNode = vec4(vColor.xyz.mul(a), a)
     material.transparent = true
     material.premultipliedAlpha = true
@@ -192,6 +214,7 @@ export function createTextMesh(
 
   const mesh = new THREE.Mesh(geometry, material) as unknown as WindfoilTextMesh
   mesh.wfOpacity = opacity
+  mesh.wfReveal = reveal
   mesh.frustumCulled = true
   return mesh
 }

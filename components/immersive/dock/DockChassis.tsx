@@ -58,7 +58,9 @@ export function DockChassis({ activity }: { activity: boolean }) {
           />
         </mesh>
       </group>
-      {/* brand plate */}
+      {/* brand plate — glow doubles as the warmup mount for the additive halo pipeline: this
+          text is always in the scene, so the blend-state variant compiles during boot instead
+          of on the first glowing header. */}
       <WindfoilText
         font={FONT.display}
         fontSize={0.028}
@@ -67,6 +69,7 @@ export function DockChassis({ activity }: { activity: boolean }) {
         anchorY="middle"
         position={[-BODY_W / 2 + 0.035, -BODY_H / 2 + 0.155, 0.002]}
         renderOrder={20}
+        glow
       >
         ARC-III
       </WindfoilText>

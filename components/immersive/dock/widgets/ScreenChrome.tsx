@@ -7,7 +7,15 @@ import { SCREEN_H } from '../CrtScreen'
 export function ScreenHeader({ title, right, width }: { title: string; right?: string; width: number }) {
   return (
     <group>
-      <WindfoilText font={FONT.display} fontSize={TYPE.header} color={rgba(ARC.greenBright)}>
+      {/* revealDuration is safe here — title is a static per-tab string, set once on mount, never
+          rebuilt per-keystroke like `right` (record counts / hit counts) can be. */}
+      <WindfoilText
+        font={FONT.display}
+        fontSize={TYPE.header}
+        color={rgba(ARC.greenBright)}
+        revealDuration={260}
+        glow
+      >
         {title}
       </WindfoilText>
       {right && (

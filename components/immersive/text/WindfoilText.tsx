@@ -4,13 +4,25 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three/webgpu'
-import type { ThreeElements } from '@react-three/fiber'
+import { useFrame, type ThreeElements } from '@react-three/fiber'
 
 type GroupProps = ThreeElements['group']
 import { loadFontAtlas, peekFontAtlas } from '@/lib/windfoil/atlas'
 import { layoutText } from '@/lib/windfoil/layout'
-import { createTextMesh } from '@/lib/windfoil/material'
+import { createTextMesh, type WindfoilTextMesh } from '@/lib/windfoil/material'
 import type { FontAtlas, TextAlign, TextRun } from '@/lib/windfoil/types'
+
+// Phosphor glow: windfoil's coverage is exact at any scale, so one enlarged copy alone is just a
+// bigger crisp copy, not a blur — there's no post-processing pipeline to actually blur it. The
+// classic poor-man's-bloom trick instead: a couple of uniformly-enlarged, additively-blended,
+// dimmer copies of the SAME mesh layered under the crisp one. The thin rings where each larger
+// copy peeks out past the previous one are dim enough to read as a soft falloff rather than
+// distinct hard edges — especially over the CRT scanline/vignette overlay, and especially for
+// green-on-black phosphor text, which is exactly what real CRT glow looks like.
+const GLOW_LAYERS: { scale: number; opacityScale: number }[] = [
+  { scale: 1.22, opacityScale: 0.35 },
+  { scale: 1.55, opacityScale: 0.13 },
+]
 
 export type RGBA = [number, number, number, number]
 
@@ -60,6 +72,15 @@ export interface WindfoilTextProps extends Omit<GroupProps, 'children' | 'color'
   depthWrite?: boolean
   renderOrder?: number
   onLayout?: (box: { width: number; height: number; lineCount: number }) => void
+  /** Materialize-in reveal, ms. Unset = text appears instantly (the default everywhere). Restarts
+   *  whenever a new mesh is created (content/font/size change) — only use on text that settles
+   *  once per mount (boot lines, tab switches, page turns), not on live-typed input. */
+  revealDuration?: number
+  /** ms to hold at zero before the reveal starts (for staggering multiple blocks). */
+  revealDelay?: number
+  /** Additive phosphor halo behind the text — a few cents of extra draw calls, no post-processing
+   *  pipeline required. Opt-in: use sparingly (headers, hero moments), not on dense body copy. */
+  glow?: boolean
 }
 
 const DEFAULT_COLOR: RGBA = [0.44, 1, 0.56, 1] // phosphor green
@@ -83,6 +104,9 @@ export function WindfoilText({
   depthWrite,
   renderOrder = 10,
   onLayout,
+  revealDuration,
+  revealDelay = 0,
+  glow = false,
   ...groupProps
 }: WindfoilTextProps) {
   const atlas = useFontAtlas(font)
@@ -109,6 +133,27 @@ export function WindfoilText({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [atlas, layout, gamma, sharp, depthTest, depthWrite])
 
+  // Halo copies for the `glow` prop: same atlas/layout, additive blending, scaled up around the
+  // text block's own center (computed directly — see GLOW_LAYERS' comment for why this can't be
+  // done with padUnits alone).
+  const haloMeshes = useMemo<WindfoilTextMesh[]>(() => {
+    if (!atlas || !layout || !glow) return []
+    return GLOW_LAYERS.map((_layer) => {
+      const m = createTextMesh(atlas, layout, { gamma, sharp, depthTest, depthWrite: false })
+      const mat = m.material as THREE.Material
+      mat.blending = THREE.AdditiveBlending
+      mat.depthWrite = false
+      return m
+    })
+  }, [atlas, layout, glow, gamma, sharp, depthTest])
+
+  const haloTransforms = useMemo<[number, number, number][]>(() => {
+    if (!layout) return []
+    const cx = layout.width / 2
+    const cy = -layout.height / 2
+    return GLOW_LAYERS.map((l) => [cx * (1 - l.scale), cy * (1 - l.scale), 0])
+  }, [layout])
+
   useEffect(() => {
     if (!mesh) return
     return () => {
@@ -118,12 +163,49 @@ export function WindfoilText({
   }, [mesh])
 
   useEffect(() => {
+    if (!haloMeshes.length) return
+    return () => {
+      for (const m of haloMeshes) {
+        m.geometry.dispose()
+        ;(m.material as THREE.Material).dispose()
+      }
+    }
+  }, [haloMeshes])
+
+  useEffect(() => {
     if (mesh) mesh.renderOrder = renderOrder
-  }, [mesh, renderOrder])
+    for (const m of haloMeshes) m.renderOrder = renderOrder - 1
+  }, [mesh, haloMeshes, renderOrder])
 
   useEffect(() => {
     if (mesh) mesh.wfOpacity.value = opacity
-  }, [mesh, opacity])
+    haloMeshes.forEach((m, i) => {
+      m.wfOpacity.value = opacity * GLOW_LAYERS[i].opacityScale
+    })
+  }, [mesh, haloMeshes, opacity])
+
+  // Arm the reveal on every fresh mesh (a new mesh means new content/font/size — the natural
+  // moment to (re)materialize). No-op when revealDuration is unset; createTextMesh's default
+  // wfReveal value already renders such text fully in.
+  const revealStartAt = useRef<number | null>(null)
+  const revealSettled = useRef(true)
+  useEffect(() => {
+    if (!mesh || !revealDuration) return
+    mesh.wfReveal.value = 0
+    for (const m of haloMeshes) m.wfReveal.value = 0
+    revealStartAt.current = performance.now() + revealDelay
+    revealSettled.current = false
+  }, [mesh, haloMeshes, revealDuration, revealDelay])
+
+  useFrame(() => {
+    if (revealSettled.current || !mesh || !revealDuration || revealStartAt.current === null) return
+    const elapsed = performance.now() - revealStartAt.current
+    if (elapsed < 0) return // still in the delay window
+    const p = Math.min(elapsed / revealDuration, 1.15) // past 1 so the last glyph's window fully clears
+    mesh.wfReveal.value = p
+    for (const m of haloMeshes) m.wfReveal.value = p
+    if (p >= 1.15) revealSettled.current = true
+  })
 
   const onLayoutRef = useRef(onLayout)
   onLayoutRef.current = onLayout
@@ -146,7 +228,17 @@ export function WindfoilText({
 
   return (
     <group {...groupProps}>
-      {mesh && <primitive object={mesh} position={offset} />}
+      <group position={offset}>
+        {haloMeshes.map((m, i) => (
+          <primitive
+            key={i}
+            object={m}
+            position={haloTransforms[i]}
+            scale={GLOW_LAYERS[i].scale}
+          />
+        ))}
+        {mesh && <primitive object={mesh} />}
+      </group>
     </group>
   )
 }
