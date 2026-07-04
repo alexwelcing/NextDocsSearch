@@ -24,9 +24,14 @@ interface ImmersiveState {
   bootPhase: BootPhase
   setBootPhase: (p: BootPhase) => void
 
-  /** Critical scene assets ready (first panorama + font atlas) — boot can complete. */
+  /** First panorama texture decoded and live. */
   sceneReady: boolean
   setSceneReady: (v: boolean) => void
+
+  /** GPU render pipelines precompiled (renderer.compileAsync) — gates boot to avoid a
+   *  first-frame hitch when the CRT overlay lifts. See scene/ShaderWarmup.tsx. */
+  shadersWarm: boolean
+  setShadersWarm: (v: boolean) => void
 
   dockOpen: boolean
   dockTab: DockTab
@@ -57,6 +62,9 @@ export const useImmersiveStore = create<ImmersiveState>((set) => ({
 
   sceneReady: false,
   setSceneReady: (sceneReady) => set({ sceneReady }),
+
+  shadersWarm: false,
+  setShadersWarm: (shadersWarm) => set({ shadersWarm }),
 
   dockOpen: false,
   dockTab: 'archive',

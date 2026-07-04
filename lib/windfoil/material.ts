@@ -132,11 +132,13 @@ export function createTextMesh(
   const material = new THREE.NodeMaterial()
   const opacity = uniform(1)
 
-  // vec4() wrappers give the untyped attribute nodes proper swizzle typings
-  const place = vec4(instancedBufferAttribute(placeAttr)) // originX, originY (Y-down), unitsToLocal, fillRule
-  const bbox = vec4(instancedBufferAttribute(bboxAttr)) // ink box in font units, Y-down
-  const color = vec4(instancedBufferAttribute(colorAttr)) // straight-alpha RGBA
-  const band = vec4(instancedBufferAttribute(bandAttr)) // rowBase, bandCount, y0, invH
+  // Explicit <'vec4'> type argument: the plain 'vec4' string argument alone widens to `string` in
+  // generic inference (literal inference only kicks in for the type PARAMETER position, not a
+  // same-named runtime argument), which drops swizzle typings (.xy, .zw, ...).
+  const place = instancedBufferAttribute<'vec4'>(placeAttr, 'vec4') // originX, originY (Y-down), unitsToLocal, fillRule
+  const bbox = instancedBufferAttribute<'vec4'>(bboxAttr, 'vec4') // ink box in font units, Y-down
+  const color = instancedBufferAttribute<'vec4'>(colorAttr, 'vec4') // straight-alpha RGBA
+  const band = instancedBufferAttribute<'vec4'>(bandAttr, 'vec4') // rowBase, bandCount, y0, invH
 
   // Vertex: expand the unit quad over the padded ink box, place it in block-local space, flip Y up.
   const corner = positionGeometry.xy
@@ -166,6 +168,9 @@ export function createTextMesh(
     const fw = vRC.fwidth().mul(0.01)
     material.fragmentNode = vec4(fw.x, fw.y, 0, 1)
   } else {
+    // wgslFn's declared return type is an untemplated Node (TS can't parse the WGSL return type
+    // from the source string), so float() — which only accepts already-scalar-typed nodes —
+    // needs a cast at this one boundary. The WGSL itself declares `-> f32`, so this is accurate.
     const cov = wfCoverage({
       rc: vRC,
       band: vBand,
@@ -174,7 +179,7 @@ export function createTextMesh(
       style: vec2(float(gamma), float(sharp)),
       curves,
       rows,
-    })
+    }) as unknown as Parameters<typeof float>[0]
     const a = vColor.w.mul(float(cov)).mul(opacity)
     material.fragmentNode = vec4(vColor.xyz.mul(a), a)
     material.transparent = true

@@ -10,6 +10,7 @@ import { PanoramaSphere } from './scene/PanoramaSphere'
 import { Atmosphere } from './scene/Atmosphere'
 import { SceneLights } from './scene/SceneLights'
 import { CameraRig } from './scene/CameraRig'
+import { ShaderWarmup } from './scene/ShaderWarmup'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
 import { SphereHunter } from './game/SphereHunter'
@@ -60,6 +61,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       <Atmosphere />
       <SceneLights />
       <CameraRig />
+      <ShaderWarmup />
       <ArcDock />
       <ImmersiveModals />
       <SphereHunter />

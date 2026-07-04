@@ -1,6 +1,7 @@
-// CRT boot sequence: a diegetic loader that plays over the scene while critical assets stream in.
-// Lines type on with staggered delays; the PANORAMA BUS gauge tracks sceneReady; a final flash
-// hands off to the live scene. Click/Enter skips once assets are ready.
+// CRT boot sequence: a diegetic loader that plays over the scene while critical assets stream in
+// AND the GPU render pipelines precompile (see scene/ShaderWarmup.tsx) — so the flash reveal
+// never pays a visible shader-compile hitch. Lines type on with staggered delays; the PANORAMA
+// BUS gauge and PIPELINE CACHE line track real async state. Click/Enter skips once both are in.
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useImmersiveStore } from '@/stores/immersiveStore'
@@ -30,8 +31,14 @@ const TYPE_MS = 22
 
 export function BootSequence() {
   const sceneReady = useImmersiveStore((s) => s.sceneReady)
+  const shadersWarm = useImmersiveStore((s) => s.shadersWarm)
   const reducedMotion = useImmersiveStore((s) => s.reducedMotion)
   const setBootPhase = useImmersiveStore((s) => s.setBootPhase)
+
+  // Both the panorama texture and the GPU render pipelines (windfoil text, CRT overlays, the
+  // panorama material) need to be in before the reveal, or the flash covers for a texture load
+  // but not a shader-compile hitch.
+  const assetsReady = sceneReady && shadersWarm
 
   const [visibleLines, setVisibleLines] = useState(0)
   const [typedChars, setTypedChars] = useState(0)
@@ -60,16 +67,16 @@ export function BootSequence() {
     return () => clearTimeout(t)
   }, [visibleLines, typedChars, linesDone, reducedMotion])
 
-  // Panorama gauge: creeps to 90% on its own, snaps to 100% when the scene is ready.
+  // Panorama gauge: creeps to 90% on its own, snaps to 100% once everything is actually in.
   useEffect(() => {
     const iv = setInterval(() => {
       setGauge((g) => {
-        if (sceneReady) return 1
+        if (assetsReady) return 1
         return Math.min(g + 0.06 * Math.random(), 0.9)
       })
     }, 160)
     return () => clearInterval(iv)
-  }, [sceneReady])
+  }, [assetsReady])
 
   const finish = useMemo(
     () => () => {
@@ -83,16 +90,16 @@ export function BootSequence() {
 
   // Auto-finish shortly after everything is in.
   useEffect(() => {
-    if (linesDone && sceneReady && gauge >= 1) {
+    if (linesDone && assetsReady && gauge >= 1) {
       const t = setTimeout(finish, reducedMotion ? 50 : 650)
       return () => clearTimeout(t)
     }
-  }, [linesDone, sceneReady, gauge, finish, reducedMotion])
+  }, [linesDone, assetsReady, gauge, finish, reducedMotion])
 
   // Skip on input once assets are ready.
   useEffect(() => {
     const skip = () => {
-      if (sceneReady) finish()
+      if (assetsReady) finish()
     }
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') skip()
@@ -103,7 +110,7 @@ export function BootSequence() {
       window.removeEventListener('pointerdown', skip)
       window.removeEventListener('keydown', onKey)
     }
-  }, [sceneReady, finish])
+  }, [assetsReady, finish])
 
   const gaugeCells = 24
   const filled = Math.round(gauge * gaugeCells)
@@ -126,7 +133,12 @@ export function BootSequence() {
           PANORAMA BUS ....... [{'▓'.repeat(filled)}{'░'.repeat(gaugeCells - filled)}]{' '}
           {Math.round(gauge * 100)}%
         </div>
-        {linesDone && sceneReady && (
+        {linesDone && (
+          <div className="arc-boot__line">
+            PIPELINE CACHE ..... {shadersWarm ? 'WARM' : 'COMPILING…'}
+          </div>
+        )}
+        {linesDone && assetsReady && (
           <div className="arc-boot__line arc-boot__hint">— PRESS ANY KEY —</div>
         )}
       </div>

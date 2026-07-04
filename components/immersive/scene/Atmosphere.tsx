@@ -30,7 +30,12 @@ export function Atmosphere() {
     const geometry = new THREE.OctahedronGeometry(0.05, 0)
     const material = new THREE.NodeMaterial()
 
-    const tint = uniform(new THREE.Color(world.particles.color))
+    // A Vector3 (not Color) uniform: uniform(Color) infers a 'color'-typed node, and pinned TSL's
+    // overloads don't let a plain type-string argument relabel it to 'vec3' anymore. Building the
+    // uniform from a Vector3 gets a genuinely vec3-typed node directly, one node simpler than the
+    // old uniform(Color) + vec3()-conversion pair.
+    const tintColor = new THREE.Color(world.particles.color)
+    const tint = uniform(new THREE.Vector3(tintColor.r, tintColor.g, tintColor.b))
 
     // Deterministic per-instance randoms.
     const h1 = hash(instanceIndex)
@@ -58,7 +63,7 @@ export function Atmosphere() {
 
     // Additive phosphor glow, twinkling.
     const twinkle = float(0.35).add(sin(time.mul(2.1).add(h4.mul(TAU))).mul(0.25))
-    material.colorNode = vec4(vec3(tint).mul(twinkle), 1)
+    material.colorNode = vec4(tint.mul(twinkle), 1)
     material.transparent = true
     material.blending = THREE.AdditiveBlending
     material.depthWrite = false
