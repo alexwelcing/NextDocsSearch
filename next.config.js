@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // StrictMode double-mounting destroys the first WebGPURenderer while its async init is still in
+  // flight (device lost -> permanent black canvas), so it stays off for the immersive app.
+  reactStrictMode: false,
+  allowedDevOrigins: ['127.0.0.1', 'localhost'],
 
   // Environment variables
   env: {

@@ -1,0 +1,44 @@
+diff --git a/build/three.webgpu.js b/build/three.webgpu.js
+index 2e490796d4d4aa9479b04a5c46ddbf31cc05b1a1..f44b05ecd519ed71e7da557be62cff150df26f11 100644
+--- a/build/three.webgpu.js
++++ b/build/three.webgpu.js
+@@ -75402,7 +75402,7 @@ class GPUTextureViewDescriptor {
+ 		 * @type {string}
+ 		 * @default 'rgba'
+ 		 */
+-		this.swizzle = 'rgba';
++		this.swizzle = undefined; // patched: upstream sends a bare string here, but the real WebGPU IDL for 'texture-component-swizzle' wants a { r, g, b, a } dictionary — a spec-shape mismatch that throws on any implementation validating it (see patches/three+0.185.1.patch). undefined omits the field, which is the correct 'no swizzle' default anyway.
+ 
+ 	}
+ 
+@@ -75420,7 +75420,7 @@ class GPUTextureViewDescriptor {
+ 		this.mipLevelCount = undefined;
+ 		this.baseArrayLayer = 0;
+ 		this.arrayLayerCount = undefined;
+-		this.swizzle = 'rgba';
++		this.swizzle = undefined; // patched: upstream sends a bare string here, but the real WebGPU IDL for 'texture-component-swizzle' wants a { r, g, b, a } dictionary — a spec-shape mismatch that throws on any implementation validating it (see patches/three+0.185.1.patch). undefined omits the field, which is the correct 'no swizzle' default anyway.
+ 
+ 	}
+ 
+diff --git a/build/three.webgpu.nodes.js b/build/three.webgpu.nodes.js
+index f707acc24f5711fdae065ce920b08435b0869c1b..f8c44c709a5abb10334c04d4b5961e7710233b8e 100644
+--- a/build/three.webgpu.nodes.js
++++ b/build/three.webgpu.nodes.js
+@@ -75402,7 +75402,7 @@ class GPUTextureViewDescriptor {
+ 		 * @type {string}
+ 		 * @default 'rgba'
+ 		 */
+-		this.swizzle = 'rgba';
++		this.swizzle = undefined; // patched — see patches/three+0.185.1.patch
+ 
+ 	}
+ 
+@@ -75420,7 +75420,7 @@ class GPUTextureViewDescriptor {
+ 		this.mipLevelCount = undefined;
+ 		this.baseArrayLayer = 0;
+ 		this.arrayLayerCount = undefined;
+-		this.swizzle = 'rgba';
++		this.swizzle = undefined; // patched — see patches/three+0.185.1.patch
+ 
+ 	}
+ 

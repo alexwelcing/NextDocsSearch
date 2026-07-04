@@ -1,50 +1,41 @@
-import React from 'react'
+// 404: terminal-flavored record-not-found page.
+
 import Head from 'next/head'
 import Link from 'next/link'
-import styles from '@/styles/Home.module.css'
-import CircleNav from '@/components/ui/CircleNav'
 import { SITE_URL } from '@/lib/site-url'
 
-export default function Custom404() {
-  const siteUrl = SITE_URL
+export default function NotFoundPage() {
   return (
     <>
       <Head>
-        <title>This page is real, but the one you clicked on was not. 404.</title>
+        <title>RECORD NOT FOUND — Alex Welcing</title>
         <meta
           name="description"
-          content="The page you are looking for on Alex Welcing's site does not exist, sorry about that."
+          content="The requested record does not exist in the archive. Return to the index or browse all records."
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="noindex, follow" />
-        <link rel="canonical" href={`${siteUrl}/404`} />
-        <link rel="icon" href="/favicon.ico" />
-
-        <meta property="og:title" content="Page Not Found | Alex Welcing" />
-        <meta
-          property="og:description"
-          content="The page you are looking for on Alex Welcing's site does not exist."
-        />
-        <meta property="og:image" content={`${siteUrl}/social-preview.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:type" content="website" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@alexwelcing" />
-        <meta name="twitter:title" content="Page Not Found | Alex Welcing" />
-        <meta
-          name="twitter:description"
-          content="The page you are looking for on Alex Welcing's site does not exist."
-        />
-        <meta name="twitter:image" content={`${siteUrl}/social-preview.png`} />
+        <link rel="canonical" href={`${SITE_URL}/404`} />
       </Head>
-      <CircleNav />
-      <div className={styles.gradientbg + ' flex flex-col items-center justify-center min-h-screen'}>
-        <h1 className="text-3xl font-bold mb-4">This page is real, but the one you clicked on was not. 404.</h1>
-        <Link href="/" className={styles.landingBtn}>
-          Return to Home
-        </Link>
-      </div>
+      <main className="arc-feed">
+        <header>
+          <h1>RECORD NOT FOUND</h1>
+          <p>
+            ARC TERMINAL // STATUS 404. The address you requested resolves to no record in this
+            archive. It may have been moved, renamed, or never committed.
+          </p>
+        </header>
+        <nav aria-label="Recovery options">
+          <ul>
+            <li>
+              <Link href="/">RETURN TO INDEX /</Link>
+            </li>
+            <li>
+              <Link href="/articles">BROWSE ALL RECORDS /articles</Link>
+            </li>
+          </ul>
+        </nav>
+      </main>
     </>
   )
 }
