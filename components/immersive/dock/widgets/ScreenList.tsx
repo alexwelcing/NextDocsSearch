@@ -1,7 +1,8 @@
 // Paginated selectable list for the CRT screen: fixed rows per page (authentic terminal
-// behavior — no smooth scrolling on a 1970s tube), selection cursor, hover, meta column.
+// behavior — no smooth scrolling on a 1970s tube), selection cursor, hover, meta column,
+// and page affordances: ◀ ▶ chips beside the PAGE counter plus wheel-over-the-list paging.
 
-import { Fragment } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { WindfoilText } from '../../text/WindfoilText'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
 import { stopLook } from '../DockKey'
@@ -34,11 +35,39 @@ export function ScreenList({
   y?: number
 }) {
   const page = Math.floor(selected / rows)
+  const pageCount = Math.max(1, Math.ceil(items.length / rows))
   const start = page * rows
   const visible = items.slice(start, start + rows)
+  const wheelAcc = useRef(0)
+
+  // both chips and wheel move the SELECTION a full page — the page display derives from it
+  const turnPage = (dir: number) => {
+    if (!items.length) return
+    const target = Math.max(0, Math.min(selected + dir * rows, items.length - 1))
+    if (target !== selected) onSelect(target)
+  }
 
   return (
     <group position={[0, y, 0]}>
+      {/* wheel-over-the-list paging: invisible catcher behind the row hitboxes; wheel is the
+          only event it handles, so row clicks/hover pass straight through */}
+      {items.length > rows && (
+        <mesh
+          position={[width / 2, (-rows * LIST_ROW_H) / 2 + 0.004, 0.0001]}
+          onWheel={(e) => {
+            e.stopPropagation()
+            e.nativeEvent.stopImmediatePropagation?.()
+            wheelAcc.current += e.deltaY
+            if (Math.abs(wheelAcc.current) >= 40) {
+              turnPage(wheelAcc.current > 0 ? 1 : -1)
+              wheelAcc.current = 0
+            }
+          }}
+        >
+          <planeGeometry args={[width + 0.01, rows * LIST_ROW_H + 0.01]} />
+          <meshBasicMaterial colorWrite={false} depthWrite={false} transparent />
+        </mesh>
+      )}
       {visible.map((item, i) => {
         const index = start + i
         const isSel = index === selected
@@ -101,16 +130,84 @@ export function ScreenList({
         )
       })}
       {items.length > rows && (
-        <WindfoilText
-          font={FONT.mono}
-          fontSize={TYPE.micro}
-          color={rgba(ARC.greenDim)}
-          anchorX="right"
-          position={[width, -rows * LIST_ROW_H - 0.004, 0.0002]}
-        >
-          {`PAGE ${page + 1}/${Math.max(1, Math.ceil(items.length / rows))}`}
-        </WindfoilText>
+        <>
+          <PageChip
+            x={width - 0.155}
+            y={-rows * LIST_ROW_H - 0.0115}
+            label="◀"
+            dim={page === 0}
+            onPress={() => turnPage(-1)}
+          />
+          <PageChip
+            x={width - 0.122}
+            y={-rows * LIST_ROW_H - 0.0115}
+            label="▶"
+            dim={page >= pageCount - 1}
+            onPress={() => turnPage(1)}
+          />
+          <WindfoilText
+            font={FONT.mono}
+            fontSize={TYPE.micro}
+            color={rgba(ARC.greenDim)}
+            anchorX="right"
+            position={[width, -rows * LIST_ROW_H - 0.004, 0.0002]}
+          >
+            {`PAGE ${page + 1}/${pageCount}`}
+          </WindfoilText>
+        </>
       )}
+    </group>
+  )
+}
+
+function PageChip({
+  x,
+  y,
+  label,
+  dim,
+  onPress,
+}: {
+  x: number
+  y: number
+  label: string
+  dim: boolean
+  onPress: () => void
+}) {
+  const [hover, setHover] = useState(false)
+  return (
+    <group position={[x, y, 0.0002]}>
+      <mesh
+        onPointerDown={(e) => {
+          stopLook(e)
+          onPress()
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation()
+          setHover(true)
+          document.body.style.cursor = 'pointer'
+        }}
+        onPointerOut={() => {
+          setHover(false)
+          document.body.style.cursor = 'auto'
+        }}
+      >
+        <planeGeometry args={[0.028, 0.022]} />
+        <meshBasicMaterial
+          color={hover && !dim ? ARC.greenFaint : ARC.bezel}
+          transparent
+          opacity={dim ? 0.35 : 0.9}
+        />
+      </mesh>
+      <WindfoilText
+        font={FONT.display}
+        fontSize={0.016}
+        color={rgba(ARC.green, dim ? 0.3 : hover ? 1 : 0.7)}
+        anchorX="center"
+        anchorY="middle"
+        position={[0, 0, 0.0001]}
+      >
+        {label}
+      </WindfoilText>
     </group>
   )
 }

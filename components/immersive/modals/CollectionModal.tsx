@@ -8,6 +8,7 @@ import { WindfoilText } from '../text/WindfoilText'
 import { ScreenList } from '../dock/widgets/ScreenList'
 import { closeModal, openModal } from '@/lib/immersive/navigation'
 import { HUB_COLLECTIONS, loadArchive, type ArcRecord } from '@/lib/immersive/archive'
+import { loadMedia } from '@/lib/immersive/media'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
 
@@ -19,9 +20,11 @@ export function CollectionModal({ hub }: { hub: string }) {
   const meta = HUB_COLLECTIONS[hub]
   const [records, setRecords] = useState<ArcRecord[]>([])
   const [sel, setSel] = useState(0)
+  const [films, setFilms] = useState<Set<string>>(() => new Set())
 
   useEffect(() => {
     loadArchive().then(setRecords, () => undefined)
+    loadMedia().then((m) => setFilms(m.films), () => undefined)
   }, [])
 
   const filtered = useMemo(
@@ -44,6 +47,12 @@ export function CollectionModal({ hub }: { hub: string }) {
       } else if (e.key === 'ArrowUp') {
         setSel((s) => Math.max(s - 1, 0))
         playSound('key')
+      } else if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        setSel((s) => Math.min(s + ROWS, Math.max(filtered.length - 1, 0)))
+        playSound('key')
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        setSel((s) => Math.max(s - ROWS, 0))
+        playSound('key')
       } else if (e.key === 'Enter') {
         activate(sel)
       } else {
@@ -62,7 +71,7 @@ export function CollectionModal({ hub }: { hub: string }) {
     <ModalShell
       title={meta.title}
       meta={`${filtered.length} RECORDS`}
-      hints="↑↓ SELECT · ENTER OPEN · ESC CLOSE"
+      hints="↑↓ SELECT · ←→ PAGE · ENTER OPEN · ESC CLOSE"
       onClose={() => closeModal(router)}
     >
       <WindfoilText
@@ -78,7 +87,7 @@ export function CollectionModal({ hub }: { hub: string }) {
         items={filtered.map((r) => ({
           id: r.slug,
           primary: r.title.toUpperCase(),
-          meta: r.date.slice(0, 7),
+          meta: (films.has(r.slug) ? '▶ ' : '') + r.date.slice(0, 7),
         }))}
         selected={sel}
         onSelect={(i) => {

@@ -8,6 +8,7 @@ import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
 import { loadArchive, type ArcRecord } from '@/lib/immersive/archive'
+import { loadMedia } from '@/lib/immersive/media'
 import { prefetchRecord } from '@/lib/immersive/prefetch'
 import { openModal } from '@/lib/immersive/navigation'
 import { playSound } from '@/lib/immersive/audio'
@@ -20,12 +21,17 @@ export function ArchiveTab({ active, width }: { active: boolean; width: number }
   const [records, setRecords] = useState<ArcRecord[]>([])
   const [failed, setFailed] = useState(false)
   const [sel, setSel] = useState(0)
+  const [films, setFilms] = useState<Set<string>>(() => new Set())
 
   useEffect(() => {
     let live = true
     loadArchive().then(
       (r) => live && setRecords(r),
       () => live && setFailed(true)
+    )
+    loadMedia().then(
+      (m) => live && setFilms(m.films),
+      () => undefined
     )
     return () => {
       live = false
@@ -37,9 +43,9 @@ export function ArchiveTab({ active, width }: { active: boolean; width: number }
       records.map((r) => ({
         id: r.slug,
         primary: r.title.toUpperCase(),
-        meta: r.date.slice(0, 7),
+        meta: (films.has(r.slug) ? '▶ ' : '') + r.date.slice(0, 7),
       })),
-    [records]
+    [records, films]
   )
 
   const activate = (index: number) => {

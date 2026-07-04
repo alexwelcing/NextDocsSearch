@@ -1,12 +1,14 @@
 // Shared in-scene modal slab: a camera-anchored projection panel with phosphor frame, header,
-// close control, and footer hints. Spawns with a scale-pop; Esc (and the ✕) close via the
-// caller-provided handler so the URL stays canonical.
+// close control, and footer hints. Spawns with a scale-pop; Esc, Backspace (dock closed), the
+// ✕, and a genuine tap on the space around the slab all close via the caller-provided handler
+// so the URL stays canonical.
 
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
 import { CameraAnchor } from '../dock/CameraAnchor'
 import { WindfoilText } from '../text/WindfoilText'
+import { useImmersiveStore } from '@/stores/immersiveStore'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
 import { playSound } from '@/lib/immersive/audio'
 
@@ -40,6 +42,9 @@ export function ModalShell({
   const rig = useRef<THREE.Group>(null)
   const [hoverClose, setHoverClose] = useState(false)
   const scale = useRef(0.6)
+  // tap-away tracking: pointerdown on the catcher plane records the screen position; the
+  // window-level pointerup decides tap vs camera-look drag by pixel travel
+  const tapStart = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     playSound('open')
@@ -48,10 +53,35 @@ export function ModalShell({
         e.preventDefault()
         playSound('close')
         onClose()
+        return
+      }
+      // Backspace backs out too — but never while the dock is open (its SEARCH field and other
+      // surfaces own the key there)
+      if (e.key === 'Backspace' && !useImmersiveStore.getState().dockOpen) {
+        e.preventDefault()
+        playSound('close')
+        onClose()
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
+  // The catcher's own pointerup can be swallowed (pointer capture, slab handlers), so the tap
+  // is resolved at window level: under ~6px of travel = a genuine tap, anything more is a look.
+  useEffect(() => {
+    const onUp = (e: PointerEvent) => {
+      const start = tapStart.current
+      tapStart.current = null
+      if (!start) return
+      const travel = Math.hypot(e.clientX - start.x, e.clientY - start.y)
+      if (travel < 6) {
+        playSound('close')
+        onClose()
+      }
+    }
+    window.addEventListener('pointerup', onUp)
+    return () => window.removeEventListener('pointerup', onUp)
   }, [onClose])
 
   useFrame((_, delta) => {
@@ -66,10 +96,24 @@ export function ModalShell({
 
   return (
     <CameraAnchor stiffness={9}>
+      {/* tap-away catcher: an invisible full-view plane behind the slab. It records pointerdown
+          WITHOUT stopping propagation, so a drag that starts here still turns the camera — only
+          a near-zero-travel tap (resolved on window pointerup) closes the modal. */}
+      <mesh position={[0, 0, -2.4]} renderOrder={4} onPointerDown={(e) => {
+        tapStart.current = { x: e.nativeEvent.clientX, y: e.nativeEvent.clientY }
+      }}>
+        <planeGeometry args={[14, 9]} />
+        <meshBasicMaterial colorWrite={false} depthWrite={false} transparent />
+      </mesh>
       <group position={[0, 0.02, -1.5]}>
         <group ref={rig} scale={0.6}>
-          {/* backdrop */}
-          <mesh renderOrder={5}>
+          {/* backdrop — stops R3F propagation so panel clicks never reach the catcher (the
+              camera-rig's raw DOM listener still sees them, so look-drags over the slab work) */}
+          <mesh
+            renderOrder={5}
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+          >
             <planeGeometry args={[width, height]} />
             <meshBasicMaterial color={ARC.screenBg} transparent opacity={0.94} />
           </mesh>
@@ -116,9 +160,16 @@ export function ModalShell({
             <planeGeometry args={[width - 0.09, 0.0025]} />
             <meshBasicMaterial color={ARC.greenDim} />
           </mesh>
-          {/* close */}
+          {/* close — the visible plate stays small; a fat invisible hitbox around it takes the
+              pointer so nobody has to aim at a 7cm target */}
+          <mesh position={[hw - 0.05, hh - 0.05, 0.002]} renderOrder={7}>
+            <planeGeometry args={[0.07, 0.07]} />
+            <meshBasicMaterial color={hoverClose ? '#3a1410' : ARC.bezel} />
+          </mesh>
+          {/* sits a hair BEHIND interactive content (raycasts sort by distance), so header chips
+              that stray into the fat zone still win their own clicks */}
           <mesh
-            position={[hw - 0.05, hh - 0.05, 0.002]}
+            position={[hw - 0.05, hh - 0.05, 0.0015]}
             onPointerDown={(e) => {
               stopLook(e)
               playSound('close')
@@ -135,8 +186,8 @@ export function ModalShell({
             }}
             renderOrder={7}
           >
-            <planeGeometry args={[0.07, 0.07]} />
-            <meshBasicMaterial color={hoverClose ? '#3a1410' : ARC.bezel} />
+            <planeGeometry args={[0.17, 0.17]} />
+            <meshBasicMaterial colorWrite={false} depthWrite={false} transparent />
           </mesh>
           <WindfoilText
             font={FONT.display}

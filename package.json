@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "tsx scripts/generate-font-atlas.ts && tsx scripts/generate-article-bodies.ts && tsx scripts/generate-image-manifest.ts && tsx scripts/generate-article-manifest.ts && next build --webpack",
+    "build": "tsx scripts/generate-font-atlas.ts && tsx scripts/generate-article-bodies.ts && tsx scripts/generate-image-manifest.ts && tsx scripts/generate-media-manifest.ts && tsx scripts/generate-article-manifest.ts && next build --webpack",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint .",
