@@ -1,6 +1,6 @@
 // Shared in-scene modal slab: a camera-anchored projection panel with phosphor frame, header,
 // close control, and footer hints. Spawns with a scale-pop; Esc, Backspace (dock closed), the
-// ✕, and a genuine tap on the space around the slab all close via the caller-provided handler
+// X, and a genuine tap on the space around the slab all close via the caller-provided handler
 // so the URL stays canonical.
 
 import { ReactNode, useEffect, useRef, useState } from 'react'
@@ -198,7 +198,7 @@ export function ModalShell({
             position={[hw - 0.05, hh - 0.05, 0.003]}
             renderOrder={10}
           >
-            ✗
+            X
           </WindfoilText>
           {/* content */}
           <group position={[-hw + MODAL_PAD, hh - 0.145, 0.002]}>{children}</group>

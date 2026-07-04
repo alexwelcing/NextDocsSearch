@@ -71,7 +71,7 @@ export function CollectionModal({ hub }: { hub: string }) {
     <ModalShell
       title={meta.title}
       meta={`${filtered.length} RECORDS`}
-      hints="↑↓ SELECT · ←→ PAGE · ENTER OPEN · ESC CLOSE"
+      hints="^v SELECT · <> PAGE · ENTER OPEN · ESC CLOSE"
       onClose={() => closeModal(router)}
     >
       <WindfoilText
@@ -87,7 +87,7 @@ export function CollectionModal({ hub }: { hub: string }) {
         items={filtered.map((r) => ({
           id: r.slug,
           primary: r.title.toUpperCase(),
-          meta: (films.has(r.slug) ? '▶ ' : '') + r.date.slice(0, 7),
+          meta: (films.has(r.slug) ? '» ' : '') + r.date.slice(0, 7),
         }))}
         selected={sel}
         onSelect={(i) => {

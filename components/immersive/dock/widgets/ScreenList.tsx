@@ -1,6 +1,8 @@
 // Paginated selectable list for the CRT screen: fixed rows per page (authentic terminal
 // behavior — no smooth scrolling on a 1970s tube), selection cursor, hover, meta column,
-// and page affordances: ◀ ▶ chips beside the PAGE counter plus wheel-over-the-list paging.
+// and page affordances: < > chips beside the PAGE counter plus wheel-over-the-list paging.
+// UI chrome glyphs stay within what VT323/Share Tech Mono actually cover (ASCII + Latin-1) —
+// the U+25xx triangles/arrows have no outlines there and would render as the '?' fallback.
 
 import { Fragment, useRef, useState } from 'react'
 import { WindfoilText } from '../../text/WindfoilText'
@@ -112,7 +114,7 @@ export function ScreenList({
               maxWidth={width - (item.meta ? 0.13 : 0.02)}
               maxLines={1}
             >
-              {(isSel ? '▶ ' : '') + item.primary}
+              {(isSel ? '> ' : '') + item.primary}
             </WindfoilText>
             {item.meta && (
               <WindfoilText
@@ -134,14 +136,14 @@ export function ScreenList({
           <PageChip
             x={width - 0.155}
             y={-rows * LIST_ROW_H - 0.0115}
-            label="◀"
+            label="<"
             dim={page === 0}
             onPress={() => turnPage(-1)}
           />
           <PageChip
             x={width - 0.122}
             y={-rows * LIST_ROW_H - 0.0115}
-            label="▶"
+            label=">"
             dim={page >= pageCount - 1}
             onPress={() => turnPage(1)}
           />

@@ -139,7 +139,7 @@ export function ArcDock() {
               anchorY="middle"
               position={[0, 0, 0.001]}
             >
-              ▲ ARC [TAB]
+              ^ ARC [TAB]
             </WindfoilText>
           </group>
         </CameraAnchor>
@@ -217,7 +217,7 @@ export function ArcDock() {
             position={[BODY_W / 2 - 0.03, BODY_H / 2 - 0.028, 0.003]}
             renderOrder={20}
           >
-            ▼
+            v
           </WindfoilText>
         </group>
       </LeashedAnchor>

@@ -80,7 +80,7 @@ export function DataModal({ panel }: { panel: 'about' | 'work' | 'pitch' }) {
     <ModalShell
       title={data.title}
       meta={pages ? `PAGE ${page + 1}/${pages.length}` : ''}
-      hints="←→ TURN PAGE · ESC CLOSE"
+      hints="<> TURN PAGE · ESC CLOSE"
       onClose={() => closeModal(router)}
     >
       {pages?.[page]?.map((p, i) => (

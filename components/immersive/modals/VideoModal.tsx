@@ -112,7 +112,7 @@ export function VideoModal({ slug }: { slug: string }) {
               position={[0, 0, 0.002]}
               renderOrder={12}
             >
-              ▶
+              »
             </WindfoilText>
           )}
           {/* scrub bar */}
@@ -155,7 +155,7 @@ export function VideoModal({ slug }: { slug: string }) {
           anchorY="middle"
           position={[0, 0, 0.001]}
         >
-          ≡ READ RECORD
+          § READ RECORD
         </WindfoilText>
       </group>
     </ModalShell>

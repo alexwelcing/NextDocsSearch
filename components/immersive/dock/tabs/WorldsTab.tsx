@@ -46,7 +46,7 @@ export function WorldsTab({ active, width }: { active: boolean; width: number })
   const items = WORLDS.map((w) => ({
     id: w.id,
     primary: w.name,
-    meta: w.id === worldId ? '● LIVE' : '',
+    meta: w.id === worldId ? '* LIVE' : '',
   }))
 
   return (
@@ -74,7 +74,7 @@ export function WorldsTab({ active, width }: { active: boolean; width: number })
       >
         {WORLDS[sel]?.blurb ?? ''}
       </WindfoilText>
-      <ScreenHints text="↑↓ SELECT · ENTER JUMP" width={width} />
+      <ScreenHints text="^v SELECT · ENTER JUMP" width={width} />
     </group>
   )
 }

@@ -150,7 +150,7 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
         rows={ROWS}
         y={-0.105}
       />
-      <ScreenHints text="TYPE QUERY · ↑↓ SELECT · ENTER OPEN" width={width} />
+      <ScreenHints text="TYPE QUERY · ^v SELECT · ENTER OPEN" width={width} />
     </group>
   )
 }

@@ -62,7 +62,7 @@ export function DataTab({ active, width }: { active: boolean; width: number }) {
         rows={7}
         y={-0.055}
       />
-      <ScreenHints text="↑↓ SELECT · ENTER OPEN" width={width} />
+      <ScreenHints text="^v SELECT · ENTER OPEN" width={width} />
     </group>
   )
 }

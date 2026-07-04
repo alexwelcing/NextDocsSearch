@@ -54,7 +54,7 @@ export function GameTab({ active, width }: { active: boolean; width: number }) {
 
   return (
     <group>
-      <ScreenHeader title="SPHERE HUNTER" right={gameActive ? '● ACTIVE' : 'ARMED'} width={width} />
+      <ScreenHeader title="SPHERE HUNTER" right={gameActive ? '* ACTIVE' : 'ARMED'} width={width} />
       <WindfoilText
         font={FONT.mono}
         fontSize={TYPE.body}

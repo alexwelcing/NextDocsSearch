@@ -354,7 +354,7 @@ export function SphereHunter() {
               position={[0, 0.1, 0.001]}
               glow={newBest}
             >
-              {newBest ? `★ NEW PERSONAL BEST ★` : `PERSONAL BEST ${best}`}
+              {newBest ? `* NEW PERSONAL BEST *` : `PERSONAL BEST ${best}`}
             </WindfoilText>
             <WindfoilText
               font={FONT.mono}
@@ -364,7 +364,7 @@ export function SphereHunter() {
               position={[0, 0.04, 0.001]}
             >
               {submitState === 'sent'
-                ? 'FILED TO LEDGER ✓'
+                ? 'FILED TO LEDGER [OK]'
                 : submitState === 'failed'
                   ? 'LEDGER UNREACHABLE'
                   : `CALLSIGN: ${name}${name.length < 12 ? '_' : ''}`}

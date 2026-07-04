@@ -303,10 +303,10 @@ function PlateLightbox({
         position={[0, MODAL_H / 2 - 0.045, 0.002]}
         renderOrder={16}
       >
-        {`◆ PLATE ${index + 1}/${plates.length}`}
+        {`+ PLATE ${index + 1}/${plates.length}`}
       </WindfoilText>
-      <LightboxArrow x={-MODAL_W / 2 + 0.09} label="◀" onPress={() => cycle(-1)} />
-      <LightboxArrow x={MODAL_W / 2 - 0.09} label="▶" onPress={() => cycle(1)} />
+      <LightboxArrow x={-MODAL_W / 2 + 0.09} label="<" onPress={() => cycle(-1)} />
+      <LightboxArrow x={MODAL_W / 2 - 0.09} label=">" onPress={() => cycle(1)} />
       <WindfoilText
         font={FONT.mono}
         fontSize={TYPE.micro}
@@ -315,7 +315,7 @@ function PlateLightbox({
         position={[0, -MODAL_H / 2 + 0.055, 0.002]}
         renderOrder={16}
       >
-        ←→ / SCROLL CYCLE · ESC BACK
+        {'<> / SCROLL CYCLE · ESC BACK'}
       </WindfoilText>
     </group>
   )
@@ -444,7 +444,7 @@ export function ArticleModal({ slug }: { slug: string }) {
     <ModalShell
       title={title}
       meta={meta}
-      hints="←→ / SCROLL TURN PAGE · ESC CLOSE"
+      hints="<> / SCROLL TURN PAGE · ESC CLOSE"
       onClose={close}
     >
       {failed && (
@@ -493,7 +493,7 @@ export function ArticleModal({ slug }: { slug: string }) {
             position={[0.004, -0.002, 0]}
             renderOrder={10}
           >
-            ◆ VISUAL RECORD
+            + VISUAL RECORD
           </WindfoilText>
           <group position={[COL_W / 2, -HERO_CAP_H - HERO_IMG_H / 2, 0]}>
             <RecordImage url={heroSrc} width={COL_W} height={HERO_IMG_H} fit="cover" />
@@ -533,14 +533,14 @@ export function ArticleModal({ slug }: { slug: string }) {
           {page > 0 && (
             <PageChevron
               x={-0.028}
-              label="◀"
+              label="<"
               onPress={() => setPage((p) => Math.max(p - 1, 0))}
             />
           )}
           {page < pages.length - 1 && (
             <PageChevron
               x={MODAL_W - MODAL_PAD * 2 + 0.028}
-              label="▶"
+              label=">"
               onPress={() => setPage((p) => Math.min(p + 1, (pages?.length ?? 1) - 1))}
             />
           )}
@@ -575,7 +575,7 @@ export function ArticleModal({ slug }: { slug: string }) {
             anchorY="middle"
             position={[0, 0, 0.001]}
           >
-            {`◆ PLATES ${plates.length}`}
+            {`+ PLATES ${plates.length}`}
           </WindfoilText>
         </group>
       )}
@@ -608,7 +608,7 @@ export function ArticleModal({ slug }: { slug: string }) {
             anchorY="middle"
             position={[0, 0, 0.001]}
           >
-            ▶ WATCH FILM
+            » WATCH FILM
           </WindfoilText>
         </group>
       )}

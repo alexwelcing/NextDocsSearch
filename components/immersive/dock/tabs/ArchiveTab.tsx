@@ -43,7 +43,7 @@ export function ArchiveTab({ active, width }: { active: boolean; width: number }
       records.map((r) => ({
         id: r.slug,
         primary: r.title.toUpperCase(),
-        meta: (films.has(r.slug) ? '▶ ' : '') + r.date.slice(0, 7),
+        meta: (films.has(r.slug) ? '» ' : '') + r.date.slice(0, 7),
       })),
     [records, films]
   )
@@ -125,7 +125,7 @@ export function ArchiveTab({ active, width }: { active: boolean; width: number }
           {selected.description || '—'}
         </WindfoilText>
       )}
-      <ScreenHints text="↑↓ SELECT · ←→ PAGE · ENTER OPEN" width={width} />
+      <ScreenHints text="^v SELECT · <> PAGE · ENTER OPEN" width={width} />
     </group>
   )
 }
