@@ -11,6 +11,7 @@ import { Atmosphere } from './scene/Atmosphere'
 import { SceneLights } from './scene/SceneLights'
 import { CameraRig } from './scene/CameraRig'
 import { ArcDock } from './dock/ArcDock'
+import { ImmersiveModals } from './ImmersiveModals'
 
 // Register the three/webgpu catalogue so JSX intrinsics resolve to WebGPU-capable classes.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +44,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       <SceneLights />
       <CameraRig />
       <ArcDock />
+      <ImmersiveModals />
       {children}
     </Canvas>
   )
