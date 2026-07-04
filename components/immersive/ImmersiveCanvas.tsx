@@ -10,13 +10,14 @@ import { PanoramaSphere } from './scene/PanoramaSphere'
 import { Atmosphere } from './scene/Atmosphere'
 import { SceneLights } from './scene/SceneLights'
 import { CameraRig } from './scene/CameraRig'
+import { WorldTitleCard } from './scene/WorldTitleCard'
 import { ShaderWarmup } from './scene/ShaderWarmup'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
 import { SphereHunter } from './game/SphereHunter'
 
 // Register the three/webgpu catalogue so JSX intrinsics resolve to WebGPU-capable classes.
- 
+
 extend(THREE as any)
 
 export default function ImmersiveCanvas({ children }: { children?: ReactNode }) {
@@ -24,7 +25,6 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
 
   return (
     <Canvas
-       
       gl={async (props: any) => {
         const renderer = new THREE.WebGPURenderer({
           ...props,
@@ -78,6 +78,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       <Atmosphere />
       <SceneLights />
       <CameraRig />
+      <WorldTitleCard />
       <ShaderWarmup />
       <ArcDock />
       <ImmersiveModals />
