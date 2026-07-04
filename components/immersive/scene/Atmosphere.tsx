@@ -9,7 +9,9 @@ import {
   hash,
   instanceIndex,
   positionLocal,
+  positionView,
   sin,
+  smoothstep,
   time,
   uniform,
   vec3,
@@ -61,18 +63,28 @@ export function Atmosphere() {
     const scalePulse = float(0.6).add(sin(time.mul(1.3).add(h2.mul(TAU))).mul(0.4))
     material.positionNode = center.add(positionLocal.mul(scalePulse.add(h1.mul(1.2))))
 
-    // Additive phosphor glow, twinkling.
+    // Additive phosphor glow, twinkling, dimmed with view depth. Scene fog is deliberately OFF
+    // here: fog mixes toward the haze color, which under additive blending ADDS haze wherever a
+    // mote is instead of attenuating it. Aerial perspective for additive sprites is a fade to
+    // black, and hazier worlds swallow the far shell sooner. A floor on the haze term keeps a
+    // whisper of depth cueing even in vacuum worlds — dimmer reads as farther.
+    const hazeAmt = Math.max(world.haze, 0.25)
+    const viewDepth = positionView.z.negate()
+    const depthDim = smoothstep(float(8), float(28), viewDepth)
+      .mul(0.85 * hazeAmt)
+      .oneMinus()
     const twinkle = float(0.35).add(sin(time.mul(2.1).add(h4.mul(TAU))).mul(0.25))
-    material.colorNode = vec4(tint.mul(twinkle), 1)
+    material.colorNode = vec4(tint.mul(twinkle).mul(depthDim), 1)
     material.transparent = true
     material.blending = THREE.AdditiveBlending
     material.depthWrite = false
+    material.fog = false
 
     const instanced = new THREE.InstancedMesh(geometry, material, count)
     instanced.frustumCulled = false
     instanced.renderOrder = 1
     return { instanced, tint }
-  }, [count, world.particles.color])
+  }, [count, world.particles.color, world.haze])
 
   return <primitive object={mesh.instanced} />
 }

@@ -94,6 +94,7 @@ export function PanoramaSphere() {
             map={back.texture}
             side={THREE.BackSide}
             depthWrite={false}
+            fog={false}
             toneMapped={false}
           />
         </mesh>
@@ -106,6 +107,7 @@ export function PanoramaSphere() {
             map={front.texture}
             side={THREE.BackSide}
             depthWrite={false}
+            fog={false}
             transparent={!!back}
             toneMapped={false}
           />

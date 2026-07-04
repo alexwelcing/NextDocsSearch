@@ -43,10 +43,16 @@ function atlasBuffers(atlas: FontAtlas): AtlasBuffers {
   const curvesArr = atlas.curves.slice()
   const rowsArr = atlas.rows.slice()
   const built: AtlasBuffers = {
-    curves: storage(new THREE.StorageBufferAttribute(curvesArr, 2), 'vec2', curvesArr.length / 2)
-      .toReadOnly() as unknown as THREE.Node,
-    rows: storage(new THREE.StorageBufferAttribute(rowsArr, 1), 'uint', rowsArr.length)
-      .toReadOnly() as unknown as THREE.Node,
+    curves: storage(
+      new THREE.StorageBufferAttribute(curvesArr, 2),
+      'vec2',
+      curvesArr.length / 2
+    ).toReadOnly() as unknown as THREE.Node,
+    rows: storage(
+      new THREE.StorageBufferAttribute(rowsArr, 1),
+      'uint',
+      rowsArr.length
+    ).toReadOnly() as unknown as THREE.Node,
   }
   bufferCache.set(atlas, built)
   return built
@@ -211,6 +217,9 @@ export function createTextMesh(
   material.depthWrite = options.depthWrite ?? false
   material.depthTest = options.depthTest ?? true
   material.side = THREE.DoubleSide
+  // Text is emissive UI — scene fog must never haze it (NodeMaterial.setupOutput applies fog
+  // even over a custom fragmentNode, so the opt-out has to be explicit).
+  material.fog = false
 
   const mesh = new THREE.Mesh(geometry, material) as unknown as WindfoilTextMesh
   mesh.wfOpacity = opacity

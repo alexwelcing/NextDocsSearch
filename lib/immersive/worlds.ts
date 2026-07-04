@@ -14,6 +14,9 @@ export interface WorldDef {
   particles: { color: string; count: number }
   /** Subtle auto-rotation speed for idle drift, radians/second. */
   drift: number
+  /** Aerial-perspective density 0..1 (0 = hard vacuum, 1 = thick air). Drives the scene
+   *  fogNode range and the atmosphere motes' depth fade. */
+  haze: number
 }
 
 export const WORLDS: WorldDef[] = [
@@ -26,6 +29,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#c8ffd8', intensity: 0.85, position: [0, 9, -2] },
     particles: { color: '#70ff8f', count: 320 },
     drift: 0.003,
+    haze: 0.35,
   },
   {
     id: 'the-overlook',
@@ -36,6 +40,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#ffb877', intensity: 1.15, position: [0, 4, -8] },
     particles: { color: '#ffd9a8', count: 160 },
     drift: 0.003,
+    haze: 0.5,
   },
   {
     id: 'signal-garden',
@@ -46,6 +51,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#66e8ff', intensity: 0.8, position: [-4, 8, 3] },
     particles: { color: '#7fefff', count: 380 },
     drift: 0.005,
+    haze: 0.7,
   },
   {
     id: 'high-orbit',
@@ -56,6 +62,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#aac8ff', intensity: 1.0, position: [6, 3, -5] },
     particles: { color: '#bcd8ff', count: 220 },
     drift: 0.004,
+    haze: 0.05,
   },
   {
     id: 'atrium',
@@ -66,6 +73,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#ffd9a0', intensity: 1.2, position: [5, 8, 2] },
     particles: { color: '#ffe9b0', count: 220 },
     drift: 0.004,
+    haze: 0.3,
   },
   {
     id: 'deep-space',
@@ -76,6 +84,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#b0c4ff', intensity: 0.9, position: [-6, 4, -3] },
     particles: { color: '#9db8ff', count: 340 },
     drift: 0.006,
+    haze: 0.0,
   },
   {
     id: 'signal-station',
@@ -86,6 +95,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#7ce8ff', intensity: 1.1, position: [4, 6, -4] },
     particles: { color: '#7ce8ff', count: 260 },
     drift: 0.005,
+    haze: 0.15,
   },
   {
     id: 'undercroft',
@@ -96,6 +106,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#8fb8d8', intensity: 0.8, position: [0, 10, 0] },
     particles: { color: '#9adfff', count: 180 },
     drift: 0.003,
+    haze: 0.8,
   },
   {
     id: 'night-train',
@@ -106,6 +117,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#ffb890', intensity: 1.0, position: [-3, 5, 4] },
     particles: { color: '#ffcf9e', count: 160 },
     drift: 0.004,
+    haze: 0.4,
   },
   {
     id: 'meridian',
@@ -116,6 +128,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#ffe2ad', intensity: 1.15, position: [8, 7, 0] },
     particles: { color: '#ffedc2', count: 140 },
     drift: 0.004,
+    haze: 0.25,
   },
   {
     id: 'verdant',
@@ -126,6 +139,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#c2ffc8', intensity: 1.0, position: [2, 9, 3] },
     particles: { color: '#baffc4', count: 240 },
     drift: 0.004,
+    haze: 0.6,
   },
   {
     id: 'ember',
@@ -136,6 +150,7 @@ export const WORLDS: WorldDef[] = [
     key: { color: '#ff9a60', intensity: 1.25, position: [-5, 6, -2] },
     particles: { color: '#ffb083', count: 300 },
     drift: 0.005,
+    haze: 0.75,
   },
 ]
 

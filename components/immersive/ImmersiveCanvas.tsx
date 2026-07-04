@@ -11,6 +11,7 @@ import { Atmosphere } from './scene/Atmosphere'
 import { SceneLights } from './scene/SceneLights'
 import { CameraRig } from './scene/CameraRig'
 import { WorldTitleCard } from './scene/WorldTitleCard'
+import { SceneFog } from './scene/SceneFog'
 import { ShaderWarmup } from './scene/ShaderWarmup'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
@@ -75,6 +76,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       style={{ position: 'fixed', inset: 0, zIndex: 10, background: '#020403' }}
     >
       <PanoramaSphere />
+      <SceneFog />
       <Atmosphere />
       <SceneLights />
       <CameraRig />

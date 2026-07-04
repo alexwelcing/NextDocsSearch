@@ -138,6 +138,7 @@ function CardInstance({
           transparent
           opacity={0.55 * opacity}
           depthWrite={false}
+          fog={false}
         />
       </mesh>
     </group>
