@@ -10,10 +10,10 @@
 // the same renderOutput transform — so windfoil text, the panorama, and the CRT stack come
 // through with precisely the colors they have today; the effects are inserted in the middle.
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
-import { float, pass } from 'three/tsl'
+import { float, pass, vec2 } from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
 import { chromaticAberration } from 'three/addons/tsl/display/ChromaticAberrationNode.js'
 import { film } from 'three/addons/tsl/display/FilmNode.js'
@@ -38,7 +38,17 @@ export function PostFX() {
     const scenePass = pass(scene, camera)
     const bloomed = scenePass.add(bloom(scenePass, BLOOM_STRENGTH, BLOOM_RADIUS, BLOOM_THRESHOLD))
     // float() wrappers where the typings insist on Nodes (the runtime takes plain numbers too).
-    const fringed = chromaticAberration(bloomed, float(CA_STRENGTH), null, float(CA_SCALE))
+    // The center must be an explicit vec2: r185's ChromaticAberrationNode documents `center: null`
+    // as "defaults to screen center" but never implements that default — the null reaches the
+    // shader-call layout and the whole RenderPipeline build dies with "THREE.TSL: TypeError:
+    // Cannot read properties of null (reading 'build')", blacking out every frame this pipeline
+    // owns. vec2(0.5, 0.5) IS the promised default, passed by hand.
+    const fringed = chromaticAberration(
+      bloomed,
+      float(CA_STRENGTH),
+      vec2(0.5, 0.5),
+      float(CA_SCALE)
+    )
     const pipeline = new THREE.RenderPipeline(gl)
     pipeline.outputNode = film(fringed, float(GRAIN))
     return { pipeline, scenePass }
@@ -53,8 +63,22 @@ export function PostFX() {
   }, [pipeline, scenePass])
 
   // Priority 1 takes over R3F's render loop; the pipeline renders the scene through the chain.
+  // If the post chain ever fails at runtime (driver-specific WGSL rejection, addon regressions),
+  // drop to the direct render path for the session instead of a dead black canvas — same spirit
+  // as the device-lost screen: degraded beats dark.
+  const postBroken = useRef(false)
   useFrame(() => {
-    pipeline.render()
+    if (postBroken.current) {
+      gl.render(scene, camera)
+      return
+    }
+    try {
+      pipeline.render()
+    } catch (err) {
+      postBroken.current = true
+      console.error('[arc] PostFX pipeline failed, dropping to direct render:', err)
+      gl.render(scene, camera)
+    }
   }, 1)
 
   return null
