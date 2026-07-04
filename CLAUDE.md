@@ -40,16 +40,23 @@ Use `pnpm run lint` and `pnpm run build` as the real gates before pushing.
 - `ImmersiveApp`: WebGPU gate (navigator.gpu only — no probe requestAdapter; see comment),
   CRT boot sequence, compatibility banner, URL↔store sync via `lib/immersive/navigation.ts`.
 - `ImmersiveCanvas`: R3F `Canvas` with `three/webgpu` WebGPURenderer (async `gl` factory +
-  `extend(THREE)`), scene = PanoramaSphere (crossfading equirect worlds), Atmosphere (TSL
-  instanced motes), SceneLights, CameraRig (inertial look), ArcDock, ImmersiveModals,
-  SphereHunter.
+  `extend(THREE)`), scene = PanoramaSphere (crossfading equirect worlds), SceneFog (uniform-
+  driven scene.fogNode; panorama/text/CRT opt out with material.fog=false), Atmosphere (TSL
+  instanced motes with haze-scaled depth fade), SceneLights, CameraRig (inertial look),
+  WorldTitleCard (hero windfoil place-name on world arrival), ArcDock, ImmersiveModals,
+  SphereHunter, PostFX (RenderPipeline bloom + chromatic aberration + grain; off on 'low'
+  quality — the WebGPU renderer tone maps full-frame, never per material, so the pipeline
+  preserves the direct-path look exactly).
 - State: `stores/immersiveStore.ts` (zustand): bootPhase, dock, modal, world, quality, game.
-- Worlds: `lib/immersive/worlds.ts` registry; panoramas in `public/background/`.
+- Worlds: `lib/immersive/worlds.ts` registry (per-world lighting/particles/drift/haze);
+  panoramas in `public/background/`.
 - Audio: `lib/immersive/audio.ts` SFX bus; clips in `public/sounds/arc/`.
 
 ### ARC Terminal dock (`components/immersive/dock/`)
 
-Camera-anchored console (CameraAnchor spring). CRT screen = TSL materials in `CrtMaterials.ts`
+Lazy-follow console: LeashedAnchor keeps yaw world-anchored inside a deadband (pitch spring-
+follows; summoning recenters), while the holstered summon chip stays hard camera-locked via
+CameraAnchor. CRT screen = TSL materials in `CrtMaterials.ts`
 (multiply scanlines need `premultipliedAlpha = true` under WebGPU). Six surfaces under
 `dock/tabs/`: Archive, Search (lexical), Ship (streaming `/api/vector-search` NDJSON), Worlds,
 Data, Game. The dock only opens modals / changes in-scene state — it never navigates away.
