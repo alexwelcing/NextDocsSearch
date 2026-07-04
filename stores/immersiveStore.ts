@@ -8,6 +8,7 @@ export type BootPhase =
   | 'unsupported' // no adapter — terminal fallback owns the page
   | 'booting' // CRT boot sequence over the loading scene
   | 'ready' // scene live, dock powered
+  | 'lost' // GPU device lost mid-session (driver reset, OOM) — reconnect prompt owns the page
 
 export type DockTab = 'archive' | 'search' | 'ship' | 'worlds' | 'data' | 'game'
 

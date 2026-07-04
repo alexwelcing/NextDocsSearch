@@ -11,6 +11,7 @@ import { loadFontAtlas } from '@/lib/windfoil/atlas'
 import { loadArchive } from '@/lib/immersive/archive'
 import { BootSequence } from './BootSequence'
 import { TerminalFallback } from './TerminalFallback'
+import { DeviceLostScreen } from './DeviceLostScreen'
 
 const ImmersiveCanvas = dynamic(() => import('./ImmersiveCanvas'), { ssr: false })
 
@@ -87,13 +88,16 @@ export default function ImmersiveApp() {
   // Scene active: lock page scroll and hide the SEO layer (crawlers without WebGPU never get here,
   // so the server-rendered content stays their whole page).
   useEffect(() => {
-    const active = bootPhase === 'booting' || bootPhase === 'ready'
+    const active = bootPhase === 'booting' || bootPhase === 'ready' || bootPhase === 'lost'
     document.documentElement.classList.toggle('arc-active', active)
     return () => document.documentElement.classList.remove('arc-active')
   }, [bootPhase])
 
   if (bootPhase === 'unsupported') return <TerminalFallback />
   if (bootPhase === 'checking') return <div className="arc-checking" aria-hidden />
+  // Unmount the canvas outright: its renderer's device is dead, so leaving it mounted just
+  // means a frameloop of no-op/erroring render calls until the user reconnects.
+  if (bootPhase === 'lost') return <DeviceLostScreen />
 
   return (
     <>

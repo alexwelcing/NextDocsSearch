@@ -99,6 +99,24 @@ html.arc-active #arc-page-content {
   }
 }
 
+.arc-lost__button {
+  margin-top: 0.6em;
+  background: transparent;
+  border: 1px solid var(--arc-green-dim);
+  color: var(--arc-green);
+  font-family: 'VT323', 'Share Tech Mono', monospace;
+  font-size: 1.1em;
+  letter-spacing: 0.06em;
+  padding: 0.5em 1.2em;
+  cursor: pointer;
+  text-shadow: 0 0 6px rgba(112, 255, 143, 0.55);
+}
+.arc-lost__button:hover,
+.arc-lost__button:focus-visible {
+  border-color: var(--arc-green);
+  background: rgba(112, 255, 143, 0.08);
+}
+
 /* Scanlines + vignette overlay shared by DOM CRT surfaces. */
 .arc-crt-overlay {
   position: absolute;

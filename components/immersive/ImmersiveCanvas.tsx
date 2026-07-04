@@ -50,6 +50,23 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
         }
         renderer.toneMapping = THREE.ACESFilmicToneMapping
         renderer.toneMappingExposure = 1.05
+
+        // Mid-session recovery: a lost device (driver reset, OOM, mobile backgrounding) leaves
+        // this renderer permanently inert. 'destroyed' is us tearing it down on purpose (e.g. a
+        // future dev-mode remount) — anything else is unexpected and needs the reconnect screen,
+        // since there's no supported way to hand this renderer a fresh device in place.
+        renderer.onDeviceLost = (info) => {
+          console.error('[arc] WebGPU device lost:', info.reason ?? 'unknown', info.message)
+          if (info.reason !== 'destroyed') {
+            useImmersiveStore.getState().setBootPhase('lost')
+          }
+        }
+        // Non-fatal validation/internal errors that don't cause a device loss — tag them into
+        // our own log channel instead of three's unprefixed default console.error.
+        renderer.onError = (errorMessage) => {
+          console.error('[arc] WebGPU uncaptured error:', errorMessage)
+        }
+
         return renderer
       }}
       camera={{ fov: 70, near: 0.05, far: 300, position: [0, 0, 0] }}
