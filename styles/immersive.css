@@ -1,0 +1,164 @@
+/* ARC Terminal — CRT chrome for the DOM layers of the immersive app
+   (boot sequence, compatibility banner, scroll locking). In-scene UI is 3D. */
+
+@font-face {
+  font-family: 'VT323';
+  src: url('/fonts/VT323-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+:root {
+  --arc-green: #70ff8f;
+  --arc-green-dim: #2f7a44;
+  --arc-bg: #020403;
+}
+
+/* Scene active: the canvas owns the viewport; the SEO layer sleeps. */
+html.arc-active,
+html.arc-active body {
+  overflow: hidden;
+  background: var(--arc-bg);
+}
+html.arc-active #arc-page-content {
+  display: none;
+}
+
+.arc-checking {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--arc-bg);
+}
+
+/* ---- boot sequence ------------------------------------------------------ */
+
+.arc-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--arc-bg);
+  color: var(--arc-green);
+  font-family: 'VT323', 'Share Tech Mono', monospace;
+  font-size: clamp(15px, 2.4vw, 22px);
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14vh;
+  cursor: pointer;
+  transition: opacity 0.42s ease-out;
+  text-shadow: 0 0 6px rgba(112, 255, 143, 0.55);
+}
+
+.arc-boot--flash {
+  opacity: 0;
+}
+.arc-boot--flash .arc-boot__inner {
+  animation: arc-flash 0.18s ease-out;
+}
+
+.arc-boot__inner {
+  width: min(680px, 88vw);
+  white-space: pre-wrap;
+}
+
+.arc-boot__line {
+  min-height: 1.5em;
+  animation: arc-line-on 0.09s steps(2) 1;
+}
+
+.arc-boot__hint {
+  margin-top: 1.2em;
+  color: var(--arc-green-dim);
+  animation: arc-blink 1.1s steps(1) infinite;
+}
+
+.arc-boot__cursor {
+  animation: arc-blink 0.85s steps(1) infinite;
+}
+
+@keyframes arc-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes arc-line-on {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes arc-flash {
+  0% {
+    filter: brightness(1);
+  }
+  30% {
+    filter: brightness(3.2);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* Scanlines + vignette overlay shared by DOM CRT surfaces. */
+.arc-crt-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.22) 3px,
+      rgba(0, 0, 0, 0) 4px
+    ),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.5) 100%);
+  animation: arc-flicker 4.2s linear infinite;
+}
+
+@keyframes arc-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0.86;
+  }
+  99% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-crt-overlay,
+  .arc-boot__hint,
+  .arc-boot__cursor,
+  .arc-boot__line {
+    animation: none;
+  }
+}
+
+/* ---- compatibility mode -------------------------------------------------- */
+
+.arc-fallback-banner {
+  background: var(--arc-bg);
+  color: var(--arc-green);
+  font-family: 'VT323', 'Share Tech Mono', monospace;
+  border-bottom: 1px solid var(--arc-green-dim);
+  padding: 14px clamp(16px, 4vw, 40px);
+  text-shadow: 0 0 5px rgba(112, 255, 143, 0.45);
+}
+
+.arc-fallback-banner__title {
+  font-size: 20px;
+  letter-spacing: 0.06em;
+}
+
+.arc-fallback-banner__body {
+  color: #a8d8b4;
+  font-size: 15px;
+  max-width: 72ch;
+}

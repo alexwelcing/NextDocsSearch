@@ -1,52 +1,24 @@
-import '@/styles/globals.css';
-import type { AppProps } from 'next/app';
-import Script from 'next/script';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { trackEvent } from '@/lib/google-analytics';
-import { JourneyProvider } from '@/components/contexts/JourneyContext';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import { ArticleDiscoveryProvider } from '@/components/ArticleDiscoveryProvider';
-import { SupabaseDataProvider } from '@/components/contexts/SupabaseDataContext';
-
+import '@/styles/globals.css'
+import '@/styles/immersive.css'
+import type { AppProps } from 'next/app'
+import Script from 'next/script'
+import ErrorBoundary from '@/components/ErrorBoundary'
+import ImmersiveApp from '@/components/immersive/ImmersiveApp'
 
 const GTM_ID = 'GTM-W24L468'
 
+// The immersive scene mounts once here and persists across route changes; page components only
+// contribute crawlable HTML (and metadata) inside #arc-page-content, hidden while the scene runs.
 function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      const urlObj = new URL(url, window.location.origin);
-      const abTestVariant = urlObj.searchParams.get('ab_test_variant');
-      if (abTestVariant) {
-        trackEvent('ab_test_variant', { variant: abTestVariant });
-      }
-    };
-
-    // Subscribe to route changes
-    router.events.on('routeChangeComplete', handleRouteChange);
-
-    // Unsubscribe from events when component unmounts
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
-
   return (
     <>
       <Script
         src="https://cookie-cdn.cookiepro.com/scripttemplates/otSDKStub.js"
         data-domain-script="2767f96d-f8c2-489d-862e-bfeb24f3c968"
       />
-
-      {/* Material icons are now loaded in _document.tsx for better performance */}
-
-      {/* Inline script for cookie pro */}
       <Script id="optanon" strategy="afterInteractive">
         {`function OptanonWrapper() { }`}
       </Script>
-            {/* Inline script for gtm */}
       <Script id="google-tag-manager" strategy="afterInteractive">
         {`
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -57,17 +29,14 @@ function App({ Component, pageProps }: AppProps) {
         `}
       </Script>
 
-      <JourneyProvider>
-        <SupabaseDataProvider>
-          <ArticleDiscoveryProvider>
-            <ErrorBoundary>
-              <Component {...pageProps} />
-            </ErrorBoundary>
-          </ArticleDiscoveryProvider>
-        </SupabaseDataProvider>
-      </JourneyProvider>
+      <ErrorBoundary>
+        <ImmersiveApp />
+        <div id="arc-page-content">
+          <Component {...pageProps} />
+        </div>
+      </ErrorBoundary>
     </>
   )
 }
 
-export default App;
+export default App
