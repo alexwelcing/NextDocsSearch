@@ -12,6 +12,7 @@ import { SceneLights } from './scene/SceneLights'
 import { CameraRig } from './scene/CameraRig'
 import { WorldTitleCard } from './scene/WorldTitleCard'
 import { SceneFog } from './scene/SceneFog'
+import { PostFX } from './scene/PostFX'
 import { ShaderWarmup } from './scene/ShaderWarmup'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
@@ -85,6 +86,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       <ArcDock />
       <ImmersiveModals />
       <SphereHunter />
+      {quality !== 'low' && <PostFX />}
       {children}
     </Canvas>
   )
