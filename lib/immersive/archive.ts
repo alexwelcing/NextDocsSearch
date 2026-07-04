@@ -1,0 +1,73 @@
+// Client-side archive index for the dock: fetched once, cached module-level, with the lexical
+// filter the SEARCH tab uses before any semantic call.
+
+export interface ArcRecord {
+  slug: string
+  title: string
+  date: string
+  description: string
+  type: string
+  minutes: number
+}
+
+let cache: Promise<ArcRecord[]> | null = null
+
+export function loadArchive(): Promise<ArcRecord[]> {
+  if (!cache) {
+    cache = fetch('/api/arc/archive')
+      .then((r) => {
+        if (!r.ok) throw new Error(`archive: HTTP ${r.status}`)
+        return r.json()
+      })
+      .then((d: { records: ArcRecord[] }) => d.records)
+      .catch((err) => {
+        cache = null
+        throw err
+      })
+  }
+  return cache
+}
+
+/** Cheap lexical ranking: word-prefix hits in title (3x), description (1x). */
+export function searchArchive(records: ArcRecord[], query: string, limit = 30): ArcRecord[] {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean)
+  if (!terms.length) return []
+  const scored: { r: ArcRecord; s: number }[] = []
+  for (const r of records) {
+    const title = r.title.toLowerCase()
+    const desc = r.description.toLowerCase()
+    let s = 0
+    for (const t of terms) {
+      if (title.includes(t)) s += 3
+      if (desc.includes(t)) s += 1
+    }
+    if (s > 0) scored.push({ r, s })
+  }
+  return scored
+    .sort((a, b) => b.s - a.s || (a.r.date < b.r.date ? 1 : -1))
+    .slice(0, limit)
+    .map((x) => x.r)
+}
+
+export const HUB_COLLECTIONS: Record<string, { title: string; blurb: string; match: (r: ArcRecord) => boolean }> = {
+  'agent-futures': {
+    title: 'AGENT FUTURES',
+    blurb: 'autonomy, delegation, and what agents do to institutions',
+    match: (r) => /agent|autonom|delegat/i.test(r.title + ' ' + r.description),
+  },
+  'emergent-intelligence': {
+    title: 'EMERGENT INTELLIGENCE',
+    blurb: 'capabilities nobody ordered, arriving anyway',
+    match: (r) => /emerg|intelligen|mind|cognit/i.test(r.title + ' ' + r.description),
+  },
+  'speculative-ai': {
+    title: 'SPECULATIVE AI',
+    blurb: 'near futures, told from the inside',
+    match: (r) => r.type === 'fiction' || /speculat|future|2\d{3}/i.test(r.title + ' ' + r.description),
+  },
+  'the-interface': {
+    title: 'THE INTERFACE',
+    blurb: 'a 24-part series on the membrane between us and them',
+    match: (r) => /interface/i.test(r.slug) || /interface/i.test(r.title),
+  },
+}
