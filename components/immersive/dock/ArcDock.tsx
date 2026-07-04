@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
-import { CameraAnchor } from './CameraAnchor'
+import { CameraAnchor, LeashedAnchor } from './CameraAnchor'
 import { DockChassis, BODY_W, BODY_H } from './DockChassis'
 import { CrtScreen, SCREEN_W } from './CrtScreen'
 import { DockKey, KEY_W, stopLook } from './DockKey'
@@ -109,15 +109,93 @@ export function ArcDock() {
   if (bootPhase !== 'ready') return null
 
   return (
-    <CameraAnchor stiffness={16}>
-      {/* summon chip — visible while holstered */}
+    <>
+      {/* summon chip — visible while holstered; hard camera-lock so it always sits at gaze */}
       {!dockOpen && (
-        <group position={[0, -0.42, -0.9]} rotation={[-0.5, 0, 0]}>
+        <CameraAnchor stiffness={16}>
+          <group position={[0, -0.42, -0.9]} rotation={[-0.5, 0, 0]}>
+            <mesh
+              onPointerDown={(e) => {
+                stopLook(e)
+                playSound('open')
+                setDockOpen(true)
+              }}
+              onPointerOver={(e) => {
+                e.stopPropagation()
+                document.body.style.cursor = 'pointer'
+              }}
+              onPointerOut={() => {
+                document.body.style.cursor = 'auto'
+              }}
+            >
+              <planeGeometry args={[0.24, 0.06]} />
+              <meshBasicMaterial color={ARC.chassisDark} transparent opacity={0.85} />
+            </mesh>
+            <WindfoilText
+              font={FONT.display}
+              fontSize={0.028}
+              color={rgba(ARC.green, 0.9)}
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0, 0.001]}
+            >
+              ▲ ARC [TAB]
+            </WindfoilText>
+          </group>
+        </CameraAnchor>
+      )}
+
+      {/* dock rig — lazy-follow: world-anchored in yaw within a deadband (a console you glanced
+          down at stays put in the room), pitch spring-follows so it never strands out of reach.
+          Summoning recenters it to the current gaze. */}
+      <LeashedAnchor recenterOn={dockOpen}>
+        <group ref={rig} position={HIDDEN_POS.toArray()} rotation={[HIDDEN_ROT, 0, 0]}>
+          <DockChassis activity={busy} />
+
+          {/* screen sits in the bezel */}
+          <group position={[0, 0.045, 0.008]}>
+            <CrtScreen powered={powered}>
+              {powered && dockTab === 'archive' && (
+                <ArchiveTab active={tabActive('archive')} width={CONTENT_W} />
+              )}
+              {powered && dockTab === 'search' && (
+                <SearchTab active={tabActive('search')} width={CONTENT_W} />
+              )}
+              {powered && dockTab === 'ship' && (
+                <ShipTab active={tabActive('ship')} width={CONTENT_W} />
+              )}
+              {powered && dockTab === 'worlds' && (
+                <WorldsTab active={tabActive('worlds')} width={CONTENT_W} />
+              )}
+              {powered && dockTab === 'data' && (
+                <DataTab active={tabActive('data')} width={CONTENT_W} />
+              )}
+              {powered && dockTab === 'game' && (
+                <GameTab active={tabActive('game')} width={CONTENT_W} />
+              )}
+            </CrtScreen>
+          </group>
+
+          {/* key row */}
+          <group position={[0, -BODY_H / 2 + 0.075, 0.012]}>
+            {keysRow.map((t) => (
+              <group key={t.id} position={[t.x, 0, 0]}>
+                <DockKey
+                  label={t.label}
+                  active={dockTab === t.id}
+                  onPress={() => setDockTab(t.id)}
+                />
+              </group>
+            ))}
+          </group>
+
+          {/* stow handle */}
           <mesh
+            position={[BODY_W / 2 - 0.03, BODY_H / 2 - 0.028, 0.002]}
             onPointerDown={(e) => {
               stopLook(e)
-              playSound('open')
-              setDockOpen(true)
+              playSound('close')
+              setDockOpen(false)
             }}
             onPointerOver={(e) => {
               e.stopPropagation()
@@ -127,83 +205,22 @@ export function ArcDock() {
               document.body.style.cursor = 'auto'
             }}
           >
-            <planeGeometry args={[0.24, 0.06]} />
-            <meshBasicMaterial color={ARC.chassisDark} transparent opacity={0.85} />
+            <planeGeometry args={[0.036, 0.036]} />
+            <meshBasicMaterial color={ARC.chassisDark} />
           </mesh>
           <WindfoilText
             font={FONT.display}
-            fontSize={0.028}
-            color={rgba(ARC.green, 0.9)}
+            fontSize={0.024}
+            color={rgba(ARC.red, 0.85)}
             anchorX="center"
             anchorY="middle"
-            position={[0, 0, 0.001]}
+            position={[BODY_W / 2 - 0.03, BODY_H / 2 - 0.028, 0.003]}
+            renderOrder={20}
           >
-            ▲ ARC [TAB]
+            ▼
           </WindfoilText>
         </group>
-      )}
-
-      <group ref={rig} position={HIDDEN_POS.toArray()} rotation={[HIDDEN_ROT, 0, 0]}>
-        <DockChassis activity={busy} />
-
-        {/* screen sits in the bezel */}
-        <group position={[0, 0.045, 0.008]}>
-          <CrtScreen powered={powered}>
-            {powered && dockTab === 'archive' && (
-              <ArchiveTab active={tabActive('archive')} width={CONTENT_W} />
-            )}
-            {powered && dockTab === 'search' && (
-              <SearchTab active={tabActive('search')} width={CONTENT_W} />
-            )}
-            {powered && dockTab === 'ship' && <ShipTab active={tabActive('ship')} width={CONTENT_W} />}
-            {powered && dockTab === 'worlds' && (
-              <WorldsTab active={tabActive('worlds')} width={CONTENT_W} />
-            )}
-            {powered && dockTab === 'data' && <DataTab active={tabActive('data')} width={CONTENT_W} />}
-            {powered && dockTab === 'game' && <GameTab active={tabActive('game')} width={CONTENT_W} />}
-          </CrtScreen>
-        </group>
-
-        {/* key row */}
-        <group position={[0, -BODY_H / 2 + 0.075, 0.012]}>
-          {keysRow.map((t) => (
-            <group key={t.id} position={[t.x, 0, 0]}>
-              <DockKey label={t.label} active={dockTab === t.id} onPress={() => setDockTab(t.id)} />
-            </group>
-          ))}
-        </group>
-
-        {/* stow handle */}
-        <mesh
-          position={[BODY_W / 2 - 0.03, BODY_H / 2 - 0.028, 0.002]}
-          onPointerDown={(e) => {
-            stopLook(e)
-            playSound('close')
-            setDockOpen(false)
-          }}
-          onPointerOver={(e) => {
-            e.stopPropagation()
-            document.body.style.cursor = 'pointer'
-          }}
-          onPointerOut={() => {
-            document.body.style.cursor = 'auto'
-          }}
-        >
-          <planeGeometry args={[0.036, 0.036]} />
-          <meshBasicMaterial color={ARC.chassisDark} />
-        </mesh>
-        <WindfoilText
-          font={FONT.display}
-          fontSize={0.024}
-          color={rgba(ARC.red, 0.85)}
-          anchorX="center"
-          anchorY="middle"
-          position={[BODY_W / 2 - 0.03, BODY_H / 2 - 0.028, 0.003]}
-          renderOrder={20}
-        >
-          ▼
-        </WindfoilText>
-      </group>
-    </CameraAnchor>
+      </LeashedAnchor>
+    </>
   )
 }

@@ -9,7 +9,7 @@ import { ARC, FONT, rgba } from '@/lib/immersive/theme'
 import { playSound } from '@/lib/immersive/audio'
 
 export const KEY_W = 0.092
-export const KEY_H = 0.052
+export const KEY_H = 0.06
 
 /** Kill both R3F propagation and the camera-rig's raw DOM listener. */
 export function stopLook(e: ThreeEvent<PointerEvent>): void {
@@ -38,8 +38,14 @@ export function DockKey({
     if (cap.current) cap.current.position.z = -0.006 * (target > 0 ? 1 : 0) - (active ? 0.003 : 0)
   })
 
-  const capColor = active ? ARC.greenDim : hover ? '#3a453c' : ARC.chassis
-  const labelColor = active ? rgba(ARC.greenBright) : hover ? rgba(ARC.green) : rgba(ARC.green, 0.55)
+  // Three unmistakable states: resting keys sit dark, a hovered key backlights (emissive, not
+  // just a lighter cap — reads at a glance even over the bright panorama), the active key is lit.
+  const capColor = active ? ARC.greenDim : hover ? '#46564a' : ARC.chassis
+  const labelColor = active
+    ? rgba(ARC.greenBright)
+    : hover
+    ? rgba(ARC.greenBright, 0.95)
+    : rgba(ARC.green, 0.55)
 
   return (
     <group>
@@ -70,8 +76,8 @@ export function DockKey({
           <meshStandardMaterial
             color={capColor}
             roughness={0.55}
-            emissive={active ? ARC.greenDim : '#000000'}
-            emissiveIntensity={active ? 0.7 : 0}
+            emissive={active ? ARC.greenDim : hover ? ARC.greenDim : '#000000'}
+            emissiveIntensity={active ? 0.7 : hover ? 0.25 : 0}
           />
         </mesh>
         <WindfoilText

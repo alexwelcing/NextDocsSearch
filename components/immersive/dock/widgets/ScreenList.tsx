@@ -43,10 +43,13 @@ export function ScreenList({
         const index = start + i
         const isSel = index === selected
         const rowY = -i * LIST_ROW_H
+        // Desktop ergonomics: hover moves the cursor, one click opens. The old select-then-
+        // activate double-click was a keyboard idiom leaking into the pointer path — with a
+        // mouse the row you're pointing at IS the selection, so clicking should just commit.
         const handleDown = (e: ThreeEvent<PointerEvent>) => {
           stopLook(e)
-          if (isSel) onActivate(index)
-          else onSelect(index)
+          if (!isSel) onSelect(index) // touch has no hover — sync selection on the way in
+          onActivate(index)
         }
         return (
           <Fragment key={item.id}>
@@ -60,7 +63,14 @@ export function ScreenList({
             <mesh
               position={[width / 2, rowY - LIST_ROW_H / 2 + 0.004, 0.0002]}
               onPointerDown={handleDown}
-              onPointerOver={(e) => e.stopPropagation()}
+              onPointerOver={(e) => {
+                e.stopPropagation()
+                if (!isSel) onSelect(index)
+                document.body.style.cursor = 'pointer'
+              }}
+              onPointerOut={() => {
+                document.body.style.cursor = 'auto'
+              }}
             >
               <planeGeometry args={[width + 0.01, LIST_ROW_H]} />
               <meshBasicMaterial colorWrite={false} depthWrite={false} transparent />
