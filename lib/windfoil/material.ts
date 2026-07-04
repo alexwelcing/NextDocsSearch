@@ -25,27 +25,30 @@ import { FLOATS_PER_INSTANCE } from './types'
 import { WINDFOIL_WGSL_COVERAGE, WINDFOIL_WGSL_HELPERS } from './wgsl'
 
 interface AtlasBuffers {
-  curves: ReturnType<typeof storage>
-  rows: ReturnType<typeof storage>
+  // TSL's storage() typings can't express element-typed read-only buffers; at runtime these are
+  // StorageBufferNodes, handed straight to the wgslFn call below as plain Nodes.
+  curves: THREE.Node
+  rows: THREE.Node
 }
 
 // Storage nodes are renderer-agnostic and immutable per atlas — share them across all materials.
 const bufferCache = new WeakMap<FontAtlas, AtlasBuffers>()
 
 function atlasBuffers(atlas: FontAtlas): AtlasBuffers {
-  let b = bufferCache.get(atlas)
-  if (!b) {
-    // Slice into standalone arrays: the atlas views alias one fetched ArrayBuffer, and buffer
-    // uploads must not drag the sibling block along (or trip on byteOffset handling).
-    const curvesArr = atlas.curves.slice()
-    const rowsArr = atlas.rows.slice()
-    b = {
-      curves: storage(new THREE.StorageBufferAttribute(curvesArr, 2), 'vec2', curvesArr.length / 2).toReadOnly(),
-      rows: storage(new THREE.StorageBufferAttribute(rowsArr, 1), 'uint', rowsArr.length).toReadOnly(),
-    }
-    bufferCache.set(atlas, b)
+  const cached = bufferCache.get(atlas)
+  if (cached) return cached
+  // Slice into standalone arrays: the atlas views alias one fetched ArrayBuffer, and buffer
+  // uploads must not drag the sibling block along (or trip on byteOffset handling).
+  const curvesArr = atlas.curves.slice()
+  const rowsArr = atlas.rows.slice()
+  const built: AtlasBuffers = {
+    curves: storage(new THREE.StorageBufferAttribute(curvesArr, 2), 'vec2', curvesArr.length / 2)
+      .toReadOnly() as unknown as THREE.Node,
+    rows: storage(new THREE.StorageBufferAttribute(rowsArr, 1), 'uint', rowsArr.length)
+      .toReadOnly() as unknown as THREE.Node,
   }
-  return b
+  bufferCache.set(atlas, built)
+  return built
 }
 
 const helpers = code(WINDFOIL_WGSL_HELPERS)
@@ -129,17 +132,18 @@ export function createTextMesh(
   const material = new THREE.NodeMaterial()
   const opacity = uniform(1)
 
-  const place = instancedBufferAttribute(placeAttr) // originX, originY (block units, Y-down), unitsToLocal, fillRule
-  const bbox = instancedBufferAttribute(bboxAttr) // ink box in font units, Y-down
-  const color = instancedBufferAttribute(colorAttr) // straight-alpha RGBA
-  const band = instancedBufferAttribute(bandAttr) // rowBase, bandCount, y0, invH
+  // vec4() wrappers give the untyped attribute nodes proper swizzle typings
+  const place = vec4(instancedBufferAttribute(placeAttr)) // originX, originY (Y-down), unitsToLocal, fillRule
+  const bbox = vec4(instancedBufferAttribute(bboxAttr)) // ink box in font units, Y-down
+  const color = vec4(instancedBufferAttribute(colorAttr)) // straight-alpha RGBA
+  const band = vec4(instancedBufferAttribute(bandAttr)) // rowBase, bandCount, y0, invH
 
   // Vertex: expand the unit quad over the padded ink box, place it in block-local space, flip Y up.
   const corner = positionGeometry.xy
   const pad = float(padUnits)
   const lo = bbox.xy.sub(pad)
   const hi = bbox.zw.add(pad)
-  const em = mix(lo, hi, corner)
+  const em = lo.add(hi.sub(lo).mul(corner)) // mix(), spelled out for the typings
   const scale = place.z
   material.positionNode = vec3(
     place.x.add(em.x.mul(scale)),
@@ -171,7 +175,7 @@ export function createTextMesh(
       curves,
       rows,
     })
-    const a = vColor.w.mul(cov).mul(opacity)
+    const a = vColor.w.mul(float(cov)).mul(opacity)
     material.fragmentNode = vec4(vColor.xyz.mul(a), a)
     material.transparent = true
     material.premultipliedAlpha = true

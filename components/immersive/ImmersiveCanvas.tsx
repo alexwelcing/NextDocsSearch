@@ -15,7 +15,7 @@ import { ImmersiveModals } from './ImmersiveModals'
 import { SphereHunter } from './game/SphereHunter'
 
 // Register the three/webgpu catalogue so JSX intrinsics resolve to WebGPU-capable classes.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 extend(THREE as any)
 
 export default function ImmersiveCanvas({ children }: { children?: ReactNode }) {
@@ -23,7 +23,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
 
   return (
     <Canvas
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       gl={async (props: any) => {
         const renderer = new THREE.WebGPURenderer({
           ...props,

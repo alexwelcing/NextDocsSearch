@@ -4,7 +4,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three/webgpu'
-import type { GroupProps } from '@react-three/fiber'
+import type { ThreeElements } from '@react-three/fiber'
+
+type GroupProps = ThreeElements['group']
 import { loadFontAtlas, peekFontAtlas } from '@/lib/windfoil/atlas'
 import { layoutText } from '@/lib/windfoil/layout'
 import { createTextMesh } from '@/lib/windfoil/material'

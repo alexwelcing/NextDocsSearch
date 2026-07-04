@@ -22,9 +22,9 @@ export function CrtScreen({
   /** false = dark glass; true = raster on (with blip animation on transitions). */
   powered: boolean
 }) {
-  const base = useMemo(createScreenBaseMaterial, [])
-  const scan = useMemo(createScanlineOverlayMaterial, [])
-  const glow = useMemo(createGlowOverlayMaterial, [])
+  const base = useMemo(() => createScreenBaseMaterial(), [])
+  const scan = useMemo(() => createScanlineOverlayMaterial(), [])
+  const glow = useMemo(() => createGlowOverlayMaterial(), [])
   const raster = useRef<THREE.Group>(null)
   const anim = useRef({ sy: powered ? 1 : 0.002, sx: powered ? 1 : 0.002 })
 

@@ -4,21 +4,22 @@ This file provides guidance to Claude Code when working with this repository.
 
 ## Project overview
 
-NextDocsSearch is a focused Next.js content/portfolio site with:
+NextDocsSearch is an immersive 360 personal site (Alex Welcing): a WebGPU-only React Three
+Fiber environment — panoramic worlds, a diegetic retro-CRT console called the **ARC Terminal**
+(Archive Retrieval Console; never "Pip-Boy"), and in-scene modals for all content. Every URL is
+a deep link into the scene, and every page also server-renders full semantic HTML as the SEO
+layer and the reading surface for browsers without WebGPU.
 
-- a cannon/glass-tile landing page
-- a lightweight React Three Fiber scene launched from `/explore`
-- an article archive with semantic search and recommendation surfaces
-- selected video/article SEO pages
-
-Old experimental labs have been removed: ProGen, procedural rooms, article levels, galaxy view, game/leaderboard/tablet terminal, admin media upload, and generation-only APIs.
+Text in the scene renders through a vendored port of **windfoil** (texel-org, Apache-2.0):
+exact box-filter coverage of quadratic Bezier glyph outlines computed per-pixel in WGSL — no
+SDF atlases. See `lib/windfoil/LICENSE.md`.
 
 ## Commands
 
 | Command | Purpose |
 |---------|---------|
 | `pnpm dev` | Start development server |
-| `pnpm build` | Full build: manifests, recommendations, embeddings, repair, Next build, sitemap |
+| `pnpm build` | Full build: font atlases, article bodies, manifests, Next build, sitemap |
 | `pnpm lint` | Run ESLint |
 | `pnpm format` | Prettier formatting |
 
@@ -26,76 +27,71 @@ Use `pnpm run lint` and `pnpm run build` as the real gates before pushing.
 
 ## Architecture
 
-### Framework and routing
+### Framework
 
-- Next.js 16 Pages Router with React 19 and TypeScript.
-- Pages live in `pages/`.
-- API routes live in `pages/api/`.
-- Path alias: `@/*` maps to project root.
+- Next.js 16 Pages Router, React 19, TypeScript, pnpm. Path alias `@/*` → repo root.
+- `reactStrictMode` is OFF deliberately: double-mount destroys the async WebGPURenderer init.
 
-### Active product routes
+### The immersive app
 
-- `/`
-- `/explore`
-- `/articles`
-- `/articles/[slug]`
-- `/videos/[slug]`
-- `/about`
-- `/current-work`
-- `/pitch`
-- `/speculative-ai`
-- `/agent-futures`
-- `/emergent-intelligence`
-- `/the-interface`
+- `pages/_app.tsx` mounts `components/immersive/ImmersiveApp.tsx` once; it persists across
+  route changes. Page components only contribute crawlable HTML inside `#arc-page-content`
+  (hidden while the scene runs) plus `<Head>` metadata.
+- `ImmersiveApp`: WebGPU gate (navigator.gpu only — no probe requestAdapter; see comment),
+  CRT boot sequence, compatibility banner, URL↔store sync via `lib/immersive/navigation.ts`.
+- `ImmersiveCanvas`: R3F `Canvas` with `three/webgpu` WebGPURenderer (async `gl` factory +
+  `extend(THREE)`), scene = PanoramaSphere (crossfading equirect worlds), Atmosphere (TSL
+  instanced motes), SceneLights, CameraRig (inertial look), ArcDock, ImmersiveModals,
+  SphereHunter.
+- State: `stores/immersiveStore.ts` (zustand): bootPhase, dock, modal, world, quality, game.
+- Worlds: `lib/immersive/worlds.ts` registry; panoramas in `public/background/`.
+- Audio: `lib/immersive/audio.ts` SFX bus; clips in `public/sounds/arc/`.
 
-### Build pipeline
+### ARC Terminal dock (`components/immersive/dock/`)
 
-`pnpm build` runs:
+Camera-anchored console (CameraAnchor spring). CRT screen = TSL materials in `CrtMaterials.ts`
+(multiply scanlines need `premultipliedAlpha = true` under WebGPU). Six surfaces under
+`dock/tabs/`: Archive, Search (lexical), Ship (streaming `/api/vector-search` NDJSON), Worlds,
+Data, Game. The dock only opens modals / changes in-scene state — it never navigates away.
 
-1. `scripts/generate-image-manifest.ts`
-2. `scripts/generate-article-manifest.ts`
-3. `scripts/generate-recommendation-index.ts`
-4. `lib/generate-embeddings.ts`
-5. `scripts/repair-client-only-package.cjs`
-6. `next build --webpack`
-7. postbuild video sitemap + `next-sitemap`
+### Windfoil text engine (`lib/windfoil/`)
 
-Generated data lives in `lib/generated/*.json` and is consumed by runtime APIs. Prefer generated manifests over request-time filesystem scans.
+- Build step `scripts/generate-font-atlas.ts`: TTF → `public/fonts/*.wfa.{bin,json}`
+  (monotone-piece curves + row-band tables + metrics; charset in `charset.ts`).
+- Runtime: `atlas.ts` (loader), `layout.ts` (wrap/align/maxLines), `material.ts`
+  (`createTextMesh`: instanced quads + wgslFn coverage shader over storage buffers),
+  `wgsl.ts` (the vendored shader).
+- React: `components/immersive/text/WindfoilText.tsx`. All in-scene text uses it.
+- Storage buffers ride pointer parameters (WGSL `unrestricted_pointer_parameters`) — fine on
+  Chrome-class WebGPU, the only supported tier.
 
-### Content system
+### Content pipeline
 
-- Articles are MDX files in `pages/docs/articles/`.
-- Article pages use SSG with fallback blocking and capped prebuilds.
-- Article metadata/image/recommendation APIs should read generated manifests.
+- Articles: MDX in `pages/docs/articles/` (327 records).
+- `scripts/generate-article-bodies.ts` → `public/arc/records/<slug>.json` (full text as blocks;
+  consumed by the in-scene reader AND `pages/articles/[slug].tsx` SSG).
+- Manifests in `lib/generated/*.json` feed APIs (`/api/arc/archive` is the dock index).
+- Films: MP4s in `public/images/article-videos/` play in-scene via VideoTexture.
 
-### 3D layer
+### Routes (all 360 deep links with crawlable HTML beneath)
 
-Active scene path:
+`/`, `/articles`, `/articles/[slug]`, `/videos/[slug]`, `/about`, `/current-work`, `/pitch`,
+`/agent-futures`, `/emergent-intelligence`, `/speculative-ai`, `/the-interface`.
 
-- `components/3d/Interactive3DExperience.tsx`
-- `components/scene/Scene3D.tsx`
-- `components/scene/SceneCanvas.tsx`
-- `components/scene/SceneBackground.tsx`
-- `components/scene/SceneCamera.tsx`
-- `components/scene/SceneEnvironment.tsx`
+## Verification
 
-The active 3D layer is presentation-only. Do not re-add cannon physics, game/leaderboard state, tablet terminal UI, or XR unless explicitly requested.
-
-### AI and search
-
-- Semantic/article answer surfaces use `/api/vector-search` and `lib/chat/*`.
-- `openai-edge` remains for vector search.
-- Removed generation-only UI/API paths should stay removed unless explicitly requested.
+Headless WebGPU works via SwiftShader but only for single presents; for real screenshots run
+headed Chromium under Xvfb (playwright with `--enable-unsafe-webgpu
+--use-webgpu-adapter=swiftshader` and a virtual display via `xvfb-run`).
 
 ## Code style
 
-- Prettier: single quotes, no semicolons, 100 char width, 2-space indentation, trailing commas where configured.
+- Prettier: single quotes, no semicolons, 100 char width, 2-space indentation.
 - ESLint is the primary lint gate.
-- Package manager: pnpm.
 
-## Cleanup guidance
+## Guardrails
 
-- Keep the route/API surface small.
-- Delete unused labs instead of preserving compatibility shims.
-- Avoid adding new custom validators/test harnesses.
-- Keep homepage first-arrival behavior as the tile/glass cannon landing page; users enter 3D from CTA/completion.
+- Do not re-add: XR/VR, cannon physics, Gaussian splats (WebGL-only lib), the removed labs
+  (film-bridge, ProGen, galaxy, tablet terminal), or a WebGL fallback renderer.
+- Keep the route/API surface small; content opens in-scene, not on new 2D pages.
+- The SEO layer must stay: every content URL server-renders its full text.

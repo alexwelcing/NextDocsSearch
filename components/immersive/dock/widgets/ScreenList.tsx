@@ -56,14 +56,14 @@ export function ScreenList({
                 <meshBasicMaterial color={ARC.greenFaint} transparent opacity={0.9} />
               </mesh>
             )}
-            {/* row hitbox */}
+            {/* row hitbox — drawn never, raycast always */}
             <mesh
               position={[width / 2, rowY - LIST_ROW_H / 2 + 0.004, 0.0002]}
               onPointerDown={handleDown}
               onPointerOver={(e) => e.stopPropagation()}
-              visible={false}
             >
               <planeGeometry args={[width + 0.01, LIST_ROW_H]} />
+              <meshBasicMaterial colorWrite={false} depthWrite={false} transparent />
             </mesh>
             <WindfoilText
               font={FONT.mono}

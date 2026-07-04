@@ -17,6 +17,12 @@ import {
 } from 'three/tsl'
 import { ARC } from '@/lib/immersive/theme'
 
+// vec3 from a hex string (TSL's vec3 typings don't accept THREE.Color directly)
+function c3(hex: string) {
+  const c = new THREE.Color(hex)
+  return vec3(c.r, c.g, c.b)
+}
+
 /** Dark phosphor glass: radial falloff + faint grid + idle glow breathing. */
 export function createScreenBaseMaterial(): THREE.NodeMaterial {
   const material = new THREE.NodeMaterial()
@@ -24,8 +30,8 @@ export function createScreenBaseMaterial(): THREE.NodeMaterial {
   const centered = u.sub(0.5)
   const r2 = centered.dot(centered)
 
-  const bg = vec3(new THREE.Color(ARC.screenBg))
-  const glowTint = vec3(new THREE.Color(ARC.greenFaint))
+  const bg = c3(ARC.screenBg)
+  const glowTint = c3(ARC.greenFaint)
 
   // faint aperture grid
   const grid = sin(u.y.mul(560)).mul(0.5).add(0.5).mul(0.06).add(
@@ -75,7 +81,7 @@ export function createGlowOverlayMaterial(): THREE.NodeMaterial {
   const halo = smoothstep(0.5, 0.0, r2).mul(0.05)
   const staticNoise = hash(u.mul(vec3(913, 517, 1).xy).add(time.mul(9).floor())).mul(0.03)
 
-  const tint = vec3(new THREE.Color(ARC.green))
+  const tint = c3(ARC.green)
   material.colorNode = vec4(tint.mul(halo.add(staticNoise)), 1)
   material.blending = THREE.AdditiveBlending
   material.transparent = true
