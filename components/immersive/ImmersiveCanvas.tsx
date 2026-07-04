@@ -12,6 +12,7 @@ import { SceneLights } from './scene/SceneLights'
 import { CameraRig } from './scene/CameraRig'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
+import { SphereHunter } from './game/SphereHunter'
 
 // Register the three/webgpu catalogue so JSX intrinsics resolve to WebGPU-capable classes.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,6 +46,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       <CameraRig />
       <ArcDock />
       <ImmersiveModals />
+      <SphereHunter />
       {children}
     </Canvas>
   )

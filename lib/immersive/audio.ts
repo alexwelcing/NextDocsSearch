@@ -12,14 +12,14 @@ export type ArcSound =
   | 'hum'
 
 const FILES: Record<ArcSound, string> = {
-  boot: '/sounds/arc/boot.mp3',
-  key: '/sounds/arc/key.mp3',
-  tab: '/sounds/arc/tab.mp3',
-  open: '/sounds/arc/open.mp3',
-  close: '/sounds/arc/close.mp3',
-  confirm: '/sounds/arc/confirm.mp3',
-  deny: '/sounds/arc/deny.mp3',
-  hum: '/sounds/arc/hum.mp3',
+  boot: '/sounds/arc/boot.wav',
+  key: '/sounds/arc/key.wav',
+  tab: '/sounds/arc/tab.wav',
+  open: '/sounds/arc/open.wav',
+  close: '/sounds/arc/close.wav',
+  confirm: '/sounds/arc/confirm.wav',
+  deny: '/sounds/arc/deny.wav',
+  hum: '/sounds/arc/hum.wav',
 }
 
 const VOLUME: Partial<Record<ArcSound, number>> = { hum: 0.18, boot: 0.5, key: 0.35 }

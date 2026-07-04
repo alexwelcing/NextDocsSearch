@@ -18,6 +18,16 @@ export interface WorldDef {
 
 export const WORLDS: WorldDef[] = [
   {
+    id: 'the-stacks',
+    name: 'THE STACKS',
+    blurb: 'the archive itself. every record you can see is real.',
+    panorama: '/background/the-stacks.jpg',
+    ambient: { color: '#a8ffc4', intensity: 0.55 },
+    key: { color: '#c8ffd8', intensity: 0.85, position: [0, 9, -2] },
+    particles: { color: '#70ff8f', count: 320 },
+    drift: 0.003,
+  },
+  {
     id: 'atrium',
     name: 'THE ATRIUM',
     blurb: 'default habitat. warm light, tall glass.',

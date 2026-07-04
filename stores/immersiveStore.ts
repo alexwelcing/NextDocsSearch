@@ -66,7 +66,7 @@ export const useImmersiveStore = create<ImmersiveState>((set) => ({
   modal: null,
   setModal: (modal) => set({ modal }),
 
-  worldId: 'atrium',
+  worldId: 'the-stacks',
   setWorld: (worldId) => set({ worldId }),
 
   quality: 'high',
