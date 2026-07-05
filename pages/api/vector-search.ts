@@ -4,10 +4,10 @@ import { createClient } from '@supabase/supabase-js'
 import { Configuration, OpenAIApi, type CreateEmbeddingResponse } from 'openai-edge'
 import { ApplicationError, UserError } from '@/lib/errors';
 import articleManifest from '@/lib/generated/article-manifest.json'
-import { generateHuggingFaceChat, generateHuggingFaceChatStream, type HfChatMessage } from '@/lib/ai/huggingface'
+import { generateHuggingFaceChat, generateHuggingFaceChatStream, hasHfToken, type HfChatMessage } from '@/lib/ai/huggingface'
 import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
 import { resolveShipTrick, type ResolvedShipTrick } from '@/lib/ai/shipTricks'
-import { queryLocalArchive } from '@/lib/chat/archiveQuery'
+import { queryLocalArchive, type LocalArchiveQueryResult } from '@/lib/chat/archiveQuery'
 import {
   buildStructuredAnswer,
   parseStructuredAnswerResponse,
@@ -427,6 +427,37 @@ function writeStreamEvent(res: NextApiResponse, event: ShipStreamEvent) {
   res.write(`${JSON.stringify(event)}\n`)
 }
 
+const EMPTY_LOCAL_ARCHIVE: LocalArchiveQueryResult = {
+  profileIntent: false,
+  profileFacts: [],
+  context: '',
+  instantResults: [],
+}
+
+/** When generation is unavailable (no HF_TOKEN, deprecated models, provider outage), the
+ *  knowledge set still answers: a short notice plus the strongest archive matches. */
+function buildLocalFallbackAnswer(query: string, instantResults: InstantAnswerItem[]): string {
+  if (!instantResults.length) {
+    return oneLine`
+      Generative link offline — and the archive index has no strong match for "${query}".
+      Try different terms, or open the ARCHIVE tab to browse the records directly.`
+  }
+
+  const lines = instantResults.slice(0, 3).map((item, index) => {
+    const summary = normalizeWhitespace(item.description || item.snippet || '').slice(0, 140)
+    return `${index + 1}. ${item.title} — ${summary}`
+  })
+
+  return [
+    'Generative link offline — answering from the archive index.',
+    '',
+    `Closest records on "${query}":`,
+    ...lines,
+    '',
+    'Open a source below to read the full record.',
+  ].join('\n')
+}
+
 const STREAM_BATCH_MIN_CHARS = 32
 const STREAM_BATCH_MAX_DELAY_MS = 180
 
@@ -630,9 +661,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ error: 'Method not allowed' })
     }
 
-    if (!process.env.HF_TOKEN?.trim()) {
-      throw new ApplicationError('Missing environment variable HF_TOKEN')
-    }
+    // No hard requirement on HF_TOKEN: without it the endpoint degrades to archive-index
+    // answers instead of refusing the query outright.
 
     const requestData = (req.body || {}) as VectorSearchRequest
 
@@ -674,9 +704,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       : []
 
+    // both retrieval layers are best-effort — a failure in either must never take down the
+    // whole query (this used to hard-500 when the local archive walk hit a missing directory)
     const [semanticSections, localArchive] = await Promise.all([
-      getSemanticPageSections(retrievalQuery),
-      queryLocalArchive(retrievalQuery),
+      getSemanticPageSections(retrievalQuery).catch((error) => {
+        console.error('[vector-search] Semantic retrieval failed:', error)
+        return [] as SemanticPageSection[]
+      }),
+      queryLocalArchive(retrievalQuery).catch((error) => {
+        console.error('[vector-search] Local archive retrieval failed:', error)
+        return EMPTY_LOCAL_ARCHIVE
+      }),
     ])
     const profileContext = buildProfileContextSection(localArchive.profileFacts)
     const archiveContext = buildArchiveContextSections(
@@ -740,23 +778,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       lastFlushAt = Date.now()
     }
 
-    const generation = await generateHuggingFaceChatStream({
-      messages: [
-        { role: 'system', content: shipPersona.systemPrompt },
-        ...historyMessages,
-        { role: 'user', content: prompt },
-      ],
-      maxNewTokens: 700,
-      temperature: localArchive.profileIntent ? 0.35 : 0.78,
-      onDelta: (delta, answer) => {
-        streamedAnswer = answer
-        lastEmittedAnswer = answer
-        pendingDelta += delta
-        flushPendingDelta(false)
-      },
-    })
+    let generation: { text: string; model: string } | null = null
+
+    if (hasHfToken()) {
+      try {
+        generation = await generateHuggingFaceChatStream({
+          messages: [
+            { role: 'system', content: shipPersona.systemPrompt },
+            ...historyMessages,
+            { role: 'user', content: prompt },
+          ],
+          maxNewTokens: 700,
+          temperature: localArchive.profileIntent ? 0.35 : 0.78,
+          onDelta: (delta, answer) => {
+            streamedAnswer = answer
+            lastEmittedAnswer = answer
+            pendingDelta += delta
+            flushPendingDelta(false)
+          },
+        })
+      } catch (error) {
+        console.error('[vector-search] Generative answer failed — degrading to archive index:', error)
+      }
+    } else {
+      console.error('[vector-search] HF_TOKEN not configured — serving archive-index answer only')
+    }
 
     flushPendingDelta(true)
+
+    // graceful degrade: the knowledge set still answers when generation is unavailable
+    if (!generation) {
+      const fallbackMessage = buildLocalFallbackAnswer(sanitizedQuery, instantResults)
+      writeStreamEvent(res, {
+        type: 'final-answer',
+        question: sanitizedQuery,
+        answer: fallbackMessage,
+        structuredAnswer: buildStructuredAnswer(fallbackMessage, answerMode),
+        provider: 'local-archive',
+        signals: [],
+      })
+      res.end()
+      return
+    }
 
     const finalRawAnswer = streamedAnswer || generation.text
     const { cleanMessage, signals } = extractShipSignals(finalRawAnswer)
@@ -828,8 +891,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error(err)
     }
 
-    return res.status(500).json({
-      error: 'There was an error processing your request',
+    // A knowledge query never hard-500s: hand the client a well-formed stream with a notice
+    // it can render instead of a dead 'SIGNAL LOST (HTTP 500)'.
+    res.status(200)
+    res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-store')
+    const notice =
+      'Ship systems fault — the archive index is unreachable right now. Try again in a moment, or browse the ARCHIVE tab directly.'
+    writeStreamEvent(res, {
+      type: 'final-answer',
+      question: '',
+      answer: notice,
+      structuredAnswer: buildStructuredAnswer(notice, 'default'),
+      provider: 'local-archive',
+      signals: [],
     })
+    res.end()
+    return
   }
 }

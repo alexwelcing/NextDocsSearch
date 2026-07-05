@@ -44,6 +44,10 @@ const HERO_CAP_H = 0.028
 const HERO_IMG_H = 0.3
 const HERO_RESERVE = HERO_CAP_H + HERO_IMG_H + 0.034
 
+// media chips (PLATES / WATCH FILM) sit in the footer strip between the bottom of the text
+// columns (-PAGE_H) and the ModalShell hints line, right-aligned
+const CHIP_Y = -PAGE_H - 0.06
+
 const RASTER = /\.(jpe?g|png|webp)$/i
 
 interface Placed {
@@ -547,9 +551,10 @@ export function ArticleModal({ slug }: { slug: string }) {
         </>
       )}
 
-      {/* plates chip */}
+      {/* media chips live in the footer strip (below the text columns, right-aligned) — the
+          header's right side belongs to the date/PAGE meta text, which they used to overlap */}
       {plates.length > 0 && (
-        <group position={[CONTENT_W - (hasFilm ? 0.44 : 0.14), 0.085, 0]}>
+        <group position={[CONTENT_W - (hasFilm ? 0.44 : 0.14), CHIP_Y, 0]}>
           <mesh
             onPointerDown={(e) => {
               stopLook(e)
@@ -582,7 +587,7 @@ export function ArticleModal({ slug }: { slug: string }) {
 
       {/* film chip */}
       {hasFilm && (
-        <group position={[CONTENT_W - 0.14, 0.085, 0]}>
+        <group position={[CONTENT_W - 0.14, CHIP_Y, 0]}>
           <mesh
             onPointerDown={(e) => {
               stopLook(e)

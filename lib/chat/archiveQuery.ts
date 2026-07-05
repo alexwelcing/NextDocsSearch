@@ -134,7 +134,15 @@ function splitParagraphs(value: string): string[] {
 }
 
 async function walk(dirPath: string): Promise<string[]> {
-  const entries = await readdir(dirPath, { withFileTypes: true })
+  // DOC_DIRECTORIES are best-effort sources: 'content' does not exist in this repo, and on
+  // Vercel the serverless bundle may omit source dirs entirely. A missing dir is an empty
+  // contribution, never a crash — this readdir throwing used to hard-500 every Ship query.
+  let entries
+  try {
+    entries = await readdir(dirPath, { withFileTypes: true })
+  } catch {
+    return []
+  }
   const nested = await Promise.all(
     entries.map(async (entry) => {
       const resolvedPath = join(dirPath, entry.name)
@@ -215,7 +223,12 @@ async function loadArchiveDocuments(): Promise<ArchiveDocument[]> {
 
 async function getArchiveDocuments(): Promise<ArchiveDocument[]> {
   if (!archiveCachePromise) {
-    archiveCachePromise = loadArchiveDocuments()
+    // never cache a rejection — a transient fs failure would otherwise poison every
+    // later query for the lifetime of the lambda
+    archiveCachePromise = loadArchiveDocuments().catch((error) => {
+      archiveCachePromise = null
+      throw error
+    })
   }
 
   return archiveCachePromise

@@ -1,8 +1,11 @@
 import { ApplicationError } from '@/lib/errors'
 
-const DEFAULT_PROVIDER = 'featherless-ai'
-const DEFAULT_PRIMARY_MODEL = 'Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2'
-const DEFAULT_FALLBACK_MODEL = 'Qwen/Qwen2.5-7B-Instruct'
+// Router models get deprecated often — every entry here was verified live on
+// https://router.huggingface.co/v1/models (the old Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2
+// primary is gone from the router entirely). Bare ids let the router auto-select any provider
+// currently serving the model; pin one explicitly with 'model:provider' via HF_CHAT_MODEL.
+const DEFAULT_PRIMARY_MODEL = 'meta-llama/Llama-3.1-8B-Instruct'
+const DEFAULT_FALLBACK_MODELS = ['Qwen/Qwen2.5-7B-Instruct', 'meta-llama/Llama-3.3-70B-Instruct']
 const HUGGING_FACE_CHAT_COMPLETIONS_URL = 'https://router.huggingface.co/v1/chat/completions'
 
 export interface HfChatMessage {
@@ -35,12 +38,17 @@ function getHfToken(): string {
   return token
 }
 
+/** True when generative answers are possible at all — callers degrade gracefully otherwise. */
+export function hasHfToken(): boolean {
+  return Boolean(process.env.HF_TOKEN?.trim())
+}
+
 function getCandidateModels(): string[] {
   const configured = process.env.HF_CHAT_MODEL?.trim()
 
-  return [configured, DEFAULT_PRIMARY_MODEL, DEFAULT_FALLBACK_MODEL]
-    .filter((value, index, all): value is string => Boolean(value) && all.indexOf(value) === index)
-    .map((value) => (value.includes(':') ? value : `${value}:${DEFAULT_PROVIDER}`))
+  return [configured, DEFAULT_PRIMARY_MODEL, ...DEFAULT_FALLBACK_MODELS].filter(
+    (value, index, all): value is string => Boolean(value) && all.indexOf(value) === index
+  )
 }
 
 function extractGeneratedText(payload: unknown): string {
