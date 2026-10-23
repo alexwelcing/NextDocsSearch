@@ -8,62 +8,94 @@ import { WindfoilText } from '../../text/WindfoilText'
 import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
-import { loadArchive, searchArchive, type ArcRecord } from '@/lib/immersive/archive'
+import { HttpIndexSource, listRecords, searchRecords, type ArchiveRecord } from '@/lib/archive'
 import { prefetchRecord } from '@/lib/immersive/prefetch'
 import { openModal } from '@/lib/immersive/navigation'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
 import { stopLook } from '../DockKey'
 
-const ROWS = 5
+const ROWS = 3
+// FIND mounts on demand. Reuse its source across visits without adding the full
+// search index to ImmersiveApp's compact landing-page preload.
+const source = new HttpIndexSource()
 
 export function SearchTab({ active, width }: { active: boolean; width: number }) {
   const router = useRouter()
-  const [records, setRecords] = useState<ArcRecord[]>([])
+  const [records, setRecords] = useState<ArchiveRecord[]>([])
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [attempt, setAttempt] = useState(0)
   const [query, setQuery] = useState('')
   const [sel, setSel] = useState(0)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    loadArchive().then(setRecords, () => undefined)
-  }, [])
+    if (!active) return
+    let live = true
+    setStatus('loading')
+    listRecords(source, { throwOnError: true }).then(
+      (loaded) => {
+        if (!live) return
+        setRecords(loaded)
+        setStatus('ready')
+      },
+      () => {
+        if (live) setStatus('error')
+      }
+    )
+    return () => {
+      live = false
+    }
+  }, [active, attempt])
+
+  const retry = () => setAttempt((value) => value + 1)
 
   // Hidden DOM input for touch keyboards; desktop keys are handled below.
   useEffect(() => {
     if (!active) return
     const el = document.createElement('input')
     el.type = 'search'
+    el.setAttribute('aria-label', 'Search archive')
+    el.maxLength = 60
     el.autocapitalize = 'off'
     el.autocomplete = 'off'
     el.style.cssText =
       'position:fixed;opacity:0;pointer-events:none;left:50%;bottom:0;height:1px;width:1px;'
-    el.value = query
-    el.addEventListener('input', () => setQuery(el.value))
+    el.addEventListener('input', () => {
+      el.value = el.value.slice(0, 60)
+      setQuery(el.value)
+    })
     document.body.appendChild(el)
     inputRef.current = el
     return () => {
       el.remove()
       inputRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
-  const results = useMemo(() => searchArchive(records, query, 40), [records, query])
-  useEffect(() => setSel(0), [query])
   useEffect(() => {
-    const rec = results[sel]
-    if (rec) prefetchRecord(rec.slug)
-  }, [results, sel])
+    if (inputRef.current && inputRef.current.value !== query) inputRef.current.value = query
+  }, [query, active])
+
+  const results = useMemo(
+    () => (status === 'ready' ? searchRecords(records, query, 40) : []),
+    [records, query, status]
+  )
+  useEffect(() => setSel(0), [query])
+  const selected = results[sel]
+  useEffect(() => {
+    if (active && selected) prefetchRecord(selected.record.slug)
+  }, [active, selected])
 
   const activate = (index: number) => {
-    const rec = results[index]
+    const rec = results[index]?.record
     if (!rec) return
     playSound('confirm')
     openModal(router, { type: 'article', slug: rec.slug })
   }
 
   useTabKeys(active, (e) => {
-    if (e.metaKey || e.ctrlKey || e.altKey) return false
+    if (e.metaKey || e.ctrlKey || e.altKey || e.isComposing) return false
     if (e.key === 'ArrowDown') {
       setSel((s) => Math.min(s + 1, Math.max(results.length - 1, 0)))
       return true
@@ -73,9 +105,13 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
       return true
     }
     if (e.key === 'Enter') {
-      activate(sel)
+      if (status === 'error') retry()
+      else activate(sel)
       return true
     }
+    // The native input owns text editing, paste, composition and mobile input.
+    // Only the unfocused desktop terminal appends/deletes characters itself.
+    if (e.target === inputRef.current) return false
     if (e.key === 'Backspace') {
       setQuery((q) => q.slice(0, -1))
       playSound('key')
@@ -89,15 +125,32 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
     return false
   })
 
-  const items = results.map((r) => ({
-    id: r.slug,
-    primary: r.title.toUpperCase(),
-    meta: `${r.minutes}MIN`,
+  const items = results.map(({ record }) => ({
+    id: record.slug,
+    primary: record.title.toUpperCase(),
+    meta: `${record.minutes}MIN`,
   }))
+
+  const message =
+    status === 'loading'
+      ? 'READING SEARCH INDEX...'
+      : status === 'error'
+      ? 'SEARCH UNAVAILABLE. ENTER OR TAP TO RETRY.'
+      : !records.length
+      ? 'ARCHIVE IS EMPTY.'
+      : query.trim() && !results.length
+      ? 'NO RECORDS MATCH'
+      : !query.trim()
+      ? 'TYPE TO SEARCH ARTICLES AND TOPICS.\nFOR THE SHIP MIND, USE THE SHIP TAB.'
+      : ''
 
   return (
     <group>
-      <ScreenHeader title="SEARCH" right={query ? `${results.length} HITS` : ''} width={width} />
+      <ScreenHeader
+        title="SEARCH"
+        right={status === 'ready' && query.trim() ? `${results.length} HITS` : ''}
+        width={width}
+      />
       {/* query line — tap to summon the OS keyboard on touch */}
       <mesh
         position={[width / 2, -0.062, -0.0005]}
@@ -120,25 +173,34 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
         {`> ${query}_`}
       </WindfoilText>
 
-      {query && !results.length && (
-        <WindfoilText
-          font={FONT.mono}
-          fontSize={TYPE.body}
-          color={rgba(ARC.amber)}
-          position={[0, -0.115, 0]}
+      {status === 'error' && (
+        <mesh
+          position={[width / 2, -0.135, 0.0002]}
+          onPointerDown={(e) => {
+            stopLook(e)
+            retry()
+          }}
+          onPointerOver={() => {
+            document.body.style.cursor = 'pointer'
+          }}
+          onPointerOut={() => {
+            document.body.style.cursor = 'auto'
+          }}
         >
-          NO RECORDS MATCH
-        </WindfoilText>
+          <planeGeometry args={[width, 0.065]} />
+          <meshBasicMaterial colorWrite={false} depthWrite={false} transparent />
+        </mesh>
       )}
-      {!query && (
+      {message && (
         <WindfoilText
           font={FONT.mono}
           fontSize={TYPE.body}
-          color={rgba(ARC.greenDim)}
+          color={rgba(status === 'error' ? ARC.amber : ARC.greenDim)}
           position={[0, -0.115, 0]}
           maxWidth={width}
+          maxLines={3}
         >
-          {'TYPE TO SCAN THE ARCHIVE.\nFOR THE SHIP MIND, USE THE SHIP TAB.'}
+          {message}
         </WindfoilText>
       )}
       <ScreenList
@@ -150,6 +212,18 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
         rows={ROWS}
         y={-0.105}
       />
+      {selected?.snippet && (
+        <WindfoilText
+          font={FONT.mono}
+          fontSize={TYPE.small}
+          color={rgba(ARC.green, 0.7)}
+          position={[0, -0.248, 0]}
+          maxWidth={width}
+          maxLines={2}
+        >
+          {selected.snippet}
+        </WindfoilText>
+      )}
       <ScreenHints text="TYPE QUERY · ^v SELECT · ENTER OPEN" width={width} />
     </group>
   )

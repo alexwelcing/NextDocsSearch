@@ -7,6 +7,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['lib/archive/**/*.test.ts'],
+    include: ['lib/archive/**/*.test.ts', 'components/immersive/dock/tabs/*.test.tsx'],
   },
 })

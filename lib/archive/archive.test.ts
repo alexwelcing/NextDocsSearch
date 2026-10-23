@@ -212,8 +212,63 @@ describe('searchRecords', () => {
     expect(searchRecords(records, 'orbit orbit signal')).toEqual(
       searchRecords(records, 'orbit signal')
     )
-    expect(searchRecords(records, 'the AI SHIP and Alex Welcing with')).toEqual([])
+    expect(searchRecords(records, 'the and with an of to in')).toEqual([])
     expect(searchRecords(records, '  ')).toEqual([])
+    expect(searchRecords(records, '!!!')).toEqual([])
+  })
+
+  it.each(['AI', 'VR', '3D'])(
+    'finds the short term %s without embedded or prefix false positives',
+    (term) => {
+      const positive = record('positive', { title: `Exploring ${term}` })
+      const negative = record('negative', { title: 'Rainfall in air, avril and 3drafts' })
+
+      expect(searchRecords([negative, positive], term).map((hit) => hit.record)).toEqual([positive])
+    }
+  )
+
+  it('keeps names and Ship searchable instead of filtering them as assistant vocabulary', () => {
+    const entry = record('entry', { title: 'Ship AI by Alex Welcing' })
+    for (const query of ['ship', 'ai', 'alex', 'welcing']) {
+      expect(searchRecords([entry], query).map((hit) => hit.record)).toEqual([entry])
+    }
+  })
+
+  it('matches longer word prefixes without finding AGI inside imaging', () => {
+    const positive = record('positive', { title: 'AGI research', keywords: ['cartography'] })
+    const negative = record('negative', { title: 'Hyperspectral imaging' })
+
+    expect(searchRecords([negative, positive], 'agi').map((hit) => hit.record)).toEqual([positive])
+    expect(searchRecords([positive], 'cartog').map((hit) => hit.record)).toEqual([positive])
+  })
+
+  it('applies the same title phrase bonus to punctuation, repetition, and stopword variants', () => {
+    const records = [
+      record('phrase', { title: 'The orbital flight' }),
+      record('metadata', { title: 'Flight orbital', keywords: ['orbital', 'flight'] }),
+    ]
+    const expected = searchRecords(records, 'orbital flight')
+    expect(expected.map((hit) => hit.record.slug)).toEqual(['phrase', 'metadata'])
+
+    for (const query of [
+      'ORBITAL, FLIGHT!',
+      'the orbital flight',
+      'orbital orbital flight',
+      'orbital flight flight',
+    ]) {
+      expect(searchRecords(records, query)).toEqual(expected)
+    }
+  })
+
+  it('requires complete token boundaries for the title phrase bonus', () => {
+    const [prefix, complete] = [
+      record('prefix', { title: 'Memoryless' }),
+      record('complete', { title: 'Memory' }),
+    ]
+    const hits = searchRecords([prefix, complete], 'memory')
+
+    expect(hits.map((hit) => hit.record)).toEqual([complete, prefix])
+    expect(hits[0].score).toBeGreaterThan(hits[1].score)
   })
 
   it('returns the best hit per slug and applies result limits after deduplication', () => {
@@ -251,7 +306,30 @@ describe('searchRecords', () => {
     expect(hit.snippet).toMatch(/^\.\.\. /)
     expect(hit.snippet).toMatch(/ \.\.\.$/)
     expect(hit.snippet).not.toMatch(/[\n\t]/)
-    expect(hit.snippet.length).toBeLessThanOrEqual(470)
+    expect(hit.snippet.indexOf('ORBIT')).toBeLessThanOrEqual(52)
+    expect(hit.snippet.length).toBeLessThanOrEqual(376)
+  })
+
+  it('uses word boundaries for body-only prefix snippets as well as ranking', () => {
+    const searchText = `discardcartography ${'padding '.repeat(
+      80
+    )}cartography charts ${'continuation '.repeat(80)}`
+    const [hit] = searchRecords([record('body', { searchText })], 'cartog')
+
+    expect(hit.snippet).toContain('cartography charts')
+    expect(hit.snippet).not.toContain('discardcartography')
+    expect(hit.snippet).toMatch(/^\.\.\. /)
+  })
+
+  it('skips an earlier false short-term match when selecting the snippet', () => {
+    const searchText = `Rainfall in the air. ${'padding '.repeat(
+      80
+    )}AI research ${'continuation '.repeat(80)}`
+    const [hit] = searchRecords([record('body', { searchText })], 'ai')
+
+    expect(hit.snippet).toContain('AI research')
+    expect(hit.snippet).not.toContain('Rainfall')
+    expect(hit.snippet).not.toContain('air')
   })
 
   it('uses the description when no body is available', () => {
@@ -260,5 +338,50 @@ describe('searchRecords', () => {
       'orbit'
     )
     expect(hit.snippet).toBe('A short description')
+  })
+
+  it('shows a full-description match when the body does not contain the query', () => {
+    const description = `${'padding '.repeat(80)}cartography describes the boundary`
+    const [hit] = searchRecords(
+      [record('entry', { searchText: 'An unrelated body.', description })],
+      'cartog'
+    )
+
+    expect(hit.snippet).toContain('cartography describes the boundary')
+    expect(hit.snippet).not.toContain('unrelated body')
+    expect(hit.snippet.indexOf('cartography')).toBeLessThanOrEqual(52)
+  })
+
+  it.each(['keywords', 'domains', 'mechanics'] as const)(
+    'shows a %s-only match when body and description do not match',
+    (field) => {
+      const [hit] = searchRecords(
+        [
+          record('entry', {
+            searchText: 'An unrelated body.',
+            description: 'An unrelated description.',
+            [field]: ['cartography'],
+          }),
+        ],
+        'cartog'
+      )
+
+      expect(hit.snippet).toBe('cartography')
+    }
+  )
+
+  it('prefers a matching body over matching description and metadata', () => {
+    const [hit] = searchRecords(
+      [
+        record('entry', {
+          searchText: 'Cartography in the body.',
+          description: 'Cartography in the description.',
+          keywords: ['cartography metadata'],
+        }),
+      ],
+      'cartog'
+    )
+
+    expect(hit.snippet).toBe('Cartography in the body.')
   })
 })

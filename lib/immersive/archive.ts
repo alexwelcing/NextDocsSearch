@@ -1,5 +1,5 @@
-// Client-side archive index for the dock: fetched once, cached module-level, with the lexical
-// filter the SEARCH tab uses before any semantic call.
+// Compact display index for the dock and collections. FIND loads the complete
+// search index on demand through lib/archive instead of this eager preload.
 
 import type { ArcRecordSlim } from '@/lib/archive'
 
@@ -21,27 +21,6 @@ export function loadArchive(): Promise<ArcRecord[]> {
       })
   }
   return cache
-}
-
-/** Cheap lexical ranking: word-prefix hits in title (3x), description (1x). */
-export function searchArchive(records: ArcRecord[], query: string, limit = 30): ArcRecord[] {
-  const terms = query.toLowerCase().split(/\s+/).filter(Boolean)
-  if (!terms.length) return []
-  const scored: { r: ArcRecord; s: number }[] = []
-  for (const r of records) {
-    const title = r.title.toLowerCase()
-    const desc = r.description.toLowerCase()
-    let s = 0
-    for (const t of terms) {
-      if (title.includes(t)) s += 3
-      if (desc.includes(t)) s += 1
-    }
-    if (s > 0) scored.push({ r, s })
-  }
-  return scored
-    .sort((a, b) => b.s - a.s || (a.r.date < b.r.date ? 1 : -1))
-    .slice(0, limit)
-    .map((x) => x.r)
 }
 
 export const HUB_COLLECTIONS: Record<string, { title: string; blurb: string; match: (r: ArcRecord) => boolean }> = {
