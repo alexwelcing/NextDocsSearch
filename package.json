@@ -8,6 +8,7 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint .",
+    "test": "vitest run",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "postinstall": "pnpm run repair:client-only",
     "repair:client-only": "node scripts/repair-client-only-package.cjs"
@@ -69,7 +70,8 @@
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",
     "unist-builder": "^3.0.1",
-    "unist-util-filter": "^4.0.1"
+    "unist-util-filter": "^4.0.1",
+    "vitest": "^3.2.6"
   },
   "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247",
   "pnpm": {

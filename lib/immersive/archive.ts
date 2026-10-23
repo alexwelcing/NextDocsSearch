@@ -1,14 +1,9 @@
 // Client-side archive index for the dock: fetched once, cached module-level, with the lexical
 // filter the SEARCH tab uses before any semantic call.
 
-export interface ArcRecord {
-  slug: string
-  title: string
-  date: string
-  description: string
-  type: string
-  minutes: number
-}
+import type { ArcRecordSlim } from '@/lib/archive'
+
+export type ArcRecord = ArcRecordSlim
 
 let cache: Promise<ArcRecord[]> | null = null
 
