@@ -62,6 +62,11 @@ const nextConfig = {
     ],
   },
 
+  // The archive server source reads this generated file at runtime.
+  outputFileTracingIncludes: {
+    '/api/arc/archive': ['./lib/generated/article-manifest.json'],
+  },
+
   // Redirects for SEO: fix broken /docs/articles/ URLs and normalize domain
   async redirects() {
     return [

@@ -65,7 +65,9 @@ export function ArcDock() {
         return
       }
       const n = parseInt(e.key, 10)
-      if (dockOpen && n >= 1 && n <= TABS.length) {
+      // Text-entry surfaces own digits (years and numbered queries), even when
+      // their hidden touch input is not focused.
+      if (dockOpen && dockTab !== 'search' && dockTab !== 'ship' && n >= 1 && n <= TABS.length) {
         playSound('tab')
         setDockTab(TABS[n - 1].id)
       }
@@ -77,7 +79,7 @@ export function ArcDock() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [bootPhase, dockOpen, modal, setDockOpen, setDockTab])
+  }, [bootPhase, dockOpen, dockTab, modal, setDockOpen, setDockTab])
 
   // CRT power follows the spring with a beat of delay each way.
   useEffect(() => {

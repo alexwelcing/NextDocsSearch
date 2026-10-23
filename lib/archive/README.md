@@ -1,0 +1,65 @@
+# Archive contract (issue #189, first slice)
+
+`ArchiveRecord` is the complete normalized record for lexical search. `ArcRecordSlim`
+is a display projection with the dock's existing six fields and 220-character
+description. Never cast a slim payload to `ArchiveRecord` or fill missing search
+metadata with empty values on the client.
+
+Server consumers use the server entrypoint, which supplies a filesystem source by
+default and only reads the generated manifest:
+
+```ts
+import { listRecords } from '@/lib/archive/server'
+import { searchRecords, toSlim } from '@/lib/archive'
+
+const records = await listRecords()
+const hits = searchRecords(records, 'delegation')
+const dockRecords = records.map(toSlim)
+```
+
+The browser entrypoint has no Node dependencies and requires an explicit source:
+
+```ts
+import { HttpIndexSource, listRecords, searchRecords } from '@/lib/archive'
+
+const source = new HttpIndexSource() // reuse the instance to reuse its cached load
+const records = await listRecords(source)
+const hits = searchRecords(records, 'delegation')
+```
+
+`GET /api/arc/archive` retains the dock response `{ records, total }`, cache policy,
+field names, description truncation, reading-time fallback, and ordering.
+`GET /api/arc/archive?view=full` returns the same envelope with complete records,
+including full descriptions, searchText, keywords, domains, mechanics, and hero.
+The HTTP source always requests this full view and rejects incomplete payloads.
+No raw MDX, author details, or internal manifest filenames are serialized.
+
+`listRecords` sorts newest first and caches successful loads per source instance.
+It coalesces concurrent requests and returns an empty list on failure, evicting
+failed loads so a missing manifest or failed request can recover. Interactive
+consumers use `listRecords(source, { throwOnError: true })` to distinguish a failed
+request from a successful empty index. Both error policies share the same cache.
+Returned list arrays can be reordered independently; treat the records themselves
+as read-only.
+
+`searchRecords` uses shared lexical weights and English stopwords, deduplicates
+query terms and result slugs, and returns `{ record, score, snippet }` hits.
+Two-character terms such as AI, VR, and 3D match whole words; longer terms match
+word prefixes as the user types. Matches inside unrelated words are excluded.
+Title phrase bonuses use the same normalization, so punctuation and repeated terms
+do not change ranking. Snippets use matching body text, descriptions, or metadata.
+Slug order breaks equal-score/equal-date ties consistently across sources. This
+engine does not perform semantic retrieval.
+
+The landing-page preload, archive list, and collections keep the compact slim
+view. FIND loads the full view only when active and uses `searchRecords` to match
+body text and metadata as well as titles. Its stable source reuses successful and
+in-flight loads across tab visits. It shows loading, failure/retry, and empty-index
+states separately from no matching results, and previews the selected hit's
+excerpt. Native touch input and desktop typing share the same query; numeric
+queries do not trigger dock tab shortcuts. Hub-page, article-page, and Ship
+retrieval migrations remain separate work under #189.
+
+Run the boundary and FIND interaction tests with `pnpm test`; they use fixtures,
+temporary manifests, and a simulated browser without network or generated-data
+dependencies.
