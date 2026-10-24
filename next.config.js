@@ -14,15 +14,13 @@ const nextConfig = {
   // Performance optimizations
   compress: true, // Enable gzip compression
 
-  // Image optimization
+  // Nothing uses next/image, so the /_next/image optimizer is pure attack surface (the SVG and AVIF
+  // RCE advisories GHSA-2464-fhr4-w9xw / GHSA-2xp9-vwfh-vxw4 live there). Keep it switched off.
+  // This 404s the route under `next start` and keeps the images config out of Vercel's build output,
+  // but Vercel still answers /_next/image with its platform-default optimizer (WebP only, SVG
+  // refused, local sources only) whatever the loader; only leaving Vercel's Next runtime ends that.
   images: {
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    unoptimized: true,
   },
 
   // Compiler optimizations
@@ -35,22 +33,7 @@ const nextConfig = {
 
   // Experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', '@react-three/fiber', '@react-three/drei'],
-  },
-  
-  // Bun runtime optimizations (moved from experimental in Next.js 15)
-  serverExternalPackages: ['sharp'],
-  
-  // Bun-specific optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize for Bun runtime
-    if (process.env.BUN_RUNTIME) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'node:stream': 'stream-browserify',
-      };
-    }
-    return config;
+    optimizePackageImports: ['lucide-react', '@react-three/fiber'],
   },
 
   // Prevent Vercel from bundling public/ assets into serverless functions
