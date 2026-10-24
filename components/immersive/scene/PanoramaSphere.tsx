@@ -12,6 +12,8 @@ const RADIUS = 60
 const FADE_SPEED = 1.6 // opacity units per second
 /** Ceiling on the idle spin (rad/s) — 0.2°/s. Faster reads as a screensaver, not a place. */
 const MAX_DRIFT = (0.2 * Math.PI) / 180
+/** How quickly the spin eases out/in around a modal, per second. */
+const DRIFT_EASE = 3
 /** Pause before the single retry of a failed panorama load, ms. */
 const RETRY_DELAY_MS = 800
 
@@ -54,6 +56,7 @@ export function PanoramaSphere() {
   const frontMat = useRef<THREE.MeshBasicMaterial>(null)
   const group = useRef<THREE.Group>(null)
   const fading = useRef(false)
+  const driftGain = useRef(1)
 
   useEffect(() => {
     let live = true
@@ -89,8 +92,12 @@ export function PanoramaSphere() {
   }, [world.panorama, setSceneReady])
 
   useFrame((_, delta) => {
+    // The spin eases out while a modal is open (the room holds still behind the page) and back
+    // in on close. Read from the store per frame so opening a modal never re-renders the sky.
+    const still = useImmersiveStore.getState().modal !== null
+    driftGain.current += ((still ? 0 : 1) - driftGain.current) * (1 - Math.exp(-DRIFT_EASE * delta))
     if (group.current && !reducedMotion) {
-      group.current.rotation.y += Math.min(world.drift, MAX_DRIFT) * delta
+      group.current.rotation.y += Math.min(world.drift, MAX_DRIFT) * driftGain.current * delta
     }
     if (fading.current && frontMat.current) {
       frontMat.current.opacity = Math.min(frontMat.current.opacity + FADE_SPEED * delta, 1)
