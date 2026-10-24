@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { ARC, rgba } from './theme'
 
 describe('rgba', () => {
@@ -23,5 +23,12 @@ describe('rgba', () => {
 
   it('returns a fresh tuple per call', () => {
     expect(rgba(ARC.red)).not.toBe(rgba(ARC.red))
+  })
+
+  it("never leaks the previous call's color through an invalid token", () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    rgba(ARC.green)
+    expect(rgba('#nothex', 0.5)).toEqual([0, 0, 0, 0.5])
+    warn.mockRestore()
   })
 })

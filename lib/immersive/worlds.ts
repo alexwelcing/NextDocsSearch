@@ -17,11 +17,14 @@ export interface WorldDef {
   /** Aerial-perspective density 0..1 (0 = hard vacuum, 1 = thick air). Drives the scene
    *  fogNode range and the atmosphere motes' depth fade. */
   haze: number
-  /** Linear gain on the panorama before the renderer's Neutral tone map, normalizing the
-   *  library's wildly uneven JPEG brightness (displayed mean luma 10–137 at exposure 1) toward a
-   *  common mid-grey. Each value moves its world halfway, in log terms, to sRGB luma ~96, clamped
-   *  to 0.7–2 so dark worlds keep their mood and bright ones their sparkle — see
-   *  scene/WorldExposure.tsx. Panorama only: UI, motes and lit surfaces never see it. */
+  /** Linear gain on the panorama before the renderer's tone map, normalizing the library's wildly
+   *  uneven JPEG brightness toward a common mid-grey. Each value moves its world halfway, in log
+   *  terms, to sRGB luma ~96, clamped to 0.7–2 so dark worlds keep their mood and bright ones
+   *  their sparkle. Mean displayed sRGB luma (0–255) across the 12 panoramas, computed offline by
+   *  running each JPEG through the tone map: 5.8–155 under main's ACESFilmic at exposure 1.05;
+   *  10–137 under Neutral at exposure 1 with no gain; 16–114 under Neutral at exposure 1 with
+   *  these gains (the-stacks 10 → 16, night-train 137 → 114). Applied by
+   *  scene/WorldExposure.tsx, to the panorama only: UI, motes and lit surfaces never see it. */
   exposure: number
 }
 
@@ -178,7 +181,15 @@ export function worldById(id: string): WorldDef {
   return WORLDS.find((w) => w.id === id) ?? WORLDS[0]
 }
 
-/** The world that owns the panorama at `path` (a URL pathname like '/background/train.jpg'). */
-export function worldByPanorama(path: string): WorldDef | undefined {
+/** The world that owns the panorama at `url`: a pathname like '/background/train.jpg', or a full
+ *  URL as a loaded image reports its `src` (origin, query and hash are ignored). Undefined for
+ *  anything else, e.g. a blob: URL or a hashed/re-encoded asset path. */
+export function worldByPanorama(url: string, base = 'http://localhost/'): WorldDef | undefined {
+  let path: string
+  try {
+    path = new URL(url, base).pathname
+  } catch {
+    return undefined
+  }
   return WORLDS.find((w) => w.panorama === path)
 }

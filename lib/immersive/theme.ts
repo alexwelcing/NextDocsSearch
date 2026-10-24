@@ -25,7 +25,9 @@ const scratch = new Color()
  *  wash #70ff8f out to pale mint. THREE.Color decodes CSS hex from sRGB, which keeps windfoil on
  *  the same color path as every meshBasicMaterial/CRT tint built from the same tokens. */
 export const rgba = (hex: string, a = 1): RGBA => {
-  scratch.set(hex)
+  // Reset first: Color.set() on an unknown string only warns and keeps the old value, which would
+  // hand back the previous caller's color. A typo renders black (plus three's warning) instead.
+  scratch.setRGB(0, 0, 0).set(hex)
   return [scratch.r, scratch.g, scratch.b, a]
 }
 

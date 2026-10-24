@@ -16,6 +16,12 @@
 // Pipelines key on shader code + blend/depth/cull/topology/winding state, not on material
 // identity, so one stand-in per variant covers every later mesh of that kind. When a new kind of
 // material lands in the scene, add its twin here; the reveal probe will show it otherwise.
+//
+// The network never holds the boot: the text stand-ins need both windfoil atlases (~800 KB), so
+// the burst waits for them only up to FONT_WAIT_MS, then warms everything else and leaves the
+// text pipelines to compile on first use. And stand-ins are only ever drawn while bootPhase is
+// 'booting' (checked when the burst starts AND before each of its frames), so a late font, a skip
+// or a boot watchdog can never put them in front of the live scene.
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
@@ -31,6 +37,10 @@ import { TitleScrim } from './WorldTitleCard'
 const DISTANCE = 0.5 // metres down the gaze — inside the frustum, in front of the whole world
 const SCALE = 0.25 // shrink the stand-ins; size never enters a pipeline key
 const WARM_FRAMES = 3
+/** How long the burst waits on the font atlases, from the rig's mount. ImmersiveApp starts both
+ *  fetches before the canvas exists, and this deadline lands inside the boot-line animation, so a
+ *  slow or stalled font never pushes the reveal past its usual ~5 s. */
+const FONT_WAIT_MS = 2500
 
 const forward = new THREE.Vector3()
 
@@ -58,15 +68,17 @@ function standInTexture(kind: 'panorama' | 'image' | 'video'): THREE.Texture {
   return tex
 }
 
+/** Stand-ins may only be drawn while the opaque boot overlay is up. */
+const booting = () => useImmersiveStore.getState().bootPhase === 'booting'
+
 export function WarmupRig() {
   const camera = useThree((s) => s.camera)
-  const bootPhase = useImmersiveStore((s) => s.bootPhase)
   const setShadersWarm = useImmersiveStore((s) => s.setShadersWarm)
 
-  // Only ever drawn under the boot overlay. A canvas that mounts outside 'booting' (nothing does
-  // today) skips the rig rather than flashing stand-ins at the viewer.
-  const [armed] = useState(() => useImmersiveStore.getState().bootPhase === 'booting')
-  const [fontsReady, setFontsReady] = useState(false)
+  // A canvas that mounts outside 'booting' (nothing does today) skips the rig entirely.
+  const [armed] = useState(booting)
+  // The rig mounts only for its burst: once the fonts are in, or once FONT_WAIT_MS gives up.
+  const [warming, setWarming] = useState(false)
   const rig = useRef<THREE.Group>(null)
   const frames = useRef(0)
   const done = useRef(false)
@@ -92,29 +104,39 @@ export function WarmupRig() {
       setShadersWarm(true)
       return
     }
-    let live = true
-    // Windfoil meshes only exist once their atlas is in (ImmersiveApp already started both loads).
-    Promise.all([loadFontAtlas(FONT.display), loadFontAtlas(FONT.mono)]).then(
-      () => live && setFontsReady(true),
-      (err) => {
-        // never hold the boot hostage to a warmup
-        console.error('[arc] warmup fonts failed (continuing cold):', err)
-        if (live) setShadersWarm(true)
-      }
-    )
+    let settled = false
+    const begin = () => {
+      if (settled) return
+      settled = true
+      // Boot may already be over (a skip, or a canvas that mounted late): release the gate and
+      // stay cold rather than mount stand-ins into the live scene.
+      if (booting()) setWarming(true)
+      else setShadersWarm(true)
+    }
+    // Windfoil meshes only exist once their atlas is in (ImmersiveApp already started both loads),
+    // but a stalled atlas fetch must never hold the overlay: whichever comes first starts the burst.
+    const deadline = setTimeout(begin, FONT_WAIT_MS)
+    Promise.all([loadFontAtlas(FONT.display), loadFontAtlas(FONT.mono)]).then(begin, (err) => {
+      console.error('[arc] warmup fonts failed (warming without text):', err)
+      begin()
+    })
     return () => {
-      live = false
+      settled = true
+      clearTimeout(deadline)
     }
   }, [armed, setShadersWarm])
-
-  // Safety net: if boot ends some other way (skip, phase change), never keep stand-ins visible.
-  useEffect(() => {
-    if (bootPhase !== 'booting' && rig.current) rig.current.visible = false
-  }, [bootPhase])
 
   useFrame(() => {
     const g = rig.current
     if (!g || done.current) return
+    // Ahead of every frame of the burst, before this tick's render: the moment boot has ended some
+    // other way (a skip, a watchdog), stand down unseen.
+    if (!booting()) {
+      done.current = true
+      g.visible = false
+      setShadersWarm(true)
+      return
+    }
     camera.getWorldDirection(forward)
     g.position.copy(camera.position).addScaledVector(forward, DISTANCE)
     g.quaternion.copy(camera.quaternion)
@@ -128,7 +150,7 @@ export function WarmupRig() {
     }
   })
 
-  if (!armed || !fontsReady) return null
+  if (!armed || !warming) return null
 
   const s = SCALE
   return (

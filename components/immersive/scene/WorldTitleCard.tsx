@@ -29,7 +29,8 @@ type Box = { width: number; height: number }
 // Legibility scrim: a feathered band of bezel-black behind the name and blurb. Without it the
 // white title and pale blurb dissolve into the bright worlds' skies (night-train, meridian); on
 // the dark worlds it is dark on dark and all but invisible. Full strength only through the
-// middle and eased to nothing well inside the plane's edges, so it never reads as a shape.
+// middle and eased to nothing well inside the plane's edges, so it has no hard edge — but on a
+// bright sky it deliberately reads as a soft smoked plate behind the text, like a lower-third.
 const SCRIM_ALPHA = 0.72
 const SCRIM_PAD_X = 1.3 // metres past the wider text block on each side — mostly feather
 const SCRIM_PAD_Y = 0.45
