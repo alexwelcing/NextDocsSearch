@@ -7,6 +7,8 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['lib/archive/**/*.test.ts', 'components/immersive/dock/tabs/*.test.tsx'],
+    // Every *.test.ts(x) in the repo is picked up, so new suites never need to edit this file.
+    include: ['**/*.test.{ts,tsx}'],
+    exclude: ['**/node_modules/**', '**/.next/**', '**/out/**', '**/.wrangler/**'],
   },
 })
