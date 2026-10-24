@@ -6,8 +6,6 @@ settings:
 
 overrides:
   vite: 7.3.5
-  axios: 1.18.1
-  form-data: 4.0.6
   ws: 8.21.0
 
 patchedDependencies:
@@ -120,7 +118,7 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       playwright:
-        specifier: ^1.57.0
+        specifier: 1.61.1
         version: 1.61.1
       postcss:
         specifier: ^8.4.41
