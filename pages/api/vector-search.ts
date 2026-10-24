@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Configuration, OpenAIApi, type CreateEmbeddingResponse } from 'openai-edge'
 import { ApplicationError, UserError } from '@/lib/errors';
 import articleManifest from '@/lib/generated/article-manifest.json'
-import { generateHuggingFaceChatStream, hasHfToken, type HfChatMessage } from '@/lib/ai/huggingface'
+import { generateHuggingFaceChatStream, hasHfToken } from '@/lib/ai/huggingface'
 import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
 import { resolveShipTrick, type ResolvedShipTrick } from '@/lib/ai/shipTricks'
 import { queryLocalArchive, type LocalArchiveQueryResult } from '@/lib/chat/archiveQuery'
@@ -14,18 +14,12 @@ import {
   type ShipAnswerMode,
   type ShipStreamEvent,
 } from '@/lib/chat/shipAnswer'
-
-/** Ship (shipClient.ts) sends {role, content}; older clients sent {question, response} pairs.
- *  Fields are unknown until validated — history is untrusted client input. */
-interface ChatHistoryEntry {
-  role?: unknown
-  content?: unknown
-  question?: unknown
-  response?: unknown
-}
-
-const HISTORY_MAX_MESSAGES = 8
-const HISTORY_MAX_CHARS = 1200
+import {
+  ARCHIVE_FALLBACK_LEAD,
+  SYSTEM_FAULT_LEAD,
+  buildHistoryMessages,
+  type ChatHistoryEntry,
+} from '@/lib/chat/shipHistory'
 
 interface QuestContext {
   currentQuest?: {
@@ -429,31 +423,6 @@ function dedupeInstantResults(items: InstantAnswerItem[], limit = 5): InstantAns
     .slice(0, limit)
 }
 
-function toHistoryMessage(role: 'user' | 'assistant', content: unknown): HfChatMessage[] {
-  if (typeof content !== 'string') return []
-  const trimmed = content.trim().slice(0, HISTORY_MAX_CHARS)
-  return trimmed ? [{ role, content: trimmed }] : []
-}
-
-/** Last 8 history messages, each capped at 1,200 chars. Only user/assistant roles are
- *  accepted (a client-supplied 'system' turn is dropped); malformed entries are skipped. */
-function buildHistoryMessages(history: unknown): HfChatMessage[] {
-  if (!Array.isArray(history)) return []
-
-  return history
-    .flatMap((entry: unknown): HfChatMessage[] => {
-      if (!entry || typeof entry !== 'object') return []
-      const { role, content, question, response } = entry as ChatHistoryEntry
-
-      if (role === 'user' || role === 'assistant') {
-        return toHistoryMessage(role, content)
-      }
-
-      return [...toHistoryMessage('user', question), ...toHistoryMessage('assistant', response)]
-    })
-    .slice(-HISTORY_MAX_MESSAGES)
-}
-
 function writeStreamEvent(res: NextApiResponse, event: ShipStreamEvent) {
   res.write(`${JSON.stringify(event)}\n`)
 }
@@ -470,7 +439,7 @@ const EMPTY_LOCAL_ARCHIVE: LocalArchiveQueryResult = {
 function buildLocalFallbackAnswer(query: string, instantResults: InstantAnswerItem[]): string {
   if (!instantResults.length) {
     return oneLine`
-      Generative link offline — and the archive index has no strong match for "${query}".
+      ${ARCHIVE_FALLBACK_LEAD} — and the archive index has no strong match for "${query}".
       Try different terms, or open the ARCHIVE tab to browse the records directly.`
   }
 
@@ -480,7 +449,7 @@ function buildLocalFallbackAnswer(query: string, instantResults: InstantAnswerIt
   })
 
   return [
-    'Generative link offline — answering from the archive index.',
+    `${ARCHIVE_FALLBACK_LEAD} — answering from the archive index.`,
     '',
     `Closest records on "${query}":`,
     ...lines,
@@ -794,8 +763,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200)
     res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8')
     res.setHeader('Cache-Control', 'no-store')
-    const notice =
-      'Ship systems fault — the archive index is unreachable right now. Try again in a moment, or browse the ARCHIVE tab directly.'
+    const notice = `${SYSTEM_FAULT_LEAD} — the archive index is unreachable right now. Try again in a moment, or browse the ARCHIVE tab directly.`
     writeStreamEvent(res, {
       type: 'final-answer',
       question: '',
