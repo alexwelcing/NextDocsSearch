@@ -108,6 +108,25 @@ describe('BM25F scoring', () => {
     expect(hits[0].score).toBeGreaterThan(hits[1].score)
   })
 
+  it('normalizes a field by the chunks that have it, so sparse fields keep their weight', () => {
+    // Like the real index: keywords exist only on the card, body on every chunk.
+    const words = (prefix: string, n: number) =>
+      Array.from({ length: n }, (_, i) => `${prefix}${i}`).join(' ')
+    const card = { title: 'Card', keywords: `quantum ${words('kw', 27)}`, body: 'short card' }
+    const bodies = Array.from({ length: 9 }, () => ({
+      title: 'Article',
+      body: `quantum ${words('word', 99)}`,
+    }))
+    const file = buildBm25([card, ...bodies])
+    expect(file.avgLengths[file.fields.indexOf('keywords')]).toBe(28)
+    const { norms } = loadBm25(file)
+    const keywordNorm = norms[file.fields.indexOf('keywords')]
+    expect(keywordNorm).toBeCloseTo(1)
+    const hits = searchBm25(loadBm25(file), 'quantum', 10)
+    expect(hits[0].doc).toBe(0)
+    expect(hits[0].score).toBeGreaterThan(hits[1].score)
+  })
+
   it('treats prefix expansions as one term', () => {
     const hits = searchBm25(
       index([{ body: 'agent agents agentic' }, { body: 'agent' }]),

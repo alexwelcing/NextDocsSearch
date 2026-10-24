@@ -17,12 +17,41 @@ import { readBuildRecords } from './nodeSources'
 
 const records = readBuildRecords()
 
-/** Rebuild the block sequence from chunks: a chunk starting at a heading holds it in `heading`. */
-function piecesOf(blocks: RecordBlock[], chunks: ChunkDraft[]): string[] {
-  return chunks.flatMap((chunk) => [
-    ...(blocks[chunk.b0]?.t === 'h' ? [chunk.heading] : []),
-    ...(chunk.text ? chunk.text.split('\n') : []),
-  ])
+const collapse = (text: string) => text.replace(/\s+/g, ' ').trim()
+
+/**
+ * Rebuild the record text from its chunks: a chunk starting at a heading holds it in `heading`,
+ * and a block over CHUNK_LIMITS.split arrives as sentence pieces, so compare joined text.
+ */
+function textOf(blocks: RecordBlock[], chunks: ChunkDraft[]): string {
+  return collapse(
+    chunks
+      .flatMap((chunk) => [
+        ...(blocks[chunk.b0]?.t === 'h' ? [chunk.heading] : []),
+        ...(chunk.text ? chunk.text.split('\n') : []),
+      ])
+      .join(' ')
+  )
+}
+
+/** Every block exactly once, in order, without crossing records; long blocks may straddle. */
+function expectCoverage(record: { slug: string; blocks: RecordBlock[] }, chunks: ChunkDraft[]) {
+  const blocks = record.blocks.filter((block) => block.x.trim())
+  expect(textOf(record.blocks, chunks)).toBe(collapse(blocks.map((block) => block.x).join(' ')))
+  chunks.forEach((chunk, i) => {
+    expect(chunk.slug).toBe(record.slug)
+    expect(chunk.id).toBe(`${record.slug}#${i}`)
+    expect(chunk.b0).toBeLessThanOrEqual(chunk.b1)
+    if (i === 0) return
+    const previous = chunks[i - 1]
+    const straddles = record.blocks[previous.b1].x.trim().length > CHUNK_LIMITS.split
+    if (straddles && chunk.b0 === previous.b1) return
+    expect(chunk.b0).toBe(previous.b1 + 1)
+  })
+  if (chunks.length) {
+    expect(chunks[0].b0).toBe(0)
+    expect(chunks[chunks.length - 1].b1).toBe(record.blocks.length - 1)
+  }
 }
 
 describe('chunkBlocks on the real corpus', () => {
@@ -37,21 +66,7 @@ describe('chunkBlocks on the real corpus', () => {
   })
 
   it('covers every block exactly once, in order, without crossing records', () => {
-    for (const record of records) {
-      const chunks = chunkBlocks(record)
-      const blocks = record.blocks.filter((block) => block.x.trim())
-      expect(piecesOf(record.blocks, chunks)).toEqual(blocks.map((block) => block.x.trim()))
-      chunks.forEach((chunk, i) => {
-        expect(chunk.slug).toBe(record.slug)
-        expect(chunk.id).toBe(`${record.slug}#${i}`)
-        expect(chunk.b0).toBeLessThanOrEqual(chunk.b1)
-        if (i > 0) expect(chunk.b0).toBe(chunks[i - 1].b1 + 1)
-      })
-      if (chunks.length) {
-        expect(chunks[0].b0).toBe(0)
-        expect(chunks[chunks.length - 1].b1).toBe(record.blocks.length - 1)
-      }
-    }
+    for (const record of records) expectCoverage(record, chunkBlocks(record))
   })
 
   it('keeps chunks inside the v1 size bounds', () => {
@@ -105,6 +120,24 @@ describe('chunkBlocks rules', () => {
     expect(chunks.length).toBeGreaterThan(1)
     expect(chunks.map((chunk) => chunk.text.split('\n').join(' ')).join(' ')).toBe(long)
     for (const chunk of chunks) expect(chunk).toMatchObject({ b0: 0, b1: 0 })
+  })
+
+  it('passes the corpus coverage check when a long block straddles chunks', () => {
+    // No committed block is over the split limit yet; this is the shape a future one takes.
+    const record = {
+      slug: 'straddle',
+      title: 'Straddle',
+      blocks: [
+        { t: 'h', x: 'Intro' },
+        { t: 'p', x: 'a'.repeat(700) },
+        { t: 'p', x: long },
+        { t: 'h', x: 'After' },
+        { t: 'p', x: 'b '.repeat(300).trim() },
+      ] as RecordBlock[],
+    }
+    const chunks = chunkBlocks(record)
+    expect(chunks.some((chunk, i) => i > 0 && chunk.b0 === chunks[i - 1].b1)).toBe(true)
+    expectCoverage(record, chunks)
   })
 
   it('breaks a run-on sentence at the last space before the limit', () => {

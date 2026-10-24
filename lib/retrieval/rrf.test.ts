@@ -40,4 +40,19 @@ describe('fuseRrf', () => {
     )
     expect(fused.map((hit) => hit.key)).toEqual(['newer', 'a-same', 'b-same', 'old'])
   })
+
+  it('orders keys that share a slug with the final comparator', () => {
+    const doc = { date: '2025-01-01', slug: 'same' }
+    const keys = ['1000', '999', '10']
+    const lists = keys.map((key) => ({ name: key, weight: 1, keys: [key] }))
+    const numeric = (a: string, b: string) => Number(a) - Number(b)
+    expect(fuseRrf(lists, { compare: byDateThenSlug(() => doc) }).map((hit) => hit.key)).toEqual([
+      '10',
+      '1000',
+      '999',
+    ])
+    expect(
+      fuseRrf(lists, { compare: byDateThenSlug(() => doc, numeric) }).map((hit) => hit.key)
+    ).toEqual(['10', '999', '1000'])
+  })
 })

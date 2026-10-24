@@ -49,9 +49,13 @@ export function fuseRrf(
     .sort((a, b) => b.score - a.score || compare(a.key, b.key))
 }
 
-/** searchRecords' order for equal scores (lib/archive/search.ts): date desc, then slug asc. */
+/**
+ * searchRecords' order for equal scores (lib/archive/search.ts): date desc, then slug asc, then
+ * `tieBreak` for keys that share a slug (chunks of one doc pass a numeric comparator).
+ */
 export function byDateThenSlug(
-  lookup: (key: string) => { date: string; slug: string } | undefined
+  lookup: (key: string) => { date: string; slug: string } | undefined,
+  tieBreak: (a: string, b: string) => number = byKey
 ) {
   return (a: string, b: string): number => {
     const left = lookup(a)
@@ -59,7 +63,7 @@ export function byDateThenSlug(
     return (
       (right?.date ?? '').localeCompare(left?.date ?? '') ||
       (left?.slug ?? a).localeCompare(right?.slug ?? b) ||
-      byKey(a, b)
+      tieBreak(a, b)
     )
   }
 }

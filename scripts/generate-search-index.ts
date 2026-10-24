@@ -7,7 +7,8 @@
 //
 // --embed-input writes {id, hash, text} per chunk: the exact text an embedding job encodes. It
 // returns data/search/<model>.bin plus <model>.json ({model, dims, quant: 'int8-row' | 'f32',
-// chunkerVersion, hashes}; see VectorSourceManifest), and the next run joins it.
+// chunkerVersion, hashes}, optionally a tuned cosineFloor and mrl: true for a Matryoshka model;
+// see VectorSourceManifest), and the next run joins it.
 
 import fs from 'node:fs'
 import path from 'node:path'

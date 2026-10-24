@@ -1,10 +1,11 @@
 // Ship's retrieval: dense (optional) + chunk BM25 + record-level searchRecords, fused with RRF
 // into the LocalArchiveQueryResult shape. Every failure degrades a rung instead of throwing:
-// no embedder / timeout / mismatch → lexical; index assets unavailable → records; neither → none.
+// no embedder / undeclared or unknown model / timeout / slow vectors / unusable query vector →
+// lexical; index assets unavailable → records; neither → none.
 import { searchRecords } from '../archive/search'
 import type { ArchiveRecord } from '../archive/types'
 import { searchBm25 } from './bm25'
-import { denseTopK } from './dense'
+import { denseTopK, queryVectorProblem } from './dense'
 import { loadCoreIndex, loadDenseIndex, type CoreIndex } from './load'
 import { PROFILE_SLUG, detectProfileIntent } from './profile'
 import type { Int8RowMatrix } from './quantize'
@@ -23,9 +24,11 @@ import type {
   RetrievalMode,
   RetrievalResult,
   SearchManifest,
+  VectorSetEntry,
 } from './types'
 
 export const SHIP_CONTEXT_LIMITS = {
+  /** One deadline for the whole dense side: the query embedding and the vector asset load. */
   embedTimeoutMs: 800,
   denseTopK: 50,
   bm25TopK: 50,
@@ -46,7 +49,10 @@ export interface ShipContextOptions {
   manifest?: SearchManifest | null
   /** Records for record-level searchRecords (RRF weight 0.5), and the fallback when the index is down. */
   records?: ArchiveRecord[] | (() => Promise<ArchiveRecord[]>)
-  /** The model embedQuery speaks; defaults to the manifest's first vector set. */
+  /**
+   * The vector-set model embedQuery speaks. Required for dense: without it retrieval stays
+   * lexical rather than guess, since a query from another model ranks noise as 'hybrid'.
+   */
   model?: string
   limits?: Partial<ShipContextLimits>
   /** RRF list weights; defaults to RRF_WEIGHTS. */
@@ -102,25 +108,14 @@ function budgetContext(sections: { head: [string, string][]; passage: string }[]
   return out.join(SECTION_SEPARATOR)
 }
 
-async function embedWithDeadline(
-  embed: (signal: AbortSignal) => Promise<Float32Array>,
-  ms: number
-): Promise<Float32Array> {
-  const controller = new AbortController()
-  let timer: ReturnType<typeof setTimeout> | undefined
-  const pending = Promise.resolve().then(() => embed(controller.signal))
-  pending.catch(() => undefined) // a late rejection after the deadline is not unhandled
-  const deadline = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => {
-      controller.abort()
-      reject(new Error(`timed out after ${ms}ms`))
-    }, ms)
-  })
-  try {
-    return await Promise.race([pending, deadline])
-  } finally {
-    clearTimeout(timer)
-  }
+/** Both values, or null as soon as either side settles to null. */
+function bothOrNull<A, B>(a: Promise<A | null>, b: Promise<B | null>): Promise<[A, B] | null> {
+  const required = <T>(pending: Promise<T | null>) =>
+    pending.then((value) => value ?? Promise.reject(new Error('missing')))
+  return Promise.all([required(a), required(b)]).then(
+    (pair) => pair,
+    () => null
+  )
 }
 
 async function resolveRecords(source: ShipContextOptions['records']): Promise<ArchiveRecord[]> {
@@ -203,10 +198,18 @@ export function operatorRecords(core: CoreIndex): ArchiveRecord[] {
   return records
 }
 
-function pickVectorSet(manifest: SearchManifest | null, model?: string) {
-  if (!manifest?.vectors?.length) return { set: null, reason: 'no vector sets in the index' }
-  const set = model ? manifest.vectors.find((entry) => entry.model === model) : manifest.vectors[0]
-  return set ? { set, reason: '' } : { set: null, reason: `no vector set for model ${model}` }
+/** The vector set dense retrieval would scan, or why there is none. */
+function pickVectorSet(
+  manifest: SearchManifest | null,
+  deps: RetrievalDeps,
+  model?: string
+): { set: VectorSetEntry; reason?: undefined } | { set?: undefined; reason: string } {
+  if (!manifest) return { reason: 'no search manifest' }
+  if (!manifest.vectors?.length) return { reason: 'no vector sets in the index' }
+  if (!deps.embedQuery) return { reason: 'no query embedder' }
+  if (!model) return { reason: 'no model declared for the query embedder' }
+  const set = manifest.vectors.find((entry) => entry.model === model)
+  return set ? { set } : { reason: `no vector set for model ${model}` }
 }
 
 export async function getShipContext(
@@ -224,65 +227,103 @@ export async function getShipContext(
     denseReason ??= reason
   }
 
-  // Start the embedding and every asset load at once; lexical scoring overlaps with them.
-  const { set, reason } = pickVectorSet(manifest, options.model)
-  let embedding: Promise<Float32Array | null> = Promise.resolve(null)
-  let matrix: Promise<Int8RowMatrix | null> = Promise.resolve(null)
-  if (!manifest) skipDense('no search manifest')
-  else if (!set) skipDense(reason)
-  else if (!deps.embedQuery) skipDense('no query embedder')
-  else if (q) {
+  // Start the embedding and every asset load at once; lexical scoring overlaps with them. One
+  // deadline, started here, bounds the embedding and the vector asset together: when it passes,
+  // the embedding is aborted, while an unfinished vector load keeps going and stays cached for
+  // the next request.
+  const { set, reason } = pickVectorSet(manifest, deps, options.model)
+  const controller = new AbortController()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let denseReady: Promise<[Float32Array, Int8RowMatrix] | null> = Promise.resolve(null)
+  if (!set) skipDense(reason)
+  else if (q && manifest && deps.embedQuery) {
     const embed = deps.embedQuery.bind(deps)
-    embedding = embedWithDeadline((signal) => embed(q, signal), limits.embedTimeoutMs).catch(
-      (error) => {
-        skipDense(`query embedding failed: ${message(error)}`)
-        return null
-      }
-    )
-    matrix = loadDenseIndex(manifest, set, deps.fetchAsset).catch((error) => {
+    let embedded = false
+    const embedding = Promise.resolve()
+      .then(() => embed(q, controller.signal))
+      .then(
+        (vector) => {
+          embedded = true
+          if (!vector) skipDense('query embedding failed: no vector returned')
+          return vector ?? null
+        },
+        (error) => {
+          skipDense(`query embedding failed: ${message(error)}`)
+          return null
+        }
+      )
+    const matrix = loadDenseIndex(manifest, set, deps.fetchAsset).catch((error) => {
       skipDense(`vectors unavailable: ${message(error)}`)
       return null
     })
-  }
-  let indexReason: string | undefined
-  const [core, records] = await Promise.all([
-    manifest
-      ? loadCoreIndex(manifest, deps.fetchAsset).catch((error) => {
-          indexReason = `index unavailable: ${message(error)}`
-          return null
-        })
-      : Promise.resolve(null),
-    resolveRecords(options.records),
-  ])
-  if (!core) {
-    await Promise.all([embedding, matrix])
-    return recordsOnly(q, records, profileIntent, limits, indexReason ?? denseReason)
+    const ms = limits.embedTimeoutMs
+    const deadline = new Promise<null>((resolve) => {
+      timer = setTimeout(() => {
+        skipDense(
+          embedded
+            ? `vectors not ready after ${ms}ms`
+            : `query embedding failed: timed out after ${ms}ms`
+        )
+        controller.abort()
+        resolve(null)
+      }, ms)
+    })
+    // Settling first disarms the deadline, so a slow core load never relabels a ready vector.
+    const work = bothOrNull(embedding, matrix).finally(() => clearTimeout(timer))
+    denseReady = Promise.race([work, deadline])
   }
 
-  const bm25Hits = searchBm25(core.bm25, q, limits.bm25TopK)
-  const recordHits = records.length
-    ? searchRecords([...records, ...operatorRecords(core)], q, limits.recordsTopK)
-    : []
-  const [vector, rows] = await Promise.all([embedding, matrix])
-  let denseRows: number[] = []
-  let dense = false
-  if (vector && rows && set) {
-    try {
-      denseRows = denseTopK(rows, vector, limits.denseTopK, set.cosineFloor).map((hit) => hit.row)
-      dense = true
-    } catch (error) {
-      skipDense(`dense scan failed: ${message(error)}`)
+  try {
+    let indexReason: string | undefined
+    const [core, records] = await Promise.all([
+      manifest
+        ? loadCoreIndex(manifest, deps.fetchAsset).catch((error) => {
+            indexReason = `index unavailable: ${message(error)}`
+            return null
+          })
+        : Promise.resolve(null),
+      resolveRecords(options.records),
+    ])
+    if (!core) {
+      // Nothing can use the vectors now: answer at once, and stop paying for the embedding.
+      controller.abort()
+      return recordsOnly(q, records, profileIntent, limits, indexReason ?? denseReason)
     }
-  }
 
-  return fuse(core, q, profileIntent, limits, {
-    dense: denseRows,
-    bm25: bm25Hits.map((hit) => hit.doc),
-    records: recordHits.map((hit) => hit.record.slug),
-    weights: options.weights,
-    mode: dense ? 'hybrid' : 'lexical',
-    fallbackReason: dense ? undefined : denseReason,
-  })
+    const bm25Hits = searchBm25(core.bm25, q, limits.bm25TopK)
+    const recordHits = records.length
+      ? searchRecords([...records, ...operatorRecords(core)], q, limits.recordsTopK)
+      : []
+    const ready = await denseReady
+    let denseRows: number[] = []
+    if (ready && set) {
+      const [vector, rows] = ready
+      const problem = queryVectorProblem(vector, set)
+      if (problem) skipDense(problem)
+      else {
+        try {
+          denseRows = denseTopK(rows, vector, limits.denseTopK, set.cosineFloor).map(
+            (hit) => hit.row
+          )
+          if (!denseRows.length) skipDense('no dense hit above the cosine floor')
+        } catch (error) {
+          skipDense(`dense scan failed: ${message(error)}`)
+        }
+      }
+    }
+    const dense = denseRows.length > 0
+
+    return fuse(core, q, profileIntent, limits, {
+      dense: denseRows,
+      bm25: bm25Hits.map((hit) => hit.doc),
+      records: recordHits.map((hit) => hit.record.slug),
+      weights: options.weights,
+      mode: dense ? 'hybrid' : 'lexical',
+      fallbackReason: dense ? undefined : denseReason,
+    })
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 export interface RankedInputs {
@@ -306,8 +347,8 @@ export function fuse(
 ): RetrievalResult {
   const { docs, chunks } = core
   const docOfKey = (key: string) => docs[chunks[Number(key)]?.doc]
-  const byDate = byDateThenSlug(docOfKey)
-  const compareChunks = (a: string, b: string) => byDate(a, b) || Number(a) - Number(b)
+  // Equal-score chunks of one doc keep index order (numeric, so '999' sorts before '1000').
+  const compareChunks = byDateThenSlug(docOfKey, (a, b) => Number(a) - Number(b))
   // A record votes through its card chunk (operator docs have none: their first chunk).
   const cards = inputs.records
     .map((slug) => core.docBySlug.get(slug))

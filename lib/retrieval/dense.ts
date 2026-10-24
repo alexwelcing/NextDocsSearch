@@ -13,8 +13,35 @@ function byScore(a: DenseHit, b: DenseHit): number {
 }
 
 /**
+ * Why `vector` cannot be scanned against `set`, or null when it can. Its length must equal the
+ * set's dims, unless the set is Matryoshka (`mrl`) and the vector longer. A static model returns
+ * all zeros for a stop-word-only or all-unknown-token query: that is no dense signal, not a
+ * ranking, and neither is a non-finite vector.
+ */
+export function queryVectorProblem(
+  vector: ArrayLike<number>,
+  set: Pick<VectorSetEntry, 'dims' | 'mrl'>
+): string | null {
+  if (vector.length < set.dims || (vector.length > set.dims && !set.mrl)) {
+    return (
+      `query vector has ${vector.length} dims, the vector set has ${set.dims}` +
+      (vector.length > set.dims ? ' and is not Matryoshka' : '')
+    )
+  }
+  let sum = 0
+  for (let i = 0; i < set.dims; i++) {
+    if (!Number.isFinite(vector[i])) return 'query vector is not finite'
+    sum += vector[i] * vector[i]
+  }
+  if (!Number.isFinite(sum)) return 'query vector is not finite'
+  return sum > 0 ? null : 'empty query embedding'
+}
+
+/**
  * Score every present row and keep the best `limit` at or above `floor`. A longer query vector
- * is Matryoshka-truncated to the matrix dims; a shorter one is a model mismatch and throws.
+ * is truncated to the matrix dims (callers check queryVectorProblem against the set first); a
+ * shorter one throws. A zero query returns no hits: every row would tie at 0, and ranking on that
+ * surfaces the first rows in index order.
  */
 export function denseTopK(
   matrix: Int8RowMatrix,
@@ -25,7 +52,7 @@ export function denseTopK(
   const { rows, dims, data, scales } = matrix
   const q = truncateNormalize(query, dims)
   const hits: DenseHit[] = []
-  if (!(limit > 0)) return hits
+  if (!(limit > 0) || q.every((value) => value === 0)) return hits
   for (let row = 0; row < rows; row++) {
     const scale = scales[row]
     if (!scale) continue

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { denseTopK } from './dense'
+import { denseTopK, queryVectorProblem } from './dense'
 import {
   decodeFloat32Rows,
   decodeInt8Rows,
@@ -98,5 +98,38 @@ describe('denseTopK', () => {
     expect(denseTopK(matrix, longer, 1)[0].row).toBe(0)
     expect(() => denseTopK(matrix, query.subarray(0, dims - 1), 1)).toThrow()
     expect(denseTopK(matrix, query, 0)).toEqual([])
+  })
+
+  it('returns no hits for a zero query instead of the first rows in index order', () => {
+    expect(denseTopK(matrix, new Float32Array(dims), 10)).toEqual([])
+    const zeroPrefix = new Float32Array(dims * 2).fill(1, dims)
+    expect(denseTopK(matrix, zeroPrefix, 10)).toEqual([])
+  })
+})
+
+describe('queryVectorProblem', () => {
+  const vector = (values: number[]) => Float32Array.from(values)
+
+  it('accepts a nonzero, finite vector of the set dims', () => {
+    expect(queryVectorProblem(vector([0, 0.5, 0]), { dims: 3 })).toBeNull()
+  })
+
+  it('rejects zero and non-finite vectors', () => {
+    expect(queryVectorProblem(new Float32Array(3), { dims: 3 })).toBe('empty query embedding')
+    expect(queryVectorProblem(vector([1, NaN, 0]), { dims: 3 })).toBe('query vector is not finite')
+    expect(queryVectorProblem(vector([1, Infinity, 0]), { dims: 3 })).toMatch(/not finite/)
+  })
+
+  it('truncates a longer vector only for a Matryoshka set', () => {
+    expect(queryVectorProblem(vector([1, 0, 0, 0]), { dims: 2 })).toBe(
+      'query vector has 4 dims, the vector set has 2 and is not Matryoshka'
+    )
+    expect(queryVectorProblem(vector([1, 0, 0, 0]), { dims: 2, mrl: true })).toBeNull()
+    expect(queryVectorProblem(vector([0, 0, 1, 0]), { dims: 2, mrl: true })).toBe(
+      'empty query embedding'
+    )
+    expect(queryVectorProblem(vector([1]), { dims: 2, mrl: true })).toBe(
+      'query vector has 1 dims, the vector set has 2'
+    )
   })
 })

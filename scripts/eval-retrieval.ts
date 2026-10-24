@@ -5,6 +5,8 @@
 //   pnpm exec tsx scripts/eval-retrieval.ts [--queries eval/x.jsonl]... [--plugin mod.ts]...
 //     [--pseudo] [--out eval/results/<date>.json | --out -] [--gate 'ship-lexical>=records']...
 //
+// Reports land in eval/results/ by default, which is git-ignored: quote the numbers in the PR.
+//
 // Built-in configurations: records (today's searchRecords over the article manifest),
 // records+operators (the same over the operator panels too, as Ship ranks them), bm25 (chunk
 // BM25 only), ship-lexical (getShipContext without an embedder: BM25 + records under RRF), and
@@ -19,7 +21,7 @@ import { searchRecords } from '../lib/archive/search'
 import { FsManifestSource } from '../lib/archive/server'
 import { searchBm25 } from '../lib/retrieval/bm25'
 import { buildSearchIndex, emitSearchIndex } from '../lib/retrieval/build'
-import { denseTopK } from '../lib/retrieval/dense'
+import { denseTopK, queryVectorProblem } from '../lib/retrieval/dense'
 import {
   METRICS,
   evaluate,
@@ -148,17 +150,16 @@ async function main() {
       {
         name: `dense:${set.model}`,
         description: `dense top-k only, d${set.dims} int8`,
-        search: async (q, k) =>
-          slugsOf(
-            denseTopK(
-              matrix,
-              await embed(q, new AbortController().signal),
-              200,
-              set.cosineFloor
-            ).map((hit) => hit.row),
+        search: async (q, k) => {
+          // The same gate as Ship: a zero or wrong-sized query vector is no dense ranking.
+          const vector = await embed(q, new AbortController().signal)
+          if (queryVectorProblem(vector, set)) return []
+          return slugsOf(
+            denseTopK(matrix, vector, 200, set.cosineFloor).map((hit) => hit.row),
             slugOfChunk,
             k
-          ),
+          )
+        },
       },
       {
         name: `hybrid:${set.model}`,

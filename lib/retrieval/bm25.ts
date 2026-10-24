@@ -48,10 +48,18 @@ export function buildBm25(docs: Bm25Fields[]): Bm25File {
     }
     return list
   })
+  // Average each field over the chunks that have it. Keywords live only on cards (and doc2query
+  // only where it is filled), so an all-chunk average would inflate every norm for that field
+  // and undo its weight: a typical card's keywords norm came out near 6, making ×2 act like ×0.3.
   const avgLengths = BM25_FIELDS.map((_, f) => {
     let total = 0
-    for (let doc = 0; doc < docs.length; doc++) total += lengths[doc * fieldCount + f]
-    return docs.length ? total / docs.length : 0
+    let present = 0
+    for (let doc = 0; doc < docs.length; doc++) {
+      const length = lengths[doc * fieldCount + f]
+      total += length
+      if (length > 0) present++
+    }
+    return present ? total / present : 0
   })
 
   return {
@@ -70,7 +78,10 @@ export function buildBm25(docs: Bm25Fields[]): Bm25File {
 
 export interface Bm25Index {
   file: Bm25File
-  /** Per doc and field: 1 - b + b * length / avgLength (0 marks a field empty everywhere). */
+  /**
+   * Per doc and field: 1 - b + b * length / avgLength, where avgLength is over the docs that have
+   * the field (0 marks a field empty everywhere).
+   */
   norms: Float64Array
 }
 

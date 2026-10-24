@@ -5,8 +5,9 @@
 /** What the runtime needs from its host. Both the Worker and Node adapters provide these. */
 export interface RetrievalDeps {
   /**
-   * Embed a query with the model the active vector set was built with. Optional: when it is
-   * absent, throws or misses the deadline, retrieval answers lexical-only with the same shape.
+   * Embed a query with the model the active vector set was built with (the caller names it in
+   * ShipContextOptions.model). Optional: when it is absent, throws, misses the deadline or returns
+   * an unusable vector, retrieval answers lexical-only with the same shape.
    */
   embedQuery?(q: string, signal: AbortSignal): Promise<Float32Array>
   /** Fetch a built index asset by its public path, e.g. '/search/chunks.<hash>.json'. */
@@ -130,6 +131,11 @@ export interface VectorSourceManifest {
   queryInstruction?: string | null
   docInstruction?: string | null
   cosineFloor?: number
+  /**
+   * Matryoshka-trained: a prefix of a longer query vector is a valid query for these rows. Only
+   * then may a longer query be truncated to `dims`; otherwise its length must equal `dims`.
+   */
+  mrl?: boolean
 }
 
 /** A built vector set: public/search/vec.<hash>.bin, rows aligned with ChunksFile.chunks. */
@@ -146,7 +152,10 @@ export interface VectorSetEntry {
   asset: string
   runtime?: string
   queryInstruction?: string | null
+  /** Dense hits below this cosine are dropped; unset means unfloored (see VectorSourceManifest). */
   cosineFloor?: number
+  /** Copied from the source: whether a longer query vector may be truncated to `dims`. */
+  mrl?: boolean
 }
 
 /** lib/generated/search-manifest.json, imported statically so a deploy stays atomic. */

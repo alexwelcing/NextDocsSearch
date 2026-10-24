@@ -91,6 +91,24 @@ describe('buildSearchIndex vector join', () => {
     expect(warnings).toMatch(/stale: no chunk matched/)
   })
 
+  it('carries a tuned floor and the Matryoshka flag, and warns when no floor is set', async () => {
+    const lexical = await buildSearchIndex(input)
+    const hashes = lexical.chunks.chunks.map((chunk) => chunk.hash)
+    const tuned = source(hashes, 8).vectorSource
+    tuned.manifest = { ...tuned.manifest, model: 'tuned', cosineFloor: 0.3, mrl: true }
+    const plain = source(hashes, 12).vectorSource
+    const built = await buildSearchIndex({ ...input, vectorSources: [tuned, plain] })
+    expect(built.vectors.map((set) => set.entry)).toEqual([
+      expect.objectContaining({ model: 'tuned', cosineFloor: 0.3, mrl: true }),
+      expect.not.objectContaining({ mrl: expect.anything() }),
+    ])
+    expect(built.vectors[1].entry.cosineFloor).toBeUndefined()
+    expect(built.warnings).toContain(
+      `vectors ${plain.manifest.model}: no cosineFloor; dense hits are unfloored`
+    )
+    expect(built.warnings.join('\n')).not.toMatch(/tuned: no cosineFloor/)
+  })
+
   it('exports the exact embed text each chunk hash is keyed by', async () => {
     const { chunks } = await buildSearchIndex(input)
     const lines = embedInputs(chunks)

@@ -225,8 +225,14 @@ export async function buildSearchIndex(input: BuildInput): Promise<BuiltIndex> {
           ? { queryInstruction: manifest.queryInstruction }
           : {}),
         ...(typeof manifest.cosineFloor === 'number' ? { cosineFloor: manifest.cosineFloor } : {}),
+        ...(manifest.mrl === true ? { mrl: true } : {}),
       },
     })
+    // A floor is model-specific (cosine scales differ between static and transformer models), so
+    // none is assumed; the eval tunes one per model and the source manifest records it.
+    if (typeof manifest.cosineFloor !== 'number') {
+      warnings.push(`vectors ${manifest.model}: no cosineFloor; dense hits are unfloored`)
+    }
   }
   if (!vectors.length) warnings.push('no vector sets joined; the index is lexical-only')
 
