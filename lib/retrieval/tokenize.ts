@@ -11,6 +11,8 @@ export const TOKENIZER_VERSION = 'archive-v1'
  * findMatch semantics over a sorted vocabulary: two-character terms match whole words only
  * ('ai' never hits 'said' or 'aim'), longer terms also match any word they prefix ('agent' hits
  * 'agents' and 'agentic'). Returns the [start, end) range of matching vocabulary entries.
+ * One known gap: the vocabulary has no stop words, so a partial query term that only prefixes
+ * a stop word ('ther' → 'there') matches in findMatch but not here.
  */
 export function matchingTermRange(sortedTerms: string[], term: string): [number, number] {
   let lo = 0
