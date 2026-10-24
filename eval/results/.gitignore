@@ -1,0 +1,3 @@
+# Eval reports are local run output (about 1 MB with --pseudo); quote the numbers in the PR.
+*
+!.gitignore
