@@ -44,3 +44,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# arcforge (research/arcforge)
+research/arcforge/.venv/
+research/arcforge/**/__pycache__/
+research/arcforge/.pytest_cache/
+research/arcforge/uv.lock.bak
