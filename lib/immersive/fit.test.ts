@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
+import { DOCK_FIT } from '@/components/immersive/dock/ArcDock'
+import { MODAL_DIST, MODAL_H, MODAL_W } from '@/components/immersive/modals/ModalShell'
 import { FIT_MARGIN, LOW_TIER_SCREEN_PX, fitScale, horizontalFov, qualityHint } from './fit'
 
 const deg = (rad: number) => (rad * 180) / Math.PI
 
-// The in-scene panels as authored: the reader slab (1.72 x 1.04 m at 1.5 m) and the ARC dock
-// (0.74 m chassis + grips at 0.85 m, tilted so its key row sits ~0.11 m nearer the eye).
-const READER = { distance: 1.5, width: 1.72, height: 1.04 }
-const DOCK = { distance: 0.85, width: 0.76, nearOffset: 0.112 }
+// The in-scene panels exactly as the components fit them, so a change to either panel's
+// dimensions re-runs these checks: the reader slab (1.72 x 1.04 m at 1.5 m) and the ARC dock
+// (0.74 m chassis + grips at 0.85 m, tilted so its key row sits ~0.12 m nearer the eye).
+const READER = { distance: MODAL_DIST, width: MODAL_W, height: MODAL_H }
+const DOCK = DOCK_FIT
 const PHONE = 390 / 844
 const DESKTOP = 1600 / 900
 
@@ -46,10 +49,8 @@ describe('fitScale', () => {
   it('matches the closed form min(1, m·2·d·tan(hFov/2)/W) for a flat panel', () => {
     const hFov = horizontalFov(70, PHONE)
     const expected = (FIT_MARGIN * 2 * READER.distance * Math.tan(hFov / 2)) / READER.width
-    expect(fitScale({ vFov: 70, aspect: PHONE, distance: 1.5, width: 1.72 })).toBeCloseTo(
-      expected,
-      10
-    )
+    const flat = { distance: READER.distance, width: READER.width }
+    expect(fitScale({ vFov: 70, aspect: PHONE, ...flat })).toBeCloseTo(expected, 10)
   })
 
   it('shrinks the reader on a portrait phone until it spans exactly the margin', () => {

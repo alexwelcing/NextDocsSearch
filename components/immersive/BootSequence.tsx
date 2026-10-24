@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { loadArchive } from '@/lib/immersive/archive'
+import { BOOT_WATCHDOG_MS, bootSkippable, recordsText } from '@/lib/immersive/boot'
 
 interface BootLine {
   text: string
@@ -33,15 +34,6 @@ const BOOT_LINES: BootLine[] = [
 ]
 
 const TYPE_MS = 22
-/** Skip unlocks after this long even if the panorama or pipelines never report in. */
-const WATCHDOG_MS = 8000
-
-/** null = still loading, -1 = the index fetch failed. */
-function recordsText(count: number | null): string {
-  if (count === null) return 'INDEXING RECORDS …'
-  if (count < 0) return 'RECORD INDEX DEFERRED'
-  return `${count} RECORDS INDEXED`
-}
 
 export function BootSequence() {
   const sceneReady = useImmersiveStore((s) => s.sceneReady)
@@ -59,11 +51,12 @@ export function BootSequence() {
   const [gauge, setGauge] = useState(0)
   const [flash, setFlash] = useState(false)
   const [watchdog, setWatchdog] = useState(false)
+  /** null = still loading, -1 = the index fetch failed (see recordsText). */
   const [records, setRecords] = useState<number | null>(null)
   const doneRef = useRef(false)
 
   const linesDone = visibleLines >= BOOT_LINES.length
-  const canSkip = assetsReady || watchdog
+  const canSkip = bootSkippable({ sceneReady, shadersWarm, watchdogFired: watchdog })
   // Read by the input listener: set during render, so a key pressed the moment the hint paints
   // is honoured (an effect-bound closure would lag a frame behind it).
   const canSkipRef = useRef(canSkip)
@@ -71,7 +64,7 @@ export function BootSequence() {
 
   // Watchdog: a hung panorama or pipeline compile must not hold the overlay forever.
   useEffect(() => {
-    const t = setTimeout(() => setWatchdog(true), WATCHDOG_MS)
+    const t = setTimeout(() => setWatchdog(true), BOOT_WATCHDOG_MS)
     return () => clearTimeout(t)
   }, [])
 

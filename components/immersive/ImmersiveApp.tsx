@@ -54,9 +54,10 @@ export default function ImmersiveApp() {
     const gpu = (navigator as Navigator & { gpu?: unknown }).gpu
     // Resolve the starting world BEFORE the canvas mounts so the first panorama fetched is the
     // right one: ?world=<id> wins, then the visitor's last choice. window.location rather than
-    // router.asPath — a statically optimized page hydrates without its query.
+    // router.asPath — a statically optimized page hydrates without its query. Neither is
+    // persisted: a shared link shows its world without replacing the visitor's own pick.
     const world = worldFromQuery(window.location.search) ?? storedWorld()
-    if (world) setWorld(world)
+    if (world) setWorld(world, { persist: false })
     setBootPhase(gpu ? 'booting' : 'unsupported')
     if (gpu) {
       // Warm the critical caches behind the boot sequence so the dock and reader open instantly.
@@ -89,7 +90,7 @@ export default function ImmersiveApp() {
       const state = routeToState(url)
       setModal(state.modal)
       if (state.dockTab) setDockTab(state.dockTab)
-      if (state.world) setWorld(state.world)
+      if (state.world) setWorld(state.world, { persist: false })
     }
     apply(router.asPath)
     router.events.on('routeChangeComplete', apply)

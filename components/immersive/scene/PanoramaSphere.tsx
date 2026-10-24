@@ -7,12 +7,12 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { worldById } from '@/lib/immersive/worlds'
+import { attractDrift, panoramaSpin } from '@/lib/immersive/drift'
+import { retryOnce } from '@/lib/immersive/boot'
 
 const RADIUS = 60
 const FADE_SPEED = 1.6 // opacity units per second
-/** Ceiling on the idle spin (rad/s) — 0.2°/s. Faster reads as a screensaver, not a place. */
-const MAX_DRIFT = (0.2 * Math.PI) / 180
-/** How quickly the spin eases out/in around a modal, per second. */
+/** How quickly the spin eases out/in around a modal or the dock, per second. */
 const DRIFT_EASE = 3
 /** Pause before the single retry of a failed panorama load, ms. */
 const RETRY_DELAY_MS = 800
@@ -35,14 +35,11 @@ async function loadPanorama(url: string): Promise<THREE.Texture> {
 }
 
 /** One retry covers a transient network blip; a second failure is final for this world. */
-async function loadPanoramaWithRetry(url: string): Promise<THREE.Texture> {
-  try {
-    return await loadPanorama(url)
-  } catch (err) {
-    console.warn('[panorama] load failed, retrying once:', url, err)
-    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
-    return loadPanorama(url)
-  }
+function loadPanoramaWithRetry(url: string): Promise<THREE.Texture> {
+  return retryOnce(() => loadPanorama(url), {
+    delayMs: RETRY_DELAY_MS,
+    onRetry: (err) => console.warn('[panorama] load failed, retrying once:', url, err),
+  })
 }
 
 export function PanoramaSphere() {
@@ -92,12 +89,16 @@ export function PanoramaSphere() {
   }, [world.panorama, setSceneReady])
 
   useFrame((_, delta) => {
-    // The spin eases out while a modal is open (the room holds still behind the page) and back
-    // in on close. Read from the store per frame so opening a modal never re-renders the sky.
-    const still = useImmersiveStore.getState().modal !== null
+    // The spin eases out while a modal or the dock is up (the room holds still behind the page
+    // and the console, as CameraRig's drift does) and back in on close — and yields to the
+    // camera's attract drift so the two share one ceiling (drift.ts). Read from the store per
+    // frame so opening a modal never re-renders the sky.
+    const { modal, dockOpen } = useImmersiveStore.getState()
+    const still = modal !== null || dockOpen
     driftGain.current += ((still ? 0 : 1) - driftGain.current) * (1 - Math.exp(-DRIFT_EASE * delta))
     if (group.current && !reducedMotion) {
-      group.current.rotation.y += Math.min(world.drift, MAX_DRIFT) * driftGain.current * delta
+      group.current.rotation.y +=
+        panoramaSpin(world.drift, driftGain.current, attractDrift.gain) * delta
     }
     if (fading.current && frontMat.current) {
       frontMat.current.opacity = Math.min(frontMat.current.opacity + FADE_SPEED * delta, 1)

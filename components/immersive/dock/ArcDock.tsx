@@ -38,10 +38,17 @@ const HIDDEN_ROT = -1.1
 
 const CONTENT_W = SCREEN_W - 0.04
 
-// Fit envelope for the presented console: chassis plus side grips, and the tilt that brings its
-// bottom edge (the key row) nearer the eye than the anchor point — those corners clip first.
-const FIT_W = BODY_W + 0.02
-const FIT_NEAR = (BODY_H / 2) * Math.sin(-SHOWN_ROT)
+/** The chassis slab sits this far below the rig origin (DockChassis body mesh, y = −0.02). */
+const CHASSIS_DROP = 0.02
+
+/** Fit envelope for the presented console: chassis plus side grips at the anchor distance, and
+ *  the tilt that brings its bottom edge (the key row) nearer the eye than the anchor point —
+ *  those corners clip first. Exported for the fit tests. */
+export const DOCK_FIT = {
+  distance: -SHOWN_POS.z,
+  width: BODY_W + 0.02,
+  nearOffset: (BODY_H / 2 + CHASSIS_DROP) * Math.sin(-SHOWN_ROT),
+} as const
 
 export function ArcDock() {
   const dockOpen = useImmersiveStore((s) => s.dockOpen)
@@ -105,15 +112,7 @@ export function ArcDock() {
     // Scaled about the rig's own origin, so the console keeps its place below gaze and only
     // narrows. Per frame: tracks resize/rotation and the wheel-zoom fov.
     const cam = state.camera as THREE.PerspectiveCamera
-    g.scale.setScalar(
-      fitScale({
-        vFov: cam.fov,
-        aspect: cam.aspect,
-        distance: -SHOWN_POS.z,
-        width: FIT_W,
-        nearOffset: FIT_NEAR,
-      })
-    )
+    g.scale.setScalar(fitScale({ vFov: cam.fov, aspect: cam.aspect, ...DOCK_FIT }))
   })
 
   const tabActive = (id: DockTab) => dockOpen && powered && dockTab === id && !modal

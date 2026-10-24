@@ -67,8 +67,10 @@ interface ImmersiveState {
   setModal: (m: ImmersiveModal) => void
 
   worldId: string
-  /** Switch worlds; the choice persists to localStorage for the next visit. */
-  setWorld: (id: string) => void
+  /** Switch worlds. A visitor's own choice persists to localStorage for the next visit; pass
+   *  `persist: false` for worlds that merely arrive (a shared ?world= link, the stored world
+   *  itself) so they never overwrite that choice. */
+  setWorld: (id: string, opts?: { persist?: boolean }) => void
 
   quality: QualityTier
   setQuality: (q: QualityTier) => void
@@ -100,9 +102,9 @@ export const useImmersiveStore = create<ImmersiveState>((set) => ({
   setModal: (modal) => set({ modal }),
 
   worldId: DEFAULT_WORLD_ID,
-  setWorld: (worldId) => {
+  setWorld: (worldId, opts) => {
     set({ worldId })
-    persistWorld(worldId)
+    if (opts?.persist !== false) persistWorld(worldId)
   },
 
   quality: 'high',

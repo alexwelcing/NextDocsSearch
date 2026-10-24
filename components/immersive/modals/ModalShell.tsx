@@ -23,7 +23,7 @@ export const MODAL_H = 1.04
 /** Content area inset from the slab edges. */
 export const MODAL_PAD = 0.07
 /** Camera → slab distance, metres. */
-const MODAL_DIST = 1.5
+export const MODAL_DIST = 1.5
 
 export function ModalShell({
   title,

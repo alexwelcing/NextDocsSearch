@@ -33,6 +33,16 @@ describe('world persistence', () => {
     expect(storedWorld()).toBe('ember')
   })
 
+  it('shows an arriving world without replacing the stored choice when persist is false', () => {
+    const storage = memoryStorage()
+    storage.setItem(WORLD_STORAGE_KEY, 'deep-space')
+    vi.stubGlobal('window', { localStorage: storage })
+    useImmersiveStore.getState().setWorld('ember', { persist: false })
+    expect(useImmersiveStore.getState().worldId).toBe('ember')
+    expect(storage.getItem(WORLD_STORAGE_KEY)).toBe('deep-space')
+    expect(storedWorld()).toBe('deep-space')
+  })
+
   it('drops a stored id that is no longer in the registry', () => {
     const storage = memoryStorage()
     storage.setItem(WORLD_STORAGE_KEY, 'retired-world')
