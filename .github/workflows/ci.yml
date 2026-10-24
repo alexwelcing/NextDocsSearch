@@ -12,7 +12,9 @@ permissions:
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  # A new push to a PR cancels its stale run; pushes to main always finish, so every commit there
+  # keeps a CI result.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check:
@@ -25,6 +27,10 @@ jobs:
       # Default shallow clone: lint/test/build need the tree, not ~1.2 GB of history. The tree
       # carries public/images, which the build's media guard (scripts/guard-media.ts) requires.
       - uses: actions/checkout@v7
+        with:
+          # Nothing pushes back, so keep GITHUB_TOKEN out of .git/config while pnpm install runs
+          # third-party postinstall scripts.
+          persist-credentials: false
 
       # No version input: pnpm/action-setup reads packageManager (pnpm@9.7.1) from package.json.
       - uses: pnpm/action-setup@v6
@@ -38,3 +44,16 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+
+      # The pre-build generators rewrite git-tracked outputs. Any change (or new file) means the
+      # committed copies are stale, so the PR would ship manifests nobody reviewed. Sitemaps are
+      # left out: their <lastmod> changes on every build.
+      - name: Generated files are committed
+        run: |
+          changed=$(git status --porcelain -- lib/generated public/arc public/fonts)
+          if [ -n "$changed" ]; then
+            echo "$changed"
+            git --no-pager diff --stat -- lib/generated public/arc public/fonts
+            echo '::error::pnpm build changed generated files. Run pnpm build and commit lib/generated, public/arc and public/fonts.'
+            exit 1
+          fi
