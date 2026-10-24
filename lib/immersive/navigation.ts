@@ -3,6 +3,7 @@
 
 import type { NextRouter } from 'next/router'
 import type { ImmersiveModal } from '@/stores/immersiveStore'
+import { worldById } from './worlds'
 
 export const HUB_SLUGS = [
   'agent-futures',
@@ -15,10 +16,28 @@ export interface RouteState {
   modal: ImmersiveModal
   /** Open the dock on this tab (deep link straight into a dock surface). */
   dockTab?: 'archive'
+  /** Start in this world (?world=<id>, any route). Only registry ids survive. */
+  world?: string
+}
+
+/** A registered world id from a URL's ?world= query, else undefined. Accepts a full asPath, a
+ *  bare search string ('?world=ember') or anything in between; the hash is ignored. */
+export function worldFromQuery(url: string): string | undefined {
+  const query = url.split('#')[0].split('?')[1]
+  if (!query) return undefined
+  const id = new URLSearchParams(query).get('world')
+  // worldById falls back to the default world for unknown ids, so a round-trip is the check
+  return id && worldById(id).id === id ? id : undefined
 }
 
 /** Resolve a Next.js asPath to immersive UI state. */
 export function routeToState(asPath: string): RouteState {
+  const state = routeToModalState(asPath)
+  const world = worldFromQuery(asPath)
+  return world ? { ...state, world } : state
+}
+
+function routeToModalState(asPath: string): RouteState {
   const path = asPath.split(/[?#]/)[0].replace(/\/+$/, '') || '/'
   const seg = path.split('/').filter(Boolean)
 
