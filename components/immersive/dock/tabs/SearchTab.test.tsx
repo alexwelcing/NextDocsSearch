@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 
-import { act, type ComponentType, type ReactNode } from 'react'
+import { act, useEffect, type ComponentType, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ArchiveRecord } from '@/lib/archive'
 import { openModal } from '@/lib/immersive/navigation'
+import { useTouchTextInput, type TouchTextInput } from '../../hooks/useTouchTextInput'
 
 // Keep intrinsic mesh event handlers observable without mounting a WebGL renderer.
 // Strip graphics-only props so ReactDOM can render these presentation nodes cleanly.
@@ -304,6 +305,21 @@ describe('FIND full archive integration', () => {
     }
   )
 
+  it('focuses the hidden input when the query line is tapped', async () => {
+    vi.stubGlobal('fetch', vi.fn<typeof fetch>().mockResolvedValue(payload([record()])))
+    await render()
+    expect(document.activeElement).not.toBe(input())
+
+    const queryLine = host.querySelector('[data-three="mesh"]')!
+    await act(async () => queryLine.dispatchEvent(new Event('pointerdown', { bubbles: true })))
+    expect(document.activeElement).toBe(input())
+
+    // the same tap's compatibility mousedown must not move focus back off the field
+    const mousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    queryLine.dispatchEvent(mousedown)
+    expect(mousedown.defaultPrevented).toBe(true)
+  })
+
   it('keeps desktop and native input edits in sync and bounds pasted text', async () => {
     vi.stubGlobal('fetch', vi.fn<typeof fetch>().mockResolvedValue(payload([record()])))
     await render()
@@ -345,5 +361,124 @@ describe('FIND full archive integration', () => {
     await type('ignored')
     await render(true)
     expect(input().value).toBe('x'.repeat(60))
+  })
+})
+
+describe('useTouchTextInput', () => {
+  let field: TouchTextInput
+  const onChange = vi.fn()
+
+  function Callsign({
+    active,
+    value,
+    expose,
+  }: {
+    active: boolean
+    value: string
+    expose: (field: TouchTextInput) => void
+  }) {
+    const touch = useTouchTextInput({
+      active,
+      value,
+      onChange,
+      label: 'Callsign',
+      maxLength: 12,
+      sanitize: (v) => v.toUpperCase().replace(/[^A-Z0-9 _-]/g, ''),
+      autoCapitalize: 'characters',
+      enterKeyHint: 'send',
+    })
+    useEffect(() => {
+      expose(touch)
+    })
+    return null
+  }
+
+  async function show(active: boolean, value: string) {
+    await act(async () =>
+      root.render(
+        <Callsign
+          active={active}
+          value={value}
+          expose={(f) => {
+            field = f
+          }}
+        />
+      )
+    )
+  }
+
+  const callsign = () => document.querySelector<HTMLInputElement>('input[aria-label="Callsign"]')
+
+  it('mounts a field only while active and focuses it on demand', async () => {
+    await show(false, '')
+    expect(callsign()).toBeNull()
+
+    await show(true, 'ACE')
+    const el = callsign()!
+    expect(el.value).toBe('ACE')
+    expect(el.type).toBe('text')
+    expect(el.maxLength).toBe(12)
+    expect(el.getAttribute('autocapitalize')).toBe('characters')
+    expect(el.getAttribute('enterkeyhint')).toBe('send')
+
+    field.focus()
+    expect(document.activeElement).toBe(el)
+
+    await show(false, 'ACE')
+    expect(el.isConnected).toBe(false)
+    expect(field.inputRef.current).toBeNull()
+  })
+
+  it("guards focus only through the tap's own mousedown and click", async () => {
+    vi.useFakeTimers()
+    try {
+      await show(true, '')
+      const press = () => {
+        const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+        host.dispatchEvent(event)
+        return event.defaultPrevented
+      }
+
+      field.focus()
+      expect(press()).toBe(true)
+      host.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+      expect(press()).toBe(false)
+
+      // a gesture that never clicks (drag, long-press) releases the guard on a timer
+      field.focus()
+      vi.advanceTimersByTime(1000)
+      expect(press()).toBe(false)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('sanitizes native edits before bounding them and reports them', async () => {
+    await show(true, '')
+    const el = callsign()!
+
+    // a pasted name keeps its valid tail: filter first, then bound
+    el.value = 'ace.of$spades-99'
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+    expect(el.value).toBe('ACEOFSPADES-')
+    expect(onChange).toHaveBeenLastCalledWith('ACEOFSPADES-')
+
+    // window-captured edits flow back into the element
+    await show(true, 'ZED')
+    expect(el.value).toBe('ZED')
+  })
+
+  it('tells key events from the native field apart from window-captured keys', async () => {
+    await show(true, '')
+    const native = new KeyboardEvent('keydown', { key: 'x', bubbles: true })
+    callsign()!.dispatchEvent(native)
+    expect(field.owns(native)).toBe(true)
+
+    const desktop = new KeyboardEvent('keydown', { key: 'x', bubbles: true })
+    window.dispatchEvent(desktop)
+    expect(field.owns(desktop)).toBe(false)
+
+    await show(false, '')
+    expect(field.owns(native)).toBe(false)
   })
 })

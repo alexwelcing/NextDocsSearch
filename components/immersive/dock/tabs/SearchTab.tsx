@@ -1,13 +1,14 @@
 // SEARCH: live lexical search over the archive index, typed directly on the terminal (keystrokes
 // are captured while the tab is active — no DOM input on desktop; touch devices get a hidden
-// input so the OS keyboard opens).
+// input via useTouchTextInput so the OS keyboard opens).
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import { WindfoilText } from '../../text/WindfoilText'
 import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
+import { useTouchTextInput } from '../../hooks/useTouchTextInput'
 import { HttpIndexSource, listRecords, searchRecords, type ArchiveRecord } from '@/lib/archive'
 import { prefetchRecord } from '@/lib/immersive/prefetch'
 import { openModal } from '@/lib/immersive/navigation'
@@ -16,6 +17,7 @@ import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
 import { stopLook } from '../DockKey'
 
 const ROWS = 3
+const MAX_QUERY = 60
 // FIND mounts on demand. Reuse its source across visits without adding the full
 // search index to ImmersiveApp's compact landing-page preload.
 const source = new HttpIndexSource()
@@ -27,7 +29,6 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
   const [attempt, setAttempt] = useState(0)
   const [query, setQuery] = useState('')
   const [sel, setSel] = useState(0)
-  const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     if (!active) return
@@ -51,31 +52,14 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
   const retry = () => setAttempt((value) => value + 1)
 
   // Hidden DOM input for touch keyboards; desktop keys are handled below.
-  useEffect(() => {
-    if (!active) return
-    const el = document.createElement('input')
-    el.type = 'search'
-    el.setAttribute('aria-label', 'Search archive')
-    el.maxLength = 60
-    el.autocapitalize = 'off'
-    el.autocomplete = 'off'
-    el.style.cssText =
-      'position:fixed;opacity:0;pointer-events:none;left:50%;bottom:0;height:1px;width:1px;'
-    el.addEventListener('input', () => {
-      el.value = el.value.slice(0, 60)
-      setQuery(el.value)
-    })
-    document.body.appendChild(el)
-    inputRef.current = el
-    return () => {
-      el.remove()
-      inputRef.current = null
-    }
-  }, [active])
-
-  useEffect(() => {
-    if (inputRef.current && inputRef.current.value !== query) inputRef.current.value = query
-  }, [query, active])
+  const field = useTouchTextInput({
+    active,
+    value: query,
+    onChange: setQuery,
+    label: 'Search archive',
+    maxLength: MAX_QUERY,
+    type: 'search',
+  })
 
   const results = useMemo(
     () => (status === 'ready' ? searchRecords(records, query, 40) : []),
@@ -111,14 +95,14 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
     }
     // The native input owns text editing, paste, composition and mobile input.
     // Only the unfocused desktop terminal appends/deletes characters itself.
-    if (e.target === inputRef.current) return false
+    if (field.owns(e)) return false
     if (e.key === 'Backspace') {
       setQuery((q) => q.slice(0, -1))
       playSound('key')
       return true
     }
     if (e.key.length === 1) {
-      setQuery((q) => (q.length < 60 ? q + e.key : q))
+      setQuery((q) => (q.length < MAX_QUERY ? q + e.key : q))
       playSound('key')
       return true
     }
@@ -156,7 +140,7 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
         position={[width / 2, -0.062, -0.0005]}
         onPointerDown={(e) => {
           stopLook(e)
-          inputRef.current?.focus()
+          field.focus()
         }}
       >
         <planeGeometry args={[width, 0.04]} />

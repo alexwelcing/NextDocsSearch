@@ -3,12 +3,15 @@
 // OVER (debrief: final score, personal best from localStorage, callsign entry, FILE SCORE to
 // the public ledger, RUN IT BACK, STAND DOWN). HUD is windfoil text, camera-anchored, built
 // only from atlas-safe glyphs (see lib/windfoil/charset.ts — no ⏱/◉, time renders as m:ss).
+//
+// The callsign field rides useTouchTextInput so touch players get an OS keyboard.
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
 import { CameraAnchor } from '../dock/CameraAnchor'
 import { WindfoilText } from '../text/WindfoilText'
+import { useTouchTextInput } from '../hooks/useTouchTextInput'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, rgba } from '@/lib/immersive/theme'
@@ -17,6 +20,7 @@ const GAME_SECONDS = 60
 const ORB_COUNT = 14
 const COMBO_WINDOW_MS = 1600
 const BEST_KEY = 'arc.sphere.best'
+const CALLSIGN_MAX = 12
 
 type Phase = 'arm' | 'live' | 'over'
 
@@ -49,6 +53,10 @@ function spawnOrb(): Orb {
     radius: 0.35 + Math.random() * 0.5,
     burst: 0,
   }
+}
+
+function sanitizeCallsign(value: string): string {
+  return value.toUpperCase().replace(/[^A-Z0-9 _-]/g, '')
 }
 
 function stopLook(e: ThreeEvent<PointerEvent>) {
@@ -183,14 +191,28 @@ export function SphereHunter() {
     return () => window.removeEventListener('keydown', onKey)
   }, [gameActive, phase])
 
-  // callsign entry for the ledger
+  // callsign entry for the ledger — typed on window, or through the hidden input on touch
+  const callsign = useTouchTextInput({
+    active: gameActive && phase === 'over',
+    value: name,
+    onChange: setName,
+    label: 'Callsign',
+    maxLength: CALLSIGN_MAX,
+    sanitize: sanitizeCallsign,
+    autoCapitalize: 'characters',
+    enterKeyHint: 'send',
+  })
+
   useEffect(() => {
     if (phase !== 'over') return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Backspace') setName((n) => n.slice(0, -1))
-      else if (e.key === 'Enter') submit()
+      if (e.isComposing) return
+      if (e.key === 'Enter') submit()
+      // the native input owns its own edits (OS keyboard, paste, composition)
+      else if (callsign.owns(e)) return
+      else if (e.key === 'Backspace') setName((n) => n.slice(0, -1))
       else if (e.key.length === 1 && /[a-z0-9 _-]/i.test(e.key)) {
-        setName((n) => (n.length < 12 ? n + e.key.toUpperCase() : n))
+        setName((n) => (n.length < CALLSIGN_MAX ? n + e.key.toUpperCase() : n))
       } else {
         return
       }
@@ -356,6 +378,19 @@ export function SphereHunter() {
             >
               {newBest ? `* NEW PERSONAL BEST *` : `PERSONAL BEST ${best}`}
             </WindfoilText>
+            {/* callsign line — tap to summon the OS keyboard on touch */}
+            {submitState !== 'sent' && (
+              <mesh
+                position={[0, 0.024, 0.0005]}
+                onPointerDown={(e) => {
+                  stopLook(e)
+                  callsign.focus()
+                }}
+              >
+                <planeGeometry args={[0.5, 0.046]} />
+                <meshBasicMaterial color={ARC.greenFaint} transparent opacity={0.65} />
+              </mesh>
+            )}
             <WindfoilText
               font={FONT.mono}
               fontSize={0.032}
@@ -367,7 +402,7 @@ export function SphereHunter() {
                 ? 'FILED TO LEDGER [OK]'
                 : submitState === 'failed'
                   ? 'LEDGER UNREACHABLE'
-                  : `CALLSIGN: ${name}${name.length < 12 ? '_' : ''}`}
+                  : `CALLSIGN: ${name}${name.length < CALLSIGN_MAX ? '_' : ''}`}
             </WindfoilText>
             {submitState !== 'sent' && (
               <GameButton
