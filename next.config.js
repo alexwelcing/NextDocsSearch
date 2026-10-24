@@ -16,12 +16,11 @@ const nextConfig = {
 
   // Nothing uses next/image, so the /_next/image optimizer is pure attack surface (the SVG and AVIF
   // RCE advisories GHSA-2464-fhr4-w9xw / GHSA-2xp9-vwfh-vxw4 live there). Keep it switched off.
-  // `unoptimized` makes `next start` 404 the route, but Vercel's builder still provisions its own
-  // managed optimizer for any build whose loader is 'default'; loader 'custom' (with no loaderFile
-  // to call, since nothing renders next/image) is what turns it off there.
+  // This 404s the route under `next start` and keeps the images config out of Vercel's build output,
+  // but Vercel still answers /_next/image with its platform-default optimizer (WebP only, SVG
+  // refused, local sources only) whatever the loader; only leaving Vercel's Next runtime ends that.
   images: {
     unoptimized: true,
-    loader: 'custom',
   },
 
   // Compiler optimizations
