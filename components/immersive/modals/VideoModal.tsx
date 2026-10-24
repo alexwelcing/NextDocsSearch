@@ -17,7 +17,6 @@ const VIDEO_H = VIDEO_W * (9 / 16) * 0.82
 export function VideoModal({ slug }: { slug: string }) {
   const router = useRouter()
   const [playing, setPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
   const [failed, setFailed] = useState(false)
   const barRef = useRef<THREE.Mesh>(null)
 
@@ -46,12 +45,15 @@ export function VideoModal({ slug }: { slug: string }) {
     }
   }, [video, texture])
 
+  // Scrub bar straight from the video clock — no React state, so playback never re-renders the
+  // modal (which used to re-bind ModalShell's listeners and replay its SFX every frame).
   useFrame(() => {
-    if (video && video.duration > 0) setProgress(video.currentTime / video.duration)
-    if (barRef.current) {
-      barRef.current.scale.x = Math.max(progress, 0.001)
-      barRef.current.position.x = (VIDEO_W * Math.max(progress, 0.001)) / 2
-    }
+    const bar = barRef.current
+    if (!bar) return
+    const p = video && video.duration > 0 ? video.currentTime / video.duration : 0
+    const w = VIDEO_W * Math.max(p, 0.001) // unit-width plane, left-anchored on the track
+    bar.scale.x = w
+    bar.position.x = w / 2
   })
 
   const toggle = () => {

@@ -2,6 +2,29 @@
 // URL deep-links are synced by ImmersiveApp (router events -> store; dock actions -> router).
 
 import { create } from 'zustand'
+import { DEFAULT_WORLD_ID, worldById } from '@/lib/immersive/worlds'
+
+/** localStorage key holding the last world the visitor chose. */
+export const WORLD_STORAGE_KEY = 'arc.world'
+
+/** The persisted world id, if storage is readable and the id is still in the registry.
+ *  Storage can throw outright (private windows, blocked site data), so every access is guarded. */
+export function storedWorld(): string | undefined {
+  try {
+    const id = window.localStorage.getItem(WORLD_STORAGE_KEY)
+    return id && worldById(id).id === id ? id : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function persistWorld(id: string): void {
+  try {
+    window.localStorage.setItem(WORLD_STORAGE_KEY, id)
+  } catch {
+    /* storage unavailable — the choice just lasts for this visit */
+  }
+}
 
 export type BootPhase =
   | 'checking' // probing WebGPU support
@@ -44,7 +67,10 @@ interface ImmersiveState {
   setModal: (m: ImmersiveModal) => void
 
   worldId: string
-  setWorld: (id: string) => void
+  /** Switch worlds. A visitor's own choice persists to localStorage for the next visit; pass
+   *  `persist: false` for worlds that merely arrive (a shared ?world= link, the stored world
+   *  itself) so they never overwrite that choice. */
+  setWorld: (id: string, opts?: { persist?: boolean }) => void
 
   quality: QualityTier
   setQuality: (q: QualityTier) => void
@@ -75,8 +101,11 @@ export const useImmersiveStore = create<ImmersiveState>((set) => ({
   modal: null,
   setModal: (modal) => set({ modal }),
 
-  worldId: 'the-stacks',
-  setWorld: (worldId) => set({ worldId }),
+  worldId: DEFAULT_WORLD_ID,
+  setWorld: (worldId, opts) => {
+    set({ worldId })
+    if (opts?.persist !== false) persistWorld(worldId)
+  },
 
   quality: 'high',
   setQuality: (quality) => set({ quality }),
