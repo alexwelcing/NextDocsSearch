@@ -1,6 +1,7 @@
 // The ARC Terminal: a camera-anchored diegetic console. Springs up from its holster when
 // summoned (Tab key or the summon chip), CRT blips on, six physical keys switch surfaces.
-// It controls only in-scene state — every "navigation" is a modal or a world change.
+// It controls only in-scene state — every "navigation" is a modal or a world change. On narrow
+// (portrait) views the console shrinks in place to stay inside the frame — see fit.ts.
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
@@ -19,6 +20,7 @@ import { GameTab } from './tabs/GameTab'
 import { useImmersiveStore, type DockTab } from '@/stores/immersiveStore'
 import { playSound, setHum } from '@/lib/immersive/audio'
 import { ARC, FONT, rgba } from '@/lib/immersive/theme'
+import { fitScale } from '@/lib/immersive/fit'
 
 const TABS: { id: DockTab; label: string }[] = [
   { id: 'archive', label: 'ARCV' },
@@ -35,6 +37,11 @@ const HIDDEN_POS = new THREE.Vector3(0, -1.05, -0.75)
 const HIDDEN_ROT = -1.1
 
 const CONTENT_W = SCREEN_W - 0.04
+
+// Fit envelope for the presented console: chassis plus side grips, and the tilt that brings its
+// bottom edge (the key row) nearer the eye than the anchor point — those corners clip first.
+const FIT_W = BODY_W + 0.02
+const FIT_NEAR = (BODY_H / 2) * Math.sin(-SHOWN_ROT)
 
 export function ArcDock() {
   const dockOpen = useImmersiveStore((s) => s.dockOpen)
@@ -88,13 +95,25 @@ export function ArcDock() {
     return () => clearTimeout(t)
   }, [dockOpen])
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const g = rig.current
     if (!g) return
     const k = 1 - Math.exp(-(dockOpen ? 9 : 7) * delta)
     g.position.lerp(dockOpen ? SHOWN_POS : HIDDEN_POS, k)
     const targetRot = dockOpen ? SHOWN_ROT : HIDDEN_ROT
     g.rotation.x += (targetRot - g.rotation.x) * k
+    // Scaled about the rig's own origin, so the console keeps its place below gaze and only
+    // narrows. Per frame: tracks resize/rotation and the wheel-zoom fov.
+    const cam = state.camera as THREE.PerspectiveCamera
+    g.scale.setScalar(
+      fitScale({
+        vFov: cam.fov,
+        aspect: cam.aspect,
+        distance: -SHOWN_POS.z,
+        width: FIT_W,
+        nearOffset: FIT_NEAR,
+      })
+    )
   })
 
   const tabActive = (id: DockTab) => dockOpen && powered && dockTab === id && !modal

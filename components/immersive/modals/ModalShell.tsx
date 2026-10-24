@@ -1,7 +1,7 @@
 // Shared in-scene modal slab: a camera-anchored projection panel with phosphor frame, header,
 // close control, and footer hints. Spawns with a scale-pop; Esc, Backspace (dock closed), the
 // X, and a genuine tap on the space around the slab all close via the caller-provided handler
-// so the URL stays canonical.
+// so the URL stays canonical. The slab shrinks to fit narrow (portrait) views — see fit.ts.
 
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
@@ -11,6 +11,7 @@ import { WindfoilText } from '../text/WindfoilText'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
 import { playSound } from '@/lib/immersive/audio'
+import { fitScale } from '@/lib/immersive/fit'
 
 export function stopLook(e: ThreeEvent<PointerEvent>): void {
   e.stopPropagation()
@@ -21,6 +22,8 @@ export const MODAL_W = 1.72
 export const MODAL_H = 1.04
 /** Content area inset from the slab edges. */
 export const MODAL_PAD = 0.07
+/** Camera → slab distance, metres. */
+const MODAL_DIST = 1.5
 
 export function ModalShell({
   title,
@@ -45,14 +48,23 @@ export function ModalShell({
   // tap-away tracking: pointerdown on the catcher plane records the screen position; the
   // window-level pointerup decides tap vs camera-look drag by pixel travel
   const tapStart = useRef<{ x: number; y: number } | null>(null)
+  // Callers pass a fresh onClose closure every render (page turns, film frames, selection
+  // changes). Reading it through a ref keeps the listeners below bound once for the slab's life
+  // instead of re-subscribing — and re-running the mount effect — on every parent render.
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
 
+  // 'open' plays exactly once per slab mount.
   useEffect(() => {
     playSound('open')
+  }, [])
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault()
         playSound('close')
-        onClose()
+        onCloseRef.current()
         return
       }
       // Backspace backs out too — but never while the dock is open (its SEARCH field and other
@@ -60,12 +72,12 @@ export function ModalShell({
       if (e.key === 'Backspace' && !useImmersiveStore.getState().dockOpen) {
         e.preventDefault()
         playSound('close')
-        onClose()
+        onCloseRef.current()
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  }, [])
 
   // The catcher's own pointerup can be swallowed (pointer capture, slab handlers), so the tap
   // is resolved at window level: under ~6px of travel = a genuine tap, anything more is a look.
@@ -77,18 +89,27 @@ export function ModalShell({
       const travel = Math.hypot(e.clientX - start.x, e.clientY - start.y)
       if (travel < 6) {
         playSound('close')
-        onClose()
+        onCloseRef.current()
       }
     }
     window.addEventListener('pointerup', onUp)
     return () => window.removeEventListener('pointerup', onUp)
-  }, [onClose])
+  }, [])
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const g = rig.current
     if (!g) return
     scale.current += (1 - scale.current) * (1 - Math.exp(-12 * delta))
-    g.scale.setScalar(scale.current)
+    // Fit is recomputed per frame: it tracks resizes/rotation and the wheel-zoom fov for free.
+    const cam = state.camera as THREE.PerspectiveCamera
+    const fit = fitScale({
+      vFov: cam.fov,
+      aspect: cam.aspect,
+      distance: MODAL_DIST,
+      width,
+      height,
+    })
+    g.scale.setScalar(scale.current * fit)
   })
 
   const hw = width / 2
@@ -105,7 +126,7 @@ export function ModalShell({
         <planeGeometry args={[14, 9]} />
         <meshBasicMaterial colorWrite={false} depthWrite={false} transparent />
       </mesh>
-      <group position={[0, 0.02, -1.5]}>
+      <group position={[0, 0.02, -MODAL_DIST]}>
         <group ref={rig} scale={0.6}>
           {/* backdrop — stops R3F propagation so panel clicks never reach the catcher (the
               camera-rig's raw DOM listener still sees them, so look-drags over the slab work) */}

@@ -225,5 +225,9 @@ export function createTextMesh(
   mesh.wfOpacity = opacity
   mesh.wfReveal = reveal
   mesh.frustumCulled = true
+  // Text is never a hit target (interactive UI carries its own hit planes), and the base unit
+  // quad would give wrong hits anyway — skip it so R3F doesn't raycast every text block on every
+  // pointermove.
+  mesh.raycast = () => null
   return mesh
 }

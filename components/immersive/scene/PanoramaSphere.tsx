@@ -1,5 +1,6 @@
 // 360 equirect panorama on an inverted sphere, with crossfade between worlds and a slow idle
-// drift. Signals sceneReady to the store when the first texture is live (boot gate).
+// drift. Signals sceneReady to the store when the first texture is live (boot gate) — or when it
+// has definitively failed, so a dead image can never strand the boot overlay.
 
 import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
@@ -9,6 +10,10 @@ import { worldById } from '@/lib/immersive/worlds'
 
 const RADIUS = 60
 const FADE_SPEED = 1.6 // opacity units per second
+/** Ceiling on the idle spin (rad/s) — 0.2°/s. Faster reads as a screensaver, not a place. */
+const MAX_DRIFT = (0.2 * Math.PI) / 180
+/** Pause before the single retry of a failed panorama load, ms. */
+const RETRY_DELAY_MS = 800
 
 interface Layer {
   texture: THREE.Texture
@@ -27,6 +32,17 @@ async function loadPanorama(url: string): Promise<THREE.Texture> {
   return tex
 }
 
+/** One retry covers a transient network blip; a second failure is final for this world. */
+async function loadPanoramaWithRetry(url: string): Promise<THREE.Texture> {
+  try {
+    return await loadPanorama(url)
+  } catch (err) {
+    console.warn('[panorama] load failed, retrying once:', url, err)
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+    return loadPanorama(url)
+  }
+}
+
 export function PanoramaSphere() {
   const worldId = useImmersiveStore((s) => s.worldId)
   const setSceneReady = useImmersiveStore((s) => s.setSceneReady)
@@ -42,7 +58,7 @@ export function PanoramaSphere() {
   useEffect(() => {
     let live = true
     if (front?.url === world.panorama) return
-    loadPanorama(world.panorama).then(
+    loadPanoramaWithRetry(world.panorama).then(
       (texture) => {
         if (!live) {
           texture.dispose()
@@ -58,7 +74,13 @@ export function PanoramaSphere() {
         fading.current = true
         setSceneReady(true)
       },
-      (err) => console.error('[panorama] load failed:', err)
+      (err) => {
+        if (!live) return
+        // Dark fallback: no sky layer — the canvas's near-black clear stands in (or the previous
+        // world stays up on a switch). Still release the boot gate; the next switch loads anew.
+        console.error('[panorama] load failed twice, continuing without it:', err)
+        setSceneReady(true)
+      }
     )
     return () => {
       live = false
@@ -67,7 +89,9 @@ export function PanoramaSphere() {
   }, [world.panorama, setSceneReady])
 
   useFrame((_, delta) => {
-    if (group.current && !reducedMotion) group.current.rotation.y += world.drift * delta * 10
+    if (group.current && !reducedMotion) {
+      group.current.rotation.y += Math.min(world.drift, MAX_DRIFT) * delta
+    }
     if (fading.current && frontMat.current) {
       frontMat.current.opacity = Math.min(frontMat.current.opacity + FADE_SPEED * delta, 1)
       if (frontMat.current.opacity >= 1) {

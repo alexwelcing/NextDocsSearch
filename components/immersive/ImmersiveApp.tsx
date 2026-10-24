@@ -5,8 +5,9 @@
 import { Component, type ReactNode, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { useImmersiveStore } from '@/stores/immersiveStore'
-import { routeToState } from '@/lib/immersive/navigation'
+import { storedWorld, useImmersiveStore } from '@/stores/immersiveStore'
+import { routeToState, worldFromQuery } from '@/lib/immersive/navigation'
+import { qualityHint } from '@/lib/immersive/fit'
 import { loadFontAtlas } from '@/lib/windfoil/atlas'
 import { loadArchive } from '@/lib/immersive/archive'
 import { BootSequence } from './BootSequence'
@@ -42,6 +43,7 @@ export default function ImmersiveApp() {
   const setQuality = useImmersiveStore((s) => s.setQuality)
   const setModal = useImmersiveStore((s) => s.setModal)
   const setDockTab = useImmersiveStore((s) => s.setDockTab)
+  const setWorld = useImmersiveStore((s) => s.setWorld)
   const router = useRouter()
 
   // WebGPU gate. Deliberately no requestAdapter probe here: a probe adapter that never creates a
@@ -50,6 +52,11 @@ export default function ImmersiveApp() {
   // authoritative probe, and its failure downgrades to the fallback (see ImmersiveCanvas onError).
   useEffect(() => {
     const gpu = (navigator as Navigator & { gpu?: unknown }).gpu
+    // Resolve the starting world BEFORE the canvas mounts so the first panorama fetched is the
+    // right one: ?world=<id> wins, then the visitor's last choice. window.location rather than
+    // router.asPath — a statically optimized page hydrates without its query.
+    const world = worldFromQuery(window.location.search) ?? storedWorld()
+    if (world) setWorld(world)
     setBootPhase(gpu ? 'booting' : 'unsupported')
     if (gpu) {
       // Warm the critical caches behind the boot sequence so the dock and reader open instantly.
@@ -58,7 +65,7 @@ export default function ImmersiveApp() {
       loadFontAtlas('share-tech-mono').catch(swallow)
       loadArchive().catch(swallow)
     }
-  }, [setBootPhase])
+  }, [setBootPhase, setWorld])
 
   // Reduced motion + coarse quality heuristics.
   useEffect(() => {
@@ -66,9 +73,13 @@ export default function ImmersiveApp() {
     const apply = () => setReducedMotion(mq.matches)
     apply()
     mq.addEventListener('change', apply)
-    const mobile = window.matchMedia('(max-width: 768px)').matches
-    const smallHeap = (navigator as { deviceMemory?: number }).deviceMemory
-    if (mobile || (smallHeap !== undefined && smallHeap <= 4)) setQuality('low')
+    const hint = qualityHint({
+      coarsePointer: window.matchMedia('(pointer: coarse)').matches,
+      screenWidth: window.screen?.width ?? 0,
+      devicePixelRatio: window.devicePixelRatio || 1,
+      deviceMemory: (navigator as { deviceMemory?: number }).deviceMemory,
+    })
+    if (hint === 'low') setQuality('low')
     return () => mq.removeEventListener('change', apply)
   }, [setReducedMotion, setQuality])
 
@@ -78,12 +89,13 @@ export default function ImmersiveApp() {
       const state = routeToState(url)
       setModal(state.modal)
       if (state.dockTab) setDockTab(state.dockTab)
+      if (state.world) setWorld(state.world)
     }
     apply(router.asPath)
     router.events.on('routeChangeComplete', apply)
     return () => router.events.off('routeChangeComplete', apply)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.events, setModal, setDockTab])
+  }, [router.events, setModal, setDockTab, setWorld])
 
   // Scene active: lock page scroll and hide the SEO layer (crawlers without WebGPU never get here,
   // so the server-rendered content stays their whole page).

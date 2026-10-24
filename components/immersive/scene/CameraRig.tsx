@@ -1,6 +1,7 @@
 // First-person look controls for the 360 scene: pointer/touch drag with inertia, wheel FOV zoom,
-// and a gentle idle drift after inactivity. The camera stays at the origin — the world turns
-// around the viewer.
+// and a gentle idle drift after inactivity — never while a reader/modal or the dock is up, since
+// keyboard reading (page turns, typing a query) doesn't count as look input. The camera stays at
+// the origin — the world turns around the viewer.
 
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
@@ -96,10 +97,12 @@ export function CameraRig() {
       const decay = Math.exp(-DAMPING * delta)
       s.velYaw *= decay
       s.velPitch *= decay
-      // idle drift
-      if (!reducedMotion && performance.now() - s.lastInputAt > IDLE_AFTER_MS) {
-        s.yaw += IDLE_DRIFT * delta
-      }
+      // idle drift — held off (and its idle timer kept fresh) while UI is up, so closing a long
+      // read doesn't start the room turning that same instant
+      const now = performance.now()
+      const { modal, dockOpen } = useImmersiveStore.getState()
+      if (modal || dockOpen) s.lastInputAt = now
+      else if (!reducedMotion && now - s.lastInputAt > IDLE_AFTER_MS) s.yaw += IDLE_DRIFT * delta
     }
     camera.rotation.set(s.pitch, s.yaw, 0, 'YXZ')
     if (Math.abs(camera.fov - s.targetFov) > 0.05) {
