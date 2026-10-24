@@ -3,17 +3,23 @@
 // without one stays lexical-only and is reported here. Emits content-hashed assets into
 // public/search/ plus lib/generated/search-manifest.json, which the Ship runtime imports.
 //
-//   pnpm exec tsx scripts/generate-search-index.ts [--dry-run]
+//   pnpm exec tsx scripts/generate-search-index.ts [--dry-run] [--embed-input <file.jsonl>]
+//
+// --embed-input writes {id, hash, text} per chunk: the exact text an embedding job encodes. It
+// returns data/search/<model>.bin plus <model>.json ({model, dims, quant: 'int8-row' | 'f32',
+// chunkerVersion, hashes}; see VectorSourceManifest), and the next run joins it.
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { buildSearchIndex, emitSearchIndex } from '../lib/retrieval/build'
+import { buildSearchIndex, embedInputs, emitSearchIndex } from '../lib/retrieval/build'
 import { readBuildInput } from '../lib/retrieval/nodeSources'
 
 const ROOT = process.cwd()
 const OUT_DIR = path.join(ROOT, 'public', 'search')
 const MANIFEST = path.join(ROOT, 'lib', 'generated', 'search-manifest.json')
 const dryRun = process.argv.includes('--dry-run')
+const embedInputFlag = process.argv.indexOf('--embed-input')
+const embedInputPath = embedInputFlag >= 0 ? process.argv[embedInputFlag + 1] : undefined
 
 async function main() {
   const started = Date.now()
@@ -46,6 +52,13 @@ async function main() {
     }
     fs.mkdirSync(path.dirname(MANIFEST), { recursive: true })
     fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`)
+  }
+  if (embedInputFlag >= 0) {
+    if (!embedInputPath) throw new Error('--embed-input needs a file path')
+    const lines = embedInputs(built.chunks).map((line) => JSON.stringify(line))
+    fs.mkdirSync(path.dirname(path.resolve(ROOT, embedInputPath)), { recursive: true })
+    fs.writeFileSync(path.resolve(ROOT, embedInputPath), `${lines.join('\n')}\n`)
+    console.log(`[search-index] wrote ${lines.length} embed inputs to ${embedInputPath}`)
   }
 
   const counts = [...kinds].map(([kind, count]) => `${count} ${kind}`).join(', ')

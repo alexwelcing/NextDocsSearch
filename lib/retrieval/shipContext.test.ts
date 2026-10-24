@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { LocalArchiveQueryResult } from '../chat/archiveQuery'
-import { ABOUT_PANEL } from '../immersive/operatorData'
-import type { VectorSource } from './build'
+import { ABOUT_PANEL, OPERATOR_PANELS } from '../immersive/operatorData'
+import { buildSearchIndex, emitSearchIndex, type VectorSource } from './build'
 import { CHUNKER_VERSION } from './chunk'
 import { resetSearchIndexCache } from './load'
+import { readBuildRecords } from './nodeSources'
 import { SHIP_CONTEXT_LIMITS, getShipContext } from './shipContext'
 import { FIXTURE_ARCHIVE, FIXTURE_RECORDS, fixtureIndex, randomVector, seeded } from './testing'
 import type { RetrievalResult } from './types'
@@ -160,6 +161,42 @@ describe('getShipContext lexical', () => {
     await getShipContext('quantum', { fetchAsset: flaky }, { manifest })
     await getShipContext('agents', { fetchAsset: flaky }, { manifest })
     expect(calls.filter((path) => path === manifest.assets.chunks)).toHaveLength(1)
+  })
+})
+
+describe('getShipContext on the real corpus', () => {
+  it('only ever emits real article slugs or operator ids, within the bounds', async () => {
+    const records = readBuildRecords()
+    const built = await buildSearchIndex({
+      records,
+      operatorPanels: Object.values(OPERATOR_PANELS),
+    })
+    const { assets, manifest } = await emitSearchIndex(built)
+    const files = new Map(assets.map((asset) => [asset.path, asset.bytes]))
+    const fetchAsset = async (path: string) => new Response(files.get(path) ?? null)
+    const real = new Set([
+      ...records.map((record) => record.slug),
+      'about',
+      'current-work',
+      'pitch',
+    ])
+    for (const query of [
+      'who is alex welcing',
+      'the cartography series',
+      'EU AI Act deadlines',
+      'raft leader election',
+      'stories about grief',
+    ]) {
+      const result = await getShipContext(query, { fetchAsset }, { manifest })
+      expect(result.mode).toBe('lexical')
+      expect(result.instantResults.length).toBeGreaterThan(0)
+      expect(result.context.length).toBeLessThanOrEqual(SHIP_CONTEXT_LIMITS.contextChars)
+      const slugs = [
+        ...result.instantResults.map((item) => item.slug),
+        ...result.context.split('\n\n---\n\n').map((part) => /^Slug: (.*)$/m.exec(part)?.[1]),
+      ]
+      for (const slug of slugs) expect(real.has(slug as string), `${query}: ${slug}`).toBe(true)
+    }
   })
 })
 

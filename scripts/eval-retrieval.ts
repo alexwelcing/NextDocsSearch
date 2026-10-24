@@ -3,11 +3,13 @@
 // with article-level Recall@5, MRR@10 and nDCG@10 on every benchmark.
 //
 //   pnpm exec tsx scripts/eval-retrieval.ts [--queries eval/x.jsonl]... [--plugin mod.ts]...
-//     [--out eval/results/<date>.json | --out -] [--gate 'ship-lexical>=records']...
+//     [--pseudo] [--out eval/results/<date>.json | --out -] [--gate 'ship-lexical>=records']...
 //
-// Built-in configurations: records (today's searchRecords), bm25 (chunk BM25 only),
-// ship-lexical (getShipContext without an embedder: BM25 + records under RRF), and for each
-// vector set whose model has a plugin embedder: dense:<model> and hybrid:<model>.
+// Built-in configurations: records (today's searchRecords over the article manifest),
+// records+operators (the same over the operator panels too, as Ship ranks them), bm25 (chunk
+// BM25 only), ship-lexical (getShipContext without an embedder: BM25 + records under RRF), and
+// for each vector set whose model has a plugin embedder: dense:<model> and hybrid:<model>.
+// --pseudo adds a known-item benchmark (each article's description as its query).
 // Plugins (see EvalPlugin in lib/retrieval/eval.ts) add models, configurations and benchmarks.
 
 import fs from 'node:fs'
@@ -22,6 +24,7 @@ import {
   METRICS,
   evaluate,
   parseQueries,
+  pseudoQueries,
   type Benchmark,
   type ConfigurationReport,
   type EvalConfiguration,
@@ -31,7 +34,7 @@ import {
 import { loadCoreIndex, loadDenseIndex } from '../lib/retrieval/load'
 import { readBuildInput } from '../lib/retrieval/nodeSources'
 import { RRF_WEIGHTS } from '../lib/retrieval/rrf'
-import { getShipContext } from '../lib/retrieval/shipContext'
+import { getShipContext, operatorRecords } from '../lib/retrieval/shipContext'
 
 const ROOT = process.cwd()
 
@@ -92,6 +95,7 @@ async function main() {
   }
   const core = await loadCoreIndex(manifest, fetchAsset)
   const records = await new FsManifestSource().load()
+  const withOperators = [...records, ...operatorRecords(core)]
   const context: EvalContext = { records, built, manifest, core, fetchAsset }
   const slugOfChunk = (id: number) => core.docs[core.chunks[id].doc].slug
   const embedders = Object.assign(
@@ -104,6 +108,11 @@ async function main() {
       name: 'records',
       description: "today's searchRecords over the article manifest (FIND / Ship lexical)",
       search: (q, k) => searchRecords(records, q, k).map((hit) => hit.record.slug),
+    },
+    {
+      name: 'records+operators',
+      description: 'searchRecords over the article manifest plus the three operator panels',
+      search: (q, k) => searchRecords(withOperators, q, k).map((hit) => hit.record.slug),
     },
     {
       name: 'bm25',
@@ -177,6 +186,9 @@ async function main() {
     name: path.basename(file).replace(/\.jsonl$/, ''),
     queries: parseQueries(fs.readFileSync(path.resolve(ROOT, file), 'utf8'), file),
   }))
+  if (process.argv.includes('--pseudo')) {
+    benchmarks.push({ name: 'pseudo-description', queries: pseudoQueries(core.docs) })
+  }
   for (const plugin of plugins) benchmarks.push(...((await plugin.benchmarks?.(context)) ?? []))
 
   const results: Record<string, ConfigurationReport[]> = {}

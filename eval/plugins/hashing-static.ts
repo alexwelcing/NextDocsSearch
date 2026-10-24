@@ -4,7 +4,7 @@
 // the template for a research program's plugin; it is not a retriever worth shipping.
 //
 //   pnpm exec tsx scripts/eval-retrieval.ts --plugin eval/plugins/hashing-static.ts --out -
-import { embedText } from '../../lib/retrieval/chunk'
+import { embedInputs } from '../../lib/retrieval/build'
 import type { EvalPlugin } from '../../lib/retrieval/eval'
 import { normalizedTokens } from '../../lib/retrieval/tokenize'
 
@@ -38,8 +38,8 @@ function embed(text: string): Float32Array {
 const plugin: EvalPlugin = {
   name: 'hashing-static',
   vectorSources({ built }) {
-    const { docs, chunks, chunkerVersion } = built.chunks
-    const texts = chunks.map((chunk) => embedText(docs[chunk.doc].title, chunk.heading, chunk.text))
+    const { chunks, chunkerVersion } = built.chunks
+    const texts = embedInputs(built.chunks).map((line) => line.text)
     const df = new Map<string, number>()
     for (const text of texts) {
       for (const token of new Set(normalizedTokens(text))) df.set(token, (df.get(token) ?? 0) + 1)

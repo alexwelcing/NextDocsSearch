@@ -49,6 +49,26 @@ export function parseQueries(jsonl: string, source = 'queries'): EvalQuery[] {
     })
 }
 
+/**
+ * Known-item pseudo-queries: each article's description should retrieve that article. A cheap
+ * corpus-wide sanity check beside the owner queries, not a substitute for them (descriptions
+ * are indexed verbatim in the card chunks, so lexical rankers find them easily).
+ */
+export function pseudoQueries(
+  docs: { slug: string; description: string; type?: string }[],
+  minChars = 60
+): EvalQuery[] {
+  return docs
+    .filter((doc) => doc.type !== 'operator' && doc.description.trim().length >= minChars)
+    .sort((a, b) => a.slug.localeCompare(b.slug))
+    .map((doc) => ({
+      id: `pseudo:${doc.slug}`,
+      query: doc.description.trim(),
+      relevant: { [doc.slug]: 1 },
+      tags: ['pseudo'],
+    }))
+}
+
 function uniqueTop(ranked: string[], k: number): string[] {
   return [...new Set(ranked)].slice(0, k)
 }

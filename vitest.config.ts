@@ -7,6 +7,10 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['lib/archive/**/*.test.ts', 'lib/retrieval/**/*.test.ts', 'components/immersive/dock/tabs/*.test.tsx'],
+    include: [
+      'lib/archive/**/*.test.ts',
+      'lib/retrieval/**/*.test.ts',
+      'components/immersive/dock/tabs/*.test.tsx',
+    ],
   },
 })

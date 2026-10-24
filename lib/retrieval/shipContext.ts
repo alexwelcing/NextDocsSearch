@@ -179,7 +179,7 @@ function recordsOnly(
 const operatorCache = new WeakMap<CoreIndex, ArchiveRecord[]>()
 
 /** Operator docs as records, so record-level ranking covers the same docs as the index. */
-function operatorRecords(core: CoreIndex): ArchiveRecord[] {
+export function operatorRecords(core: CoreIndex): ArchiveRecord[] {
   let records = operatorCache.get(core)
   if (!records) {
     records = core.docs

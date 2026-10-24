@@ -8,6 +8,7 @@ import {
   cardChunk,
   chunkBlocks,
   chunkHash,
+  embedText,
   operatorBlocks,
   operatorTarget,
   sha256Hex,
@@ -236,6 +237,26 @@ export async function buildSearchIndex(input: BuildInput): Promise<BuiltIndex> {
     hashes,
     warnings,
   }
+}
+
+/** One line of the embedding job's input: the exact text a document vector must encode. */
+export interface EmbedInput {
+  id: string
+  /** The chunk hash the resulting vector row is keyed by in data/search/<model>.json. */
+  hash: string
+  text: string
+}
+
+/**
+ * What an external embedding job (a Workers AI batch, a static model's trainer) must embed per
+ * chunk; chunkHash(text) is always the chunk's hash, so its vector rows join back by hash.
+ */
+export function embedInputs(file: ChunksFile): EmbedInput[] {
+  return file.chunks.map((chunk) => ({
+    id: chunk.id,
+    hash: chunk.hash,
+    text: embedText(file.docs[chunk.doc].title, chunk.heading, chunk.text),
+  }))
 }
 
 export interface EmittedAsset {

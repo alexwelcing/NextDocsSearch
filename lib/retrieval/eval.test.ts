@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { OPERATOR_DOCS } from './chunk'
-import { evaluate, mrrAt, ndcgAt, parseQueries, recallAt } from './eval'
+import { evaluate, mrrAt, ndcgAt, parseQueries, pseudoQueries, recallAt } from './eval'
 import { readBuildRecords } from './nodeSources'
 
 describe('retrieval metrics', () => {
@@ -68,6 +68,22 @@ describe('retrieval metrics', () => {
     expect(report.byTag.t1['mrr@10']).toBe(1)
     expect(report.byTag.t2['mrr@10']).toBeCloseTo(1 / 3)
     expect(report.queries.map((query) => query.firstRelevant)).toEqual([1, 3])
+  })
+})
+
+describe('pseudoQueries', () => {
+  it('turns long article descriptions into known-item queries, skipping operator docs', () => {
+    const long = 'A description long enough to stand in for a reader query about the piece.'
+    const queries = pseudoQueries([
+      { slug: 'b', description: long },
+      { slug: 'a', description: `  ${long}  ` },
+      { slug: 'short', description: 'Too short.' },
+      { slug: 'about', description: long, type: 'operator' },
+    ])
+    expect(queries).toEqual([
+      { id: 'pseudo:a', query: long, relevant: { a: 1 }, tags: ['pseudo'] },
+      { id: 'pseudo:b', query: long, relevant: { b: 1 }, tags: ['pseudo'] },
+    ])
   })
 })
 

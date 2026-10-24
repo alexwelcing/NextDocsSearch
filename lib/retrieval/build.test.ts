@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { OPERATOR_PANELS } from '../immersive/operatorData'
-import { buildSearchIndex, emitSearchIndex, type VectorSource } from './build'
-import { CHUNKER_VERSION } from './chunk'
+import { buildSearchIndex, embedInputs, emitSearchIndex, type VectorSource } from './build'
+import { CHUNKER_VERSION, chunkHash } from './chunk'
 import { decodeInt8Rows, dequantizeRow, encodeInt8Rows, quantizeRows } from './quantize'
 import { FIXTURE_RECORDS, cosine, randomVector, seeded } from './testing'
 
@@ -89,6 +89,15 @@ describe('buildSearchIndex vector join', () => {
     expect(warnings).toMatch(/duplicate model/)
     expect(warnings).toMatch(/stale: built for chunker v0/)
     expect(warnings).toMatch(/stale: no chunk matched/)
+  })
+
+  it('exports the exact embed text each chunk hash is keyed by', async () => {
+    const { chunks } = await buildSearchIndex(input)
+    const lines = embedInputs(chunks)
+    expect(lines.map((line) => line.id)).toEqual(chunks.chunks.map((chunk) => chunk.id))
+    for (const line of lines) expect(await chunkHash(line.text)).toBe(line.hash)
+    const card = lines.find((line) => line.id === 'quantum-key-distribution#card')
+    expect(card?.text.split('\n')[0]).toBe('Quantum Key Distribution')
   })
 
   it('stays lexical-only, with a warning, when no vectors exist', async () => {
