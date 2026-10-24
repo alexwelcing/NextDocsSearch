@@ -4,22 +4,22 @@ import { createClient } from '@supabase/supabase-js'
 import { Configuration, OpenAIApi, type CreateEmbeddingResponse } from 'openai-edge'
 import { ApplicationError, UserError } from '@/lib/errors';
 import articleManifest from '@/lib/generated/article-manifest.json'
-import { generateHuggingFaceChat, generateHuggingFaceChatStream, hasHfToken, type HfChatMessage } from '@/lib/ai/huggingface'
+import { generateHuggingFaceChatStream, hasHfToken } from '@/lib/ai/huggingface'
 import { extractShipSignals, shipPersona } from '@/lib/ai/shipPersona';
 import { resolveShipTrick, type ResolvedShipTrick } from '@/lib/ai/shipTricks'
 import { queryLocalArchive, type LocalArchiveQueryResult } from '@/lib/chat/archiveQuery'
 import {
   buildStructuredAnswer,
-  parseStructuredAnswerResponse,
   type InstantAnswerItem,
   type ShipAnswerMode,
   type ShipStreamEvent,
 } from '@/lib/chat/shipAnswer'
-
-interface ChatHistoryEntry {
-  question?: string
-  response?: string
-}
+import {
+  ARCHIVE_FALLBACK_LEAD,
+  SYSTEM_FAULT_LEAD,
+  buildHistoryMessages,
+  type ChatHistoryEntry,
+} from '@/lib/chat/shipHistory'
 
 interface QuestContext {
   currentQuest?: {
@@ -439,7 +439,7 @@ const EMPTY_LOCAL_ARCHIVE: LocalArchiveQueryResult = {
 function buildLocalFallbackAnswer(query: string, instantResults: InstantAnswerItem[]): string {
   if (!instantResults.length) {
     return oneLine`
-      Generative link offline — and the archive index has no strong match for "${query}".
+      ${ARCHIVE_FALLBACK_LEAD} — and the archive index has no strong match for "${query}".
       Try different terms, or open the ARCHIVE tab to browse the records directly.`
   }
 
@@ -449,7 +449,7 @@ function buildLocalFallbackAnswer(query: string, instantResults: InstantAnswerIt
   })
 
   return [
-    'Generative link offline — answering from the archive index.',
+    `${ARCHIVE_FALLBACK_LEAD} — answering from the archive index.`,
     '',
     `Closest records on "${query}":`,
     ...lines,
@@ -568,92 +568,6 @@ function buildUserPrompt(
   `
 }
 
-function buildStructuredAnswerPrompt(
-  question: string,
-  answer: string,
-  instantResults: InstantAnswerItem[],
-  mode: ShipAnswerMode,
-  trickLabel?: string,
-  articleContext?: VectorSearchRequest['articleContext'],
-): string {
-  const sources = instantResults
-    .slice(0, 5)
-    .map((item, index) => `${index + 1}. ${item.slug} | ${item.title} | ${item.domains.join(', ') || 'unknown domain'}`)
-    .join('\n')
-
-  return codeBlock`
-    Transform the answer below into valid JSON only.
-
-    User question:
-    ${question}
-
-    Answer:
-    ${answer}
-
-    Candidate source slugs:
-    ${sources || 'none'}
-
-    Current article context:
-    ${articleContext?.title ? `${articleContext.title} | ${articleContext.slug || 'unknown'} | ${articleContext.articleType || 'unknown'}` : 'none'}
-
-    Active mode:
-    ${mode}${trickLabel ? ` (${trickLabel})` : ''}
-
-    Return exactly one JSON object with this shape:
-    {
-      "mode": "default" | "story" | "brief" | "signal" | "map" | "roast" | "compare" | "mission",
-      "headline": string,
-      "kicker": string,
-      "summary": string,
-      "quickFacts": string[],
-      "suggestedActions": string[],
-      "sections": [
-        {
-          "title": string,
-          "body": string,
-          "tone": "summary" | "insight" | "detail" | "next-step",
-          "sourceSlug": string | null
-        }
-      ],
-      "diagram": {
-        "title": string,
-        "nodes": [
-          {
-            "label": string,
-            "detail": string,
-            "weight": number,
-            "tone": "core" | "supporting" | "source",
-            "sourceSlug": string | null
-          }
-        ]
-      }
-    }
-
-    Rules:
-    - JSON only. No markdown fences. No explanation.
-    - The mode field must equal ${mode}.
-    - headline must be 3 to 7 words, plain text only.
-    - kicker must be 1 short sentence, plain text only.
-    - Keep summary to 1 sentence.
-    - summary must be plain text only, no labels like Verdict or Executive Brief.
-    - Keep quickFacts to at most 4 items.
-    - quickFacts must be plain text statements, not bullets or labels.
-    - Keep suggestedActions to at most 3 items.
-    - Keep sections to at most 4 items.
-    - Each section title must be 2 to 5 words, plain text only.
-    - Keep diagram nodes to at most 5 items.
-    - Each diagram node label must be 1 to 4 words, plain text only.
-    - Only use sourceSlug values from the candidate list.
-    - Ignore presentation wrappers from the original answer. Extract the semantic content only.
-    - If mode is story, prefer sections titled Character Pressure, World Rule, Hidden Assumption, Next Scene.
-    - If mode is story, the diagram should feel like a narrative map: premise plus 3 to 4 beats or story forces.
-    - If mode is map, prefer sections titled Product, Technical, Narrative.
-    - If mode is brief, prefer a decisive headline and compact executive framing.
-    - If mode is roast, keep the critique useful and evidence-grounded, not theatrical.
-    - If mode is mission, make suggestedActions concrete and immediate.
-  `
-}
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method !== 'POST') {
@@ -686,23 +600,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).send(trickContext.helpResponse)
     }
 
-    const historyMessages: HfChatMessage[] = Array.isArray(history)
-      ? history
-        .slice(-shipPersona.memory.maxInteractions)
-        .flatMap((entry): HfChatMessage[] => {
-          const messages: HfChatMessage[] = []
-
-          if (entry.question) {
-            messages.push({ role: 'user', content: entry.question })
-          }
-
-          if (entry.response) {
-            messages.push({ role: 'assistant', content: entry.response })
-          }
-
-          return messages
-        })
-      : []
+    const historyMessages = buildHistoryMessages(history)
 
     // both retrieval layers are best-effort — a failure in either must never take down the
     // whole query (this used to hard-500 when the local archive walk hit a missing directory)
@@ -824,42 +722,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const finalRawAnswer = streamedAnswer || generation.text
     const { cleanMessage, signals } = extractShipSignals(finalRawAnswer)
 
-    let structuredAnswer = buildStructuredAnswer(cleanMessage, answerMode)
+    // No client renders structuredAnswer yet, so it is built locally rather than with a second
+    // LLM call that held the UI in RECEIVING. The provider rides in the event, not a header:
+    // headers are already flushed once streaming starts.
+    const structuredAnswer = buildStructuredAnswer(cleanMessage, answerMode)
 
-    try {
-      const structuredGeneration = await generateHuggingFaceChat({
-        messages: [
-          {
-            role: 'system',
-            content: 'You convert answers into strict JSON for a UI renderer. Respond with JSON only.',
-          },
-          {
-            role: 'user',
-            content: buildStructuredAnswerPrompt(
-              sanitizedQuery,
-              cleanMessage,
-              instantResults,
-              answerMode,
-              trickContext.trick?.label,
-              articleContext,
-            ),
-          },
-        ],
-        maxNewTokens: 700,
-        temperature: 0.15,
-      })
-
-      structuredAnswer = parseStructuredAnswerResponse(
-        structuredGeneration.text,
-        cleanMessage,
-        instantResults,
-        answerMode,
-      )
-    } catch (error) {
-      console.error('[vector-search] Structured synthesis fallback:', error)
-    }
-
-    res.setHeader('X-Ship-AI-Provider', `huggingface:${generation.model}`)
     writeStreamEvent(res, {
       type: 'final-answer',
       question: sanitizedQuery,
@@ -896,8 +763,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200)
     res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8')
     res.setHeader('Cache-Control', 'no-store')
-    const notice =
-      'Ship systems fault — the archive index is unreachable right now. Try again in a moment, or browse the ARCHIVE tab directly.'
+    const notice = `${SYSTEM_FAULT_LEAD} — the archive index is unreachable right now. Try again in a moment, or browse the ARCHIVE tab directly.`
     writeStreamEvent(res, {
       type: 'final-answer',
       question: '',
