@@ -5,6 +5,7 @@
 
 import { spawn } from 'node:child_process'
 import fs from 'node:fs'
+import path from 'node:path'
 
 export const PHASES = ['pre', 'post'] as const
 export type Phase = (typeof PHASES)[number]
@@ -12,14 +13,24 @@ export type Phase = (typeof PHASES)[number]
 export type Step = () => void | Promise<void>
 
 const STEP_FILE = /^\d{2}-[a-z0-9-]+\.ts$/
+/** What a phase directory may hold besides steps: co-located tests, notes and dotfiles. */
+const NOT_A_STEP = /^\.|\.test\.ts$|\.md$/
 
-/** The step files of one phase directory, in run order. Anything not named NN-<name>.ts is skipped. */
+/**
+ * The step files of one phase directory, in run order. Anything that is not a test, a note or a
+ * dotfile must be named NN-<name>.ts: a misnamed step (`60-search_index.ts`, `060-x.ts`,
+ * `60-x.mjs`) throws instead of being skipped, since a skipped step lets the build pass without
+ * its output.
+ */
 export function listSteps(dir: string): string[] {
   if (!fs.existsSync(dir)) return []
-  return fs
-    .readdirSync(dir)
-    .filter((file) => STEP_FILE.test(file))
-    .sort()
+  const entries = fs.readdirSync(dir).filter((file) => !NOT_A_STEP.test(file))
+  const misnamed = entries.filter((file) => !STEP_FILE.test(file))
+  if (misnamed.length > 0) {
+    const files = misnamed.map((file) => path.join(dir, file)).join(', ')
+    throw new Error(`[steps] ${files}: a step must be named NN-<name>.ts (lowercase kebab-case)`)
+  }
+  return entries.sort()
 }
 
 /** Run a command from the repo root with inherited stdio; rejects on a non-zero exit. */

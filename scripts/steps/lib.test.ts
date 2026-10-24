@@ -2,19 +2,39 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { listSteps, run, type Step } from './lib'
 
 const STEPS_DIR = fileURLToPath(new URL('.', import.meta.url))
 
 describe('listSteps', () => {
-  it('returns NN-<name>.ts files in run order and skips everything else', () => {
+  const dirs: string[] = []
+  const phaseDir = (files: string[]) => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'steps-'))
-    for (const file of ['20-b.ts', '05-a.ts', '100-c.ts', 'lib.ts', '10-x.test.ts', 'README.md']) {
-      fs.writeFileSync(path.join(dir, file), '')
-    }
+    dirs.push(dir)
+    for (const file of files) fs.writeFileSync(path.join(dir, file), '')
+    return dir
+  }
+  afterEach(() => {
+    for (const dir of dirs.splice(0)) fs.rmSync(dir, { recursive: true, force: true })
+  })
+
+  it('returns NN-<name>.ts files in run order, ignoring tests, notes and dotfiles', () => {
+    const dir = phaseDir(['20-b.ts', '05-a.ts', '10-x.test.ts', 'README.md', '.DS_Store'])
     expect(listSteps(dir)).toEqual(['05-a.ts', '20-b.ts'])
-    fs.rmSync(dir, { recursive: true, force: true })
+  })
+
+  // A skipped step would let the build pass and ship without its output, so a bad name is fatal.
+  it.each([
+    '100-c.ts',
+    '060-c.ts',
+    '60-search_index.ts',
+    '60-searchIndex.ts',
+    '60-c.mjs',
+    'lib.ts',
+  ])('throws on the misnamed step %s instead of skipping it', (file) => {
+    const dir = phaseDir(['05-a.ts', file])
+    expect(() => listSteps(dir)).toThrow(path.join(dir, file))
   })
 
   it('treats a missing phase directory as no steps', () => {
