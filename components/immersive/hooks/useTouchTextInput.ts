@@ -2,7 +2,7 @@
 // each surface; this element exists so a tap can focus a real <input> and the OS keyboard opens.
 // While it has focus the native field owns editing (paste, composition, autocorrect) and every
 // edit flows back through onChange — surfaces skip their own character handling for events the
-// field `owns`.
+// field `owns`, and ignore keys typed into another surface's field (`isTouchTextTarget`).
 
 import { useCallback, useEffect, useRef, type RefObject } from 'react'
 
@@ -39,6 +39,14 @@ const GESTURE_MS = 1000
 const HIDDEN =
   'position:fixed;opacity:0;pointer-events:none;left:50%;bottom:0;height:1px;width:1px;'
 
+/** Marks every surface's hidden field, so one surface can skip keys typed into another's. */
+const FIELD_ATTR = 'data-touch-text-input'
+
+/** True when an event came from any surface's hidden field — that field's owner handles it. */
+export function isTouchTextTarget(e: Event): boolean {
+  return e.target instanceof Element && e.target.hasAttribute(FIELD_ATTR)
+}
+
 export function useTouchTextInput({
   active,
   value,
@@ -55,6 +63,7 @@ export function useTouchTextInput({
   onChangeRef.current = onChange
   const sanitizeRef = useRef(sanitize)
   sanitizeRef.current = sanitize
+  const composing = useRef(false)
 
   useEffect(() => {
     if (!active) return
@@ -67,16 +76,29 @@ export function useTouchTextInput({
     el.setAttribute('autocorrect', 'off')
     el.setAttribute('spellcheck', 'false')
     if (enterKeyHint) el.setAttribute('enterkeyhint', enterKeyHint)
+    el.setAttribute(FIELD_ATTR, '')
     el.style.cssText = HIDDEN
-    el.addEventListener('input', () => {
+    // Mid-composition (IME, Android word suggestions) the keyboard owns el.value — writing it
+    // garbles or duplicates text on Gboard/Samsung — so report the cleaned text as it is typed
+    // and write it back only once the composition settles.
+    const commit = () => {
       const clean = sanitizeRef.current ? sanitizeRef.current(el.value) : el.value
       const next = clean.slice(0, maxLength)
-      if (el.value !== next) el.value = next
+      if (!composing.current && el.value !== next) el.value = next
       onChangeRef.current(next)
+    }
+    el.addEventListener('compositionstart', () => {
+      composing.current = true
     })
+    el.addEventListener('compositionend', () => {
+      composing.current = false
+      commit()
+    })
+    el.addEventListener('input', commit)
     document.body.appendChild(el)
     inputRef.current = el
     return () => {
+      composing.current = false
       el.remove()
       inputRef.current = null
     }
@@ -84,7 +106,7 @@ export function useTouchTextInput({
 
   useEffect(() => {
     const el = inputRef.current
-    if (el && el.value !== value) el.value = value
+    if (el && !composing.current && el.value !== value) el.value = value
   }, [value, active])
 
   const focus = useCallback(() => {

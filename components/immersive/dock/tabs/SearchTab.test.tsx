@@ -2,10 +2,12 @@
 
 import { act, useEffect, type ComponentType, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
+import { Matrix4, Vector3, type InstancedMesh } from 'three'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ArchiveRecord } from '@/lib/archive'
 import { openModal } from '@/lib/immersive/navigation'
 import { useTouchTextInput, type TouchTextInput } from '../../hooks/useTouchTextInput'
+import type { Orb } from '../../game/SphereHunter'
 
 // Keep intrinsic mesh event handlers observable without mounting a WebGL renderer.
 // Strip graphics-only props so ReactDOM can render these presentation nodes cleanly.
@@ -14,7 +16,7 @@ vi.mock('react/jsx-dev-runtime', async (importOriginal) => {
   const jsxDEV: typeof runtime.jsxDEV = (type, props, key, isStatic, source, self) => {
     if (
       typeof type === 'string' &&
-      ['group', 'mesh', 'planeGeometry', 'meshBasicMaterial'].includes(type)
+      ['group', 'mesh', 'primitive', 'planeGeometry', 'meshBasicMaterial'].includes(type)
     ) {
       const { children, onPointerDown, onPointerOver, onPointerOut } = props as Record<
         string,
@@ -84,6 +86,12 @@ vi.mock('@/lib/immersive/audio', () => ({ playSound: vi.fn() }))
 vi.mock('@/lib/immersive/navigation', () => ({ openModal: vi.fn() }))
 vi.mock('@/lib/immersive/prefetch', () => ({ prefetchRecord: vi.fn() }))
 vi.mock('../DockKey', () => ({ stopLook: (event: Event) => event.stopPropagation() }))
+// Sphere Hunter (tested below): core three stands in for the WebGPU build, no render loop.
+vi.mock('three/webgpu', () => import('three'))
+vi.mock('@react-three/fiber', () => ({ useFrame: vi.fn() }))
+vi.mock('../CameraAnchor', () => ({
+  CameraAnchor: ({ children }: { children: ReactNode }) => <>{children}</>,
+}))
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
@@ -124,10 +132,47 @@ async function type(query: string) {
   })
 }
 
+async function press(key: string, target: EventTarget = window) {
+  const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+  await act(async () => target.dispatchEvent(event))
+  return event
+}
+
 function input() {
   const element = document.querySelector<HTMLInputElement>('input[aria-label="Search archive"]')
   expect(element).not.toBeNull()
   return element!
+}
+
+const callsign = () => document.querySelector<HTMLInputElement>('input[aria-label="Callsign"]')
+const onFieldChange = vi.fn()
+
+/** A bare surface on useTouchTextInput, configured like the Sphere Hunter callsign. */
+function Field({
+  active,
+  value,
+  label = 'Callsign',
+  expose,
+}: {
+  active: boolean
+  value: string
+  label?: string
+  expose?: (field: TouchTextInput) => void
+}) {
+  const touch = useTouchTextInput({
+    active,
+    value,
+    onChange: onFieldChange,
+    label,
+    maxLength: 12,
+    sanitize: (v) => v.toUpperCase().replace(/[^A-Z0-9 _-]/g, ''),
+    autoCapitalize: 'characters',
+    enterKeyHint: 'send',
+  })
+  useEffect(() => {
+    expose?.(touch)
+  })
+  return null
 }
 
 beforeEach(async () => {
@@ -362,41 +407,34 @@ describe('FIND full archive integration', () => {
     await render(true)
     expect(input().value).toBe('x'.repeat(60))
   })
+
+  it("leaves keys typed into another surface's hidden field to that surface", async () => {
+    vi.stubGlobal('fetch', vi.fn<typeof fetch>().mockResolvedValue(payload([record()])))
+    await act(async () =>
+      root.render(
+        <>
+          <SearchTab active width={0.6} />
+          <Field active value="" />
+        </>
+      )
+    )
+    const other = await press('q', callsign()!)
+    expect(other.defaultPrevented).toBe(false)
+    expect(host.textContent).toContain('> _')
+
+    await press('q')
+    expect(host.textContent).toContain('> q_')
+  })
 })
 
 describe('useTouchTextInput', () => {
   let field: TouchTextInput
-  const onChange = vi.fn()
-
-  function Callsign({
-    active,
-    value,
-    expose,
-  }: {
-    active: boolean
-    value: string
-    expose: (field: TouchTextInput) => void
-  }) {
-    const touch = useTouchTextInput({
-      active,
-      value,
-      onChange,
-      label: 'Callsign',
-      maxLength: 12,
-      sanitize: (v) => v.toUpperCase().replace(/[^A-Z0-9 _-]/g, ''),
-      autoCapitalize: 'characters',
-      enterKeyHint: 'send',
-    })
-    useEffect(() => {
-      expose(touch)
-    })
-    return null
-  }
+  const onChange = onFieldChange
 
   async function show(active: boolean, value: string) {
     await act(async () =>
       root.render(
-        <Callsign
+        <Field
           active={active}
           value={value}
           expose={(f) => {
@@ -406,8 +444,6 @@ describe('useTouchTextInput', () => {
       )
     )
   }
-
-  const callsign = () => document.querySelector<HTMLInputElement>('input[aria-label="Callsign"]')
 
   it('mounts a field only while active and focuses it on demand', async () => {
     await show(false, '')
@@ -468,6 +504,30 @@ describe('useTouchTextInput', () => {
     expect(el.value).toBe('ZED')
   })
 
+  it('leaves the element to the keyboard mid-composition and settles it afterwards', async () => {
+    await show(true, '')
+    const el = callsign()!
+
+    // an IME / Android word composition: the cleaned text is reported as it is typed...
+    el.dispatchEvent(new Event('compositionstart'))
+    el.value = 'ace.'
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+    expect(onChange).toHaveBeenLastCalledWith('ACE')
+    // ...but neither the input handler nor the parent's echo writes into the composing element
+    expect(el.value).toBe('ace.')
+    await show(true, 'ACE')
+    expect(el.value).toBe('ace.')
+
+    el.value = 'ace.9'
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+    el.dispatchEvent(new Event('compositionend'))
+    expect(el.value).toBe('ACE9')
+    expect(onChange).toHaveBeenLastCalledWith('ACE9')
+
+    await show(true, 'ZED')
+    expect(el.value).toBe('ZED')
+  })
+
   it('tells key events from the native field apart from window-captured keys', async () => {
     await show(true, '')
     const native = new KeyboardEvent('keydown', { key: 'x', bubbles: true })
@@ -480,5 +540,208 @@ describe('useTouchTextInput', () => {
 
     await show(false, '')
     expect(field.owns(native)).toBe(false)
+  })
+})
+
+// Sphere Hunter lives here too: vitest only collects components/immersive/dock/tabs/*.test.tsx.
+describe('Sphere Hunter', () => {
+  let Game: typeof import('../../game/SphereHunter')
+  let store: typeof import('@/stores/immersiveStore').useImmersiveStore
+
+  beforeEach(async () => {
+    Game = await import('../../game/SphereHunter')
+    ;({ useImmersiveStore: store } = await import('@/stores/immersiveStore'))
+  })
+
+  afterEach(async () => {
+    await act(async () => root.render(null))
+    vi.useRealTimers()
+  })
+
+  const orb = (position: Vector3, velocity = new Vector3(), burst = 0): Orb => ({
+    position,
+    velocity,
+    radius: 0.5,
+    burst,
+  })
+
+  it('respawns a finished burst into its own slot and drifts the rest in place', () => {
+    const drifting = orb(new Vector3(10, 0, 0), new Vector3(0, 1, 0))
+    const popping = orb(new Vector3(0, 0, 10), new Vector3(), 0.9)
+    const orbs = [drifting, popping]
+    Game.stepOrbs(orbs, 0.05)
+
+    expect(orbs).toHaveLength(2)
+    expect(orbs[0]).toBe(drifting)
+    expect(drifting.position.y).toBeCloseTo(0.05)
+    expect(orbs[1]).not.toBe(popping)
+    expect(orbs[1].burst).toBe(0)
+  })
+
+  it('reflects at the shell only while an orb is still heading through it', () => {
+    // a long frame left this one far outside, already turned for home: no flip-flop
+    const stray = orb(new Vector3(30, 0, 0), new Vector3(-1, 0, 0))
+    const leaving = orb(new Vector3(22.5, 0, 0), new Vector3(1, 0, 0))
+    const diving = orb(new Vector3(4, 0, 0), new Vector3(-1, 0, 0))
+    Game.stepOrbs([stray, leaving, diving], 0.016)
+
+    expect(stray.velocity.x).toBe(-1)
+    expect(leaving.velocity.x).toBe(-1)
+    expect(diving.velocity.x).toBe(1)
+  })
+
+  it('hides empty slots and blooms a ring only around a bursting orb', () => {
+    const field = Game.createOrbField()
+    const m = new Matrix4()
+    // length of the instance's x basis: its scale, rotation (the billboarded ring) aside
+    const scaleAt = (mesh: InstancedMesh, i: number) => {
+      mesh.getMatrixAt(i, m)
+      return new Vector3().setFromMatrixColumn(m, 0).length()
+    }
+    try {
+      const orbs = [orb(new Vector3(0, 0, -10)), orb(new Vector3(0, 0, 10), new Vector3(), 0.5)]
+      Game.syncOrbField(field, orbs, new Vector3())
+
+      expect(scaleAt(field.orbs, 0)).toBeCloseTo(0.5)
+      expect(scaleAt(field.rings, 0)).toBe(0)
+      expect(scaleAt(field.orbs, 1)).toBeCloseTo(0.25)
+      expect(scaleAt(field.rings, 1)).toBeCloseTo(0.5 * (1 + 0.5 * 2.5))
+      expect(scaleAt(field.orbs, 2)).toBe(0)
+      expect(scaleAt(field.rings, 2)).toBe(0)
+    } finally {
+      field.dispose()
+    }
+  })
+
+  /** Arm a hunt, ride out the 3-2-1, and end it early with Esc to reach the debrief. */
+  async function debrief(beside?: ReactNode) {
+    vi.useFakeTimers()
+    store.setState({ gameActive: true })
+    await act(async () =>
+      root.render(
+        <>
+          <Game.SphereHunter />
+          {beside}
+        </>
+      )
+    )
+    await countdown()
+  }
+
+  async function countdown() {
+    for (let beat = 0; beat < 3; beat++) await act(async () => vi.advanceTimersByTime(900))
+    expect(host.textContent).toContain('SCORE 000000')
+    await press('Escape')
+    expect(host.textContent).toContain('HUNT COMPLETE')
+  }
+
+  /** Tap the in-scene surface laid out just before a line of text (a plate or a button face). */
+  async function tapBefore(text: string) {
+    const line = [...host.querySelectorAll('span')].find((s) => s.textContent?.startsWith(text))
+    await act(async () =>
+      line!.previousElementSibling!.dispatchEvent(new Event('pointerdown', { bubbles: true }))
+    )
+  }
+
+  it('files once per round from the keyboard however fast Enter repeats', async () => {
+    let finish!: (response: Response) => void
+    const fetcher = vi.fn<typeof fetch>().mockReturnValue(
+      new Promise<Response>((resolve) => {
+        finish = resolve
+      })
+    )
+    vi.stubGlobal('fetch', fetcher)
+    await debrief()
+    await type('ace.9')
+    expect(host.textContent).toContain('CALLSIGN: ACE9_')
+
+    await act(async () => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }))
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }))
+    })
+    await press('Enter')
+    expect(fetcher).toHaveBeenCalledTimes(1)
+    expect(String(fetcher.mock.calls[0][0])).toBe('/api/game/submit-score')
+    expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body))).toEqual({
+      player_name: 'ACE9',
+      score: 0,
+      combo_max: 1,
+    })
+
+    await act(async () => finish(new Response('{}')))
+    expect(host.textContent).toContain('FILED TO LEDGER [OK]')
+    expect(callsign()).toBeNull()
+    await press('Enter')
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
+  it('retries a failed filing, and a reply from an abandoned round files nothing', async () => {
+    let finish!: (response: Response) => void
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockRejectedValueOnce(new Error('offline'))
+      .mockReturnValueOnce(
+        new Promise<Response>((resolve) => {
+          finish = resolve
+        })
+      )
+      .mockResolvedValue(new Response('{}'))
+    vi.stubGlobal('fetch', fetcher)
+    await debrief()
+
+    await press('Enter')
+    expect(host.textContent).toContain('LEDGER UNREACHABLE')
+    await press('Enter')
+    expect(fetcher).toHaveBeenCalledTimes(2)
+
+    // RUN IT BACK while that retry is still out; its reply lands during the next countdown
+    await tapBefore('RUN IT BACK')
+    await act(async () => finish(new Response('{}')))
+    await countdown()
+    expect(host.textContent).toContain('CALLSIGN: _')
+    expect(host.textContent).not.toContain('FILED TO LEDGER')
+
+    await press('Enter')
+    expect(fetcher).toHaveBeenCalledTimes(3)
+  })
+
+  it('leaves native edits, the dock and other fields their own keys', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('{}'))
+    vi.stubGlobal('fetch', fetcher)
+    await debrief(<Field active value="" label="Search archive" />)
+
+    // tapping the plate focuses the hidden field; keys typed there are its own edits
+    await tapBefore('CALLSIGN:')
+    const el = callsign()!
+    expect(document.activeElement).toBe(el)
+    const own = await press('x', el)
+    expect(own.defaultPrevented).toBe(false)
+    expect(host.textContent).toContain('CALLSIGN: _')
+    await act(async () => {
+      el.value = 'ace.of $pades-99'
+      el.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    expect(host.textContent).toContain('CALLSIGN: ACEOF PADES-')
+
+    // while the dock is up its keys are not callsign edits
+    await act(async () => store.setState({ dockOpen: true }))
+    await press('Backspace')
+    await press('Enter')
+    expect(host.textContent).toContain('CALLSIGN: ACEOF PADES-')
+    await act(async () => store.setState({ dockOpen: false }))
+    await press('Backspace')
+    expect(host.textContent).toContain('CALLSIGN: ACEOF PADES_')
+
+    // nor are keys typed into another surface's field
+    const search = document.querySelector<HTMLInputElement>('input[aria-label="Search archive"]')!
+    await press('z', search)
+    await press('Enter', search)
+    expect(host.textContent).toContain('CALLSIGN: ACEOF PADES_')
+    expect(fetcher).not.toHaveBeenCalled()
+
+    // the OS keyboard's send key files the score
+    await press('Enter', el)
+    expect(fetcher).toHaveBeenCalledTimes(1)
+    expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body)).player_name).toBe('ACEOF PADES')
   })
 })

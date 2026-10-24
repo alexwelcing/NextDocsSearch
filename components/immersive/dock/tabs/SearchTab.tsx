@@ -8,7 +8,7 @@ import { WindfoilText } from '../../text/WindfoilText'
 import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
-import { useTouchTextInput } from '../../hooks/useTouchTextInput'
+import { isTouchTextTarget, useTouchTextInput } from '../../hooks/useTouchTextInput'
 import { HttpIndexSource, listRecords, searchRecords, type ArchiveRecord } from '@/lib/archive'
 import { prefetchRecord } from '@/lib/immersive/prefetch'
 import { openModal } from '@/lib/immersive/navigation'
@@ -80,6 +80,8 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
 
   useTabKeys(active, (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey || e.isComposing) return false
+    // keys typed into another surface's field (the Sphere Hunter callsign) are that field's
+    if (isTouchTextTarget(e) && !field.owns(e)) return false
     if (e.key === 'ArrowDown') {
       setSel((s) => Math.min(s + 1, Math.max(results.length - 1, 0)))
       return true

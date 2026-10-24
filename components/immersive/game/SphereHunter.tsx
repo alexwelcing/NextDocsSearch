@@ -13,7 +13,7 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
 import { CameraAnchor } from '../dock/CameraAnchor'
 import { WindfoilText } from '../text/WindfoilText'
-import { useTouchTextInput } from '../hooks/useTouchTextInput'
+import { isTouchTextTarget, useTouchTextInput } from '../hooks/useTouchTextInput'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, rgba } from '@/lib/immersive/theme'
@@ -26,10 +26,15 @@ const CALLSIGN_MAX = 12
 /** Orbs bounce between these radii from the viewer. */
 const SHELL_MIN = 5
 const SHELL_MAX = 22
+/** An instanced draw sorts by the shell's center — the camera — so it would land nearest and
+ *  draw after the near transparent UI (summon chip), which then depth-rejects orbs behind it.
+ *  Pin the field where per-orb depth sorting used to put it: after the panorama's crossfade
+ *  layer (-1), before everything at the default order. */
+const FIELD_RENDER_ORDER = -0.5
 
 type Phase = 'arm' | 'live' | 'over'
 
-interface Orb {
+export interface Orb {
   position: THREE.Vector3
   velocity: THREE.Vector3
   radius: number
@@ -58,13 +63,17 @@ function spawnOrb(): Orb {
 
 /** Advance every orb one frame in place: drift, reflect at the shell, and respawn finished
  *  bursts into the same slot so the field always holds ORB_COUNT. */
-function stepOrbs(orbs: Orb[], delta: number): void {
+export function stepOrbs(orbs: Orb[], delta: number): void {
   for (let i = 0; i < orbs.length; i++) {
     const orb = orbs[i]
     orb.position.addScaledVector(orb.velocity, delta)
-    // keep them in the shell: reflect at bounds
+    // keep them in the shell: reflect at a bound only while still heading through it, so a long
+    // frame (back from a hidden tab) that overshoots can't flip-flop an orb outside the shell
     const d = orb.position.length()
-    if (d < SHELL_MIN || d > SHELL_MAX) orb.velocity.multiplyScalar(-1)
+    const outward = orb.velocity.dot(orb.position)
+    if ((d < SHELL_MIN && outward < 0) || (d > SHELL_MAX && outward > 0)) {
+      orb.velocity.multiplyScalar(-1)
+    }
     if (orb.burst > 0) {
       orb.burst += delta * 4
       if (orb.burst >= 1) orbs[i] = spawnOrb()
@@ -72,7 +81,7 @@ function stepOrbs(orbs: Orb[], delta: number): void {
   }
 }
 
-interface OrbField {
+export interface OrbField {
   orbs: THREE.InstancedMesh
   rings: THREE.InstancedMesh
   dispose: () => void
@@ -116,6 +125,8 @@ export function createOrbField(): OrbField {
     ORB_COUNT
   )
   for (const mesh of [orbs, rings]) {
+    // same order and sort depth for both, so rings (created second) draw over their orbs
+    mesh.renderOrder = FIELD_RENDER_ORDER
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
     // Instances move every frame: skip culling, and give raycasts one fixed sphere around the
     // whole shell instead of a stale one computed from the first frame's matrices.
@@ -141,7 +152,7 @@ export function createOrbField(): OrbField {
 }
 
 /** Write the orb list into the field: orbs collapse as their ring blooms outward and fades. */
-function syncOrbField(field: OrbField, orbs: Orb[], camera: THREE.Vector3): void {
+export function syncOrbField(field: OrbField, orbs: Orb[], camera: THREE.Vector3): void {
   for (let i = 0; i < ORB_COUNT; i++) {
     const orb = orbs[i]
     if (!orb) {
@@ -168,7 +179,7 @@ function syncOrbField(field: OrbField, orbs: Orb[], camera: THREE.Vector3): void
   field.rings.instanceColor!.needsUpdate = true
 }
 
-function sanitizeCallsign(value: string): string {
+export function sanitizeCallsign(value: string): string {
   return value.toUpperCase().replace(/[^A-Z0-9 _-]/g, '')
 }
 
@@ -207,7 +218,7 @@ export function SphereHunter() {
   const [phase, setPhase] = useState<Phase>('arm')
   const [armCount, setArmCount] = useState(3)
   const orbs = useRef<Orb[]>([])
-  const field = useMemo(createOrbField, [])
+  const field = useMemo(() => createOrbField(), [])
   const [score, setScore] = useState(0)
   const [combo, setCombo] = useState(1)
   const [remaining, setRemaining] = useState(GAME_SECONDS)
@@ -219,10 +230,16 @@ export function SphereHunter() {
   const comboMax = useRef(1)
   const endAt = useRef(0)
   const lastTickSecond = useRef(-1)
+  // Filing guard, read synchronously: two Enters can land before React re-renders, and a reply
+  // from an earlier round (RUN IT BACK while FILING…) must not mark this round filed.
+  const round = useRef(0)
+  const filing = useRef(false)
 
   useEffect(() => field.dispose, [field])
 
   const arm = () => {
+    round.current++
+    filing.current = false
     setPhase('arm')
     setArmCount(3)
     orbs.current = []
@@ -307,9 +324,30 @@ export function SphereHunter() {
     return () => window.removeEventListener('keydown', onKey)
   }, [gameActive, phase])
 
+  const submit = () => {
+    if (filing.current) return
+    filing.current = true
+    const filedRound = round.current
+    const settle = (ok: boolean) => {
+      if (round.current !== filedRound) return
+      filing.current = ok // a failure leaves FILE SCORE open for a retry
+      setSubmitState(ok ? 'sent' : 'failed')
+    }
+    setSubmitState('sending')
+    fetch('/api/game/submit-score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ player_name: name || 'HUNTER', score, combo_max: comboMax.current }),
+    })
+      .then((r) => settle(r.ok))
+      .catch(() => settle(false))
+  }
+  const submitRef = useRef(submit)
+  submitRef.current = submit
+
   // callsign entry for the ledger — typed on window, or through the hidden input on touch (which
   // unmounts once the score is filed, so the OS keyboard folds away)
-  const callsign = useTouchTextInput({
+  const { owns: ownsCallsign, focus: focusCallsign } = useTouchTextInput({
     active: gameActive && phase === 'over' && submitState !== 'sent',
     value: name,
     onChange: setName,
@@ -324,9 +362,12 @@ export function SphereHunter() {
     if (phase !== 'over') return
     const onKey = (e: KeyboardEvent) => {
       if (e.isComposing) return
-      if (e.key === 'Enter') submit()
+      // keys belong to the dock or a reader while one is up, and to any other surface's field
+      const { dockOpen, modal } = useImmersiveStore.getState()
+      if (dockOpen || modal || (isTouchTextTarget(e) && !ownsCallsign(e))) return
+      if (e.key === 'Enter') submitRef.current()
       // the native input owns its own edits (OS keyboard, paste, composition)
-      else if (callsign.owns(e)) return
+      else if (ownsCallsign(e)) return
       else if (e.key === 'Backspace') setName((n) => n.slice(0, -1))
       else if (e.key.length === 1 && /[a-z0-9 _-]/i.test(e.key)) {
         setName((n) => (n.length < CALLSIGN_MAX ? n + e.key.toUpperCase() : n))
@@ -337,20 +378,7 @@ export function SphereHunter() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, name, score])
-
-  const submit = () => {
-    if (submitState === 'sending' || submitState === 'sent') return
-    setSubmitState('sending')
-    fetch('/api/game/submit-score', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ player_name: name || 'HUNTER', score, combo_max: comboMax.current }),
-    })
-      .then((r) => setSubmitState(r.ok ? 'sent' : 'failed'))
-      .catch(() => setSubmitState('failed'))
-  }
+  }, [phase, ownsCallsign])
 
   // ARM syncs the empty list (every instance hidden) while the field's pipelines warm up
   useFrame((state, delta) => {
@@ -477,7 +505,7 @@ export function SphereHunter() {
                 position={[0, 0.024, 0.0005]}
                 onPointerDown={(e) => {
                   stopLook(e)
-                  callsign.focus()
+                  focusCallsign()
                 }}
               >
                 <planeGeometry args={[0.5, 0.046]} />
