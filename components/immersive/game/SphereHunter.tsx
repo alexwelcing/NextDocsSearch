@@ -4,7 +4,9 @@
 // the public ledger, RUN IT BACK, STAND DOWN). HUD is windfoil text, camera-anchored, built
 // only from atlas-safe glyphs (see lib/windfoil/charset.ts — no ⏱/◉, time renders as m:ss).
 //
-// The callsign field rides useTouchTextInput so touch players get an OS keyboard.
+// The quarry is one InstancedMesh driven from a ref — no React state per frame — and a burst is
+// an additive emissive ring from a second InstancedMesh, so a hit never swaps in a new pipeline
+// mid-hunt. The callsign field rides useTouchTextInput so touch players get an OS keyboard.
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
@@ -21,19 +23,19 @@ const ORB_COUNT = 14
 const COMBO_WINDOW_MS = 1600
 const BEST_KEY = 'arc.sphere.best'
 const CALLSIGN_MAX = 12
+/** Orbs bounce between these radii from the viewer. */
+const SHELL_MIN = 5
+const SHELL_MAX = 22
 
 type Phase = 'arm' | 'live' | 'over'
 
 interface Orb {
-  id: number
   position: THREE.Vector3
   velocity: THREE.Vector3
   radius: number
   /** burst progress 0 = alive; >0 animating out */
   burst: number
 }
-
-let orbSerial = 1
 
 function spawnOrb(): Orb {
   const dir = new THREE.Vector3(
@@ -43,7 +45,6 @@ function spawnOrb(): Orb {
   ).normalize()
   const dist = 7 + Math.random() * 13
   return {
-    id: orbSerial++,
     position: dir.multiplyScalar(dist),
     velocity: new THREE.Vector3(
       (Math.random() - 0.5) * 1.6,
@@ -53,6 +54,118 @@ function spawnOrb(): Orb {
     radius: 0.35 + Math.random() * 0.5,
     burst: 0,
   }
+}
+
+/** Advance every orb one frame in place: drift, reflect at the shell, and respawn finished
+ *  bursts into the same slot so the field always holds ORB_COUNT. */
+function stepOrbs(orbs: Orb[], delta: number): void {
+  for (let i = 0; i < orbs.length; i++) {
+    const orb = orbs[i]
+    orb.position.addScaledVector(orb.velocity, delta)
+    // keep them in the shell: reflect at bounds
+    const d = orb.position.length()
+    if (d < SHELL_MIN || d > SHELL_MAX) orb.velocity.multiplyScalar(-1)
+    if (orb.burst > 0) {
+      orb.burst += delta * 4
+      if (orb.burst >= 1) orbs[i] = spawnOrb()
+    }
+  }
+}
+
+interface OrbField {
+  orbs: THREE.InstancedMesh
+  rings: THREE.InstancedMesh
+  dispose: () => void
+}
+
+const HIDDEN_MATRIX = new THREE.Matrix4().makeScale(0, 0, 0)
+const NO_ROTATION = new THREE.Quaternion()
+const RING_HOT = new THREE.Color(ARC.green).multiplyScalar(2.5)
+const BLACK = new THREE.Color(0, 0, 0)
+const tmpMatrix = new THREE.Matrix4()
+const tmpScale = new THREE.Vector3()
+const tmpColor = new THREE.Color()
+const tmpCamera = new THREE.Vector3()
+const billboard = new THREE.Object3D()
+
+/** Two instanced draws for the whole hunt: the orbs, and one burst ring per orb slot. Exported
+ *  so a shader warmup can compile the same pipelines ahead of the first hunt. */
+export function createOrbField(): OrbField {
+  const green = new THREE.Color(ARC.green)
+  const orbs = new THREE.InstancedMesh(
+    new THREE.IcosahedronGeometry(1, 1),
+    new THREE.MeshStandardMaterial({
+      color: green,
+      emissive: green,
+      emissiveIntensity: 0.7,
+      transparent: true,
+      opacity: 0.92,
+    }),
+    ORB_COUNT
+  )
+  // Additive, so the per-instance color fading to black IS the fade-out; fog off because fog
+  // under additive blending adds haze instead of attenuating (see Atmosphere).
+  const rings = new THREE.InstancedMesh(
+    new THREE.RingGeometry(0.82, 1, 48),
+    new THREE.MeshBasicMaterial({
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      fog: false,
+    }),
+    ORB_COUNT
+  )
+  for (const mesh of [orbs, rings]) {
+    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    // Instances move every frame: skip culling, and give raycasts one fixed sphere around the
+    // whole shell instead of a stale one computed from the first frame's matrices.
+    mesh.frustumCulled = false
+    mesh.boundingSphere = new THREE.Sphere(new THREE.Vector3(), SHELL_MAX + 4)
+    for (let i = 0; i < ORB_COUNT; i++) mesh.setMatrixAt(i, HIDDEN_MATRIX)
+  }
+  // Allocate instanceColor up front — adding it after the first draw would change the shader.
+  for (let i = 0; i < ORB_COUNT; i++) rings.setColorAt(i, BLACK)
+  rings.instanceColor!.setUsage(THREE.DynamicDrawUsage)
+  rings.raycast = () => {}
+  return {
+    orbs,
+    rings,
+    dispose: () => {
+      for (const mesh of [orbs, rings]) {
+        mesh.geometry.dispose()
+        ;(mesh.material as THREE.Material).dispose()
+        mesh.dispose()
+      }
+    },
+  }
+}
+
+/** Write the orb list into the field: orbs collapse as their ring blooms outward and fades. */
+function syncOrbField(field: OrbField, orbs: Orb[], camera: THREE.Vector3): void {
+  for (let i = 0; i < ORB_COUNT; i++) {
+    const orb = orbs[i]
+    if (!orb) {
+      field.orbs.setMatrixAt(i, HIDDEN_MATRIX)
+      field.rings.setMatrixAt(i, HIDDEN_MATRIX)
+      continue
+    }
+    const b = orb.burst
+    tmpMatrix.compose(orb.position, NO_ROTATION, tmpScale.setScalar(orb.radius * (1 - b)))
+    field.orbs.setMatrixAt(i, tmpMatrix)
+    if (b > 0) {
+      billboard.position.copy(orb.position)
+      billboard.lookAt(camera)
+      billboard.scale.setScalar(orb.radius * (1 + b * 2.5))
+      billboard.updateMatrix()
+      field.rings.setMatrixAt(i, billboard.matrix)
+      field.rings.setColorAt(i, tmpColor.copy(RING_HOT).multiplyScalar(1 - b))
+    } else {
+      field.rings.setMatrixAt(i, HIDDEN_MATRIX)
+    }
+  }
+  field.orbs.instanceMatrix.needsUpdate = true
+  field.rings.instanceMatrix.needsUpdate = true
+  field.rings.instanceColor!.needsUpdate = true
 }
 
 function sanitizeCallsign(value: string): string {
@@ -93,7 +206,8 @@ export function SphereHunter() {
 
   const [phase, setPhase] = useState<Phase>('arm')
   const [armCount, setArmCount] = useState(3)
-  const [orbs, setOrbs] = useState<Orb[]>([])
+  const orbs = useRef<Orb[]>([])
+  const field = useMemo(createOrbField, [])
   const [score, setScore] = useState(0)
   const [combo, setCombo] = useState(1)
   const [remaining, setRemaining] = useState(GAME_SECONDS)
@@ -106,10 +220,12 @@ export function SphereHunter() {
   const endAt = useRef(0)
   const lastTickSecond = useRef(-1)
 
+  useEffect(() => field.dispose, [field])
+
   const arm = () => {
     setPhase('arm')
     setArmCount(3)
-    setOrbs([])
+    orbs.current = []
     setScore(0)
     setCombo(1)
     comboMax.current = 1
@@ -124,7 +240,7 @@ export function SphereHunter() {
     if (gameActive) {
       arm()
     } else {
-      setOrbs([])
+      orbs.current = []
       setPhase('arm')
     }
   }, [gameActive])
@@ -137,7 +253,7 @@ export function SphereHunter() {
       setArmCount((c) => {
         if (c <= 1) {
           setPhase('live')
-          setOrbs(Array.from({ length: ORB_COUNT }, spawnOrb))
+          orbs.current = Array.from({ length: ORB_COUNT }, spawnOrb)
           endAt.current = performance.now() + GAME_SECONDS * 1000
           playSound('confirm', { rate: 1.2 })
           return 0
@@ -235,26 +351,11 @@ export function SphereHunter() {
       .catch(() => setSubmitState('failed'))
   }
 
-  useFrame((_, delta) => {
-    if (!gameActive || phase !== 'live') return
-    setOrbs((prev) => {
-      let changed = false
-      const next = prev.map((orb) => {
-        const p = orb.position.clone().addScaledVector(orb.velocity, delta)
-        // keep them in the shell: reflect at bounds
-        const d = p.length()
-        if (d < 5 || d > 22) orb.velocity.multiplyScalar(-1)
-        const burst = orb.burst > 0 ? orb.burst + delta * 4 : 0
-        if (burst !== orb.burst || !p.equals(orb.position)) changed = true
-        return { ...orb, position: p, burst }
-      })
-      const alive = next.filter((o) => o.burst < 1)
-      while (alive.length < ORB_COUNT) {
-        alive.push(spawnOrb())
-        changed = true
-      }
-      return changed ? alive : prev
-    })
+  // ARM syncs the empty list (every instance hidden) while the field's pipelines warm up
+  useFrame((state, delta) => {
+    if (!gameActive || phase === 'over') return
+    if (phase === 'live') stepOrbs(orbs.current, delta)
+    syncOrbField(field, orbs.current, state.camera.getWorldPosition(tmpCamera))
   })
 
   const hit = (orb: Orb) => {
@@ -268,10 +369,8 @@ export function SphereHunter() {
     setScore((s) => s + Math.round(100 * nextCombo * (0.9 / orb.radius)))
     // the ding climbs with the combo — a rising pitch ladder for hot streaks
     playSound('confirm', { rate: 1 + (nextCombo - 1) * 0.08 })
-    setOrbs((prev) => prev.map((o) => (o.id === orb.id ? { ...o, burst: 0.001 } : o)))
+    orb.burst = 0.001
   }
-
-  const orbMaterialColor = useMemo(() => new THREE.Color(ARC.green), [])
 
   if (!gameActive) return null
 
@@ -279,29 +378,22 @@ export function SphereHunter() {
 
   return (
     <>
-      {/* the quarry */}
-      {phase === 'live' &&
-        orbs.map((orb) => (
-          <mesh
-            key={orb.id}
-            position={orb.position.toArray()}
-            scale={orb.radius * (orb.burst > 0 ? 1 + orb.burst * 2.5 : 1)}
-            onPointerDown={(e) => {
+      {/* the quarry — mounted (all instances hidden) through ARM so its pipelines compile
+          during the countdown rather than on the first live frame */}
+      {phase !== 'over' && (
+        <>
+          <primitive
+            object={field.orbs}
+            onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+              const orb = e.instanceId === undefined ? undefined : orbs.current[e.instanceId]
+              if (!orb) return
               stopLook(e)
               hit(orb)
             }}
-          >
-            <icosahedronGeometry args={[1, 1]} />
-            <meshStandardMaterial
-              color={orbMaterialColor}
-              emissive={orbMaterialColor}
-              emissiveIntensity={orb.burst > 0 ? 2.5 : 0.7}
-              transparent
-              opacity={orb.burst > 0 ? Math.max(1 - orb.burst, 0) : 0.92}
-              wireframe={orb.burst > 0}
-            />
-          </mesh>
-        ))}
+          />
+          <primitive object={field.rings} />
+        </>
+      )}
 
       <CameraAnchor stiffness={22}>
         {/* ARM: big centered countdown */}
