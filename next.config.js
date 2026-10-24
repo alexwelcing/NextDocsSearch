@@ -30,22 +30,7 @@ const nextConfig = {
 
   // Experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', '@react-three/fiber', '@react-three/drei'],
-  },
-  
-  // Bun runtime optimizations (moved from experimental in Next.js 15)
-  serverExternalPackages: ['sharp'],
-  
-  // Bun-specific optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize for Bun runtime
-    if (process.env.BUN_RUNTIME) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'node:stream': 'stream-browserify',
-      };
-    }
-    return config;
+    optimizePackageImports: ['lucide-react', '@react-three/fiber'],
   },
 
   // Prevent Vercel from bundling public/ assets into serverless functions
