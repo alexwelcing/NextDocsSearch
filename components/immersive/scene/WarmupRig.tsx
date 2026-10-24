@@ -202,6 +202,11 @@ export function WarmupRig() {
           <planeGeometry args={[0.05, 0.05]} />
           <meshBasicMaterial color={ARC.screenBg} transparent opacity={0.97} fog={false} />
         </mesh>
+        {/* the title card's accent rule: translucent, fog-free, no depth write */}
+        <mesh position={[0.2, 0.06, 0]}>
+          <planeGeometry args={[0.05, 0.01]} />
+          <meshBasicMaterial color={ARC.green} transparent depthWrite={false} fog={false} />
+        </mesh>
         {/* textured planes: reader images (fog-free) and the film panel (fogged, video sampler) */}
         <mesh position={[0.26, 0, 0]}>
           <planeGeometry args={[0.05, 0.05]} />

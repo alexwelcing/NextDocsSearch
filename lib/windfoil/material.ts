@@ -172,10 +172,14 @@ export function createTextMesh(
   )
 
   const vRC = varying(vec2(em))
-  const vBand = varying(vec4(band))
-  const vBbox = varying(vec4(bbox))
-  const vColor = varying(vec4(color))
-  const vFill = varying(place.w)
+  // Per-glyph constants ride FLAT varyings. Interpolated, a constant can land a hair under its
+  // value (perspective-correct barycentrics aren't exact), and the shader's u32(band.x) row-base
+  // truncation then reads the neighbouring row band — whole columns of a glyph dropped or smeared
+  // into vertical streaks, wherever the rounding happened to fall on a given GPU and projection.
+  const vBand = varying(vec4(band)).setInterpolation('flat', 'either')
+  const vBbox = varying(vec4(bbox)).setInterpolation('flat', 'either')
+  const vColor = varying(vec4(color)).setInterpolation('flat', 'either')
+  const vFill = varying(place.w).setInterpolation('flat', 'either')
 
   // Materialize-in: instanceIndex is emission order (reading order — line by line, char by char,
   // per layoutText), a vertex-stage-only WGSL builtin, so the ordinal and its fade window are
