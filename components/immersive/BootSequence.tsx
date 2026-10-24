@@ -1,5 +1,5 @@
 // CRT boot sequence: a diegetic loader that plays over the scene while critical assets stream in
-// AND the GPU render pipelines precompile (see scene/ShaderWarmup.tsx) — so the flash reveal
+// AND the GPU render pipelines precompile (see scene/WarmupRig.tsx) — so the flash reveal
 // never pays a visible shader-compile hitch. Lines type on with staggered delays; the PANORAMA
 // BUS gauge, PIPELINE CACHE and record-count lines track real async state. Click/Enter skips once
 // both are in — or after a watchdog, so a stalled asset can never trap the visitor here.

@@ -193,7 +193,7 @@ function RecordImage({
   return (
     <mesh renderOrder={renderOrder} scale={[planeW, planeH, 1]}>
       <planeGeometry args={[1, 1]} />
-      <meshBasicMaterial map={tex} toneMapped={false} fog={false} />
+      <meshBasicMaterial map={tex} fog={false} />
     </mesh>
   )
 }

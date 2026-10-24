@@ -17,6 +17,15 @@ export interface WorldDef {
   /** Aerial-perspective density 0..1 (0 = hard vacuum, 1 = thick air). Drives the scene
    *  fogNode range and the atmosphere motes' depth fade. */
   haze: number
+  /** Linear gain on the panorama before the renderer's tone map, normalizing the library's wildly
+   *  uneven JPEG brightness toward a common mid-grey. Each value moves its world halfway, in log
+   *  terms, to sRGB luma ~96, clamped to 0.7–2 so dark worlds keep their mood and bright ones
+   *  their sparkle. Mean displayed sRGB luma (0–255) across the 12 panoramas, computed offline by
+   *  running each JPEG through the tone map: 5.8–155 under main's ACESFilmic at exposure 1.05;
+   *  10–137 under Neutral at exposure 1 with no gain; 16–114 under Neutral at exposure 1 with
+   *  these gains (the-stacks 10 → 16, night-train 137 → 114). Applied by
+   *  scene/WorldExposure.tsx, to the panorama only: UI, motes and lit surfaces never see it. */
+  exposure: number
 }
 
 export const WORLDS: WorldDef[] = [
@@ -30,6 +39,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#70ff8f', count: 320 },
     drift: 0.003,
     haze: 0.35,
+    exposure: 2,
   },
   {
     id: 'the-overlook',
@@ -41,6 +51,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#ffd9a8', count: 160 },
     drift: 0.003,
     haze: 0.5,
+    exposure: 2,
   },
   {
     id: 'signal-garden',
@@ -52,6 +63,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#7fefff', count: 380 },
     drift: 0.005,
     haze: 0.7,
+    exposure: 2,
   },
   {
     id: 'high-orbit',
@@ -63,6 +75,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#bcd8ff', count: 220 },
     drift: 0.004,
     haze: 0.05,
+    exposure: 2,
   },
   {
     id: 'atrium',
@@ -74,6 +87,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#ffe9b0', count: 220 },
     drift: 0.004,
     haze: 0.3,
+    exposure: 1.15,
   },
   {
     id: 'deep-space',
@@ -85,6 +99,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#9db8ff', count: 340 },
     drift: 0.006,
     haze: 0.0,
+    exposure: 1.1,
   },
   {
     id: 'signal-station',
@@ -96,6 +111,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#7ce8ff', count: 260 },
     drift: 0.005,
     haze: 0.15,
+    exposure: 1.6,
   },
   {
     id: 'undercroft',
@@ -107,6 +123,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#9adfff', count: 180 },
     drift: 0.003,
     haze: 0.8,
+    exposure: 1.6,
   },
   {
     id: 'night-train',
@@ -118,6 +135,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#ffcf9e', count: 160 },
     drift: 0.004,
     haze: 0.4,
+    exposure: 0.7,
   },
   {
     id: 'meridian',
@@ -129,6 +147,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#ffedc2', count: 140 },
     drift: 0.004,
     haze: 0.25,
+    exposure: 0.85,
   },
   {
     id: 'verdant',
@@ -140,6 +159,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#baffc4', count: 240 },
     drift: 0.004,
     haze: 0.6,
+    exposure: 1.6,
   },
   {
     id: 'ember',
@@ -151,6 +171,7 @@ export const WORLDS: WorldDef[] = [
     particles: { color: '#ffb083', count: 300 },
     drift: 0.005,
     haze: 0.75,
+    exposure: 0.85,
   },
 ]
 
@@ -158,4 +179,17 @@ export const DEFAULT_WORLD_ID = WORLDS[0].id
 
 export function worldById(id: string): WorldDef {
   return WORLDS.find((w) => w.id === id) ?? WORLDS[0]
+}
+
+/** The world that owns the panorama at `url`: a pathname like '/background/train.jpg', or a full
+ *  URL as a loaded image reports its `src` (origin, query and hash are ignored). Undefined for
+ *  anything else, e.g. a blob: URL or a hashed/re-encoded asset path. */
+export function worldByPanorama(url: string, base = 'http://localhost/'): WorldDef | undefined {
+  let path: string
+  try {
+    path = new URL(url, base).pathname
+  } catch {
+    return undefined
+  }
+  return WORLDS.find((w) => w.panorama === path)
 }

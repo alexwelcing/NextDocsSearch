@@ -52,8 +52,8 @@ interface ImmersiveState {
   sceneReady: boolean
   setSceneReady: (v: boolean) => void
 
-  /** GPU render pipelines precompiled (renderer.compileAsync) — gates boot to avoid a
-   *  first-frame hitch when the CRT overlay lifts. See scene/ShaderWarmup.tsx. */
+  /** GPU render pipelines prebuilt (stand-ins drawn under the overlay) — gates boot to avoid a
+   *  first-frame hitch when the CRT overlay lifts. See scene/WarmupRig.tsx. */
   shadersWarm: boolean
   setShadersWarm: (v: boolean) => void
 

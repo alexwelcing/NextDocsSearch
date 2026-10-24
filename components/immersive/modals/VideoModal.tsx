@@ -99,7 +99,7 @@ export function VideoModal({ slug }: { slug: string }) {
           >
             <planeGeometry args={[VIDEO_W, VIDEO_H]} />
             {texture ? (
-              <meshBasicMaterial map={texture} toneMapped={false} />
+              <meshBasicMaterial map={texture} />
             ) : (
               <meshBasicMaterial color="#000000" />
             )}
