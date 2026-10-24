@@ -14,15 +14,10 @@ const nextConfig = {
   // Performance optimizations
   compress: true, // Enable gzip compression
 
-  // Image optimization
+  // Nothing uses next/image, so the /_next/image optimizer is pure attack surface (the SVG and AVIF
+  // RCE advisories GHSA-2464-fhr4-w9xw / GHSA-2xp9-vwfh-vxw4 live there). Keep it switched off.
   images: {
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    unoptimized: true,
   },
 
   // Compiler optimizations
