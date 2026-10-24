@@ -13,7 +13,8 @@ import { CameraRig } from './scene/CameraRig'
 import { WorldTitleCard } from './scene/WorldTitleCard'
 import { SceneFog } from './scene/SceneFog'
 import { PostFX } from './scene/PostFX'
-import { ShaderWarmup } from './scene/ShaderWarmup'
+import { WarmupRig } from './scene/WarmupRig'
+import { WorldExposure } from './scene/WorldExposure'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
 import { SphereHunter } from './game/SphereHunter'
@@ -50,8 +51,13 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
           useImmersiveStore.getState().setBootPhase('unsupported')
           throw err
         }
-        renderer.toneMapping = THREE.ACESFilmicToneMapping
-        renderer.toneMappingExposure = 1.05
+        // Neutral (Khronos PBR Neutral) keeps authored hue and saturation through the mids and
+        // only rolls off true highlights: #70ff8f lands at ~(97,240,129) and white at ~240, where
+        // ACES at 1.05 gave pale mint ~(204,228,209) and capped white at ~228. Its toe deepens
+        // shadows; dark panoramas get that back from WorldDef.exposure (scene/WorldExposure), not
+        // from this global exposure, so the UI reads the same in every world.
+        renderer.toneMapping = THREE.NeutralToneMapping
+        renderer.toneMappingExposure = 1
 
         // Mid-session recovery: a lost device (driver reset, OOM, mobile backgrounding) leaves
         // this renderer permanently inert. 'destroyed' is us tearing it down on purpose (e.g. a
@@ -77,12 +83,13 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       style={{ position: 'fixed', inset: 0, zIndex: 10, background: '#020403' }}
     >
       <PanoramaSphere />
+      <WorldExposure />
       <SceneFog />
       <Atmosphere />
       <SceneLights />
       <CameraRig />
       <WorldTitleCard />
-      <ShaderWarmup />
+      <WarmupRig />
       <ArcDock />
       <ImmersiveModals />
       <SphereHunter />

@@ -1,5 +1,6 @@
 // ARC Terminal phosphor palette + type scale, shared by every in-scene UI surface.
 
+import { Color } from 'three/webgpu'
 import type { RGBA } from '@/components/immersive/text/WindfoilText'
 
 export const ARC = {
@@ -16,10 +17,16 @@ export const ARC = {
   bezel: '#0c100d',
 } as const
 
+const scratch = new Color()
+
+/** Palette token → straight-alpha RGBA in the LINEAR working space. Windfoil text (like every
+ *  material) renders linear into the frame target and only becomes sRGB in the renderer's
+ *  full-frame output pass (tone map + encode), so a raw 0..255/255 hex would be encoded twice and
+ *  wash #70ff8f out to pale mint. THREE.Color decodes CSS hex from sRGB, which keeps windfoil on
+ *  the same color path as every meshBasicMaterial/CRT tint built from the same tokens. */
 export const rgba = (hex: string, a = 1): RGBA => {
-  const n = parseInt(hex.slice(1), 16)
-  // display-ready values: windfoil text writes straight to the framebuffer
-  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255, a]
+  scratch.set(hex)
+  return [scratch.r, scratch.g, scratch.b, a]
 }
 
 /** Windfoil font sizes for the dock screen (world units; screen is ~0.62 wide). */

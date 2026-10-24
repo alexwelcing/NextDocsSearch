@@ -10,15 +10,18 @@ type GroupProps = ThreeElements['group']
 import { loadFontAtlas, peekFontAtlas } from '@/lib/windfoil/atlas'
 import { layoutText } from '@/lib/windfoil/layout'
 import { createTextMesh, type WindfoilTextMesh } from '@/lib/windfoil/material'
-import type { FontAtlas, TextAlign, TextRun } from '@/lib/windfoil/types'
+import { FLOATS_PER_INSTANCE } from '@/lib/windfoil/types'
+import type { FontAtlas, TextAlign, TextLayout, TextRun } from '@/lib/windfoil/types'
 
 // Phosphor glow: windfoil's coverage is exact at any scale, so one enlarged copy alone is just a
-// bigger crisp copy, not a blur — there's no post-processing pipeline to actually blur it. The
-// classic poor-man's-bloom trick instead: a couple of uniformly-enlarged, additively-blended,
-// dimmer copies of the SAME mesh layered under the crisp one. The thin rings where each larger
-// copy peeks out past the previous one are dim enough to read as a soft falloff rather than
-// distinct hard edges — especially over the CRT scanline/vignette overlay, and especially for
-// green-on-black phosphor text, which is exactly what real CRT glow looks like.
+// bigger crisp copy, not a blur — and PostFX bloom only exists above 'low' quality. The classic
+// poor-man's-bloom trick instead: a couple of enlarged, additively-blended, dimmer copies of the
+// SAME glyphs layered under the crisp ones. The thin rings where each larger copy peeks out past
+// the previous one are dim enough to read as a soft falloff rather than distinct hard edges —
+// especially over the CRT scanline/vignette overlay, and especially for green-on-black phosphor
+// text, which is exactly what real CRT glow looks like. Each glyph grows about its OWN centre
+// (haloLayout): scaling the whole block about its middle shoved the outer glyphs' halos sideways
+// by (scale - 1) x half the line width, which on a hero title read as ghost duplicate letters.
 const GLOW_LAYERS: { scale: number; opacityScale: number }[] = [
   { scale: 1.22, opacityScale: 0.35 },
   { scale: 1.55, opacityScale: 0.13 },
@@ -26,12 +29,32 @@ const GLOW_LAYERS: { scale: number; opacityScale: number }[] = [
 
 export type RGBA = [number, number, number, number]
 
-/** Accepts a css-style hex/named color or an RGBA tuple; returns straight-alpha RGBA. */
+/** Accepts a css-style hex/named color or an RGBA tuple; returns straight-alpha RGBA in the
+ *  linear working space (THREE.Color decodes CSS colors from sRGB; tuples pass through as-is). */
 export function toRGBA(color: string | RGBA | undefined, fallback: RGBA): RGBA {
   if (!color) return fallback
   if (Array.isArray(color)) return color
   const c = new THREE.Color(color)
   return [c.r, c.g, c.b, 1]
+}
+
+/** Copy of `layout` with every glyph quad scaled by `scale` about its own ink-box centre, so a
+ *  halo stays registered on its glyph whatever the line length. Instance packing (types.ts):
+ *  place(penX, baselineY, unitsToLocal, fillRule) · bbox(loX, loY, hiX, hiY in font units) · … */
+export function haloLayout(layout: TextLayout, scale: number): TextLayout {
+  const src = layout.instances
+  const instances = new Float32Array(src)
+  for (let i = 0; i < layout.glyphCount; i++) {
+    const o = i * FLOATS_PER_INSTANCE
+    const k = src[o + 2]
+    const cx = (src[o + 4] + src[o + 6]) / 2
+    const cy = (src[o + 5] + src[o + 7]) / 2
+    // centre stays put: pen + c·k === pen' + c·k·scale
+    instances[o] = src[o] + cx * k * (1 - scale)
+    instances[o + 1] = src[o + 1] + cy * k * (1 - scale)
+    instances[o + 2] = k * scale
+  }
+  return { ...layout, instances }
 }
 
 /** Load (and re-render on arrival of) a compiled windfoil font atlas. */
@@ -83,7 +106,7 @@ export interface WindfoilTextProps extends Omit<GroupProps, 'children' | 'color'
   glow?: boolean
 }
 
-const DEFAULT_COLOR: RGBA = [0.44, 1, 0.56, 1] // phosphor green
+const DEFAULT_COLOR: RGBA = toRGBA('#70ff8f', [0, 0, 0, 1]) // phosphor green (ARC.green)
 
 export function WindfoilText({
   children,
@@ -110,7 +133,14 @@ export function WindfoilText({
   ...groupProps
 }: WindfoilTextProps) {
   const atlas = useFontAtlas(font)
-  const rgba = useMemo(() => toRGBA(color, DEFAULT_COLOR), [color])
+  // Keyed by VALUE: callers build colors inline (rgba(ARC.green, 0.9)) and run arrays inline, so
+  // identity changes on every parent render. Keying on identity rebuilt the layout, the meshes and
+  // their GPU buffers on every re-render, and re-armed the reveal: a title card whose parent
+  // re-renders per frame while fading re-materialized glyph-by-glyph the whole way out.
+  const colorKey = Array.isArray(color) ? color.join(',') : color ?? ''
+  const contentKey = typeof children === 'string' ? children : JSON.stringify(children)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const rgba = useMemo(() => toRGBA(color, DEFAULT_COLOR), [colorKey])
 
   const layout = useMemo(() => {
     if (!atlas) return undefined
@@ -123,7 +153,8 @@ export function WindfoilText({
       letterSpacing,
       maxLines,
     })
-  }, [atlas, children, fontSize, rgba, maxWidth, align, lineHeight, letterSpacing, maxLines])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [atlas, contentKey, fontSize, rgba, maxWidth, align, lineHeight, letterSpacing, maxLines])
 
   const mesh = useMemo(() => {
     if (!atlas || !layout) return undefined
@@ -133,26 +164,23 @@ export function WindfoilText({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [atlas, layout, gamma, sharp, depthTest, depthWrite])
 
-  // Halo copies for the `glow` prop: same atlas/layout, additive blending, scaled up around the
-  // text block's own center (computed directly — see GLOW_LAYERS' comment for why this can't be
-  // done with padUnits alone).
+  // Halo copies for the `glow` prop: same atlas and glyphs, additive blending, each glyph grown
+  // about its own centre (haloLayout — see GLOW_LAYERS' comment for why not the block's).
   const haloMeshes = useMemo<WindfoilTextMesh[]>(() => {
     if (!atlas || !layout || !glow) return []
-    return GLOW_LAYERS.map((_layer) => {
-      const m = createTextMesh(atlas, layout, { gamma, sharp, depthTest, depthWrite: false })
+    return GLOW_LAYERS.map((layer) => {
+      const m = createTextMesh(atlas, haloLayout(layout, layer.scale), {
+        gamma,
+        sharp,
+        depthTest,
+        depthWrite: false,
+      })
       const mat = m.material as THREE.Material
       mat.blending = THREE.AdditiveBlending
       mat.depthWrite = false
       return m
     })
   }, [atlas, layout, glow, gamma, sharp, depthTest])
-
-  const haloTransforms = useMemo<[number, number, number][]>(() => {
-    if (!layout) return []
-    const cx = layout.width / 2
-    const cy = -layout.height / 2
-    return GLOW_LAYERS.map((l) => [cx * (1 - l.scale), cy * (1 - l.scale), 0])
-  }, [layout])
 
   useEffect(() => {
     if (!mesh) return
@@ -230,12 +258,7 @@ export function WindfoilText({
     <group {...groupProps}>
       <group position={offset}>
         {haloMeshes.map((m, i) => (
-          <primitive
-            key={i}
-            object={m}
-            position={haloTransforms[i]}
-            scale={GLOW_LAYERS[i].scale}
-          />
+          <primitive key={i} object={m} />
         ))}
         {mesh && <primitive object={mesh} />}
       </group>
