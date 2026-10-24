@@ -307,9 +307,10 @@ export function SphereHunter() {
     return () => window.removeEventListener('keydown', onKey)
   }, [gameActive, phase])
 
-  // callsign entry for the ledger — typed on window, or through the hidden input on touch
+  // callsign entry for the ledger — typed on window, or through the hidden input on touch (which
+  // unmounts once the score is filed, so the OS keyboard folds away)
   const callsign = useTouchTextInput({
-    active: gameActive && phase === 'over',
+    active: gameActive && phase === 'over' && submitState !== 'sent',
     value: name,
     onChange: setName,
     label: 'Callsign',
