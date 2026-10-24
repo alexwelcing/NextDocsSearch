@@ -10,7 +10,8 @@
 //
 // Why it HIDES rather than unmounts: three releases a pipeline the moment its last user is
 // disposed, so unmounting would throw the warm cache away before the dock ever opened. A few
-// invisible meshes keep every variant referenced for the session at no per-frame cost.
+// invisible meshes keep every variant referenced for the session at no draw cost (only the
+// stand-ins' own useFrame ticks keep running, which is negligible).
 //
 // Pipelines key on shader code + blend/depth/cull/topology/winding state, not on material
 // identity, so one stand-in per variant covers every later mesh of that kind. When a new kind of
