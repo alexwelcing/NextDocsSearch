@@ -54,19 +54,21 @@ const stopWords = new Set([
   'they',
 ])
 
-function normalizedTokens(value: string): string[] {
+/** Lowercased alphanumeric words of 2+ characters, minus stop words; shared with lib/retrieval. */
+export function normalizedTokens(value: string): string[] {
   return value
     .toLowerCase()
     .split(/[^a-z0-9]+/)
     .filter((token) => token.length >= 2 && !stopWords.has(token))
 }
 
-function tokenize(query: string): string[] {
+/** The unique query terms searchRecords ranks on. */
+export function tokenize(query: string): string[] {
   return [...new Set(normalizedTokens(query))]
 }
 
 /** Short terms are whole words; longer terms also match a word as it is typed. */
-function findMatch(text: string, term: string): number {
+export function findMatch(text: string, term: string): number {
   let index = text.indexOf(term)
   while (index >= 0) {
     const startsWord = index === 0 || !/[a-z0-9]/.test(text[index - 1])

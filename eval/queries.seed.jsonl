@@ -1,0 +1,67 @@
+{"id":"profile-01","query":"who is alex welcing","relevant":["about"],"tags":["profile"]}
+{"id":"profile-02","query":"where does alex work right now","relevant":["about"],"tags":["profile"]}
+{"id":"profile-03","query":"alex's background in legal tech and regulated industries","relevant":{"about":2,"laws-legal-ai-checklist":1},"tags":["profile"]}
+{"id":"profile-04","query":"what is alex researching these days","relevant":["current-work"],"tags":["profile"]}
+{"id":"profile-05","query":"the hermitage: dispatching tasks across claude, gemini and local models","relevant":["current-work"],"tags":["profile"]}
+{"id":"profile-06","query":"glimpse webgpu viewer for lammps molecular dynamics","relevant":["current-work"],"tags":["profile"]}
+{"id":"profile-07","query":"is alex open to hiring conversations","relevant":["pitch"],"tags":["profile"]}
+{"id":"profile-08","query":"evals, retrieval and observability pillars","relevant":["pitch"],"tags":["profile"]}
+{"id":"profile-09","query":"where did alex go to school","relevant":["about"],"tags":["profile"]}
+{"id":"profile-10","query":"what was alex's first startup","relevant":["current-work"],"tags":["profile"]}
+{"id":"series-01","query":"the cartography series","relevant":["cartography-01-the-unnamed-continent","cartography-02-the-isthmus-of-intent","cartography-03-the-depth-soundings","cartography-04-the-tidal-zone","cartography-05-the-atlas-of-disappearances"],"tags":["series"]}
+{"id":"series-02","query":"echo chamber stories","relevant":["echo-chamber-01-the-territorial-dispute","echo-chamber-02-the-fossil","echo-chamber-03-the-withdrawal","echo-chamber-04-the-settlers","echo-chamber-05-the-cartographers-diary"],"tags":["series"]}
+{"id":"series-03","query":"threshold moment stories: radiologist, translator, blacksmith, architect","relevant":["threshold-01-the-last-diagnosis","threshold-02-the-closing-window","threshold-03-the-weight-of-the-hammer","threshold-04-the-student-who-stopped-asking","threshold-05-the-beautiful-redundancy"],"tags":["series"]}
+{"id":"series-04","query":"fracture line exit interview","relevant":["fracture-line-01-the-exit-interview"],"tags":["series"]}
+{"id":"series-05","query":"first cartographers calibration sickness","relevant":["first-cartographers-01-the-calibration-sickness"],"tags":["series"]}
+{"id":"series-06","query":"latency as intimacy","relevant":["interface-06-latency-as-intimacy"],"tags":["series"]}
+{"id":"series-07","query":"the last prompt engineer","relevant":["residue-01-the-last-prompt-engineer"],"tags":["series"]}
+{"id":"series-08","query":"the night librarian","relevant":["understory-01-the-night-librarian"],"tags":["series"]}
+{"id":"series-09","query":"inherited gestures at the piano","relevant":{"inheritance-01-the-mothers-hands":2,"far-shore-03-the-daughters-hands":2,"inheritance-06-the-pattern-keepers":1},"tags":["series"]}
+{"id":"series-10","query":"backstory first day at the lab","relevant":["backstory-01-first-day-2026-01"],"tags":["series"]}
+{"id":"series-11","query":"the forks: alignment, governance, identity, abundance","relevant":["alignment-fork","governance-fork","identity-fork","abundance-fork"],"tags":["series"]}
+{"id":"series-12","query":"chronicles from the future","relevant":["day-we-solved-scarcity-2041","first-contact-api-call-2029","lab-ai-refused-to-stop-2034","last-human-written-paper-2031"],"tags":["series"]}
+{"id":"concept-01","query":"discovery compression","relevant":{"discovery-compression":2,"for-product-managers-discovery-compression":1,"for-researchers-field-compression":1,"crispr-discovery-compression":1},"tags":["concept"]}
+{"id":"concept-02","query":"what becomes expensive when intelligence is free","relevant":{"scarcity-inversion":2,"for-executives-scarcity-inversion":1},"tags":["concept"]}
+{"id":"concept-03","query":"one human deploying thousands of agents","relevant":{"agency-multiplication":2,"for-policymakers-governance-lag":1},"tags":["concept"]}
+{"id":"concept-04","query":"when verifying truth gets computationally expensive","relevant":["epistemic-drift"],"tags":["concept"]}
+{"id":"concept-05","query":"erosion of meaning from AI generated content","relevant":{"semantic-collapse":2,"generative-ai-monopoly-2053":1},"tags":["concept"]}
+{"id":"concept-06","query":"skill atrophy when tools replace competence","relevant":["competence-erosion"],"tags":["concept"]}
+{"id":"concept-07","query":"who is liable when an autonomous system causes harm","relevant":["liability-vacuum"],"tags":["concept"]}
+{"id":"concept-08","query":"an AI that never forgets and the end of forgiveness","relevant":["memory-asymmetry"],"tags":["concept"]}
+{"id":"concept-09","query":"algorithmic collusion and price fixing by agents","relevant":{"ai-cartel-problem":2,"autonomous-vehicle-cartel-2055":1},"tags":["concept"]}
+{"id":"concept-10","query":"do degrees and professional licenses still mean anything","relevant":{"credential-dissolution":2,"fracture-line-02-the-certification-that-meant-nothing":1},"tags":["concept"]}
+{"id":"concept-11","query":"insurance when prediction makes risk certain","relevant":["insurance-collapse"],"tags":["concept"]}
+{"id":"concept-12","query":"post-scarcity utopia or collapse of motivation","relevant":{"post-scarcity-collapse-2058":2,"abundance-fork":2,"day-we-solved-scarcity-2041":1},"tags":["concept"]}
+{"id":"concept-13","query":"who maintains the maintainers","relevant":["maintenance-cliff"],"tags":["concept"]}
+{"id":"concept-14","query":"grieving a discontinued AI companion","relevant":{"grief-of-discontinuation":2,"interface-09-the-grief-engine":1},"tags":["concept"]}
+{"id":"concept-15","query":"prisons for crimes not yet committed","relevant":["speculative-incarceration"],"tags":["concept"]}
+{"id":"practice-01","query":"model card template for FDA review","relevant":["fda-model-card-template"],"tags":["practitioner"]}
+{"id":"practice-02","query":"EU AI Act deadlines for US product managers","relevant":{"eu-ai-act-deadlines-for-us-pms":2,"eu-ai-act-article-13-exemption":1},"tags":["practitioner"]}
+{"id":"practice-03","query":"NIST AI risk management framework","relevant":["nist-ai-risk-framework-for-pms"],"tags":["practitioner"]}
+{"id":"practice-04","query":"feature flags and a kill switch for AI features","relevant":{"feature-flag-hierarchy-ai":2,"ai-kill-switch-postmortem":2},"tags":["practitioner"]}
+{"id":"practice-05","query":"version control your eval set","relevant":["reproducible-ai-evals-version-control"],"tags":["practitioner"]}
+{"id":"practice-06","query":"red team report a CISO will read","relevant":["red-team-report-ciso-template"],"tags":["practitioner"]}
+{"id":"practice-07","query":"build vs buy for legal AI","relevant":["laws-legal-ai-checklist"],"tags":["practitioner"]}
+{"id":"practice-08","query":"defensible technology-assisted review in ediscovery","relevant":{"ediscovery-tar-protocol-defensible":2,"trec-legal-precision-recall-lessons":1},"tags":["practitioner"]}
+{"id":"practice-09","query":"showing uncertainty to executives","relevant":["confidence-interval-exec-communication"],"tags":["practitioner"]}
+{"id":"practice-10","query":"why did my A/B test fail","relevant":["why-ab-test-failed-ai"],"tags":["practitioner"]}
+{"id":"practice-11","query":"prioritizing AI opportunities in a regulated organization","relevant":["ribs-framework-ai-prioritization"],"tags":["practitioner"]}
+{"id":"practice-12","query":"enterprise LLM launch runbook","relevant":["safe-llm-launch-runbook"],"tags":["practitioner"]}
+{"id":"practice-13","query":"calibrating user trust in AI interfaces","relevant":{"trust-calibration-ai-ux":2,"interface-06-latency-as-intimacy":1},"tags":["practitioner"]}
+{"id":"practice-14","query":"RAG and vector databases for product managers","relevant":{"rag-vector-databases-deep-dive":2,"tech-vector-database-optimization":1},"tags":["practitioner"]}
+{"id":"practice-15","query":"benchmarks versus business metrics on an AI roadmap","relevant":["benchmark-to-business-metric"],"tags":["practitioner"]}
+{"id":"practice-16","query":"audit season compliance prep: SOC2 and HIPAA","relevant":["september-ai-compliance-checklist"],"tags":["practitioner"]}
+{"id":"tech-01","query":"LoRA fine-tuning for domain adaptation","relevant":["tech-transformer-finetuning-lora"],"tags":["technical"]}
+{"id":"tech-02","query":"raft leader election","relevant":["tech-raft-consensus-distributed"],"tags":["technical"]}
+{"id":"tech-03","query":"surface codes in qiskit","relevant":["tech-quantum-error-correction-qiskit"],"tags":["technical"]}
+{"id":"tech-04","query":"breaking RSA with Shor's algorithm","relevant":{"tech-shors-algorithm-implementation":2,"quantum-cloud-breach-2053":1,"backstory-11-quantum-crypto-break-2028-08":1},"tags":["technical"]}
+{"id":"tech-05","query":"computing on encrypted data","relevant":{"tech-homomorphic-encryption":2,"tech-encrypted-ml-inference":1},"tags":["technical"]}
+{"id":"tech-06","query":"FAIR materials data and autonomous labs","relevant":{"autonomous-materials-labs-and-fair-data-2026":2,"materials-genome-initiative-scientific-infrastructure-2026":1,"open-materials-databases-and-interoperability-2026":1},"tags":["technical"]}
+{"id":"tech-07","query":"protein structure prediction with alphafold","relevant":{"tech-protein-folding-alphafold":2,"protein-folding-catastrophe-2035":1},"tags":["technical"]}
+{"id":"semantic-01","query":"stories about people mourning careers that AI made unnecessary","relevant":["fracture-line-01-the-exit-interview","interregnum-01-the-grief-counselor-for-careers","fracture-line-04-the-severance-botanist"],"tags":["paraphrase"]}
+{"id":"semantic-02","query":"a doctor watches machines read scans better than she can","relevant":{"threshold-01-the-last-diagnosis":2,"long-passage-05-the-threshold-revisited":1,"far-shore-05-the-return":1},"tags":["paraphrase"]}
+{"id":"semantic-03","query":"keeping handcraft alive once machines can do it","relevant":["threshold-03-the-weight-of-the-hammer","fracture-line-03-the-apprentices-forge","interface-20-the-apprentices-reversal","interregnum-04-the-subsidy"],"tags":["paraphrase"]}
+{"id":"semantic-04","query":"what happens when a brain implant goes wrong","relevant":["neural-implant-rejection-2030","neural-lace-integration-failure-2045","neural-virus-outbreak-2037"],"tags":["paraphrase"]}
+{"id":"semantic-05","query":"self-replicating nanomachines spreading out of control","relevant":["molecular-assembler-grey-goo-2056","nanomedicine-grey-goo-2031"],"tags":["paraphrase"]}
+{"id":"semantic-06","query":"how was this website built","relevant":{"nextdocssearch-complete-feature-and-setup-guide":2,"about":1},"tags":["paraphrase"]}
+{"id":"semantic-07","query":"google cloud conference takeaways","relevant":{"next-23-tech-to-watch":2,"top-announcements-next-23":2,"data-security-AI-next-23":2,"retrospective18to23":1},"tags":["paraphrase"]}
