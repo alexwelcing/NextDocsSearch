@@ -25,6 +25,7 @@ import { ARC, FONT, rgba } from '@/lib/immersive/theme'
 import { WindfoilText } from '../text/WindfoilText'
 import { DockChassis } from '../dock/DockChassis'
 import { CrtScreen } from '../dock/CrtScreen'
+import { TitleScrim } from './WorldTitleCard'
 
 const DISTANCE = 0.5 // metres down the gaze — inside the frustum, in front of the whole world
 const SCALE = 0.25 // shrink the stand-ins; size never enters a pipeline key
@@ -207,6 +208,8 @@ export function WarmupRig() {
           <planeGeometry args={[0.05, 0.01]} />
           <meshBasicMaterial color={ARC.green} transparent depthWrite={false} fog={false} />
         </mesh>
+        {/* ...and its legibility scrim (a TSL NodeMaterial of its own) */}
+        <TitleScrim width={0.05} height={0.03} opacity={1} position={[0.26, 0.06, 0]} />
         {/* textured planes: reader images (fog-free) and the film panel (fogged, video sampler) */}
         <mesh position={[0.26, 0, 0]}>
           <planeGeometry args={[0.05, 0.05]} />

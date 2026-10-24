@@ -51,14 +51,6 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
           useImmersiveStore.getState().setBootPhase('unsupported')
           throw err
         }
-        // Neutral (Khronos PBR Neutral) keeps authored hue and saturation through the mids and
-        // only rolls off true highlights: #70ff8f lands at ~(97,240,129) and white at ~240, where
-        // ACES at 1.05 gave pale mint ~(204,228,209) and capped white at ~228. Its toe deepens
-        // shadows; dark panoramas get that back from WorldDef.exposure (scene/WorldExposure), not
-        // from this global exposure, so the UI reads the same in every world.
-        renderer.toneMapping = THREE.NeutralToneMapping
-        renderer.toneMappingExposure = 1
-
         // Mid-session recovery: a lost device (driver reset, OOM, mobile backgrounding) leaves
         // this renderer permanently inert. 'destroyed' is us tearing it down on purpose (e.g. a
         // future dev-mode remount) — anything else is unexpected and needs the reconnect screen,
@@ -76,6 +68,17 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
         }
 
         return renderer
+      }}
+      // Neutral (Khronos PBR Neutral) keeps authored hue and saturation through the mids and only
+      // rolls off true highlights: #70ff8f lands at ~(97,240,129) and white at ~240, where ACES at
+      // 1.05 gave pale mint ~(204,228,209) and capped white at ~228. Its toe deepens shadows; dark
+      // panoramas get that back from WorldDef.exposure (scene/WorldExposure), not from this global
+      // exposure, so the UI reads the same in every world. Set here, not in the gl factory: R3F's
+      // first configure() stamps ACESFilmic onto the renderer AFTER the factory resolves, and
+      // onCreated is the first hook that runs after that (still before the first frame).
+      onCreated={({ gl }) => {
+        gl.toneMapping = THREE.NeutralToneMapping
+        gl.toneMappingExposure = 1
       }}
       camera={{ fov: 70, near: 0.05, far: 300, position: [0, 0, 0] }}
       dpr={quality === 'low' ? [1, 1.25] : [1, 2]}
