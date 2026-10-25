@@ -110,7 +110,7 @@ describe('listRecords', () => {
 })
 
 describe('HttpIndexSource', () => {
-  it('explicitly requests full records and retains every search field', async () => {
+  it('reads the static full index by default and retains every search field', async () => {
     const full = record('rich', {
       description: 'd'.repeat(250),
       searchText: 'body-only evidence',
@@ -124,21 +124,17 @@ describe('HttpIndexSource', () => {
     vi.stubGlobal('fetch', fetcher)
 
     expect(await new HttpIndexSource().load()).toEqual([full])
-    const url = new URL(String(fetcher.mock.calls[0][0]), 'https://archive.test')
-    expect(url.pathname).toBe('/api/arc/archive')
-    expect(url.searchParams.get('view')).toBe('full')
+    expect(fetcher).toHaveBeenCalledWith('/arc/archive-full.json')
   })
 
-  it('preserves existing query parameters when selecting the full contract', async () => {
+  it('fetches a caller-supplied URL verbatim, such as the API alias full view', async () => {
     const fetcher = vi
       .fn<typeof fetch>()
       .mockResolvedValue(new Response(JSON.stringify({ records: [] })))
     vi.stubGlobal('fetch', fetcher)
 
-    await new HttpIndexSource('/api/arc/archive?lang=en').load()
-    const url = new URL(String(fetcher.mock.calls[0][0]), 'https://archive.test')
-    expect(url.searchParams.get('lang')).toBe('en')
-    expect(url.searchParams.get('view')).toBe('full')
+    await new HttpIndexSource('/api/arc/archive?view=full&lang=en').load()
+    expect(fetcher).toHaveBeenCalledWith('/api/arc/archive?view=full&lang=en')
   })
 
   it('rejects the slim response rather than inventing missing search information', async () => {

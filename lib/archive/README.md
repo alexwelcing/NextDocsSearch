@@ -27,11 +27,15 @@ const records = await listRecords(source)
 const hits = searchRecords(records, 'delegation')
 ```
 
-`GET /api/arc/archive` retains the dock response `{ records, total }`, cache policy,
-field names, description truncation, reading-time fallback, and ordering.
-`GET /api/arc/archive?view=full` returns the same envelope with complete records,
-including full descriptions, searchText, keywords, domains, mechanics, and hero.
-The HTTP source always requests this full view and rejects incomplete payloads.
+The build writes the index as static files (`scripts/generate-archive-index.ts`):
+`/arc/archive.json` holds the dock response `{ records, total }` with the slim
+field names, description truncation and reading-time fallback, and
+`/arc/archive-full.json` the same envelope with complete records, including full
+descriptions, searchText, keywords, domains, mechanics, and hero. Both list records
+in `archiveOrder` (newest date first, equal dates by slug). `GET /api/arc/archive`
+(`?view=full`) remains as an alias serving the same records from a bundled manifest.
+The HTTP source fetches its URL verbatim (default `/arc/archive-full.json`) and
+rejects incomplete payloads.
 No raw MDX, author details, or internal manifest filenames are serialized.
 
 `listRecords` sorts newest first and caches successful loads per source instance.

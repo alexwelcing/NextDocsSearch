@@ -1,0 +1,21 @@
+# Python / uv
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+dist/
+*.egg-info/
+
+# Run outputs and caches live in GCS and ~/.cache/arcforge, never in the repo
+.arcforge-cache/
+runs/
+artifacts/
+models/
+*.safetensors
+*.onnx
+*.bin
+
+# The vault: plaintext queries and identities never touch the repo (owner data lives in ~/arc-owner/)
+*.age.key
+vault/plaintext/
+arc-owner/

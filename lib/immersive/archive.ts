@@ -1,7 +1,9 @@
-// Compact display index for the dock and collections. FIND loads the complete
-// search index on demand through lib/archive instead of this eager preload.
+// Compact display index for the dock and collections: the static /arc/archive.json the build
+// writes. FIND loads the complete search index on demand through lib/archive instead of this
+// eager preload.
 
 import type { ArcRecordSlim } from '@/lib/archive'
+import { ARCHIVE_URL } from '@/lib/archive/http'
 
 export type ArcRecord = ArcRecordSlim
 
@@ -9,7 +11,7 @@ let cache: Promise<ArcRecord[]> | null = null
 
 export function loadArchive(): Promise<ArcRecord[]> {
   if (!cache) {
-    cache = fetch('/api/arc/archive')
+    cache = fetch(ARCHIVE_URL)
       .then((r) => {
         if (!r.ok) throw new Error(`archive: HTTP ${r.status}`)
         return r.json()
