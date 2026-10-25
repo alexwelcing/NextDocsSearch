@@ -348,7 +348,9 @@ def _choose_squeeze(arms: Sequence[Mapping[str, Any]], within: float, max_bundle
     best = max(a['gain_lfo'] for a in arms)
     # Rounded so that 'within 0.01' is not lost to float noise in the subtraction.
     feasible = [
-        a for a in arms if a['bundle_raw'] <= max_bundle and round(best - a['gain_lfo'], 12) <= within
+        a
+        for a in arms
+        if a['bundle_raw'] <= max_bundle and round(best - a['gain_lfo'], 12) <= within
     ]
     if not feasible:
         return 'parent'
@@ -398,7 +400,9 @@ def evaluate(
     adoption = None
     if doc.get('adoption') is not None:
         adoption = []
-        for entry in sorted(doc['adoption'], key=lambda e: (str(e.get('rule')), e.get('fold') or 0)):
+        for entry in sorted(
+            doc['adoption'], key=lambda e: (str(e.get('rule')), e.get('fold') or 0)
+        ):
             rule_id = f'adoption.{entry.get("rule")}'
             chosen = ctx.adoption.get(rule_id, {}).get(entry.get('fold'))
             adoption.append(
@@ -406,7 +410,10 @@ def evaluate(
                     'fold': entry.get('fold'),
                     'rule': entry.get('rule'),
                     'arms': [
-                        {k: arm.get(k) for k in ('arm_id', 'gain_lfo', 'guard_ok', 'control', 'bundle_raw')}
+                        {
+                            k: arm.get(k)
+                            for k in ('arm_id', 'gain_lfo', 'guard_ok', 'control', 'bundle_raw')
+                        }
                         for arm in entry.get('arms') or []
                     ],
                     'chosen_arm': chosen,
@@ -419,8 +426,14 @@ def evaluate(
     gates_inputs = doc.get('gates_inputs') or {}
     out_doc: dict[str, Any] = {
         'schema': VERDICTS_SCHEMA,
-        'run': {k: run.get(k) for k in ('id', 'branch', 'h1_provisional', 'prereg_sha256', 'rules_sha256')},
-        'vault': {k: vault.get(k) for k in ('read_this_run', 'read_index', 'hybrid_minus_b2_ndcg10', 'sign')},
+        'run': {
+            k: run.get(k)
+            for k in ('id', 'branch', 'h1_provisional', 'prereg_sha256', 'rules_sha256')
+        },
+        'vault': {
+            k: vault.get(k)
+            for k in ('read_this_run', 'read_index', 'hybrid_minus_b2_ndcg10', 'sign')
+        },
         'gates_inputs': {k: gates_inputs.get(k) for k in GATE_INPUT_KEYS},
         'gates_summary': summary,
         'rows': rows,
@@ -475,7 +488,9 @@ def check_structure(ctx: Context) -> list[str]:
             continue
         seen.append(cid)
         if cid not in read_by_scope:
-            errors.append(f'row {cid} is present, but no rule in scope at {ctx.run_id}/{ctx.branch} reads it')
+            errors.append(
+                f'row {cid} is present, but no rule in scope at {ctx.run_id}/{ctx.branch} reads it'
+            )
         errors.extend(_check_row_metadata(ctx, row))
     errors.extend(_check_holm(ctx))
 
@@ -488,7 +503,9 @@ def check_structure(ctx: Context) -> list[str]:
     for entry in doc.get('adoption') or []:
         rule_id = f'adoption.{entry.get("rule")}'
         if rule_id not in (r.id for r in rules.rules) or not ctx.in_scope(rule_id):
-            errors.append(f'an adoption decision under {rule_id} is recorded, which is not in scope')
+            errors.append(
+                f'an adoption decision under {rule_id} is recorded, which is not in scope'
+            )
     return errors
 
 
@@ -542,9 +559,16 @@ def _check_holm(ctx: Context) -> list[str]:
         expected.update(stats.holm(family, alpha))
     for cid, (rank, m, alpha_adj, p_holm) in expected.items():
         row = ctx.rows[cid]
-        for key, value in (('holm_rank', rank), ('holm_m', m), ('alpha_adj', alpha_adj), ('p_holm', p_holm)):
+        for key, value in (
+            ('holm_rank', rank),
+            ('holm_m', m),
+            ('alpha_adj', alpha_adj),
+            ('p_holm', p_holm),
+        ):
             if not close(row.get(key), value):
-                errors.append(f'row {cid}: {key} is {row.get(key)!r}, Holm over its family gives {value!r}')
+                errors.append(
+                    f'row {cid}: {key} is {row.get(key)!r}, Holm over its family gives {value!r}'
+                )
     for row in outside:
         cid = row['comparison_id']
         m = len(families.get(ctx.rules.rows[cid].hypothesis, {}))
@@ -557,7 +581,9 @@ def _check_holm(ctx: Context) -> list[str]:
             ('ci_hi_adj', row.get('ci_hi_raw')),
         ):
             if not close(row.get(key), value):
-                errors.append(f'row {cid} (outside its Holm family): {key} is {row.get(key)!r}, expected {value!r}')
+                errors.append(
+                    f'row {cid} (outside its Holm family): {key} is {row.get(key)!r}, expected {value!r}'
+                )
     return errors
 
 
@@ -617,7 +643,9 @@ def stripped_keys_present(doc: Any) -> list[str]:
     for list_key, keys in STRIP_MAP.items():
         for n, entry in enumerate(doc.get(list_key) or []):
             found.extend(
-                f'{list_key}[{n}].{key}' for key in keys if isinstance(entry, Mapping) and key in entry
+                f'{list_key}[{n}].{key}'
+                for key in keys
+                if isinstance(entry, Mapping) and key in entry
             )
     return found
 

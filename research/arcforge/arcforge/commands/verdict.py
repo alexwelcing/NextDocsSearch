@@ -49,7 +49,10 @@ def run(args: argparse.Namespace) -> int:
     run_dir = _run_dir(args.run, args.runs_dir)
     if not run_dir.is_dir():
         known = ', '.join(RUN_IDS)
-        print(f'arcforge verdict: no run directory {run_dir} (give a run id: {known}; or a path)', file=sys.stderr)
+        print(
+            f'arcforge verdict: no run directory {run_dir} (give a run id: {known}; or a path)',
+            file=sys.stderr,
+        )
         return EXIT_USAGE
     runs_root = Path(args.runs_dir) if args.runs_dir else run_dir.parent
 
@@ -83,7 +86,10 @@ def run(args: argparse.Namespace) -> int:
     ok = not problems
     if args.emit:
         if outcome is None or not outcome.ok:
-            print('arcforge verdict: not writing --emit: the verdicts are not computable', file=sys.stderr)
+            print(
+                'arcforge verdict: not writing --emit: the verdicts are not computable',
+                file=sys.stderr,
+            )
         else:
             Path(args.emit).write_text(dumps_doc(outcome.doc), encoding='utf-8')
     if args.json:
@@ -118,7 +124,9 @@ def register(subparsers) -> None:
         description=DESCRIPTION,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('run', help='a run id (r00 .. r10, r05K, r07K, r08K, r09K, r10K) or a run directory')
+    parser.add_argument(
+        'run', help='a run id (r00 .. r10, r05K, r07K, r08K, r09K, r10K) or a run directory'
+    )
     parser.add_argument(
         '--runs-dir',
         help='the directory holding one sub-directory per run (default: $ARCFORGE_RUNS_DIR, else ./runs); '
@@ -128,7 +136,11 @@ def register(subparsers) -> None:
         '--rules',
         help='the rules file (default: $ARCFORGE_RULES, else the packaged template); it must hash to run.rules_sha256',
     )
-    parser.add_argument('--inputs', metavar='JSON', help="build from the producer's input document instead of verifying")
+    parser.add_argument(
+        '--inputs',
+        metavar='JSON',
+        help="build from the producer's input document instead of verifying",
+    )
     parser.add_argument('--emit', metavar='PATH', help='write the recomputed verdicts.json to PATH')
     parser.add_argument('--json', action='store_true', help='print the result as JSON')
     parser.set_defaults(func=run)

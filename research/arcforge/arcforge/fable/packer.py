@@ -66,7 +66,9 @@ def now_utc() -> str:
 
 
 def canonical_bytes(obj: Any) -> bytes:
-    return json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
+    return json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode(
+        'utf-8'
+    )
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -100,7 +102,9 @@ def _read_json(path: str | Path, what: str) -> Any:
         raise PacketError(f'{what}: {path} is not JSON ({error})') from None
 
 
-def _validate(instance: Any, schema: Mapping[str, Any], what: str, definition: str | None = None) -> None:
+def _validate(
+    instance: Any, schema: Mapping[str, Any], what: str, definition: str | None = None
+) -> None:
     from arcforge.contract import schema as report_schema
 
     problems = report_schema.errors(instance, schema, definition)
@@ -123,15 +127,22 @@ def build(
     """Write (or reuse) a packet. `inputs` are (path under inputs/, role, bytes)."""
     kind = KINDS[kind_name]
     if role not in kind.roles or run_id not in kind.runs_by_role[role]:
-        raise PacketError(f'{kind_name}: role {role!r} does not run at {run_id!r} ({dict(kind.runs_by_role)})')
+        raise PacketError(
+            f'{kind_name}: role {role!r} does not run at {run_id!r} ({dict(kind.runs_by_role)})'
+        )
     root = Path(root) if root is not None else default_root()
     repo = inside_git_worktree(root)
     if repo is not None and not allow_in_repo:
-        raise PacketError(f'{root} is inside the git work tree {repo}: an agent there could read unstripped run files')
+        raise PacketError(
+            f'{root} is inside the git work tree {repo}: an agent there could read unstripped run files'
+        )
 
     files: dict[str, tuple[str, bytes]] = {
         'INSTRUCTIONS.md': ('instructions', render_brief(kind, context).encode('utf-8')),
-        'output.schema.json': ('output_schema', (Path(__file__).with_name('schemas') / kind.output_schema).read_bytes()),
+        'output.schema.json': (
+            'output_schema',
+            (Path(__file__).with_name('schemas') / kind.output_schema).read_bytes(),
+        ),
     }
     for rel, file_role, data in inputs:
         path = f'inputs/{rel}'
@@ -167,7 +178,9 @@ def build(
         target = staging / 'packet' / path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
-    (staging / 'packet' / 'packet.json').write_bytes(json.dumps(manifest, indent=1).encode('utf-8') + b'\n')
+    (staging / 'packet' / 'packet.json').write_bytes(
+        json.dumps(manifest, indent=1).encode('utf-8') + b'\n'
+    )
     ledger = {
         'schema': LEDGER_SCHEMA,
         'packet_sha256': digest,
@@ -186,7 +199,9 @@ def build(
     return packet
 
 
-def verify_dir(directory: Path, manifest: Mapping[str, Any], allow: Sequence[str] = ()) -> list[str]:
+def verify_dir(
+    directory: Path, manifest: Mapping[str, Any], allow: Sequence[str] = ()
+) -> list[str]:
     """Problems with `directory` as a copy of the manifest: changed, missing or extra files.
 
     `allow` names extra top-level files that may exist (packet.json; output.json in a workdir).
@@ -250,12 +265,18 @@ def load(packet_root: str | Path) -> Packet:
 
 
 def pack_gold_audit(
-    pairs: str | Path, rubric: str | Path, *, shape: tuple[int, int] | None = GOLD_SHAPE, **kwargs: Any
+    pairs: str | Path,
+    rubric: str | Path,
+    *,
+    shape: tuple[int, int] | None = GOLD_SHAPE,
+    **kwargs: Any,
 ) -> Packet:
     """Gold audit #1 (R00) or #2 (R10/R10K): pairs.json (arc-gold-pairs/1) and the rubric."""
     data = _read(pairs, 'pairs')
     doc = _read_json(pairs, 'pairs')
-    schema = json.loads((Path(__file__).with_name('schemas') / 'gold-pairs-1.json').read_text(encoding='utf-8'))
+    schema = json.loads(
+        (Path(__file__).with_name('schemas') / 'gold-pairs-1.json').read_text(encoding='utf-8')
+    )
     _validate(doc, schema, 'pairs')
     queries = doc['queries']
     ids = [q['query_id'] for q in queries]
@@ -265,9 +286,16 @@ def pack_gold_audit(
     if shape is not None:
         counts = {len(q['candidates']) for q in queries}
         if len(queries) != shape[0] or counts != {shape[1]}:
-            raise PacketError(f'pairs: a gold audit is {shape[0]} queries x {shape[1]} candidates, got {len(queries)} x {sorted(counts)}')
+            raise PacketError(
+                f'pairs: a gold audit is {shape[0]} queries x {shape[1]} candidates, got {len(queries)} x {sorted(counts)}'
+            )
     role = f'gold_audit_{doc["audit_index"]}'
-    context = {'audit_index': doc['audit_index'], 'run_id': doc['run_id'], 'n_queries': len(queries), 'n_pairs': len(candidates)}
+    context = {
+        'audit_index': doc['audit_index'],
+        'run_id': doc['run_id'],
+        'n_queries': len(queries),
+        'n_pairs': len(candidates),
+    }
     inputs = [('pairs.json', 'pairs', data), ('rubric.md', 'rubric', _read(rubric, 'rubric'))]
     return build('gold_audit', role, doc['run_id'], inputs, context, **kwargs)
 
@@ -296,7 +324,9 @@ def pack_signoff(
     return build('prereg_signoff', 'signoff', 'r00', inputs, {'run_id': 'r00'}, **kwargs)
 
 
-def pack_blind(*, prereg: str | Path, rules: str | Path, verdicts: Sequence[str | Path], **kwargs: Any) -> Packet:
+def pack_blind(
+    *, prereg: str | Path, rules: str | Path, verdicts: Sequence[str | Path], **kwargs: Any
+) -> Packet:
     """The end review's blind pass: PREREG.md, rules.yaml and every run's verdicts.json, stripped."""
     from arcforge.contract import schema as report_schema
     from arcforge.contract.branches import PathError, Step, follow
@@ -317,8 +347,12 @@ def pack_blind(*, prereg: str | Path, rules: str | Path, verdicts: Sequence[str 
     except PathError as error:
         raise PacketError(f'verdicts: {error}') from None
     final = run_ids[-1]
-    if final not in ('r10', 'r10K') or not any(len(parsed_rules.branch_table[p]) == len(docs) for p in paths):
-        raise PacketError(f'verdicts: the blind pass needs every run of the realized path through R10/R10K, got {run_ids}')
+    if final not in ('r10', 'r10K') or not any(
+        len(parsed_rules.branch_table[p]) == len(docs) for p in paths
+    ):
+        raise PacketError(
+            f'verdicts: the blind pass needs every run of the realized path through R10/R10K, got {run_ids}'
+        )
     inputs = []
     full_schema = report_schema.load()
     for doc in docs:
@@ -327,15 +361,26 @@ def pack_blind(*, prereg: str | Path, rules: str | Path, verdicts: Sequence[str 
         if left:
             raise PacketError(f'{doc["run"]["id"]}: stripped fields remain: {left}')
         _validate(blind, full_schema, f'{doc["run"]["id"]} (blind)', 'VerdictsDocBlind')
-        inputs.append((f'verdicts/{doc["run"]["id"]}.json', 'verdicts_blind', dumps_doc(blind).encode('utf-8')))
-    inputs += [('PREREG.md', 'prereg', _read(prereg, 'prereg')), ('rules.yaml', 'rules', _read(rules, 'rules'))]
+        inputs.append(
+            (
+                f'verdicts/{doc["run"]["id"]}.json',
+                'verdicts_blind',
+                dumps_doc(blind).encode('utf-8'),
+            )
+        )
+    inputs += [
+        ('PREREG.md', 'prereg', _read(prereg, 'prereg')),
+        ('rules.yaml', 'rules', _read(rules, 'rules')),
+    ]
     context = {
         'run_id': final,
         'final_run': final,
         'runs': ', '.join(run_ids),
         'stripped': ', '.join(f'`{f}`' for f in STRIPPED_FIELDS),
     }
-    return build('blind_recompute', 'end_review', final, inputs, context, stripped=STRIPPED_FIELDS, **kwargs)
+    return build(
+        'blind_recompute', 'end_review', final, inputs, context, stripped=STRIPPED_FIELDS, **kwargs
+    )
 
 
 def pack_mismatch(

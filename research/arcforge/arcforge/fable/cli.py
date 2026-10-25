@@ -45,7 +45,9 @@ def cmd_pack(args: argparse.Namespace) -> int:
             verdicts=args.verdicts, bench_card=args.bench_card, **common,
         )  # fmt: skip
     elif args.kind == 'blind':
-        packet = packer.pack_blind(prereg=args.prereg, rules=args.rules, verdicts=args.verdicts, **common)
+        packet = packer.pack_blind(
+            prereg=args.prereg, rules=args.rules, verdicts=args.verdicts, **common
+        )
     else:
         packet = packer.pack_mismatch(
             prereg=args.prereg, rules=args.rules, writeup=args.writeup, reports=args.reports,
@@ -59,7 +61,9 @@ def cmd_pack(args: argparse.Namespace) -> int:
             'packet_sha256': packet.sha256,
             'kind': packet.manifest['kind'],
             'role': packet.manifest['role'],
-            'workdir': None if open_attempt is None else str(packet.workdir(open_attempt['attempt'])),
+            'workdir': None
+            if open_attempt is None
+            else str(packet.workdir(open_attempt['attempt'])),
             'status': ledger['status'],
         }
     )
@@ -129,20 +133,31 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest='command', metavar='<command>', required=True)
 
     pack = sub.add_parser('pack', help='write a packet and its first working directory')
-    pack.add_argument('--root', help='packet root (default: $ARCFORGE_FABLE_DIR, else ~/.cache/arcforge/fable)')
+    pack.add_argument(
+        '--root', help='packet root (default: $ARCFORGE_FABLE_DIR, else ~/.cache/arcforge/fable)'
+    )
     pack.add_argument('--allow-in-repo', action='store_true', help=argparse.SUPPRESS)
-    kinds = pack.add_subparsers(dest='kind', metavar='<gold-audit|signoff|blind|mismatch>', required=True)
+    kinds = pack.add_subparsers(
+        dest='kind', metavar='<gold-audit|signoff|blind|mismatch>', required=True
+    )
     gold = kinds.add_parser('gold-audit', help='gold audit #1 (R00) or #2 (R10/R10K)')
     gold.add_argument('--pairs', required=True, help='the pairs file (arc-gold-pairs/1)')
     gold.add_argument('--rubric', required=True, help='the 0-3 relevance rubric (markdown)')
-    gold.add_argument('--shape', default='60x12', help="queries x candidates to require (default 60x12; 'any')")
+    gold.add_argument(
+        '--shape', default='60x12', help="queries x candidates to require (default 60x12; 'any')"
+    )
     signoff = kinds.add_parser('signoff', help='the R00 PREREG sign-off')
     for name in ('prereg', 'rules', 'schema', 'lint', 'report', 'verdicts', 'bench-card'):
         signoff.add_argument(f'--{name}', required=True)
     blind = kinds.add_parser('blind', help="the end review's blind pass (verdicts are stripped)")
     blind.add_argument('--prereg', required=True)
     blind.add_argument('--rules', required=True)
-    blind.add_argument('--verdicts', required=True, nargs='+', help="every run's verdicts.json (full; arcforge strips them)")
+    blind.add_argument(
+        '--verdicts',
+        required=True,
+        nargs='+',
+        help="every run's verdicts.json (full; arcforge strips them)",
+    )
     mismatch = kinds.add_parser('mismatch', help="the end review's mismatch pass")
     for name in ('prereg', 'rules', 'writeup', 'comparison'):
         mismatch.add_argument(f'--{name}', required=True)
@@ -152,20 +167,26 @@ def build_parser() -> argparse.ArgumentParser:
     check = sub.add_parser('check', help="validate the open attempt's output.json")
     check.add_argument('packet', help='the packet root printed by pack')
     check.add_argument('--session', required=True, help="the agent's session id")
-    check.add_argument('--model', required=True, help='the model id the harness reported for the agent')
+    check.add_argument(
+        '--model', required=True, help='the model id the harness reported for the agent'
+    )
     check.set_defaults(func=cmd_check)
 
-    comp = sub.add_parser('compare', help='compare an accepted blind pass with the reported verdicts')
+    comp = sub.add_parser(
+        'compare', help='compare an accepted blind pass with the reported verdicts'
+    )
     comp.add_argument('packet', help='the blind_recompute packet root')
     comp.add_argument('--verdicts', required=True, nargs='+', help="every run's full verdicts.json")
     comp.add_argument('--out', help='also write the table here (the mismatch pack --comparison)')
     comp.set_defaults(func=cmd_compare)
 
-    rec = sub.add_parser('record', help="print the report.json fable[] entry")
+    rec = sub.add_parser('record', help='print the report.json fable[] entry')
     rec.add_argument('packet')
     rec.set_defaults(func=cmd_record)
 
-    sign = sub.add_parser('owner-sign', help='record the owner signing PREREG after a failed-closed sign-off')
+    sign = sub.add_parser(
+        'owner-sign', help='record the owner signing PREREG after a failed-closed sign-off'
+    )
     sign.add_argument('packet')
     sign.add_argument('--note', required=True)
     sign.set_defaults(func=cmd_owner_sign)

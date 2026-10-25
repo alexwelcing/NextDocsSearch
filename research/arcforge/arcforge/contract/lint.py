@@ -23,13 +23,35 @@ from typing import Any
 from arcforge.contract import schema as report_schema
 from arcforge.contract.expr import CONTEXT_NAMES, Read
 from arcforge.contract.ids import BRANCHES, PRODUCES_SCHEMA, RUN_IDS
-from arcforge.contract.rules import TEMPLATE_PATH, Rule, Rules, RulesError, load_rules, load_yaml, sha256_bytes
+from arcforge.contract.rules import (
+    TEMPLATE_PATH,
+    Rule,
+    Rules,
+    RulesError,
+    load_rules,
+    load_yaml,
+    sha256_bytes,
+)
 
 PRODUCES_PATH = Path(__file__).with_name('produces.yaml')
 DOC = 'verdicts_doc'
 # Nullable VerdictRow fields whose presence rules.yaml itself decides.
 _RULE_DECIDED_ROW_FIELDS = frozenset({'tau', 'tau_floor', 'mde_r00', 'prediction'})
-_KILL_RULES = ('FUT', 'H1.F', 'H1', 'H2', 'H3', 'H3a', 'H3b', 'H4', 'H5', 'H6', 'H7', 'H7.report', 'K1')
+_KILL_RULES = (
+    'FUT',
+    'H1.F',
+    'H1',
+    'H2',
+    'H3',
+    'H3a',
+    'H3b',
+    'H4',
+    'H5',
+    'H6',
+    'H7',
+    'H7.report',
+    'K1',
+)
 
 
 @dataclass(frozen=True)
@@ -106,7 +128,9 @@ def _flatten(values: Any) -> list[Any]:
     return [values]
 
 
-def load_plan(path: str | Path, rules: Rules, schema: Mapping[str, Any], report: LintReport) -> Plan | None:
+def load_plan(
+    path: str | Path, rules: Rules, schema: Mapping[str, Any], report: LintReport
+) -> Plan | None:
     raw_bytes = Path(path).read_bytes()
     try:
         data = load_yaml(raw_bytes.decode('utf-8'))
@@ -132,7 +156,9 @@ def load_plan(path: str | Path, rules: Rules, schema: Mapping[str, Any], report:
                 report.add('error', 'plan', f'unknown branch {branch!r}', pair=pair)
                 continue
             if pair not in realizable:
-                report.add('error', 'plan-unreachable', 'no PREREG path reaches this pair', pair=pair)
+                report.add(
+                    'error', 'plan-unreachable', 'no PREREG path reaches this pair', pair=pair
+                )
                 continue
             if not isinstance(body, dict) or set(body) - {'fields', 'rows'}:
                 report.add('error', 'plan', 'a plan entry is {fields, rows}', pair=pair)
@@ -140,15 +166,24 @@ def load_plan(path: str | Path, rules: Rules, schema: Mapping[str, Any], report:
             fields = [f for f in _flatten(body.get('fields') or []) if f is not None]
             rows = [r for r in _flatten(body.get('rows') or []) if r is not None]
             for name in fields:
-                if not isinstance(name, str) or not report_schema.lookup(schema, f'{DOC}.{name}').exists:
-                    report.add('error', 'plan-field', f'{name!r} is not a verdicts.json field', pair=pair)
+                if (
+                    not isinstance(name, str)
+                    or not report_schema.lookup(schema, f'{DOC}.{name}').exists
+                ):
+                    report.add(
+                        'error', 'plan-field', f'{name!r} is not a verdicts.json field', pair=pair
+                    )
             for row in rows:
                 if row not in rules.rows:
-                    report.add('error', 'plan-row', f'{row!r} is not a row of rules.yaml', pair=pair)
+                    report.add(
+                        'error', 'plan-row', f'{row!r} is not a row of rules.yaml', pair=pair
+                    )
             entries[pair] = (frozenset(f for f in fields if isinstance(f, str)), tuple(rows))
     for pair in sorted(realizable, key=_pair_key):
         if pair not in entries:
-            report.add('error', 'plan-missing', 'the plan says nothing about this (run, branch)', pair=pair)
+            report.add(
+                'error', 'plan-missing', 'the plan says nothing about this (run, branch)', pair=pair
+            )
     return Plan(sha256=sha256_bytes(raw_bytes), path=str(path), entries=entries)
 
 
@@ -225,7 +260,9 @@ class _Computability:
                 return f'reads gates_summary.{key}, but {producer.id} is out of scope here'
             inner = self.rule(producer, pair, stack)
             if inner:
-                return f'reads gates_summary.{key}, but {producer.id} is not computable ({inner[0]})'
+                return (
+                    f'reads gates_summary.{key}, but {producer.id} is not computable ({inner[0]})'
+                )
         for read in sorted(expr.reads(env), key=str):
             why = self.read(read, pair, stack)
             if why:
@@ -279,11 +316,21 @@ def _check_scope(rules: Rules, report: LintReport) -> None:
         for clause in rule.applies_to:
             hits = {p for p in realizable if clause.matches(*p)}
             if not hits:
-                report.add('error', 'dead-clause', f'{clause.describe()} reaches no run of any path', rule.id)
+                report.add(
+                    'error',
+                    'dead-clause',
+                    f'{clause.describe()} reaches no run of any path',
+                    rule.id,
+                )
             elif not clause.wildcard:
                 assert clause.runs is not None and clause.branches is not None
                 unreachable = sorted(
-                    ((r, b) for r in clause.runs for b in clause.branches if (r, b) not in realizable),
+                    (
+                        (r, b)
+                        for r in clause.runs
+                        for b in clause.branches
+                        if (r, b) not in realizable
+                    ),
                     key=_pair_key,
                 )
                 if unreachable:
@@ -306,11 +353,21 @@ def _check_fields_exist(rules: Rules, schema: Mapping[str, Any], report: LintRep
             path = f'{DOC}.rows[].{read.path}' if read.row else f'{DOC}.{read.path}'
             found = report_schema.lookup(schema, path)
             if not found.exists:
-                report.add('error', 'field-not-in-schema', f'reads {read}, which arc-report/1 does not define ({found.missing_at})', rule.id)
+                report.add(
+                    'error',
+                    'field-not-in-schema',
+                    f'reads {read}, which arc-report/1 does not define ({found.missing_at})',
+                    rule.id,
+                )
         for target in rule.derive:
             found = report_schema.lookup(schema, target)
             if not found.exists:
-                report.add('error', 'field-not-in-schema', f'derives {target}, which arc-report/1 does not define', rule.id)
+                report.add(
+                    'error',
+                    'field-not-in-schema',
+                    f'derives {target}, which arc-report/1 does not define',
+                    rule.id,
+                )
 
 
 def _check_decisions(rules: Rules, report: LintReport) -> None:
@@ -320,14 +377,28 @@ def _check_decisions(rules: Rules, report: LintReport) -> None:
         covered.add(pair)
         rule = rules.rule(decision.rule)
         if not rules.in_scope(rule.id, *pair):
-            report.add('error', 'decision', f'{rule.id} decides here but is out of scope', rule.id, pair)
+            report.add(
+                'error', 'decision', f'{rule.id} decides here but is out of scope', rule.id, pair
+            )
         statuses = set(rule.statuses())
         if set(decision.outcomes) != statuses:
-            report.add('error', 'decision', f'routes {sorted(decision.outcomes)}, but {rule.id} can be {sorted(statuses)}', rule.id, pair)
+            report.add(
+                'error',
+                'decision',
+                f'routes {sorted(decision.outcomes)}, but {rule.id} can be {sorted(statuses)}',
+                rule.id,
+                pair,
+            )
         through = {name for name, seq in rules.branch_table.items() if pair in seq}
         routed = {p for paths in decision.outcomes.values() for p in paths}
         if routed != through:
-            report.add('error', 'decision', f'routes paths {sorted(routed)}, but {sorted(through)} pass here', rule.id, pair)
+            report.add(
+                'error',
+                'decision',
+                f'routes paths {sorted(routed)}, but {sorted(through)} pass here',
+                rule.id,
+                pair,
+            )
         for status, paths in decision.outcomes.items():
             nexts = set()
             for name in paths:
@@ -335,7 +406,13 @@ def _check_decisions(rules: Rules, report: LintReport) -> None:
                 if pair in seq and seq.index(pair) + 1 < len(seq):
                     nexts.add(seq[seq.index(pair) + 1])
             if len(nexts) > 1:
-                report.add('error', 'decision', f'{status} leaves the next run open: {sorted(nexts)}', rule.id, pair)
+                report.add(
+                    'error',
+                    'decision',
+                    f'{status} leaves the next run open: {sorted(nexts)}',
+                    rule.id,
+                    pair,
+                )
     # Every fork of the table must be decided by some rule.
     for name, seq in rules.branch_table.items():
         for other, seq2 in rules.branch_table.items():
@@ -345,7 +422,11 @@ def _check_decisions(rules: Rules, report: LintReport) -> None:
             while common < min(len(seq), len(seq2)) and seq[common] == seq2[common]:
                 common += 1
             if 0 < common < min(len(seq), len(seq2)) and seq[common - 1] not in covered:
-                report.add('error', 'decision', f'paths {name} and {other} fork after {_label(seq[common - 1])}, and no decision routes them')
+                report.add(
+                    'error',
+                    'decision',
+                    f'paths {name} and {other} fork after {_label(seq[common - 1])}, and no decision routes them',
+                )
 
 
 def _check_invariants(rules: Rules, report: LintReport) -> None:
@@ -353,7 +434,12 @@ def _check_invariants(rules: Rules, report: LintReport) -> None:
     h3 = rules.rule('H3')
     falsifiers = [expr.source for status, expr in h3.outcomes if status == 'FALSIFIED']
     if falsifiers != ['c1.ci_hi_raw < 0.05']:
-        report.add('error', 'review3-h3-falsifier', f"H3's falsifier must read 'c1.ci_hi_raw < 0.05', got {falsifiers}", 'H3')
+        report.add(
+            'error',
+            'review3-h3-falsifier',
+            f"H3's falsifier must read 'c1.ci_hi_raw < 0.05', got {falsifiers}",
+            'H3',
+        )
     # Review 3, required change 2b: the read budget per path, S-F's two reads, at most 3.
     for name, seq in rules.branch_table.items():
         reads = [p for p in seq if rules.in_scope('vault.read', *p)]
@@ -365,11 +451,21 @@ def _check_invariants(rules: Rules, report: LintReport) -> None:
                 'vault.read',
             )  # fmt: skip
     if rules.vault_read_budget.get('S-F') != 2:
-        report.add('error', 'review3-sf-reads', 'S-F takes exactly two vault reads (r04 and r10K)', 'vault.read')
+        report.add(
+            'error',
+            'review3-sf-reads',
+            'S-F takes exactly two vault reads (r04 and r10K)',
+            'vault.read',
+        )
     # At r00 every hypothesis rule is NOT_APPLICABLE (the sign-off requires it).
     for rule_id in _KILL_RULES:
         if rules.in_scope(rule_id, 'r00', 'N'):
-            report.add('error', 'r00-hypothesis', 'in scope at r00, where every H rule must be NOT_APPLICABLE', rule_id)
+            report.add(
+                'error',
+                'r00-hypothesis',
+                'in scope at r00, where every H rule must be NOT_APPLICABLE',
+                rule_id,
+            )
 
 
 def _check_frozen(rules: Rules, frozen: bool, report: LintReport) -> None:
@@ -377,34 +473,55 @@ def _check_frozen(rules: Rules, frozen: bool, report: LintReport) -> None:
     if not unfilled:
         return
     if frozen:
-        report.add('error', 'not-frozen', f'mde_r00 {unfilled} are null; every tau = max(tau_floor, mde_r00) needs them (arcforge prereg freeze)')
+        report.add(
+            'error',
+            'not-frozen',
+            f'mde_r00 {unfilled} are null; every tau = max(tau_floor, mde_r00) needs them (arcforge prereg freeze)',
+        )
     else:
-        report.add('warning', 'template', f'mde_r00 {unfilled} are null (template); R00 freezes them')
+        report.add(
+            'warning', 'template', f'mde_r00 {unfilled} are null (template); R00 freezes them'
+        )
 
 
-def _check_computable(rules: Rules, schema: Mapping[str, Any], plan: Plan, report: LintReport) -> None:
+def _check_computable(
+    rules: Rules, schema: Mapping[str, Any], plan: Plan, report: LintReport
+) -> None:
     check = _Computability(rules, schema, plan)
     for rule in rules.rules:
         for pair in rules.scope_pairs(rule.id):
             for why in check.rule(rule, pair):
                 report.add('error', 'not-computable', why, rule.id, pair)
     for pair, (_, rows) in sorted(plan.entries.items(), key=lambda item: _pair_key(item[0])):
-        read = {cid for rule in rules.rules if rules.in_scope(rule.id, *pair) for cid in rule.rows.values()}
+        read = {
+            cid
+            for rule in rules.rules
+            if rules.in_scope(rule.id, *pair)
+            for cid in rule.rows.values()
+        }
         for row in rows:
             if row in rules.rows and row not in read:
-                report.add('error', 'row-unread', f'the plan produces {row}, which no rule in scope here reads', pair=pair)
+                report.add(
+                    'error',
+                    'row-unread',
+                    f'the plan produces {row}, which no rule in scope here reads',
+                    pair=pair,
+                )
 
 
 def format_report(report: LintReport) -> str:
     lines = [
         f'arcforge prereg lint: {report.rules_path}'
         + (f' (sha256 {report.rules_sha256[:12]})' if report.rules_sha256 else ''),
-        f'  plan {report.plan_path}' + (f' (sha256 {report.plan_sha256[:12]})' if report.plan_sha256 else ''),
+        f'  plan {report.plan_path}'
+        + (f' (sha256 {report.plan_sha256[:12]})' if report.plan_sha256 else ''),
         f'  schema arc-report-1.json (sha256 {report.schema_sha256[:12]}){"  [frozen]" if report.frozen else ""}',
     ]
     if report.scope:
         pairs = sum(len(v) for v in report.scope.values())
-        lines.append(f'  {len(report.scope)} rules; applies_to expands to {pairs} in-scope (rule, run, branch) checks')
+        lines.append(
+            f'  {len(report.scope)} rules; applies_to expands to {pairs} in-scope (rule, run, branch) checks'
+        )
     lines.extend(f'  {finding}' for finding in report.findings)
     verdict = 'ok' if report.ok else 'FAILED'
     lines.append(f'lint {verdict}: {len(report.errors)} errors, {len(report.warnings)} warnings')

@@ -78,7 +78,11 @@ def next_step(rules: Rules, history: Sequence[Step]) -> tuple[str, str] | None:
     """The (run, branch) that follows `history`, or None when the arc is complete."""
     candidates = follow(rules, history)
     index = len(history)
-    nexts = {rules.branch_table[name][index] for name in candidates if index < len(rules.branch_table[name])}
+    nexts = {
+        rules.branch_table[name][index]
+        for name in candidates
+        if index < len(rules.branch_table[name])
+    }
     if not nexts:
         return None
     if len(nexts) > 1:

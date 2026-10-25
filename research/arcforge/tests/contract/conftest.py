@@ -33,13 +33,20 @@ GOOD_INPUTS = {
     'I1': {'kappa_qw_owner': 0.72, 'min_kendall_ci_lo': 0.68},
     'I1_prior_pass': True,
     'I2': {'inflation_ratio': 2.4},
-    'I3': {'student_chrome_in': 0.2, 'student_chrome_out': 0.05, 'teacher_chrome_in': 0.15, 'teacher_chrome_out': 0.04},
+    'I3': {
+        'student_chrome_in': 0.2,
+        'student_chrome_out': 0.05,
+        'teacher_chrome_in': 0.15,
+        'teacher_chrome_out': 0.04,
+    },
     'I4': {'flip_rate': 0.02},
     'I5': {'kappa_drop': 0.07},
 }
 
 
-def numeric_row(rules: Rules, cid: str, point: float, lo: float, hi: float, **overrides: Any) -> dict[str, Any]:
+def numeric_row(
+    rules: Rules, cid: str, point: float, lo: float, hi: float, **overrides: Any
+) -> dict[str, Any]:
     """A VerdictRow with the given numbers; adjusted CI = raw CI unless overridden."""
     spec = rules.rows[cid]
     row = dict.fromkeys(ROW_FIELDS)
@@ -75,7 +82,12 @@ def finish_rows(rules: Rules, doc: dict[str, Any]) -> dict[str, Any]:
         if cid in holm:
             rank, m, alpha_adj, p_holm = holm[cid]
         else:
-            rank, m, alpha_adj, p_holm = 0, len(families.get(row['hypothesis'], {})), rules.stats.alpha, row['p_raw']
+            rank, m, alpha_adj, p_holm = (
+                0,
+                len(families.get(row['hypothesis'], {})),
+                rules.stats.alpha,
+                row['p_raw'],
+            )
             row['ci_lo_adj'], row['ci_hi_adj'] = row['ci_lo_raw'], row['ci_hi_raw']
         row.update(holm_rank=rank, holm_m=m, alpha_adj=alpha_adj, p_holm=p_holm)
     return doc
@@ -103,9 +115,23 @@ def make_doc(rules: Rules) -> MakeDoc:
         reading = rules.in_scope('vault.read', run_id, branch)
         doc = {
             'schema': 'arc-verdicts/1',
-            'run': {'id': run_id, 'branch': branch, 'h1_provisional': None, 'prereg_sha256': None, 'rules_sha256': rules.sha256},
-            'vault': {'read_this_run': reading, 'read_index': 1 if reading else None, 'hybrid_minus_b2_ndcg10': 0.03 if reading else None, 'sign': 1 if reading else None},
-            'gates_inputs': {key: (value if _gate_in_scope(rules, key, run_id, branch) else None) for key, value in GOOD_INPUTS.items()},
+            'run': {
+                'id': run_id,
+                'branch': branch,
+                'h1_provisional': None,
+                'prereg_sha256': None,
+                'rules_sha256': rules.sha256,
+            },
+            'vault': {
+                'read_this_run': reading,
+                'read_index': 1 if reading else None,
+                'hybrid_minus_b2_ndcg10': 0.03 if reading else None,
+                'sign': 1 if reading else None,
+            },
+            'gates_inputs': {
+                key: (value if _gate_in_scope(rules, key, run_id, branch) else None)
+                for key, value in GOOD_INPUTS.items()
+            },
             'rows': built,
             'adoption': None,
             'signoff_inputs': None,
@@ -125,7 +151,13 @@ def default_adoption(rules: Rules, run_id: str, branch: str) -> list[dict[str, A
     for rule_id, method in (('adoption.default', 'default'), ('adoption.squeeze', 'squeeze')):
         if rules.in_scope(rule_id, run_id, branch):
             bundle = 3_000_000 if method == 'squeeze' else None
-            arm = {'arm_id': 'arm:x', 'gain_lfo': 0.02, 'guard_ok': True, 'control': False, 'bundle_raw': bundle}
+            arm = {
+                'arm_id': 'arm:x',
+                'gain_lfo': 0.02,
+                'guard_ok': True,
+                'control': False,
+                'bundle_raw': bundle,
+            }
             entries += [{'fold': fold, 'rule': method, 'arms': [dict(arm)]} for fold in (1, 2, 3)]
     return entries or None
 

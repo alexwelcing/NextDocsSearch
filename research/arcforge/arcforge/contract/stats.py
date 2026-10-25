@@ -297,7 +297,9 @@ def _pigeonhole(
     point = design.macro(diff, design.unit_weights())
     assert point is not None
     boot = rng_for(cid, 'boot')
-    replicates = _bootstrap(lambda w: design.macro(diff, w), lambda: design.weights(boot), resamples)
+    replicates = _bootstrap(
+        lambda w: design.macro(diff, w), lambda: design.weights(boot), resamples
+    )
     coefficients = design.part_coefficients()
     p_raw = _signflip_p(
         [d * c for d, c in zip(diff, coefficients, strict=True)], permutations, rng_for(cid, 'perm')
@@ -322,7 +324,9 @@ def _pigeonhole(
     )
 
 
-def _ratio(design: _Design, a: Sequence[float], b: Sequence[float], w: Sequence[float]) -> float | None:
+def _ratio(
+    design: _Design, a: Sequence[float], b: Sequence[float], w: Sequence[float]
+) -> float | None:
     num = design.macro(a, w)
     den = design.macro(b, w)
     if num is None or den is None or den <= 0.0:
@@ -419,7 +423,9 @@ def _refit_pooled(
         if len(set(ranking)) != len(ranking):
             raise ScoresError(f'fits[{fit.get("id")}].{arm}: duplicate items')
         if len(ranking) < k:
-            raise ScoresError(f'fits[{fit.get("id")}].{arm}: {len(ranking)} items, fewer than k={k}')
+            raise ScoresError(
+                f'fits[{fit.get("id")}].{arm}: {len(ranking)} items, fewer than k={k}'
+            )
         return ranking[:k]
 
     def hits(items: Sequence[str]) -> list[int]:

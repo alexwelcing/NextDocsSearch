@@ -70,7 +70,9 @@ def validator(schema: Mapping[str, Any] | None = None, definition: str | None = 
     return _VALIDATORS[key]
 
 
-def errors(instance: Any, schema: Mapping[str, Any] | None = None, definition: str | None = None) -> list[str]:
+def errors(
+    instance: Any, schema: Mapping[str, Any] | None = None, definition: str | None = None
+) -> list[str]:
     """Every validation error as '<path>: <message>', sorted (empty when valid)."""
     found = []
     for error in validator(schema, definition).iter_errors(instance):
@@ -127,7 +129,9 @@ def _allows_null(root: Mapping[str, Any], node: Mapping[str, Any]) -> bool:
     return any(_allows_null(root, sub) for key in ('anyOf', 'oneOf') for sub in node.get(key, []))
 
 
-def _children(root: Mapping[str, Any], node: Mapping[str, Any], segment: str) -> list[Mapping[str, Any]]:
+def _children(
+    root: Mapping[str, Any], node: Mapping[str, Any], segment: str
+) -> list[Mapping[str, Any]]:
     out = []
     for branch in _branches(root, node):
         if segment == '[]':

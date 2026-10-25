@@ -66,7 +66,9 @@ def check_listing(rules: Rules, doc: Mapping[str, Any]) -> list[str]:
     ids = [e.get('id') for e in entries if isinstance(e, Mapping)]
     for rule_id in RULE_IDS:
         if ids.count(rule_id) != 1:
-            errors.append(f'verdicts.json lists {rule_id} {ids.count(rule_id)} times (exactly once required)')
+            errors.append(
+                f'verdicts.json lists {rule_id} {ids.count(rule_id)} times (exactly once required)'
+            )
     extra = sorted({str(i) for i in ids} - set(RULE_IDS))
     if extra:
         errors.append(f'verdicts.json lists unknown rules {extra}')
@@ -77,9 +79,13 @@ def check_listing(rules: Rules, doc: Mapping[str, Any]) -> list[str]:
             continue
         in_scope = rules.in_scope(rule_id, run.get('id', ''), run.get('branch', ''))
         if not in_scope and (entry.get('status') != NOT_APPLICABLE or entry.get('row_ids')):
-            errors.append(f'{rule_id} is out of scope at {run.get("id")}/{run.get("branch")}: it must be NOT_APPLICABLE with no rows')
+            errors.append(
+                f'{rule_id} is out of scope at {run.get("id")}/{run.get("branch")}: it must be NOT_APPLICABLE with no rows'
+            )
         if in_scope and entry.get('status') == NOT_APPLICABLE:
-            errors.append(f'{rule_id} is in scope at {run.get("id")}/{run.get("branch")} but reported NOT_APPLICABLE')
+            errors.append(
+                f'{rule_id} is in scope at {run.get("id")}/{run.get("branch")} but reported NOT_APPLICABLE'
+            )
     return errors
 
 
@@ -91,7 +97,9 @@ def load_history(rules: Rules, runs_root: Path, run_id: str, branch: str) -> lis
         doc = load_json(runs_root / prior_run / 'verdicts.json')
         found = (doc.get('run') or {}).get('branch')
         if found != prior_branch:
-            raise PathError(f'{prior_run}/verdicts.json is on branch {found!r}, the path needs {prior_branch!r}')
+            raise PathError(
+                f'{prior_run}/verdicts.json is on branch {found!r}, the path needs {prior_branch!r}'
+            )
         history.append(doc)
     return history
 
@@ -107,28 +115,42 @@ def _walk(report: Mapping[str, Any], path: str) -> tuple[bool, Any]:
 
 def cross_check(report: Mapping[str, Any], doc: Mapping[str, Any], outcome: Outcome) -> list[str]:
     """report.json against its verdicts.json and the recomputed outcome."""
-    errors = [f'report.verdicts_doc differs from verdicts.json: {d}' for d in diff(doc, report.get('verdicts_doc'))]
+    errors = [
+        f'report.verdicts_doc differs from verdicts.json: {d}'
+        for d in diff(doc, report.get('verdicts_doc'))
+    ]
     run, d_run = report.get('run') or {}, doc.get('run') or {}
     for key in ('id', 'branch', 'h1_provisional', 'prereg_sha256', 'rules_sha256'):
         if run.get(key) != d_run.get(key):
-            errors.append(f'report.run.{key} is {run.get(key)!r}, verdicts.json says {d_run.get(key)!r}')
+            errors.append(
+                f'report.run.{key} is {run.get(key)!r}, verdicts.json says {d_run.get(key)!r}'
+            )
     schema_sha = report_schema.sha256()
     if run.get('schema_sha256') != schema_sha:
-        errors.append(f'report.run.schema_sha256 is {run.get("schema_sha256")}, arc-report-1.json hashes to {schema_sha}')
+        errors.append(
+            f'report.run.schema_sha256 is {run.get("schema_sha256")}, arc-report-1.json hashes to {schema_sha}'
+        )
     vault, d_vault = report.get('vault') or {}, doc.get('vault') or {}
     for key in ('read_this_run', 'read_index', 'hybrid_minus_b2_ndcg10', 'sign'):
         if not close(vault.get(key), d_vault.get(key)):
-            errors.append(f'report.vault.{key} is {vault.get(key)!r}, verdicts.json says {d_vault.get(key)!r}')
+            errors.append(
+                f'report.vault.{key} is {vault.get(key)!r}, verdicts.json says {d_vault.get(key)!r}'
+            )
 
     gates, inputs = report.get('gates') or {}, doc.get('gates_inputs') or {}
     i1 = gates.get('I1')
     expected_i1 = None
     if i1 is not None:
         kendall = [k.get('ci_lo') for k in i1.get('kendall') or []]
-        expected_i1 = {'kappa_qw_owner': i1.get('kappa_qw_owner'), 'min_kendall_ci_lo': min(kendall) if kendall else None}
+        expected_i1 = {
+            'kappa_qw_owner': i1.get('kappa_qw_owner'),
+            'min_kendall_ci_lo': min(kendall) if kendall else None,
+        }
     projections = {
         'I1': expected_i1,
-        'I2': None if gates.get('I2') is None else {'inflation_ratio': gates['I2'].get('inflation_ratio')},
+        'I2': None
+        if gates.get('I2') is None
+        else {'inflation_ratio': gates['I2'].get('inflation_ratio')},
         'I3': gates.get('I3'),
         'I4': None if gates.get('I4') is None else {'flip_rate': gates['I4'].get('flip_rate')},
         'I5': None if gates.get('I5') is None else {'kappa_drop': gates['I5'].get('kappa_drop')},
@@ -138,7 +160,9 @@ def cross_check(report: Mapping[str, Any], doc: Mapping[str, Any], outcome: Outc
             errors.append(f'report.gates.{key} does not match verdicts.json: {problem}')
     summary = outcome.doc['gates_summary']
     if i1 is not None and i1.get('pass_effective') is not summary.get('I1_pass_effective'):
-        errors.append(f'report.gates.I1.pass_effective is {i1.get("pass_effective")!r}, the rules give {summary.get("I1_pass_effective")!r}')
+        errors.append(
+            f'report.gates.I1.pass_effective is {i1.get("pass_effective")!r}, the rules give {summary.get("I1_pass_effective")!r}'
+        )
     for path, value in outcome.derived.items():
         exists, found = _walk(report, path)
         if not exists or found is None:
@@ -146,14 +170,22 @@ def cross_check(report: Mapping[str, Any], doc: Mapping[str, Any], outcome: Outc
         elif found != value:
             errors.append(f'report.{path} is {found!r}; the rules derive {value!r}')
     if gates.get('I4') is not None and gates['I4'].get('pass') is not summary.get('I4_pass'):
-        errors.append(f'report.gates.I4.pass is {gates["I4"].get("pass")!r}, the rules give {summary.get("I4_pass")!r}')
+        errors.append(
+            f'report.gates.I4.pass is {gates["I4"].get("pass")!r}, the rules give {summary.get("I4_pass")!r}'
+        )
 
     report_adoption = sorted(
         (
             {
                 'fold': e.get('fold'),
                 'rule': e.get('rule'),
-                'arms': [{k: a.get(k) for k in ('arm_id', 'gain_lfo', 'guard_ok', 'control', 'bundle_raw')} for a in e.get('arms') or []],
+                'arms': [
+                    {
+                        k: a.get(k)
+                        for k in ('arm_id', 'gain_lfo', 'guard_ok', 'control', 'bundle_raw')
+                    }
+                    for a in e.get('arms') or []
+                ],
                 'chosen_arm': e.get('chosen_arm'),
                 'adopted': e.get('adopted'),
             }
@@ -168,8 +200,14 @@ def cross_check(report: Mapping[str, Any], doc: Mapping[str, Any], outcome: Outc
     artifacts = {a.get('path'): a for a in report.get('artifacts') or [] if isinstance(a, Mapping)}
     for row in doc.get('rows') or []:
         art = artifacts.get(row.get('scores_file'))
-        if art is None or art.get('kind') != 'scores' or art.get('sha256') != row.get('scores_sha256'):
-            errors.append(f'row {row.get("comparison_id")}: {row.get("scores_file")} is not a listed scores artifact with its sha256')
+        if (
+            art is None
+            or art.get('kind') != 'scores'
+            or art.get('sha256') != row.get('scores_sha256')
+        ):
+            errors.append(
+                f'row {row.get("comparison_id")}: {row.get("scores_file")} is not a listed scores artifact with its sha256'
+            )
     return errors
 
 
@@ -200,9 +238,13 @@ def verify_run(
 
     size = verdicts_path.stat().st_size
     if size >= VERDICTS_MAX_BYTES:
-        result.errors.append(f'verdicts.json is {size} bytes; it must stay under {VERDICTS_MAX_BYTES}')
+        result.errors.append(
+            f'verdicts.json is {size} bytes; it must stay under {VERDICTS_MAX_BYTES}'
+        )
     if validate:
-        result.errors.extend(f'verdicts.json: {e}' for e in report_schema.errors(stored, definition='VerdictsDoc'))
+        result.errors.extend(
+            f'verdicts.json: {e}' for e in report_schema.errors(stored, definition='VerdictsDoc')
+        )
         if report is not None:
             result.errors.extend(f'report.json: {e}' for e in report_schema.errors(report))
     if not isinstance(stored, Mapping):
@@ -219,7 +261,9 @@ def verify_run(
     outcome = build_verdicts(rules, stored, run_dir, history)
     result.outcome = outcome
     result.errors.extend(outcome.problems())
-    result.errors.extend(f'verdicts.json does not reproduce: {d}' for d in diff(outcome.doc, stored))
+    result.errors.extend(
+        f'verdicts.json does not reproduce: {d}' for d in diff(outcome.doc, stored)
+    )
     if report is not None:
         result.errors.extend(cross_check(report, stored, outcome))
     return result

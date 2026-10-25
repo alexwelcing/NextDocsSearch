@@ -72,7 +72,9 @@ def _check_identity(rules: Rules, cid: str, scores: Mapping[str, Any]) -> None:
     if spec.estimator == 'refit_pooled':
         cut = spec.metric.partition('@')[2]
         if not cut.isdigit() or scores.get('k') != int(cut):
-            raise stats.ScoresError(f'k is {scores.get("k")!r}; metric {spec.metric} needs k = {cut}')
+            raise stats.ScoresError(
+                f'k is {scores.get("k")!r}; metric {spec.metric} needs k = {cut}'
+            )
 
 
 def compute_rows(
@@ -159,11 +161,18 @@ def compute_rows(
             rank, m, alpha_adj, p_holm = holm[cid]
             row['ci_lo_adj'], row['ci_hi_adj'] = row_stats.ci(alpha_adj)
         else:
-            rank, m, alpha_adj, p_holm = 0, len(families.get(row['hypothesis'], {})), rules.stats.alpha, row_stats.p_raw
+            rank, m, alpha_adj, p_holm = (
+                0,
+                len(families.get(row['hypothesis'], {})),
+                rules.stats.alpha,
+                row_stats.p_raw,
+            )
             row['ci_lo_adj'], row['ci_hi_adj'] = row['ci_lo_raw'], row['ci_hi_raw']
         row.update(holm_rank=rank, holm_m=m, alpha_adj=alpha_adj, p_holm=p_holm)
     order = list(rules.rows)
-    rows = sorted((row for row, _ in computed.values()), key=lambda r: order.index(r['comparison_id']))
+    rows = sorted(
+        (row for row, _ in computed.values()), key=lambda r: order.index(r['comparison_id'])
+    )
     return rows, errors
 
 

@@ -8,11 +8,22 @@ import pytest
 
 from arcforge.contract.ids import NOT_APPLICABLE, RULE_IDS, STRIPPED_FIELDS
 from arcforge.contract.rules import Rules
-from arcforge.contract.verdicts import diff, evaluate, strip, stripped_field_names, stripped_keys_present
+from arcforge.contract.verdicts import (
+    diff,
+    evaluate,
+    strip,
+    stripped_field_names,
+    stripped_keys_present,
+)
 
 PASSING = (0.12, 0.10, 0.14)
 CLEAR = (0.0, -0.01, 0.01)
-DEFAULTS = {'guard': CLEAR, 'bound': CLEAR, 'ratio': (0.97, 0.95, 0.99), 'report': (0.02, 0.0, 0.04)}
+DEFAULTS = {
+    'guard': CLEAR,
+    'bound': CLEAR,
+    'ratio': (0.97, 0.95, 0.99),
+    'report': (0.02, 0.0, 0.04),
+}
 SPECIAL = {'H3b.b1': (-0.05, -0.06, -0.04)}
 
 
@@ -67,11 +78,23 @@ def test_out_of_scope_rules_are_not_applicable_and_read_nothing(make_doc, rules)
             assert entry['status'] == NOT_APPLICABLE
             assert entry['row_ids'] == [] and entry['provisional'] is False
     assert statuses(outcome)['H2'] == 'SUPPORTED'
-    assert outcome.doc['gates_summary'] == {'I1_pass': None, 'I1_pass_effective': True, 'I4_pass': True, 'futility_fired': None}
+    assert outcome.doc['gates_summary'] == {
+        'I1_pass': None,
+        'I1_pass_effective': True,
+        'I4_pass': True,
+        'futility_fired': None,
+    }
 
 
 def test_every_h_rule_is_not_applicable_at_r00(make_doc, rules):
-    signoff = {'lint_ok': True, 'report_valid': True, 'vault_sealed': True, 'i1_fallback_scheduled': False, 'i2_scheduled': True, 'i4_scheduled': True}
+    signoff = {
+        'lint_ok': True,
+        'report_valid': True,
+        'vault_sealed': True,
+        'i1_fallback_scheduled': False,
+        'i2_scheduled': True,
+        'i4_scheduled': True,
+    }
     outcome = run(make_doc, rules, 'r00', 'N', signoff_inputs=signoff)
     assert outcome.ok, outcome.problems()
     in_scope = {k for k, v in statuses(outcome).items() if v != NOT_APPLICABLE}
@@ -110,22 +133,34 @@ def test_a_missing_row_makes_its_rule_not_computable(make_doc, rules):
 
 def test_a_null_carried_i1_pass_makes_h1_not_computable(make_doc, rules):
     outcome = run(make_doc, rules, 'r06', 'N', gates_inputs={'I1_prior_pass': None})
-    assert 'gates_summary.I1_pass_effective' in {f for n in outcome.not_computable for f in n.fields}
+    assert 'gates_summary.I1_pass_effective' in {
+        f for n in outcome.not_computable for f in n.fields
+    }
 
 
 def test_vault_read_in_scope_without_a_read_is_not_computable(make_doc, rules):
-    outcome = run(make_doc, rules, 'r04', 'N', vault={'read_this_run': False, 'read_index': None, 'sign': None})
+    outcome = run(
+        make_doc,
+        rules,
+        'r04',
+        'N',
+        vault={'read_this_run': False, 'read_index': None, 'sign': None},
+    )
     assert {n.rule for n in outcome.not_computable} == {'vault.read', 'FUT'}
 
 
 def test_a_lost_key_is_a_read_with_sign_unavailable(make_doc, rules):
-    outcome = run(make_doc, rules, 'r04', 'N', vault={'sign': 'unavailable', 'hybrid_minus_b2_ndcg10': None})
+    outcome = run(
+        make_doc, rules, 'r04', 'N', vault={'sign': 'unavailable', 'hybrid_minus_b2_ndcg10': None}
+    )
     assert outcome.ok, outcome.problems()
     assert statuses(outcome)['vault.read'] == 'DONE'
 
 
 def test_a_vault_read_outside_the_read_points_fails(make_doc, rules):
-    outcome = run(make_doc, rules, 'r05', 'N', vault={'read_this_run': True, 'read_index': 2, 'sign': 1})
+    outcome = run(
+        make_doc, rules, 'r05', 'N', vault={'read_this_run': True, 'read_index': 2, 'sign': 1}
+    )
     assert any('not a registered read point' in e for e in outcome.errors)
 
 
@@ -185,7 +220,14 @@ def test_the_i1_fallback_family_is_c1_and_c3(make_doc, rules):
     # I1 failed at R00 and was not passed at R01: c2 and c4 are exploratory, the family is
     # {c1, c3} with m = 2, and failing c2 / c4 no longer block SUPPORTED.
     weak = (0.01, -0.01, 0.03)
-    outcome = run(make_doc, rules, 'r06', 'N', {'H1__c2': weak, 'H1__c4': weak}, gates_inputs={'I1_prior_pass': False})
+    outcome = run(
+        make_doc,
+        rules,
+        'r06',
+        'N',
+        {'H1__c2': weak, 'H1__c4': weak},
+        gates_inputs={'I1_prior_pass': False},
+    )
     assert outcome.ok, outcome.problems()
     assert statuses(outcome)['H1'] == 'SUPPORTED'
     rows = {r['comparison_id']: r for r in outcome.doc['rows']}
@@ -198,7 +240,14 @@ def test_the_i1_fallback_family_is_c1_and_c3(make_doc, rules):
 
 def test_fusion_only_under_the_i1_fallback_needs_only_c1(make_doc, rules):
     weak = (0.01, -0.01, 0.03)
-    outcome = run(make_doc, rules, 'r06', 'N', {'H1__c2': weak, 'H1__c3': weak}, gates_inputs={'I1_prior_pass': False})
+    outcome = run(
+        make_doc,
+        rules,
+        'r06',
+        'N',
+        {'H1__c2': weak, 'H1__c3': weak},
+        gates_inputs={'I1_prior_pass': False},
+    )
     assert statuses(outcome)['H1'] == 'FUSION_ONLY'
 
 
@@ -351,7 +400,11 @@ def test_h6(make_doc, rules, rows, expected):
 
 @pytest.mark.parametrize(
     ('rows', 'expected'),
-    [({}, 'SUPPORTED'), ({'H7__c1': (-0.01, -0.03, -0.001)}, 'FALSIFIED'), ({'H7__c1': (0.03, -0.01, 0.07)}, 'INCONCLUSIVE')],
+    [
+        ({}, 'SUPPORTED'),
+        ({'H7__c1': (-0.01, -0.03, -0.001)}, 'FALSIFIED'),
+        ({'H7__c1': (0.03, -0.01, 0.07)}, 'INCONCLUSIVE'),
+    ],
 )
 def test_h7_is_registered_on_the_kill_path(make_doc, rules, rows, expected):
     outcome = run(make_doc, rules, 'r07K', 'N-F', rows)
@@ -361,17 +414,27 @@ def test_h7_is_registered_on_the_kill_path(make_doc, rules, rows, expected):
 
 @pytest.mark.parametrize(('point', 'met'), [(0.02, True), (0.0, True), (-0.01, False)])
 def test_h7_report_states_its_prediction(make_doc, rules, point, met):
-    outcome = run(make_doc, rules, 'r07', 'N', {'H7.report__c1': (point, point - 0.02, point + 0.02)})
+    outcome = run(
+        make_doc, rules, 'r07', 'N', {'H7.report__c1': (point, point - 0.02, point + 0.02)}
+    )
     assert statuses(outcome)['H7.report'] == 'REPORTED'
     row = outcome.doc['rows'][0]
-    assert (row['comparison_id'], row['registered'], row['verdict_component'], row['prediction'], row['prediction_met']) == (
-        'H7.report.c1', False, 'REPORTED', 'x.point >= 0', met
-    )
+    assert (
+        row['comparison_id'],
+        row['registered'],
+        row['verdict_component'],
+        row['prediction'],
+        row['prediction_met'],
+    ) == ('H7.report.c1', False, 'REPORTED', 'x.point >= 0', met)
 
 
 @pytest.mark.parametrize(
     ('rows', 'expected'),
-    [({}, 'SUPPORTED'), ({'K1__k1': (0.0, -0.01, 0.0099)}, 'FALSIFIED'), ({'K1__k2': (0.02, 0.0, 0.04)}, 'INCONCLUSIVE')],
+    [
+        ({}, 'SUPPORTED'),
+        ({'K1__k1': (0.0, -0.01, 0.0099)}, 'FALSIFIED'),
+        ({'K1__k2': (0.02, 0.0, 0.04)}, 'INCONCLUSIVE'),
+    ],
 )
 def test_k1(make_doc, rules, rows, expected):
     for run_id, branch in (('r07K', 'S-F'), ('r08K', 'S-C-F'), ('r10K', 'N-F')):
@@ -404,14 +467,23 @@ def test_i1_failing_at_r10_moves_h1_to_the_fallback_family(make_doc, rules):
 
 @pytest.mark.parametrize(('flip', 'expected'), [(0.049, 'PASS'), (0.05, 'FAIL')])
 def test_i4(make_doc, rules, flip, expected):
-    outcome = run(make_doc, rules, 'r03', 'N', {'H3__c1': (0.4, 0.2, 0.6), 'H3__c2': (0.4, 0.2, 0.6)}, gates_inputs={'I4': {'flip_rate': flip}})
+    outcome = run(
+        make_doc,
+        rules,
+        'r03',
+        'N',
+        {'H3__c1': (0.4, 0.2, 0.6), 'H3__c2': (0.4, 0.2, 0.6)},
+        gates_inputs={'I4': {'flip_rate': flip}},
+    )
     assert statuses(outcome)['I4'] == expected
 
 
 def test_i2_and_i5_are_reported_with_their_predictions(make_doc, rules):
     r04 = run(make_doc, rules, 'r04', 'N', gates_inputs={'I2': {'inflation_ratio': 1.9}})
     assert statuses(r04)['I2'] == 'REPORTED' and r04.derived['gates.I2.prediction_met'] is False
-    r00 = run(make_doc, rules, 'r00', 'N', gates_inputs={'I5': {'kappa_drop': 0.05}}, signoff_inputs=None)
+    r00 = run(
+        make_doc, rules, 'r00', 'N', gates_inputs={'I5': {'kappa_drop': 0.05}}, signoff_inputs=None
+    )
     assert statuses(r00)['I5'] == 'REPORTED' and r00.derived['gates.I5.prediction_met'] is True
 
 
@@ -426,7 +498,14 @@ def test_i2_and_i5_are_reported_with_their_predictions(make_doc, rules):
     ],
 )
 def test_signoff(make_doc, rules, changes, i1_pass, expected):
-    signoff = {'lint_ok': True, 'report_valid': True, 'vault_sealed': True, 'i1_fallback_scheduled': False, 'i2_scheduled': True, 'i4_scheduled': True}
+    signoff = {
+        'lint_ok': True,
+        'report_valid': True,
+        'vault_sealed': True,
+        'i1_fallback_scheduled': False,
+        'i2_scheduled': True,
+        'i4_scheduled': True,
+    }
     signoff.update(changes)
     i1 = {'kappa_qw_owner': 0.7 if i1_pass else 0.5, 'min_kendall_ci_lo': 0.7}
     outcome = run(make_doc, rules, 'r00', 'N', gates_inputs={'I1': i1}, signoff_inputs=signoff)
@@ -443,14 +522,29 @@ def test_signoff_without_its_inputs_is_not_computable(make_doc, rules):
 
 
 def _arms(*arms):
-    return [{'arm_id': a, 'gain_lfo': g, 'guard_ok': ok, 'control': c, 'bundle_raw': b} for a, g, ok, c, b in arms]
+    return [
+        {'arm_id': a, 'gain_lfo': g, 'guard_ok': ok, 'control': c, 'bundle_raw': b}
+        for a, g, ok, c, b in arms
+    ]
 
 
 def test_adoption_default_picks_the_highest_qualifying_arm(make_doc, rules):
     adoption = [
-        {'fold': 1, 'rule': 'default', 'arms': _arms(('arm:a', 0.03, True, False, None), ('arm:b', 0.05, False, False, None), ('arm:ctl', 0.09, True, True, None))},
+        {
+            'fold': 1,
+            'rule': 'default',
+            'arms': _arms(
+                ('arm:a', 0.03, True, False, None),
+                ('arm:b', 0.05, False, False, None),
+                ('arm:ctl', 0.09, True, True, None),
+            ),
+        },
         {'fold': 2, 'rule': 'default', 'arms': _arms(('arm:a', 0.009, True, False, None))},
-        {'fold': 3, 'rule': 'default', 'arms': _arms(('arm:b', 0.01, True, False, None), ('arm:a', 0.01, True, False, None))},
+        {
+            'fold': 3,
+            'rule': 'default',
+            'arms': _arms(('arm:b', 0.01, True, False, None), ('arm:a', 0.01, True, False, None)),
+        },
     ]
     outcome = run(make_doc, rules, 'r05', 'N', adoption=adoption)
     assert outcome.ok, outcome.problems()
@@ -479,7 +573,10 @@ def test_adoption_needs_every_fold(make_doc, rules):
 
 
 def test_squeeze_needs_bundle_sizes(make_doc, rules):
-    adoption = [{'fold': f, 'rule': 'squeeze', 'arms': _arms(('arm:x', 0.02, True, False, None))} for f in (1, 2, 3)]
+    adoption = [
+        {'fold': f, 'rule': 'squeeze', 'arms': _arms(('arm:x', 0.02, True, False, None))}
+        for f in (1, 2, 3)
+    ]
     outcome = run(make_doc, rules, 'r07', 'N', adoption=adoption)
     assert {n.rule for n in outcome.not_computable} == {'adoption.squeeze'}
 
@@ -505,7 +602,9 @@ def test_an_unknown_or_duplicate_row_fails(make_doc, rules):
     doc['rows'].append(dict(doc['rows'][0]))
     doc['rows'].append({**doc['rows'][0], 'comparison_id': 'H2.c9'})
     errors = evaluate(rules, doc).errors
-    assert any('appears twice' in e for e in errors) and any("'H2.c9' is not defined" in e for e in errors)
+    assert any('appears twice' in e for e in errors) and any(
+        "'H2.c9' is not defined" in e for e in errors
+    )
 
 
 @pytest.mark.parametrize(
@@ -549,7 +648,10 @@ def test_strip_removes_exactly_the_registered_fields():
 
 
 def test_the_blind_form_holds_everything_the_rules_read(make_doc, rules):
-    adoption = [{'fold': f, 'rule': 'default', 'arms': _arms(('arm:a', 0.03, True, False, None))} for f in (1, 2, 3)]
+    adoption = [
+        {'fold': f, 'rule': 'default', 'arms': _arms(('arm:a', 0.03, True, False, None))}
+        for f in (1, 2, 3)
+    ]
     full = run(make_doc, rules, 'r06', 'N', adoption=adoption).doc
     blind = strip(full)
     assert stripped_keys_present(full) and not stripped_keys_present(blind)
@@ -562,8 +664,8 @@ def test_the_blind_form_holds_everything_the_rules_read(make_doc, rules):
 
 
 def test_diff_reports_paths():
-    assert diff({'a': [{'id': 'H1', 'status': 'PASS'}]}, {'a': [{'id': 'H1', 'status': 'FAIL'}]}) == [
-        "a[H1].status: 'FAIL', recomputed 'PASS'"
-    ]
+    assert diff(
+        {'a': [{'id': 'H1', 'status': 'PASS'}]}, {'a': [{'id': 'H1', 'status': 'FAIL'}]}
+    ) == ["a[H1].status: 'FAIL', recomputed 'PASS'"]
     assert diff({'x': 0.1}, {'x': 0.1 + 1e-12}) == []
     assert diff({'x': True}, {'x': 1}) == ['x: 1, recomputed True']

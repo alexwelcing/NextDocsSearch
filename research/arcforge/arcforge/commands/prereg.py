@@ -1,10 +1,10 @@
 """`arcforge prereg` — the pre-registration contract: lint, freeze and hash rules.yaml.
 
-  lint    expand every rule's applies_to over the PREREG branch table and prove each in-scope
-          rule computable: every field it reads exists in arc-report/1 and the run plan
-          produces it non-null. --frozen also requires every MDE (each tau = max(floor, MDE)).
-  freeze  write the R00 MDEs into a copy of the rules template (comments kept).
-  hash    print the sha256 of rules.yaml, the schema and PREREG.md, as report.run records them.
+lint    expand every rule's applies_to over the PREREG branch table and prove each in-scope
+        rule computable: every field it reads exists in arc-report/1 and the run plan
+        produces it non-null. --frozen also requires every MDE (each tau = max(floor, MDE)).
+freeze  write the R00 MDEs into a copy of the rules template (comments kept).
+hash    print the sha256 of rules.yaml, the schema and PREREG.md, as report.run records them.
 """
 
 from __future__ import annotations
@@ -74,7 +74,11 @@ def hash_files(args: argparse.Namespace) -> int:
     from arcforge.contract.rules import TEMPLATE_PATH, sha256_bytes
 
     rules = Path(_rules_path(args.rules) or TEMPLATE_PATH)
-    files = {'rules_sha256': rules, 'schema_sha256': schema.REPORT_SCHEMA_PATH, 'plan_sha256': Path(args.plan or PRODUCES_PATH)}
+    files = {
+        'rules_sha256': rules,
+        'schema_sha256': schema.REPORT_SCHEMA_PATH,
+        'plan_sha256': Path(args.plan or PRODUCES_PATH),
+    }
     if args.prereg:
         files['prereg_sha256'] = Path(args.prereg)
     try:
@@ -83,7 +87,11 @@ def hash_files(args: argparse.Namespace) -> int:
         print(f'arcforge prereg hash: {error}', file=sys.stderr)
         return EXIT_USAGE
     if args.json:
-        print(json.dumps({key: {'path': str(files[key]), 'sha256': h} for key, h in hashes.items()}, indent=1))
+        print(
+            json.dumps(
+                {key: {'path': str(files[key]), 'sha256': h} for key, h in hashes.items()}, indent=1
+            )
+        )
     else:
         for key, digest in hashes.items():
             print(f'{key:14} {digest}  {files[key]}')
@@ -101,12 +109,22 @@ def register(subparsers) -> None:
     parser.set_defaults(func=lambda _args: (parser.print_help(), EXIT_USAGE)[1])
 
     p_lint = sub.add_parser('lint', help='prove every in-scope rule computable on every branch')
-    p_lint.add_argument('--rules', help='rules file (default: $ARCFORGE_RULES, else the packaged template)')
-    p_lint.add_argument('--plan', help='run plan (arc-produces/1; default: the packaged produces.yaml)')
+    p_lint.add_argument(
+        '--rules', help='rules file (default: $ARCFORGE_RULES, else the packaged template)'
+    )
+    p_lint.add_argument(
+        '--plan', help='run plan (arc-produces/1; default: the packaged produces.yaml)'
+    )
     p_lint.add_argument('--schema', help='report schema (default: the packaged arc-report-1.json)')
-    p_lint.add_argument('--frozen', action='store_true', help='require every mde_r00 (use at R00, before the sign-off)')
+    p_lint.add_argument(
+        '--frozen',
+        action='store_true',
+        help='require every mde_r00 (use at R00, before the sign-off)',
+    )
     p_lint.add_argument('--json', action='store_true', help='print the lint report as JSON')
-    p_lint.add_argument('--out', metavar='PATH', help="also write the JSON report (the sign-off packet's lint.json)")
+    p_lint.add_argument(
+        '--out', metavar='PATH', help="also write the JSON report (the sign-off packet's lint.json)"
+    )
     p_lint.set_defaults(func=lint)
 
     p_freeze = sub.add_parser('freeze', help='write the R00 MDEs into a copy of the rules template')
@@ -118,8 +136,12 @@ def register(subparsers) -> None:
     p_freeze.add_argument('--force', action='store_true', help='replace --out if it exists')
     p_freeze.set_defaults(func=freeze)
 
-    p_hash = sub.add_parser('hash', help='print the sha256 of rules.yaml, the schema, the plan and PREREG.md')
-    p_hash.add_argument('--rules', help='rules file (default: $ARCFORGE_RULES, else the packaged template)')
+    p_hash = sub.add_parser(
+        'hash', help='print the sha256 of rules.yaml, the schema, the plan and PREREG.md'
+    )
+    p_hash.add_argument(
+        '--rules', help='rules file (default: $ARCFORGE_RULES, else the packaged template)'
+    )
     p_hash.add_argument('--plan', help='run plan (default: the packaged produces.yaml)')
     p_hash.add_argument('--prereg', help='PREREG.md, when it exists')
     p_hash.add_argument('--json', action='store_true')

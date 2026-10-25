@@ -67,9 +67,9 @@ def _exactly_once(expected: list[Any], got: list[Any], what: str) -> list[str]:
     missing = [e for e in expected if e not in seen]
     extra = [g for g in dict.fromkeys(got) if g not in set(expected)]
     if missing:
-        problems.append(f'{len(missing)} {what}s missing, e.g. {missing[:3]}')
+        problems.append(f'missing {what}: {len(missing)} (e.g. {missing[:3]})')
     if extra:
-        problems.append(f'{len(extra)} {what}s not in the packet, e.g. {extra[:3]}')
+        problems.append(f'{what} not in the packet: {len(extra)} (e.g. {extra[:3]})')
     return problems
 
 
@@ -77,7 +77,9 @@ def check_gold_audit(output: Mapping[str, Any], packet_dir: Path) -> list[str]:
     if output.get('status') != 'ok':
         return []
     pairs = _json(packet_dir / 'inputs' / 'pairs.json')
-    expected = [(q['query_id'], c['candidate_id']) for q in pairs['queries'] for c in q['candidates']]
+    expected = [
+        (q['query_id'], c['candidate_id']) for q in pairs['queries'] for c in q['candidates']
+    ]
     got = [(g.get('query_id'), g.get('candidate_id')) for g in output['result']['grades']]
     return _exactly_once(expected, got, 'graded pair')
 
@@ -100,16 +102,26 @@ def check_blind(output: Mapping[str, Any], packet_dir: Path) -> list[str]:
         entry = runs.get(run_id)
         if entry is None:
             continue
-        problems += [f'{run_id}: {p}' for p in _exactly_once(list(RULE_IDS), [h.get('id') for h in entry['hypotheses']], 'rule')]
+        problems += [
+            f'{run_id}: {p}'
+            for p in _exactly_once(
+                list(RULE_IDS), [h.get('id') for h in entry['hypotheses']], 'rule'
+            )
+        ]
         rows = [r['comparison_id'] for r in doc.get('rows') or []]
-        problems += [f'{run_id}: {p}' for p in _exactly_once(rows, [r.get('comparison_id') for r in entry['rows']], 'row')]
+        problems += [
+            f'{run_id}: {p}'
+            for p in _exactly_once(rows, [r.get('comparison_id') for r in entry['rows']], 'row')
+        ]
         adoption = [(a['rule'], a['fold']) for a in doc.get('adoption') or []]
         got = [(a.get('rule'), a.get('fold')) for a in entry['adoption']]
         problems += [f'{run_id}: {p}' for p in _exactly_once(adoption, got, 'adoption decision')]
     if result.get('arc_summary') is None:
         problems.append('arc_summary is required: the packet ends with the final run')
     else:
-        problems += _exactly_once(list(RULE_IDS), [a.get('id') for a in result['arc_summary']], 'arc_summary rule')
+        problems += _exactly_once(
+            list(RULE_IDS), [a.get('id') for a in result['arc_summary']], 'arc_summary rule'
+        )
     return problems
 
 
@@ -131,7 +143,11 @@ KINDS: dict[str, Kind] = {
         check_gold_audit,
     ),
     'prereg_signoff': Kind(
-        'prereg_signoff', {'signoff': ('r00',)}, 'output-prereg-signoff-1.json', 'prereg_signoff.md', check_signoff
+        'prereg_signoff',
+        {'signoff': ('r00',)},
+        'output-prereg-signoff-1.json',
+        'prereg_signoff.md',
+        check_signoff,
     ),
     'blind_recompute': Kind(
         'blind_recompute',
@@ -152,10 +168,14 @@ KINDS: dict[str, Kind] = {
 
 def render_brief(kind: Kind, context: Mapping[str, Any]) -> str:
     """INSTRUCTIONS.md: the kind's brief plus the common ground rules, {{placeholders}} filled."""
-    text = (BRIEF_DIR / kind.brief).read_text(encoding='utf-8') + (BRIEF_DIR / '_common.md').read_text(encoding='utf-8')
+    text = (BRIEF_DIR / kind.brief).read_text(encoding='utf-8') + (
+        BRIEF_DIR / '_common.md'
+    ).read_text(encoding='utf-8')
     for key, value in {**context, 'kind': kind.name}.items():
         text = text.replace('{{' + key + '}}', str(value))
     if '{{' in text:
         start = text.index('{{')
-        raise ValueError(f'brief {kind.brief}: unfilled placeholder {text[start : text.index("}}", start) + 2]}')
+        raise ValueError(
+            f'brief {kind.brief}: unfilled placeholder {text[start : text.index("}}", start) + 2]}'
+        )
     return text

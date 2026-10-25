@@ -53,7 +53,9 @@ _ROW_KEYS = frozenset(
 # which only scope decides.
 _OUTCOME_STATUSES = frozenset(STATUSES) - {NOT_APPLICABLE} | {NOT_COMPUTABLE}
 # Row fields no expression may read: they are outcomes (and the blind pass strips some of them).
-UNREADABLE_ROW_FIELDS = frozenset({'verdict_component', 'prediction_met', 'registered', 'provisional'})
+UNREADABLE_ROW_FIELDS = frozenset(
+    {'verdict_component', 'prediction_met', 'registered', 'provisional'}
+)
 
 
 class RulesError(ValueError):
@@ -91,7 +93,9 @@ class Clause:
     def describe(self) -> str:
         runs = WILDCARD if self.runs is None else ', '.join(sorted(self.runs, key=RUN_IDS.index))
         branches = (
-            WILDCARD if self.branches is None else ', '.join(sorted(self.branches, key=BRANCHES.index))
+            WILDCARD
+            if self.branches is None
+            else ', '.join(sorted(self.branches, key=BRANCHES.index))
         )
         return f'{{{runs}; {branches}}}'
 
@@ -368,7 +372,9 @@ def parse_rules(data: Any, sha256: str = '', path: str | None = None) -> Rules:
         problems.add(dup, 'defined more than once')
     missing = [i for i in RULE_IDS if i not in ids]
     if missing:
-        problems.add('rules', f'missing rules {missing} (verdicts.json lists every rule exactly once)')
+        problems.add(
+            'rules', f'missing rules {missing} (verdicts.json lists every rule exactly once)'
+        )
     for rule_id, alias, cid in references:
         if cid not in rows:
             problems.add(rule_id, f'row {alias}: {cid!r} is not defined by any rule')
@@ -553,7 +559,9 @@ def _parse_rule(
             applies_to.append(
                 Clause(
                     runs=_expand(clause['runs'], RUN_IDS, sets, f'{where}.runs', problems),
-                    branches=_expand(clause['branches'], BRANCHES, sets, f'{where}.branches', problems),
+                    branches=_expand(
+                        clause['branches'], BRANCHES, sets, f'{where}.branches', problems
+                    ),
                 )
             )
 
@@ -759,9 +767,12 @@ def _parse_row(
 def _parse_adopt(raw: Any, rule_id: str, problems: _Problems) -> dict[str, Any] | None:
     where = f'{rule_id}.adopt'
     if not isinstance(raw, dict) or raw.get('method') not in ('default', 'squeeze'):
-        problems.add(where, "must be {method: default | squeeze, ...}")
+        problems.add(where, 'must be {method: default | squeeze, ...}')
         return None
-    expected = {'default': {'method', 'min_gain'}, 'squeeze': {'method', 'within', 'max_bundle_raw'}}
+    expected = {
+        'default': {'method', 'min_gain'},
+        'squeeze': {'method', 'within', 'max_bundle_raw'},
+    }
     keys = expected[raw['method']]
     if set(raw) != keys:
         problems.add(where, f'{raw["method"]} takes exactly {sorted(keys)}')
@@ -830,7 +841,9 @@ def _check_summaries(rules: Rules, problems: _Problems) -> None:
     for key in GATE_SUMMARY_KEYS:
         found = producers.get(key, [])
         if len(found) != 1:
-            problems.add('gates_summary', f'{key} must be produced by exactly one rule, got {found}')
+            problems.add(
+                'gates_summary', f'{key} must be produced by exactly one rule, got {found}'
+            )
 
 
 def freeze_text(text: str, mde: Mapping[str, float]) -> str:
@@ -841,7 +854,9 @@ def freeze_text(text: str, mde: Mapping[str, float]) -> str:
     missing = [k for k in MDE_KEYS if k not in mde]
     extra = sorted(set(mde) - set(MDE_KEYS))
     if missing or extra:
-        raise RulesError([f'freeze needs exactly {list(MDE_KEYS)} (missing {missing}, extra {extra})'])
+        raise RulesError(
+            [f'freeze needs exactly {list(MDE_KEYS)} (missing {missing}, extra {extra})']
+        )
     for key, value in mde.items():
         if not _number(value) or value < 0:
             raise RulesError([f'mde_r00.{key} must be a number >= 0, got {value!r}'])

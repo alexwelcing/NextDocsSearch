@@ -121,7 +121,9 @@ class Expr:
                 node.value is None or isinstance(node.value, (bool, int, float, str))
             ):
                 raise ExprError(f'{self.source!r}: constant {node.value!r} is not allowed')
-            if isinstance(node, ast.Call) and (node.keywords or not isinstance(node.func, ast.Name)):
+            if isinstance(node, ast.Call) and (
+                node.keywords or not isinstance(node.func, ast.Name)
+            ):
                 raise ExprError(f'{self.source!r}: only plain calls f(a, b) are allowed')
             if isinstance(node, ast.Attribute) and not isinstance(
                 node.value, (ast.Name, ast.Attribute)
@@ -286,7 +288,9 @@ class _Analyzer:
                 let = self.env.lets[node.id]
                 return _Analyzer(let, self.env, set()).row_values(let.tree, (*stack, node.id))
         if isinstance(node, (ast.List, ast.Tuple)):
-            return set().union(*(self.row_values(e, stack) for e in node.elts)) if node.elts else set()
+            return (
+                set().union(*(self.row_values(e, stack) for e in node.elts)) if node.elts else set()
+            )
         if isinstance(node, ast.IfExp):
             return self.row_values(node.body, stack) | self.row_values(node.orelse, stack)
         raise self.fail(f'{ast.unparse(node)!r} is not a row, a list of rows or a let of rows')

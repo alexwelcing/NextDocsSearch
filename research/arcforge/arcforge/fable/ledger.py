@@ -22,7 +22,15 @@ from pathlib import Path
 from typing import Any
 
 from arcforge.fable.kinds import KINDS
-from arcforge.fable.packer import Packet, PacketError, load, now_utc, open_attempt, sha256_bytes, verify_dir
+from arcforge.fable.packer import (
+    Packet,
+    PacketError,
+    load,
+    now_utc,
+    open_attempt,
+    sha256_bytes,
+    verify_dir,
+)
 
 MAX_ATTEMPTS = 2
 OUTPUT_SCHEMA = 'arc-fable-output/1'
@@ -58,7 +66,9 @@ def _save(packet: Packet, ledger: dict[str, Any]) -> None:
     tmp.replace(packet.ledger_path)
 
 
-def validate_output(packet: Packet, data: bytes | None, model: str | None) -> tuple[str, list[str], Any]:
+def validate_output(
+    packet: Packet, data: bytes | None, model: str | None
+) -> tuple[str, list[str], Any]:
     """('ok' | 'invalid' | 'refused', problems, parsed output) for one attempt's output bytes."""
     from arcforge.contract import schema as report_schema
 
@@ -72,7 +82,9 @@ def validate_output(packet: Packet, data: bytes | None, model: str | None) -> tu
     problems = report_schema.errors(output, kind.schema())
     expected = packet.manifest['expected_model']
     if not model or not model.startswith(expected):
-        problems.append(f'the output came from {model!r}, not {expected}* (no other model may stand in for Fable)')
+        problems.append(
+            f'the output came from {model!r}, not {expected}* (no other model may stand in for Fable)'
+        )
     if not problems:
         problems = kind.check(output, packet.canonical)
     if problems:
@@ -131,7 +143,9 @@ def owner_sign(packet_root: str | Path, note: str) -> dict[str, Any]:
     if packet.manifest['kind'] != 'prereg_signoff':
         raise PacketError('only the PREREG sign-off can be signed by the owner')
     if ledger['status'] not in ('refused', 'failed'):
-        raise PacketError(f'the owner signs only after the sign-off failed closed (status is {ledger["status"]!r})')
+        raise PacketError(
+            f'the owner signs only after the sign-off failed closed (status is {ledger["status"]!r})'
+        )
     if not note.strip():
         raise PacketError('give a note saying why the owner signs')
     ledger.update(status='owner_signed', owner_note=note.strip(), owner_signed_utc=now_utc())

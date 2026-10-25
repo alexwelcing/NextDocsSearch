@@ -36,18 +36,29 @@ SCENARIOS: dict[str, synth.Scenario] = {
     'S-F': synth.Scenario('S-F'),
     'S-C': synth.Scenario('S-C'),
     'S-C-F': synth.Scenario('S-C-F'),
-    'N/fusion-only': synth.Scenario('N', statuses={('r06', 'H1'): 'FUSION_ONLY', ('r10', 'H1'): 'FUSION_ONLY'}),
+    'N/fusion-only': synth.Scenario(
+        'N', statuses={('r06', 'H1'): 'FUSION_ONLY', ('r10', 'H1'): 'FUSION_ONLY'}
+    ),
     # I1 fails at R00 and is not passed at R01: H1's family is {c1, c3} at the R06 checkpoint, so
     # c2 and c4 failing does not stop SUPPORTED. R10 passes I1 again.
     'N/i1-fallback': synth.Scenario(
-        'N', i1_pass={'r00': False, 'r01': False}, effects={('r06', 'H1.c2'): 0.0, ('r06', 'H1.c4'): 0.0}
+        'N',
+        i1_pass={'r00': False, 'r01': False},
+        effects={('r06', 'H1.c2'): 0.0, ('r06', 'H1.c4'): 0.0},
     ),
     'N/rungs-falsified': synth.Scenario('N', statuses=RUNG_FALSIFIED),
     'N/inconclusive': synth.Scenario('N', statuses=RUNG_INCONCLUSIVE),
     'S-F/kill-inconclusive': synth.Scenario(
-        'S-F', statuses={('r07K', 'K1'): 'INCONCLUSIVE', ('r07K', 'H7'): 'FALSIFIED', ('r10K', 'K1'): 'FALSIFIED'}
+        'S-F',
+        statuses={
+            ('r07K', 'K1'): 'INCONCLUSIVE',
+            ('r07K', 'H7'): 'FALSIFIED',
+            ('r10K', 'K1'): 'FALSIFIED',
+        },
     ),
-    'S-C-F/k-supported': synth.Scenario('S-C-F', statuses={('r08K', 'H7'): 'INCONCLUSIVE', ('r09K', 'H6'): 'INCONCLUSIVE'}),
+    'S-C-F/k-supported': synth.Scenario(
+        'S-C-F', statuses={('r08K', 'H7'): 'INCONCLUSIVE', ('r09K', 'H6'): 'INCONCLUSIVE'}
+    ),
 }
 GATES = {'I2': 'REPORTED', 'I3': 'REPORTED', 'I5': 'REPORTED', 'I4': 'PASS', 'vault.read': 'DONE',
          'adoption.default': 'DONE', 'adoption.squeeze': 'DONE', 'signoff': 'PASS'}  # fmt: skip
@@ -63,7 +74,9 @@ def written(tmp_path_factory: pytest.TempPathFactory, frozen: tuple[Path, Rules]
     return out
 
 
-def expected_status(rules: Rules, scenario: synth.Scenario, run_id: str, branch: str, rule_id: str) -> str:
+def expected_status(
+    rules: Rules, scenario: synth.Scenario, run_id: str, branch: str, rule_id: str
+) -> str:
     if not rules.in_scope(rule_id, run_id, branch):
         return NOT_APPLICABLE
     if rule_id == 'I1':
@@ -74,7 +87,11 @@ def expected_status(rules: Rules, scenario: synth.Scenario, run_id: str, branch:
 
 
 def test_the_scenarios_cover_every_run_id_and_every_branch(written, rules):
-    pairs = {(r.run_id, r.branch) for name in ('N', 'N-F', 'S-F', 'S-C', 'S-C-F') for r in written[name][1]}
+    pairs = {
+        (r.run_id, r.branch)
+        for name in ('N', 'N-F', 'S-F', 'S-C', 'S-C-F')
+        for r in written[name][1]
+    }
     assert pairs == rules.realizable()
     assert {run_id for run_id, _ in pairs} == set(RUN_IDS)
     assert {branch for _, branch in pairs} == {'N', 'N-F', 'S', 'S-F', 'S-C', 'S-C-F'}
@@ -85,7 +102,9 @@ def test_arcforge_verdict_reproduces_every_run(name, written, frozen, capsys):
     rules_path, rules = frozen
     root, runs = written[name]
     for synth_run in runs:
-        code = cli.main(['verdict', synth_run.run_id, '--runs-dir', str(root), '--rules', str(rules_path)])
+        code = cli.main(
+            ['verdict', synth_run.run_id, '--runs-dir', str(root), '--rules', str(rules_path)]
+        )
         out = capsys.readouterr().out
         assert code == 0, f'{name} {synth_run.run_id}:\n{out}'
         assert 'verdict reproduced' in out
@@ -96,7 +115,10 @@ def test_every_status_is_the_planned_one(name, written, rules):
     scenario = SCENARIOS[name]
     for synth_run in written[name][1]:
         got = {h['id']: h['status'] for h in synth_run.outcome.doc['hypotheses']}
-        want = {rule.id: expected_status(rules, scenario, synth_run.run_id, synth_run.branch, rule.id) for rule in rules.rules}
+        want = {
+            rule.id: expected_status(rules, scenario, synth_run.run_id, synth_run.branch, rule.id)
+            for rule in rules.rules
+        }
         assert got == want, f'{name} {synth_run.run_id}/{synth_run.branch}'
         for entry in synth_run.outcome.doc['hypotheses']:
             assert (entry['status'] == NOT_APPLICABLE) is (not entry['in_scope'])
@@ -144,7 +166,9 @@ def test_vault_reads_follow_the_budget(written, rules):
 
 def test_fusion_only_sets_h1_provisional(written):
     runs = {r.run_id: r for r in written['N/fusion-only'][1]}
-    assert {h['id']: h['status'] for h in runs['r06'].outcome.doc['hypotheses']}['H1'] == 'FUSION_ONLY'
+    assert {h['id']: h['status'] for h in runs['r06'].outcome.doc['hypotheses']}[
+        'H1'
+    ] == 'FUSION_ONLY'
     assert runs['r07'].outcome.doc['run']['h1_provisional'] == 'FUSION_ONLY'
     assert arc(written, 'N/fusion-only')['H1'] == ('FUSION_ONLY', 'r10')
 
@@ -153,18 +177,29 @@ def test_the_i1_fallback_family_end_to_end(written):
     runs = {r.run_id: r for r in written['N/i1-fallback'][1]}
     r00 = runs['r00'].outcome.doc
     assert r00['gates_summary']['I1_pass'] is False
-    assert {h['id']: h['status'] for h in r00['hypotheses']}['signoff'] == 'PASS'  # fallback scheduled
+    assert {h['id']: h['status'] for h in r00['hypotheses']}[
+        'signoff'
+    ] == 'PASS'  # fallback scheduled
     assert r00['signoff_inputs']['i1_fallback_scheduled'] is True
     r06 = runs['r06'].outcome.doc
     assert r06['gates_inputs']['I1_prior_pass'] is False
     assert {h['id']: h['status'] for h in r06['hypotheses']}['H1'] == 'SUPPORTED'
     rows = {r['comparison_id']: r for r in r06['rows']}
-    assert [rows[c]['registered'] for c in ('H1.c1', 'H1.c2', 'H1.c3', 'H1.c4')] == [True, False, True, False]
+    assert [rows[c]['registered'] for c in ('H1.c1', 'H1.c2', 'H1.c3', 'H1.c4')] == [
+        True,
+        False,
+        True,
+        False,
+    ]
     assert rows['H1.c2']['verdict_component'] == rows['H1.c4']['verdict_component'] == 'REPORTED'
     assert rows['H1.c1']['holm_m'] == rows['H1.c3']['holm_m'] == 2
     r10 = runs['r10'].outcome.doc
     assert r10['gates_summary']['I1_pass'] is True
-    assert all(r['registered'] for r in r10['rows'] if r['hypothesis'] == 'H1' and r['kind'] == 'superiority')
+    assert all(
+        r['registered']
+        for r in r10['rows']
+        if r['hypothesis'] == 'H1' and r['kind'] == 'superiority'
+    )
 
 
 # ---- tampering --------------------------------------------------------------------------------
@@ -184,7 +219,9 @@ def verdict(root: Path, run_id: str, rules_path: Path, *extra: str) -> tuple[int
 
     buffer = StringIO()
     with redirect_stdout(buffer):
-        code = cli.main(['verdict', run_id, '--runs-dir', str(root), '--rules', str(rules_path), *extra])
+        code = cli.main(
+            ['verdict', run_id, '--runs-dir', str(root), '--rules', str(rules_path), *extra]
+        )
     return code, buffer.getvalue()
 
 
@@ -258,7 +295,9 @@ def test_every_rule_must_be_listed(run_copy, frozen):
 
 def test_other_rules_are_refused(run_copy, tmp_path):
     root, _ = run_copy
-    other, _ = synth.write_rules(tmp_path / 'other', stats={'resamples': 401, 'permutations': 400, 'refit_resamples': 100})
+    other, _ = synth.write_rules(
+        tmp_path / 'other', stats={'resamples': 401, 'permutations': 400, 'refit_resamples': 100}
+    )
     code, out = verdict(root, 'r07', other)
     assert code == 1 and 'run.rules_sha256' in out
 
@@ -286,7 +325,9 @@ def test_inputs_with_a_planted_null_fail_not_computable(written, frozen, tmp_pat
     inputs['vault']['sign'] = None
     path = tmp_path / 'inputs.json'
     path.write_text(json.dumps(inputs))
-    code, out = verdict(root, 'r06', frozen[0], '--inputs', str(path), '--emit', str(tmp_path / 'out.json'))
+    code, out = verdict(
+        root, 'r06', frozen[0], '--inputs', str(path), '--emit', str(tmp_path / 'out.json')
+    )
     assert code == 1
     assert 'H1: NOT_COMPUTABLE (reads null' in out and 'vault.sign' in out
     assert not (tmp_path / 'out.json').exists()

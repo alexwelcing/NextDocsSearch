@@ -62,7 +62,15 @@ def compare(
             checked += 1
             value = recomputed.get((item, key), '(missing)')
             if value != reported or isinstance(value, bool) != isinstance(reported, bool):
-                mismatches.append({'run_id': run_id, 'item': item, 'field': key, 'reported': reported, 'recomputed': value})
+                mismatches.append(
+                    {
+                        'run_id': run_id,
+                        'item': item,
+                        'field': key,
+                        'reported': reported,
+                        'recomputed': value,
+                    }
+                )
     for n, entry in enumerate(mismatches, start=1):
         entry['mismatch_id'] = f'm{n:03d}'
     return {
@@ -90,12 +98,21 @@ def reference_result(rules: Rules, blind_docs: Sequence[Mapping[str, Any]]) -> d
                 'run_id': full['run']['id'],
                 'hypotheses': [{'id': h['id'], 'status': h['status']} for h in full['hypotheses']],
                 'rows': [
-                    {'comparison_id': r['comparison_id'], 'verdict_component': r['verdict_component'], 'prediction_met': r['prediction_met']}
+                    {
+                        'comparison_id': r['comparison_id'],
+                        'verdict_component': r['verdict_component'],
+                        'prediction_met': r['prediction_met'],
+                    }
                     for r in full['rows']
                 ],
                 'gates_summary': full['gates_summary'],
                 'adoption': [
-                    {'fold': a['fold'], 'rule': a['rule'], 'chosen_arm': a['chosen_arm'], 'adopted': a['adopted']}
+                    {
+                        'fold': a['fold'],
+                        'rule': a['rule'],
+                        'chosen_arm': a['chosen_arm'],
+                        'adopted': a['adopted'],
+                    }
                     for a in full['adoption'] or []
                 ],
             }
@@ -103,4 +120,8 @@ def reference_result(rules: Rules, blind_docs: Sequence[Mapping[str, Any]]) -> d
         if full['arc_summary'] is not None:
             arc_summary = full['arc_summary']
         history.append(full)
-    return {'runs': runs, 'arc_summary': arc_summary, 'notes': 'reference recomputation by arcforge.contract'}
+    return {
+        'runs': runs,
+        'arc_summary': arc_summary,
+        'notes': 'reference recomputation by arcforge.contract',
+    }
