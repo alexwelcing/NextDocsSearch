@@ -1,0 +1,93 @@
+# produces.yaml — the run plan as the contract sees it (arc-produces/1).
+#
+# For every (run, branch) a PREREG path reaches: which verdicts.json fields the PLANNED stages of
+# that run emit non-null, and which VerdictRows. Written from program.experiments (what each rung
+# measures), independently of rules.yaml, so that `arcforge prereg lint` is a real cross-check: it
+# expands every rule's applies_to over the branch table and fails when an in-scope rule reads a
+# field this plan leaves null (or a row it does not produce).
+#
+# Field entries are verdicts.json paths. An entry promises that node non-null together with every
+# non-nullable field inside it (`gates_inputs.I1` covers kappa_qw_owner and min_kendall_ci_lo).
+# Fields that arc-report/1 never allows to be null (run.id, vault.read_this_run, ...) need no entry.
+# Lists may nest (YAML aliases below); the lint flattens them.
+#
+# When `arcforge plan` learns to emit this from configs/rNN.yaml, pass its output with
+# `arcforge prereg lint --produces <file>`.
+
+schema: arc-produces/1
+
+common:
+  every_run: &every_run [gates_inputs.I3]
+  # From r01 on: the drift panel, and the I1 pass carried forward from the last run that decided it.
+  after_r00: &after_r00 [gates_inputs.I3, gates_inputs.I4, gates_inputs.I1_prior_pass]
+  vault_read: &vault_read [vault.sign, vault.read_index]
+  h1_rows: &h1_rows [H1.c1, H1.c2, H1.c3, H1.c4, H1.g1]
+  h2_rows: &h2_rows [H2.c1, H2.c2, H2.c3]
+  h3_rows: &h3_rows [H3.c1, H3.c2]
+  h4_rows: &h4_rows [H4.c1, H4.g1]
+  h5_rows: &h5_rows [H5.c1, H5.b1]
+  h3b_rows: &h3b_rows [H3b.b1, H3b.b2]
+  h6_rows: &h6_rows [H6.r1, H6.r2, H6.g1]
+  k1_rows: &k1_rows [K1.k1, K1.k2]
+
+runs:
+  r00:
+    # Instrument and floor: I1, I3, I5, and the sign-off preconditions the laptop tail measures
+    # (each may be null on its own, so each is promised).
+    N:
+      fields:
+        - *every_run
+        - [gates_inputs.I1, gates_inputs.I5, signoff_inputs]
+        - [signoff_inputs.lint_ok, signoff_inputs.report_valid, signoff_inputs.vault_sealed]
+        - [signoff_inputs.i1_fallback_scheduled, signoff_inputs.i2_scheduled, signoff_inputs.i4_scheduled]
+      rows: []
+  r01:
+    # Lexemes. I1 is recomputed after a re-judge or carried forward (rejudged false).
+    N: {fields: [*after_r00, gates_inputs.I1, adoption], rows: []}
+  r02:
+    N: {fields: [*after_r00, adoption], rows: *h2_rows}
+  r03:
+    N: {fields: [*after_r00, adoption], rows: [*h3_rows, H3a.a1]}
+  r04:
+    # Contrastive training, the I2 leakage triad, vault read #1 and the futility look.
+    N: {fields: [*after_r00, gates_inputs.I2, adoption, *vault_read], rows: [FUT.c1]}
+  r05:
+    N: {fields: [*after_r00, adoption], rows: *h4_rows}
+  r05K:
+    # Kill-only: H1.F on the R04 champions' held-out scores, no vault read, no adoption.
+    S: {fields: *after_r00, rows: [H1.c1, H1.g1]}
+  r06:
+    # N: H5 plus the governing H1 checkpoint (vault read #2). S-F: H5 only. S-C: H4.
+    N: {fields: [*after_r00, adoption, *vault_read], rows: [*h5_rows, *h1_rows]}
+    S-F: {fields: [*after_r00, adoption], rows: *h5_rows}
+    S-C: {fields: [*after_r00, adoption], rows: *h4_rows}
+  r07:
+    # N: squeeze and glass (the exploratory H7 row). S-C: H5 plus the H1 checkpoint (read #2).
+    N: {fields: [*after_r00, adoption], rows: [H7.report.c1]}
+    S-C: {fields: [*after_r00, adoption, *vault_read], rows: [*h5_rows, *h1_rows]}
+  r07K:
+    N-F: {fields: *after_r00, rows: [*k1_rows, H7.c1]}
+    S-F: {fields: *after_r00, rows: [*k1_rows, H7.c1]}
+  r08:
+    # Whose map is it (H3b), a measurement rung; in S-C also the squeeze grid and glass.
+    N: {fields: *after_r00, rows: *h3b_rows}
+    N-F: {fields: *after_r00, rows: *h3b_rows}
+    S-F: {fields: *after_r00, rows: *h3b_rows}
+    S-C: {fields: [*after_r00, adoption], rows: [*h3b_rows, H7.report.c1]}
+  r08K:
+    S-C-F: {fields: *after_r00, rows: [*h3b_rows, *k1_rows, H7.c1]}
+  r09:
+    N: {fields: *after_r00, rows: *h6_rows}
+    S-C: {fields: *after_r00, rows: *h6_rows}
+  r09K:
+    N-F: {fields: *after_r00, rows: *h6_rows}
+    S-F: {fields: *after_r00, rows: *h6_rows}
+    S-C-F: {fields: *after_r00, rows: *h6_rows}
+  r10:
+    # Confirmatory: H1, H2 and H3 re-decided, I1 and I5 repeated, vault read #3.
+    N: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows]}
+    S-C: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows]}
+  r10K:
+    N-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}
+    S-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}
+    S-C-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}

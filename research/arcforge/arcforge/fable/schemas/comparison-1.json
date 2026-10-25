@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:fable-comparison-1",
+  "title": "arc-fable-comparison/1",
+  "description": "`python -m arcforge.fable compare`: every verdict where Fable's blind recomputation differs from the reported verdicts.json files, each with a stable mismatch id. The input of the mismatch pass.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "blind_packet_sha256", "blind_output_sha256", "checked", "mismatches"],
+  "properties": {
+    "schema": {"const": "arc-fable-comparison/1"},
+    "blind_packet_sha256": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}]},
+    "blind_output_sha256": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}]},
+    "checked": {"description": "How many verdicts were compared.", "type": "integer", "minimum": 0},
+    "mismatches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["mismatch_id", "run_id", "item", "field", "reported", "recomputed"],
+        "properties": {
+          "mismatch_id": {"type": "string", "pattern": "^m[0-9]{3,}$"},
+          "run_id": {"type": "string", "minLength": 1},
+          "item": {"description": "e.g. hypotheses.H1, rows.H1.c3, gates_summary, adoption.default.fold2, arc_summary.H4", "type": "string", "minLength": 1},
+          "field": {"type": "string", "minLength": 1},
+          "reported": {},
+          "recomputed": {}
+        }
+      }
+    }
+  }
+}

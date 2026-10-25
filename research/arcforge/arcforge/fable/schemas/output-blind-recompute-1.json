@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:fable-output-blind-recompute-1",
+  "title": "arc-fable-output/1: blind_recompute",
+  "description": "output.json of the end review's blind pass: every verdict recomputed from PREREG.md, rules.yaml and the stripped verdicts files alone. One entry per run file, each with every rule's status, every row's verdict component and prediction_met, the gates_summary and the adoption choices; plus the arc_summary of the final run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kind", "status", "reason", "result"],
+  "properties": {
+    "schema": {"const": "arc-fable-output/1"},
+    "kind": {"const": "blind_recompute"},
+    "status": {"enum": ["ok", "refused"]},
+    "reason": {"type": ["string", "null"]},
+    "result": {"anyOf": [{"$ref": "#/$defs/Result"}, {"type": "null"}]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ok"}}, "required": ["status"]},
+      "then": {"properties": {"result": {"$ref": "#/$defs/Result"}, "reason": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "refused"}}, "required": ["status"]},
+      "then": {"properties": {"result": {"type": "null"}, "reason": {"type": "string", "minLength": 1}}}
+    }
+  ],
+  "$defs": {
+    "status": {"enum": ["SUPPORTED", "FUSION_ONLY", "FALSIFIED", "INCONCLUSIVE", "NOT_FALSIFIED", "REPORTED", "FIRED", "NOT_FIRED", "PASS", "FAIL", "DONE", "NOT_APPLICABLE", "NOT_COMPUTABLE"]},
+    "Result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runs", "arc_summary", "notes"],
+      "properties": {
+        "runs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["run_id", "hypotheses", "rows", "gates_summary", "adoption"],
+            "properties": {
+              "run_id": {"type": "string", "minLength": 1},
+              "hypotheses": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id", "status"],
+                  "properties": {"id": {"type": "string"}, "status": {"$ref": "#/$defs/status"}}
+                }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["comparison_id", "verdict_component", "prediction_met"],
+                  "properties": {
+                    "comparison_id": {"type": "string"},
+                    "verdict_component": {"enum": ["PASS", "FAIL", "FIRES", "CLEAR", "REPORTED"]},
+                    "prediction_met": {"type": ["boolean", "null"]}
+                  }
+                }
+              },
+              "gates_summary": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["I1_pass", "I1_pass_effective", "I4_pass", "futility_fired"],
+                "properties": {
+                  "I1_pass": {"type": ["boolean", "null"]},
+                  "I1_pass_effective": {"type": ["boolean", "null"]},
+                  "I4_pass": {"type": ["boolean", "null"]},
+                  "futility_fired": {"type": ["boolean", "null"]}
+                }
+              },
+              "adoption": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["fold", "rule", "chosen_arm", "adopted"],
+                  "properties": {
+                    "fold": {"enum": [1, 2, 3]},
+                    "rule": {"enum": ["default", "squeeze"]},
+                    "chosen_arm": {"type": "string", "minLength": 1},
+                    "adopted": {"type": "boolean"}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "arc_summary": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "final_status", "governing_run"],
+                "properties": {
+                  "id": {"type": "string"},
+                  "final_status": {"anyOf": [{"$ref": "#/$defs/status"}, {"const": "NOT_TESTED"}]},
+                  "governing_run": {"type": ["string", "null"]}
+                }
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "notes": {"type": "string", "maxLength": 8000}
+      }
+    }
+  }
+}

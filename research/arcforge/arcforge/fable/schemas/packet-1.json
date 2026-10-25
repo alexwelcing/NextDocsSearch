@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:fable-packet-1",
+  "title": "arc-fable-packet/1",
+  "description": "packet.json: the manifest of one orchestrator (Fable) packet. Its sha256 (of the canonical bytes: sorted keys, no whitespace) is the packet id. It pins every file the agent's working directory holds; nothing else is in that directory.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kind", "role", "run_id", "expected_model", "instructions", "output", "files", "stripped"],
+  "properties": {
+    "schema": {"const": "arc-fable-packet/1"},
+    "kind": {"enum": ["gold_audit", "prereg_signoff", "blind_recompute", "mismatch_review"]},
+    "role": {"enum": ["gold_audit_1", "gold_audit_2", "signoff", "end_review"]},
+    "run_id": {"enum": ["r00", "r10", "r10K"]},
+    "expected_model": {"description": "Outputs are accepted only from a model whose reported id starts with this (a missing review is never replaced by another model).", "type": "string", "minLength": 1},
+    "instructions": {"const": "INSTRUCTIONS.md"},
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema"],
+      "properties": {"path": {"const": "output.json"}, "schema": {"const": "output.schema.json"}}
+    },
+    "files": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "role", "sha256", "bytes"],
+        "properties": {
+          "path": {"type": "string", "pattern": "^(?:INSTRUCTIONS\\.md|output\\.schema\\.json|inputs/[A-Za-z0-9._/-]+)$"},
+          "role": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "stripped": {"description": "The verdicts.json fields removed for a blind pass (empty otherwise).", "type": "array", "items": {"type": "string"}}
+  }
+}

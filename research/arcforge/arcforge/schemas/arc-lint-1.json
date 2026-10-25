@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:arc-lint-1",
+  "title": "arc-lint/1",
+  "description": "The JSON report of `arcforge prereg lint --json` (or --out): the files linted with their sha256, every error and warning, and the applies_to expansion of every rule over the PREREG branch table. At R00 it is lint.json in Fable's sign-off packet.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "ok", "frozen", "rules", "schema_sha256", "plan", "errors", "warnings", "scope"],
+  "properties": {
+    "schema": {"const": "arc-lint/1"},
+    "ok": {"type": "boolean"},
+    "frozen": {"type": "boolean"},
+    "rules": {"$ref": "#/$defs/file"},
+    "schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "plan": {"$ref": "#/$defs/file"},
+    "errors": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "warnings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "scope": {
+      "description": "rule id -> the (run/branch) pairs where it is in scope.",
+      "type": "object",
+      "additionalProperties": {"type": "array", "items": {"type": "string", "pattern": "^r[0-9]{2}K?/(?:N|N-F|S|S-F|S-C|S-C-F)$"}}
+    }
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string"}, "sha256": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}]}}
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "code", "message", "rule", "run", "branch"],
+      "properties": {
+        "level": {"enum": ["error", "warning"]},
+        "code": {"type": "string", "minLength": 1},
+        "message": {"type": "string"},
+        "rule": {"type": ["string", "null"]},
+        "run": {"type": ["string", "null"]},
+        "branch": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

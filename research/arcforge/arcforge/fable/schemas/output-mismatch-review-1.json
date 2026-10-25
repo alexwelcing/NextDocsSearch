@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:fable-output-mismatch-review-1",
+  "title": "arc-fable-output/1: mismatch_review",
+  "description": "output.json of the end review's mismatch pass (published verbatim as fable-end-review.json): an assessment of every mismatch between the blind recomputation and the reported verdicts (inputs/comparison.json), and every place the write-up disagrees with the reports.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kind", "status", "reason", "result"],
+  "properties": {
+    "schema": {"const": "arc-fable-output/1"},
+    "kind": {"const": "mismatch_review"},
+    "status": {"enum": ["ok", "refused"]},
+    "reason": {"type": ["string", "null"]},
+    "result": {"anyOf": [{"$ref": "#/$defs/Result"}, {"type": "null"}]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ok"}}, "required": ["status"]},
+      "then": {"properties": {"result": {"$ref": "#/$defs/Result"}, "reason": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "refused"}}, "required": ["status"]},
+      "then": {"properties": {"result": {"type": "null"}, "reason": {"type": "string", "minLength": 1}}}
+    }
+  ],
+  "$defs": {
+    "Result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mismatches", "writeup_findings", "statement"],
+      "properties": {
+        "mismatches": {
+          "description": "Exactly one entry per mismatch_id of inputs/comparison.json.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["mismatch_id", "assessment", "resolution"],
+            "properties": {
+              "mismatch_id": {"type": "string", "minLength": 1},
+              "assessment": {"enum": ["reported_correct", "recomputed_correct", "rule_ambiguous"]},
+              "resolution": {"type": "string", "minLength": 1, "maxLength": 2000}
+            }
+          }
+        },
+        "writeup_findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["location", "severity", "finding"],
+            "properties": {
+              "location": {"type": "string", "minLength": 1},
+              "severity": {"enum": ["blocking", "minor"]},
+              "finding": {"type": "string", "minLength": 1, "maxLength": 2000}
+            }
+          }
+        },
+        "statement": {"type": "string", "minLength": 1, "maxLength": 4000}
+      }
+    }
+  }
+}
