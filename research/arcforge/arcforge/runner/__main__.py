@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import tempfile
 import time
@@ -37,7 +38,14 @@ print('device', torch.cuda.get_device_name(0), 'matmul sum', float((x @ x).sum()
 
 
 def _git_sha() -> str:
-    """HEAD of the checkout this package runs from (names and labels the VMs)."""
+    """HEAD of the checkout this package runs from (names and labels the VMs).
+
+    ARCFORGE_COMMIT overrides it, as for `arcforge version`, where the code was synced from a
+    checkout elsewhere.
+    """
+    override = os.environ.get('ARCFORGE_COMMIT', '').removesuffix('-dirty')
+    if override:
+        return override
     out = SubprocessShell().run(['git', '-C', str(Path(__file__).resolve().parent), 'rev-parse', 'HEAD'])
     if not out.ok:
         raise SystemExit('arcforge.runner: not a git checkout; VM names carry the code SHA')
@@ -137,6 +145,14 @@ def cmd_image(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_base_image(_args: argparse.Namespace) -> int:
+    from arcforge.runner import baseimage
+
+    name = baseimage.build(SubprocessShell(), RunnerConfig(), code_sha=_git_sha(), date=time.strftime('%Y%m%d', time.gmtime()))
+    print(f'built {name}; pin it as RunnerConfig.boot_image (boot_image_project = the runner project)')
+    return 0
+
+
 def cmd_iam(_args: argparse.Namespace) -> int:
     print('# Owner, once: create the runner service account and grant it exactly what a run needs.')
     for line in iam.setup_commands(RunnerConfig()):
@@ -150,8 +166,6 @@ def ssh_argv(cfg: RunnerConfig, name: str, zone: str, command: str | None = None
 
 
 def cmd_ssh(args: argparse.Namespace) -> int:
-    import os
-
     argv = ssh_argv(RunnerConfig(), args.name, args.zone, args.command)
     os.execvp(argv[0], argv)  # interactive: hand the terminal to gcloud
     return 0  # pragma: no cover
@@ -188,6 +202,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--allow-dirty', action='store_true')
     p.add_argument('--no-pin', action='store_true', help='print the result instead of writing pinned/image.json')
     p.set_defaults(func=cmd_image)
+
+    p = sub.add_parser('base-image', help='bake the runner boot image (DLVM + Docker + NVIDIA container toolkit)')
+    p.add_argument('action', choices=['build'])
+    p.set_defaults(func=cmd_base_image)
 
     p = sub.add_parser('iam', help="print the owner's one-time commands for the runner service account")
     p.set_defaults(func=cmd_iam)

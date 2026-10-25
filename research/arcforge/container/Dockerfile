@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1.7
 # The arcforge runner container: CUDA user space + uv + the arcforge package with the gpu and
 # cloud extras, exactly as uv.lock pins them. Built by Cloud Build (container/cloudbuild.yaml,
 # driven by `python -m arcforge.runner image build`) and pulled by digest on every runner VM.

@@ -205,7 +205,7 @@ def check_boot_image(ctx: Context) -> Check:
 
 def check_runner_sa(ctx: Context) -> Check:
     sa = ctx.cfg.service_account
-    fix = 'owner, once:\n    ' + '\n    '.join(iam.setup_commands(ctx.cfg))
+    fix = 'owner, once (or `python -m arcforge.runner iam`):\n  ' + '\n  '.join(iam.setup_commands(ctx.cfg))
     described = ctx.gcloud('iam', 'service-accounts', 'describe', sa, f'--project={ctx.cfg.project}', '--format=value(email,disabled)')
     if not described.ok:
         return Check('runner service account', FAIL, f'{sa} does not exist', fix)
@@ -308,7 +308,8 @@ def render(checks: Sequence[Check]) -> str:
     for c in checks:
         lines.append(f'{c.status:4}  {c.name:{width}}  {c.detail}')
         if c.status != OK and c.fix:
-            lines.append(f'{"":4}  {"":{width}}  fix: {c.fix}')
+            pad = ' ' * (width + 8)
+            lines.append(pad + 'fix: ' + c.fix.replace('\n', '\n' + pad))
     fails = sum(c.status == FAIL for c in checks)
     warns = sum(c.status == WARN for c in checks)
     lines.append('')

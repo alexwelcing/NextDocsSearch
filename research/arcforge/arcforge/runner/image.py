@@ -83,9 +83,10 @@ def build(
         raise BuildError(f'Cloud Build {build_id} ended {status}: {info.get("statusDetail", "")}')
     images = (info.get('results') or {}).get('images') or []
     repository = image_repository(cfg.project, cfg.region)
-    digests = [i['digest'] for i in images if i.get('name', '').startswith(repository)]
+    # The commit tag and the buildcache tag name the same manifest.
+    digests = sorted({i['digest'] for i in images if i.get('name', '').startswith(repository + ':')})
     if len(digests) != 1:
-        raise BuildError(f'expected one pushed {repository} image, got {images}')
+        raise BuildError(f'expected one pushed {repository} digest, got {images}')
     return pins.ImagePin(
         repository=repository,
         digest=digests[0],

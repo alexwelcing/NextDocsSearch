@@ -4,7 +4,7 @@ import re
 import tomllib
 from pathlib import Path
 
-from arcforge.runner import image
+from arcforge.runner import baseimage, image
 from arcforge.runner.config import RunnerConfig
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,7 +31,8 @@ def test_cuda_base_fits_torchs_cuda_and_the_runners_driver():
     runtime = re.search(r'^name = "nvidia-cuda-runtime(?:-cu\d+)?"\nversion = "(\d+)\.(\d+)', lock, re.M)
     torch_cuda = (int(runtime.group(1)), int(runtime.group(2)))
     assert cuda[0] == torch_cuda[0], f'base CUDA {cuda} vs torch wheels {torch_cuda}'
-    driver = re.search(r'nvidia-(\d{3})', RunnerConfig().boot_image).group(1)
+    # The runner boots an image baked from this Deep Learning VM image (baseimage.py).
+    driver = re.search(r'nvidia-(\d{3})', baseimage.SOURCE_IMAGE).group(1)
     assert max(cuda, torch_cuda) <= DRIVER_CUDA[driver], f'driver {driver} supports CUDA {DRIVER_CUDA[driver]}'
 
 
@@ -70,7 +71,8 @@ def test_build_waits_and_pins_the_pushed_digest(shell):
     shell.on('builds submit', then=shell.ok({'id': 'b-1', 'status': 'QUEUED'}))
     shell.on('builds describe', then=[shell.ok({'id': 'b-1', 'status': 'WORKING'}),
                                       shell.ok({'id': 'b-1', 'status': 'SUCCESS',
-                                                'results': {'images': [{'name': f'{repo}:abc', 'digest': digest}]}})])
+                                                'results': {'images': [{'name': f'{repo}:abc', 'digest': digest},
+                                                                       {'name': f'{repo}:buildcache', 'digest': digest}]}})])
     pin = image.build(shell, RunnerConfig(), commit='abc', now_utc='2026-10-24T12:00:00Z', sleep=lambda _s: None, log=lambda _m: None)
     assert pin.ref == f'{repo}@{digest}' and pin.built_from == 'abc' and pin.cuda == image.cuda_version()
     assert pin.torch == image.locked_version('torch')
@@ -83,3 +85,37 @@ def test_a_failed_build_raises(shell):
     shell.on('builds describe', then=shell.ok({'id': 'b-2', 'status': 'FAILURE', 'statusDetail': 'step 0 failed'}))
     with pytest.raises(image.BuildError, match='step 0 failed'):
         image.build(shell, RunnerConfig(), commit='abc', now_utc='t', sleep=lambda _s: None, log=lambda _m: None)
+
+
+def test_base_image_builder(shell):
+    shell.on('instances create', then=shell.ok([{}]))
+    shell.on('instances describe', then=[shell.ok({'status': 'RUNNING'}), shell.ok({'status': 'TERMINATED'})])
+    shell.on('get-serial-port-output', then=shell.ok(
+        "+ echo 'ARCFORGE-BASE OK docker=x'\nstartup-script: ARCFORGE-BASE OK docker=29.1.3 ctk=1.20.1\n"))
+    shell.on('images create', then=shell.ok())
+    shell.on('instances delete', then=shell.ok())
+    name = baseimage.build(shell, RunnerConfig(), code_sha='3a74fb4c0ffe', date='20261025', sleep=lambda _s: None, log=lambda _m: None)
+    assert name == 'arcforge-runner-20261025-3a74fb4'
+    create = shell.called('instances create')[0]
+    assert 'arc-run-base-3a74fb4' in create and '--max-run-duration=3600s' in create and '--no-service-account' in create
+    (images,) = shell.called('images create')
+    assert '--source-disk=arc-run-base-3a74fb4' in images and '--family=arcforge-runner' in images
+    assert shell.called('instances delete')  # the builder never outlives the build
+
+
+def test_base_image_failure_still_deletes_the_builder(shell):
+    import pytest
+
+    shell.on('instances create', then=shell.ok([{}]))
+    shell.on('instances describe', then=shell.ok({'status': 'TERMINATED'}))
+    shell.on('get-serial-port-output', then=shell.ok('ARCFORGE-BASE FAILED line 12\n'))
+    shell.on('instances delete', then=shell.ok())
+    with pytest.raises(baseimage.BaseImageError, match='FAILED line 12'):
+        baseimage.build(shell, RunnerConfig(), code_sha='3a74fb4', date='20261025', sleep=lambda _s: None, log=lambda _m: None)
+    assert shell.called('instances delete') and not shell.called('images create')
+
+
+def test_base_image_script_pins_versions():
+    script = baseimage.render_script()
+    assert script.startswith('#!/bin/bash\nDOCKER_VERSION=29.1.3-0ubuntu3~24.04.2\nCTK_VERSION=1.20.1-1\n')
+    assert '"docker.io=${DOCKER_VERSION}"' in script and 'nvidia-ctk runtime configure --runtime=docker' in script
