@@ -8,7 +8,7 @@
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import type { PerspectiveCamera } from 'three'
-import { useImmersiveStore } from '@/stores/immersiveStore'
+import { useImmersiveStore, type BootPhase, type ImmersiveModal } from '@/stores/immersiveStore'
 import { attractDrift, attractSpin, stepAttract } from '@/lib/immersive/drift'
 
 const LOOK_SPEED = 0.0032
@@ -17,7 +17,30 @@ const DAMPING = 4.5 // velocity decay per second
 const PITCH_LIMIT = Math.PI / 2 - 0.12
 const FOV_MIN = 45
 const FOV_MAX = 85
-const IDLE_AFTER_MS = 6000
+export const IDLE_AFTER_MS = 6000
+
+/** The UI that holds the idle drift off: a reader/modal, the dock, or the boot overlay. */
+export interface IdleHolds {
+  modal: ImmersiveModal
+  dockOpen: boolean
+  bootPhase: BootPhase
+}
+
+/**
+ * One frame of the idle clock: when the visitor last counts as active. UI keeps it fresh, so
+ * closing a long read doesn't start the room turning that same instant — and the boot overlay
+ * counts as UI, so idleness is timed from the reveal, not from page load, and the room doesn't
+ * start turning a second after it appears, under the arriving world's title card.
+ */
+export function nextLastInputAt(lastInputAt: number, now: number, ui: IdleHolds): number {
+  return ui.modal || ui.dockOpen || ui.bootPhase !== 'ready' ? now : lastInputAt
+}
+
+/** Whether the attract drift may run: IDLE_AFTER_MS without look input, and never under
+ *  reduced motion. */
+export function isIdle(lastInputAt: number, now: number, reducedMotion: boolean): boolean {
+  return !reducedMotion && now - lastInputAt > IDLE_AFTER_MS
+}
 
 /**
  * Attract gain from its linear ramp (drift.ts stepAttract): smoothstep, so the drift's rate
@@ -114,16 +137,12 @@ export function CameraRig() {
       const decay = Math.exp(-DAMPING * delta)
       s.velYaw *= decay
       s.velPitch *= decay
-      // idle drift — held off (and its idle timer kept fresh) while UI is up, so closing a long
-      // read doesn't start the room turning that same instant. The boot overlay counts as UI:
-      // idleness is timed from the reveal, not from page load, so the room doesn't start
-      // turning a second after it appears, under the arriving world's title card. It eases in,
-      // and turns the same way as the panorama spin, which yields to it (drift.ts) so the two
-      // never stack.
+      // idle drift — held off (and its idle timer kept fresh) while UI or the boot overlay is up
+      // (nextLastInputAt). It eases in, and turns the same way as the panorama spin, which
+      // yields to it (drift.ts) so the two never stack.
       const now = performance.now()
-      const { modal, dockOpen, bootPhase } = useImmersiveStore.getState()
-      if (modal || dockOpen || bootPhase !== 'ready') s.lastInputAt = now
-      const idle = !reducedMotion && now - s.lastInputAt > IDLE_AFTER_MS
+      s.lastInputAt = nextLastInputAt(s.lastInputAt, now, useImmersiveStore.getState())
+      const idle = isIdle(s.lastInputAt, now, reducedMotion)
       s.attract = stepAttract(s.attract, idle, delta)
       attractDrift.gain = easeAttract(s.attract)
       s.yaw -= attractSpin(attractDrift.gain) * delta

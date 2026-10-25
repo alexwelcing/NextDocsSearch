@@ -85,6 +85,23 @@ export function balancedWrapWidth(
 
 type Box = { width: number; height: number }
 
+/**
+ * The card's fit scale for a view: shrink-only, about the rule, so it is 1 on every landscape
+ * view and the desktop card is untouched. Null until both text blocks have laid out, and the card
+ * stays hidden until then: the shrink can't be known before, and reduced motion has no reveal
+ * to cover a frame of an over-wide title (THE UNDERCROFT on a phone) at full width.
+ */
+export function cardScale(
+  title: Box | null,
+  blurb: Box | null,
+  vFov: number,
+  aspect: number
+): number | null {
+  if (!title || !blurb) return null
+  const width = Math.max(title.width, blurb.width, RULE_W)
+  return fitScale({ vFov, aspect, distance: DISTANCE, width })
+}
+
 // Legibility scrim: a feathered band of bezel-black behind the name and blurb. Without it the
 // white title and pale blurb dissolve into the bright worlds' skies (night-train, meridian); on
 // the dark worlds it is dark on dark and all but invisible. Full strength only through the
@@ -217,12 +234,13 @@ function CardInstance({
 
   useFrame((state) => {
     if (done.current) return
-    // Shrink-only, about the rule: 1 on every landscape view, so the desktop card is untouched.
+    // Runs before this tick's render, so the first frame the card shows is already fitted.
     const g = fit.current
-    if (g && titleBox && blurbBox) {
+    if (g) {
       const cam = state.camera as THREE.PerspectiveCamera
-      const width = Math.max(titleBox.width, blurbBox.width, RULE_W)
-      g.scale.setScalar(fitScale({ vFov: cam.fov, aspect: cam.aspect, distance: DISTANCE, width }))
+      const scale = cardScale(titleBox, blurbBox, cam.fov, cam.aspect)
+      g.visible = scale !== null
+      if (scale !== null) g.scale.setScalar(scale)
     }
     const now = performance.now()
     if (bornAt.current === null) bornAt.current = now

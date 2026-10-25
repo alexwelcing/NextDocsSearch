@@ -6,7 +6,14 @@ import { FONT } from '@/lib/immersive/theme'
 import { WORLDS } from '@/lib/immersive/worlds'
 import { layoutText, measureText } from '@/lib/windfoil/layout'
 import type { AtlasManifest, FontAtlas, GlyphEntry } from '@/lib/windfoil/types'
-import { BLURB_SIZE, RULE_W, TITLE_SIZE, balancedWrapWidth, cardSpan } from './WorldTitleCard'
+import {
+  BLURB_SIZE,
+  RULE_W,
+  TITLE_SIZE,
+  balancedWrapWidth,
+  cardScale,
+  cardSpan,
+} from './WorldTitleCard'
 
 const PHONE = 390 / 844
 const DESKTOP = 1600 / 900
@@ -36,13 +43,15 @@ const measureBlurb = (s: string) => measureText(mono, s, BLURB_SIZE)
 const blurbLayout = (text: string, maxWidth?: number) =>
   layoutText(mono, text, { fontSize: BLURB_SIZE, maxWidth })
 
-/** The card's widest element as the component measures it (title, wrapped blurb, rule). */
-function cardWidth(name: string, blurb: string, aspect: number) {
+/** The card at a view as the component lays it out (title, wrapped blurb), its widest element
+ *  (title, blurb or rule) and the scale it is drawn at. */
+function card(name: string, blurb: string, aspect: number) {
   const wrap = balancedWrapWidth(blurb, cardSpan(FOV, aspect), measureBlurb)
-  const title = layoutText(display, name, { fontSize: TITLE_SIZE }).width
+  const title = layoutText(display, name, { fontSize: TITLE_SIZE })
   // centred text reports its wrap width as the block width
-  const blurbW = layoutText(mono, blurb, { fontSize: BLURB_SIZE, maxWidth: wrap, align: 'center' })
-  return Math.max(title, blurbW.width, RULE_W)
+  const lines = layoutText(mono, blurb, { fontSize: BLURB_SIZE, maxWidth: wrap, align: 'center' })
+  const width = Math.max(title.width, lines.width, RULE_W)
+  return { width, scale: cardScale(title, lines, FOV, aspect)! }
 }
 
 describe('cardSpan', () => {
@@ -103,13 +112,29 @@ describe('balancedWrapWidth', () => {
 })
 
 describe('title card fit', () => {
+  it('has no scale (the card stays hidden) until both blocks have laid out', () => {
+    const wide = { width: 30, height: 1 }
+    expect(cardScale(null, null, FOV, PHONE)).toBeNull()
+    expect(cardScale(wide, null, FOV, PHONE)).toBeNull()
+    expect(cardScale(null, wide, FOV, PHONE)).toBeNull()
+    expect(cardScale(wide, wide, FOV, PHONE)).toBeCloseTo(cardSpan(FOV, PHONE) / 30, 10)
+  })
+
+  it('measures the rule too, and never enlarges', () => {
+    const tiny = { width: 0.1, height: 0.1 }
+    for (const aspect of [PHONE, DESKTOP]) expect(cardScale(tiny, tiny, FOV, aspect)).toBe(1)
+    // a view narrower than the rule itself
+    const sliver = 0.3
+    expect(cardSpan(FOV, sliver)).toBeLessThan(RULE_W)
+    expect(cardScale(tiny, tiny, FOV, sliver)).toBeCloseTo(cardSpan(FOV, sliver) / RULE_W, 10)
+  })
+
   it('fits the hero title and blurb of every world on a 390x844 portrait phone', () => {
     const span = cardSpan(FOV, PHONE)
     let wrapped = 0
     for (const { name, blurb } of WORLDS) {
       if (balancedWrapWidth(blurb, span, measureBlurb) !== undefined) wrapped++
-      const width = cardWidth(name, blurb, PHONE)
-      const s = fitScale({ vFov: FOV, aspect: PHONE, distance: 7, width })
+      const { width, scale: s } = card(name, blurb, PHONE)
       expect(s * width).toBeLessThanOrEqual(span * (1 + 1e-9))
       // the blurb breaks into lines instead of dragging the title down with it
       expect(s).toBeGreaterThan(0.85)
@@ -123,8 +148,7 @@ describe('title card fit', () => {
       const span = cardSpan(FOV, aspect)
       for (const { name, blurb } of WORLDS) {
         expect(balancedWrapWidth(blurb, span, measureBlurb)).toBeUndefined()
-        const width = cardWidth(name, blurb, aspect)
-        expect(fitScale({ vFov: FOV, aspect, distance: 7, width })).toBe(1)
+        expect(card(name, blurb, aspect).scale).toBe(1)
       }
     }
     // wheel-zoomed all the way in (fov 45) on 16:9 still fits untouched

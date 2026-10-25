@@ -541,8 +541,8 @@ export function SphereHunter() {
               {submitState === 'sent'
                 ? 'FILED TO LEDGER [OK]'
                 : submitState === 'failed'
-                ? 'LEDGER UNREACHABLE'
-                : `CALLSIGN: ${name}${name.length < CALLSIGN_MAX ? '_' : ''}`}
+                  ? 'LEDGER UNREACHABLE'
+                  : `CALLSIGN: ${name}${name.length < CALLSIGN_MAX ? '_' : ''}`}
             </WindfoilText>
             {submitState !== 'sent' && (
               <GameButton

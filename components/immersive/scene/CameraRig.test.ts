@@ -6,7 +6,8 @@ import {
   panoramaSpin,
   stepAttract,
 } from '@/lib/immersive/drift'
-import { easeAttract } from './CameraRig'
+import type { BootPhase, ImmersiveModal } from '@/stores/immersiveStore'
+import { IDLE_AFTER_MS, easeAttract, isIdle, nextLastInputAt, type IdleHolds } from './CameraRig'
 
 const FPS = 60
 
@@ -20,6 +21,65 @@ function onset(seconds: number): number[] {
   }
   return rates
 }
+
+/** A 62.5 fps frame loop in whole milliseconds, so UI boundaries never land on float noise. */
+const FRAME_MS = 16
+const READER: ImmersiveModal = { type: 'article', slug: 'a' }
+
+/**
+ * The time of the first frame at or after `from` that CameraRig's loop would call idle, given the
+ * UI at each moment and no look input after page load (performance.now() = 0), or undefined if
+ * none does within `ms`.
+ */
+function firstIdle(ui: (t: number) => Partial<IdleHolds>, ms: number, from = 0, reduced = false) {
+  let last = 0
+  for (let t = 0; t <= ms; t += FRAME_MS) {
+    const holds: IdleHolds = { modal: null, dockOpen: false, bootPhase: 'ready', ...ui(t) }
+    last = nextLastInputAt(last, t, holds)
+    if (t >= from && isIdle(last, t, reduced)) return t
+  }
+  return undefined
+}
+
+/** Idle from within a frame of IDLE_AFTER_MS after the clock was last held fresh. */
+function expectIdleAfter(t: number | undefined, releasedAt: number) {
+  expect(t).toBeDefined()
+  expect(Math.abs(t! - (releasedAt + IDLE_AFTER_MS))).toBeLessThanOrEqual(FRAME_MS)
+}
+
+describe('idle clock', () => {
+  const nothingUp = (): Partial<IdleHolds> => ({})
+  const boot = (reveal: number) => (t: number) => ({
+    bootPhase: (t < 300 ? 'checking' : t < reveal ? 'booting' : 'ready') as BootPhase,
+  })
+
+  it('times idleness from the reveal, not page load: the boot overlay keeps the clock fresh', () => {
+    // timed from page load, a 5 s boot would start the drift a second after the reveal
+    expectIdleAfter(firstIdle(nothingUp, 60_000), 0)
+    expectIdleAfter(firstIdle(boot(5000), 60_000), 5000)
+    expectIdleAfter(firstIdle(boot(30_000), 60_000), 30_000)
+  })
+
+  it.each<[string, (t: number) => Partial<IdleHolds>]>([
+    ['a reader', (t) => ({ modal: t >= 7000 && t < 12_000 ? READER : null })],
+    ['the dock', (t) => ({ dockOpen: t >= 7000 && t < 12_000 })],
+    ['a lost device', (t) => ({ bootPhase: t >= 7000 && t < 12_000 ? 'lost' : 'ready' })],
+  ])('holds off through %s, then waits the full stretch after it closes', (_, ui) => {
+    expectIdleAfter(firstIdle(ui, 60_000), 0) // idle already before it opened
+    expectIdleAfter(firstIdle(ui, 60_000, 7000), 12_000) // not while it is up, nor right after
+  })
+
+  it('leaves look input alone while nothing holds the clock, so a drag restarts the wait', () => {
+    const ready: IdleHolds = { modal: null, dockOpen: false, bootPhase: 'ready' }
+    expect(nextLastInputAt(4200, 9000, ready)).toBe(4200)
+    expect(isIdle(4200, 4200 + IDLE_AFTER_MS, false)).toBe(false)
+    expect(isIdle(4200, 4200 + IDLE_AFTER_MS + 1, false)).toBe(true)
+  })
+
+  it('never idles under reduced motion', () => {
+    expect(firstIdle(nothingUp, 60_000, 0, true)).toBeUndefined()
+  })
+})
 
 describe('easeAttract', () => {
   it('runs 0 → 1 and clamps outside the ramp', () => {
