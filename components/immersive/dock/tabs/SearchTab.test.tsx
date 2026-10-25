@@ -204,8 +204,8 @@ describe('FIND full archive integration', () => {
     await render(true)
     expect(fetcher).toHaveBeenCalledTimes(1)
     const url = new URL(String(fetcher.mock.calls[0][0]), 'https://archive.test')
-    expect(url.pathname).toBe('/api/arc/archive')
-    expect(url.searchParams.get('view')).toBe('full')
+    expect(url.pathname).toBe('/arc/archive-full.json')
+    expect(url.search).toBe('')
 
     await act(async () => root.render(null))
     expect(document.querySelector('input[aria-label="Search archive"]')).toBeNull()

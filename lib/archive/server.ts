@@ -56,16 +56,41 @@ function fromManifest(value: unknown): ArchiveRecord {
   }
 }
 
+function fromManifestList(manifest: unknown): ArchiveRecord[] {
+  if (!Array.isArray(manifest)) throw new Error('archive: invalid manifest')
+  return manifest.map(fromManifest)
+}
+
 export class FsManifestSource implements ArchiveSource {
   constructor(
     private readonly manifestPath = path.join(process.cwd(), 'lib/generated/article-manifest.json')
   ) {}
 
   async load(): Promise<ArchiveRecord[]> {
-    const manifest: unknown = JSON.parse(await readFile(this.manifestPath, 'utf8'))
-    if (!Array.isArray(manifest)) throw new Error('archive: invalid manifest')
-    return manifest.map(fromManifest)
+    return fromManifestList(JSON.parse(await readFile(this.manifestPath, 'utf8')))
   }
+}
+
+/**
+ * A manifest already in memory, e.g. a static JSON import the bundler inlines, so the consumer
+ * needs no filesystem at runtime (a Cloudflare Worker has none).
+ */
+export class BundledManifestSource implements ArchiveSource {
+  constructor(private readonly manifest: unknown) {}
+
+  async load(): Promise<ArchiveRecord[]> {
+    return fromManifestList(this.manifest)
+  }
+}
+
+/**
+ * The archive's one listing order: newest `date` first, equal dates by slug. The static index files
+ * and the API alias share it, so the dock lists the same order from either. It replaces the API's
+ * old comparator, which never returned 0 and so reversed runs of equal dates by accident.
+ */
+export function archiveOrder(a: ArchiveRecord, b: ArchiveRecord): number {
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1
+  return a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0
 }
 
 const manifestSource = new FsManifestSource()
