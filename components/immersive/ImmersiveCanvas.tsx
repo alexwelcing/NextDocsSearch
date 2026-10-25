@@ -1,4 +1,4 @@
-// The WebGPU R3F canvas hosting the whole immersive app: panorama world, atmosphere, lights,
+// The WebGPU R3F canvas hosting the whole immersive app: the world's sky, atmosphere, lights,
 // camera rig, and whatever feature layers (dock, modals, game) are passed as children.
 // Always dynamically imported with ssr: false — three/webgpu touches navigator at module scope.
 
@@ -6,7 +6,7 @@ import { ReactNode } from 'react'
 import * as THREE from 'three/webgpu'
 import { Canvas, extend } from '@react-three/fiber'
 import { useImmersiveStore } from '@/stores/immersiveStore'
-import { PanoramaSphere } from './scene/PanoramaSphere'
+import { Sky } from './scene/Sky'
 import { Atmosphere } from './scene/Atmosphere'
 import { SceneLights } from './scene/SceneLights'
 import { CameraRig } from './scene/CameraRig'
@@ -14,7 +14,6 @@ import { WorldTitleCard } from './scene/WorldTitleCard'
 import { SceneFog } from './scene/SceneFog'
 import { PostFX } from './scene/PostFX'
 import { WarmupRig } from './scene/WarmupRig'
-import { WorldExposure } from './scene/WorldExposure'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
 import { SphereHunter } from './game/SphereHunter'
@@ -72,7 +71,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       // Neutral (Khronos PBR Neutral) keeps authored hue and saturation through the mids and only
       // rolls off true highlights: #70ff8f lands at ~(97,240,129) and white at ~240, where ACES at
       // 1.05 gave pale mint ~(204,228,209) and capped white at ~228. Its toe deepens shadows; dark
-      // panoramas get that back from WorldDef.exposure (scene/WorldExposure), not from this global
+      // skies get that back from WorldDef.exposure (applied in scene/Sky's shader), not from this global
       // exposure, so the UI reads the same in every world. Set here, not in the gl factory: R3F's
       // first configure() stamps ACESFilmic onto the renderer AFTER the factory resolves, and
       // onCreated is the first hook that runs after that (still before the first frame).
@@ -85,8 +84,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
       frameloop="always"
       style={{ position: 'fixed', inset: 0, zIndex: 10, background: '#020403' }}
     >
-      <PanoramaSphere />
-      <WorldExposure />
+      <Sky />
       <SceneFog />
       <Atmosphere />
       <SceneLights />

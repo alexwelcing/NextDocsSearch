@@ -17,7 +17,9 @@
 // identity, so one stand-in per variant covers every later mesh of that kind. When a new kind of
 // material lands in the scene, add its twin here; the reveal probe will show it otherwise. The
 // exception is an InstancedMesh: its vertex shader names its own matrix buffer, so no twin can
-// stand in for it — the rig borrows the real meshes instead (Sphere Hunter's orb field).
+// stand in for it — the rig borrows the real meshes instead (Sphere Hunter's orb field). The sky
+// needs no twin either: scene/Sky.tsx draws its one material from the first frame (placeholder
+// textures until a tier lands), and a texture swap or crossfade never makes a new pipeline.
 //
 // The network never holds the boot: the text stand-ins need both windfoil atlases (~800 KB), so
 // the burst waits for them only up to FONT_WAIT_MS, then warms everything else and leaves the
@@ -48,7 +50,7 @@ const FONT_WAIT_MS = 2500
 const forward = new THREE.Vector3()
 
 /** Tiny sRGB canvas texture with a real texture's sampler setup (TextureLoader/VideoTexture). */
-function standInTexture(kind: 'panorama' | 'image' | 'video'): THREE.Texture {
+function standInTexture(kind: 'image' | 'video'): THREE.Texture {
   const canvas = document.createElement('canvas')
   canvas.width = 4
   canvas.height = 2
@@ -58,11 +60,7 @@ function standInTexture(kind: 'panorama' | 'image' | 'video'): THREE.Texture {
   const tex = new THREE.Texture(canvas)
   tex.colorSpace = THREE.SRGBColorSpace
   tex.anisotropy = 4
-  if (kind === 'panorama') {
-    // mirrors PanoramaSphere.loadPanorama
-    tex.mapping = THREE.EquirectangularReflectionMapping
-    tex.wrapS = THREE.RepeatWrapping
-  } else if (kind === 'video') {
+  if (kind === 'video') {
     // VideoTexture defaults
     tex.minFilter = THREE.LinearFilter
     tex.generateMipmaps = false
@@ -89,7 +87,6 @@ export function WarmupRig() {
 
   const textures = useMemo(
     () => ({
-      panorama: standInTexture('panorama'),
       image: standInTexture('image'),
       video: standInTexture('video'),
     }),
@@ -97,7 +94,6 @@ export function WarmupRig() {
   )
   useEffect(() => {
     return () => {
-      textures.panorama.dispose()
       textures.image.dispose()
       textures.video.dispose()
     }
@@ -235,29 +231,6 @@ export function WarmupRig() {
         <mesh position={[0.32, 0, 0]}>
           <planeGeometry args={[0.05, 0.05]} />
           <meshBasicMaterial map={textures.video} />
-        </mesh>
-      </group>
-      {/* panorama layers, settled (opaque) and mid-crossfade (transparent): inverted spheres seen
-          from inside-out, mirrored like PanoramaSphere's (negative scale flips the winding) */}
-      <group position={[0, 0.12, 0]}>
-        <mesh position={[-0.05, 0, 0]} scale={[-0.03, 0.03, 0.03]}>
-          <sphereGeometry args={[1, 16, 8]} />
-          <meshBasicMaterial
-            map={textures.panorama}
-            side={THREE.BackSide}
-            depthWrite={false}
-            fog={false}
-          />
-        </mesh>
-        <mesh position={[0.05, 0, 0]} scale={[-0.03, 0.03, 0.03]}>
-          <sphereGeometry args={[1, 16, 8]} />
-          <meshBasicMaterial
-            map={textures.panorama}
-            side={THREE.BackSide}
-            depthWrite={false}
-            fog={false}
-            transparent
-          />
         </mesh>
       </group>
     </group>

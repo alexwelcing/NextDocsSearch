@@ -26,9 +26,12 @@ const nextConfig = {
   // Compiler optimizations
   compiler: {
     styledComponents: true,
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error', 'warn'],
-    } : false,
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? {
+            exclude: ['error', 'warn'],
+          }
+        : false,
   },
 
   // Experimental features for better performance
@@ -41,6 +44,8 @@ const nextConfig = {
     '*': [
       'public/images/**',
       'public/background/**',
+      'public/worlds/**',
+      'public/basis/**',
       'public/splats/**',
     ],
   },
@@ -77,14 +82,14 @@ const nextConfig = {
         destination: '/articles',
         permanent: true,
       },
-    ];
+    ]
   },
 
   // Headers for caching and security
   async headers() {
     return [
       {
-        source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
+        source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|ktx2)',
         headers: [
           {
             key: 'Cache-Control',
@@ -101,7 +106,7 @@ const nextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
 }
 

@@ -40,7 +40,8 @@ Use `pnpm run lint` and `pnpm run build` as the real gates before pushing.
 - `ImmersiveApp`: WebGPU gate (navigator.gpu only — no probe requestAdapter; see comment),
   CRT boot sequence, compatibility banner, URL↔store sync via `lib/immersive/navigation.ts`.
 - `ImmersiveCanvas`: R3F `Canvas` with `three/webgpu` WebGPURenderer (async `gl` factory +
-  `extend(THREE)`), scene = PanoramaSphere (crossfading equirect worlds), SceneFog (uniform-
+  `extend(THREE)`), scene = Sky (the world's equirect sky, sampled per fragment by direction with
+  seam-safe gradients, two-slot crossfade in one shader; see "Skies" below), SceneFog (uniform-
   driven scene.fogNode; panorama/text/CRT opt out with material.fog=false), Atmosphere (TSL
   instanced motes with haze-scaled depth fade), SceneLights, CameraRig (inertial look),
   WorldTitleCard (hero windfoil place-name on world arrival), ArcDock, ImmersiveModals,
@@ -48,9 +49,27 @@ Use `pnpm run lint` and `pnpm run build` as the real gates before pushing.
   quality — the WebGPU renderer tone maps full-frame, never per material, so the pipeline
   preserves the direct-path look exactly).
 - State: `stores/immersiveStore.ts` (zustand): bootPhase, dock, modal, world, quality, game.
-- Worlds: `lib/immersive/worlds.ts` registry (per-world lighting/particles/drift/haze);
-  panoramas in `public/background/`.
+- Worlds: `lib/immersive/worlds.ts` registry (per-world sky, lighting/particles/drift/haze,
+  exposure). `hidden` worlds (pilots awaiting review) stay off the dock list, reachable by ?world=.
 - Audio: `lib/immersive/audio.ts` SFX bus; clips in `public/sounds/arc/`.
+
+### Skies (`lib/immersive/sky/`, `components/immersive/scene/Sky.tsx`)
+
+- `WorldDef.sky` is a tier ladder: `preview` (1024 WebP, in git) → `k4` (4096 UASTC KTX2, in
+  git, ≤ 6 MB) → `k8` (8192 UASTC KTX2, R2 only — never in git; 'high' desktops only), or
+  `legacyJpeg` (today's 2K JPEGs in `public/background/`) for worlds with no KTX2 yet. `tiers.ts`
+  picks the plan; `loader.ts` loads (one KTX2Loader, one idle-terminated worker, CPU mip data
+  dropped after upload); `Sky.tsx` places each upload under the boot overlay, inside a world
+  switch's hold, or at a quiet moment.
+- 2D equirect only, row 0 = zenith, flipY=false everywhere. No cubemaps (CompressedCubeTexture
+  does not upload under r185 WebGPU) and no ETC1S above the preview (bands dark gradients).
+- New worlds author the hero at u = 0.5 (seam behind the viewer); legacy JPEGs keep heroU 0.75.
+- Assets come from `scripts/worlds/sky_prep.py` + `sky_encode.sh` (forge VM), content-hashed.
+- `public/basis/` is version-locked to three: re-copy
+  `node_modules/three/examples/jsm/libs/basis/*` on every three upgrade (a test enforces it).
+- Debug-only switches (`lib/immersive/sky/debug.ts`): `?look=yaw,pitch[,fov]`, `?still=1`,
+  `?skytier=`, `?skydebug=1` (`window.__sky`), and `?depth=1` — depth parallax, which stays a
+  flag until it meets its budget (H1 spike verdict).
 
 ### ARC Terminal dock (`components/immersive/dock/`)
 
@@ -102,3 +121,4 @@ headed Chromium under Xvfb (playwright with `--enable-unsafe-webgpu
   (film-bridge, ProGen, galaxy, tablet terminal), or a WebGL fallback renderer.
 - Keep the route/API surface small; content opens in-scene, not on new 2D pages.
 - The SEO layer must stay: every content URL server-renders its full text.
+- Large binaries (8K masters, 8K KTX2) never go in git: masters live in GCS, 8K tiers on R2.
