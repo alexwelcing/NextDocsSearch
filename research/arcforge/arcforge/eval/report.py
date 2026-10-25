@@ -197,6 +197,8 @@ def evaluate_run(
         'witness': _witness(inputs),
         'claude_plan_tokens': _claude_tokens(inputs, run_id),
         'determinism': _determinism(inputs),
+        's0': _json(inputs, 'X2', 's0.json', {}) or {},
+        'fable': list(((_json(inputs, 'gate', 'fable_calls.json', {}) or {}).get('calls')) or []),
         'problems': problems,
     }
     outputs = {
@@ -209,8 +211,9 @@ def evaluate_run(
                                   'pilot_replication': pre['pilot_replication']}),  # fmt: skip
         'ledger.json': io.pretty({'schema': 'arc-ledger/1', 'lines': [], 'gpu_min': 0.0, 'claude_plan_tokens': 0}),
     }
-    if weird_bytes:
-        outputs['weirdness.json'] = weird_bytes
+    outputs['weirdness.json'] = weird_bytes or io.pretty(
+        {'schema': 'arc-weirdness/1', 'available': False, 'records': []}
+    )
     return outputs
 
 

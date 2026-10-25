@@ -23,9 +23,9 @@ from arcforge.eval.i1 import REGISTERED_SYSTEMS, pair_id
 SEEDS = (1729, 1730, 1731, 1732, 1733)
 STUDENTS = ('B5', 'hyb(B5)', 'champ', 'hyb(champ)')
 SKILL = {
-    'B0': 0.6, 'B1': 1.0, 'B2': 1.2, 'B4': 0.4, 'B3.potion8m': 0.8, 'hyb(B4)': 1.4,
-    'hyb(B3.potion8m)': 1.6, 'B6.embeddinggemma-2-768': 2.0, 'B5': 1.1, 'hyb(B5)': 1.9,
-    'champ': 1.15, 'hyb(champ)': 1.95, 'B6.wai-qwen3-embedding-0.6b': 1.7,
+    'B0': 0.6, 'B1': 1.2, 'B2': 1.5, 'B4': 0.3, 'B3.potion8m': 0.9, 'hyb(B4)': 1.8,
+    'hyb(B3.potion8m)': 2.1, 'B6.embeddinggemma-2-768': 2.6, 'B5': 1.4, 'hyb(B5)': 2.3,
+    'champ': 1.45, 'hyb(champ)': 2.35, 'B6.wai-qwen3-embedding-0.6b': 2.0,
 }  # fmt: skip
 N_RECORDS = 40
 
@@ -127,7 +127,7 @@ def rankings(queries: list[dict[str, Any]], truth: dict[str, dict[str, int]]) ->
             for fold, seed in slots:
                 r = _rng('rank', q['query_id'], system, fold, seed)
                 scored = sorted(
-                    ((round(skill * rel.get(c, 0) + r.gauss(0, 1.0), 6), c) for c in pool),
+                    ((round(skill * rel.get(c, 0) + r.gauss(0, 2.0), 6), c) for c in pool),
                     key=lambda x: (-x[0], x[1]),
                 )[:50]
                 out.append({'query_id': q['query_id'], 'system_id': system, 'fold': fold,
@@ -142,7 +142,7 @@ def _noisy(grade: int, *labels: object, p: float = 0.08) -> int:
     return grade
 
 
-def judging(queries, truth, ranks):  # noqa: ANN001, ANN201 - toy plumbing
+def judging(queries, truth, ranks, fable_noise=0.02):  # noqa: ANN001, ANN201 - toy plumbing
     """(pools, judgments, probes, frames, ref_open, ref_claude, fable_gold)."""
     judged_strata = {'C', 'D', 'E', 'T'}
     by_q = {q['query_id']: q for q in queries}
@@ -192,9 +192,11 @@ def judging(queries, truth, ranks):  # noqa: ANN001, ANN201 - toy plumbing
     d_e = [p for p in order if by_q[pairs[p][0]]['stratum'] in ('D', 'E') and not by_q[pairs[p][0]]['quarantined']]
     i1b = d_e[:150]
     dense_only, bm25_only = d_e[150:190], d_e[190:230]
-    gold_queries = sorted({pairs[p][0] for p in d_e})[:10]
-    gold_pairs = [p for p in order if pairs[p][0] in gold_queries][:60]
-    ref_fable = [p for p in gold_pairs if p not in set(i1b)][:40]
+    gold_queries = sorted({pairs[p][0] for p in d_e})[:40]
+    gold_pairs = []
+    for q in gold_queries:
+        gold_pairs += [p for p in order if pairs[p][0] == q][:12]
+    ref_fable = [p for p in gold_pairs if p not in set(i1b)][:150]
     frames = {
         'schema': 'arc-frames/1',
         'gold': [{'query_id': q, 'slugs': sorted(pairs[p][1] for p in gold_pairs if pairs[p][0] == q)[:12]} for q in gold_queries],
@@ -219,7 +221,7 @@ def judging(queries, truth, ranks):  # noqa: ANN001, ANN201 - toy plumbing
         ref_claude.append({'pair_id': pid, 'family': 'claude', 'grade': _noisy(true, pid, 'claude', p=0.04),
                            'packet_sha256': _sha('claude-packet')})  # fmt: skip
     fable_gold = [
-        {'query_id': pairs[p][0], 'slug': pairs[p][1], 'grade': _noisy(pairs[p][2], p, 'fable', p=0.02),
+        {'query_id': pairs[p][0], 'slug': pairs[p][1], 'grade': _noisy(pairs[p][2], p, 'fable', p=fable_noise),
          'note': None, 'packet_sha256': _sha('gold-packet')}
         for p in gold_pairs
     ]  # fmt: skip
@@ -240,10 +242,13 @@ def _safetensors(tensors: dict[str, list[list[float]]], slugs: list[str]) -> byt
     return struct.pack('<Q', len(encoded)) + encoded + blob
 
 
-def toy_inputs() -> dict[str, dict[str, bytes]]:
+def toy_inputs(*, i1_pass: bool = True, claude_leg: str = 'accepted') -> dict[str, dict[str, bytes]]:
+    """Toy upstream artifacts; i1_pass=False makes Fable's gold disagree (I1c fails)."""
     queries, truth, fixed = bench()
     ranks = rankings(queries, truth)
-    pools, judgments, probes, frames, ref_open, ref_claude, fable_gold = judging(queries, truth, ranks)
+    pools, judgments, probes, frames, ref_open, ref_claude, fable_gold = judging(
+        queries, truth, ranks, fable_noise=0.02 if i1_pass else 0.6
+    )
     recs = records()
     w0 = [[_rng('w0', s, d).gauss(0, 1) for d in range(8)] for s in recs]
     w1 = [[x + 0.3 * _rng('w1', s, d).gauss(0, 1) for d, x in enumerate(row)] for s, row in zip(recs, w0, strict=True)]
@@ -287,7 +292,7 @@ def toy_inputs() -> dict[str, dict[str, bytes]]:
         'S12r': {'ref_open.jsonl': io.jsonl(ref_open, ('pair_id', 'family')), 'ledger.json': ledger('S12r', 0.15, 10.0)},
         'gate': {'ref_claude.jsonl': io.jsonl(ref_claude, 'pair_id'),
                  'fable_gold.json': io.pretty({'schema': 'arc-fable-gold/1', 'grades': fable_gold}),
-                 'gate_receipts.json': io.pretty({'schema': 'arc-gate-receipts/1', 'claude_leg_status': 'accepted',
+                 'gate_receipts.json': io.pretty({'schema': 'arc-gate-receipts/1', 'claude_leg_status': claude_leg,
                                                   'witness': [{'kind': 'r00-sets', 'digest': _sha('r00-sets'), 'mode': 'dry',
                                                                'log_index': None, 'integrated_time': None}]}),
                  'fable_calls.json': io.pretty({'schema': 'arc-fable-calls/1', 'calls': []}),
