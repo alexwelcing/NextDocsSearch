@@ -52,6 +52,14 @@ def load_external(ctx: StageContext, env: RunEnv) -> tuple[str, CorpusFiles]:
     return corpus.fingerprint, corpus
 
 
+def _str(value: Any) -> str | None:
+    return value if isinstance(value, str) else None
+
+
+def _int(value: Any) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
 def _text(data: bytes, where: str) -> str:
     try:
         return data.decode('utf-8')
@@ -84,21 +92,15 @@ def run(ctx: StageContext) -> dict[str, bytes]:
                 json.loads(record_text)
             except json.JSONDecodeError as error:
                 raise StageError(f'S0: {corpus.records_dir}/{slug}.json: {error}') from error
-        series = meta.get('series')
-        series = series if isinstance(series, str) else None
-        order = meta.get('seriesOrder')
+        series = _str(meta.get('series'))
         rows.append(
             {
                 'slug': slug,
-                'title': meta.get('title') if isinstance(meta.get('title'), str) else None,
+                'title': _str(meta.get('title')),
                 'date': normalize_date(meta.get('date')),
-                'article_type': meta.get('articleType')
-                if isinstance(meta.get('articleType'), str)
-                else None,
+                'article_type': _str(meta.get('articleType')),
                 'series': series,
-                'series_order': order
-                if isinstance(order, int) and not isinstance(order, bool)
-                else None,
+                'series_order': _int(meta.get('seriesOrder')),
                 'withheld': series in withheld_series,
                 'mdx_sha256': sha256_bytes(data),
                 'mdx_bytes': len(data),
