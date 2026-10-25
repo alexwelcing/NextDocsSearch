@@ -4,7 +4,6 @@ Disallow: /api/
 Disallow: /admin/
 Disallow: /drafts/
 Disallow: /experiments/
-Disallow: /_next/
 
 Sitemap: https://alexwelcing.com/sitemap.xml
 

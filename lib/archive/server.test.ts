@@ -2,8 +2,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { listRecords, toSlim } from './index'
-import { FsManifestSource } from './server'
+import { listRecords, toSlim, type ArchiveRecord } from './index'
+import { archiveOrder, BundledManifestSource, FsManifestSource } from './server'
 
 let directory: string
 let manifestPath: string
@@ -103,4 +103,59 @@ describe('FsManifestSource', () => {
       expect(await listRecords(new FsManifestSource(manifestPath))).toEqual([])
     }
   )
+})
+
+describe('BundledManifestSource', () => {
+  const manifest = [
+    {
+      slug: 'rich',
+      title: 'Rich record',
+      date: '2026-10-22',
+      articleType: 'fiction',
+      readingTime: 8,
+    },
+    { slug: 'bare', title: 'Bare record' },
+  ]
+
+  it('normalizes an in-memory manifest exactly as the filesystem source does', async () => {
+    await writeFile(manifestPath, JSON.stringify(manifest))
+    const bundled = await new BundledManifestSource(manifest).load()
+
+    expect(bundled).toEqual(await new FsManifestSource(manifestPath).load())
+    expect(bundled.map((r) => [r.slug, r.type, r.minutes])).toEqual([
+      ['rich', 'fiction', 8],
+      ['bare', 'article', 3],
+    ])
+  })
+
+  it.each([{}, null, [{ title: 'Missing slug' }]])(
+    'rejects an invalid manifest: %j',
+    async (value) => {
+      await expect(new BundledManifestSource(value).load()).rejects.toThrow(/archive: invalid/)
+      expect(await listRecords(new BundledManifestSource(value))).toEqual([])
+    }
+  )
+})
+
+describe('archiveOrder', () => {
+  const entry = (slug: string, date: string) => ({ slug, date } as ArchiveRecord)
+
+  it('lists newest first and breaks equal dates by slug, whatever the input order', () => {
+    const expected = ['b', 'a-10', 'a-2', 'c', 'undated']
+    const records = [
+      entry('c', '2024-12-23'),
+      entry('a-10', '2024-12-23'),
+      entry('undated', ''),
+      entry('a-2', '2024-12-23'),
+      entry('b', '2067-12-31'),
+    ]
+
+    expect([...records].sort(archiveOrder).map((r) => r.slug)).toEqual(expected)
+    expect(
+      [...records]
+        .reverse()
+        .sort(archiveOrder)
+        .map((r) => r.slug)
+    ).toEqual(expected)
+  })
 })

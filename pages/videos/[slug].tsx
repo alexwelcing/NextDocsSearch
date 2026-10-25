@@ -1,5 +1,6 @@
 // Video deep link: crawlable HTML + VideoObject structured data for each article video.
-// Slugs come from public/images/article-videos/*.mp4; metadata from the article manifest.
+// Slugs are the films in public/arc/media.json (every public/images/article-videos/*.mp4), all
+// prerendered at build (fallback: false, no ISR); metadata comes from the article manifest.
 
 import Head from 'next/head'
 import Link from 'next/link'
@@ -8,6 +9,7 @@ import path from 'node:path'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import StructuredData from '@/components/StructuredData'
 import { SITE_URL } from '@/lib/site-url'
+import { readImageManifest, resolveOgImage } from '@/lib/seo/records'
 
 interface VideoPageProps {
   slug: string
@@ -15,10 +17,16 @@ interface VideoPageProps {
   date: string
   description: string
   hasArticle: boolean
+  /** Site-relative poster: the record's og:image (see resolveOgImage()). */
+  ogPath: string
+  ogWidth: number
+  ogHeight: number
 }
 
-const VIDEOS_DIR = path.join(process.cwd(), 'public', 'images', 'article-videos')
-const MANIFEST_PATH = path.join(process.cwd(), 'lib/generated/article-manifest.json')
+const ROOT = process.cwd()
+const VIDEOS_DIR = path.join(ROOT, 'public', 'images', 'article-videos')
+const MANIFEST_PATH = path.join(ROOT, 'lib/generated/article-manifest.json')
+const RECORDS_DIR = path.join(ROOT, 'public', 'arc', 'records')
 
 interface ManifestEntry {
   slug: string
@@ -27,38 +35,36 @@ interface ManifestEntry {
   description?: string
 }
 
+// Read at build time, once per build worker rather than once per page.
+let manifest: ManifestEntry[] | undefined
+function articleManifest(): ManifestEntry[] {
+  return (manifest ??= JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8')) as ManifestEntry[])
+}
+
 export const getStaticPaths: GetStaticPaths = async () => {
-  let slugs: string[] = []
-  try {
-    slugs = fs
-      .readdirSync(VIDEOS_DIR)
-      .filter((f) => f.endsWith('.mp4'))
-      .map((f) => ({
-        slug: f.slice(0, -4),
-        mtime: fs.statSync(path.join(VIDEOS_DIR, f)).mtimeMs,
-      }))
-      .sort((a, b) => b.mtime - a.mtime)
-      .slice(0, 8)
-      .map((v) => v.slug)
-  } catch {
-    // videos directory may be absent in a bare checkout
-  }
-  return { paths: slugs.map((slug) => ({ params: { slug } })), fallback: 'blocking' }
+  // media.json is generated from the film directory (scripts/generate-media-manifest.ts); an
+  // ALLOW_EMPTY_MEDIA build lists no films and so exports no video pages.
+  const media = JSON.parse(
+    fs.readFileSync(path.join(ROOT, 'public', 'arc', 'media.json'), 'utf8')
+  ) as { films: string[] }
+  return { paths: media.films.map((slug) => ({ params: { slug } })), fallback: false }
 }
 
 export const getStaticProps: GetStaticProps<VideoPageProps> = async ({ params }) => {
   const slug = String(params?.slug ?? '')
   if (!/^[a-z0-9-]+$/i.test(slug)) return { notFound: true }
-
-  let entry: ManifestEntry | undefined
-  try {
-    const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8')) as ManifestEntry[]
-    entry = manifest.find((a) => a.slug === slug)
-  } catch {
-    // manifest is generated during build
+  // Build-time assertion: media.json listed this film, so its MP4 must be there to link.
+  if (!fs.existsSync(path.join(VIDEOS_DIR, `${slug}.mp4`))) {
+    throw new Error(`videos: public/images/article-videos/${slug}.mp4 is missing`)
   }
-  const hasVideo = fs.existsSync(path.join(VIDEOS_DIR, `${slug}.mp4`))
-  if (!entry && !hasVideo) return { notFound: true }
+
+  const entry = articleManifest().find((a) => a.slug === slug)
+  // The poster is the record's og:image, so the film and its article share one social card.
+  const recordFile = path.join(RECORDS_DIR, `${slug}.json`)
+  const hero = fs.existsSync(recordFile)
+    ? (JSON.parse(fs.readFileSync(recordFile, 'utf8')) as { hero: string | null }).hero
+    : null
+  const og = resolveOgImage(ROOT, hero, readImageManifest(ROOT)[slug])
 
   return {
     props: {
@@ -67,14 +73,26 @@ export const getStaticProps: GetStaticProps<VideoPageProps> = async ({ params })
       date: entry?.date ?? '',
       description: entry?.description ?? `Video companion to the record "${slug}".`,
       hasArticle: Boolean(entry),
+      ogPath: og.path,
+      ogWidth: og.width,
+      ogHeight: og.height,
     },
-    revalidate: 86400,
   }
 }
 
-export default function VideoPage({ slug, title, date, description, hasArticle }: VideoPageProps) {
+export default function VideoPage({
+  slug,
+  title,
+  date,
+  description,
+  hasArticle,
+  ogPath,
+  ogWidth,
+  ogHeight,
+}: VideoPageProps) {
   const url = `${SITE_URL}/videos/${slug}`
   const contentUrl = `${SITE_URL}/images/article-videos/${slug}.mp4`
+  const poster = `${SITE_URL}${ogPath}`
   return (
     <>
       <Head>
@@ -88,7 +106,9 @@ export default function VideoPage({ slug, title, date, description, hasArticle }
         <meta property="og:type" content="video.other" />
         <meta property="og:url" content={url} />
         <meta property="og:video" content={contentUrl} />
-        <meta property="og:image" content={`${SITE_URL}/social-preview.png`} />
+        <meta property="og:image" content={poster} />
+        <meta property="og:image:width" content={String(ogWidth)} />
+        <meta property="og:image:height" content={String(ogHeight)} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <StructuredData
@@ -97,7 +117,7 @@ export default function VideoPage({ slug, title, date, description, hasArticle }
           name: title,
           description,
           contentUrl,
-          thumbnailUrl: [`${SITE_URL}/social-preview.png`],
+          thumbnailUrl: [poster],
           ...(date && { uploadDate: date }),
           url,
           mainEntityOfPage: url,
