@@ -177,12 +177,26 @@ def test_cost_lines_follow_arc_report_1(rates, make_cloud):
     }
 
 
-def test_status_urls_are_per_run_and_instance(rates, make_cloud):
+def test_status_urls_are_per_run_session_and_instance(rates, make_cloud):
     runner = session(make_cloud({}), rates)
     assert (
         runner.status_url('arc-run-r00-3a74fb4')
-        == 'gs://witching-606c6-arcforge/runs/r00/vm/arc-run-r00-3a74fb4'
+        == 'gs://witching-606c6-arcforge/runs/r00/vm/20261024T100000Z/arc-run-r00-3a74fb4'
     )
+
+
+def test_a_rerun_never_reads_the_previous_sessions_done(rates, make_cloud):
+    """Same run id, same code: same instance names. The old `done` must not end the new run."""
+    cloud = make_cloud({1: [(600, ('done', 0))]})
+    with session(cloud, rates) as runner:
+        runner.run(JOB)
+    stale = dict(cloud.objects)
+    cloud.plans = {1: [(60, 'running'), (900, ('done', 0))]}
+    with session(cloud, rates) as rerun:
+        assert rerun.run(JOB).ok
+        (booked,) = rerun.vm_report()['instances']
+    assert booked['billed_min'] == 15.0  # it waited for its own VM, not the stale status
+    assert set(stale) < set(cloud.objects)
 
 
 def _flaky_describe(cloud, failures):

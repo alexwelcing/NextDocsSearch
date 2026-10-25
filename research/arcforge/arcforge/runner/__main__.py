@@ -13,10 +13,13 @@ import os
 import sys
 import tempfile
 import time
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 from arcforge.runner import billing, iam, pins
 from arcforge.runner.config import RunnerConfig
+from arcforge.runner.lifecycle import Instance
 from arcforge.runner.session import RunnerSession, utc_now
 from arcforge.runner.shell import SubprocessShell
 
@@ -110,7 +113,7 @@ def cmd_smoke(args: argparse.Namespace) -> int:
     run_id = 'smoke-' + time.strftime('%Y%m%d%H%M%S', time.gmtime())
     ssh_tries: list[int] = []
 
-    def on_poll(sess, inst, status):
+    def on_poll(sess: RunnerSession, inst: Instance, status: Mapping[str, Any] | None) -> None:
         # A fresh instance-level SSH key takes a few polls to reach the guest agent: retry.
         if (
             not args.ssh

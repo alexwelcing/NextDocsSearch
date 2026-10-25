@@ -23,6 +23,12 @@ from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any, Protocol
 
+from arcforge.runner import lifecycle
+from arcforge.runner.bootstrap import Job
+from arcforge.runner.lifecycle import Instance
+from arcforge.runner.session import RunnerSession
+from arcforge.runner.shell import Shell
+
 DRILL_CODE = 'arcforge.runner.drill/v1'  # bump when the step function changes
 STAGE = 'drill'
 STEP_BYTES = 1 << 20
@@ -121,6 +127,8 @@ def expected_artifact(tmp: Path, *, steps: int, seed: int) -> bytes:
 def _main(argv: list[str] | None = None) -> int:
     import argparse
 
+    from arcforge.core.cache import open_backend
+
     parser = argparse.ArgumentParser(prog='python -m arcforge.runner.drill')
     sub = parser.add_subparsers(dest='cmd', required=True)
     run = sub.add_parser('stage', help='run or resume the dummy stage against a GCS cache')
@@ -138,8 +146,6 @@ def _main(argv: list[str] | None = None) -> int:
     artifact, counts = stage(
         CacheSteps(args.cache), steps=args.steps, seed=args.seed, step_seconds=args.step_seconds
     )
-    from arcforge.core.cache import open_backend
-
     out_dir, _, name = args.out.rpartition('/')
     open_backend(out_dir).write(name, artifact, create_only=False)
     print(
@@ -152,7 +158,7 @@ def _main(argv: list[str] | None = None) -> int:
 # --- the controller -------------------------------------------------------------------------
 
 
-def count_cached(shell, cache_url: str) -> int:
+def count_cached(shell: Shell, cache_url: str) -> int:
     """Steps recorded so far: the stage records under <cache>/stages/drill/."""
     result = shell.run(
         ['gcloud', 'storage', 'ls', f'{cache_url.rstrip("/")}/stages/{STAGE}/'], timeout=60
@@ -161,7 +167,7 @@ def count_cached(shell, cache_url: str) -> int:
 
 
 def run_drill(
-    session,
+    session: RunnerSession,
     *,
     image: str,
     drill_id: str,
@@ -172,9 +178,6 @@ def run_drill(
     workdir: Path,
 ) -> dict[str, Any]:
     """Drive one drill through `session` (an entered RunnerSession). Returns the drill report."""
-    from arcforge.runner import lifecycle
-    from arcforge.runner.bootstrap import Job
-
     if not 0 < kill_after < steps:
         raise ValueError('kill_after must leave work both before and after the kill')
     bucket = session.cfg.bucket
@@ -201,7 +204,7 @@ def run_drill(
     )
     killed: dict[str, Any] = {}
 
-    def on_poll(sess, inst, status: Mapping[str, Any] | None) -> None:
+    def on_poll(sess: RunnerSession, inst: Instance, status: Mapping[str, Any] | None) -> None:
         if killed or inst.attempt != 1:
             return
         done = count_cached(sess.shell, cache)

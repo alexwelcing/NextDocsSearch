@@ -93,10 +93,10 @@ def test_run_drill_kills_the_first_vm_and_proves_the_resume(tmp_path, rates, mak
         artifact, _ = drill.stage(
             CloudStore(), steps=min(progress[name], 6), seed=1729, log=lines.append
         )
-        cloud.objects[f'{prefix}/vm/{name}/job.log'] = '\n'.join(lines)
+        cloud.objects[f'{inst["status_url"]}/job.log'] = '\n'.join(lines)
         if progress[name] >= 6:
             cloud.objects[f'{prefix}/artifacts/drill.json'] = artifact.decode()
-            cloud.objects[f'{prefix}/vm/{name}/status.json'] = json.dumps(
+            cloud.objects[f'{inst["status_url"]}/status.json'] = json.dumps(
                 {'phase': 'done', 'exit_code': 0}
             )
 

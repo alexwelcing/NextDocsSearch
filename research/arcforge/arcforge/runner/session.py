@@ -90,6 +90,9 @@ class RunnerSession:
         self.poll_seconds = poll_seconds
         self.log = log
         self.instances: list[Instance] = []
+        # Status objects live under a per-session prefix: a rerun of the same run id and code
+        # gets the same instance names, and must never read the previous session's `done`.
+        self.session_id = clock().replace('-', '').replace(':', '')
         self._saved_handlers: dict[int, Any] = {}
         self._scratch = tempfile.TemporaryDirectory(prefix='arcforge-runner-')
 
@@ -151,7 +154,7 @@ class RunnerSession:
     # --- running a job ---------------------------------------------------------------------
 
     def status_url(self, inst_name: str) -> str:
-        return f'gs://{self.cfg.bucket}/runs/{self.run_id}/vm/{inst_name}'
+        return f'gs://{self.cfg.bucket}/runs/{self.run_id}/vm/{self.session_id}/{inst_name}'
 
     def run(self, job: Job, *, on_poll: PollHook | None = None) -> JobResult:
         if self.instances:

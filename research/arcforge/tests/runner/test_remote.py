@@ -122,7 +122,7 @@ def test_a_preempted_run_resumes_and_books_both_vms(wired):
     assert (
         scripts[0]
         .replace('ARC_ATTEMPT=1', 'ARC_ATTEMPT=2')
-        .replace('/vm/arc-run-r00-3a74fb4', '/vm/arc-run-r00-3a74fb4-2')
+        .replace('/arc-run-r00-3a74fb4', '/arc-run-r00-3a74fb4-2')
         .replace('ARCFORGE_ATTEMPT=1', 'ARCFORGE_ATTEMPT=2')
         == scripts[1]
     )  # the same job, resumed

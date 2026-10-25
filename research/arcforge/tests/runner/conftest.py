@@ -125,7 +125,7 @@ class FakeCloud(FakeShell):
                 self.apply(name, inst, event)
 
     def apply(self, name: str, inst: dict[str, Any], event: Any) -> None:
-        url = f'gs://witching-606c6-arcforge/runs/{inst["run"]}/vm/{name}/status.json'
+        url = f'{inst["status_url"]}/status.json'
         if event == 'running':
             self.objects[url] = json.dumps({'phase': 'running', 'exit_code': None})
         elif isinstance(event, tuple) and event[0] == 'done':
@@ -164,11 +164,14 @@ class FakeCloud(FakeShell):
                 return Result(argv, 1, '', 'ZONE_RESOURCE_POOL_EXHAUSTED')
             attempt = int(flag['--labels'].split('arcforge-attempt=')[1].split(',')[0])
             run = flag['--labels'].split('arcforge-run=')[1].split(',')[0]
+            script = Path(flag['--metadata-from-file'].split('=', 1)[1]).read_text()
             self.instances[name] = {
                 'zone': zone,
                 'status': 'RUNNING',
                 'created': self.now,
                 'run': run,
+                # Where the VM would report: read from its rendered startup-script.
+                'status_url': script.split('ARC_STATUS_URL=', 1)[1].split('\n', 1)[0],
                 'plan': list(self.plans.get(attempt, [])),
             }
             self.created.append((name, zone, model))
