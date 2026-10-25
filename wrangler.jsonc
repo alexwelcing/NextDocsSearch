@@ -1,6 +1,6 @@
 // The Cloudflare target: one Worker serving the static export (out/, from `pnpm run build:cf`) as
-// Workers Static Assets, with worker/index.ts answering /api/* only. Vercel stays production until
-// the apex cutover, which is a separate, deliberate change (see the routes note below).
+// Workers Static Assets, with worker/index.ts answering /api/* only. This Worker IS production for
+// alexwelcing.com; Vercel builds main as a warm fallback only (see the routes note below).
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "alexwelcing-site",
@@ -44,7 +44,13 @@
   },
   "observability": { "enabled": true },
   "upload_source_maps": true,
-  // Staging only. The apex and www are attached ONLY in the deliberate, atomic cutover change (or
-  // through the dashboard), never here: a non-interactive deploy overrides conflicting DNS records.
-  "routes": [{ "pattern": "next.alexwelcing.com", "custom_domain": true }]
+  // The complete set of hostnames this Worker serves. A deploy REPLACES the Worker's custom domains
+  // with this list: a non-interactive deploy overrides any conflicting DNS record for a listed
+  // hostname, and detaches (and deletes the record of) any hostname left off. Removing the apex
+  // here takes alexwelcing.com offline until a DNS record is restored. www is not here: it is the
+  // redirect Worker in worker/www/.
+  "routes": [
+    { "pattern": "alexwelcing.com", "custom_domain": true },
+    { "pattern": "next.alexwelcing.com", "custom_domain": true }
+  ]
 }
