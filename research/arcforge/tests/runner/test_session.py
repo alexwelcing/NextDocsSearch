@@ -151,3 +151,38 @@ def test_cost_lines_follow_arc_report_1(rates, make_cloud):
 def test_status_urls_are_per_run_and_instance(rates, make_cloud):
     runner = session(make_cloud({}), rates)
     assert runner.status_url('arc-run-r00-3a74fb4') == 'gs://witching-606c6-arcforge/runs/r00/vm/arc-run-r00-3a74fb4'
+
+
+def _flaky_describe(cloud, failures):
+    """Make the next `failures` describe calls fail like a network blip."""
+    from arcforge.runner.shell import Result
+
+    real = cloud.run
+    left = [failures]
+
+    def run(argv, **kw):
+        if 'instances describe' in ' '.join(argv) and left[0] > 0:
+            left[0] -= 1
+            cloud.calls.append(tuple(argv))
+            return Result(tuple(argv), 1, '', 'ERROR: (gcloud) There was a problem refreshing your current auth tokens')
+        return real(argv, **kw)
+
+    cloud.run = run
+
+
+def test_transient_poll_errors_are_ridden_out(rates, make_cloud):
+    cloud = make_cloud({1: [(600, ('done', 0))]})
+    _flaky_describe(cloud, 3)
+    with session(cloud, rates) as runner:
+        assert runner.run(JOB).ok
+    assert len(cloud.created) == 1
+
+
+def test_persistent_poll_errors_abort_and_delete(rates, make_cloud):
+    from arcforge.runner.shell import CommandError
+
+    cloud = make_cloud({1: [(6000, ('done', 0))]})
+    _flaky_describe(cloud, 10)
+    with pytest.raises(CommandError), session(cloud, rates) as runner:
+        runner.run(JOB)
+    assert cloud.instances == {} and runner.instances[0].ended == 'aborted'

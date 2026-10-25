@@ -89,9 +89,14 @@ def test_a_failed_build_raises(shell):
 
 def test_base_image_builder(shell):
     shell.on('instances create', then=shell.ok([{}]))
-    shell.on('instances describe', then=[shell.ok({'status': 'RUNNING'}), shell.ok({'status': 'TERMINATED'})])
-    shell.on('get-serial-port-output', then=shell.ok(
-        "+ echo 'ARCFORGE-BASE OK docker=x'\nstartup-script: ARCFORGE-BASE OK docker=29.1.3 ctk=1.20.1\n"))
+    shell.on('instances describe', then=[shell.ok({'status': 'RUNNING'}), shell.ok({'status': 'STOPPING'}),
+                                         shell.ok({'status': 'TERMINATED'})])
+    # Serial output is only served while the VM is up; once TERMINATED it reads back empty.
+    shell.on('get-serial-port-output', then=[
+        shell.ok('startup-script: + apt-get update\n'),
+        shell.ok("startup-script: ++ echo 'ARCFORGE-BASE OK docker=x'\nstartup-script: ARCFORGE-BASE OK docker=29.1.3 ctk=1.20.1\n"),
+        shell.ok(''),
+    ])
     shell.on('images create', then=shell.ok())
     shell.on('instances delete', then=shell.ok())
     name = baseimage.build(shell, RunnerConfig(), code_sha='3a74fb4c0ffe', date='20261025', sleep=lambda _s: None, log=lambda _m: None)
@@ -107,8 +112,8 @@ def test_base_image_failure_still_deletes_the_builder(shell):
     import pytest
 
     shell.on('instances create', then=shell.ok([{}]))
-    shell.on('instances describe', then=shell.ok({'status': 'TERMINATED'}))
-    shell.on('get-serial-port-output', then=shell.ok('ARCFORGE-BASE FAILED line 12\n'))
+    shell.on('instances describe', then=[shell.ok({'status': 'STOPPING'}), shell.ok({'status': 'TERMINATED'})])
+    shell.on('get-serial-port-output', then=shell.ok('ARCFORGE-BASE FAILED line 12: apt-get update\n'))
     shell.on('instances delete', then=shell.ok())
     with pytest.raises(baseimage.BaseImageError, match='FAILED line 12'):
         baseimage.build(shell, RunnerConfig(), code_sha='3a74fb4', date='20261025', sleep=lambda _s: None, log=lambda _m: None)

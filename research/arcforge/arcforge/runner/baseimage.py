@@ -63,6 +63,38 @@ def builder_argv(cfg: RunnerConfig, name: str, zone: str, script: Path) -> list[
     ]
 
 
+_VERDICT = re.compile(r'(?:^|startup-script: )ARCFORGE-BASE (.+)$', re.M)
+
+
+def _wait_for_verdict(
+    shell: Shell, cfg: RunnerConfig, builder: str, zone: str, *, sleep: Callable[[float], None],
+    poll_seconds: float, timeout_s: float,
+) -> str:
+    """The builder's last ARCFORGE-BASE line, once it has powered off.
+
+    The serial port is read while the VM is still up: Compute Engine stops serving a VM's serial
+    output once it is TERMINATED.
+    """
+    verdict = ''
+    waited = 0.0
+    while True:
+        resource = lifecycle.describe(shell, cfg, builder, zone)
+        if resource is None:
+            raise BaseImageError(f'{builder} disappeared before finishing')
+        status = resource.get('status')
+        if status in ('RUNNING', 'STOPPING'):
+            serial = shell.run(['gcloud', 'compute', 'instances', 'get-serial-port-output', builder,
+                                f'--project={cfg.project}', f'--zone={zone}'], timeout=120)
+            lines = _VERDICT.findall(serial.stdout) if serial.ok else []
+            verdict = lines[-1].strip() if lines else verdict
+        if status == 'TERMINATED':
+            return verdict or 'no ARCFORGE-BASE line seen on the serial port before it stopped'
+        if waited > timeout_s:
+            raise BaseImageError(f'{builder} still {status} after {timeout_s:.0f}s')
+        sleep(poll_seconds)
+        waited += poll_seconds
+
+
 def build(
     shell: Shell,
     cfg: RunnerConfig,
@@ -84,23 +116,10 @@ def build(
         check(shell.run(builder_argv(cfg, builder, zone, script), timeout=600))
     log(f'base-image: builder {builder} started in {zone}')
     try:
-        waited = 0.0
-        while True:
-            resource = lifecycle.describe(shell, cfg, builder, zone)
-            if resource is None:
-                raise BaseImageError(f'{builder} disappeared before finishing')
-            if resource.get('status') == 'TERMINATED':
-                break
-            if waited > timeout_s:
-                raise BaseImageError(f'{builder} still {resource.get("status")} after {timeout_s:.0f}s')
-            sleep(poll_seconds)
-            waited += poll_seconds
-        serial = shell.run(['gcloud', 'compute', 'instances', 'get-serial-port-output', builder,
-                            f'--project={cfg.project}', f'--zone={zone}'], timeout=120).stdout
-        verdict = [line for line in serial.splitlines() if 'ARCFORGE-BASE ' in line and 'echo' not in line]
-        if not verdict or 'ARCFORGE-BASE OK' not in verdict[-1]:
-            raise BaseImageError(f'builder failed: {verdict[-1] if verdict else "no ARCFORGE-BASE line on the serial port"}')
-        log(f'base-image: {verdict[-1].split("ARCFORGE-BASE ", 1)[1]}')
+        verdict = _wait_for_verdict(shell, cfg, builder, zone, sleep=sleep, poll_seconds=poll_seconds, timeout_s=timeout_s)
+        if not verdict.startswith('OK'):
+            raise BaseImageError(f'builder failed: {verdict}')
+        log(f'base-image: {verdict}')
         check(shell.run([
             'gcloud', 'compute', 'images', 'create', name, f'--project={cfg.project}',
             f'--source-disk={builder}', f'--source-disk-zone={zone}', f'--family={FAMILY}',

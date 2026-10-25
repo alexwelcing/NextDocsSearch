@@ -34,12 +34,13 @@ from arcforge.runner import billing, bootstrap, lifecycle
 from arcforge.runner.bootstrap import Job
 from arcforge.runner.config import RunnerConfig
 from arcforge.runner.lifecycle import Instance
-from arcforge.runner.shell import Shell, SubprocessShell
+from arcforge.runner.shell import CommandError, Shell, SubprocessShell
 
 MAX_ATTEMPTS = 3  # spot, spot once more, then on-demand
 SPOT_ATTEMPTS = 2
 # A VM gone within this margin of --max-run-duration expired; it was not preempted.
 EXPIRY_MARGIN_S = 120
+MAX_POLL_ERRORS = 10  # consecutive failed polls before the session gives up (and deletes)
 
 
 class RunnerError(RuntimeError):
@@ -188,8 +189,8 @@ class RunnerSession:
         except json.JSONDecodeError:
             return None  # caught mid-write; the next poll reads it whole
 
-    def _done(self, inst: Instance) -> tuple[str, int] | None:
-        status = self.read_status(inst)
+    @staticmethod
+    def _finished(status: Mapping[str, Any] | None) -> tuple[str, int | None] | None:
         if status and status.get('phase') == 'done':
             code = status.get('exit_code')
             return ('done' if code == 0 else 'failed'), code
@@ -200,23 +201,30 @@ class RunnerSession:
 
     def _wait(self, inst: Instance, on_poll: PollHook | None) -> tuple[str, int | None]:
         last_phase = None
+        errors = 0
         while True:
             status = self.read_status(inst)
-            if status and status.get('phase') == 'done':
-                code = status.get('exit_code')
-                return ('done' if code == 0 else 'failed'), code
+            if finished := self._finished(status):
+                return finished
             if status and status.get('phase') != last_phase:
                 last_phase = status.get('phase')
                 self.log(f'runner: {inst.name}: {last_phase}')
-            resource = lifecycle.describe(self.shell, self.cfg, inst.name, inst.zone)
-            if resource is None or resource.get('status') in lifecycle.GONE_STATES:
-                finished = self._done(inst)  # it may have reported and stopped between reads
-                if finished:
-                    return finished[0], finished[1]
-                if self._age_seconds(inst) >= self.cfg.max_run_seconds - EXPIRY_MARGIN_S:
-                    return 'expired', None
-                _, preempted = lifecycle.end_time(lifecycle.operations(self.shell, self.cfg, inst.name, inst.zone))
-                return ('preempted' if preempted else 'lost'), None
+            try:
+                resource = lifecycle.describe(self.shell, self.cfg, inst.name, inst.zone)
+                if resource is None or resource.get('status') in lifecycle.GONE_STATES:
+                    if finished := self._finished(self.read_status(inst)):  # reported, then stopped
+                        return finished
+                    if self._age_seconds(inst) >= self.cfg.max_run_seconds - EXPIRY_MARGIN_S:
+                        return 'expired', None
+                    _, preempted = lifecycle.end_time(lifecycle.operations(self.shell, self.cfg, inst.name, inst.zone))
+                    return ('preempted' if preempted else 'lost'), None
+                errors = 0
+            except CommandError as error:
+                # A blip in the API must not abort (and so delete) a two-hour run.
+                errors += 1
+                self.log(f'runner: poll failed ({errors}/{MAX_POLL_ERRORS}): {error}')
+                if errors >= MAX_POLL_ERRORS:
+                    raise
             if on_poll:
                 on_poll(self, inst, status)
             self.sleep(self.poll_seconds)
