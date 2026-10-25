@@ -32,8 +32,15 @@ common:
 
 runs:
   r00:
-    # Instrument and floor: I1, I3, I5, and the sign-off preconditions from the laptop tail.
-    N: {fields: [*every_run, gates_inputs.I1, gates_inputs.I5, signoff_inputs], rows: []}
+    # Instrument and floor: I1, I3, I5, and the sign-off preconditions the laptop tail measures
+    # (each may be null on its own, so each is promised).
+    N:
+      fields:
+        - *every_run
+        - [gates_inputs.I1, gates_inputs.I5, signoff_inputs]
+        - [signoff_inputs.lint_ok, signoff_inputs.report_valid, signoff_inputs.vault_sealed]
+        - [signoff_inputs.i1_fallback_scheduled, signoff_inputs.i2_scheduled, signoff_inputs.i4_scheduled]
+      rows: []
   r01:
     # Lexemes. I1 is recomputed after a re-judge or carried forward (rejudged false).
     N: {fields: [*after_r00, gates_inputs.I1, adoption], rows: []}

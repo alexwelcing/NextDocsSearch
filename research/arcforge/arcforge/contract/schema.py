@@ -51,16 +51,23 @@ def subschema(schema: Mapping[str, Any], definition: str) -> dict[str, Any]:
     }
 
 
+_VALIDATORS: dict[tuple[str, str | None], Any] = {}
+
+
 def validator(schema: Mapping[str, Any] | None = None, definition: str | None = None) -> Any:
+    """A Draft 2020-12 validator, the schema itself checked once and the validator cached."""
     try:
         import jsonschema
     except ImportError as error:
         raise SchemaUnavailable(f'jsonschema is not installed ({error}); use `uv run`') from None
     schema = dict(schema if schema is not None else load())
-    if definition is not None:
-        schema = subschema(schema, definition)
-    jsonschema.Draft202012Validator.check_schema(schema)
-    return jsonschema.Draft202012Validator(schema)
+    key = (json.dumps(schema, sort_keys=True), definition)
+    if key not in _VALIDATORS:
+        if definition is not None:
+            schema = subschema(schema, definition)
+        jsonschema.Draft202012Validator.check_schema(schema)
+        _VALIDATORS[key] = jsonschema.Draft202012Validator(schema)
+    return _VALIDATORS[key]
 
 
 def errors(instance: Any, schema: Mapping[str, Any] | None = None, definition: str | None = None) -> list[str]:

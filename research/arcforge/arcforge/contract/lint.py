@@ -163,8 +163,8 @@ def _label(pair: tuple[str, str]) -> str:
 class _Computability:
     """Is a field (or a rule, or a gates_summary value) non-null at a (run, branch)?"""
 
-    def __init__(self, rules: Rules, schema: Mapping[str, Any], plan: Plan, frozen: bool):
-        self.rules, self.schema, self.plan, self.frozen = rules, schema, plan, frozen
+    def __init__(self, rules: Rules, schema: Mapping[str, Any], plan: Plan):
+        self.rules, self.schema, self.plan = rules, schema, plan
 
     def in_scope(self, rule_id: str, pair: tuple[str, str]) -> bool:
         return self.rules.in_scope(rule_id, *pair)
@@ -181,11 +181,9 @@ class _Computability:
             if f'{DOC}.rows[].{read.path}' not in found.nullable_prefixes:
                 return None
             spec = self.rules.rows[read.row]
+            # A null mde_r00 value is one 'not-frozen' finding (see _check_frozen), not one per read.
             if read.path in ('tau', 'tau_floor') and spec.tau_floor is None:
                 return f'reads {read}, but the row has no tau_floor, so its tau is null'
-            if read.path in ('tau', 'mde_r00') and spec.mde is not None and self.frozen:
-                if self.rules.mde_r00.get(spec.mde) is None:
-                    return f'reads {read}, but mde_r00.{spec.mde} is null'
             if read.path == 'mde_r00' and spec.mde is None:
                 return f'reads {read}, but the row names no mde, so mde_r00 is null'
             if read.path == 'prediction' and spec.prediction is None:
@@ -270,7 +268,7 @@ def lint(
     _check_invariants(rules, report)
     _check_frozen(rules, frozen, report)
     if plan is not None:
-        _check_computable(rules, schema, plan, frozen, report)
+        _check_computable(rules, schema, plan, report)
     return report
 
 
@@ -384,10 +382,8 @@ def _check_frozen(rules: Rules, frozen: bool, report: LintReport) -> None:
         report.add('warning', 'template', f'mde_r00 {unfilled} are null (template); R00 freezes them')
 
 
-def _check_computable(
-    rules: Rules, schema: Mapping[str, Any], plan: Plan, frozen: bool, report: LintReport
-) -> None:
-    check = _Computability(rules, schema, plan, frozen)
+def _check_computable(rules: Rules, schema: Mapping[str, Any], plan: Plan, report: LintReport) -> None:
+    check = _Computability(rules, schema, plan)
     for rule in rules.rules:
         for pair in rules.scope_pairs(rule.id):
             for why in check.rule(rule, pair):

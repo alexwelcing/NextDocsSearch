@@ -124,12 +124,14 @@ class Scenario:
     (run_id, rule_id); otherwise the decision rules follow the path (FUT fires on the S paths,
     H1.F falsifies on S-F, H1 falsifies where the path turns to its K branch) and every other
     hypothesis is SUPPORTED. `i1_pass` sets I1 at the runs where it is decided (default: pass).
+    `effects` overrides single rows, keyed (run_id, comparison_id).
     """
 
     path: str
     statuses: dict[tuple[str, str], str] = field(default_factory=dict)
     i1_pass: dict[str, bool] = field(default_factory=dict)
     vault_sign: dict[str, int | str] = field(default_factory=dict)
+    effects: dict[tuple[str, str], float] = field(default_factory=dict)
 
     def wanted(self, run_id: str, rule_id: str) -> str:
         if (run_id, rule_id) in self.statuses:
@@ -257,7 +259,7 @@ def _effects_for(rules: Rules, scenario: Scenario, run_id: str, branch: str) -> 
         if table is None:
             raise ValueError(f'synth cannot produce {rule.id} = {status}')
         for alias, cid in rule.rows.items():
-            effects.setdefault(cid, table[alias])
+            effects.setdefault(cid, scenario.effects.get((run_id, cid), table[alias]))
     return effects
 
 
