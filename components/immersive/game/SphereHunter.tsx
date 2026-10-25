@@ -8,7 +8,7 @@
 // an additive emissive ring from a second InstancedMesh, so a hit never swaps in a new pipeline
 // mid-hunt. The callsign field rides useTouchTextInput so touch players get an OS keyboard.
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
 import { CameraAnchor } from '../dock/CameraAnchor'
@@ -97,8 +97,7 @@ const tmpColor = new THREE.Color()
 const tmpCamera = new THREE.Vector3()
 const billboard = new THREE.Object3D()
 
-/** Two instanced draws for the whole hunt: the orbs, and one burst ring per orb slot. Exported
- *  so a shader warmup can compile the same pipelines ahead of the first hunt. */
+/** Two instanced draws for the whole hunt: the orbs, and one burst ring per orb slot. */
 export function createOrbField(): OrbField {
   const green = new THREE.Color(ARC.green)
   const orbs = new THREE.InstancedMesh(
@@ -149,6 +148,28 @@ export function createOrbField(): OrbField {
       }
     },
   }
+}
+
+let sharedField: { field: OrbField; users: number } | null = null
+
+/**
+ * The canvas's one orb field, shared by the hunt and the boot WarmupRig. Shared rather than a
+ * second createOrbField(): r185 names each InstancedMesh's matrix uniform buffer after its node
+ * id ('NodeBuffer_' + id in WGSLNodeBuilder), so every field generates its own vertex shader and
+ * pipelines — only the very meshes the rig drew can reuse what it compiled. Disposed (GPU side)
+ * when its last user unmounts; a canvas mounted after that starts a fresh one.
+ */
+export function useOrbField(): OrbField {
+  const [entry] = useState(() => (sharedField ??= { field: createOrbField(), users: 0 }))
+  useEffect(() => {
+    entry.users++
+    return () => {
+      if (--entry.users > 0) return
+      entry.field.dispose()
+      if (sharedField === entry) sharedField = null
+    }
+  }, [entry])
+  return entry.field
 }
 
 /** Write the orb list into the field: orbs collapse as their ring blooms outward and fades. */
@@ -218,7 +239,7 @@ export function SphereHunter() {
   const [phase, setPhase] = useState<Phase>('arm')
   const [armCount, setArmCount] = useState(3)
   const orbs = useRef<Orb[]>([])
-  const field = useMemo(() => createOrbField(), [])
+  const field = useOrbField()
   const [score, setScore] = useState(0)
   const [combo, setCombo] = useState(1)
   const [remaining, setRemaining] = useState(GAME_SECONDS)
@@ -234,8 +255,6 @@ export function SphereHunter() {
   // from an earlier round (RUN IT BACK while FILING…) must not mark this round filed.
   const round = useRef(0)
   const filing = useRef(false)
-
-  useEffect(() => field.dispose, [field])
 
   const arm = () => {
     round.current++
