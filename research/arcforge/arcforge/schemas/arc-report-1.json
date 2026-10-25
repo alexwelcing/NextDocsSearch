@@ -580,7 +580,7 @@
               "additionalProperties": false,
               "required": ["n_ref_pairs", "ref", "graders", "kappa_drop", "prediction", "prediction_met", "self_pref_inflation"],
               "properties": {
-                "n_ref_pairs": {"const": 300},
+                "n_ref_pairs": {"description": "The realized reference pairs (300 as registered: 150 + 150).", "$ref": "#/$defs/count"},
                 "ref": {"description": "A0: the 150 I1b three-family median pairs plus 150 Fable gold pairs drawn by sha256 (disjoint). Claude appears in both references.", "const": "ref150+fable150"},
                 "graders": {"const": ["gemini-3.1-flash-lite", "qwen3.5-9b", "ministral-3-8b"]},
                 "kappa_drop": {"type": "number"},
@@ -688,13 +688,14 @@
     },
 
     "Latency": {
+      "description": "Milliseconds where measured (CI and local wrangler dev), otherwise null.",
       "type": "object",
       "additionalProperties": false,
       "required": ["worker_p95_cpu_ms", "worker_cold_load_ms", "browser_p95_ms"],
       "properties": {
-        "worker_p95_cpu_ms": {"$ref": "#/$defs/nonNegative"},
-        "worker_cold_load_ms": {"$ref": "#/$defs/nonNegative"},
-        "browser_p95_ms": {"$ref": "#/$defs/nonNegative"}
+        "worker_p95_cpu_ms": {"anyOf": [{"$ref": "#/$defs/nonNegative"}, {"type": "null"}]},
+        "worker_cold_load_ms": {"anyOf": [{"$ref": "#/$defs/nonNegative"}, {"type": "null"}]},
+        "browser_p95_ms": {"anyOf": [{"$ref": "#/$defs/nonNegative"}, {"type": "null"}]}
       }
     },
 
@@ -729,7 +730,7 @@
       "additionalProperties": false,
       "required": ["mean_5nn_gap_radius", "top_gaps", "briefs", "proposals_md_sha256"],
       "properties": {
-        "mean_5nn_gap_radius": {"$ref": "#/$defs/nonNegative"},
+        "mean_5nn_gap_radius": {"description": "null when the record vectors were not available.", "anyOf": [{"$ref": "#/$defs/nonNegative"}, {"type": "null"}]},
         "top_gaps": {
           "type": "array",
           "items": {
@@ -768,8 +769,8 @@
       "additionalProperties": false,
       "required": ["file", "sha256", "definition"],
       "properties": {
-        "file": {"type": "string", "minLength": 1},
-        "sha256": {"$ref": "#/$defs/sha256"},
+        "file": {"description": "null when the W0 and W1 record vectors were not available.", "type": ["string", "null"], "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256OrNull"},
         "definition": {"const": "1 − cos(Procrustes(W0), W1) per record, plus 10-NN rewiring"}
       }
     },
