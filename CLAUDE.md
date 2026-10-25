@@ -22,6 +22,9 @@ SDF atlases. See `lib/windfoil/LICENSE.md`.
 | `pnpm build` | Full build: font atlases, article bodies, manifests, Next build, sitemap |
 | `pnpm lint` | Run ESLint |
 | `pnpm format` | Prettier formatting |
+| `pnpm build:cf` | Cloudflare target: static export into `out/` plus `_redirects`/`_headers`, verified |
+| `pnpm cf:typecheck` | Worker types: `wrangler.jsonc` bindings vs `worker/env.ts`, then `tsc -p worker` |
+| `pnpm cf:dry-run` | Bundle the Worker as a deploy would, without uploading |
 
 Use `pnpm run lint` and `pnpm run build` as the real gates before pushing.
 
@@ -98,6 +101,20 @@ Data, Game. The dock only opens modals / changes in-scene state — it never nav
   consumed by the in-scene reader AND `pages/articles/[slug].tsx` SSG).
 - Manifests in `lib/generated/*.json` feed APIs (`/api/arc/archive` is the dock index).
 - Films: MP4s in `public/images/article-videos/` play in-scene via VideoTexture.
+
+### Cloudflare target (staging until the apex cutover; Vercel is production)
+
+- `NEXT_OUTPUT=export` (`pnpm build:cf`) switches next.config.js to `output: 'export'` with
+  `pageExtensions: ['tsx']`, which leaves out the Vercel-only `pages/api/*.ts` and `middleware.ts`
+  without moving files (so every page must stay `.tsx`; the export build fails otherwise).
+- `scripts/cf-finalize.ts` writes `out/_redirects`, `out/_headers` (one splat per rule; immutable
+  only under content-hashed prefixes; noindex for workers.dev and next.alexwelcing.com) and
+  `out/.assetsignore`, then checks every sitemap page carries its full `#arc-page-content` text.
+- `worker/index.ts` (wrangler.jsonc 'alexwelcing-site') runs only for `/api/*` and the film
+  directories: Ship on Workers AI, the D1 leaderboard, the archive alias, and MP4 byte ranges
+  (Static Assets ignore Range). `_headers` never applies to Worker responses; `worker/policy.ts`
+  holds the shared header values. Deploys run from the VM (`npx wrangler deploy`); never add the
+  apex or www to `routes` outside the deliberate cutover change.
 
 ### Routes (all 360 deep links with crawlable HTML beneath)
 

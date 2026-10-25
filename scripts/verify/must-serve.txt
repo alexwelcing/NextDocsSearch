@@ -1,0 +1,44 @@
+# Files every deployment of alexwelcing.com must serve with a 2xx, whatever the sitemap says.
+# scripts/verify/parity-crawl.ts fails the run (a regression) when the origin under test does not
+# serve one, even if production fails too; scripts/verify/range-check.sh reads the *.mp4 lines.
+#
+# One site-relative path per line; '#' starts a comment. *.mp4 paths are requested with
+# Range: bytes=0-1 and must answer 206 Partial Content (Safari will not play a film otherwise).
+# Many of these are linked from outside the site (job applications, LinkedIn, social cards), so
+# no build check would notice them disappearing.
+
+# crawler and social entry points
+/robots.txt
+/sitemap.xml
+/video-sitemap.xml
+/favicon.ico
+/social-preview.png
+/og-default.png
+
+# resumes (linked from applications; referenced nowhere in the code)
+/resumes/Alex_Welcing_Product_Manager.pdf
+/resumes/Alex_Welcing_Product_Marketing_Manager.pdf
+/resumes/Alex_Welcing_Technical_Products.pdf
+/resumes/Senior_Technical_Product_Manager.pdf
+
+# fonts: the HTML preloads the TTF; the scene loads the windfoil atlases
+/fonts/VT323-Regular.ttf
+/fonts/ShareTechMono-Regular.ttf
+/fonts/vt323.wfa.json
+/fonts/vt323.wfa.bin
+/fonts/share-tech-mono.wfa.json
+/fonts/share-tech-mono.wfa.bin
+
+# the static archive index (dock, collections) and the film list
+/arc/archive.json
+/arc/archive-full.json
+/arc/media.json
+
+# images: an article hero (SVG) and a film poster (JPEG); /social-preview.png is above
+/images/og/cartography-01-the-unnamed-continent.svg
+/images/articles/cartography-01-the-unnamed-continent.jpg
+
+# films: the smallest, a typical and the largest MP4
+/images/article-videos/interface-10-forking-paths.mp4
+/images/article-videos/cartography-01-the-unnamed-continent.mp4
+/images/article-videos/threshold-03-the-weight-of-the-hammer.mp4

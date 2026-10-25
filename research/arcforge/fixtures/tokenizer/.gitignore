@@ -1,0 +1,3 @@
+# research/arcforge/.gitignore ignores *.bin (model weights); the toy bundle's lexicon.bin is a
+# committed parity fixture.
+!*.bin

@@ -57,3 +57,35 @@ jobs:
             echo '::error::pnpm build changed generated files. Run pnpm build and commit lib/generated, public/arc and public/fonts.'
             exit 1
           fi
+
+  cloudflare:
+    name: Cloudflare export
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # wrangler.jsonc's bindings match the generated worker-configuration.d.ts and worker/env.ts,
+      # and the Worker plus the lib/ code it bundles type-check against the workerd runtime.
+      - run: pnpm run cf:typecheck
+
+      # The same commit as the Vercel build, as a static export: out/_redirects and out/_headers,
+      # then every sitemap page checked for its full #arc-page-content text (scripts/cf-finalize.ts).
+      - run: pnpm run build:cf
+
+      # Bundles the Worker exactly as `wrangler deploy` would, with no credentials and no upload.
+      - run: pnpm run cf:dry-run
