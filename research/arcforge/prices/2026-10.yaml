@@ -1,0 +1,81 @@
+# The pinned price table that `arcforge plan` prices every run against (program.training_recipe,
+# "Cost"). Pinned 2026-10-24, in USD.
+#
+# - Plans price runner-VM minutes at the ON-DEMAND rate, the fallback, so a spot stockout can
+#   never break a plan. Actual cost is booked by the runner at the provisioned SKU's rate, read
+#   from the Cloud Billing Catalog API at start and reconciled with the billing export.
+# - `verify_at_launch` lists the fields of an entry that are third-party or volatile. Both
+#   Gemini prices and the spot rate carry it; `arcforge plan` prints every flagged value, and the
+#   owner re-checks them before each launch. A changed price means a new table
+#   (prices/YYYY-MM.yaml), never an edit to a pinned one: its sha256 is part of every plan.
+# - Numbers are written as decimals and computed exactly (Decimal), never as binary floats.
+schema: arc-prices/1
+id: '2026-10'
+pinned: '2026-10-24'
+currency: USD
+
+compute:
+  g2-standard-8:
+    region: us-central1
+    gpu: nvidia-l4
+    gpus: 1
+    vcpus: 8
+    on_demand_usd_per_h: 0.85
+    spot_usd_per_h: 0.34
+    verify_at_launch: [spot_usd_per_h]
+    note: the runner VM; spot is about $0.34/h, verify at launch
+  g2-standard-16:
+    region: us-central1
+    gpu: nvidia-l4
+    gpus: 1
+    vcpus: 16
+    on_demand_usd_per_h: 1.15
+    spot_usd_per_h: 0.46
+    verify_at_launch: [on_demand_usd_per_h, spot_usd_per_h]
+    note: the S9 CPU-fallback shape (same single L4), paid from the $3 reserve
+
+llm:
+  gemini-3.1-flash-lite:
+    provider: vertex
+    endpoint: us-central1
+    usd_per_m_in: 0.25
+    usd_per_m_out: 1.50
+    thinking: billed at the output rate (thinking_level minimal)
+    verify_at_launch: [usd_per_m_in, usd_per_m_out]
+    note: preview, third-party price; if served only on the global endpoint, the line records it
+  gemini-3-flash:
+    provider: vertex
+    endpoint: us-central1
+    usd_per_m_in: 0.50
+    usd_per_m_out: 3.00
+    verify_at_launch: [usd_per_m_in, usd_per_m_out]
+    note: Flash pricing changes on 2027-01-01
+  # Open models served by vLLM on the runner's L4: no cash per token; their time is the VM line.
+  qwen3.5-9b:
+    provider: vllm
+    usd_per_m_in: 0
+    usd_per_m_out: 0
+  qwen3.5-4b:
+    provider: vllm
+    usd_per_m_in: 0
+    usd_per_m_out: 0
+  ministral-3-8b-instruct-2512:
+    provider: vllm
+    usd_per_m_in: 0
+    usd_per_m_out: 0
+  ministral-3-3b-instruct-2512:
+    provider: vllm
+    usd_per_m_in: 0
+    usd_per_m_out: 0
+  # Fable runs only through the orchestrator's workflow agents: $0 cash, tokens logged.
+  claude-fable-5-1:
+    provider: orchestrator
+    usd_per_m_in: 0
+    usd_per_m_out: 0
+
+workers_ai:
+  usd_per_k_neurons: 0.011
+
+storage:
+  gcs_standard_usd_per_gb_month: 0.020
+  region: us-central1
