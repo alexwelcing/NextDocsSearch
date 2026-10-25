@@ -85,6 +85,9 @@ vi.mock('../widgets/ScreenList', () => ({
 vi.mock('@/lib/immersive/audio', () => ({ playSound: vi.fn() }))
 vi.mock('@/lib/immersive/navigation', () => ({ openModal: vi.fn() }))
 vi.mock('@/lib/immersive/prefetch', () => ({ prefetchRecord: vi.fn() }))
+// These cases cover FIND's record-level path, which ranks until the full-text index arrives
+// (never, here); SearchTab.fulltext.test.tsx covers the index and the fallback to records.
+vi.mock('@/lib/retrieval/load', () => ({ loadCoreIndex: () => new Promise(() => {}) }))
 vi.mock('../DockKey', () => ({ stopLook: (event: Event) => event.stopPropagation() }))
 // Sphere Hunter (tested below): core three stands in for the WebGPU build, no render loop.
 vi.mock('three/webgpu', () => import('three'))

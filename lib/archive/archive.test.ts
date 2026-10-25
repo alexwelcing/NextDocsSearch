@@ -191,7 +191,7 @@ describe('searchRecords', () => {
     ])
   })
 
-  it('boosts an exact title phrase and resolves equal scores newest first', () => {
+  it('boosts an exact title phrase and resolves equal scores by title, then slug', () => {
     const records = [
       record('older', { title: 'Orbital flight', date: '2024-01-01' }),
       record('newer', { title: 'Orbital flight', date: '2026-01-01' }),

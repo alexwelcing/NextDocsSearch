@@ -11,13 +11,13 @@ import { PROFILE_SLUG, detectProfileIntent } from './profile'
 import type { Int8RowMatrix } from './quantize'
 import {
   RRF_WEIGHTS,
-  byDateThenSlug,
+  byTitleThenSlug,
   fuseRrf,
   type FusedHit,
   type RankedList,
   type RrfWeights,
 } from './rrf'
-import { findMatch, queryTerms } from './tokenize'
+import { findMatch, foldText, queryTerms } from './tokenize'
 import type {
   RetrievalDeps,
   RetrievalItem,
@@ -73,8 +73,8 @@ function clip(value: string, max: number): string {
 /** Keep the first query-term match visible, like FIND's dock preview. */
 function snippetFor(text: string, terms: string[], max: number): string {
   const value = collapse(text)
-  const lower = value.toLowerCase()
-  const positions = terms.map((term) => findMatch(lower, term)).filter((index) => index >= 0)
+  const folded = foldText(value)
+  const positions = terms.map((term) => findMatch(folded, term)).filter((index) => index >= 0)
   const start = positions.length ? Math.max(0, Math.min(...positions) - 48) : 0
   const end = Math.min(value.length, start + max)
   return `${start > 0 ? '... ' : ''}${value.slice(start, end).trim()}${
@@ -348,7 +348,7 @@ export function fuse(
   const { docs, chunks } = core
   const docOfKey = (key: string) => docs[chunks[Number(key)]?.doc]
   // Equal-score chunks of one doc keep index order (numeric, so '999' sorts before '1000').
-  const compareChunks = byDateThenSlug(docOfKey, (a, b) => Number(a) - Number(b))
+  const compareChunks = byTitleThenSlug(docOfKey, (a, b) => Number(a) - Number(b))
   // A record votes through its card chunk (operator docs have none: their first chunk).
   const cards = inputs.records
     .map((slug) => core.docBySlug.get(slug))
@@ -370,7 +370,7 @@ export function fuse(
   const slugOf = (key: string) => docs[chunks[Number(key)].doc].slug
   const slugRank = fuseRrf(
     chunkLists.map((list) => ({ ...list, keys: list.keys.map(slugOf) })),
-    { compare: byDateThenSlug((slug) => docs[core.docBySlug.get(slug) ?? -1]) }
+    { compare: byTitleThenSlug((slug) => docs[core.docBySlug.get(slug) ?? -1]) }
   )
 
   const terms = queryTerms(query)

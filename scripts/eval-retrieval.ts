@@ -7,9 +7,10 @@
 //
 // Reports land in eval/results/ by default, which is git-ignored: quote the numbers in the PR.
 //
-// Built-in configurations: records (today's searchRecords over the article manifest),
+// Built-in configurations: records (searchRecords over the article manifest, FIND's fallback),
 // records+operators (the same over the operator panels too, as Ship ranks them), bm25 (chunk
-// BM25 only), ship-lexical (getShipContext without an embedder: BM25 + records under RRF), and
+// BM25 only), find (FIND as shipped: searchFullText, articles ranked by their best BM25F chunk),
+// ship-lexical (getShipContext without an embedder: BM25 + records under RRF), and
 // for each vector set whose model has a plugin embedder: dense:<model> and hybrid:<model>.
 // --pseudo adds a known-item benchmark (each article's description as its query).
 // Plugins (see EvalPlugin in lib/retrieval/eval.ts) add models, configurations and benchmarks.
@@ -17,7 +18,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { searchRecords } from '../lib/archive/search'
+import { searchFullText, searchRecords } from '../lib/archive/search'
 import { FsManifestSource } from '../lib/archive/server'
 import { searchBm25 } from '../lib/retrieval/bm25'
 import { buildSearchIndex, emitSearchIndex } from '../lib/retrieval/build'
@@ -108,7 +109,7 @@ async function main() {
   const configurations: EvalConfiguration[] = [
     {
       name: 'records',
-      description: "today's searchRecords over the article manifest (FIND / Ship lexical)",
+      description: "searchRecords over the article manifest (FIND's fallback, Ship's record vote)",
       search: (q, k) => searchRecords(records, q, k).map((hit) => hit.record.slug),
     },
     {
@@ -125,6 +126,11 @@ async function main() {
           slugOfChunk,
           k
         ),
+    },
+    {
+      name: 'find',
+      description: 'FIND: searchFullText, articles ranked by their best BM25F chunk',
+      search: (q, k) => searchFullText(core, records, q, k).map((hit) => hit.record.slug),
     },
     ...[0.5, 0.25, 0].map((weight) => ({
       name: weight === RRF_WEIGHTS.records ? 'ship-lexical' : `ship-lexical:records=${weight}`,

@@ -1,5 +1,6 @@
 // Weighted reciprocal rank fusion: score(key) = Σ weight / (k + rank), ranks from 1 within each
-// list (a repeated key keeps its first rank). Ties break like searchRecords: newer, then slug.
+// list (a repeated key keeps its first rank). Ties break like searchRecords: title, then slug.
+import { compareTitleThenSlug } from '../archive/search'
 
 export const RRF_K = 60
 
@@ -50,20 +51,15 @@ export function fuseRrf(
 }
 
 /**
- * searchRecords' order for equal scores (lib/archive/search.ts): date desc, then slug asc, then
- * `tieBreak` for keys that share a slug (chunks of one doc pass a numeric comparator).
+ * searchRecords' order for equal scores (lib/archive/search.ts): title, then slug, then
+ * `tieBreak` for keys that share a slug (chunks of one doc pass a numeric comparator). Never date:
+ * the archive's dates are largely diegetic, and newest-first lifted future-dated fiction.
  */
-export function byDateThenSlug(
-  lookup: (key: string) => { date: string; slug: string } | undefined,
+export function byTitleThenSlug(
+  lookup: (key: string) => { title: string; slug: string } | undefined,
   tieBreak: (a: string, b: string) => number = byKey
 ) {
-  return (a: string, b: string): number => {
-    const left = lookup(a)
-    const right = lookup(b)
-    return (
-      (right?.date ?? '').localeCompare(left?.date ?? '') ||
-      (left?.slug ?? a).localeCompare(right?.slug ?? b) ||
-      tieBreak(a, b)
-    )
-  }
+  const meta = (key: string) => lookup(key) ?? { title: '', slug: key }
+  return (a: string, b: string): number =>
+    compareTitleThenSlug(meta(a), meta(b)) || tieBreak(a, b)
 }

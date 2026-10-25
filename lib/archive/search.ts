@@ -1,120 +1,82 @@
+import { searchBm25 } from '../retrieval/bm25'
+import type { CoreIndex } from '../retrieval/load'
+import { findMatch, foldText, normalizedTokens, queryTerms } from '../retrieval/tokenize'
 import type { ArchiveRecord, SearchHit } from './types'
 
-// Shared lexical vocabulary and field weights; consumers never need to load MDX.
-const stopWords = new Set([
-  'am',
-  'an',
-  'as',
-  'at',
-  'be',
-  'by',
-  'do',
-  'he',
-  'if',
-  'in',
-  'is',
-  'it',
-  'me',
-  'my',
-  'no',
-  'of',
-  'on',
-  'or',
-  'so',
-  'to',
-  'up',
-  'we',
-  'the',
-  'and',
-  'for',
-  'with',
-  'that',
-  'this',
-  'from',
-  'into',
-  'your',
-  'have',
-  'what',
-  'about',
-  'would',
-  'there',
-  'their',
-  'them',
-  'then',
-  'when',
-  'where',
-  'which',
-  'while',
-  'were',
-  'been',
-  'will',
-  'just',
-  'like',
-  'than',
-  'they',
-])
+// FIND's vocabulary is lib/retrieval/tokenize.ts, shared with the chunk BM25F index, so both
+// rankers fold diacritics, split words and match prefixes identically.
+export { findMatch, foldText, normalizedTokens, queryTerms as tokenize }
 
-/** Lowercased alphanumeric words of 2+ characters, minus stop words; shared with lib/retrieval. */
-export function normalizedTokens(value: string): string[] {
-  return value
-    .toLowerCase()
-    .split(/[^a-z0-9]+/)
-    .filter((token) => token.length >= 2 && !stopWords.has(token))
+/** A record in search form, folded once per record object (records are never mutated). */
+interface SearchForm {
+  /** Folded field values with their weights; list fields contribute one entry per value. */
+  fields: [string, number][]
+  /** The title's tokens, space-delimited, for the exact-phrase bonus. */
+  title: string
+  /** Snippet sources, whitespace-collapsed, with their folded forms; built on first use. */
+  previews?: Preview[]
 }
 
-/** The unique query terms searchRecords ranks on. */
-export function tokenize(query: string): string[] {
-  return [...new Set(normalizedTokens(query))]
+interface Preview {
+  text: string
+  folded: string
 }
 
-/** Short terms are whole words; longer terms also match a word as it is typed. */
-export function findMatch(text: string, term: string): number {
-  let index = text.indexOf(term)
-  while (index >= 0) {
-    const startsWord = index === 0 || !/[a-z0-9]/.test(text[index - 1])
-    const endsWord = !/[a-z0-9]/.test(text[index + term.length] ?? '')
-    if (startsWord && (term.length > 2 || endsWord)) return index
-    index = text.indexOf(term, index + 1)
+const searchForms = new WeakMap<ArchiveRecord, SearchForm>()
+
+function searchForm(record: ArchiveRecord): SearchForm {
+  let form = searchForms.get(record)
+  if (!form) {
+    const weighted = (values: string[], weight: number) =>
+      values.map((value): [string, number] => [value, weight])
+    const fields: [string, number][] = [
+      [record.title, 9],
+      [record.description, 5],
+      [record.searchText, 2],
+      [record.slug, 4],
+      [record.type, 2],
+      [record.date, 1],
+      ...weighted(record.keywords, 7),
+      ...weighted(record.domains, 5),
+      ...weighted(record.mechanics, 3),
+    ]
+    form = {
+      fields: fields.map(([value, weight]) => [foldText(value), weight]),
+      title: ` ${normalizedTokens(record.title).join(' ')} `,
+    }
+    searchForms.set(record, form)
   }
-  return -1
-}
-
-function scoreField(value: string, terms: string[], weight: number): number {
-  const text = value.toLowerCase()
-  return terms.reduce((score, term) => score + (findMatch(text, term) >= 0 ? weight : 0), 0)
+  return form
 }
 
 function scoreRecord(record: ArchiveRecord, terms: string[]): number {
-  let score =
-    scoreField(record.title, terms, 9) +
-    scoreField(record.description, terms, 5) +
-    scoreField(record.searchText, terms, 2) +
-    scoreField(record.slug, terms, 4) +
-    scoreField(record.type, terms, 2) +
-    scoreField(record.date, terms, 1)
-  for (const [values, weight] of [
-    [record.keywords, 7],
-    [record.domains, 5],
-    [record.mechanics, 3],
-  ] as const) {
-    score += values.reduce((sum, value) => sum + scoreField(value, terms, weight), 0)
+  const form = searchForm(record)
+  let score = 0
+  for (const [text, weight] of form.fields) {
+    for (const term of terms) if (findMatch(text, term) >= 0) score += weight
   }
   // Use the same normalized query as field scoring, with complete token boundaries.
-  const title = ` ${normalizedTokens(record.title).join(' ')} `
-  if (title.includes(` ${terms.join(' ')} `)) score += 20
+  if (form.title.includes(` ${terms.join(' ')} `)) score += 20
   return score
 }
 
-function snippet(record: ArchiveRecord, terms: string[]): string {
-  const candidates = [
+function preview(value: string): Preview {
+  const text = value.replace(/\s+/g, ' ').trim()
+  return { text, folded: foldText(text) }
+}
+
+/** `passage`, when given, is searched first: the chunk that matched in the full-text index. */
+function snippet(record: ArchiveRecord, terms: string[], passage = ''): string {
+  const form = searchForm(record)
+  form.previews ??= [
     record.searchText,
     record.description,
     [...record.keywords, ...record.domains, ...record.mechanics].join(' '),
-  ].map((value) => value.replace(/\s+/g, ' ').trim())
+  ].map(preview)
+  const candidates = passage ? [preview(passage), ...form.previews] : form.previews
 
-  for (const text of candidates) {
-    const lower = text.toLowerCase()
-    const positions = terms.map((term) => findMatch(lower, term)).filter((index) => index >= 0)
+  for (const { text, folded } of candidates) {
+    const positions = terms.map((term) => findMatch(folded, term)).filter((index) => index >= 0)
     if (!positions.length) continue
     const match = Math.min(...positions)
     // Keep the match visible in the dock's compact selected-result preview.
@@ -125,22 +87,34 @@ function snippet(record: ArchiveRecord, terms: string[]): string {
     }`
   }
 
-  return (candidates[0] || candidates[1]).slice(0, 420)
+  return (candidates[0].text || candidates[1].text).slice(0, 420)
 }
+
+/**
+ * Equal scores order by title, then slug, and never by date: the archive's dates are largely
+ * diegetic (fiction set in 2067), so a newest-first tiebreak lifted future-dated stories over
+ * real research. Shared with Ship's RRF (lib/retrieval/rrf.ts).
+ */
+export function compareTitleThenSlug(
+  a: { title: string; slug: string },
+  b: { title: string; slug: string }
+): number {
+  return a.title.localeCompare(b.title, 'en') || (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0)
+}
+
+type Ranked = { record: ArchiveRecord; score: number }
+
+const byScore = (a: Ranked, b: Ranked) =>
+  b.score - a.score || compareTitleThenSlug(a.record, b.record)
 
 /** Pure lexical ranking over complete records, independent of their transport. */
 export function searchRecords(records: ArchiveRecord[], query: string, limit = 30): SearchHit[] {
-  const terms = tokenize(query)
+  const terms = queryTerms(query)
   if (!terms.length || limit <= 0 || Number.isNaN(limit)) return []
   const ranked = records
     .map((record) => ({ record, score: scoreRecord(record, terms) }))
     .filter((hit) => hit.score > 0)
-    .sort(
-      (a, b) =>
-        b.score - a.score ||
-        b.record.date.localeCompare(a.record.date) ||
-        a.record.slug.localeCompare(b.record.slug)
-    )
+    .sort(byScore)
   const seen = new Set<string>()
   return ranked
     .filter(({ record }) => {
@@ -150,4 +124,36 @@ export function searchRecords(records: ArchiveRecord[], query: string, limit = 3
     })
     .slice(0, limit)
     .map((hit) => ({ ...hit, snippet: snippet(hit.record, terms) }))
+}
+
+/**
+ * FIND over the full-text chunk BM25F index (scripts/generate-search-index.ts): each record ranks
+ * by its best chunk, so a match anywhere in an article counts, not only in the manifest's
+ * searchText preview, and the snippet comes from that chunk. Only slugs in `records` are returned
+ * (the index also holds the operator panels, which FIND does not list).
+ */
+export function searchFullText(
+  index: CoreIndex,
+  records: ArchiveRecord[],
+  query: string,
+  limit = 30
+): SearchHit[] {
+  const terms = queryTerms(query)
+  if (!terms.length || limit <= 0 || Number.isNaN(limit)) return []
+  const bySlug = new Map(records.map((record) => [record.slug, record]))
+  const best = new Map<string, Ranked & { chunk: number }>()
+  // Chunk hits arrive best first, so the first chunk seen for a slug is that record's best.
+  for (const { doc: chunk, score } of searchBm25(index.bm25, query, index.chunks.length)) {
+    const slug = index.docs[index.chunks[chunk].doc].slug
+    const record = bySlug.get(slug)
+    if (record && !best.has(slug)) best.set(slug, { record, score, chunk })
+  }
+  return [...best.values()]
+    .sort(byScore)
+    .slice(0, limit)
+    .map(({ record, score, chunk }) => ({
+      record,
+      score,
+      snippet: snippet(record, terms, index.chunks[chunk].text),
+    }))
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { RRF_K, RRF_WEIGHTS, byDateThenSlug, fuseRrf } from './rrf'
+import { RRF_K, RRF_WEIGHTS, byTitleThenSlug, fuseRrf } from './rrf'
 
 describe('fuseRrf', () => {
   it('scores weight / (k + rank) summed across lists', () => {
@@ -26,33 +26,33 @@ describe('fuseRrf', () => {
     ])
   })
 
-  it('breaks ties like searchRecords: newer date first, then slug', () => {
-    const meta: Record<string, { date: string; slug: string }> = {
-      old: { date: '2024-01-01', slug: 'old' },
-      newer: { date: '2026-01-01', slug: 'newer' },
-      'b-same': { date: '2025-01-01', slug: 'b-same' },
-      'a-same': { date: '2025-01-01', slug: 'a-same' },
+  it('breaks ties like searchRecords: title, then slug, never date', () => {
+    const meta: Record<string, { title: string; slug: string }> = {
+      future: { title: 'The Last Handshake', slug: 'far-shore-06' },
+      research: { title: 'Agent Credentials', slug: 'agent-credentials' },
+      'b-same': { title: 'Same Title', slug: 'b-same' },
+      'a-same': { title: 'Same Title', slug: 'a-same' },
     }
     // Every key sits at rank 1 of its own list, so every score ties.
     const fused = fuseRrf(
       Object.keys(meta).map((key) => ({ name: key, weight: 1, keys: [key] })),
-      { compare: byDateThenSlug((key) => meta[key]) }
+      { compare: byTitleThenSlug((key) => meta[key]) }
     )
-    expect(fused.map((hit) => hit.key)).toEqual(['newer', 'a-same', 'b-same', 'old'])
+    expect(fused.map((hit) => hit.key)).toEqual(['research', 'a-same', 'b-same', 'future'])
   })
 
   it('orders keys that share a slug with the final comparator', () => {
-    const doc = { date: '2025-01-01', slug: 'same' }
+    const doc = { title: 'Same', slug: 'same' }
     const keys = ['1000', '999', '10']
     const lists = keys.map((key) => ({ name: key, weight: 1, keys: [key] }))
     const numeric = (a: string, b: string) => Number(a) - Number(b)
-    expect(fuseRrf(lists, { compare: byDateThenSlug(() => doc) }).map((hit) => hit.key)).toEqual([
+    expect(fuseRrf(lists, { compare: byTitleThenSlug(() => doc) }).map((hit) => hit.key)).toEqual([
       '10',
       '1000',
       '999',
     ])
     expect(
-      fuseRrf(lists, { compare: byDateThenSlug(() => doc, numeric) }).map((hit) => hit.key)
+      fuseRrf(lists, { compare: byTitleThenSlug(() => doc, numeric) }).map((hit) => hit.key)
     ).toEqual(['10', '999', '1000'])
   })
 })
