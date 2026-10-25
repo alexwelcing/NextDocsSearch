@@ -1,0 +1,500 @@
+[
+ {
+  "name": "train-flat-lean",
+  "query": "sky=ktx2&tier=8k-uastc&world=night-train&still=1",
+  "views": [
+   {
+    "name": "ring-L1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "ring-R1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "ring-L3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "ring-R3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "train-d-raw-e0",
+  "query": "sky=ktx2&tier=8k-uastc&world=night-train&still=1&depth=1&dmap=raw&edge=0",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "views": [
+   {
+    "name": "ring-L1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "ring-R1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "ring-L3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "ring-R3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   },
+   {
+    "name": "table-L1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "table-R1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "table-L3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "table-R3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "train-d-cond-e0",
+  "query": "sky=ktx2&tier=8k-uastc&world=night-train&still=1&depth=1&edge=0",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "views": [
+   {
+    "name": "ring-L1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "ring-R1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "ring-L3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "ring-R3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   },
+   {
+    "name": "table-L1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "table-R1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "table-L3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "table-R3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "train-d-cond-e1",
+  "query": "sky=ktx2&tier=8k-uastc&world=night-train&still=1&depth=1&edge=1",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "views": [
+   {
+    "name": "ring-L1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "ring-R1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "ring-L3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "ring-R3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   },
+   {
+    "name": "table-L1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "table-R1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "table-L3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "table-R3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "train-d-cond-e2",
+  "query": "sky=ktx2&tier=8k-uastc&world=night-train&still=1&depth=1&edge=2",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "views": [
+   {
+    "name": "ring-L1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "ring-R1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "ring-L3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "ring-R3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   },
+   {
+    "name": "table-L1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "table-R1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "table-L3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "table-R3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "train-d-raw-e2",
+  "query": "sky=ktx2&tier=8k-uastc&world=night-train&still=1&depth=1&dmap=raw&edge=2",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "views": [
+   {
+    "name": "ring-L1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "ring-R1",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "ring-L3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "ring-R3",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   },
+   {
+    "name": "table-L1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -1,
+     0
+    ]
+   },
+   {
+    "name": "table-R1",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   },
+   {
+    "name": "table-L3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "table-R3",
+    "yaw": -80,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "stacks-d-cond-e2",
+  "query": "sky=ktx2&tier=8k-uastc&world=the-stacks&still=1&depth=1&edge=2",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "views": [
+   {
+    "name": "corridor-L3",
+    "yaw": 90,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "corridor-R3",
+    "yaw": 90,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   },
+   {
+    "name": "racks-L3",
+    "yaw": 0,
+    "pitch": 0,
+    "lean": [
+     -3,
+     0
+    ]
+   },
+   {
+    "name": "racks-R3",
+    "yaw": 0,
+    "pitch": 0,
+    "lean": [
+     3,
+     0
+    ]
+   }
+  ]
+ }
+]

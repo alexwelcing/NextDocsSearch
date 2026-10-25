@@ -1,0 +1,12 @@
+[
+ {"name": "cube-uastc", "query": "sky=cube&fmt=uastc&still=1", "wait": ["cube.texture"],
+  "views": [{"name": "start", "yaw": 0, "pitch": 0}]},
+ {"name": "cube-etc1s", "query": "sky=cube&fmt=etc1s&still=1", "wait": ["cube.texture"],
+  "views": [{"name": "start", "yaw": 0, "pitch": 0}]},
+ {"name": "cube-ctl", "query": "sky=cube&ctl=1&still=1", "wait": ["cube.texture"],
+  "views": [{"name": "start", "yaw": 0, "pitch": 0}, {"name": "px", "yaw": -90, "pitch": 0}, {"name": "up", "yaw": 0, "pitch": 80}]},
+ {"name": "stacks-8k-uastc", "query": "sky=ktx2&tier=8k-uastc&still=1",
+  "views": [{"name": "start", "yaw": 0, "pitch": 0}, {"name": "seam", "yaw": -90, "pitch": 0}, {"name": "atan-seam", "yaw": 90, "pitch": 0}, {"name": "up", "yaw": 0, "pitch": 80}, {"name": "down", "yaw": 0, "pitch": -80}]},
+ {"name": "stacks-jpg", "query": "sky=jpg&still=1", "wait": ["image.load"],
+  "views": [{"name": "start", "yaw": 0, "pitch": 0}, {"name": "seam", "yaw": -90, "pitch": 0}, {"name": "up", "yaw": 0, "pitch": 80}]}
+]

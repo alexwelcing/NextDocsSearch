@@ -6,6 +6,8 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { worldById } from '@/lib/immersive/worlds'
+import { SKY_SPIKE } from '@/lib/immersive/sky/spikeFlags'
+import { SkySpike } from './spike/SkySpike'
 
 const RADIUS = 60
 const FADE_SPEED = 1.6 // opacity units per second
@@ -27,11 +29,21 @@ async function loadPanorama(url: string): Promise<THREE.Texture> {
   return tex
 }
 
+// SPIKE (H1 sky): ?sky=ktx2|jpg|cube swaps in the experimental sky; without it, main's behavior.
 export function PanoramaSphere() {
+  const setWorld = useImmersiveStore((s) => s.setWorld)
+  useEffect(() => {
+    if (SKY_SPIKE.sky && SKY_SPIKE.world) setWorld(SKY_SPIKE.world)
+  }, [setWorld])
+  return SKY_SPIKE.sky && SKY_SPIKE.sky !== 'legacy' ? <SkySpike /> : <LegacyPanoramaSphere />
+}
+
+function LegacyPanoramaSphere() {
   const worldId = useImmersiveStore((s) => s.worldId)
   const setSceneReady = useImmersiveStore((s) => s.setSceneReady)
   const reducedMotion = useImmersiveStore((s) => s.reducedMotion)
   const world = worldById(worldId)
+  const panorama = (SKY_SPIKE.sky === 'legacy' && SKY_SPIKE.pano) || world.panorama
 
   const [front, setFront] = useState<Layer | null>(null)
   const [back, setBack] = useState<Layer | null>(null)
@@ -41,8 +53,8 @@ export function PanoramaSphere() {
 
   useEffect(() => {
     let live = true
-    if (front?.url === world.panorama) return
-    loadPanorama(world.panorama).then(
+    if (front?.url === panorama) return
+    loadPanorama(panorama).then(
       (texture) => {
         if (!live) {
           texture.dispose()
@@ -53,7 +65,7 @@ export function PanoramaSphere() {
             old?.texture.dispose()
             return prev
           })
-          return { texture, url: world.panorama }
+          return { texture, url: panorama }
         })
         fading.current = true
         setSceneReady(true)
@@ -64,10 +76,12 @@ export function PanoramaSphere() {
       live = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [world.panorama, setSceneReady])
+  }, [panorama, setSceneReady])
 
   useFrame((_, delta) => {
-    if (group.current && !reducedMotion) group.current.rotation.y += world.drift * delta * 10
+    if (group.current && !reducedMotion && !SKY_SPIKE.still) {
+      group.current.rotation.y += world.drift * delta * 10
+    }
     if (fading.current && frontMat.current) {
       frontMat.current.opacity = Math.min(frontMat.current.opacity + FADE_SPEED * delta, 1)
       if (frontMat.current.opacity >= 1) {

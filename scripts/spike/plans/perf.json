@@ -1,0 +1,462 @@
+[
+ {
+  "name": "r1-1600-legacy",
+  "query": "sky=legacy&world=night-train&still=1",
+  "wait": [],
+  "settle": 4000,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-1600-jpg2k-dir",
+  "query": "sky=jpg&world=night-train&still=1",
+  "wait": [
+   "image.load"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-1600-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1",
+  "wait": [
+   "sky.fullMs"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-1600-8k-uastc-depth-e0",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=0",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-1600-8k-uastc-depth-e2",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=2",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-2560-legacy",
+  "query": "sky=legacy&world=night-train&still=1",
+  "wait": [],
+  "settle": 4000,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-2560-jpg2k-dir",
+  "query": "sky=jpg&world=night-train&still=1",
+  "wait": [
+   "image.load"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-2560-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1",
+  "wait": [
+   "sky.fullMs"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-2560-8k-uastc-depth-e0",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=0",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r1-2560-8k-uastc-depth-e2",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=2",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-1600-legacy",
+  "query": "sky=legacy&world=night-train&still=1",
+  "wait": [],
+  "settle": 4000,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-1600-jpg2k-dir",
+  "query": "sky=jpg&world=night-train&still=1",
+  "wait": [
+   "image.load"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-1600-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1",
+  "wait": [
+   "sky.fullMs"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-1600-8k-uastc-depth-e0",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=0",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-1600-8k-uastc-depth-e2",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=2",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   1600,
+   900
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-2560-legacy",
+  "query": "sky=legacy&world=night-train&still=1",
+  "wait": [],
+  "settle": 4000,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-2560-jpg2k-dir",
+  "query": "sky=jpg&world=night-train&still=1",
+  "wait": [
+   "image.load"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-2560-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1",
+  "wait": [
+   "sky.fullMs"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-2560-8k-uastc-depth-e0",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=0",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "name": "r2-2560-8k-uastc-depth-e2",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1&depth=1&edge=2",
+  "wait": [
+   "sky.fullMs",
+   "depth.ready"
+  ],
+  "settle": 2500,
+  "viewport": [
+   2560,
+   1440
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 137,
+    "pitch": 0,
+    "lean": [
+     1,
+     0
+    ]
+   }
+  ]
+ }
+]

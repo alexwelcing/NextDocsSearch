@@ -1,0 +1,194 @@
+[
+ {
+  "name": "r1-train-esr-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r1-train-esr-4k-uastc",
+  "query": "sky=ktx2&tier=esr-4k-uastc&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r1-train-esr-8k-etc1s",
+  "query": "sky=ktx2&tier=esr-8k-etc1s&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r1-train-esr-4k-etc1s",
+  "query": "sky=ktx2&tier=esr-4k-etc1s&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r1-stacks-esr-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r1-stacks-esr-4k-uastc",
+  "query": "sky=ktx2&tier=esr-4k-uastc&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r1-stacks-esr-8k-etc1s",
+  "query": "sky=ktx2&tier=esr-8k-etc1s&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r1-stacks-esr-4k-etc1s",
+  "query": "sky=ktx2&tier=esr-4k-etc1s&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-train-esr-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-train-esr-4k-uastc",
+  "query": "sky=ktx2&tier=esr-4k-uastc&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-train-esr-8k-etc1s",
+  "query": "sky=ktx2&tier=esr-8k-etc1s&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-train-esr-4k-etc1s",
+  "query": "sky=ktx2&tier=esr-4k-etc1s&world=night-train&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-stacks-esr-8k-uastc",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-stacks-esr-4k-uastc",
+  "query": "sky=ktx2&tier=esr-4k-uastc&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-stacks-esr-8k-etc1s",
+  "query": "sky=ktx2&tier=esr-8k-etc1s&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ },
+ {
+  "name": "r2-stacks-esr-4k-etc1s",
+  "query": "sky=ktx2&tier=esr-4k-etc1s&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ],
+  "settle": 800
+ }
+]

@@ -1,0 +1,243 @@
+[
+ {
+  "name": "grid-legacy-2k",
+  "query": "sky=legacy&pano=/images/spike-sky/test-grid-2k.jpg&still=1",
+  "wait": [],
+  "settle": 4000,
+  "views": [
+   {
+    "name": "seam",
+    "yaw": -90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "atan-seam",
+    "yaw": 90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "up83",
+    "yaw": 0,
+    "pitch": 83,
+    "fov": 45
+   },
+   {
+    "name": "down83",
+    "yaw": 0,
+    "pitch": -83,
+    "fov": 45
+   },
+   {
+    "name": "up-wide",
+    "yaw": 0,
+    "pitch": 80,
+    "fov": 70
+   }
+  ]
+ },
+ {
+  "name": "grid-dir-2k",
+  "query": "sky=jpg&pano=/images/spike-sky/test-grid-2k.jpg&still=1",
+  "wait": [
+   "image.load"
+  ],
+  "views": [
+   {
+    "name": "seam",
+    "yaw": -90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "atan-seam",
+    "yaw": 90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "up83",
+    "yaw": 0,
+    "pitch": 83,
+    "fov": 45
+   },
+   {
+    "name": "down83",
+    "yaw": 0,
+    "pitch": -83,
+    "fov": 45
+   },
+   {
+    "name": "up-wide",
+    "yaw": 0,
+    "pitch": 80,
+    "fov": 70
+   }
+  ]
+ },
+ {
+  "name": "grid-8k-uastc",
+  "query": "sky=ktx2&asset=test-grid&tier=8k-uastc&still=1",
+  "views": [
+   {
+    "name": "seam",
+    "yaw": -90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "atan-seam",
+    "yaw": 90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "up83",
+    "yaw": 0,
+    "pitch": 83,
+    "fov": 45
+   },
+   {
+    "name": "down83",
+    "yaw": 0,
+    "pitch": -83,
+    "fov": 45
+   },
+   {
+    "name": "up-wide",
+    "yaw": 0,
+    "pitch": 80,
+    "fov": 70
+   }
+  ]
+ },
+ {
+  "name": "grid-8k-nograd",
+  "query": "sky=ktx2&asset=test-grid&tier=8k-uastc&nograd=1&still=1",
+  "views": [
+   {
+    "name": "seam",
+    "yaw": -90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "atan-seam",
+    "yaw": 90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "up83",
+    "yaw": 0,
+    "pitch": 83,
+    "fov": 45
+   }
+  ]
+ },
+ {
+  "name": "grid-8k-etc1s",
+  "query": "sky=ktx2&asset=test-grid&tier=8k-etc1s&still=1",
+  "views": [
+   {
+    "name": "seam",
+    "yaw": -90,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "up83",
+    "yaw": 0,
+    "pitch": 83,
+    "fov": 45
+   }
+  ]
+ },
+ {
+  "name": "cube-shim-uastc",
+  "query": "sky=cube&fmt=uastc&shim=1&still=1",
+  "wait": [
+   "cube.texture"
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   },
+   {
+    "name": "px",
+    "yaw": -90,
+    "pitch": 0
+   },
+   {
+    "name": "up",
+    "yaw": 0,
+    "pitch": 80
+   }
+  ]
+ },
+ {
+  "name": "cube-shim-etc1s",
+  "query": "sky=cube&fmt=etc1s&shim=1&still=1",
+  "wait": [
+   "cube.texture"
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   },
+   {
+    "name": "px",
+    "yaw": -90,
+    "pitch": 0
+   },
+   {
+    "name": "up",
+    "yaw": 0,
+    "pitch": 80
+   }
+  ]
+ },
+ {
+  "name": "cube-ctl",
+  "query": "sky=cube&ctl=1&still=1",
+  "wait": [
+   "cube.texture"
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   },
+   {
+    "name": "px",
+    "yaw": -90,
+    "pitch": 0
+   },
+   {
+    "name": "up",
+    "yaw": 0,
+    "pitch": 80
+   }
+  ]
+ },
+ {
+  "name": "cube-noshim-uastc",
+  "query": "sky=cube&fmt=uastc&still=1",
+  "wait": [
+   "cube.texture"
+  ],
+  "views": [
+   {
+    "name": "start",
+    "yaw": 0,
+    "pitch": 0
+   }
+  ]
+ }
+]

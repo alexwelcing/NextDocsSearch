@@ -17,6 +17,7 @@ import { ShaderWarmup } from './scene/ShaderWarmup'
 import { ArcDock } from './dock/ArcDock'
 import { ImmersiveModals } from './ImmersiveModals'
 import { SphereHunter } from './game/SphereHunter'
+import { SKY_SPIKE, spikeHandle } from '@/lib/immersive/sky/spikeFlags'
 
 // Register the three/webgpu catalogue so JSX intrinsics resolve to WebGPU-capable classes.
 
@@ -32,6 +33,8 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
           ...props,
           antialias: true,
           powerPreference: 'high-performance',
+          // SPIKE (H1 sky): GPU pass timing for the sky experiment only.
+          ...(SKY_SPIKE.sky ? { trackTimestamp: true } : {}),
         })
         try {
           await renderer.init()
@@ -50,6 +53,7 @@ export default function ImmersiveCanvas({ children }: { children?: ReactNode }) 
           useImmersiveStore.getState().setBootPhase('unsupported')
           throw err
         }
+        if (SKY_SPIKE.sky) spikeHandle().renderer = renderer
         renderer.toneMapping = THREE.ACESFilmicToneMapping
         renderer.toneMappingExposure = 1.05
 

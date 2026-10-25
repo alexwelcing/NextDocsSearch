@@ -1,0 +1,74 @@
+[
+ {
+  "name": "grid-8k-nograd",
+  "query": "sky=ktx2&asset=test-grid&tier=8k-uastc&nograd=1&still=1",
+  "views": [
+   {
+    "name": "seam-a",
+    "yaw": -90.05,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "seam-b",
+    "yaw": -89.93,
+    "pitch": 10,
+    "fov": 45
+   },
+   {
+    "name": "seam-c",
+    "yaw": -90.11,
+    "pitch": -20,
+    "fov": 70
+   }
+  ]
+ },
+ {
+  "name": "grid-8k-grad",
+  "query": "sky=ktx2&asset=test-grid&tier=8k-uastc&still=1",
+  "views": [
+   {
+    "name": "seam-a",
+    "yaw": -90.05,
+    "pitch": 0,
+    "fov": 45
+   },
+   {
+    "name": "seam-b",
+    "yaw": -89.93,
+    "pitch": 10,
+    "fov": 45
+   },
+   {
+    "name": "seam-c",
+    "yaw": -90.11,
+    "pitch": -20,
+    "fov": 70
+   }
+  ]
+ },
+ {
+  "name": "stacks-esr-nograd",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=the-stacks&nograd=1&still=1",
+  "views": [
+   {
+    "name": "seam-a",
+    "yaw": -90.05,
+    "pitch": 0,
+    "fov": 45
+   }
+  ]
+ },
+ {
+  "name": "stacks-esr-grad",
+  "query": "sky=ktx2&tier=esr-8k-uastc&world=the-stacks&still=1",
+  "views": [
+   {
+    "name": "seam-a",
+    "yaw": -90.05,
+    "pitch": 0,
+    "fov": 45
+   }
+  ]
+ }
+]
