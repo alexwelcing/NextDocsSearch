@@ -93,7 +93,8 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
     if (status !== 'ready') return []
     return index ? searchFullText(index, records, query, 40) : searchRecords(records, query, 40)
   }, [records, index, query, status])
-  useEffect(() => setSel(0), [query])
+  // A new query, or the full-text index replacing record ranking, starts again at the top.
+  useEffect(() => setSel(0), [query, index])
   const selected = results[sel]
   useEffect(() => {
     if (active && selected) prefetchRecord(selected.record.slug)

@@ -60,6 +60,5 @@ export function byTitleThenSlug(
   tieBreak: (a: string, b: string) => number = byKey
 ) {
   const meta = (key: string) => lookup(key) ?? { title: '', slug: key }
-  return (a: string, b: string): number =>
-    compareTitleThenSlug(meta(a), meta(b)) || tieBreak(a, b)
+  return (a: string, b: string): number => compareTitleThenSlug(meta(a), meta(b)) || tieBreak(a, b)
 }

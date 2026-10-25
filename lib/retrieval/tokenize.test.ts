@@ -19,7 +19,9 @@ describe('foldText', () => {
   })
 
   it('folds Latin letters that have no Unicode decomposition', () => {
-    expect(foldText('Tromsø, Łódź, Straße, Æsir, Œuvre')).toBe('tromso, lodz, strasse, aesir, oeuvre')
+    expect(foldText('Tromsø, Łódź, Straße, Æsir, Œuvre')).toBe(
+      'tromso, lodz, strasse, aesir, oeuvre'
+    )
   })
 
   it('treats precomposed and combining-mark spellings the same', () => {

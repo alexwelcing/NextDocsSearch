@@ -12,7 +12,10 @@ import { FIXTURE_ARCHIVE, fixtureIndex } from '@/lib/retrieval/testing'
 vi.mock('react/jsx-dev-runtime', async (importOriginal) => {
   const runtime = await importOriginal<typeof import('react/jsx-dev-runtime')>()
   const jsxDEV: typeof runtime.jsxDEV = (type, props, key, isStatic, source, self) => {
-    if (typeof type === 'string' && ['group', 'mesh', 'planeGeometry', 'meshBasicMaterial'].includes(type)) {
+    if (
+      typeof type === 'string' &&
+      ['group', 'mesh', 'planeGeometry', 'meshBasicMaterial'].includes(type)
+    ) {
       const { children, onPointerDown } = props as Record<string, unknown>
       return runtime.jsxDEV('div', { children, onPointerDown }, key, isStatic, source, self)
     }

@@ -53,17 +53,28 @@ describe('BM25 tokenization parity with searchRecords', () => {
   ]
   const docs = texts.map((body) => ({ body }))
   const parity = (term: string) =>
-    texts
-      .map((text, i) => (findMatch(foldText(text), term) >= 0 ? i : -1))
-      .filter((i) => i >= 0)
+    texts.map((text, i) => (findMatch(foldText(text), term) >= 0 ? i : -1)).filter((i) => i >= 0)
 
-  it.each(['ai', 'vr', 'agent', 'agents', 'immers', 'reality', 'lab', 'solene', 'tomas', 'tromso',
-    'naive', 'resum', 'tuhoe', 'sol', 'na', 'ne'])(
-    "matches '%s' exactly where findMatch does",
-    (term) => {
-      expect(matches(docs, term)).toEqual(parity(term))
-    }
-  )
+  it.each([
+    'ai',
+    'vr',
+    'agent',
+    'agents',
+    'immers',
+    'reality',
+    'lab',
+    'solene',
+    'tomas',
+    'tromso',
+    'naive',
+    'resum',
+    'tuhoe',
+    'sol',
+    'na',
+    'ne',
+  ])("matches '%s' exactly where findMatch does", (term) => {
+    expect(matches(docs, term)).toEqual(parity(term))
+  })
 
   it('agrees with findMatch over real records, accented names included', () => {
     const fields = readBuildRecords()
