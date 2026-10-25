@@ -102,6 +102,11 @@ def test_force_recomputes_and_lands_on_the_same_record(repo, tmp_path, capsys):
     assert 'S1    built' in capsys.readouterr().err
 
 
+def test_force_must_name_selected_stages(repo, tmp_path, capsys):
+    assert _run(repo, tmp_path / 'cache', None, '--force', 'S5') == 2
+    assert "outside the selection: ['S5']" in capsys.readouterr().err
+
+
 def test_verify_passes_then_catches_tampering_and_corpus_drift(repo, tmp_path, capsys):
     cache = tmp_path / 'cache'
     assert _run(repo, cache, tmp_path / 'out') == 0
@@ -237,6 +242,18 @@ def test_out_dir_with_foreign_files_is_not_overwritten(repo, tmp_path, capsys):
     assert _run(repo, tmp_path / 'cache', out) == 1
     assert 'refusing to overwrite' in capsys.readouterr().err
     assert (out / 'precious.txt').read_text() == 'keep me'
+
+
+def test_rerunning_into_the_same_out_dir_replaces_only_the_previous_run(repo, tmp_path, capsys):
+    out = tmp_path / 'out'
+    assert _run(repo, tmp_path / 'cache', out) == 0
+    first = _tree(out)
+    assert _run(repo, tmp_path / 'cache', out) == 0
+    assert _tree(out) == first
+    (out / 'S1' / 'notes.txt').write_text('mine')
+    assert _run(repo, tmp_path / 'cache', out) == 1
+    assert 'S1/notes.txt' in capsys.readouterr().err
+    assert (out / 'S1' / 'notes.txt').read_text() == 'mine'
 
 
 def test_bench_materialize_is_a_documented_stub(capsys):

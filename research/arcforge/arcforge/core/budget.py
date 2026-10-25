@@ -278,6 +278,14 @@ def price_line(
     )
 
 
+def _check_dividend(config: Config, prices: PriceTable, stages: dict[str, Stage]) -> None:
+    for item in config.get('budget.dividend') or []:
+        if item['stage'] not in stages:
+            raise ConfigError(f'dividend item {item["item"]!r}: unknown stage {item["stage"]!r}')
+        if prices.llm(item['model'])['provider'] != 'vertex':
+            raise ConfigError(f'dividend item {item["item"]!r}: {item["model"]} is not on Vertex')
+
+
 def _dividend_lines(config: Config, prices: PriceTable, room: Decimal) -> list[Line]:
     budget = config.get('budget')
     items = budget.get('dividend') or []
@@ -320,6 +328,7 @@ def make_plan(
     if unknown:
         raise ConfigError(f'plan names unknown stages {unknown} (known: {", ".join(stages)})')
     budget = config.get('budget')
+    _check_dividend(config, prices, stages)
     rows: list[StageRow] = []
     lines: list[Line] = []
     for name, stage in stages.items():

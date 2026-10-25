@@ -99,9 +99,11 @@
     "corpus": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["git_sha", "mdx_dir", "records_dir", "chunker", "strip_rules", "frontier", "rename_map", "ghosts_by_default", "person_map_sha256", "registers_sha256"],
+      "required": ["git_sha", "corpus_id", "main_corpus_id", "mdx_dir", "records_dir", "chunker", "strip_rules", "frontier", "rename_map", "ghosts_by_default", "person_map_sha256", "registers_sha256"],
       "properties": {
         "git_sha": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{40}$"}, {"type": "null"}]},
+        "corpus_id": {"$ref": "#/$defs/sha256_or_null"},
+        "main_corpus_id": {"$ref": "#/$defs/sha256_or_null"},
         "mdx_dir": {"type": "string", "minLength": 1},
         "records_dir": {"type": "string", "minLength": 1},
         "chunker": {"type": "string"},

@@ -164,6 +164,8 @@ def test_the_dividend_respects_budget_and_max_units():
         ),
         ({'plan.S2': [{'kind': 'llm', 'item': 'x', 'model': 'qwen3.5-9b'}]}, 'not a Vertex'),
         ({'budget.first_cut': {'line': 'S12.nothing', 'scale': 0.5}}, 'names no plan line'),
+        (_later([dict(DIVIDEND[0], stage='S99')]), 'unknown stage'),
+        (_later([dict(DIVIDEND[0], model='qwen3.5-9b')]), 'not on Vertex'),
     ],
 )
 def test_plan_rejects_bad_workloads(overrides, message):

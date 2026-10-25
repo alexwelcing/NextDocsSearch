@@ -11,7 +11,7 @@ replayed from the cache. Timings and hit/miss go to the event log only.
 
 from __future__ import annotations
 
-import shutil
+import json
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -179,6 +179,28 @@ def manifest_bytes(doc: Mapping[str, Any]) -> bytes:
     return pretty_json(dict(doc))
 
 
+def _clear_previous_run(out: Path, extra: set[str]) -> None:
+    try:
+        previous = json.loads((out / 'run.json').read_bytes())
+        owned = {f'{s["stage"]}/{name}' for s in previous['stages'] for name in s['outputs']}
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        raise StageError(
+            f'{out} is not empty and holds no readable run.json; refusing to overwrite it'
+        ) from error
+    owned |= {'run.json'} | extra
+    present = {p.relative_to(out).as_posix() for p in out.rglob('*') if not p.is_dir()}
+    foreign = sorted(present - owned)
+    if foreign:
+        raise StageError(
+            f'{out} holds files that no previous run wrote ({", ".join(foreign[:5])}); '
+            'refusing to overwrite it'
+        )
+    for rel in present:
+        (out / rel).unlink()
+    for path in sorted((p for p in out.rglob('*') if p.is_dir()), key=lambda p: -len(p.parts)):
+        path.rmdir()
+
+
 def materialize(
     out: Path,
     doc: Mapping[str, Any],
@@ -187,13 +209,12 @@ def materialize(
 ) -> None:
     """Write run.json, any extra files, and every artifact as <out>/<stage>/<name>.
 
-    An existing output directory is replaced only if it holds a previous run (run.json);
-    anything else is refused rather than deleted.
+    A non-empty output directory is cleared only when everything in it belongs to a previous
+    run (the files its run.json lists, plus the extra files); anything else is refused, never
+    deleted.
     """
     if out.exists() and any(out.iterdir()):
-        if not (out / 'run.json').is_file():
-            raise StageError(f'{out} is not empty and holds no run.json; refusing to overwrite it')
-        shutil.rmtree(out)
+        _clear_previous_run(out, set(extra or {}))
     out.mkdir(parents=True, exist_ok=True)
     for result in results:
         for name, blob in result.data.items():

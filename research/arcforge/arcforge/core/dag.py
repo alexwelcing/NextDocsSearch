@@ -3,7 +3,8 @@
 A stage's outputs are cached under its KEY, the sha256 of the canonical JSON of:
 
     stage    the stage name ('S0'..'S14', 'S13b', 'gate', 'tail')
-    code     sha256 of the source files of the modules that compute it (`Stage.code`)
+    code     sha256 of the source files of the modules that compute it (`Stage.code`), plus
+             the interpreter's major.minor and Unicode version
     config   the config SUBTREE it reads: {dotted path: value} for `Stage.config_keys`
     inputs   the output digest of every upstream stage, plus the fingerprint of each external
              input (the corpus files for S0)
@@ -24,6 +25,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
+import unicodedata
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -51,7 +54,6 @@ class RunEnv:
     """Where a run reads from. Not part of any key: content enters keys through fingerprints."""
 
     repo_root: Path
-    arcforge_root: Path = ARCFORGE_ROOT
 
 
 @dataclass(frozen=True)
@@ -185,15 +187,23 @@ def closure(stages: Mapping[str, Stage], targets: Iterable[str]) -> list[str]:
 # --- keys --------------------------------------------------------------------------------------
 
 
+def runtime_fingerprint() -> dict[str, str]:
+    """The interpreter is part of the code: Unicode tables (NFKD folding) change with Python."""
+    return {
+        'python': f'{sys.version_info.major}.{sys.version_info.minor}',
+        'unicode': unicodedata.unidata_version,
+    }
+
+
 def code_hash(modules: Iterable[str]) -> str:
-    """sha256 over {module: sha256(source file)}, in module-name order."""
+    """sha256 over {module: sha256(source file)} plus the runtime fingerprint."""
     files: dict[str, str] = {}
     for name in sorted(set(modules)):
         spec = importlib.util.find_spec(name)
         if spec is None or not spec.origin or not Path(spec.origin).is_file():
             raise StageError(f'cannot hash code of module {name!r}')
         files[name] = sha256_file(Path(spec.origin))
-    return digest_of(files)
+    return digest_of({'modules': files, 'runtime': runtime_fingerprint()})
 
 
 def stage_code_hash(stage: Stage) -> str:

@@ -27,6 +27,8 @@ run:
 
 corpus:
   git_sha: null           # pinned at S0; null reads the worktree and hashes its files
+  corpus_id: null         # pinned after S0: S0 then refuses any other snapshot
+  main_corpus_id: null    # the same for the main line S0⁻
   mdx_dir: pages/docs/articles
   records_dir: public/arc/records
   chunker: lib/retrieval@v2

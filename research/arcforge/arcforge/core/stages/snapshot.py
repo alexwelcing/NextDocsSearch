@@ -7,6 +7,9 @@
     records_id      the same over (slug, sha256(public/arc/records/<slug>.json)), the rendered
                     text S1 reads
 
+When the config pins corpus.corpus_id or corpus.main_corpus_id (after S0, so a later run
+cannot silently snapshot a different archive), S0 refuses a snapshot whose id differs.
+
 Outputs:
     snapshot.json   pointers and metadata for every record (no text)
     corpus.jsonl    one line per record, {slug, mdx, record}: the exact source text, so every
@@ -107,6 +110,17 @@ def run(ctx: StageContext) -> dict[str, bytes]:
 
     main = [r for r in rows if not r['withheld']]
     present_series = {r['series'] for r in rows}
+    ids = {
+        'corpus_id': pairs_id([(r['slug'], r['mdx_sha256']) for r in rows]),
+        'main_corpus_id': pairs_id([(r['slug'], r['mdx_sha256']) for r in main]),
+    }
+    for name, value in ids.items():
+        pinned = ctx.cfg(f'corpus.{name}')
+        if pinned is not None and pinned != value:
+            raise StageError(
+                f"S0: the snapshot's {name} is {value}, but the config pins {pinned} "
+                f'(corpus.{name}); the corpus changed since it was pinned'
+            )
     snapshot = {
         'schema': SCHEMA,
         'source': {
@@ -116,8 +130,7 @@ def run(ctx: StageContext) -> dict[str, bytes]:
             'records_dir': corpus.records_dir,
             'fingerprint': corpus.fingerprint,
         },
-        'corpus_id': pairs_id([(r['slug'], r['mdx_sha256']) for r in rows]),
-        'main_corpus_id': pairs_id([(r['slug'], r['mdx_sha256']) for r in main]),
+        **ids,
         'records_id': pairs_id(
             [(r['slug'], r['record_sha256']) for r in rows if r['record_sha256']]
         ),

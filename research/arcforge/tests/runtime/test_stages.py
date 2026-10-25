@@ -57,6 +57,24 @@ def test_s0_corpus_ids_follow_the_program_formula(repo, config, cache_dir, mdx_t
     assert {row['slug']: row['mdx'] for row in corpus} == mdx_texts
 
 
+def test_s0_refuses_a_corpus_other_than_the_pinned_one(repo, config, cache_dir):
+    snap = _json(_run(repo, config, cache_dir, ['S0'])['S0'], 'snapshot.json')
+    pins = {'corpus.corpus_id': snap['corpus_id'], 'corpus.main_corpus_id': snap['main_corpus_id']}
+    pinned = load_config('r00', {**config_overrides(config), **pins})
+    _run(repo, pinned, cache_dir, ['S0'])  # the same archive passes
+    (repo / 'pages/docs/articles/gamma.mdx').write_text('---\ntitle: changed\n---\n')
+    with pytest.raises(StageError, match='the corpus changed since it was pinned'):
+        _run(repo, pinned, cache_dir, ['S0'])
+
+
+def config_overrides(config):
+    return {
+        'corpus.frontier.withheld': config.get('corpus.frontier.withheld'),
+        'corpus.rename_map': config.get('corpus.rename_map'),
+        'corpus.ghosts_by_default': config.get('corpus.ghosts_by_default'),
+    }
+
+
 def test_s0_flags_missing_series_and_orphan_records(repo, cache_dir):
     (repo / 'public/arc/records/orphan.json').write_text('{}')
     (repo / 'public/arc/records/gamma.json').unlink()
