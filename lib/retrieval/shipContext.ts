@@ -61,6 +61,14 @@ export interface ShipContextOptions {
 
 const SECTION_SEPARATOR = '\n\n---\n\n'
 
+/**
+ * clearTimeout for a timer that may never have been armed. workerd's clearTimeout takes
+ * `number | null`, not undefined, so the Worker build type-checks this file too.
+ */
+function stop(timer: ReturnType<typeof setTimeout> | undefined): void {
+  if (timer !== undefined) clearTimeout(timer)
+}
+
 function collapse(value: string): string {
   return value.replace(/\s+/g, ' ').trim()
 }
@@ -271,7 +279,7 @@ export async function getShipContext(
       }, ms)
     })
     // Settling first disarms the deadline, so a slow core load never relabels a ready vector.
-    const work = bothOrNull(embedding, matrix).finally(() => clearTimeout(timer))
+    const work = bothOrNull(embedding, matrix).finally(() => stop(timer))
     denseReady = Promise.race([work, deadline])
   }
 
@@ -324,7 +332,7 @@ export async function getShipContext(
       fallbackReason: dense ? undefined : denseReason,
     })
   } finally {
-    clearTimeout(timer)
+    stop(timer)
   }
 }
 

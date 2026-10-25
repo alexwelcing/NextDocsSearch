@@ -41,6 +41,9 @@
   "exclude": [
     "node_modules",
     "scripts",
-    "research"
+    "research",
+    "worker",
+    "out",
+    ".wrangler"
   ]
 }
