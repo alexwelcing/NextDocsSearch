@@ -100,6 +100,11 @@ def load_history(rules: Rules, runs_root: Path, run_id: str, branch: str) -> lis
             raise PathError(
                 f'{prior_run}/verdicts.json is on branch {found!r}, the path needs {prior_branch!r}'
             )
+        used = (doc.get('run') or {}).get('rules_sha256')
+        if rules.sha256 and used != rules.sha256:
+            raise ValueError(
+                f'{prior_run}/verdicts.json was decided under rules {used}, not {rules.sha256}'
+            )
         history.append(doc)
     return history
 
@@ -258,7 +263,12 @@ def verify_run(
             history = load_history(rules, runs_root, run.get('id'), run.get('branch'))
         except (FileNotFoundError, ValueError, PathError) as error:
             result.errors.append(f'arc_summary: {error}')
-    outcome = build_verdicts(rules, stored, run_dir, history)
+    try:
+        outcome = build_verdicts(rules, stored, run_dir, history)
+    except (KeyError, TypeError, AttributeError, ValueError) as error:
+        # Only a document the schema already rejected gets here; report it, do not crash.
+        result.errors.append(f'verdicts.json cannot be recomputed: {type(error).__name__}: {error}')
+        return result
     result.outcome = outcome
     result.errors.extend(outcome.problems())
     result.errors.extend(

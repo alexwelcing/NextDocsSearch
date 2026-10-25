@@ -669,3 +669,8 @@ def test_diff_reports_paths():
     ) == ["a[H1].status: 'FAIL', recomputed 'PASS'"]
     assert diff({'x': 0.1}, {'x': 0.1 + 1e-12}) == []
     assert diff({'x': True}, {'x': 1}) == ['x: 1, recomputed True']
+
+
+def test_vault_numbers_without_a_read_fail(make_doc, rules):
+    outcome = run(make_doc, rules, 'r05', 'N', vault={'read_this_run': False, 'sign': 1})
+    assert any('vault.sign given without a read this run' in e for e in outcome.errors)

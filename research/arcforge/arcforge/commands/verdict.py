@@ -18,6 +18,8 @@ import sys
 from pathlib import Path
 
 DESCRIPTION = __doc__.split('\n\n', 1)[1].strip() if __doc__ else ''
+# Where `arcforge run` writes run directories (research/arcforge/runs/<run id>, gitignored).
+DEFAULT_RUNS_DIR = Path(__file__).resolve().parents[2] / 'runs'
 EXIT_OK, EXIT_FAIL, EXIT_USAGE, EXIT_UNAVAILABLE = 0, 1, 2, 3
 
 
@@ -30,7 +32,7 @@ def _run_dir(arg: str, runs_dir: str | None) -> Path:
 
     if arg not in RUN_IDS:
         return Path(arg)
-    return Path(runs_dir or os.environ.get('ARCFORGE_RUNS_DIR') or 'runs') / arg
+    return Path(runs_dir or os.environ.get('ARCFORGE_RUNS_DIR') or DEFAULT_RUNS_DIR) / arg
 
 
 def run(args: argparse.Namespace) -> int:
@@ -129,12 +131,14 @@ def register(subparsers) -> None:
     )
     parser.add_argument(
         '--runs-dir',
-        help='the directory holding one sub-directory per run (default: $ARCFORGE_RUNS_DIR, else ./runs); '
-        'R10/R10K read every earlier run of their path from it',
+        help='the directory holding one sub-directory per run (default: $ARCFORGE_RUNS_DIR, else '
+        'research/arcforge/runs, where `arcforge run` writes); R10/R10K read every earlier run of '
+        'their path from it',
     )
     parser.add_argument(
         '--rules',
-        help='the rules file (default: $ARCFORGE_RULES, else the packaged template); it must hash to run.rules_sha256',
+        help='the rules file (default: $ARCFORGE_RULES, else the packaged template); it must hash '
+        "to the run's run.rules_sha256",
     )
     parser.add_argument(
         '--inputs',

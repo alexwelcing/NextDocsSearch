@@ -274,3 +274,14 @@ def test_yaml_never_coerces_ids(template):
     """Plain scalars such as N, S, r00 stay strings (no YAML 1.1 booleans)."""
     assert all(isinstance(b, str) for seq in template.branch_table.values() for _, b in seq)
     assert re.search(r'^\s+N:\s+\[\[r00, N\]', TEMPLATE, re.M)
+
+
+def test_the_vault_read_points_agree_with_vault_read(template):
+    """arcforge.vault refuses reads outside its table; it must be vault.read's scope, per path."""
+    from arcforge.vault.readpoints import READ_POINTS
+
+    assert set(READ_POINTS) == set(template.branch_table)
+    for path, seq in template.branch_table.items():
+        reads = tuple(run for run, branch in seq if template.in_scope('vault.read', run, branch))
+        assert reads == READ_POINTS[path], path
+        assert len(reads) == template.vault_read_budget[path]

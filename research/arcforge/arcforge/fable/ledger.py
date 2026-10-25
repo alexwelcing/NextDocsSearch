@@ -33,7 +33,6 @@ from arcforge.fable.packer import (
 )
 
 MAX_ATTEMPTS = 2
-OUTPUT_SCHEMA = 'arc-fable-output/1'
 
 
 @dataclass
@@ -97,6 +96,9 @@ def check(packet_root: str | Path, *, session: str, model: str) -> CheckResult:
     ledger = _ledger(packet)
     if ledger['status'] is not None:
         raise PacketError(f'{packet.root}: already final ({ledger["status"]})')
+    damaged = verify_dir(packet.canonical, packet.manifest, allow=('packet.json',))
+    if damaged:  # the semantic checks read the canonical inputs, so they must be intact
+        raise PacketError(f'{packet.canonical} no longer matches its manifest: {damaged}')
     attempt = ledger['attempts'][-1]
     if attempt['outcome'] is not None:
         raise PacketError(f'{packet.root}: attempt {attempt["attempt"]} was already checked')

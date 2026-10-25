@@ -311,7 +311,7 @@ class Context:
         assert rule.adopt is not None
         method = rule.adopt['method']
         entries = [e for e in self.doc.get('adoption') or [] if e.get('rule') == method]
-        folds = sorted(e.get('fold') for e in entries)
+        folds = sorted((e.get('fold') for e in entries), key=str)
         if folds != [1, 2, 3]:
             return [f'adoption: one {method} decision per fold (got folds {folds})']
         decisions: dict[int, str] = {}
@@ -500,6 +500,12 @@ def check_structure(ctx: Context) -> list[str]:
             f'a vault read is recorded at {ctx.run_id}/{ctx.branch}, which is not a registered '
             'read point (the harness refuses such a read)'
         )
+    if not vault.get('read_this_run'):
+        released = [
+            k for k in ('read_index', 'hybrid_minus_b2_ndcg10', 'sign') if vault.get(k) is not None
+        ]
+        if released:
+            errors.append(f'vault.{", vault.".join(released)} given without a read this run')
     for entry in doc.get('adoption') or []:
         rule_id = f'adoption.{entry.get("rule")}'
         if rule_id not in (r.id for r in rules.rules) or not ctx.in_scope(rule_id):

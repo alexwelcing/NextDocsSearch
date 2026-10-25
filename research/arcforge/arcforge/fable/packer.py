@@ -102,6 +102,10 @@ def _read_json(path: str | Path, what: str) -> Any:
         raise PacketError(f'{what}: {path} is not JSON ({error})') from None
 
 
+def _schema(name: str) -> dict[str, Any]:
+    return json.loads((Path(__file__).with_name('schemas') / name).read_text(encoding='utf-8'))
+
+
 def _validate(
     instance: Any, schema: Mapping[str, Any], what: str, definition: str | None = None
 ) -> None:
@@ -134,7 +138,8 @@ def build(
     repo = inside_git_worktree(root)
     if repo is not None and not allow_in_repo:
         raise PacketError(
-            f'{root} is inside the git work tree {repo}: an agent there could read unstripped run files'
+            f'{root} is inside the git work tree {repo}: an agent there could read the '
+            'unstripped run files next to it (set ARCFORGE_FABLE_DIR elsewhere)'
         )
 
     files: dict[str, tuple[str, bytes]] = {
@@ -167,7 +172,9 @@ def build(
     digest = sha256_bytes(manifest_bytes)
     packet = Packet(root / f'{kind_name}-{run_id}-{digest[:12]}', digest, manifest)
     if packet.canonical.exists():
-        verify_dir(packet.canonical, manifest, allow=('packet.json',))
+        problems = verify_dir(packet.canonical, manifest, allow=('packet.json',))
+        if problems:
+            raise PacketError(f'{packet.canonical} no longer matches its manifest: {problems}')
         return packet  # content-addressed: the same inputs are the same packet
 
     staging = packet.root.with_name(packet.root.name + '.partial')
@@ -274,10 +281,7 @@ def pack_gold_audit(
     """Gold audit #1 (R00) or #2 (R10/R10K): pairs.json (arc-gold-pairs/1) and the rubric."""
     data = _read(pairs, 'pairs')
     doc = _read_json(pairs, 'pairs')
-    schema = json.loads(
-        (Path(__file__).with_name('schemas') / 'gold-pairs-1.json').read_text(encoding='utf-8')
-    )
-    _validate(doc, schema, 'pairs')
+    _validate(doc, _schema('gold-pairs-1.json'), 'pairs')
     queries = doc['queries']
     ids = [q['query_id'] for q in queries]
     candidates = [c['candidate_id'] for q in queries for c in q['candidates']]
@@ -305,9 +309,10 @@ def pack_signoff(
     verdicts: str | Path, bench_card: str | Path, **kwargs: Any,
 ) -> Packet:  # fmt: skip
     """The R00 PREREG sign-off: PREREG.md, the frozen rules, the schema, lint.json, R00's files."""
+    from arcforge.contract import schema as report_schema
+
     lint_doc = _read_json(lint, 'lint')
-    if not isinstance(lint_doc, Mapping) or lint_doc.get('schema') != 'arc-lint/1':
-        raise PacketError('lint: expected the JSON of `arcforge prereg lint --json` (arc-lint/1)')
+    _validate(lint_doc, report_schema.load(report_schema.SCHEMA_DIR / 'arc-lint-1.json'), 'lint')
     verdicts_doc = _read_json(verdicts, 'verdicts')
     if (verdicts_doc.get('run') or {}).get('id') != 'r00':
         raise PacketError('verdicts: the sign-off reads the r00 verdicts.json')
@@ -389,8 +394,7 @@ def pack_mismatch(
 ) -> Packet:  # fmt: skip
     """The end review's mismatch pass: the comparison table, the write-up and the full reports."""
     table = _read_json(comparison, 'comparison')
-    if not isinstance(table, Mapping) or table.get('schema') != 'arc-fable-comparison/1':
-        raise PacketError('comparison: expected the output of `python -m arcforge.fable compare`')
+    _validate(table, _schema('comparison-1.json'), 'comparison')
     inputs = []
     run_ids = []
     for path in reports:

@@ -194,3 +194,12 @@ def test_the_lint_report_is_json(tmp_path):
     data = report.to_json()
     assert data['schema'] == 'arc-lint/1' and data['ok'] is True and data['frozen'] is False
     assert data['rules']['sha256'] == report.rules_sha256 and len(data['scope']) == 22
+
+
+def test_the_lint_report_validates_against_arc_lint_1(tmp_path):
+    from arcforge.contract import schema
+
+    lint_schema = schema.load(schema.SCHEMA_DIR / 'arc-lint-1.json')
+    failing = lint(write(tmp_path, 'rules.yaml', RULES.replace('schema: arc-rules/1', 'schema: x')))
+    for report in (lint(), lint(frozen=True), failing):
+        assert schema.errors(report.to_json(), lint_schema) == []

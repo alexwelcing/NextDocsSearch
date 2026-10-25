@@ -25,8 +25,6 @@ from arcforge.contract.ids import SCORES_SCHEMA
 from arcforge.contract.rules import Rules
 from arcforge.contract.verdicts import Context, Outcome, evaluate
 
-ROW_INPUT_KEYS: tuple[str, ...] = ('comparison_id', 'scores_file', 'nested', 'vault_read')
-
 
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -185,7 +183,7 @@ def build_verdicts(
     """The complete verdicts.json for a run, from its inputs and score files.
 
     `inputs` may be a stored verdicts.json (its numbers and statuses are ignored and recomputed;
-    only each row's ROW_INPUT_KEYS are read) or the producer's own input document.
+    only each row's comparison_id, scores_file, nested and vault_read are read) or the producer's own input document.
     """
     rows, errors = compute_rows(rules, inputs, Path(run_dir))
     outcome = evaluate(rules, {**inputs, 'rows': rows}, history)

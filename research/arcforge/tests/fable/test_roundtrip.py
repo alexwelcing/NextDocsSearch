@@ -74,6 +74,15 @@ def test_packets_are_content_addressed(pairs, rubric, root, tmp_path):
     )
 
 
+def test_a_tampered_canonical_packet_is_not_reused(pairs, rubric, root):
+    packet = packer.pack_gold_audit(pairs, rubric, shape=(3, 2), root=root)
+    (packet.canonical / 'inputs' / 'rubric.md').write_text('# edited after packing\n')
+    with pytest.raises(packer.PacketError, match='no longer matches its manifest'):
+        packer.pack_gold_audit(pairs, rubric, shape=(3, 2), root=root)
+    with pytest.raises(packer.PacketError, match='no longer matches its manifest'):
+        ledger.check(packet.root, session='s1', model=FABLE)
+
+
 def test_packets_refuse_a_git_work_tree(pairs, rubric, tmp_path):
     (tmp_path / 'repo' / '.git').mkdir(parents=True)
     with pytest.raises(packer.PacketError, match='inside the git work tree'):

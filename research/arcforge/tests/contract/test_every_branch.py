@@ -309,6 +309,15 @@ def test_the_final_run_needs_every_earlier_run(run_copy, frozen):
     assert code == 1 and 'arc_summary' in out
 
 
+def test_the_final_run_needs_one_rules_file_for_the_whole_arc(run_copy, frozen):
+    root, _ = run_copy
+    edit_json(
+        root / 'r03' / 'verdicts.json', lambda d: d['run'].__setitem__('rules_sha256', 'e' * 64)
+    )
+    code, out = verdict(root, 'r10', frozen[0])
+    assert code == 1 and 'r03/verdicts.json was decided under rules eeee' in out
+
+
 def test_emit_is_byte_identical(written, frozen, tmp_path):
     root, runs = written['S-C-F']
     for synth_run in runs:

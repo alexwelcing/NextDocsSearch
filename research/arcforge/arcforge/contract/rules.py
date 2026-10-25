@@ -195,10 +195,6 @@ class Rules:
         """True once R00 has written every MDE."""
         return all(v is not None for v in self.mde_r00.values())
 
-    def owner_rows(self, rule_id: str) -> list[str]:
-        """Comparison ids of the rows `rule_id` itself defines."""
-        return [cid for cid, spec in self.rows.items() if spec.hypothesis == rule_id]
-
     def mde_value(self, spec: RowSpec) -> float | None:
         return None if spec.mde is None else self.mde_r00.get(spec.mde)
 
@@ -223,12 +219,14 @@ class Rules:
         return macros
 
     def rule_env(self, rule: Rule, **kwargs: Any) -> Env:
-        fires = {cid: self.rows[cid].fires for cid in rule.rows.values() if self.rows[cid].fires}
+        fires = {
+            cid: expr for cid in rule.rows.values() if (expr := self.rows[cid].fires) is not None
+        }
         return Env(
             rows=dict(rule.rows),
             lets=dict(rule.lets),
             macros=self.macros_for(rule),
-            fires=fires,  # type: ignore[arg-type]
+            fires=fires,
             **kwargs,
         )
 
