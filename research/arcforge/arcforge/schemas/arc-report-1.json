@@ -1,0 +1,1024 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:arc-report-1",
+  "title": "arc-report/1",
+  "description": "The contract every RE-MEANING run emits: report.json, and verdicts.json (= report.verdicts_doc, $defs/VerdictsDoc). Hashed into PREREG together with rules.yaml. Conventions: metrics are fractions in [0, 1]; a difference is arm_a - arm_b in the same unit; money is USD, time minutes, latency milliseconds, sizes bytes; hashes are lowercase hex sha256 (64 chars) except git SHAs (40 hex); timestamps are ISO-8601 UTC. null means 'not measured in this run' and is never coerced to 0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "run", "vm", "cost", "adoption", "production", "mde", "power", "strata", "gates",
+    "vault", "verdicts_doc", "sizes", "latency", "remeaning", "density", "weirdness",
+    "constraint_audit", "collisions", "fable", "agreement", "determinism", "artifacts"
+  ],
+  "properties": {
+    "schema": {"const": "arc-report/1"},
+    "run": {"$ref": "#/$defs/Run"},
+    "vm": {
+      "description": "null for laptop-only stages.",
+      "anyOf": [{"$ref": "#/$defs/Vm"}, {"type": "null"}]
+    },
+    "cost": {"$ref": "#/$defs/Cost"},
+    "adoption": {
+      "description": "Every nested adoption decision of this run, three per adopting rung; empty in measurement rungs.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/Adoption"}
+    },
+    "production": {"$ref": "#/$defs/Production"},
+    "mde": {"$ref": "#/$defs/Mde"},
+    "power": {
+      "description": "R00 only; null elsewhere.",
+      "anyOf": [{"$ref": "#/$defs/Power"}, {"type": "null"}]
+    },
+    "strata": {"type": "array", "items": {"$ref": "#/$defs/Stratum"}},
+    "gates": {"$ref": "#/$defs/Gates"},
+    "vault": {"$ref": "#/$defs/Vault"},
+    "verdicts_doc": {"$ref": "#/$defs/VerdictsDoc"},
+    "sizes": {"$ref": "#/$defs/Sizes"},
+    "latency": {"$ref": "#/$defs/Latency"},
+    "remeaning": {"anyOf": [{"$ref": "#/$defs/Remeaning"}, {"type": "null"}]},
+    "density": {"$ref": "#/$defs/Density"},
+    "weirdness": {"$ref": "#/$defs/Weirdness"},
+    "constraint_audit": {
+      "description": "H5 runs only.",
+      "anyOf": [{"type": "array", "items": {"$ref": "#/$defs/ConstraintAudit"}}, {"type": "null"}]
+    },
+    "collisions": {
+      "description": "R00, then whenever the person map changes.",
+      "anyOf": [{"$ref": "#/$defs/Collisions"}, {"type": "null"}]
+    },
+    "fable": {
+      "description": "One record per orchestrator (Fable) call made in this run: R00 makes gold audit #1 and the sign-off; R10/R10K gold audit #2 and the two end-review passes. Empty when the run calls Fable not at all. Written by arcforge.fable (record).",
+      "type": "array",
+      "items": {"$ref": "#/$defs/FableCall"}
+    },
+    "agreement": {
+      "description": "R10/R10K only.",
+      "anyOf": [{"type": "array", "items": {"$ref": "#/$defs/Agreement"}}, {"type": "null"}]
+    },
+    "determinism": {"$ref": "#/$defs/Determinism"},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/Artifact"}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha256OrNull": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "gitSha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "utc": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    },
+    "runId": {
+      "enum": ["r00", "r01", "r02", "r03", "r04", "r05", "r05K", "r06", "r07", "r07K", "r08", "r08K", "r09", "r09K", "r10", "r10K"]
+    },
+    "branch": {
+      "description": "No other values; run-07's variants are branch 'N' plus h1_provisional.",
+      "enum": ["N", "N-F", "S", "S-F", "S-C", "S-C-F"]
+    },
+    "h1Provisional": {
+      "description": "The latest governing H1 status; null before R05K/R06.",
+      "enum": ["SUPPORTED", "FUSION_ONLY", "INCONCLUSIVE", "FALSIFIED", "NOT_FALSIFIED", null]
+    },
+    "ruleId": {
+      "enum": ["FUT", "H1.F", "H1", "H2", "H3", "H3a", "H3b", "H4", "H5", "H6", "H7", "H7.report", "K1", "I1", "I2", "I3", "I4", "I5", "vault.read", "adoption.default", "adoption.squeeze", "signoff"]
+    },
+    "status": {
+      "description": "Verdict statuses. NOT_COMPUTABLE is never a status: an in-scope null fails the run.",
+      "enum": ["SUPPORTED", "FUSION_ONLY", "FALSIFIED", "INCONCLUSIVE", "NOT_FALSIFIED", "REPORTED", "FIRED", "NOT_FIRED", "PASS", "FAIL", "DONE", "NOT_APPLICABLE"]
+    },
+    "arcStatus": {
+      "description": "NOT_TESTED is arc-level only: a registered rule no run of the realized branch path applied (H4 in S-F).",
+      "enum": ["SUPPORTED", "FUSION_ONLY", "FALSIFIED", "INCONCLUSIVE", "NOT_FALSIFIED", "REPORTED", "FIRED", "NOT_FIRED", "PASS", "FAIL", "DONE", "NOT_APPLICABLE", "NOT_TESTED"]
+    },
+    "component": {"enum": ["PASS", "FAIL", "FIRES", "CLEAR", "REPORTED"]},
+    "fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "nonNegative": {"type": "number", "minimum": 0},
+    "count": {"type": "integer", "minimum": 0},
+    "usd": {"description": "USD, 2 dp.", "type": "number", "minimum": 0},
+    "minutes": {"description": "Minutes, 1 dp.", "type": "number", "minimum": 0},
+    "systemId": {
+      "description": "B0, B1, ship-lexical, B2, B2w, B3.<id>[@matched], B4 (= W0 at the champion's dims), B5 (= W1), B6.<id>, B7, ship-hybrid, champ, arm:<name>, and hyb(<any of those>).",
+      "type": "string",
+      "pattern": "^(?:(?:B0|B1|ship-lexical|B2|B2w|B3\\.[A-Za-z0-9._-]+(?:@matched)?|B4|B5|B6\\.[A-Za-z0-9._-]+|B7|ship-hybrid|champ|arm:[A-Za-z0-9._+-]+)|hyb\\((?:B0|B1|ship-lexical|B2|B2w|B3\\.[A-Za-z0-9._-]+(?:@matched)?|B4|B5|B6\\.[A-Za-z0-9._-]+|B7|ship-hybrid|champ|arm:[A-Za-z0-9._+-]+)\\))$"
+    },
+    "stratumId": {
+      "description": "Query strata of ARC-Bench. C_vault is R10/R10K only; E_h only if the opt-in add-on runs.",
+      "type": "string",
+      "pattern": "^(?:A|B|AB|C_open|C_vault|D|D\\.[a-z0-9_+-]+|E|E_h|CE|F|G|T|FRONTIER|FRONTIER\\.[A-Za-z0-9_.+-]+|POST_S0|V1_CORE)$"
+    },
+    "rowStratum": {
+      "description": "A VerdictRow's unit population: a query stratum, or a POOL.<name> of non-query items (POOL.remeaning: H3's labelled candidate pool; POOL.lexicon: H3b's lexemes; POOL.trace: H7's query-hit pairs).",
+      "anyOf": [
+        {"$ref": "#/$defs/stratumId"},
+        {"type": "string", "pattern": "^POOL\\.[a-z0-9_]+$"}
+      ]
+    },
+    "metric": {"type": "string", "pattern": "^[a-z0-9@_.+-]+$"},
+    "byFold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["1", "2", "3"],
+      "properties": {"1": {"type": "number"}, "2": {"type": "number"}, "3": {"type": "number"}}
+    },
+    "shaByFold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["1", "2", "3"],
+      "properties": {"1": {"$ref": "#/$defs/sha256"}, "2": {"$ref": "#/$defs/sha256"}, "3": {"$ref": "#/$defs/sha256"}}
+    },
+    "fold": {"enum": [1, 2, 3]},
+
+    "Run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "branch", "h1_provisional", "one_change", "prediction", "config_sha256",
+        "prereg_sha256", "amendments", "rules_sha256", "schema_sha256", "parent_by_fold",
+        "corpus_id", "main_corpus_id", "frontier", "bench", "seeds", "code_sha",
+        "container_digest", "teacher_revision", "train_device", "started_utc", "wall_clock_min"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/runId"},
+        "branch": {"$ref": "#/$defs/branch"},
+        "h1_provisional": {"$ref": "#/$defs/h1Provisional"},
+        "one_change": {"type": "string"},
+        "prediction": {"type": "string"},
+        "config_sha256": {"$ref": "#/$defs/sha256"},
+        "prereg_sha256": {
+          "description": "null only before the R00 hash.",
+          "$ref": "#/$defs/sha256OrNull"
+        },
+        "amendments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "sha256"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^PREREG-A[0-9]+$"},
+              "sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        },
+        "rules_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"},
+        "parent_by_fold": {"$ref": "#/$defs/shaByFold"},
+        "corpus_id": {"$ref": "#/$defs/sha256"},
+        "main_corpus_id": {
+          "description": "The S0- id through R08; equal to corpus_id from R09.",
+          "$ref": "#/$defs/sha256"
+        },
+        "frontier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "series", "rejoin_run"],
+          "properties": {
+            "kind": {"const": "withheld"},
+            "series": {"const": ["the-echo-chamber", "the-residue"]},
+            "rejoin_run": {"enum": ["r09", "r09K"]}
+          }
+        },
+        "bench": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["version", "sha256"],
+          "properties": {
+            "version": {"type": "string", "pattern": "^v(?:1|N|[0-9]+)$"},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "seeds": {"type": "array", "minItems": 1, "items": {"type": "integer"}},
+        "code_sha": {"$ref": "#/$defs/gitSha"},
+        "container_digest": {"type": "string", "minLength": 1},
+        "teacher_revision": {"type": "string", "minLength": 1},
+        "train_device": {"enum": ["cuda", "cpu"]},
+        "started_utc": {"$ref": "#/$defs/utc"},
+        "wall_clock_min": {"$ref": "#/$defs/minutes"}
+      }
+    },
+
+    "Vm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project", "region", "shape", "gpu", "preemptions", "instances"],
+      "properties": {
+        "project": {"const": "witching-606c6"},
+        "region": {"const": "us-central1"},
+        "shape": {"enum": ["g2-standard-8", "g2-standard-16"]},
+        "gpu": {"const": "nvidia-l4"},
+        "preemptions": {"$ref": "#/$defs/count"},
+        "instances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "zone", "provisioning", "created_utc", "deleted_utc", "billed_min", "rate_usd_per_h", "usd"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "zone": {"type": "string", "pattern": "^us-central1-[a-z]$"},
+              "provisioning": {"enum": ["SPOT", "STANDARD"]},
+              "created_utc": {"$ref": "#/$defs/utc"},
+              "deleted_utc": {"$ref": "#/$defs/utc"},
+              "billed_min": {"$ref": "#/$defs/minutes"},
+              "rate_usd_per_h": {"$ref": "#/$defs/usd"},
+              "usd": {"$ref": "#/$defs/usd"}
+            }
+          }
+        }
+      }
+    },
+
+    "Cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_usd", "actual_usd", "cap_usd", "plan_ceiling_usd", "lines"],
+      "properties": {
+        "plan_usd": {"$ref": "#/$defs/usd"},
+        "actual_usd": {"$ref": "#/$defs/usd"},
+        "cap_usd": {"const": 20},
+        "plan_ceiling_usd": {"description": "20 at r00 (the ceiling equals the cap), 17 later.", "enum": [20, 17]},
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stage", "item", "provider", "endpoint", "model", "tokens_in", "tokens_out", "gpu_min", "usd", "cached", "dividend"],
+            "properties": {
+              "stage": {"type": "string", "pattern": "^(?:S(?:[0-9]|1[0-4])|S13b|gate|tail)$"},
+              "item": {"type": "string", "minLength": 1},
+              "provider": {"enum": ["vertex", "gcp", "workers_ai", "hf", "orchestrator"]},
+              "endpoint": {"enum": ["us-central1", "global", null]},
+              "model": {"type": ["string", "null"]},
+              "tokens_in": {"$ref": "#/$defs/count"},
+              "tokens_out": {"$ref": "#/$defs/count"},
+              "gpu_min": {"$ref": "#/$defs/minutes"},
+              "usd": {"description": "0 for orchestrator lines.", "$ref": "#/$defs/usd"},
+              "cached": {"type": "boolean"},
+              "dividend": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+
+    "Adoption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fold", "decided_from_folds", "rule", "primary", "parent_raw_by_fold", "arms", "chosen_arm", "adopted", "champion_out_sha256"],
+      "properties": {
+        "fold": {"$ref": "#/$defs/fold"},
+        "decided_from_folds": {
+          "description": "The other two folds, whose pooled held-out scores decided this fold.",
+          "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/fold"}
+        },
+        "rule": {"enum": ["default", "squeeze"]},
+        "primary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stratum", "metric"],
+          "properties": {"stratum": {"$ref": "#/$defs/stratumId"}, "metric": {"$ref": "#/$defs/metric"}}
+        },
+        "parent_raw_by_fold": {"$ref": "#/$defs/byFold"},
+        "arms": {"type": "array", "items": {"$ref": "#/$defs/AdoptionArm"}},
+        "chosen_arm": {"description": "The chosen arm's arm_id, or 'parent' when the parent is kept.", "type": "string", "minLength": 1},
+        "adopted": {"type": "boolean"},
+        "champion_out_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "AdoptionArm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arm_id", "gain_lfo", "guard_ok", "raw_by_fold", "control", "bundle_raw"],
+      "properties": {
+        "arm_id": {"type": "string", "minLength": 1, "not": {"const": "parent"}},
+        "gain_lfo": {"description": "The leave-fold-out primary gain over the fold's parent.", "type": "number"},
+        "guard_ok": {"description": "No other primary stratum's leave-fold-out point falls by more than 0.01.", "type": "boolean"},
+        "raw_by_fold": {"description": "The arm's raw primary score on each fold's held-out queries.", "$ref": "#/$defs/byFold"},
+        "control": {"description": "Control arms (rewired, generic, chunk-random, N, the Flash-Lite bank) are never candidates.", "type": "boolean"},
+        "bundle_raw": {"description": "The arm's model bundle in bytes; required (non-null) for squeeze arms.", "anyOf": [{"$ref": "#/$defs/count"}, {"type": "null"}]}
+      }
+    },
+
+    "Production": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config_sha256", "votes", "split_decision", "trained_on", "used_for_verdicts", "flag"],
+      "properties": {
+        "config_sha256": {"$ref": "#/$defs/sha256"},
+        "votes": {"enum": ["3-0", "2-1", "1-1-1"]},
+        "split_decision": {"type": "boolean"},
+        "trained_on": {"const": "all_main_line_records"},
+        "used_for_verdicts": {"const": false},
+        "flag": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "model", "verdicts_sha256"],
+          "properties": {
+            "mode": {"enum": ["off", "shadow", "on"]},
+            "model": {"enum": ["champ", "w0", null]},
+            "verdicts_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+
+    "Mde": {
+      "description": "The R00 values, copied unchanged into every later report.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["AB", "D", "CE", "G", "vault", "frontier"],
+      "properties": {
+        "AB": {"$ref": "#/$defs/nonNegative"},
+        "D": {"$ref": "#/$defs/nonNegative"},
+        "CE": {"$ref": "#/$defs/nonNegative"},
+        "G": {"$ref": "#/$defs/nonNegative"},
+        "vault": {"$ref": "#/$defs/nonNegative"},
+        "frontier": {"$ref": "#/$defs/nonNegative"}
+      }
+    },
+
+    "Power": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["se", "verdict_probs"],
+      "properties": {
+        "se": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["AB", "D", "CE"],
+          "properties": {"AB": {"$ref": "#/$defs/nonNegative"}, "D": {"$ref": "#/$defs/nonNegative"}, "CE": {"$ref": "#/$defs/nonNegative"}}
+        },
+        "verdict_probs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["row", "true_gain", "p_supported", "p_inconclusive", "p_falsified"],
+            "properties": {
+              "row": {"type": "string", "minLength": 1},
+              "true_gain": {"type": "number"},
+              "p_supported": {"$ref": "#/$defs/fraction"},
+              "p_inconclusive": {"$ref": "#/$defs/fraction"},
+              "p_falsified": {"$ref": "#/$defs/fraction"}
+            }
+          }
+        }
+      }
+    },
+
+    "Stratum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "n_queries", "n_source_clusters", "n_target_clusters", "judged_at_10", "condensed_ndcg10", "exploratory", "systems"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stratumId"},
+        "n_queries": {"$ref": "#/$defs/count"},
+        "n_source_clusters": {"$ref": "#/$defs/count"},
+        "n_target_clusters": {"$ref": "#/$defs/count"},
+        "judged_at_10": {"anyOf": [{"$ref": "#/$defs/fraction"}, {"type": "null"}]},
+        "condensed_ndcg10": {
+          "anyOf": [
+            {"type": "object", "propertyNames": {"$ref": "#/$defs/systemId"}, "additionalProperties": {"$ref": "#/$defs/fraction"}},
+            {"type": "null"}
+          ]
+        },
+        "exploratory": {"description": "True when n_queries <= 40.", "type": "boolean"},
+        "systems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["system_id", "metric", "mean", "seed_sd", "ci_lo", "ci_hi"],
+            "properties": {
+              "system_id": {"$ref": "#/$defs/systemId"},
+              "metric": {"$ref": "#/$defs/metric"},
+              "mean": {"type": "number"},
+              "seed_sd": {"$ref": "#/$defs/nonNegative"},
+              "ci_lo": {"type": "number"},
+              "ci_hi": {"type": "number"}
+            }
+          }
+        }
+      }
+    },
+
+    "Gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["I1", "I2", "I3", "I4", "I5"],
+      "properties": {
+        "I1": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kappa_qw_owner", "n_owner_pairs", "check_pairs", "kendall", "systems", "owner_overrides_fable", "rejudged", "pass", "pass_effective"],
+              "properties": {
+                "kappa_qw_owner": {"type": "number", "minimum": -1, "maximum": 1},
+                "n_owner_pairs": {"$ref": "#/$defs/count"},
+                "check_pairs": {"anyOf": [{"$ref": "#/$defs/count"}, {"type": "null"}]},
+                "kendall": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["judges", "tau", "ci_lo", "ci_hi", "tau_b"],
+                    "properties": {
+                      "judges": {"enum": ["gemini|qwen", "gemini|fable", "qwen|fable"]},
+                      "tau": {"type": "number", "minimum": -1, "maximum": 1},
+                      "ci_lo": {"type": "number", "minimum": -1, "maximum": 1},
+                      "ci_hi": {"type": "number", "minimum": -1, "maximum": 1},
+                      "tau_b": {"type": "number", "minimum": -1, "maximum": 1}
+                    }
+                  }
+                },
+                "systems": {"const": ["B0", "B1", "B2", "B4", "B3.potion8m", "hyb(B4)", "hyb(B3.potion8m)", "B6.embeddinggemma-2-768"]},
+                "owner_overrides_fable": {"$ref": "#/$defs/count"},
+                "rejudged": {"type": "boolean"},
+                "pass": {"type": "boolean"},
+                "pass_effective": {"description": "The latest I1 pass at or before this run.", "type": "boolean"}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "I2": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["gain_chunk_random", "gain_record_disjoint", "gain_c_open", "inflation_ratio", "prediction", "prediction_met"],
+              "properties": {
+                "gain_chunk_random": {"type": "number"},
+                "gain_record_disjoint": {"type": "number"},
+                "gain_c_open": {"type": "number"},
+                "inflation_ratio": {"type": "number"},
+                "prediction": {"const": 2.0},
+                "prediction_met": {"type": "boolean"}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "I3": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["student_chrome_in", "student_chrome_out", "teacher_chrome_in", "teacher_chrome_out"],
+          "properties": {
+            "student_chrome_in": {"$ref": "#/$defs/fraction"},
+            "student_chrome_out": {"$ref": "#/$defs/fraction"},
+            "teacher_chrome_in": {"$ref": "#/$defs/fraction"},
+            "teacher_chrome_out": {"$ref": "#/$defs/fraction"}
+          }
+        },
+        "I4": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["flip_rate", "n_pairs", "pass"],
+              "properties": {
+                "flip_rate": {"$ref": "#/$defs/fraction"},
+                "n_pairs": {"const": 2000},
+                "pass": {"type": "boolean"}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "I5": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["n_ref_pairs", "ref", "graders", "kappa_drop", "prediction", "prediction_met", "self_pref_inflation"],
+              "properties": {
+                "n_ref_pairs": {"const": 300},
+                "ref": {"const": "owner150+fable150"},
+                "graders": {"const": ["gemini-3.1-flash-lite", "qwen3.5-9b", "ministral-3-8b"]},
+                "kappa_drop": {"type": "number"},
+                "prediction": {"const": 0.05},
+                "prediction_met": {"type": "boolean"},
+                "self_pref_inflation": {"type": "number"}
+              }
+            },
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+
+    "Vault": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reads_used", "read_points", "reads_budget_branch", "read_this_run", "read_index", "sealed_sha256", "queries_commitment_sha256", "hybrid_minus_b2_ndcg10", "sign", "log"],
+      "properties": {
+        "reads_used": {"type": "integer", "minimum": 0, "maximum": 3},
+        "read_points": {"description": "Run ids of the realized branch's read points.", "type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/runId"}},
+        "reads_budget_branch": {"enum": [2, 3]},
+        "read_this_run": {"type": "boolean"},
+        "read_index": {"enum": [1, 2, 3, null]},
+        "sealed_sha256": {"description": "null only before R00 sealing.", "$ref": "#/$defs/sha256OrNull"},
+        "queries_commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "hybrid_minus_b2_ndcg10": {"description": "Rounded to 0.01.", "type": ["number", "null"]},
+        "sign": {"enum": [-1, 0, 1, "unavailable", null]},
+        "log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["read_index", "run_id", "utc", "sealed_sha256", "host"],
+            "properties": {
+              "read_index": {"enum": [1, 2, 3]},
+              "run_id": {"$ref": "#/$defs/runId"},
+              "utc": {"$ref": "#/$defs/utc"},
+              "sealed_sha256": {"$ref": "#/$defs/sha256"},
+              "host": {"const": "owner-laptop"}
+            }
+          }
+        }
+      }
+    },
+
+    "Sizes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_bundle_raw", "model_bundle_gzip", "vector_set_raw", "lexical_assets_raw", "lexical_assets_gzip", "first_open_raw", "first_open_gzip", "world_payload_raw", "world_payload_gzip", "model_bundle_max"],
+      "properties": {
+        "model_bundle_raw": {"$ref": "#/$defs/count"},
+        "model_bundle_gzip": {"$ref": "#/$defs/count"},
+        "vector_set_raw": {"$ref": "#/$defs/count"},
+        "lexical_assets_raw": {"$ref": "#/$defs/count"},
+        "lexical_assets_gzip": {"$ref": "#/$defs/count"},
+        "first_open_raw": {"$ref": "#/$defs/count"},
+        "first_open_gzip": {"$ref": "#/$defs/count"},
+        "world_payload_raw": {"$ref": "#/$defs/count"},
+        "world_payload_gzip": {"$ref": "#/$defs/count"},
+        "model_bundle_max": {"const": 4000000}
+      }
+    },
+
+    "Latency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["worker_p95_cpu_ms", "worker_cold_load_ms", "browser_p95_ms"],
+      "properties": {
+        "worker_p95_cpu_ms": {"$ref": "#/$defs/nonNegative"},
+        "worker_cold_load_ms": {"$ref": "#/$defs/nonNegative"},
+        "browser_p95_ms": {"$ref": "#/$defs/nonNegative"}
+      }
+    },
+
+    "Remeaning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pool_size", "labelled", "unlabelled_counted_negative", "p100", "label", "coined_ranking_file"],
+      "properties": {
+        "pool_size": {"$ref": "#/$defs/count"},
+        "labelled": {"$ref": "#/$defs/count"},
+        "unlabelled_counted_negative": {"$ref": "#/$defs/count"},
+        "p100": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["residualized", "raw", "logodds"],
+          "properties": {
+            "residualized": {"$ref": "#/$defs/fraction"},
+            "raw": {"$ref": "#/$defs/fraction"},
+            "logodds": {"$ref": "#/$defs/fraction"}
+          }
+        },
+        "label": {"description": "'re-meaning lexicon' only while H3 is SUPPORTED.", "enum": ["re-meaning lexicon", "frequency lexicon"]},
+        "coined_ranking_file": {"type": "string", "minLength": 1}
+      }
+    },
+
+    "Density": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean_5nn_gap_radius", "top_gaps", "briefs", "proposals_md_sha256"],
+      "properties": {
+        "mean_5nn_gap_radius": {"$ref": "#/$defs/nonNegative"},
+        "top_gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["gap_id", "radius", "neighbours"],
+            "properties": {
+              "gap_id": {"type": "string", "minLength": 1},
+              "radius": {"$ref": "#/$defs/nonNegative"},
+              "neighbours": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "string"}}
+            }
+          }
+        },
+        "briefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["brief_id", "kind", "target", "neighbours", "era", "register"],
+            "properties": {
+              "brief_id": {"type": "string", "minLength": 1},
+              "kind": {"enum": ["gap", "ghost"]},
+              "target": {"type": "string"},
+              "neighbours": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "string"}},
+              "era": {"type": "string"},
+              "register": {"type": "string"}
+            }
+          }
+        },
+        "proposals_md_sha256": {"description": "null when the optional S13b briefs did not run.", "$ref": "#/$defs/sha256OrNull"}
+      }
+    },
+
+    "Weirdness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "sha256", "definition"],
+      "properties": {
+        "file": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "definition": {"const": "1 − cos(Procrustes(W0), W1) per record, plus 10-NN rewiring"}
+      }
+    },
+
+    "ConstraintAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bank", "auditor", "n", "proper_noun_rate", "title_word_leak_rate", "len_p50_chars", "len_p95_chars", "misremember_rate"],
+      "properties": {
+        "bank": {"type": "string", "minLength": 1},
+        "auditor": {"const": "ministral-3-8b"},
+        "n": {"$ref": "#/$defs/count"},
+        "proper_noun_rate": {"$ref": "#/$defs/fraction"},
+        "title_word_leak_rate": {"$ref": "#/$defs/fraction"},
+        "len_p50_chars": {"$ref": "#/$defs/count"},
+        "len_p95_chars": {"$ref": "#/$defs/count"},
+        "misremember_rate": {"$ref": "#/$defs/fraction"}
+      }
+    },
+
+    "Collisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "sha256", "names", "clusters", "byline_overlaps", "spelling_variants", "owner_checked"],
+      "properties": {
+        "file": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "names": {"$ref": "#/$defs/count"},
+        "clusters": {"$ref": "#/$defs/count"},
+        "byline_overlaps": {"$ref": "#/$defs/count"},
+        "spelling_variants": {"$ref": "#/$defs/count"},
+        "owner_checked": {"$ref": "#/$defs/count"}
+      }
+    },
+
+    "FableCall": {
+      "description": "One orchestrator call: the packet, the accepted output (null unless status is ok), the agent session and model the harness reported, how many attempts were made (a schema-invalid or declined output is retried once in a fresh agent), and the final status (null while pending; owner_signed only for the sign-off; missing only for the end review).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "kind", "via", "packet_sha256", "output_sha256", "agent_session", "model_reported", "attempts", "status", "lint_ok"],
+      "properties": {
+        "role": {"enum": ["signoff", "gold_audit_1", "gold_audit_2", "end_review"]},
+        "kind": {"enum": ["gold_audit", "prereg_signoff", "blind_recompute", "mismatch_review"]},
+        "via": {"const": "orchestrator"},
+        "packet_sha256": {"$ref": "#/$defs/sha256"},
+        "output_sha256": {"$ref": "#/$defs/sha256OrNull"},
+        "agent_session": {"type": ["string", "null"]},
+        "model_reported": {"type": ["string", "null"]},
+        "attempts": {"enum": [0, 1, 2]},
+        "status": {"enum": ["ok", "refused", "failed", "owner_signed", "missing", null]},
+        "lint_ok": {"description": "Sign-off only: whether the linted rules passed.", "type": ["boolean", "null"]}
+      }
+    },
+
+    "Agreement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hypothesis", "rung_run", "rung_status", "r10_kind", "r10_status", "agree", "delta_point"],
+      "properties": {
+        "hypothesis": {"$ref": "#/$defs/ruleId"},
+        "rung_run": {"$ref": "#/$defs/runId"},
+        "rung_status": {"$ref": "#/$defs/status"},
+        "r10_kind": {"enum": ["re_decided", "replication_row", "not_rerun"]},
+        "r10_status": {"anyOf": [{"$ref": "#/$defs/status"}, {"type": "null"}]},
+        "agree": {"type": ["boolean", "null"]},
+        "delta_point": {"type": ["number", "null"]}
+      }
+    },
+
+    "Determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rerun_identical", "resumed_after_preemption", "artifact_hashes"],
+      "properties": {
+        "rerun_identical": {"type": ["boolean", "null"]},
+        "resumed_after_preemption": {"type": "boolean"},
+        "artifact_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha256"}}
+      }
+    },
+
+    "Artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "bytes", "kind"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "bytes": {"$ref": "#/$defs/count"},
+        "kind": {"enum": ["scores", "gallery", "trace", "bundle", "vector_source", "qrels", "proposals", "weirdness", "person_map", "collisions"]}
+      }
+    },
+
+    "VerdictsRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "branch", "h1_provisional", "prereg_sha256", "rules_sha256"],
+      "properties": {
+        "id": {"$ref": "#/$defs/runId"},
+        "branch": {"$ref": "#/$defs/branch"},
+        "h1_provisional": {"$ref": "#/$defs/h1Provisional"},
+        "prereg_sha256": {"$ref": "#/$defs/sha256OrNull"},
+        "rules_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "VerdictsVault": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read_this_run", "read_index", "hybrid_minus_b2_ndcg10", "sign"],
+      "properties": {
+        "read_this_run": {"type": "boolean"},
+        "read_index": {"enum": [1, 2, 3, null]},
+        "hybrid_minus_b2_ndcg10": {"type": ["number", "null"]},
+        "sign": {"enum": [-1, 0, 1, "unavailable", null]}
+      }
+    },
+    "GatesInputs": {
+      "description": "Every number a gate rule reads. I2, I3 and I5 extend the program's list so that every rule's inputs are in verdicts.json (the blind pass reads nothing else).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["I1", "I1_prior_pass", "I2", "I3", "I4", "I5"],
+      "properties": {
+        "I1": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kappa_qw_owner", "min_kendall_ci_lo"],
+              "properties": {
+                "kappa_qw_owner": {"type": "number", "minimum": -1, "maximum": 1},
+                "min_kendall_ci_lo": {"type": "number", "minimum": -1, "maximum": 1}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "I1_prior_pass": {"description": "The I1 pass carried forward from the last run that decided it.", "type": ["boolean", "null"]},
+        "I2": {
+          "anyOf": [
+            {"type": "object", "additionalProperties": false, "required": ["inflation_ratio"], "properties": {"inflation_ratio": {"type": "number"}}},
+            {"type": "null"}
+          ]
+        },
+        "I3": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["student_chrome_in", "student_chrome_out", "teacher_chrome_in", "teacher_chrome_out"],
+              "properties": {
+                "student_chrome_in": {"$ref": "#/$defs/fraction"},
+                "student_chrome_out": {"$ref": "#/$defs/fraction"},
+                "teacher_chrome_in": {"$ref": "#/$defs/fraction"},
+                "teacher_chrome_out": {"$ref": "#/$defs/fraction"}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "I4": {
+          "anyOf": [
+            {"type": "object", "additionalProperties": false, "required": ["flip_rate"], "properties": {"flip_rate": {"$ref": "#/$defs/fraction"}}},
+            {"type": "null"}
+          ]
+        },
+        "I5": {
+          "anyOf": [
+            {"type": "object", "additionalProperties": false, "required": ["kappa_drop"], "properties": {"kappa_drop": {"type": "number"}}},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "GatesSummary": {
+      "description": "Verdicts, all of them: stripped as a whole in the blind pass.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["I1_pass", "I1_pass_effective", "I4_pass", "futility_fired"],
+      "properties": {
+        "I1_pass": {"type": ["boolean", "null"]},
+        "I1_pass_effective": {"type": ["boolean", "null"]},
+        "I4_pass": {"type": ["boolean", "null"]},
+        "futility_fired": {"type": ["boolean", "null"]}
+      }
+    },
+    "SignoffInputs": {
+      "description": "R00 only: the sign-off preconditions the R00 tail measured.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lint_ok", "report_valid", "vault_sealed", "i1_fallback_scheduled", "i2_scheduled", "i4_scheduled"],
+      "properties": {
+        "lint_ok": {"description": "`arcforge prereg lint --frozen` passed.", "type": ["boolean", "null"]},
+        "report_valid": {"description": "report.json validates against arc-report/1.", "type": ["boolean", "null"]},
+        "vault_sealed": {"description": "vault.sealed_sha256 is present and published in the bench card.", "type": ["boolean", "null"]},
+        "i1_fallback_scheduled": {"description": "PREREG-A1 registered and the r01 plan carries the re-judge line.", "type": ["boolean", "null"]},
+        "i2_scheduled": {"type": ["boolean", "null"]},
+        "i4_scheduled": {"type": ["boolean", "null"]}
+      }
+    },
+
+    "VerdictRowCore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comparison_id", "hypothesis", "registered", "kind", "arm_a", "arm_b", "stratum",
+        "metric", "unit", "n_queries", "n_clusters", "point", "ci_lo_raw", "ci_hi_raw",
+        "holm_family", "holm_m", "holm_rank", "alpha_adj", "ci_lo_adj", "ci_hi_adj", "p_raw",
+        "p_holm", "tau", "tau_floor", "mde_r00", "seed_sd", "n_seeds", "nested", "vault_read",
+        "provisional", "prediction", "scores_file", "scores_sha256"
+      ],
+      "properties": {
+        "comparison_id": {"description": "Matches rules.yaml, e.g. 'H1.c3'.", "type": "string", "pattern": "^[A-Za-z0-9]+(?:\\.[A-Za-z0-9]+)*\\.[a-z][a-z0-9]*$"},
+        "hypothesis": {"$ref": "#/$defs/ruleId"},
+        "registered": {"description": "false for H1.c2 and H1.c4 while I1_pass_effective is false, and for exploratory rows.", "type": "boolean"},
+        "kind": {"enum": ["superiority", "guard", "bound", "ratio", "report"]},
+        "arm_a": {"$ref": "#/$defs/systemId"},
+        "arm_b": {"anyOf": [{"$ref": "#/$defs/systemId"}, {"type": "null"}]},
+        "stratum": {"$ref": "#/$defs/rowStratum"},
+        "metric": {"$ref": "#/$defs/metric"},
+        "unit": {"enum": ["fraction", "ratio", "rho"]},
+        "n_queries": {"type": "integer", "minimum": 1},
+        "n_clusters": {"type": "integer", "minimum": 1},
+        "point": {"type": "number"},
+        "ci_lo_raw": {"description": "95%; two-way pigeonhole bootstrap (10k) on seed-averaged per-query scores; ratio rows: record-clustered bootstrap; P@100 rows: 5-refit x 2,000-item pooled bootstrap.", "type": "number"},
+        "ci_hi_raw": {"type": "number"},
+        "holm_family": {"description": "= hypothesis id.", "$ref": "#/$defs/ruleId"},
+        "holm_m": {"$ref": "#/$defs/count"},
+        "holm_rank": {"description": "1..m inside the family; 0 for rows outside it.", "$ref": "#/$defs/count"},
+        "alpha_adj": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "ci_lo_adj": {"description": "The CI at level 1 - alpha_adj.", "type": "number"},
+        "ci_hi_adj": {"type": "number"},
+        "p_raw": {"description": "Paired randomization, 10k permutations, two-sided.", "type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "p_holm": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "tau": {"type": ["number", "null"]},
+        "tau_floor": {"type": ["number", "null"]},
+        "mde_r00": {"type": ["number", "null"]},
+        "seed_sd": {"description": "SD over seeds (over refits for P@100) of the per-seed point estimate; 0 for deterministic systems.", "$ref": "#/$defs/nonNegative"},
+        "n_seeds": {"type": "integer", "minimum": 1},
+        "nested": {"description": "True when scores are held-out-fold scores under fold-wise champions.", "type": "boolean"},
+        "vault_read": {"type": "boolean"},
+        "provisional": {"type": "boolean"},
+        "prediction": {"type": ["string", "null"]},
+        "prediction_met": {"type": ["boolean", "null"]},
+        "verdict_component": {"$ref": "#/$defs/component"},
+        "scores_file": {"description": "Relative to the run directory.", "type": "string", "minLength": 1},
+        "scores_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "VerdictRow": {
+      "allOf": [{"$ref": "#/$defs/VerdictRowCore"}, {"required": ["prediction_met", "verdict_component"]}]
+    },
+    "VerdictRowBlind": {
+      "allOf": [
+        {"$ref": "#/$defs/VerdictRowCore"},
+        {"not": {"anyOf": [{"required": ["prediction_met"]}, {"required": ["verdict_component"]}]}}
+      ]
+    },
+
+    "HypothesisCore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "in_scope", "provisional", "rule_id", "row_ids"],
+      "properties": {
+        "id": {"$ref": "#/$defs/ruleId"},
+        "status": {"$ref": "#/$defs/status"},
+        "in_scope": {"type": "boolean"},
+        "provisional": {"type": "boolean"},
+        "rule_id": {"description": "The rules.yaml rule id (= id).", "$ref": "#/$defs/ruleId"},
+        "row_ids": {"description": "Empty when NOT_APPLICABLE.", "type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      },
+      "if": {"properties": {"in_scope": {"const": false}}, "required": ["in_scope"]},
+      "then": {"properties": {"row_ids": {"maxItems": 0}, "provisional": {"const": false}}}
+    },
+    "Hypothesis": {
+      "allOf": [
+        {"$ref": "#/$defs/HypothesisCore"},
+        {"required": ["status"]},
+        {
+          "if": {"properties": {"in_scope": {"const": false}}, "required": ["in_scope"]},
+          "then": {"properties": {"status": {"const": "NOT_APPLICABLE"}}},
+          "else": {"properties": {"status": {"not": {"const": "NOT_APPLICABLE"}}}}
+        }
+      ]
+    },
+    "HypothesisBlind": {
+      "allOf": [{"$ref": "#/$defs/HypothesisCore"}, {"not": {"required": ["status"]}}]
+    },
+
+    "ArcEntryCore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "governing_run"],
+      "properties": {
+        "id": {"$ref": "#/$defs/ruleId"},
+        "final_status": {"$ref": "#/$defs/arcStatus"},
+        "governing_run": {"anyOf": [{"$ref": "#/$defs/runId"}, {"type": "null"}]}
+      }
+    },
+    "ArcEntry": {"allOf": [{"$ref": "#/$defs/ArcEntryCore"}, {"required": ["final_status"]}]},
+    "ArcEntryBlind": {"allOf": [{"$ref": "#/$defs/ArcEntryCore"}, {"not": {"required": ["final_status"]}}]},
+
+    "AdoptionDecisionCore": {
+      "description": "The inputs of one fold's adoption decision, and its outcome (chosen_arm, adopted).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fold", "rule", "arms"],
+      "properties": {
+        "fold": {"$ref": "#/$defs/fold"},
+        "rule": {"enum": ["default", "squeeze"]},
+        "arms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["arm_id", "gain_lfo", "guard_ok", "control", "bundle_raw"],
+            "properties": {
+              "arm_id": {"type": "string", "minLength": 1, "not": {"const": "parent"}},
+              "gain_lfo": {"type": "number"},
+              "guard_ok": {"type": "boolean"},
+              "control": {"type": "boolean"},
+              "bundle_raw": {"anyOf": [{"$ref": "#/$defs/count"}, {"type": "null"}]}
+            }
+          }
+        },
+        "chosen_arm": {"type": "string", "minLength": 1},
+        "adopted": {"type": "boolean"}
+      }
+    },
+    "AdoptionDecision": {"allOf": [{"$ref": "#/$defs/AdoptionDecisionCore"}, {"required": ["chosen_arm", "adopted"]}]},
+    "AdoptionDecisionBlind": {
+      "allOf": [
+        {"$ref": "#/$defs/AdoptionDecisionCore"},
+        {"not": {"anyOf": [{"required": ["chosen_arm"]}, {"required": ["adopted"]}]}}
+      ]
+    },
+
+    "VerdictsDocCore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "run", "vault", "gates_inputs", "rows", "hypotheses", "arc_summary", "adoption", "signoff_inputs"],
+      "properties": {
+        "schema": {"const": "arc-verdicts/1"},
+        "run": {"$ref": "#/$defs/VerdictsRun"},
+        "vault": {"$ref": "#/$defs/VerdictsVault"},
+        "gates_inputs": {"$ref": "#/$defs/GatesInputs"},
+        "gates_summary": {"$ref": "#/$defs/GatesSummary"},
+        "rows": {"type": "array"},
+        "hypotheses": {"description": "Every rule in rules.yaml exactly once.", "type": "array", "minItems": 22, "maxItems": 22},
+        "arc_summary": {"description": "R10/R10K only.", "type": ["array", "null"]},
+        "adoption": {"description": "The adoption decisions of this run (null when none).", "type": ["array", "null"]},
+        "signoff_inputs": {"description": "R00 only.", "anyOf": [{"$ref": "#/$defs/SignoffInputs"}, {"type": "null"}]}
+      }
+    },
+    "VerdictsDoc": {
+      "description": "verdicts.json (arc-verdicts/1), = report.verdicts_doc, under 25 KB.",
+      "allOf": [
+        {"$ref": "#/$defs/VerdictsDocCore"},
+        {
+          "required": ["gates_summary"],
+          "properties": {
+            "rows": {"items": {"$ref": "#/$defs/VerdictRow"}},
+            "hypotheses": {"items": {"$ref": "#/$defs/Hypothesis"}},
+            "arc_summary": {"anyOf": [{"type": "array", "items": {"$ref": "#/$defs/ArcEntry"}}, {"type": "null"}]},
+            "adoption": {"anyOf": [{"type": "array", "items": {"$ref": "#/$defs/AdoptionDecision"}}, {"type": "null"}]}
+          }
+        }
+      ]
+    },
+    "VerdictsDocBlind": {
+      "description": "verdicts.json as Fable's blind pass receives it: every status, verdict component, prediction_met, the whole gates_summary, arc_summary[].final_status and the adoption outcomes stripped; everything the rules read kept.",
+      "allOf": [
+        {"$ref": "#/$defs/VerdictsDocCore"},
+        {
+          "not": {"required": ["gates_summary"]},
+          "properties": {
+            "rows": {"items": {"$ref": "#/$defs/VerdictRowBlind"}},
+            "hypotheses": {"items": {"$ref": "#/$defs/HypothesisBlind"}},
+            "arc_summary": {"anyOf": [{"type": "array", "items": {"$ref": "#/$defs/ArcEntryBlind"}}, {"type": "null"}]},
+            "adoption": {"anyOf": [{"type": "array", "items": {"$ref": "#/$defs/AdoptionDecisionBlind"}}, {"type": "null"}]}
+          }
+        }
+      ]
+    }
+  }
+}
