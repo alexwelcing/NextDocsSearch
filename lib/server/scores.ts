@@ -53,8 +53,8 @@ const NAME_MAX = 20
 const SCORE_MAX = 100_000
 const COUNT_MAX = 1_000_000
 const ACCURACY_MAX = 100
-/** A real filing is under 100 characters. Anything far past that is not worth parsing. */
-const BODY_MAX_CHARS = 4096
+/** A real filing is under 100 bytes. Anything far past that is not worth reading. */
+const BODY_MAX_BYTES = 4096
 
 const NOT_CONFIGURED = 'Leaderboard not configured'
 
@@ -78,9 +78,10 @@ values (?, ?, ?, ?, ?, ?)
 returning *`
 
 export function sanitizeName(name: string): string {
-  // Strip control characters, zero-width chars, and normalize whitespace
+  // Strip control characters, zero-width chars, bidi embeddings/overrides/isolates (which would let
+  // a ledger name reorder the text around it), and normalize whitespace
   return name
-    .replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\uFEFF]/g, '')
+    .replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
 }
@@ -148,13 +149,66 @@ function clientIp(headers: Headers): string {
   )
 }
 
+/**
+ * The limiter bucket for a client address. An IPv6 client holds at least a /64 and can rotate
+ * through it at will, so IPv6 is keyed on that prefix; IPv4 (or IPv4-mapped IPv6) is keyed whole.
+ * Anything that doesn't parse is keyed as given.
+ */
+export function limiterKey(ip: string): string {
+  const address = ip.split('%')[0] // an IPv6 zone id names the interface, not the client
+  if (!address.includes(':')) return address
+  if (address.includes('.')) return address.slice(address.lastIndexOf(':') + 1) // ::ffff:a.b.c.d
+  let groups = address.split(':')
+  const gap = address.split('::')
+  if (gap.length === 2) {
+    const [head, tail] = gap.map((half) => (half ? half.split(':') : []))
+    const zeros = Array<string>(Math.max(0, 8 - head.length - tail.length)).fill('0')
+    groups = [...head, ...zeros, ...tail]
+  }
+  if (groups.length !== 8 || !groups.every((g) => /^[0-9a-f]{1,4}$/i.test(g))) return address
+  const prefix = groups.slice(0, 4).map((g) => parseInt(g, 16).toString(16))
+  return `${prefix.join(':')}::/64`
+}
+
+/**
+ * Only a JSON filing is read. A cross-site page can send text/plain (a no-cors fetch, or a
+ * <form enctype="text/plain"> shaped into JSON) without a CORS preflight, but not
+ * application/json, and the Worker answers no preflight. So this keeps filings same-origin.
+ */
+function isJson(headers: Headers): boolean {
+  const type = headers.get('content-type')?.split(';')[0].trim().toLowerCase()
+  return type === 'application/json'
+}
+
+/**
+ * The body as text, or null past BODY_MAX_BYTES. It reads at most that much (plus one chunk),
+ * whether or not Content-Length is sent, so a huge chunked body is never buffered whole.
+ */
+async function readBody(request: Request): Promise<string | null> {
+  if (Number(request.headers.get('content-length')) > BODY_MAX_BYTES) return null
+  if (!request.body) return ''
+  const reader = request.body.getReader()
+  const decoder = new TextDecoder()
+  let text = ''
+  let size = 0
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) return text + decoder.decode()
+    size += value.byteLength
+    if (size > BODY_MAX_BYTES) {
+      // Not awaited: the answer doesn't depend on how the rest of the upload is torn down.
+      reader.cancel().catch(() => {})
+      return null
+    }
+    text += decoder.decode(value, { stream: true })
+  }
+}
+
 async function readJson(
   request: Request
 ): Promise<{ ok: true; body: unknown } | { ok: false; status: number; error: string }> {
-  const tooLarge = { ok: false, status: 413, error: 'Payload too large' } as const
-  if (Number(request.headers.get('content-length')) > BODY_MAX_CHARS) return tooLarge
-  const text = await request.text()
-  if (text.length > BODY_MAX_CHARS) return tooLarge
+  const text = await readBody(request)
+  if (text === null) return { ok: false, status: 413, error: 'Payload too large' }
   try {
     return { ok: true, body: JSON.parse(text) }
   } catch {
@@ -178,7 +232,7 @@ export async function getLeaderboard(request: Request, db?: D1Like | null): Prom
   }
 }
 
-/** POST /api/game/submit-score: validate, rate-limit per IP, insert, and return the stored row. */
+/** POST /api/game/submit-score: validate, rate-limit per client, insert, return the stored row. */
 export async function submitScore(
   request: Request,
   db?: D1Like | null,
@@ -187,6 +241,9 @@ export async function submitScore(
   if (request.method !== 'POST') return json(405, METHOD_NOT_ALLOWED)
   // Without the limiter, an unthrottled write path would be open, so treat it as unconfigured.
   if (!db || !limiter) return json(503, SUBMIT_UNAVAILABLE)
+  if (!isJson(request.headers)) {
+    return json(415, { error: 'Content-Type must be application/json' })
+  }
   try {
     const read = await readJson(request)
     if (!read.ok) return json(read.status, { error: read.error })
@@ -194,7 +251,8 @@ export async function submitScore(
     if (!parsed.ok) return json(400, { error: parsed.error })
 
     // Only well-formed filings spend the caller's quota, so a typo never locks a player out.
-    const { success } = await limiter.limit({ key: `${clientIp(request.headers)}:scores` })
+    const key = `${limiterKey(clientIp(request.headers))}:scores`
+    const { success } = await limiter.limit({ key })
     if (!success) {
       return json(
         429,

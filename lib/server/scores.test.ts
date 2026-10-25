@@ -8,6 +8,7 @@ import {
   LEADERBOARD_SIZE,
   SCORE_LIMIT_PERIOD_S,
   getLeaderboard,
+  limiterKey,
   parseSubmission,
   sanitizeName,
   submitScore,
@@ -86,6 +87,14 @@ const postRequest = (body: unknown, headers: Record<string, string> = {}) =>
     headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.7', ...headers },
     body: typeof body === 'string' ? body : JSON.stringify(body),
   })
+/** A filing streamed with no Content-Length, as a chunked HTTP/1.1 or an HTTP/2 upload arrives. */
+const streamRequest = (source: UnderlyingDefaultSource<Uint8Array>) =>
+  new Request(`${API}/submit-score`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.7' },
+    body: new ReadableStream(source),
+    duplex: 'half',
+  } as RequestInit)
 
 interface ScoreRow {
   player_name?: string
@@ -111,6 +120,31 @@ describe('sanitizeName', () => {
   it('strips control and zero-width characters and collapses whitespace', () => {
     expect(sanitizeName('  ACE\u0000\u200B  \t NINE\uFEFF\u0085 ')).toBe('ACE NINE')
     expect(sanitizeName('\u0007\u200D')).toBe('')
+  })
+
+  it('strips bidi embeddings, overrides and isolates, so a name cannot reorder the ledger', () => {
+    expect(sanitizeName('\u202Eevil\u202C \u2066ACE\u2069\u202A\u202B\u202D\u2067\u2068')).toBe(
+      'evil ACE'
+    )
+  })
+})
+
+describe('limiterKey', () => {
+  it.each([
+    ['203.0.113.7', '203.0.113.7'],
+    ['2001:db8:85a3:12:aaaa:bbbb:cccc:dddd', '2001:db8:85a3:12::/64'],
+    ['2001:0DB8:85A3:0012:0:0:0:1', '2001:db8:85a3:12::/64'],
+    ['2001:db8::1', '2001:db8:0:0::/64'],
+    ['2001:db8:1:2::', '2001:db8:1:2::/64'],
+    ['::1', '0:0:0:0::/64'],
+    ['fe80::1%eth0', 'fe80:0:0:0::/64'],
+    ['::ffff:203.0.113.7', '203.0.113.7'],
+    ['unknown', 'unknown'],
+    ['1::2::3', '1::2::3'],
+    ['2001:db8:zz::1', '2001:db8:zz::1'],
+    ['1:2:3:4:5:6:7:8:9', '1:2:3:4:5:6:7:8:9'],
+  ])('keys %s as %s', (ip, key) => {
+    expect(limiterKey(ip)).toBe(key)
   })
 })
 
@@ -145,6 +179,7 @@ describe('parseSubmission', () => {
       'Player name must be between 1 and 20 characters',
     ],
     [{ player_name: 'X'.repeat(21), score: 10 }, 'Player name must be between 1 and 20 characters'],
+    [{ player_name: '\u202E\u2067', score: 10 }, 'Player name must be between 1 and 20 characters'],
     [{ player_name: 'ACE', score: -1 }, 'Invalid score range'],
     [{ player_name: 'ACE', score: 100_001 }, 'Invalid score range'],
     [{ player_name: 'ACE', score: 12.5 }, 'Invalid score range'],
@@ -300,6 +335,97 @@ describe('submitScore', () => {
     expect(response.status).toBe(413)
   })
 
+  it('refuses a declared Content-Length past the cap without reading the body', async () => {
+    const request = postRequest({ player_name: 'ACE', score: 1 }, { 'Content-Length': '999999' })
+    expect(request.headers.get('content-length')).toBe('999999')
+    const response = await submitScore(request, fakeD1().db, fakeLimiter().limiter)
+    expect(response.status).toBe(413)
+    expect(await response.json()).toEqual({ error: 'Payload too large' })
+    expect(request.bodyUsed).toBe(false)
+  })
+
+  it('stops reading a streamed body at the cap instead of buffering it whole', async () => {
+    const { db, queries } = fakeD1()
+    const { limiter, keys } = fakeLimiter()
+    let pulled = 0
+    let cancelled = false
+    const request = streamRequest({
+      // 64 KiB in 1 KiB chunks. Reading it whole would pull all 64 before the length check.
+      pull: (controller) => {
+        if (++pulled > 64) return controller.close()
+        controller.enqueue(new Uint8Array(1024).fill(0x20))
+      },
+      cancel: () => {
+        cancelled = true
+      },
+    })
+    expect(request.headers.has('content-length')).toBe(false)
+
+    const response = await submitScore(request, db, limiter)
+    expect(response.status).toBe(413)
+    expect(await response.json()).toEqual({ error: 'Payload too large' })
+    // The fifth chunk crosses 4 KiB. The stream may queue one ahead, but no further.
+    expect(pulled).toBeLessThanOrEqual(6)
+    expect(cancelled).toBe(true)
+    expect(keys).toEqual([])
+    expect(queries).toEqual([])
+  })
+
+  it('reassembles a streamed filing, with characters split across chunks', async () => {
+    const { db } = fakeD1()
+    const name = '\u00C5CE\u2605\u{1F680}'
+    const bytes = new TextEncoder().encode(JSON.stringify({ player_name: name, score: 9 }))
+    let at = 0
+    // One byte per chunk, so every multi-byte character is cut mid-sequence.
+    const request = streamRequest({
+      pull: (controller) => {
+        if (at < bytes.length) controller.enqueue(bytes.slice(at, ++at))
+        else controller.close()
+      },
+    })
+    const response = await submitScore(request, db, fakeLimiter().limiter)
+    expect(response.status).toBe(200)
+    expect((await response.json()).entry).toMatchObject({ player_name: name, score: 9 })
+  })
+
+  it.each([
+    ['text/plain', '{"player_name":"ACE","score":1}'],
+    ['text/plain;charset=UTF-8', '{"player_name":"ACE","score":1}'],
+    ['application/x-www-form-urlencoded', 'player_name=ACE&score=1'],
+    ['multipart/form-data; boundary=x', '--x\r\n'],
+    ['application/jsonx', '{"player_name":"ACE","score":1}'],
+  ])(
+    'refuses a %s body with 415, as a cross-site page could send it without a preflight',
+    async (type, body) => {
+      const { db, queries } = fakeD1()
+      const { limiter, keys } = fakeLimiter()
+      const response = await submitScore(postRequest(body, { 'Content-Type': type }), db, limiter)
+      expect(response.status).toBe(415)
+      expect(await response.json()).toEqual({ error: 'Content-Type must be application/json' })
+      expect(keys).toEqual([])
+      expect(queries).toEqual([])
+    }
+  )
+
+  it('refuses a body with no Content-Type with 415', async () => {
+    const request = new Request(`${API}/submit-score`, {
+      method: 'POST',
+      body: new TextEncoder().encode('{"player_name":"ACE","score":1}'),
+    })
+    expect(request.headers.get('content-type')).toBeNull()
+    const response = await submitScore(request, fakeD1().db, fakeLimiter().limiter)
+    expect(response.status).toBe(415)
+  })
+
+  it.each(['application/json; charset=utf-8', 'Application/JSON'])(
+    'accepts Content-Type %s',
+    async (type) => {
+      const request = postRequest({ player_name: 'ACE', score: 1 }, { 'Content-Type': type })
+      const response = await submitScore(request, fakeD1().db, fakeLimiter().limiter)
+      expect(response.status).toBe(200)
+    }
+  )
+
   it('answers a limiter denial with 429 and Retry-After, and writes nothing', async () => {
     const { db, sqlite } = fakeD1()
     const { limiter } = fakeLimiter(5)
@@ -318,18 +444,40 @@ describe('submitScore', () => {
     const { limiter, keys } = fakeLimiter()
     const body = { player_name: 'ACE', score: 1 }
     await submitScore(postRequest(body, { 'X-Forwarded-For': '198.51.100.1' }), db, limiter)
+    const json = { 'Content-Type': 'application/json' }
     const forwarded = new Request(`${API}/submit-score`, {
       method: 'POST',
-      headers: { 'X-Forwarded-For': '198.51.100.2, 10.0.0.1' },
+      headers: { ...json, 'X-Forwarded-For': '198.51.100.2, 10.0.0.1' },
       body: JSON.stringify(body),
     })
     await submitScore(forwarded, db, limiter)
     await submitScore(
-      new Request(`${API}/submit-score`, { method: 'POST', body: JSON.stringify(body) }),
+      new Request(`${API}/submit-score`, {
+        method: 'POST',
+        headers: json,
+        body: JSON.stringify(body),
+      }),
       db,
       limiter
     )
     expect(keys).toEqual(['203.0.113.7:scores', '198.51.100.2:scores', 'unknown:scores'])
+  })
+
+  it('gives a whole IPv6 /64 one bucket, so rotating addresses inside it buys nothing', async () => {
+    const { db } = fakeD1()
+    const { limiter, keys } = fakeLimiter(5)
+    const statuses: number[] = []
+    for (let i = 1; i <= 6; i++) {
+      const ip = { 'CF-Connecting-IP': `2001:db8:1:2::${i.toString(16)}` }
+      const response = await submitScore(
+        postRequest({ player_name: 'ACE', score: 1 }, ip),
+        db,
+        limiter
+      )
+      statuses.push(response.status)
+    }
+    expect(statuses).toEqual([200, 200, 200, 200, 200, 429])
+    expect(new Set(keys)).toEqual(new Set(['2001:db8:1:2::/64:scores']))
   })
 
   it('answers the exact production 503 without a ledger or without its limiter', async () => {
