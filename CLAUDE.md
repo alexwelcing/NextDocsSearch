@@ -16,15 +16,15 @@ SDF atlases. See `lib/windfoil/LICENSE.md`.
 
 ## Commands
 
-| Command | Purpose |
-|---------|---------|
-| `pnpm dev` | Start development server |
-| `pnpm build` | Full build: font atlases, article bodies, manifests, Next build, sitemap |
-| `pnpm lint` | Run ESLint |
-| `pnpm format` | Prettier formatting |
-| `pnpm build:cf` | Cloudflare target: static export into `out/` plus `_redirects`/`_headers`, verified |
-| `pnpm cf:typecheck` | Worker types: `wrangler.jsonc` bindings vs `worker/env.ts`, then `tsc -p worker` |
-| `pnpm cf:dry-run` | Bundle the Worker as a deploy would, without uploading |
+| Command             | Purpose                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| `pnpm dev`          | Start development server                                                            |
+| `pnpm build`        | Full build: font atlases, article bodies, manifests, Next build, sitemap            |
+| `pnpm lint`         | Run ESLint                                                                          |
+| `pnpm format`       | Prettier formatting                                                                 |
+| `pnpm build:cf`     | Cloudflare target: static export into `out/` plus `_redirects`/`_headers`, verified |
+| `pnpm cf:typecheck` | Worker types: `wrangler.jsonc` bindings vs `worker/env.ts`, then `tsc -p worker`    |
+| `pnpm cf:dry-run`   | Bundle the Worker as a deploy would, without uploading                              |
 
 Use `pnpm run lint` and `pnpm run build` as the real gates before pushing.
 
@@ -83,7 +83,7 @@ Data, Game. The dock only opens modals / changes in-scene state — it never nav
 - Manifests in `lib/generated/*.json` feed APIs (`/api/arc/archive` is the dock index).
 - Films: MP4s in `public/images/article-videos/` play in-scene via VideoTexture.
 
-### Cloudflare target (staging until the apex cutover; Vercel is production)
+### Cloudflare (production)
 
 - `NEXT_OUTPUT=export` (`pnpm build:cf`) switches next.config.js to `output: 'export'` with
   `pageExtensions: ['tsx']`, which leaves out the Vercel-only `pages/api/*.ts` and `middleware.ts`
@@ -94,8 +94,16 @@ Data, Game. The dock only opens modals / changes in-scene state — it never nav
 - `worker/index.ts` (wrangler.jsonc 'alexwelcing-site') runs only for `/api/*` and the film
   directories: Ship on Workers AI, the D1 leaderboard, the archive alias, and MP4 byte ranges
   (Static Assets ignore Range). `_headers` never applies to Worker responses; `worker/policy.ts`
-  holds the shared header values. Deploys run from the VM (`npx wrangler deploy`); never add the
-  apex or www to `routes` outside the deliberate cutover change.
+  holds the shared header values.
+- `wrangler.jsonc` `routes` is the complete list of hostnames the site Worker serves (the apex and
+  next.alexwelcing.com). A deploy replaces the Worker's custom domains with that list, overriding
+  conflicting DNS records and detaching anything left off, so dropping the apex from it takes the
+  site offline. `worker/www/` is a separate tiny Worker that 301s www to the apex.
+- Deploys run from the VM until Workers Builds is connected: `~/work/tools/cf-deploy.sh <sha>`
+  (clean worktree, `build:cf`, non-interactive `wrangler deploy`), then
+  `npx wrangler deploy -c worker/www/wrangler.jsonc` when the www Worker changes. Vercel still
+  builds main and stays a warm fallback; rolling back means restoring the apex A record
+  216.198.79.1 (DNS-only) in the Cloudflare dashboard.
 
 ### Routes (all 360 deep links with crawlable HTML beneath)
 

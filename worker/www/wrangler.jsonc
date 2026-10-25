@@ -1,0 +1,12 @@
+// The www redirect Worker: `npx wrangler deploy -c worker/www/wrangler.jsonc`. Like the site
+// Worker, its routes are the complete set of hostnames it serves (see ../../wrangler.jsonc).
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "alexwelcing-www",
+  "main": "index.ts",
+  "compatibility_date": "2026-10-15",
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "routes": [{ "pattern": "www.alexwelcing.com", "custom_domain": true }]
+}
