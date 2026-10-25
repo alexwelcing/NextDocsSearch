@@ -1,10 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import fs from 'node:fs'
+import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import handler from '../../pages/api/arc/archive'
+import { buildArchiveIndex } from '../../scripts/generate-archive-index'
+import manifest from '../generated/article-manifest.json'
+import { ARCHIVE_FULL_URL, ARCHIVE_URL } from './http'
 import { HttpIndexSource, searchRecords, toSlim, type ArchiveRecord } from './index'
 import { listRecords } from './server'
 
-vi.mock('./server', () => ({ listRecords: vi.fn() }))
+vi.mock('./server', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./server')>()),
+  listRecords: vi.fn(),
+}))
 
 const fixture: ArchiveRecord[] = [
   {
@@ -61,17 +69,17 @@ describe('/api/arc/archive compatibility', () => {
     expect(body.records[0].description).toHaveLength(220)
   })
 
-  it('preserves the legacy newest-first and equal-date ordering without mutating loaded records', async () => {
+  it('lists newest first, equal dates by slug, without mutating loaded records', async () => {
     const records = [
       { ...fixture[0], slug: 'older', date: '2024-01-01' },
-      { ...fixture[0], slug: 'first' },
       { ...fixture[0], slug: 'second' },
+      { ...fixture[0], slug: 'first' },
     ]
     vi.mocked(listRecords).mockResolvedValue(records)
 
     const { body } = await request()
-    expect(body.records.map((r: ArchiveRecord) => r.slug)).toEqual(['second', 'first', 'older'])
-    expect(records.map((r) => r.slug)).toEqual(['older', 'first', 'second'])
+    expect(body.records.map((r: ArchiveRecord) => r.slug)).toEqual(['first', 'second', 'older'])
+    expect(records.map((r) => r.slug)).toEqual(['older', 'second', 'first'])
   })
 
   it('provides complete records only for an explicit full view', async () => {
@@ -95,12 +103,29 @@ describe('/api/arc/archive compatibility', () => {
       })
     )
 
-    const browserRecords = await new HttpIndexSource().load()
+    const browserRecords = await new HttpIndexSource('/api/arc/archive?view=full').load()
     for (const query of ['cartography', 'quantum', 'governance', 'multiplication']) {
       const serverHits = searchRecords(fixture, query)
       expect(serverHits).toHaveLength(1)
       expect(searchRecords(browserRecords, query)).toEqual(serverHits)
     }
     expect(browserRecords[0].description).toBe(fixture[0].description)
+  })
+
+  it('serves exactly the records and order of the committed static index files', async () => {
+    const actual = await vi.importActual<typeof import('./server')>('./server')
+    vi.mocked(listRecords).mockImplementation(actual.listRecords)
+    const { files } = await buildArchiveIndex(manifest)
+
+    for (const [url, view] of [
+      [ARCHIVE_URL, undefined],
+      [ARCHIVE_FULL_URL, 'full'],
+    ] as const) {
+      const committed = fs.readFileSync(path.join(process.cwd(), 'public', url), 'utf8')
+      // Byte-identical to what the pre step writes from the committed manifest, so a stale copy
+      // fails here as well as in CI's generated-files check after the build.
+      expect(committed).toBe(files[url])
+      expect((await request({ view })).body).toEqual(JSON.parse(committed))
+    }
   })
 })
