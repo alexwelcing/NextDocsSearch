@@ -18,7 +18,10 @@ const filler = (topic: string, n: number) =>
       `realistic block of archive text before anything distinctive turns up at all.`
   )
 
-function buildRecord(slug: string, fields: Partial<BuildRecord> = {}): BuildRecord {
+/** A record as the index build reads it, plus the manifest-only mechanics FIND also scores. */
+type TestRecord = BuildRecord & { mechanics?: string[] }
+
+function buildRecord(slug: string, fields: Partial<TestRecord> = {}): TestRecord {
   return {
     slug,
     title: `Entry ${slug}`,
@@ -33,7 +36,7 @@ function buildRecord(slug: string, fields: Partial<BuildRecord> = {}): BuildReco
 }
 
 /** The manifest's view of a record: metadata plus a truncated searchText. */
-function archiveRecord(record: BuildRecord): ArchiveRecord {
+function archiveRecord(record: TestRecord): ArchiveRecord {
   return {
     slug: record.slug,
     title: record.title,
@@ -59,7 +62,7 @@ async function loadIndex(records: BuildRecord[]) {
   return loadCoreIndex(manifest, async (path) => new Response(files.get(path)))
 }
 
-async function corpus(records: BuildRecord[]) {
+async function corpus(records: TestRecord[]) {
   return { index: await loadIndex(records), records: records.map(archiveRecord) }
 }
 
@@ -138,14 +141,13 @@ describe('searchFullText', () => {
     const tagged = buildRecord('far-shore-02-the-quiet-festival', {
       title: 'The Quiet Festival',
       description: 'Lanterns on the water.',
-      // A Date#toString, as one real record's date is: the year still indexes.
-      date: 'Tue Mar 01 2067 00:00:00 GMT+0000 (Coordinated Universal Time)',
+      date: '2067-03-01',
       type: 'fiction',
       mechanics: ['epistemic-drift', 'biological-convergence'],
     })
     const { index, records } = await corpus([tagged, buildRecord('other')])
 
-    // articleType, a mechanic (typed as words or as its id), slug words and the year
+    // articleType, a mechanic (typed as words or as its id), slug words and the date
     for (const query of [
       'fiction',
       'epistemic drift',
@@ -158,18 +160,26 @@ describe('searchFullText', () => {
     }
   })
 
-  it('ranks text matches above metadata-only matches', async () => {
+  it('lists metadata-only matches after every full-text hit, within the limit', async () => {
     const essay = buildRecord('drift-essay', {
       title: 'Epistemic Drift',
       blocks: [{ t: 'p', x: 'Epistemic drift is what happens when sources stop agreeing.' }],
     })
-    // 'Entry aa-tagged' would win a tie on title, so only the score can put the essay first.
+    const mention = buildRecord('mention', {
+      blocks: [{ t: 'p', x: 'A footnote on epistemic humility.' }],
+    })
+    // 'Entry aa-tagged' would win a title tie, and searchRecords scores mechanics above body text.
     const tagged = buildRecord('aa-tagged', { mechanics: ['epistemic-drift'] })
-    const { index, records } = await corpus([tagged, essay])
+    const { index, records } = await corpus([tagged, mention, essay])
+    const hits = searchFullText(index, records, 'epistemic drift')
 
-    expect(slugs(searchFullText(index, records, 'epistemic drift'))).toEqual([
+    expect(slugs(hits)).toEqual(['drift-essay', 'mention', 'aa-tagged'])
+    expect(hits[2]).toEqual(
+      searchRecords(records, 'epistemic drift').find((hit) => hit.record === hits[2].record)
+    )
+    expect(slugs(searchFullText(index, records, 'epistemic drift', 2))).toEqual([
       'drift-essay',
-      'aa-tagged',
+      'mention',
     ])
   })
 

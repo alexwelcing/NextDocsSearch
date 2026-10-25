@@ -23,7 +23,7 @@ function strings(value: unknown): string[] {
     : []
 }
 
-/** public/arc/records joined with article-manifest type, keywords, domains and mechanics. */
+/** public/arc/records joined with article-manifest type, keywords and domains. */
 export function readBuildRecords(paths: Paths = corpusPaths()): BuildRecord[] {
   const meta = new Map<string, Record<string, unknown>>()
   if (existsSync(paths.articleManifest)) {
@@ -50,7 +50,6 @@ export function readBuildRecords(paths: Paths = corpusPaths()): BuildRecord[] {
         type: typeof article.articleType === 'string' ? article.articleType : undefined,
         keywords: strings(article.keywords),
         domains: strings(article.domains),
-        mechanics: strings(article.mechanics),
       }
     })
 }

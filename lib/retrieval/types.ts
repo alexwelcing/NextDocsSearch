@@ -92,7 +92,7 @@ export interface ChunksFile {
   chunks: SearchChunk[]
 }
 
-export type Bm25FieldName = 'title' | 'heading' | 'keywords' | 'body' | 'doc2query' | 'meta'
+export type Bm25FieldName = 'title' | 'heading' | 'keywords' | 'body' | 'doc2query'
 
 /**
  * public/search/bm25.<hash>.json: precomputed BM25F postings over the chunks.

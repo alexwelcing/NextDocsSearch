@@ -45,8 +45,6 @@ export interface BuildRecord {
   type?: string
   keywords?: string[]
   domains?: string[]
-  /** The article manifest's inferred mechanics; indexed for BM25 only, never shipped. */
-  mechanics?: string[]
 }
 
 export interface VectorSource {
@@ -78,33 +76,18 @@ export interface BuiltIndex {
   warnings: string[]
 }
 
-/**
- * A record card's metadata words, so FIND's full-text path still finds what searchRecords
- * matched on metadata alone: articleType ('fiction'), mechanics ('epistemic-drift'), slug words
- * (series names such as 'far-shore') and the year. BM25 only: the chunk text and hash keep out.
- */
-function cardMeta(record: BuildRecord, type: string): string {
-  // The year is the date's first four-digit word: one record's date is a Date#toString.
-  const year = /\b\d{4}\b/.exec(record.date)?.[0] ?? ''
-  return [type, ...(record.mechanics ?? []), record.slug, year].join(' ')
-}
-
 function collectDrafts(input: BuildInput) {
   const docs: SearchDoc[] = []
-  /** Per doc: cardMeta for records, '' for operator docs. */
-  const meta: string[] = []
   const drafts: { doc: number; draft: ChunkDraft }[] = []
   const records = [...input.records].sort((a, b) => a.slug.localeCompare(b.slug))
   for (const record of records) {
     const keywords = record.keywords ?? []
-    const type = record.type || 'article'
     const doc = docs.length
-    meta.push(cardMeta(record, type))
     docs.push({
       slug: record.slug,
       title: record.title,
       date: record.date,
-      type,
+      type: record.type || 'article',
       description: record.description,
       keywords,
       domains: record.domains ?? [],
@@ -118,7 +101,6 @@ function collectDrafts(input: BuildInput) {
     if (!panel) continue
     const blocks = operatorBlocks(panel)
     const doc = docs.length
-    meta.push('')
     docs.push({
       slug: operator.slug,
       title: operator.title,
@@ -132,7 +114,7 @@ function collectDrafts(input: BuildInput) {
     const source = { slug: operator.slug, title: operator.title, blocks }
     for (const draft of chunkBlocks(source, 'operator')) drafts.push({ doc, draft })
   }
-  return { docs, meta, drafts }
+  return { docs, drafts }
 }
 
 type RowReader = (row: number, out: Int8Array, offset: number) => number
@@ -194,7 +176,7 @@ export function joinVectors(source: VectorSource, chunks: SearchChunk[], warning
 
 export async function buildSearchIndex(input: BuildInput): Promise<BuiltIndex> {
   const warnings: string[] = []
-  const { docs, meta, drafts } = collectDrafts(input)
+  const { docs, drafts } = collectDrafts(input)
   const chunks: SearchChunk[] = []
   for (const { doc, draft } of drafts) {
     const { id, kind, heading, b0, b1, text } = draft
@@ -211,7 +193,6 @@ export async function buildSearchIndex(input: BuildInput): Promise<BuiltIndex> {
       keywords: card ? [...doc.keywords, ...doc.domains].join(' ') : '',
       body: card ? doc.description : chunk.text,
       doc2query: (doc2query[chunk.hash] ?? []).join(' '),
-      meta: card ? meta[chunk.doc] : '',
     }
   })
 

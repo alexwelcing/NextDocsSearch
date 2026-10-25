@@ -3,14 +3,7 @@
 import { matchingTermRange, normalizedTokens, queryTerms, TOKENIZER_VERSION } from './tokenize'
 import type { Bm25File, Bm25FieldName } from './types'
 
-export const BM25_FIELDS: Bm25FieldName[] = [
-  'title',
-  'heading',
-  'keywords',
-  'body',
-  'doc2query',
-  'meta',
-]
+export const BM25_FIELDS: Bm25FieldName[] = ['title', 'heading', 'keywords', 'body', 'doc2query']
 
 export const BM25_WEIGHTS: Record<Bm25FieldName, number> = {
   title: 3,
@@ -18,9 +11,6 @@ export const BM25_WEIGHTS: Record<Bm25FieldName, number> = {
   keywords: 2,
   body: 1,
   doc2query: 1.5,
-  // Record cards' metadata (articleType, mechanics, slug words, year): facet recall at half a
-  // body word, since mechanics are a substring heuristic that must never outrank the text.
-  meta: 0.5,
 }
 
 export const BM25_PARAMS = { k1: 1.2, b: 0.75 } as const

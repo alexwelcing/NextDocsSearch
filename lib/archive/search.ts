@@ -115,21 +115,25 @@ type Ranked = { record: ArchiveRecord; score: number }
 const byScore = (a: Ranked, b: Ranked) =>
   b.score - a.score || compareTitleThenSlug(a.record, b.record)
 
-/** Pure lexical ranking over complete records, independent of their transport. */
-export function searchRecords(records: ArchiveRecord[], query: string, limit = 30): SearchHit[] {
-  const terms = queryTerms(query)
-  if (!terms.length || limit <= 0 || Number.isNaN(limit)) return []
+/** Records matching any term, best first, once per slug. */
+function rankRecords(records: ArchiveRecord[], terms: string[]): Ranked[] {
   const ranked = records
     .map((record) => ({ record, score: scoreRecord(record, terms) }))
     .filter((hit) => hit.score > 0)
     .sort(byScore)
   const seen = new Set<string>()
-  return ranked
-    .filter(({ record }) => {
-      if (seen.has(record.slug)) return false
-      seen.add(record.slug)
-      return true
-    })
+  return ranked.filter(({ record }) => {
+    if (seen.has(record.slug)) return false
+    seen.add(record.slug)
+    return true
+  })
+}
+
+/** Pure lexical ranking over complete records, independent of their transport. */
+export function searchRecords(records: ArchiveRecord[], query: string, limit = 30): SearchHit[] {
+  const terms = queryTerms(query)
+  if (!terms.length || limit <= 0 || Number.isNaN(limit)) return []
+  return rankRecords(records, terms)
     .slice(0, limit)
     .map((hit) => ({ ...hit, snippet: snippet(hit.record, terms) }))
 }
@@ -139,6 +143,12 @@ export function searchRecords(records: ArchiveRecord[], query: string, limit = 3
  * by its best chunk, so a match anywhere in an article counts, not only in the manifest's
  * searchText preview, and the snippet comes from that chunk. Only slugs in `records` are returned
  * (the index also holds the operator panels, which FIND does not list).
+ *
+ * The index holds text, not the record metadata searchRecords also scores (articleType,
+ * mechanics, slug, date), so the records only searchRecords matches follow every full-text hit,
+ * in its order and with its scores: FIND still finds everything it did before the index. Indexing
+ * that metadata on the cards instead would raise the document frequency of heuristic mechanic
+ * words ('governance' is tagged on 148 records), lowering their IDF in every chunk, Ship's too.
  */
 export function searchFullText(
   index: CoreIndex,
@@ -156,7 +166,7 @@ export function searchFullText(
     const record = bySlug.get(slug)
     if (record && !best.has(slug)) best.set(slug, { record, score, chunk })
   }
-  return [...best.values()]
+  const hits: SearchHit[] = [...best.values()]
     .sort(byScore)
     .slice(0, limit)
     .map(({ record, score, chunk }) => ({
@@ -164,4 +174,12 @@ export function searchFullText(
       score,
       snippet: snippet(record, terms, index.chunks[chunk].text),
     }))
+  if (hits.length < limit) {
+    for (const hit of rankRecords(records, terms)) {
+      if (best.has(hit.record.slug)) continue
+      hits.push({ ...hit, snippet: snippet(hit.record, terms) })
+      if (hits.length >= limit) break
+    }
+  }
+  return hits
 }
