@@ -2,15 +2,15 @@
 
 M1's exit criterion: "a spot-preemption drill (deleting the VM mid-stage) resumes to
 byte-identical artifacts and books both VMs". The drill runs a dummy stage on a real spot runner:
-a chain of steps, each content-addressed by sha256(stage, code, step, input hash, seed) and
-stored in GCS as it completes, exactly the way the runtime's stage DAG keys its outputs. Once a
-few steps are cached, the controller deletes the VM. The session sees the VM vanish, recreates it
-(spot once more), and the stage on the new VM finds those steps in the cache and computes only
-the rest. The final artifact must equal, byte for byte, the one computed locally with no VM at
-all, and the booking must list both instances.
+a chain of steps, each keyed by sha256(stage, code, step, input hash, seed) and stored as it
+completes in the runtime's own content-addressed cache (arcforge.core.cache: write-once objects
+and stage records, create-only on GCS). Once a few steps are cached, the controller deletes the
+VM. The session sees the VM vanish and recreates it (spot once more); the stage on the new VM
+finds those steps in the cache and computes only the rest. The final artifact must equal, byte
+for byte, the one computed locally with no VM at all, and the booking must list both instances.
 
 Two halves, one module:
-- `stage` runs in the container on the VM (google-cloud-storage from the cloud extra);
+- `stage` runs in the container on the VM (the GCS cache needs the cloud extra);
 - `run_drill` runs on the laptop / forge and drives a RunnerSession.
 """
 
@@ -24,48 +24,30 @@ from pathlib import Path
 from typing import Any, Protocol
 
 DRILL_CODE = 'arcforge.runner.drill/v1'  # bump when the step function changes
+STAGE = 'drill'
 STEP_BYTES = 1 << 20
 
 
-class Store(Protocol):
+class Steps(Protocol):
     def get(self, key: str) -> bytes | None: ...
     def put(self, key: str, data: bytes) -> None: ...
 
 
-class DirStore:
-    """A local directory store, for tests and for computing the expected artifact."""
-
-    def __init__(self, root: Path):
-        self.root = root
-        root.mkdir(parents=True, exist_ok=True)
-
-    def get(self, key: str) -> bytes | None:
-        path = self.root / key
-        return path.read_bytes() if path.exists() else None
-
-    def put(self, key: str, data: bytes) -> None:
-        (self.root / key).write_bytes(data)
-
-
-class GcsStore:
-    """gs://bucket/prefix/<key>, through google-cloud-storage and the VM's metadata credentials."""
+class CacheSteps:
+    """Steps kept in an arcforge.core.cache Store: one object + one stage record per step."""
 
     def __init__(self, url: str):
-        from google.cloud import storage  # the cloud extra, present in the runner image
+        from arcforge.core.cache import open_store
 
-        bucket, _, prefix = url.removeprefix('gs://').partition('/')
-        self.bucket = storage.Client().bucket(bucket)
-        self.prefix = prefix.rstrip('/')
-
-    def _blob(self, key: str):
-        return self.bucket.blob(f'{self.prefix}/{key}' if self.prefix else key)
+        self.store = open_store(url)
 
     def get(self, key: str) -> bytes | None:
-        blob = self._blob(key)
-        return blob.download_as_bytes() if blob.exists() else None
+        record = self.store.get_record(STAGE, key)
+        return self.store.get_object(record['outputs']['out']) if record else None  # hash-checked
 
     def put(self, key: str, data: bytes) -> None:
-        self._blob(key).upload_from_string(data, content_type='application/octet-stream')
+        digest = self.store.put_object(data)
+        self.store.put_record({'stage': STAGE, 'key': key, 'outputs': {'out': digest}, 'bytes': len(data)})
 
 
 def step_key(step: int, input_sha256: str, seed: int) -> str:
@@ -85,7 +67,7 @@ def step_output(key: str, size: int = STEP_BYTES) -> bytes:
 
 
 def stage(
-    store: Store,
+    store: Steps,
     *,
     steps: int,
     seed: int,
@@ -117,7 +99,7 @@ def stage(
 
 def expected_artifact(tmp: Path, *, steps: int, seed: int) -> bytes:
     """The artifact a clean, uninterrupted run produces, computed locally with no VM."""
-    artifact, _ = stage(DirStore(tmp), steps=steps, seed=seed, log=lambda _m: None)
+    artifact, _ = stage(CacheSteps(str(tmp)), steps=steps, seed=seed, log=lambda _m: None)
     return artifact
 
 
@@ -130,16 +112,18 @@ def _main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog='python -m arcforge.runner.drill')
     sub = parser.add_subparsers(dest='cmd', required=True)
     run = sub.add_parser('stage', help='run or resume the dummy stage against a GCS cache')
-    run.add_argument('--cache', required=True, help='gs:// prefix of the drill cache')
+    run.add_argument('--cache', required=True, help='the drill cache (gs://… on the VM; any arcforge.core.cache URL)')
     run.add_argument('--out', required=True, help='gs:// URL for the final artifact')
     run.add_argument('--steps', type=int, default=6)
     run.add_argument('--seed', type=int, default=1729)
     run.add_argument('--step-seconds', type=float, default=40.0)
     args = parser.parse_args(argv)
 
-    artifact, counts = stage(GcsStore(args.cache), steps=args.steps, seed=args.seed, step_seconds=args.step_seconds)
+    artifact, counts = stage(CacheSteps(args.cache), steps=args.steps, seed=args.seed, step_seconds=args.step_seconds)
+    from arcforge.core.cache import open_backend
+
     out_dir, _, name = args.out.rpartition('/')
-    GcsStore(out_dir).put(name, artifact)
+    open_backend(out_dir).write(name, artifact, create_only=False)
     print(f'drill: done, {counts["cached"]} steps from cache, {counts["computed"]} computed, '
           f'artifact sha256 {hashlib.sha256(artifact).hexdigest()}')
     return 0
@@ -149,8 +133,9 @@ def _main(argv: list[str] | None = None) -> int:
 
 
 def count_cached(shell, cache_url: str) -> int:
-    result = shell.run(['gcloud', 'storage', 'ls', cache_url.rstrip('/') + '/'], timeout=60)
-    return len(result.stdout.split()) if result.ok else 0
+    """Steps recorded so far: the stage records under <cache>/stages/drill/."""
+    result = shell.run(['gcloud', 'storage', 'ls', f'{cache_url.rstrip("/")}/stages/{STAGE}/'], timeout=60)
+    return sum(line.endswith('.json') for line in result.stdout.split()) if result.ok else 0
 
 
 def run_drill(
@@ -171,7 +156,7 @@ def run_drill(
     if not 0 < kill_after < steps:
         raise ValueError('kill_after must leave work both before and after the kill')
     bucket = session.cfg.bucket
-    cache = f'gs://{bucket}/cache/drill/{drill_id}'
+    cache = f'gs://{bucket}/drill/{drill_id}/cache'  # its own prefix: never the production cache
     out = f'gs://{bucket}/runs/{session.run_id}/artifacts/drill.json'
     job = Job(
         image=image,

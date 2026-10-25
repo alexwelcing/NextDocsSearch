@@ -40,7 +40,8 @@ def test_custom_and_sole_tenancy_skus_never_match(skus):
 
 def test_region_is_respected(skus):
     with pytest.raises(billing.BillingError, match='asia-southeast1'):
-        billing.rate_card(skus, RunnerConfig(region='asia-southeast1'), 'on_demand', fetched_utc=FETCHED)
+        cfg = RunnerConfig(region='asia-southeast1', zones=('asia-southeast1-a',))
+        billing.rate_card(skus, cfg, 'on_demand', fetched_utc=FETCHED)
 
 
 def test_g2_standard_16_scales_cpu_and_ram_not_the_gpu(skus):

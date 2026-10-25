@@ -108,3 +108,18 @@ def test_bad_requests_are_refused_before_any_vm(wired, patch, message):
 
 def test_the_package_exposes_the_hook():
     assert callable(runner.execute_remote)
+
+
+def test_the_runtime_finds_the_hook_and_its_spec_validates(tmp_path):
+    """The other side of the contract: arcforge/core/executor.py builds the spec we accept."""
+    from arcforge.core.config import load_config
+    from arcforge.core.dag import RunEnv
+    from arcforge.core.executor import RunRequest, VMExecutor, vm_spec
+    from arcforge.runner.config import RunnerConfig
+
+    assert VMExecutor().hook() is runner.execute_remote
+    spec = vm_spec(RunRequest(config=load_config('r00'), stages=['S3'], cache_url='gs://witching-606c6-arcforge/cache',
+                              env=RunEnv(tmp_path), budget_usd=20, plan_usd=11.8))
+    remote._validate(spec)
+    cfg = RunnerConfig.from_compute(spec['compute'])
+    assert cfg == RunnerConfig()  # configs/r00.yaml asks for exactly the program's runner

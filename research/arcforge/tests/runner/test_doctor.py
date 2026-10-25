@@ -42,7 +42,9 @@ def healthy(shell, tmp_path):
     shell.on('firewall-rules list', then=shell.ok(FIREWALL))
     shell.on('storage cat', then=shell.ok('{"files": []}'))
     recipient = tmp_path / 'vault.recipient'
-    recipient.write_text('age1qyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqs3290gq\n')
+    # As `arcforge vault keygen` writes it: a comment line, then the recipient.
+    recipient.write_text('# The RE-MEANING vault recipient. Safe to commit.\n'
+                         'age1qyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqs3290gq\n')
     return doctor.Context(
         shell=shell,
         image=ImagePin(repository='us-central1-docker.pkg.dev/witching-606c6/arcforge/arcforge', digest=DIGEST, built_from='abc'),
@@ -133,6 +135,18 @@ def test_iap_rule_detection():
     assert not doctor._allows_iap_ssh({**iap, 'allowed': [{'IPProtocol': 'tcp', 'ports': ['5432']}]}, tag)
     assert not doctor._allows_iap_ssh({**iap, 'sourceRanges': ['10.0.0.0/8']}, tag)
     assert not doctor._allows_iap_ssh({**iap, 'disabled': True}, tag)
+
+
+def test_a_malformed_recipient_fails(shell, tmp_path):
+    ctx = healthy(shell, tmp_path)
+    ctx.vault_recipient.write_text('not a recipient\n')
+    assert by_name(doctor.run_checks(ctx, cloud=False))['vault recipient'].status == doctor.FAIL
+
+
+def test_default_recipient_path_is_the_vaults():
+    from arcforge.owner.paths import recipient_path
+
+    assert doctor.Context(shell=None).vault_recipient == recipient_path()
 
 
 def test_missing_tools_and_recipient(shell, tmp_path):

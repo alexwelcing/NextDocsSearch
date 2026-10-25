@@ -13,11 +13,11 @@ class Interrupt(Exception):
     pass
 
 
-class FlakyStore(drill.DirStore):
+class FlakyStore(drill.CacheSteps):
     """Dies after `budget` puts: a VM deleted mid-stage."""
 
     def __init__(self, root, budget):
-        super().__init__(root)
+        super().__init__(str(root))
         self.budget = budget
 
     def put(self, key, data):
@@ -39,12 +39,28 @@ def test_an_interrupted_stage_resumes_byte_identical(tmp_path):
     cache = tmp_path / 'cache'
     with pytest.raises(Interrupt):
         drill.stage(FlakyStore(cache, budget=2), steps=5, seed=1729, log=lambda _m: None)
-    resumed, counts = drill.stage(drill.DirStore(cache), steps=5, seed=1729, log=lambda _m: None)
+    resumed, counts = drill.stage(drill.CacheSteps(str(cache)), steps=5, seed=1729, log=lambda _m: None)
     assert counts == {'cached': 2, 'computed': 3}
     assert resumed == clean
     rows = json.loads(resumed)['steps']
     assert [r['step'] for r in rows] == list(range(5))
     assert rows[1]['key'] == drill.step_key(1, rows[0]['sha256'], 1729)
+    # The steps live in the runtime's cache layout: hash-addressed objects + stage records.
+    assert sorted(p.name for p in (cache / 'stages' / 'drill').iterdir()) == sorted(f'{r["key"]}.json' for r in rows)
+    assert all((cache / 'objects' / r['sha256'][:2] / r['sha256']).exists() for r in rows)
+
+
+def test_a_corrupt_cached_step_is_caught(tmp_path):
+    from arcforge.core.cache import CacheCorrupt
+
+    cache = tmp_path / 'cache'
+    drill.stage(drill.CacheSteps(str(cache)), steps=2, seed=1729, log=lambda _m: None)
+    victim = next((cache / 'objects').rglob('*'))
+    while victim.is_dir():
+        victim = next(victim.iterdir())
+    victim.write_bytes(b'flipped')
+    with pytest.raises(CacheCorrupt):
+        drill.stage(drill.CacheSteps(str(cache)), steps=2, seed=1729, log=lambda _m: None)
 
 
 def test_run_drill_kills_the_first_vm_and_proves_the_resume(tmp_path, rates, make_cloud):
@@ -81,7 +97,7 @@ def test_run_drill_kills_the_first_vm_and_proves_the_resume(tmp_path, rates, mak
             vm_tick(name, inst)
 
     cloud.tick = tick
-    cloud.on('storage ls', then=lambda argv: Result(argv, 0, '\n'.join(f'{argv[3]}{k}' for k in cache)))
+    cloud.on('storage ls', then=lambda argv: Result(argv, 0, '\n'.join(f'{argv[3]}{k}.json' for k in cache)))
 
     runner = RunnerSession(RunnerConfig(), run_id='drill-x', code_sha='3a74fb4', shell=cloud, rates=rates,
                            clock=cloud.clock, sleep=cloud.sleep, poll_seconds=40, log=lambda _m: None)

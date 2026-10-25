@@ -21,7 +21,12 @@ from arcforge.runner.shell import Result, Shell
 
 OK, WARN, FAIL = 'OK', 'WARN', 'FAIL'
 UV_MIN = (0, 13, 5)
-VAULT_RECIPIENT = Path(__file__).resolve().parents[2] / 'configs' / 'vault.recipient'
+
+
+def _vault_recipient_path() -> Path:
+    from arcforge.owner.paths import recipient_path  # the vault's own answer: configs/vault.recipient
+
+    return recipient_path()
 
 
 @dataclass(frozen=True)
@@ -38,7 +43,7 @@ class Context:
     cfg: RunnerConfig = field(default_factory=RunnerConfig)
     image: pins.ImagePin | None = None
     models: Sequence[pins.ModelPin] = ()
-    vault_recipient: Path = VAULT_RECIPIENT
+    vault_recipient: Path = field(default_factory=_vault_recipient_path)
 
     def gcloud(self, *args: str, timeout: float = 60) -> Result:
         return self.shell.run(['gcloud', *args], timeout=timeout)
@@ -72,10 +77,20 @@ def check_uv(ctx: Context) -> Check:
     return Check('uv', OK, result.stdout.strip())
 
 
+def _age_binary(tool: str) -> str:
+    """Where the vault will find the tool (its env override, PATH, then Homebrew's prefixes)."""
+    from arcforge.vault.age import AgeError, find
+
+    try:
+        return find(tool)
+    except AgeError:
+        return tool
+
+
 def check_age(ctx: Context) -> Check:
     found = []
     for binary in ('age', 'age-keygen'):
-        result = ctx.shell.run([binary, '--version'])
+        result = ctx.shell.run([_age_binary(binary), '--version'])
         if not result.ok:
             return Check('age', FAIL, f'{binary} is not on PATH', 'brew install age  (or apt install age): the vault needs age and age-keygen')
         found.append(f'{binary} {result.stdout.strip()}')
@@ -83,13 +98,16 @@ def check_age(ctx: Context) -> Check:
 
 
 def check_vault_recipient(ctx: Context) -> Check:
+    from arcforge.vault.age import AgeError, read_recipient_file
+
     path = ctx.vault_recipient
     if not path.exists():
         return Check('vault recipient', WARN, f'{path.name} not found', 'run `uv run arcforge vault keygen` (owner checklist step 1)')
-    text = path.read_text().strip()
-    if not text.startswith('age1'):
-        return Check('vault recipient', FAIL, f'{path.name} does not hold an age recipient (age1…)', 'rerun `arcforge vault keygen`')
-    return Check('vault recipient', OK, f'{path.name}: {text[:12]}…')
+    try:
+        recipient = read_recipient_file(path)
+    except AgeError as error:
+        return Check('vault recipient', FAIL, str(error), 'rerun `uv run arcforge vault keygen`')
+    return Check('vault recipient', OK, f'{path.name}: {recipient[:12]}…')
 
 
 # --- project and access ---------------------------------------------------------------------
