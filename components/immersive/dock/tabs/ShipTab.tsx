@@ -1,12 +1,19 @@
 // SHIP: the ship-mind console. Ask a question, watch the answer stream onto the tube, open any
-// source it cites. History stays for the session.
+// source it cites in-scene. History stays for the session. Keystrokes are captured while the tab
+// is active; touch devices get a hidden input via useTouchTextInput so the OS keyboard opens.
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { WindfoilText } from '../../text/WindfoilText'
 import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { useTabKeys } from '../useTabKeys'
-import { askShip, type ShipHistoryEntry, type ShipInstantItem } from '@/lib/immersive/shipClient'
+import { isTouchTextTarget, useTouchTextInput } from '../../hooks/useTouchTextInput'
+import {
+  askShip,
+  sourceModal,
+  type ShipHistoryEntry,
+  type ShipInstantItem,
+} from '@/lib/immersive/shipClient'
 import { openModal } from '@/lib/immersive/navigation'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
@@ -14,6 +21,8 @@ import { stopLook } from '../DockKey'
 import { SCREEN_H } from '../CrtScreen'
 
 type Phase = 'idle' | 'thinking' | 'streaming' | 'done' | 'error'
+
+const MAX_QUERY = 120
 
 export function ShipTab({ active, width }: { active: boolean; width: number }) {
   const router = useRouter()
@@ -25,6 +34,16 @@ export function ShipTab({ active, width }: { active: boolean; width: number }) {
   const abort = useRef<AbortController | null>(null)
 
   useEffect(() => () => abort.current?.abort(), [])
+
+  // Hidden DOM input for touch keyboards; desktop keys are handled below.
+  const field = useTouchTextInput({
+    active,
+    value: query,
+    onChange: setQuery,
+    label: 'Ask the ship mind',
+    maxLength: MAX_QUERY,
+    enterKeyHint: 'send',
+  })
 
   const ask = () => {
     const q = query.trim()
@@ -68,18 +87,23 @@ export function ShipTab({ active, width }: { active: boolean; width: number }) {
   }
 
   useTabKeys(active, (e) => {
-    if (e.metaKey || e.ctrlKey || e.altKey) return false
+    if (e.metaKey || e.ctrlKey || e.altKey || e.isComposing) return false
+    // keys typed into another surface's field (the Sphere Hunter callsign) are that field's
+    if (isTouchTextTarget(e) && !field.owns(e)) return false
     if (e.key === 'Enter') {
       ask()
       return true
     }
+    // The native input owns text editing, paste, composition and mobile input.
+    // Only the unfocused desktop terminal appends/deletes characters itself.
+    if (field.owns(e)) return false
     if (e.key === 'Backspace') {
       setQuery((q) => q.slice(0, -1))
       playSound('key')
       return true
     }
     if (e.key.length === 1) {
-      setQuery((q) => (q.length < 120 ? q + e.key : q))
+      setQuery((q) => (q.length < MAX_QUERY ? q + e.key : q))
       playSound('key')
       return true
     }
@@ -90,17 +114,24 @@ export function ShipTab({ active, width }: { active: boolean; width: number }) {
     phase === 'thinking'
       ? 'SHIP MIND ENGAGED…'
       : phase === 'streaming'
-        ? 'RECEIVING'
-        : phase === 'error'
-          ? 'FAULT'
-          : phase === 'done'
-            ? 'COMPLETE'
-            : 'STANDING BY'
+      ? 'RECEIVING'
+      : phase === 'error'
+      ? 'FAULT'
+      : phase === 'done'
+      ? 'COMPLETE'
+      : 'STANDING BY'
 
   return (
     <group>
       <ScreenHeader title="SHIP" right={status} width={width} />
-      <mesh position={[width / 2, -0.062, -0.0005]}>
+      {/* query line — tap to summon the OS keyboard on touch */}
+      <mesh
+        position={[width / 2, -0.062, -0.0005]}
+        onPointerDown={(e) => {
+          stopLook(e)
+          field.focus()
+        }}
+      >
         <planeGeometry args={[width, 0.04]} />
         <meshBasicMaterial color={ARC.greenFaint} transparent opacity={0.65} />
       </mesh>
@@ -141,7 +172,8 @@ export function ShipTab({ active, width }: { active: boolean; width: number }) {
                 position={[(width - 0.09) / 6 - 0.01, -0.002, -0.0005]}
                 onPointerDown={(e) => {
                   stopLook(e)
-                  if (s.slug) openModal(router, { type: 'article', slug: String(s.slug) })
+                  const modal = sourceModal(s)
+                  if (modal) openModal(router, modal)
                 }}
               >
                 <planeGeometry args={[(width - 0.09) / 3 - 0.008, 0.026]} />

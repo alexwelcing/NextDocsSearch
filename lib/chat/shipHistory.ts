@@ -1,14 +1,14 @@
-// Ship conversation history → model messages for /api/vector-search. History is untrusted
-// client input: ShipTab (shipClient.ts) sends {role, content}; older clients sent
+// Ship conversation history → model messages for the Ship handler (lib/ship). History is
+// untrusted client input: ShipTab (shipClient.ts) sends {role, content}; older clients sent
 // {question, response} pairs.
 
-import type { HfChatMessage } from '@/lib/ai/huggingface'
+import type { ChatMessage } from '@/lib/ai/chatProvider'
 import { resolveShipTrick } from '@/lib/ai/shipTricks'
 
 export const HISTORY_MAX_MESSAGES = 8
 export const HISTORY_MAX_CHARS = 1200
 
-/** Lead-ins of the replies the route writes itself when the model can't answer. */
+/** Lead-ins of the replies the handler writes itself when the model can't answer. */
 export const ARCHIVE_FALLBACK_LEAD = 'Generative link offline'
 export const SYSTEM_FAULT_LEAD = 'Ship systems fault'
 
@@ -20,7 +20,7 @@ export interface ChatHistoryEntry {
   response?: unknown
 }
 
-function toHistoryMessage(role: 'user' | 'assistant', content: unknown): HfChatMessage[] {
+function toHistoryMessage(role: 'user' | 'assistant', content: unknown): ChatMessage[] {
   if (typeof content !== 'string') return []
   const trimmed = content.trim().slice(0, HISTORY_MAX_CHARS)
   return trimmed ? [{ role, content: trimmed }] : []
@@ -30,11 +30,11 @@ function isRouteReply(content: string): boolean {
   return content.startsWith(ARCHIVE_FALLBACK_LEAD) || content.startsWith(SYSTEM_FAULT_LEAD)
 }
 
-/** Some replies come from the route, not the model: the archive fallback, the fault notice and
+/** Some replies come from the handler, not the model: the archive fallback, the fault notice and
  *  the text/plain trick listings (/help, /tricks, unknown commands). Replaying them would tell
  *  the model it said them, so each is dropped along with the question it answered. */
-function dropRouteReplies(messages: HfChatMessage[]): HfChatMessage[] {
-  const kept: HfChatMessage[] = []
+function dropRouteReplies(messages: ChatMessage[]): ChatMessage[] {
+  const kept: ChatMessage[] = []
   let dropReply = false
 
   for (const message of messages) {
@@ -63,10 +63,10 @@ function dropRouteReplies(messages: HfChatMessage[]): HfChatMessage[] {
 /** The newest HISTORY_MAX_MESSAGES user/assistant turns, each capped at HISTORY_MAX_CHARS.
  *  Client-supplied 'system' turns and malformed entries are dropped before the cap is applied,
  *  so junk can't crowd out real turns. */
-export function buildHistoryMessages(history: unknown): HfChatMessage[] {
+export function buildHistoryMessages(history: unknown): ChatMessage[] {
   if (!Array.isArray(history)) return []
 
-  const messages = history.flatMap((entry: unknown): HfChatMessage[] => {
+  const messages = history.flatMap((entry: unknown): ChatMessage[] => {
     if (!entry || typeof entry !== 'object') return []
     const { role, content, question, response } = entry as ChatHistoryEntry
 

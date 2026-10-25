@@ -1,0 +1,16 @@
+: Workers AI @cf/qwen/qwen3-30b-a3b-fp8: a reasoning model with no thinking switch. Its reasoning
+: rides reasoning_content, and the content can still open with a <think> block, split across
+: chunks here at awkward places.
+
+data: {"id":"chatcmpl-9a0e","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"role":"assistant","reasoning_content":"Okay, let me look at the archive context."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-9a0e","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":"<thi"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-9a0e","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":"nk>The context mentions BB84.</th"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-9a0e","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":"ink>\n\nQuantum key distribution "},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-9a0e","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":"uses photon polarization."},"finish_reason":"stop"}]}
+
+data: [DONE]
+
