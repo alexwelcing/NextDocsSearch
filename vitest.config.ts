@@ -17,6 +17,8 @@ export default defineConfig({
       '**/out/**',
       '**/.wrangler/**',
       '**/.claude/**',
+      '**/.venv/**',
+      'research/**',
     ],
   },
 })
