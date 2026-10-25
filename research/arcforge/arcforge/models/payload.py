@@ -123,13 +123,13 @@ def planned_entries(
     """Lexicon entries of the planned shape; returns (entries, bucket_base)."""
     bucket_base = shape.rows - shape.buckets
     entries: list[LexiconEntry] = []
+    index: dict[str, int] = {}
     row = 0
-    taken: set[str] = set()
 
     def add(key: str, kind: Kind, r: int, candidates: tuple[int, ...] = ()) -> bool:
-        if key in taken:
+        if key in index:
             return False
-        taken.add(key)
+        index[key] = len(entries)
         entries.append(LexiconEntry(key, kind, r, candidates))
         return True
 
@@ -145,18 +145,25 @@ def planned_entries(
             by_first.setdefault(key.split()[0], []).append(row)
             row += 1
     aliases = 0
-    for first, rows in sorted(by_first.items()):
+    for first, people in sorted(by_first.items()):
         if aliases == shape.aliases:
             break
-        if first in taken:
-            continue  # a corpus word already; S3 would decide which row the bare name gets
-        if len(rows) >= 2 and add(first, Kind.ALIAS, row, tuple(rows)):
+        if len(people) < 2:
+            continue
+        if first in index:
+            # A bare first name that is also a corpus word: its row becomes the alias row.
+            existing = entries[index[first]]
+            if existing.kind != Kind.WORD:
+                continue
+            entries[index[first]] = LexiconEntry(first, Kind.ALIAS, existing.row, tuple(people))
+        else:
+            add(first, Kind.ALIAS, row, tuple(people))
             row += 1
-            aliases += 1
+        aliases += 1
     remaining = bucket_base - row
     if remaining <= 0:
         raise ValueError(f'payload: {row} lexeme rows leave no room under bucket_base {bucket_base}')
-    general = [w for w in general if w not in taken]
+    general = [w for w in general if w not in index]
     for i, word in enumerate(general):
         # Vocabulary quantization: general words share the remaining rows round-robin.
         add(word, Kind.GENERAL, row + i % remaining)
