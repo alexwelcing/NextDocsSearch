@@ -84,10 +84,12 @@ export const HEADER_RULES: HeaderRule[] = [
     headers: { 'Cache-Control': IMMUTABLE },
   })),
   // /videos/<slug> are HTML pages (default revalidation); only the films under it are media.
-  ...['/images/*', '/background/*', '/sounds/*', '/videos/articles/*'].map((pattern) => ({
-    pattern,
-    headers: { 'Cache-Control': MEDIA_CACHE },
-  })),
+  ...['/images/*', '/background/*', '/sounds/*', '/videos/articles/*', '/worlds/*', '/basis/*'].map(
+    (pattern) => ({
+      pattern,
+      headers: { 'Cache-Control': MEDIA_CACHE },
+    })
+  ),
   { pattern: '/fonts/*', headers: { 'Cache-Control': FONT_CACHE } },
   ...['/arc/*', '/search/*'].map((pattern) => ({
     pattern,

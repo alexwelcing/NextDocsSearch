@@ -1,12 +1,13 @@
-// WORLDS: environment selector. Choosing a world crossfades the panorama and re-tints the
-// lighting and atmosphere. The dock stays put — the room changes around you.
+// WORLDS: environment selector. Choosing a world crossfades the sky and re-tints the lighting and
+// atmosphere. The dock stays put — the room changes around you. Hidden worlds (pilots awaiting
+// review) are left off the list; they open only by ?world=<id>.
 
 import { useState } from 'react'
 import { WindfoilText } from '../../text/WindfoilText'
 import { ScreenHeader, ScreenHints } from '../widgets/ScreenChrome'
 import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
-import { WORLDS } from '@/lib/immersive/worlds'
+import { LISTED_WORLDS } from '@/lib/immersive/worlds'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { playSound } from '@/lib/immersive/audio'
 import { ARC, FONT, TYPE, rgba } from '@/lib/immersive/theme'
@@ -16,10 +17,15 @@ const ROWS = 5
 export function WorldsTab({ active, width }: { active: boolean; width: number }) {
   const worldId = useImmersiveStore((s) => s.worldId)
   const setWorld = useImmersiveStore((s) => s.setWorld)
-  const [sel, setSel] = useState(() => Math.max(0, WORLDS.findIndex((w) => w.id === worldId)))
+  const [sel, setSel] = useState(() =>
+    Math.max(
+      0,
+      LISTED_WORLDS.findIndex((w) => w.id === worldId)
+    )
+  )
 
   const activate = (index: number) => {
-    const world = WORLDS[index]
+    const world = LISTED_WORLDS[index]
     if (!world || world.id === worldId) return
     playSound('confirm')
     setWorld(world.id)
@@ -27,7 +33,7 @@ export function WorldsTab({ active, width }: { active: boolean; width: number })
 
   useTabKeys(active, (e) => {
     if (e.key === 'ArrowDown') {
-      setSel((s) => Math.min(s + 1, WORLDS.length - 1))
+      setSel((s) => Math.min(s + 1, LISTED_WORLDS.length - 1))
       playSound('key')
       return true
     }
@@ -43,7 +49,7 @@ export function WorldsTab({ active, width }: { active: boolean; width: number })
     return false
   })
 
-  const items = WORLDS.map((w) => ({
+  const items = LISTED_WORLDS.map((w) => ({
     id: w.id,
     primary: w.name,
     meta: w.id === worldId ? '* LIVE' : '',
@@ -51,7 +57,7 @@ export function WorldsTab({ active, width }: { active: boolean; width: number })
 
   return (
     <group>
-      <ScreenHeader title="WORLDS" right={`${WORLDS.length} MAPPED`} width={width} />
+      <ScreenHeader title="WORLDS" right={`${LISTED_WORLDS.length} MAPPED`} width={width} />
       <ScreenList
         items={items}
         selected={sel}
@@ -72,7 +78,7 @@ export function WorldsTab({ active, width }: { active: boolean; width: number })
         maxWidth={width}
         maxLines={2}
       >
-        {WORLDS[sel]?.blurb ?? ''}
+        {LISTED_WORLDS[sel]?.blurb ?? ''}
       </WindfoilText>
       <ScreenHints text="^v SELECT · ENTER JUMP" width={width} />
     </group>

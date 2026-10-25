@@ -93,7 +93,13 @@ function serverOnly() {
   return {
     // Prevent Vercel from bundling public/ assets into serverless functions
     outputFileTracingExcludes: {
-      '*': ['public/images/**', 'public/background/**', 'public/splats/**'],
+      '*': [
+        'public/images/**',
+        'public/background/**',
+        'public/splats/**',
+        'public/worlds/**',
+        'public/basis/**',
+      ],
     },
 
     // The archive server source reads this generated file at runtime, and Ship reads the search
@@ -135,7 +141,7 @@ function serverOnly() {
     async headers() {
       return [
         {
-          source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
+          source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|ktx2)',
           headers: [
             {
               key: 'Cache-Control',

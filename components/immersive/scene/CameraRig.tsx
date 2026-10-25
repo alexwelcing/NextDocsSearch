@@ -3,13 +3,15 @@
 // keyboard reading (page turns, typing a query) doesn't count as look input, and never timed
 // from behind the boot overlay. The drift eases in from rest and shares one 0.2°/s rotation
 // budget with the panorama's spin (see lib/immersive/drift.ts). The camera stays at the
-// origin — the world turns around the viewer.
+// origin — the world turns around the viewer — except under the ?depth=1 debug flag, where a
+// small pointer-driven head-lean gives the depth-parallax experiment something to show.
 
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import type { PerspectiveCamera } from 'three'
 import { useImmersiveStore, type BootPhase, type ImmersiveModal } from '@/stores/immersiveStore'
 import { attractDrift, attractSpin, stepAttract } from '@/lib/immersive/drift'
+import { SKY_DEBUG, skyDebugHandle } from '@/lib/immersive/sky/debug'
 
 const LOOK_SPEED = 0.0032
 const TOUCH_SPEED = 0.0044
@@ -18,6 +20,12 @@ const PITCH_LIMIT = Math.PI / 2 - 0.12
 const FOV_MIN = 45
 const FOV_MAX = 85
 export const IDLE_AFTER_MS = 6000
+const DEG = Math.PI / 180
+// DEBUG (?depth=1) head-lean: camera translation in the yaw frame, scene units (sky radius 60,
+// nearest depth 4), damped toward the pointer. Off under reduced motion.
+const LEAN_X = 0.3
+const LEAN_Y = 0.12
+const LEAN_RATE = 6 // 1/s
 
 /** The UI that holds the idle drift off: a reader/modal, the dock, or the boot overlay. */
 export interface IdleHolds {
@@ -70,7 +78,38 @@ export function CameraRig() {
     lastInputAt: 0,
     /** Linear 0..1 attract ramp; attractDrift.gain is its eased value. */
     attract: 0,
+    lean: { x: 0, y: 0, tx: 0, ty: 0 },
   })
+
+  // Debug: a fixed starting view (?look=yaw,pitch[,fov], degrees) and, for probes, a setter.
+  useEffect(() => {
+    const s = state.current
+    const look = (yawDeg: number, pitchDeg: number, fov?: number | null) => {
+      s.yaw = -yawDeg * DEG // +yaw turns right; camera yaw is counter-clockwise
+      s.pitch = Math.max(-PITCH_LIMIT, Math.min(PITCH_LIMIT, pitchDeg * DEG))
+      s.velYaw = s.velPitch = 0
+      if (fov) {
+        s.targetFov = camera.fov = fov
+        camera.updateProjectionMatrix()
+      }
+    }
+    if (SKY_DEBUG.look) look(SKY_DEBUG.look.yaw, SKY_DEBUG.look.pitch, SKY_DEBUG.look.fov)
+    const h = skyDebugHandle()
+    if (h) h.look = look
+  }, [camera])
+
+  // Debug: pointer-driven head-lean for the depth-parallax experiment.
+  useEffect(() => {
+    if (!SKY_DEBUG.depth) return
+    const s = state.current
+    const onMove = (e: PointerEvent) => {
+      if (s.dragging) return
+      s.lean.tx = (e.clientX / window.innerWidth) * 2 - 1
+      s.lean.ty = -((e.clientY / window.innerHeight) * 2 - 1)
+    }
+    window.addEventListener('pointermove', onMove)
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [])
 
   useEffect(() => {
     const el = gl.domElement
@@ -142,7 +181,7 @@ export function CameraRig() {
       // yields to it (drift.ts) so the two never stack.
       const now = performance.now()
       s.lastInputAt = nextLastInputAt(s.lastInputAt, now, useImmersiveStore.getState())
-      const idle = isIdle(s.lastInputAt, now, reducedMotion)
+      const idle = isIdle(s.lastInputAt, now, reducedMotion || SKY_DEBUG.still)
       s.attract = stepAttract(s.attract, idle, delta)
       attractDrift.gain = easeAttract(s.attract)
       s.yaw -= attractSpin(attractDrift.gain) * delta
@@ -151,6 +190,15 @@ export function CameraRig() {
       attractDrift.gain = 0
     }
     camera.rotation.set(s.pitch, s.yaw, 0, 'YXZ')
+    if (SKY_DEBUG.depth && !reducedMotion) {
+      const l = s.lean
+      const k = 1 - Math.exp(-LEAN_RATE * delta)
+      l.x += (l.tx - l.x) * k
+      l.y += (l.ty - l.y) * k
+      // Lean in the yaw frame: camera right = (cos yaw, 0, −sin yaw).
+      const ox = l.x * LEAN_X
+      camera.position.set(ox * Math.cos(s.yaw), l.y * LEAN_Y, -ox * Math.sin(s.yaw))
+    }
     if (Math.abs(camera.fov - s.targetFov) > 0.05) {
       camera.fov += (s.targetFov - camera.fov) * Math.min(1, delta * 8)
       camera.updateProjectionMatrix()
