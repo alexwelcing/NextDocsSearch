@@ -1,0 +1,56 @@
+{
+  "comment": "Model revisions mirrored to gs://witching-606c6-arcforge/models/<repo>@<revision>/ by `arcforge mirror`. Revisions are full commit SHAs, resolved and verified on the Hub on 2026-10-24. Runner VMs read only the mirror, never the Hub. `default: false` entries are the program's pre-named fallbacks, mirrored only if an M1 gate pins them.",
+  "models": [
+    {
+      "key": "embeddinggemma-2",
+      "repo": "google/embeddinggemma-2",
+      "revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "role": "primary teacher (S4), B6 local rows, B7 first stage",
+      "default": true,
+      "exclude": []
+    },
+    {
+      "key": "qwen3.5-9b",
+      "repo": "Qwen/Qwen3.5-9B",
+      "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "role": "training-query generator (S5), persona/constraint banks, 25% audit judge (vLLM, text-only)",
+      "default": true,
+      "exclude": []
+    },
+    {
+      "key": "ministral-3-8b",
+      "repo": "mistralai/Ministral-3-8B-Instruct-2512",
+      "revision": "5b26027e7b19eeb4b7352e1fed3926375dd2cb4d",
+      "role": "eval-query generator (S6), R06 constraint auditor, third I5 re-grader (vLLM, text-only)",
+      "default": true,
+      "exclude": ["consolidated.safetensors"],
+      "note": "HF shards only: consolidated.safetensors duplicates model-0000x-of-00003."
+    },
+    {
+      "key": "qwen3-reranker-0.6b",
+      "repo": "Qwen/Qwen3-Reranker-0.6B",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+      "role": "B7 ceiling reranker (R00 only)",
+      "default": true,
+      "exclude": []
+    },
+    {
+      "key": "qwen3.5-4b",
+      "repo": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "role": "pinned for the arc in place of qwen3.5-9b if the M1 throughput gate (>= 1,000 tok/s at 64-way) fails",
+      "default": false,
+      "fallback_for": "qwen3.5-9b",
+      "exclude": []
+    },
+    {
+      "key": "ministral-3-3b",
+      "repo": "mistralai/Ministral-3-3B-Instruct-2512",
+      "revision": "b35d4dfe56c142746f54dbd64f579faab2744308",
+      "role": "pinned in place of ministral-3-8b if the M1 schema-valid-JSON gate (>= 99% of 200) fails",
+      "default": false,
+      "fallback_for": "ministral-3-8b",
+      "exclude": ["consolidated.safetensors"]
+    }
+  ]
+}

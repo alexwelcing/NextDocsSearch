@@ -1,0 +1,24 @@
+# Cloud Build recipe for the arcforge runner container (see container/Dockerfile).
+# Submitted from research/arcforge by `python -m arcforge.runner image build`, which passes
+# _COMMIT and reads back the pushed digest into arcforge/runner/pinned/image.json.
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    env: ['DOCKER_BUILDKIT=1']
+    args:
+      - build
+      - --file=container/Dockerfile
+      - --build-arg=ARCFORGE_COMMIT=${_COMMIT}
+      - --tag=${_IMAGE}:${_COMMIT}
+      - .
+images:
+  - ${_IMAGE}:${_COMMIT}
+substitutions:
+  _IMAGE: us-central1-docker.pkg.dev/${PROJECT_ID}/arcforge/arcforge
+  _COMMIT: unknown
+options:
+  dynamicSubstitutions: true
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
+timeout: 3600s
+tags: ['arcforge', 'managed-by-claude']
