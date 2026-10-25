@@ -42,8 +42,12 @@ def register(subparsers) -> None:
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('a', metavar='RUN_A', help='a run id (latest manifest in the cache) or a run.json path')
-    parser.add_argument('b', metavar='RUN_B', help='a run id (latest manifest in the cache) or a run.json path')
+    parser.add_argument(
+        'a', metavar='RUN_A', help='a run id (latest manifest in the cache) or a run.json path'
+    )
+    parser.add_argument(
+        'b', metavar='RUN_B', help='a run id (latest manifest in the cache) or a run.json path'
+    )
     add_cache_arg(parser)
     parser.add_argument('--json', action='store_true', help='print the arc-diff/1 report as JSON')
     parser.add_argument('--exit-code', action='store_true', help='exit 1 when the runs differ')

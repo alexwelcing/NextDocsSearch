@@ -46,7 +46,9 @@ def diff_runs(a: dict[str, Any], b: dict[str, Any], store: Store | None = None) 
             stages.append(
                 {
                     'stage': name,
-                    'change': 'outputs changed' if left['digest'] != right['digest'] else 'key changed, same outputs',
+                    'change': 'outputs changed'
+                    if left['digest'] != right['digest']
+                    else 'key changed, same outputs',
                 }
             )
     ha, hb = a.get('artifact_hashes', {}), b.get('artifact_hashes', {})
@@ -77,19 +79,27 @@ def diff_runs(a: dict[str, Any], b: dict[str, Any], store: Store | None = None) 
 
 def render(report: dict[str, Any]) -> str:
     a, b = report['a'], report['b']
-    lines = [f'arcforge diff {a["id"]} (config {a["config_sha256"][:12]}) .. {b["id"]} (config {b["config_sha256"][:12]})']
+    lines = [
+        f'arcforge diff {a["id"]} (config {a["config_sha256"][:12]}) .. '
+        f'{b["id"]} (config {b["config_sha256"][:12]})'
+    ]
     if report['identical']:
         lines.append('identical: same config, stage keys and artifacts')
         return '\n'.join(lines)
     if report['config']:
         lines.append(f'config ({len(report["config"])} changed):')
-        lines += [f'  {c["path"]}: {json.dumps(c["a"])} -> {json.dumps(c["b"])}' for c in report['config']]
+        lines += [
+            f'  {c["path"]}: {json.dumps(c["a"])} -> {json.dumps(c["b"])}' for c in report['config']
+        ]
     if report['stages']:
         lines.append('stages:')
         lines += [f'  {s["stage"]:5} {s["change"]}' for s in report['stages']]
     if report['artifacts']:
         lines.append(f'artifacts ({len(report["artifacts"])} changed):')
-        lines += [f'  {x["artifact"]}: {(x["a"] or "-")[:12]} -> {(x["b"] or "-")[:12]}' for x in report['artifacts']]
+        lines += [
+            f'  {x["artifact"]}: {(x["a"] or "-")[:12]} -> {(x["b"] or "-")[:12]}'
+            for x in report['artifacts']
+        ]
     corpus = report['corpus']
     if corpus:
         lines.append(

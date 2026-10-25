@@ -36,7 +36,14 @@ from typing import Any, Protocol
 from arcforge.core.cache import open_store
 from arcforge.core.config import Config
 from arcforge.core.dag import RunEnv
-from arcforge.core.pipeline import Log, StageResult, manifest, manifest_bytes, materialize, run_selection
+from arcforge.core.pipeline import (
+    Log,
+    StageResult,
+    manifest,
+    manifest_bytes,
+    materialize,
+    run_selection,
+)
 from arcforge.core.stages import REGISTRY
 
 VM_REQUEST_SCHEMA = 'arc-vm-request/1'
@@ -80,7 +87,13 @@ class LocalExecutor:
     def execute(self, request: RunRequest, log: Log) -> RunOutcome:
         store = open_store(request.cache_url)
         results = run_selection(
-            REGISTRY, request.stages, request.config, store, request.env, force=request.force, log=log
+            REGISTRY,
+            request.stages,
+            request.config,
+            store,
+            request.env,
+            force=request.force,
+            log=log,
         )
         doc = manifest(request.config, results)
         digest = store.put_manifest(request.config.run_id, manifest_bytes(doc))
@@ -119,8 +132,8 @@ def vm_spec(request: RunRequest) -> dict[str, Any]:
 class VMExecutor:
     name = 'vm'
 
-    def __init__(self, module: str = RUNNER_MODULE):
-        self.module = module
+    def __init__(self, module: str | None = None):
+        self.module = module or RUNNER_MODULE
 
     def hook(self) -> Any:
         try:
@@ -144,7 +157,8 @@ class VMExecutor:
     def execute(self, request: RunRequest, log: Log) -> RunOutcome:
         if not request.cache_url.startswith('gs://'):
             raise ExecutorUnavailable(
-                f'the VM executor needs a gs:// cache the runner VM can reach (got {request.cache_url}); '
+                'the VM executor needs a gs:// cache the runner VM can reach '
+                f'(got {request.cache_url}); '
                 'pass --cache gs://witching-606c6-arcforge/cache'
             )
         hook = self.hook()

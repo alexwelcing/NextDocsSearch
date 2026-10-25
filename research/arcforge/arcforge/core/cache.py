@@ -125,7 +125,9 @@ def _http_code(error: BaseException) -> int | None:
 class GCSBackend:
     """gs://bucket/prefix. `client` is injectable for tests; by default a storage.Client."""
 
-    def __init__(self, bucket: str, prefix: str = '', client: Any = None, project: str = GCS_PROJECT):
+    def __init__(
+        self, bucket: str, prefix: str = '', client: Any = None, project: str = GCS_PROJECT
+    ):
         self.bucket_name = bucket
         self.prefix = prefix.strip('/')
         self.url = f'gs://{bucket}/{self.prefix}' if self.prefix else f'gs://{bucket}'

@@ -11,7 +11,15 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from arcforge.core.cliutil import EXIT_FAIL, EXIT_OK, add_cache_arg, add_repo_arg, default_repo_root, emit_json, guarded
+from arcforge.core.cliutil import (
+    EXIT_FAIL,
+    EXIT_OK,
+    add_cache_arg,
+    add_repo_arg,
+    default_repo_root,
+    emit_json,
+    guarded,
+)
 
 
 def _run(args: argparse.Namespace) -> int:
@@ -26,7 +34,9 @@ def _run(args: argparse.Namespace) -> int:
     if not args.manifest and doc['run']['id'] != args.run:
         print(f'arcforge verify: the latest manifest for {args.run} is for {doc["run"]["id"]}')
         return EXIT_FAIL
-    report = verify_run(doc, store, RunEnv(repo_root=(args.repo or default_repo_root()).resolve()), REGISTRY)
+    report = verify_run(
+        doc, store, RunEnv(repo_root=(args.repo or default_repo_root()).resolve()), REGISTRY
+    )
     if args.json:
         emit_json(report)
     else:
@@ -41,8 +51,12 @@ def register(subparsers) -> None:
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('run', metavar='RUN', help='the run id whose latest manifest to verify, e.g. r00')
-    parser.add_argument('--manifest', metavar='RUN_JSON', type=Path, help='verify this run.json instead')
+    parser.add_argument(
+        'run', metavar='RUN', help='the run id whose latest manifest to verify, e.g. r00'
+    )
+    parser.add_argument(
+        '--manifest', metavar='RUN_JSON', type=Path, help='verify this run.json instead'
+    )
     add_cache_arg(parser)
     add_repo_arg(parser)
     parser.add_argument('--json', action='store_true', help='print the arc-verify/1 report as JSON')

@@ -167,7 +167,10 @@ class Plan:
             'stages': [row.to_json() for row in self.stages],
             'lines': [line.to_json() for line in self.lines],
             'subtotal_usd': float(cents(self.subtotal)),
-            'contingency': {'rate': float(self.contingency_rate), 'usd': float(cents(self.contingency))},
+            'contingency': {
+                'rate': float(self.contingency_rate),
+                'usd': float(cents(self.contingency)),
+            },
             'dividend_usd': float(cents(self.dividend)),
             'plan_usd': float(cents(self.total)),
             'ceiling_usd': float(self.ceiling),
@@ -189,7 +192,9 @@ def _int(entry: dict[str, Any], name: str) -> int:
     return value
 
 
-def price_line(stage: str, entry: dict[str, Any], prices: PriceTable, config: Config) -> tuple[Line | None, str | None, Decimal]:
+def price_line(
+    stage: str, entry: dict[str, Any], prices: PriceTable, config: Config
+) -> tuple[Line | None, str | None, Decimal]:
     """One workload entry -> (cost line or None, minutes bucket, minutes)."""
     kind = entry.get('kind')
     if kind not in KINDS:
@@ -198,7 +203,12 @@ def price_line(stage: str, entry: dict[str, Any], prices: PriceTable, config: Co
     if not isinstance(item, str) or not item:
         raise ConfigError(f'plan.{stage}: every line needs an item')
     minutes = dec(entry.get('minutes', 0))
-    common = {'stage': stage, 'item': item, 'id': entry.get('id'), 'cached': bool(entry.get('cached', False))}
+    common = {
+        'stage': stage,
+        'item': item,
+        'id': entry.get('id'),
+        'cached': bool(entry.get('cached', False)),
+    }
     if kind in ('laptop', 'owner'):
         return None, kind, minutes
     if kind == 'vm':
@@ -223,7 +233,9 @@ def price_line(stage: str, entry: dict[str, Any], prices: PriceTable, config: Co
             raise ConfigError(f'plan.{stage}: llm line {item!r} needs a model')
         price = prices.llm(model)
         if price['provider'] != 'vertex':
-            raise ConfigError(f'plan.{stage}: {model} is not a Vertex model (provider {price["provider"]})')
+            raise ConfigError(
+                f'plan.{stage}: {model} is not a Vertex model (provider {price["provider"]})'
+            )
         tokens_in, tokens_out = _int(entry, 'tokens_in'), _int(entry, 'tokens_out')
         usd = Decimal(0) if common['cached'] else prices.llm_usd(model, tokens_in, tokens_out)
         line = Line(
@@ -237,9 +249,21 @@ def price_line(stage: str, entry: dict[str, Any], prices: PriceTable, config: Co
         )
         return line, None, minutes
     if kind == 'workers_ai':
-        return Line(provider='workers_ai', usd=prices.workers_ai_usd(entry.get('neurons_k', 0)), **common), None, minutes
+        return (
+            Line(
+                provider='workers_ai',
+                usd=prices.workers_ai_usd(entry.get('neurons_k', 0)),
+                **common,
+            ),
+            None,
+            minutes,
+        )
     if kind == 'storage':
-        return Line(provider='gcp', usd=prices.storage_usd(entry.get('gb_month', 0)), **common), None, minutes
+        return (
+            Line(provider='gcp', usd=prices.storage_usd(entry.get('gb_month', 0)), **common),
+            None,
+            minutes,
+        )
     return (
         Line(
             provider='orchestrator',
@@ -264,7 +288,9 @@ def _dividend_lines(config: Config, prices: PriceTable, room: Decimal) -> list[L
             unit_usd = prices.llm_usd(item['model'], per_in, per_out)
             if unit_usd <= 0:
                 raise ConfigError(f'dividend item {item["item"]!r} costs nothing per unit')
-            units = min(_int(item, 'max_units'), int((room / unit_usd).to_integral_value(ROUND_FLOOR)))
+            units = min(
+                _int(item, 'max_units'), int((room / unit_usd).to_integral_value(ROUND_FLOOR))
+            )
             if units <= 0:
                 continue
             usd = unit_usd * units
@@ -272,7 +298,7 @@ def _dividend_lines(config: Config, prices: PriceTable, room: Decimal) -> list[L
             lines.append(
                 Line(
                     stage=item['stage'],
-                    item=f'{item["item"]} ({units} {item.get("unit", "unit")}s)',
+                    item=f'{item["item"]} ({units} x {item["unit"]})',
                     id=f'dividend.{priority}',
                     provider='vertex',
                     endpoint=prices.llm(item['model']).get('endpoint'),
@@ -286,7 +312,9 @@ def _dividend_lines(config: Config, prices: PriceTable, room: Decimal) -> list[L
     return lines
 
 
-def make_plan(config: Config, prices: PriceTable, stages: dict[str, Stage], budget_usd: float | None = None) -> Plan:
+def make_plan(
+    config: Config, prices: PriceTable, stages: dict[str, Stage], budget_usd: float | None = None
+) -> Plan:
     workload = config.get('plan', {}) or {}
     unknown = sorted(set(workload) - set(stages))
     if unknown:
@@ -347,54 +375,67 @@ def make_plan(config: Config, prices: PriceTable, stages: dict[str, Stage], budg
     return plan
 
 
+def _usd(value: Decimal) -> str:
+    return f'{float(cents(value)):>8.2f}'
+
+
 def render(plan: Plan) -> str:
     """The plan as a fixed-width table for the terminal."""
     doc = plan.to_json()
+    prices = plan.prices
     out = [
-        f'arcforge plan {plan.run_id} (branch {plan.branch}) · prices {plan.prices.id} '
-        f'({plan.prices.path.name}, sha256 {plan.prices.sha256[:12]}) · config {plan.config_sha256[:12]}',
+        f'arcforge plan {plan.run_id} (branch {plan.branch}) · prices {prices.id} '
+        f'({prices.path.name}, sha256 {prices.sha256[:12]}) · config {plan.config_sha256[:12]}',
         '',
         f'{"stage":6}{"phase":6}{"platform":19}{"":44}{"usd":>8}',
-        f'{"":6}{"- line":44}{"provider":13}{"model":30}{"tokens in":>11}{"out":>10}{"min":>6}{"usd":>8}',
+        f'{"":6}{"- line":44}{"provider":13}{"model":30}'
+        f'{"tokens in":>11}{"out":>10}{"min":>6}{"usd":>8}',
     ]
     by_stage: dict[str, list[Line]] = {}
     for line in plan.lines:
         by_stage.setdefault(line.stage, []).append(line)
     for row in plan.stages:
         title = row.title + ('' if row.implemented else ' [stub]')
-        free = [f'{kind} {minutes:g} min' for kind, minutes in (('laptop', row.laptop_min), ('owner', row.owner_min)) if minutes]
+        free = [
+            f'{kind} {minutes:g} min'
+            for kind, minutes in (('laptop', row.laptop_min), ('owner', row.owner_min))
+            if minutes
+        ]
         if free:
             title += f' ({", ".join(free)})'
-        out.append(f'{row.stage:6}{row.phase:6}{row.platform:19}{title[:43]:44}{float(cents(row.usd)):>8.2f}')
+        out.append(f'{row.stage:6}{row.phase:6}{row.platform:19}{title[:43]:44}{_usd(row.usd)}')
         for line in by_stage.get(row.stage, []):
             label = ('[dividend] ' if line.dividend else '') + line.item
             minutes = f'{line.gpu_min:g}' if line.gpu_min else ''
             out.append(
                 f'{"":6}- {label[:41]:42}{line.provider:13}{(line.model or "-")[:29]:30}'
-                f'{line.tokens_in or "":>11}{line.tokens_out or "":>10}{minutes:>6}{float(cents(line.usd)):>8.2f}'
+                f'{line.tokens_in or "":>11}{line.tokens_out or "":>10}{minutes:>6}{_usd(line.usd)}'
             )
     vm = doc['vm']
+    budget = f', --budget ${doc["budget_usd"]:.2f}' if doc['budget_usd'] is not None else ''
+    verdict = 'OK' if doc['ok'] else 'OVER THE LIMIT'
     out += [
         '',
-        f'runner VM  {vm["shape"]}: {vm["minutes"]:g} min priced at on-demand ${vm["rate_usd_per_h"]:.2f}/h '
-        f'= ${vm["usd"]:.2f}  (spot ${vm["spot_rate_usd_per_h"]:.2f}/h would be about ${vm["spot_estimate_usd"]:.2f}; not planned)',
-        f'subtotal          ${doc["subtotal_usd"]:>7.2f}   (the sum of the unrounded lines, in cents)',
+        f'runner VM  {vm["shape"]}: {vm["minutes"]:g} min priced at on-demand '
+        f'${vm["rate_usd_per_h"]:.2f}/h = ${vm["usd"]:.2f}  '
+        f'(spot ${vm["spot_rate_usd_per_h"]:.2f}/h would be about '
+        f'${vm["spot_estimate_usd"]:.2f}; not planned)',
+        f'subtotal          ${doc["subtotal_usd"]:>7.2f}   (the unrounded lines, summed in cents)',
         f'contingency {doc["contingency"]["rate"]:.0%}   ${doc["contingency"]["usd"]:>7.2f}',
         f'dividend          ${doc["dividend_usd"]:>7.2f}',
         f'PLAN              ${doc["plan_usd"]:>7.2f}',
         '',
-        f'limit ${doc["limit_usd"]:.2f} = min(ceiling ${doc["ceiling_usd"]:.2f}, cap ${doc["cap_usd"]:.2f}'
-        + (f', --budget ${doc["budget_usd"]:.2f}' if doc['budget_usd'] is not None else '')
-        + f')  ->  {"OK" if doc["ok"] else "OVER THE LIMIT"} (headroom ${doc["headroom_usd"]:.2f})',
+        f'limit ${doc["limit_usd"]:.2f} = min(ceiling ${doc["ceiling_usd"]:.2f}, '
+        f'cap ${doc["cap_usd"]:.2f}{budget})  ->  {verdict} (headroom ${doc["headroom_usd"]:.2f})',
     ]
     if not doc['ok'] and doc['first_cut']:
         cut = doc['first_cut']
         out.append(
-            f'pre-named first cut: {cut["note"]} ({cut["line"]}): -${cut["saving_usd"]:.2f} on the line, '
-            f'-${cut["plan_saving_usd"]:.2f} on the plan with contingency'
+            f'pre-named first cut: {cut["note"]} ({cut["line"]}): -${cut["saving_usd"]:.2f} on the '
+            f'line, -${cut["plan_saving_usd"]:.2f} on the plan with contingency'
         )
-    out.append('')
-    out.append('verify at launch (third-party or volatile prices in this table):')
+    out += ['', 'verify at launch (third-party or volatile prices in this table):']
     for flag in doc['verify_at_launch']:
-        out.append(f'  {flag["entry"]}.{flag["field"]} = {flag["value"]}' + (f'  ({flag["note"]})' if flag['note'] else ''))
+        note = f'  ({flag["note"]})' if flag['note'] else ''
+        out.append(f'  {flag["entry"]}.{flag["field"]} = {flag["value"]}{note}')
     return '\n'.join(out)

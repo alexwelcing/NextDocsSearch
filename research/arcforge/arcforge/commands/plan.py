@@ -14,7 +14,10 @@ from arcforge.core.cliutil import EXIT_BUDGET, EXIT_OK, add_set_arg, emit_json, 
 
 
 def _run(args: argparse.Namespace) -> int:
-    from arcforge.core.budget import make_plan, render  # noqa: PLC0415 — lazy, see commands/__init__
+    from arcforge.core.budget import (  # noqa: PLC0415 — lazy, see commands/__init__
+        make_plan,
+        render,
+    )
     from arcforge.core.config import load_config, parse_override  # noqa: PLC0415
     from arcforge.core.prices import load_prices  # noqa: PLC0415
     from arcforge.core.stages import REGISTRY  # noqa: PLC0415
@@ -36,9 +39,15 @@ def register(subparsers) -> None:
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('config', metavar='RUN', help="a run id ('r00' -> configs/r00.yaml) or a config path")
-    parser.add_argument('--prices', metavar='YAML', help='price table to use instead of budget.prices')
-    parser.add_argument('--budget', metavar='USD', type=float, help='an extra limit below the ceiling')
+    parser.add_argument(
+        'config', metavar='RUN', help="a run id ('r00' -> configs/r00.yaml) or a config path"
+    )
+    parser.add_argument(
+        '--prices', metavar='YAML', help='price table to use instead of budget.prices'
+    )
+    parser.add_argument(
+        '--budget', metavar='USD', type=float, help='an extra limit below the ceiling'
+    )
     parser.add_argument('--json', action='store_true', help='print the plan as arc-plan/1 JSON')
     add_set_arg(parser)
     parser.set_defaults(func=guarded('plan', _run))

@@ -45,7 +45,9 @@ def _slug_of(path: str, prefix: str) -> str:
     return path[len(prefix) :].strip('/').split('/')[0]
 
 
-def _status(target: str, slugs: set[str], rename_map: dict[str, str], ghosts: set[str]) -> tuple[str, str | None]:
+def _status(
+    target: str, slugs: set[str], rename_map: dict[str, str], ghosts: set[str]
+) -> tuple[str, str | None]:
     if target in slugs:
         return 'real', target
     if rename_map.get(target) in slugs:

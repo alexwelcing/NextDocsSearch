@@ -104,7 +104,9 @@ def run_stage(
         if record is not None:
             outputs = record['outputs']
             if set(outputs) != set(stage.outputs) or outputs_digest(outputs) != record['digest']:
-                raise CacheCorrupt(f'stage record {stage.name}/{key} in {store.url} is inconsistent')
+                raise CacheCorrupt(
+                    f'stage record {stage.name}/{key} in {store.url} is inconsistent'
+                )
             data = {name: store.get_object(outputs[name]['sha256']) for name in stage.outputs}
             return StageResult(stage.name, key, record['digest'], outputs, data, cached=True)
 
@@ -146,7 +148,10 @@ def run_selection(
     for name in order:
         result = run_stage(stages[name], config, store, env, results, use_cache=name not in force)
         results[name] = result
-        log(f'{name:5} {"cached " if result.cached else "built  "} {result.digest[:12]}  key {result.key[:12]}')
+        log(
+            f'{name:5} {"cached " if result.cached else "built  "} {result.digest[:12]}  '
+            f'key {result.key[:12]}'
+        )
     return [results[name] for name in order]
 
 

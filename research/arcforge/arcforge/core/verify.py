@@ -22,7 +22,15 @@ from typing import Any
 
 from arcforge.core.cache import CacheError, Store
 from arcforge.core.config import Config
-from arcforge.core.dag import RunEnv, Stage, StageContext, StageError, key_material, outputs_digest, stage_key
+from arcforge.core.dag import (
+    RunEnv,
+    Stage,
+    StageContext,
+    StageError,
+    key_material,
+    outputs_digest,
+    stage_key,
+)
 from arcforge.core.hashing import digest_of
 from arcforge.core.pipeline import MANIFEST_SCHEMA, compute, describe_outputs
 
@@ -41,7 +49,9 @@ def load_manifest(data: bytes) -> dict[str, Any]:
     return doc
 
 
-def verify_run(doc: dict[str, Any], store: Store, env: RunEnv, stages: dict[str, Stage]) -> dict[str, Any]:
+def verify_run(
+    doc: dict[str, Any], store: Store, env: RunEnv, stages: dict[str, Stage]
+) -> dict[str, Any]:
     config = config_of(doc)
     recorded: dict[str, dict[str, bytes]] = {}
     digests: dict[str, str] = {}
@@ -85,7 +95,9 @@ def verify_run(doc: dict[str, Any], store: Store, env: RunEnv, stages: dict[str,
             fingerprint, payload = external.load(ctx, env)
             ctx.external[external.name] = payload
             fingerprints[external.name] = fingerprint
-        row['key_now'] = stage_key(key_material(stage, config, {i: digests[i] for i in stage.inputs}, fingerprints))
+        row['key_now'] = stage_key(
+            key_material(stage, config, {i: digests[i] for i in stage.inputs}, fingerprints)
+        )
         row['key_drift'] = row['key_now'] != entry['key']
         try:
             rebuilt = describe_outputs(compute(stage, ctx))
@@ -94,9 +106,15 @@ def verify_run(doc: dict[str, Any], store: Store, env: RunEnv, stages: dict[str,
             continue
         for artifact, meta in entry['outputs'].items():
             now = rebuilt.get(artifact, {}).get('sha256')
-            row['artifacts'][artifact] = {'recorded': meta['sha256'], 'rebuilt': now, 'match': now == meta['sha256']}
+            row['artifacts'][artifact] = {
+                'recorded': meta['sha256'],
+                'rebuilt': now,
+                'match': now == meta['sha256'],
+            }
             if now != meta['sha256']:
-                row['problems'].append(f'{artifact}: rebuilt {str(now)[:12]} != recorded {meta["sha256"][:12]}')
+                row['problems'].append(
+                    f'{artifact}: rebuilt {str(now)[:12]} != recorded {meta["sha256"][:12]}'
+                )
     ok = all(not row['problems'] for row in rows)
     return {
         'schema': 'arc-verify/1',
@@ -109,10 +127,17 @@ def verify_run(doc: dict[str, Any], store: Store, env: RunEnv, stages: dict[str,
 
 
 def render(report: dict[str, Any]) -> str:
-    lines = [f'arcforge verify {report["run"]["id"]} (config {report["run"]["config_sha256"][:12]}, cache {report["cache"]})']
+    lines = [
+        f'arcforge verify {report["run"]["id"]} (config {report["run"]["config_sha256"][:12]}, '
+        f'cache {report["cache"]})'
+    ]
     for row in report['stages']:
         status = 'ok' if not row['problems'] else 'FAIL'
-        drift = '  (key drift: code, config or corpus changed since the run)' if row.get('key_drift') else ''
+        drift = (
+            '  (key drift: code, config or corpus changed since the run)'
+            if row.get('key_drift')
+            else ''
+        )
         lines.append(f'  {row["stage"]:5} {status:4} {len(row["artifacts"])} artifacts{drift}')
         lines += [f'        {problem}' for problem in row['problems']]
     verdict = 'byte-identical' if report['ok'] else 'MISMATCH'

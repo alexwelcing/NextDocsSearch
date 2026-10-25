@@ -43,7 +43,10 @@ def select(stages: dict, phases: tuple[str, ...] | None, explicit: list[str]) ->
 
 
 def _run(args: argparse.Namespace) -> int:
-    from arcforge.core.budget import make_plan, render  # noqa: PLC0415 — lazy, see commands/__init__
+    from arcforge.core.budget import (  # noqa: PLC0415 — lazy, see commands/__init__
+        make_plan,
+        render,
+    )
     from arcforge.core.cache import default_cache_url  # noqa: PLC0415
     from arcforge.core.config import ARCFORGE_ROOT, load_config, parse_override  # noqa: PLC0415
     from arcforge.core.dag import RunEnv  # noqa: PLC0415
@@ -56,11 +59,16 @@ def _run(args: argparse.Namespace) -> int:
     if args.seed is not None:
         overrides['run.seed'] = args.seed
     config = load_config(args.config, overrides)
-    plan = make_plan(config, load_prices(config.get('budget.prices')), REGISTRY, budget_usd=args.budget)
+    plan = make_plan(
+        config, load_prices(config.get('budget.prices')), REGISTRY, budget_usd=args.budget
+    )
     if not plan.ok:
         print(render(plan), file=sys.stderr)
-        print(f'arcforge run: refusing to start, plan ${plan.to_json()["plan_usd"]:.2f} is above '
-              f'the ${plan.limit:.2f} limit', file=sys.stderr)
+        print(
+            f'arcforge run: refusing to start, plan ${plan.to_json()["plan_usd"]:.2f} is above '
+            f'the ${plan.limit:.2f} limit',
+            file=sys.stderr,
+        )
         return EXIT_BUDGET
 
     phase = 'prep' if args.prep else 'resume' if args.resume else 'vm'
@@ -72,7 +80,9 @@ def _run(args: argparse.Namespace) -> int:
     force = frozenset(split_csv(args.force))
     unknown = sorted(force - set(selection))
     if unknown:
-        print(f'arcforge run: --force names stages outside the selection: {unknown}', file=sys.stderr)
+        print(
+            f'arcforge run: --force names stages outside the selection: {unknown}', file=sys.stderr
+        )
         return 2
     out = None if args.no_out else (args.out or ARCFORGE_ROOT / 'runs' / config.run_id)
     plan_doc = plan.to_json()
@@ -88,9 +98,11 @@ def _run(args: argparse.Namespace) -> int:
         extra_files={'plan.json': pretty_json(plan_doc)},
     )
     log = (lambda _msg: None) if args.json else (lambda msg: print(msg, file=sys.stderr))
-    log(f'arcforge run {config.run_id} seed {config.seed}: {",".join(selection)} '
+    log(
+        f'arcforge run {config.run_id} seed {config.seed}: {",".join(selection)} '
         f'via {executor_name}, cache {request.cache_url}, plan ${plan_doc["plan_usd"]:.2f} '
-        f'of ${plan.limit:.2f}')
+        f'of ${plan.limit:.2f}'
+    )
     outcome = get_executor(executor_name).execute(request, log)
     summary = {
         'run': config.run_id,
@@ -113,21 +125,40 @@ def register(subparsers) -> None:
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('config', metavar='CONFIG', help="configs/rNN.yaml, or a run id such as 'r00'")
+    parser.add_argument(
+        'config', metavar='CONFIG', help="configs/rNN.yaml, or a run id such as 'r00'"
+    )
     parser.add_argument('--seed', type=int, help='the run seed (overrides run.seed)')
-    parser.add_argument('--budget', metavar='USD', type=float, help='refuse to start if the plan exceeds this')
+    parser.add_argument(
+        '--budget', metavar='USD', type=float, help='refuse to start if the plan exceeds this'
+    )
     which = parser.add_mutually_exclusive_group()
-    which.add_argument('--prep', action='store_true', help='the laptop prep pass (phase prep: S0-S2)')
+    which.add_argument(
+        '--prep', action='store_true', help='the laptop prep pass (phase prep: S0-S2)'
+    )
     which.add_argument('--resume', action='store_true', help='the owner gate and the laptop tail')
     which.add_argument('--stages', metavar='S0,S1', help='exactly these stages and what they need')
-    parser.add_argument('--force', metavar='S1,...', help='recompute these stages even on a cache hit')
-    parser.add_argument('--executor', choices=('auto', 'local', 'vm'), default='auto',
-                        help='where to run (default auto: vm if the selection has a vm stage)')
+    parser.add_argument(
+        '--force', metavar='S1,...', help='recompute these stages even on a cache hit'
+    )
+    parser.add_argument(
+        '--executor',
+        choices=('auto', 'local', 'vm'),
+        default='auto',
+        help='where to run (default auto: vm if the selection has a vm stage)',
+    )
     add_cache_arg(parser)
     add_repo_arg(parser)
     outputs = parser.add_mutually_exclusive_group()
-    outputs.add_argument('--out', metavar='DIR', type=Path, help='write run.json and artifacts here (default runs/<run id>/)')
+    outputs.add_argument(
+        '--out',
+        metavar='DIR',
+        type=Path,
+        help='write run.json and artifacts here (default runs/<run id>/)',
+    )
     outputs.add_argument('--no-out', action='store_true', help='write only to the cache')
-    parser.add_argument('--json', action='store_true', help='print a JSON summary instead of the log')
+    parser.add_argument(
+        '--json', action='store_true', help='print a JSON summary instead of the log'
+    )
     add_set_arg(parser)
     parser.set_defaults(func=guarded('run', _run))

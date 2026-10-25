@@ -26,7 +26,13 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from arcforge.core.corpus import CorpusError, CorpusFiles, load_corpus, normalize_date, parse_frontmatter
+from arcforge.core.corpus import (
+    CorpusError,
+    CorpusFiles,
+    load_corpus,
+    normalize_date,
+    parse_frontmatter,
+)
 from arcforge.core.dag import RunEnv, StageContext, StageError
 from arcforge.core.hashing import canonical_json, pairs_id, sha256_bytes
 
@@ -67,7 +73,9 @@ def run(ctx: StageContext) -> dict[str, bytes]:
         except CorpusError as error:
             raise StageError(f'S0: {corpus.mdx_dir}/{slug}.mdx: {error}') from error
         record = records.get(slug)
-        record_text = _text(record, f'{corpus.records_dir}/{slug}.json') if record is not None else None
+        record_text = (
+            _text(record, f'{corpus.records_dir}/{slug}.json') if record is not None else None
+        )
         if record_text is not None:
             try:
                 json.loads(record_text)
@@ -81,9 +89,13 @@ def run(ctx: StageContext) -> dict[str, bytes]:
                 'slug': slug,
                 'title': meta.get('title') if isinstance(meta.get('title'), str) else None,
                 'date': normalize_date(meta.get('date')),
-                'article_type': meta.get('articleType') if isinstance(meta.get('articleType'), str) else None,
+                'article_type': meta.get('articleType')
+                if isinstance(meta.get('articleType'), str)
+                else None,
                 'series': series,
-                'series_order': order if isinstance(order, int) and not isinstance(order, bool) else None,
+                'series_order': order
+                if isinstance(order, int) and not isinstance(order, bool)
+                else None,
                 'withheld': series in withheld_series,
                 'mdx_sha256': sha256_bytes(data),
                 'mdx_bytes': len(data),
@@ -106,7 +118,9 @@ def run(ctx: StageContext) -> dict[str, bytes]:
         },
         'corpus_id': pairs_id([(r['slug'], r['mdx_sha256']) for r in rows]),
         'main_corpus_id': pairs_id([(r['slug'], r['mdx_sha256']) for r in main]),
-        'records_id': pairs_id([(r['slug'], r['record_sha256']) for r in rows if r['record_sha256']]),
+        'records_id': pairs_id(
+            [(r['slug'], r['record_sha256']) for r in rows if r['record_sha256']]
+        ),
         'frontier': {
             'kind': 'withheld',
             'series': withheld_series,

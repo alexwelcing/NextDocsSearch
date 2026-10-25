@@ -89,7 +89,9 @@ def _git(repo_root: Path, *args: str, stdin: bytes | None = None) -> bytes:
 
 
 def load_git(repo_root: Path, git_sha: str, mdx_dir: str, records_dir: str) -> CorpusFiles:
-    listing = _git(repo_root, 'ls-tree', '-r', '-z', '--name-only', git_sha, '--', mdx_dir, records_dir)
+    listing = _git(
+        repo_root, 'ls-tree', '-r', '-z', '--name-only', git_sha, '--', mdx_dir, records_dir
+    )
     paths = sorted(
         p
         for p in listing.decode('utf-8').split('\0')
@@ -114,7 +116,9 @@ def load_git(repo_root: Path, git_sha: str, mdx_dir: str, records_dir: str) -> C
     return CorpusFiles('git', git_sha, mdx_dir, records_dir, files)
 
 
-def load_corpus(repo_root: Path, mdx_dir: str, records_dir: str, git_sha: str | None) -> CorpusFiles:
+def load_corpus(
+    repo_root: Path, mdx_dir: str, records_dir: str, git_sha: str | None
+) -> CorpusFiles:
     if git_sha:
         return load_git(repo_root, git_sha, mdx_dir, records_dir)
     return load_worktree(repo_root, mdx_dir, records_dir)

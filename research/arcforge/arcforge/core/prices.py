@@ -67,7 +67,10 @@ class PriceTable:
 
     def llm_usd(self, model: str, tokens_in: int, tokens_out: int) -> Decimal:
         entry = self.llm(model)
-        return (dec(tokens_in) * dec(entry['usd_per_m_in']) + dec(tokens_out) * dec(entry['usd_per_m_out'])) / MILLION
+        return (
+            dec(tokens_in) * dec(entry['usd_per_m_in'])
+            + dec(tokens_out) * dec(entry['usd_per_m_out'])
+        ) / MILLION
 
     def workers_ai_usd(self, neurons_k: Any) -> Decimal:
         return dec(neurons_k) * dec(self.data['workers_ai']['usd_per_k_neurons'])

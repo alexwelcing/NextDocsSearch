@@ -45,7 +45,8 @@ def add_repo_arg(parser: argparse.ArgumentParser) -> None:
         '--repo',
         metavar='DIR',
         type=Path,
-        help='the NextDocsSearch checkout holding the corpus (default $ARCFORGE_REPO, else this checkout)',
+        help='the NextDocsSearch checkout holding the corpus '
+        '(default $ARCFORGE_REPO, else this checkout)',
     )
 
 
@@ -55,11 +56,14 @@ def add_set_arg(parser: argparse.ArgumentParser) -> None:
         metavar='PATH=VALUE',
         action='append',
         default=[],
-        help='override one config value (JSON-parsed), e.g. --set budget.contingency=0.2; repeatable',
+        help='override one config value (JSON-parsed), e.g. --set budget.contingency=0.2; '
+        'repeatable',
     )
 
 
-def guarded(name: str, body: Callable[[argparse.Namespace], int]) -> Callable[[argparse.Namespace], int]:
+def guarded(
+    name: str, body: Callable[[argparse.Namespace], int]
+) -> Callable[[argparse.Namespace], int]:
     """Turn the runtime's expected failures into one-line messages and exit codes."""
 
     def run(args: argparse.Namespace) -> int:

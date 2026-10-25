@@ -77,13 +77,19 @@ STAGES: tuple[Stage, ...] = (
         phase='vm',
         platform='l4',
         inputs=('S1', 'S3'),
-        outputs=('token_states.safetensors', 'spans.jsonl', 'anchors.safetensors', 'isolated.safetensors'),
+        outputs=(
+            'token_states.safetensors',
+            'spans.jsonl',
+            'anchors.safetensors',
+            'isolated.safetensors',
+        ),
         config_keys=('teacher',),
         model_keys=('teacher.revision',),
         prompt_keys=('teacher.prompts',),
         notes='EmbeddingGemma-2 bf16: corpus token states with character offsets, about 60k '
         'spans, 100k FineWeb-Edu anchors (cached per teacher revision), the isolated vocabulary '
-        "pass; S0⁻ reuses the chunk states and recomputes only its aggregates and the null's spans.",
+        "pass; S0⁻ reuses the chunk states and recomputes only its aggregates and the null's "
+        'spans.',
     ),
     Stage(
         name='S5',
@@ -184,7 +190,8 @@ STAGES: tuple[Stage, ...] = (
         outputs=('report.json', 'verdicts.json'),
         config_keys=('run', 'eval'),
         notes='held-out-fold scoring, the nested adoption decisions, report.json and '
-        'verdicts.json against arc-report/1 (arcforge.contract); `arcforge verdict` must reproduce it.',
+        'verdicts.json against arc-report/1 (arcforge.contract); `arcforge verdict` must '
+        'reproduce it.',
     ),
     Stage(
         name='S13b',

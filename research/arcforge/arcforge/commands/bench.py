@@ -36,8 +36,8 @@ USAGE = 2
 
 def _materialize(_args: argparse.Namespace) -> int:
     print(
-        'arcforge bench materialize: not implemented yet; the ARC-Bench v1 pointer format is frozen '
-        'at M2. Contract: arcforge bench materialize --help',
+        'arcforge bench materialize: not implemented yet; the ARC-Bench v1 pointer format is '
+        'frozen at M2. Contract: arcforge bench materialize --help',
         file=sys.stderr,
     )
     return EXIT_UNAVAILABLE
@@ -53,13 +53,22 @@ def register(subparsers) -> None:
     sub = parser.add_subparsers(dest='bench_command', metavar='<bench command>')
     materialize = sub.add_parser(
         'materialize',
-        help="rebuild v1's text from the public repo at the pinned SHA and verify every hash (stub)",
+        help="rebuild v1's text from the repo at the pinned SHA and verify every hash (stub)",
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    materialize.add_argument('--pointers', metavar='FILE', type=Path, help='the ARC-Bench v1 pointer file')
-    materialize.add_argument('--repo', metavar='DIR', type=Path, help='a NextDocsSearch clone that has the S0 SHA')
-    materialize.add_argument('--out', metavar='DIR', type=Path, help='where to write chunks.jsonl, records/ and materialize.json')
+    materialize.add_argument(
+        '--pointers', metavar='FILE', type=Path, help='the ARC-Bench v1 pointer file'
+    )
+    materialize.add_argument(
+        '--repo', metavar='DIR', type=Path, help='a NextDocsSearch clone that has the S0 SHA'
+    )
+    materialize.add_argument(
+        '--out',
+        metavar='DIR',
+        type=Path,
+        help='where to write chunks.jsonl, records/ and materialize.json',
+    )
     materialize.set_defaults(func=_materialize)
 
     def _help(_args: argparse.Namespace) -> int:
