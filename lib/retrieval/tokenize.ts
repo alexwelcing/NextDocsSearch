@@ -82,8 +82,8 @@ const NON_WORD = /[^\p{L}\p{N}]+/u
 /**
  * The search form of a text: lowercased, NFKD with combining marks stripped, so 'Tomáš', 'Tūhoe'
  * and 'Solène' read as 'tomas', 'tuhoe' and 'solene'. findMatch positions index this form, which
- * keeps the input's length except around folds that expand or drop characters (ß, ligatures,
- * already-decomposed input).
+ * can be longer or shorter than the input once anything non-ASCII is folded ('ß' → 'ss',
+ * '…' → '...', marks and variation selectors dropped): slice the input through foldWithOffsets.
  */
 export function foldText(value: string): string {
   if (!NEEDS_FOLD.test(value)) return value.toLowerCase()
@@ -93,6 +93,36 @@ export function foldText(value: string): string {
     .replace(MARKS, '')
     .toLowerCase()
     .replace(UNDECOMPOSED, (letter) => LETTER_FOLDS[letter])
+}
+
+export interface FoldedText {
+  folded: string
+  /**
+   * For each index of `folded` (and one past its end), the index in the input it came from;
+   * null when folding kept every position (text with nothing to fold, the common case).
+   */
+  offsets: number[] | null
+}
+
+/**
+ * foldText one character at a time, recording where each folded character came from, so a
+ * findMatch position in `folded` maps back to the input exactly for snippets. Its tokens are
+ * foldText's (General Punctuation stays unexpanded here, and never forms word characters).
+ */
+export function foldWithOffsets(value: string): FoldedText {
+  if (!NEEDS_FOLD.test(value)) return { folded: value.toLowerCase(), offsets: null }
+  let folded = ''
+  const offsets: number[] = []
+  for (let i = 0; i < value.length; ) {
+    const width = (value.codePointAt(i) as number) > 0xffff ? 2 : 1
+    const char = value.slice(i, i + width)
+    const out = foldText(char)
+    folded += out
+    for (let k = 0; k < out.length; k++) offsets.push(i)
+    i += width
+  }
+  offsets.push(value.length)
+  return { folded, offsets }
 }
 
 /** Folded words (letters and digits of any script) of 2+ characters, minus stop words. */

@@ -119,7 +119,7 @@ async function main() {
     },
     {
       name: 'bm25',
-      description: 'chunk BM25F only (title×3 heading×2 keywords×2 body×1 doc2query×1.5)',
+      description: 'chunk BM25F only (title×3 heading×2 keywords×2 body×1 doc2query×1.5 meta×0.5)',
       search: (q, k) =>
         slugsOf(
           searchBm25(core.bm25, q, 200).map((hit) => hit.doc),

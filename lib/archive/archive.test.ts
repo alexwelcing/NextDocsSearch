@@ -192,16 +192,17 @@ describe('searchRecords', () => {
   })
 
   it('boosts an exact title phrase and resolves equal scores by title, then slug', () => {
+    // Slug order and date order disagree, so a newest-first tiebreak would fail this.
     const records = [
-      record('older', { title: 'Orbital flight', date: '2024-01-01' }),
-      record('newer', { title: 'Orbital flight', date: '2026-01-01' }),
+      record('b-newer', { title: 'Orbital flight', date: '2026-01-01' }),
+      record('a-older', { title: 'Orbital flight', date: '2024-01-01' }),
       record('phrase', { title: 'Flight orbital', date: '2023-01-01' }),
     ]
 
     expect(searchRecords(records, 'flight orbital').map((hit) => hit.record.slug)).toEqual([
       'phrase',
-      'newer',
-      'older',
+      'a-older',
+      'b-newer',
     ])
   })
 

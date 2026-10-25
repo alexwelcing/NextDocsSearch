@@ -17,7 +17,7 @@ import {
   type RankedList,
   type RrfWeights,
 } from './rrf'
-import { findMatch, foldText, queryTerms } from './tokenize'
+import { findMatch, foldWithOffsets, queryTerms } from './tokenize'
 import type {
   RetrievalDeps,
   RetrievalItem,
@@ -73,9 +73,11 @@ function clip(value: string, max: number): string {
 /** Keep the first query-term match visible, like FIND's dock preview. */
 function snippetFor(text: string, terms: string[], max: number): string {
   const value = collapse(text)
-  const folded = foldText(value)
+  const { folded, offsets } = foldWithOffsets(value)
   const positions = terms.map((term) => findMatch(folded, term)).filter((index) => index >= 0)
-  const start = positions.length ? Math.max(0, Math.min(...positions) - 48) : 0
+  const match = positions.length ? Math.min(...positions) : 0
+  // Folded positions map back to the passage's own.
+  const start = Math.max(0, (offsets ? offsets[match] : match) - 48)
   const end = Math.min(value.length, start + max)
   return `${start > 0 ? '... ' : ''}${value.slice(start, end).trim()}${
     end < value.length ? ' ...' : ''

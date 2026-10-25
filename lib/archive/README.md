@@ -44,17 +44,27 @@ as read-only.
 
 `searchRecords` uses shared lexical weights and English stopwords, deduplicates
 query terms and result slugs, and returns `{ record, score, snippet }` hits.
-Two-character terms such as AI, VR, and 3D match whole words; longer terms match
-word prefixes as the user types. Matches inside unrelated words are excluded.
-Title phrase bonuses use the same normalization, so punctuation and repeated terms
-do not change ranking. Snippets use matching body text, descriptions, or metadata.
-Slug order breaks equal-score/equal-date ties consistently across sources. This
-engine does not perform semantic retrieval.
+Its vocabulary is `lib/retrieval/tokenize.ts`: text is NFKD-folded with diacritics
+stripped, so 'Solène' and 'solene' match alike. Two-character terms such as AI,
+VR, and 3D match whole words; longer terms match word prefixes as the user types.
+Matches inside unrelated words are excluded. Title phrase bonuses use the same
+normalization, so punctuation and repeated terms do not change ranking. Snippets
+use matching body text, descriptions, or metadata. Equal scores order by title,
+then slug, never by date (the archive's dates are largely diegetic). It ranks only
+the manifest's `searchText` preview of each body.
+
+`searchFullText` ranks the same records over the full-text chunk BM25F index
+(`public/search/`, built by `scripts/generate-search-index.ts`): each record ranks
+by its best chunk, anywhere in the article, and the snippet comes from that chunk.
+Record cards also index articleType, mechanics, slug words and the year at a low
+weight, so every record `searchRecords` finds on metadata alone is still found.
+This engine does not perform semantic retrieval.
 
 The landing-page preload, archive list, and collections keep the compact slim
-view. FIND loads the full view only when active and uses `searchRecords` to match
-body text and metadata as well as titles. Its stable source reuses successful and
-in-flight loads across tab visits. It shows loading, failure/retry, and empty-index
+view. FIND loads the full view only when active, and the full-text index the first
+time it opens; it ranks with `searchFullText` once the index is ready and with
+`searchRecords` until then or if the index cannot load. Its stable source reuses
+successful and in-flight loads across tab visits. It shows loading, failure/retry, and empty-index
 states separately from no matching results, and previews the selected hit's
 excerpt. Native touch input and desktop typing share the same query; numeric
 queries do not trigger dock tab shortcuts. Hub-page, article-page, and Ship

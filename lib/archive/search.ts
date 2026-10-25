@@ -1,6 +1,13 @@
 import { searchBm25 } from '../retrieval/bm25'
 import type { CoreIndex } from '../retrieval/load'
-import { findMatch, foldText, normalizedTokens, queryTerms } from '../retrieval/tokenize'
+import {
+  findMatch,
+  foldText,
+  foldWithOffsets,
+  normalizedTokens,
+  queryTerms,
+  type FoldedText,
+} from '../retrieval/tokenize'
 import type { ArchiveRecord, SearchHit } from './types'
 
 // FIND's vocabulary is lib/retrieval/tokenize.ts, shared with the chunk BM25F index, so both
@@ -17,9 +24,8 @@ interface SearchForm {
   previews?: Preview[]
 }
 
-interface Preview {
+interface Preview extends FoldedText {
   text: string
-  folded: string
 }
 
 const searchForms = new WeakMap<ArchiveRecord, SearchForm>()
@@ -62,7 +68,7 @@ function scoreRecord(record: ArchiveRecord, terms: string[]): number {
 
 function preview(value: string): Preview {
   const text = value.replace(/\s+/g, ' ').trim()
-  return { text, folded: foldText(text) }
+  return { text, ...foldWithOffsets(text) }
 }
 
 /** `passage`, when given, is searched first: the chunk that matched in the full-text index. */
@@ -75,13 +81,15 @@ function snippet(record: ArchiveRecord, terms: string[], passage = ''): string {
   ].map(preview)
   const candidates = passage ? [preview(passage), ...form.previews] : form.previews
 
-  for (const { text, folded } of candidates) {
+  for (const { text, folded, offsets } of candidates) {
     const positions = terms.map((term) => findMatch(folded, term)).filter((index) => index >= 0)
     if (!positions.length) continue
     const match = Math.min(...positions)
-    // Keep the match visible in the dock's compact selected-result preview.
-    const start = Math.max(0, match - 48)
-    const end = Math.min(text.length, match + 320)
+    // Keep the match visible in the dock's compact selected-result preview; the window is cut
+    // in folded positions and mapped back to the text's own.
+    const at = (index: number) => (offsets ? offsets[index] : index)
+    const start = at(Math.max(0, match - 48))
+    const end = at(Math.min(folded.length, match + 320))
     return `${start > 0 ? '... ' : ''}${text.slice(start, end).trim()}${
       end < text.length ? ' ...' : ''
     }`

@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { OPERATOR_PANELS } from '../immersive/operatorData'
 import { buildSearchIndex, emitSearchIndex, type BuildRecord } from '../retrieval/build'
 import { loadCoreIndex, resetSearchIndexCache } from '../retrieval/load'
+import { readBuildRecords } from '../retrieval/nodeSources'
 import { compareTitleThenSlug, searchFullText, searchRecords } from './search'
+import { FsManifestSource } from './server'
 import type { ArchiveRecord } from './types'
 
 // The article manifest's searchText is a preview (scripts/generate-article-manifest.ts).
@@ -41,7 +43,7 @@ function archiveRecord(record: BuildRecord): ArchiveRecord {
     minutes: 4,
     keywords: record.keywords ?? [],
     domains: record.domains ?? [],
-    mechanics: [],
+    mechanics: record.mechanics ?? [],
     searchText: record.blocks
       .map((block) => block.x)
       .join(' ')
@@ -50,13 +52,18 @@ function archiveRecord(record: BuildRecord): ArchiveRecord {
   }
 }
 
-async function corpus(records: BuildRecord[]) {
+async function loadIndex(records: BuildRecord[]) {
   const built = await buildSearchIndex({ records, operatorPanels: Object.values(OPERATOR_PANELS) })
   const { assets, manifest } = await emitSearchIndex(built)
   const files = new Map(assets.map((asset) => [asset.path, asset.bytes]))
-  const index = await loadCoreIndex(manifest, async (path) => new Response(files.get(path)))
-  return { index, records: records.map(archiveRecord) }
+  return loadCoreIndex(manifest, async (path) => new Response(files.get(path)))
 }
+
+async function corpus(records: BuildRecord[]) {
+  return { index: await loadIndex(records), records: records.map(archiveRecord) }
+}
+
+const slugs = (hits: { record: { slug: string } }[]) => hits.map((hit) => hit.record.slug)
 
 afterEach(() => resetSearchIndexCache())
 
@@ -127,6 +134,45 @@ describe('searchFullText', () => {
     expect(searchFullText(index, records, 'weather')).toHaveLength(3)
   })
 
+  it('finds records through their metadata alone, as searchRecords does', async () => {
+    const tagged = buildRecord('far-shore-02-the-quiet-festival', {
+      title: 'The Quiet Festival',
+      description: 'Lanterns on the water.',
+      // A Date#toString, as one real record's date is: the year still indexes.
+      date: 'Tue Mar 01 2067 00:00:00 GMT+0000 (Coordinated Universal Time)',
+      type: 'fiction',
+      mechanics: ['epistemic-drift', 'biological-convergence'],
+    })
+    const { index, records } = await corpus([tagged, buildRecord('other')])
+
+    // articleType, a mechanic (typed as words or as its id), slug words and the year
+    for (const query of [
+      'fiction',
+      'epistemic drift',
+      'biological-convergence',
+      'far shore',
+      '2067',
+    ]) {
+      expect(slugs(searchRecords(records, query)), query).toEqual([tagged.slug])
+      expect(slugs(searchFullText(index, records, query)), query).toEqual([tagged.slug])
+    }
+  })
+
+  it('ranks text matches above metadata-only matches', async () => {
+    const essay = buildRecord('drift-essay', {
+      title: 'Epistemic Drift',
+      blocks: [{ t: 'p', x: 'Epistemic drift is what happens when sources stop agreeing.' }],
+    })
+    // 'Entry aa-tagged' would win a tie on title, so only the score can put the essay first.
+    const tagged = buildRecord('aa-tagged', { mechanics: ['epistemic-drift'] })
+    const { index, records } = await corpus([tagged, essay])
+
+    expect(slugs(searchFullText(index, records, 'epistemic drift'))).toEqual([
+      'drift-essay',
+      'aa-tagged',
+    ])
+  })
+
   it('breaks equal scores by title, then slug, never by date', async () => {
     const twin = (slug: string, title: string, date: string) =>
       buildRecord(slug, { title, date, description: 'Field notes.' })
@@ -181,5 +227,28 @@ describe('searchRecords tiebreak', () => {
     expect(compareTitleThenSlug(entry('Émile', 'z'), entry('Frank', 'a'))).toBeLessThan(0)
     expect(compareTitleThenSlug(entry('Same', 'a-b'), entry('Same', 'ab'))).toBeLessThan(0)
     expect(compareTitleThenSlug(entry('Same', 'x'), entry('Same', 'x'))).toBe(0)
+  })
+})
+
+describe('searchFullText on the real archive', () => {
+  // Facets searchRecords matches on metadata alone (articleType, mechanics, slug, year): the
+  // full-text path must keep every one of those hits once the index arrives.
+  it('returns every record searchRecords finds for facet queries', async () => {
+    const [index, records] = await Promise.all([
+      loadIndex(readBuildRecords()),
+      new FsManifestSource().load(),
+    ])
+    const mechanics = [...new Set(records.flatMap((record) => record.mechanics))]
+    const types = [...new Set(records.map((record) => record.type))]
+    expect(mechanics.length).toBeGreaterThan(3)
+    for (const query of [...types, ...mechanics, 'far shore', 'cartography', '2026']) {
+      const old = slugs(searchRecords(records, query, 1000))
+      const found = new Set(slugs(searchFullText(index, records, query, 1000)))
+      expect(old.length, query).toBeGreaterThan(0)
+      expect(
+        old.filter((slug) => !found.has(slug)),
+        query
+      ).toEqual([])
+    }
   })
 })

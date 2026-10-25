@@ -5,6 +5,7 @@ import {
   TOKENIZER_VERSION,
   findMatch,
   foldText,
+  foldWithOffsets,
   matchingTermRange,
   normalizedTokens,
   queryTerms,
@@ -35,14 +36,63 @@ describe('foldText', () => {
     expect(normalizedTokens('Pro™ suite ✅ done')).toEqual(['pro', 'suite', 'done'])
   })
 
-  it('only lowercases ASCII and keeps a folded string the same length', () => {
+  it('only lowercases ASCII and General Punctuation', () => {
     expect(foldText('AI-Driven VR, v2')).toBe('ai-driven vr, v2')
     // General Punctuation never folds into a word, so it takes the same fast path.
     expect(foldText('Dashes—“Quotes”… ‘End’')).toBe('dashes—“quotes”… ‘end’')
     expect(normalizedTokens('Dashes—“Quotes”… ‘End’')).toEqual(['dashes', 'quotes', 'end'])
     expect(normalizedTokens('Dashes—“Quotes”… ‘End’ é')).toEqual(['dashes', 'quotes', 'end'])
-    for (const text of ['Tomáš Horák', 'Solène ✅ Tūhoe', 'naïve café']) {
-      expect(foldText(text)).toHaveLength(text.length)
+  })
+
+  it('changes length once anything non-ASCII is folded', () => {
+    expect(foldText('Tomáš Horák')).toHaveLength('Tomáš Horák'.length)
+    expect(foldText('Straße é')).toBe('strasse e')
+    expect(foldText('wait… é')).toBe('wait... e')
+    expect(foldText('12″ é')).toBe('12′′ e')
+    expect(foldText('ok\u2764\ufe0f é')).toBe('ok  e')
+    expect(foldText('Sole\u0300ne')).toBe('solene')
+  })
+})
+
+describe('foldWithOffsets', () => {
+  const texts = [
+    'Plain ASCII text',
+    'Tomáš Horák met Solène',
+    'Straße… 12″ ok\u2764\ufe0f ﬁeld',
+    'Sole\u0300ne of Tūhoe 🚀 launch',
+    'İstanbul, Tromsø, Łódź',
+  ]
+
+  it.each(texts)("tokenizes exactly as foldText does: '%s'", (text) => {
+    const tokens = (value: string) => value.split(/[^\p{L}\p{N}]+/u).filter(Boolean)
+    expect(tokens(foldWithOffsets(text).folded)).toEqual(tokens(foldText(text)))
+  })
+
+  it('maps every folded position back to the character it came from', () => {
+    for (const text of texts) {
+      const { folded, offsets } = foldWithOffsets(text)
+      if (!offsets) {
+        expect(folded).toBe(text.toLowerCase())
+        continue
+      }
+      expect(offsets).toHaveLength(folded.length + 1)
+      expect(offsets[folded.length]).toBe(text.length)
+      for (let i = 1; i < offsets.length; i++)
+        expect(offsets[i]).toBeGreaterThanOrEqual(offsets[i - 1])
+    }
+  })
+
+  it('slices the original text at a folded match', () => {
+    const text = 'Straße… ok\u2764\ufe0f Sole\u0300ne kept the Tūhoe records'
+    const { folded, offsets } = foldWithOffsets(text)
+    for (const [term, word] of [
+      ['solene', 'Sole\u0300ne'],
+      ['tuhoe', 'Tūhoe'],
+      ['records', 'records'],
+    ]) {
+      const at = findMatch(folded, term)
+      expect(at).toBeGreaterThan(0)
+      expect(text.slice(offsets?.[at], offsets?.[at + term.length])).toBe(word)
     }
   })
 })
