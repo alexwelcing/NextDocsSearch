@@ -31,7 +31,6 @@ wheels = [
 
 [[package]]
 name = "arcforge"
-version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "jsonschema" },
@@ -45,9 +44,6 @@ cloud = [
     { name = "google-cloud-secret-manager" },
     { name = "google-cloud-storage" },
 ]
-dev = [
-    { name = "pytest" },
-]
 gpu = [
     { name = "model2vec" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
@@ -55,6 +51,14 @@ gpu = [
     { name = "sentence-transformers" },
     { name = "tokenizers" },
     { name = "torch" },
+]
+tokenize = [
+    { name = "tokenizers" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
 ]
 
 [package.metadata]
@@ -66,13 +70,16 @@ requires-dist = [
     { name = "jsonschema", specifier = ">=4.21" },
     { name = "model2vec", marker = "extra == 'gpu'", specifier = ">=0.10" },
     { name = "numpy", marker = "extra == 'gpu'", specifier = ">=2" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pyyaml", specifier = ">=6" },
     { name = "sentence-transformers", marker = "extra == 'gpu'", specifier = ">=5" },
     { name = "tokenizers", marker = "extra == 'gpu'", specifier = ">=0.21" },
+    { name = "tokenizers", marker = "extra == 'tokenize'", specifier = ">=0.21" },
     { name = "torch", marker = "extra == 'gpu'", specifier = ">=2.9" },
 ]
-provides-extras = ["gpu", "cloud", "dev"]
+provides-extras = ["cloud", "gpu", "tokenize"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8" }]
 
 [[package]]
 name = "attrs"

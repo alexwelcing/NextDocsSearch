@@ -1,16 +1,21 @@
 [project]
 name = "arcforge"
-version = "0.1.0"
+dynamic = ["version"]
 description = "RE-MEANING: The Calibration Runs — the reproducible ~$20 run pipeline behind arc-lexeme, a corpus-native static embedding model for the alexwelcing.com archive."
 readme = "README.md"
 requires-python = ">=3.11"
-# The core stays light: the laptop-side commands (owner desk, vault, plan, verdict, prereg lint)
-# must run anywhere. GPU and cloud stacks live in optional extras installed on the runner VM.
+# The core stays light: the laptop-side commands (plan, verdict, prereg lint) run under uv with
+# these two. The owner desk and vault import only the standard library, so they also run under a
+# bare system python3 (see arcforge/commands/__init__.py). GPU and cloud stacks are extras for
+# the runner VM.
 dependencies = ["pyyaml>=6", "jsonschema>=4.21"]
 
 [project.optional-dependencies]
-gpu = ["torch>=2.9", "sentence-transformers>=5", "model2vec>=0.10", "tokenizers>=0.21", "numpy>=2"]
+tokenize = ["tokenizers>=0.21"]
+gpu = ["arcforge[tokenize]", "torch>=2.9", "sentence-transformers>=5", "model2vec>=0.10", "numpy>=2"]
 cloud = ["google-cloud-storage>=2.18", "google-cloud-compute>=1.20", "google-cloud-billing>=1.14", "google-cloud-secret-manager>=2.20"]
+
+[dependency-groups]
 dev = ["pytest>=8"]
 
 [project.scripts]
@@ -20,8 +25,16 @@ arcforge = "arcforge.cli:main"
 requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
+[tool.hatch.version]
+path = "arcforge/__init__.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["arcforge"]
 
+[tool.uv]
+required-version = ">=0.13.5"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Workstreams add test files with the same basename in different folders.
+addopts = ["--import-mode=importlib"]
