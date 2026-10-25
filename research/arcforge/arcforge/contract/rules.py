@@ -886,3 +886,34 @@ def freeze_text(text: str, mde: Mapping[str, float]) -> str:
     frozen = ''.join(out)
     loads_rules(frozen)  # still valid
     return frozen
+
+
+def freeze_diff(template: str, frozen: str) -> list[str] | None:
+    """The mde_r00 keys a freeze changed, or None if it changed anything else.
+
+    The R00 freeze may write the six MDEs and nothing more: every other line of the s0-committed
+    rules.yaml (rules, rows, taus, falsifiers, comments) must be byte-identical.
+    """
+    old, new = template.splitlines(keepends=True), frozen.splitlines(keepends=True)
+    if len(old) != len(new):
+        return None
+    changed: list[str] = []
+    in_block = False
+    for a, b in zip(old, new, strict=True):
+        if re.match(r'^mde_r00:\s*(#.*)?$', a.rstrip('\r\n')):
+            in_block = True
+            if a != b:
+                return None
+            continue
+        if in_block and a.strip() and not a.startswith((' ', '#')):
+            in_block = False
+        if a == b:
+            continue
+        key_a = re.match(r'^\s+([A-Za-z]+):', a)
+        key_b = re.match(r'^\s+([A-Za-z]+):', b)
+        if not (in_block and key_a and key_b and key_a.group(1) == key_b.group(1)):
+            return None
+        if key_a.group(1) not in MDE_KEYS:
+            return None
+        changed.append(key_a.group(1))
+    return changed

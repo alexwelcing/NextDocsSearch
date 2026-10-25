@@ -7,8 +7,14 @@
 - RETRY: the first attempt was invalid or refused. Its output is moved to rejected/, its
   directory deleted, and attempt-2/ is a fresh copy of the packet for a fresh agent.
 - FAILED CLOSED: the second attempt was invalid ('failed') or refused ('refused'). Nothing is
-  substituted: no PREREG hash without a sign-off; the owner may sign manually (`owner_sign`,
-  recorded as 'owner_signed'); a missing end review is marked 'missing' (`mark_missing`).
+  substituted; a missing end review is marked 'missing' (`mark_missing`).
+
+The PREREG sign-off follows Amendment A0's repair-or-halt instead (replacements[18]): there is no
+manual sign. A refusal is final for its packet at once (no fresh-agent retry: the repair takes its
+place). The orchestrator may then correct exactly the defects Fable listed and resubmit with the
+refusal and the diff (`repair`), at most twice; every refusal is carried verbatim into the next
+packet and published. A third refusal halts the arc at R00 (status 'halted'). An invalid output
+is still retried once; two invalid outputs fail closed ('failed'), which also stops the arc.
 
 `record(packet_root)` is the report.json `fable[]` entry (arc-report/1 $defs/FableCall).
 """
@@ -21,13 +27,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from arcforge.fable.kinds import KINDS
+from arcforge.fable.kinds import KINDS, MAX_REPAIRS
 from arcforge.fable.packer import (
     Packet,
     PacketError,
     load,
     now_utc,
     open_attempt,
+    repair_cycle,
+    repair_signoff,
     sha256_bytes,
     verify_dir,
 )
@@ -128,7 +136,16 @@ def check(packet_root: str | Path, *, session: str, model: str) -> CheckResult:
         rejected = packet.root / 'rejected'
         rejected.mkdir(exist_ok=True)
         output_path.replace(rejected / f'attempt-{n}.output.json')
+        if outcome == 'refused':
+            attempt['refusal'] = f'rejected/attempt-{n}.output.json'
     shutil.rmtree(workdir)
+    signoff = packet.manifest['kind'] == 'prereg_signoff'
+    if signoff and outcome == 'refused':
+        # A0: a refusal of the sign-off is final for this packet; repair, or halt on the third.
+        halted = repair_cycle(packet) >= MAX_REPAIRS
+        ledger['status'] = 'halted' if halted else 'refused'
+        _save(packet, ledger)
+        return CheckResult('failed_closed', n, outcome, ledger['status'], None, problems)
     if n < MAX_ATTEMPTS:
         _save(packet, ledger)
         retry = open_attempt(packet, n + 1)
@@ -138,21 +155,35 @@ def check(packet_root: str | Path, *, session: str, model: str) -> CheckResult:
     return CheckResult('failed_closed', n, outcome, ledger['status'], None, problems)
 
 
-def owner_sign(packet_root: str | Path, note: str) -> dict[str, Any]:
-    """After a sign-off failed closed, record the owner's manual signature (never Fable's)."""
+def refusal_bytes(packet_root: str | Path) -> bytes:
+    """The refused sign-off output of a packet, byte for byte (it is published verbatim)."""
     packet = load(packet_root)
     ledger = _ledger(packet)
-    if packet.manifest['kind'] != 'prereg_signoff':
-        raise PacketError('only the PREREG sign-off can be signed by the owner')
-    if ledger['status'] not in ('refused', 'failed'):
+    refused = [a for a in ledger['attempts'] if a.get('refusal')]
+    if ledger['status'] not in ('refused', 'halted') or not refused:
+        raise PacketError(f'{packet.root} holds no refusal (status {ledger["status"]!r})')
+    return (packet.root / refused[-1]['refusal']).read_bytes()
+
+
+def repair(
+    refused_root: str | Path, diff: str | Path, overrides: dict[str, Any] | None = None,
+    **kwargs: Any,
+) -> Packet:  # fmt: skip
+    """Resubmit a refused sign-off with exactly the listed defects corrected (A0 repair or halt).
+
+    The new packet carries the refusal verbatim and the diff; a refused third submission halts.
+    """
+    packet = load(refused_root)
+    status = _ledger(packet)['status']
+    if status == 'halted':
+        raise PacketError(f'{packet.root}: the sign-off was refused three times; the arc halts')
+    if packet.manifest['kind'] != 'prereg_signoff' or status != 'refused':
         raise PacketError(
-            f'the owner signs only after the sign-off failed closed (status is {ledger["status"]!r})'
+            f'only a refused PREREG sign-off is repaired ({packet.manifest["kind"]}, status {status!r})'
         )
-    if not note.strip():
-        raise PacketError('give a note saying why the owner signs')
-    ledger.update(status='owner_signed', owner_note=note.strip(), owner_signed_utc=now_utc())
-    _save(packet, ledger)
-    return record(packet_root)
+    return repair_signoff(
+        refused_root, diff, refusal=refusal_bytes(refused_root), overrides=overrides, **kwargs
+    )
 
 
 def mark_missing(packet_root: str | Path, reason: str) -> dict[str, Any]:
@@ -165,7 +196,7 @@ def mark_missing(packet_root: str | Path, reason: str) -> dict[str, Any]:
         raise PacketError('this review was delivered')
     if not reason.strip():
         raise PacketError('give the reason the review is missing')
-    ledger.update(status='missing', owner_note=reason.strip())
+    ledger.update(status='missing', note=reason.strip())
     _save(packet, ledger)
     return record(packet_root)
 
@@ -185,9 +216,17 @@ def record(packet_root: str | Path) -> dict[str, Any]:
     checked = [a for a in ledger['attempts'] if a['outcome'] is not None]
     last = checked[-1] if checked else None
     lint_ok = None
+    refusals: list[str] = []
     if packet.manifest['kind'] == 'prereg_signoff':
         lint = json.loads((packet.canonical / 'inputs' / 'lint.json').read_text(encoding='utf-8'))
         lint_ok = bool(lint.get('ok'))
+        # Every earlier refusal travels with the repair (inputs/repair/), then this packet's own.
+        refusals = [
+            f['sha256']
+            for f in sorted(packet.manifest['files'], key=lambda f: f['path'])
+            if f['role'] == 'refusal'
+        ]
+        refusals += [a['output_sha256'] for a in checked if a.get('refusal')]
     return {
         'role': packet.manifest['role'],
         'kind': packet.manifest['kind'],
@@ -197,6 +236,8 @@ def record(packet_root: str | Path) -> dict[str, Any]:
         'agent_session': None if last is None else last['agent_session'],
         'model_reported': None if last is None else last['model_reported'],
         'attempts': len(checked),
+        'repair_cycle': repair_cycle(packet),
+        'refusals': refusals,
         'status': ledger['status'],
         'lint_ok': lint_ok,
     }

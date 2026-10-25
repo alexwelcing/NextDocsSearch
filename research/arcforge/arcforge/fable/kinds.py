@@ -22,19 +22,31 @@ BRIEF_DIR = Path(__file__).with_name('briefs')
 # rejected, so a missing review is never replaced by another model.
 FABLE_MODEL_PREFIX = 'claude-fable'
 
+# The R00 sign-off checks as Amendment A0 sets them (A0 rule 7 plus the approved checks; the
+# vault-seal check is gone with the age vault). Fable gives each exactly once.
 SIGNOFF_CHECKS: tuple[str, ...] = (
     'lint_passed_with_branch_expansion',
-    'i1_passed_or_fallback_engaged',
+    'i1_a0_passed_or_fallback_engaged',
     'i3_i5_reported_with_predictions',
     'i2_i4_scheduled',
     'taus_equal_max_floor_mde',
     'mde_from_baseline_variance_only',
     'verdicts_list_every_rule_h_not_applicable',
-    'h3_falsifier_ci_hi_raw_lt_0_05',
+    'h3_falsifier_ci_hi_raw_lt_0_05_and_i6',
     'sf_read_budget_two',
-    'vault_seal_published_no_key_material',
     'falsifiers_read_only_schema_fields',
+    'a0_is_amendment_zero_and_first_witness',
+    's0_and_r00_sets_witnessed',
+    'model_choice_record_present',
+    'contamination_precutoff_resolved',
+    'provenance_tables_present',
+    'panel_and_quarantine_reported',
+    'no_owner_field_read',
+    'no_reader_output_in_training',
+    'no_secret_material',
 )
+# Repair or halt (A0 replacements[18]): at most this many repaired resubmissions of the sign-off.
+MAX_REPAIRS = 2
 
 
 @dataclass(frozen=True)

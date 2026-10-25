@@ -66,7 +66,9 @@ def test_hash(tmp_path, capsys):
     hashes = json.loads(capsys.readouterr().out)
     assert hashes['rules_sha256']['sha256'] == sha256_bytes(TEMPLATE_PATH.read_bytes())
     assert hashes['prereg_sha256']['sha256'] == sha256_bytes(b'# PREREG\n')
-    assert set(hashes) == {'rules_sha256', 'schema_sha256', 'plan_sha256', 'prereg_sha256'}
+    assert set(hashes) == {
+        'rules_sha256', 'schema_sha256', 'plan_sha256', 'prereg_pre_sha256', 'prereg_sha256'
+    }
 
 
 def test_lint_json_and_bad_rules(tmp_path, capsys):

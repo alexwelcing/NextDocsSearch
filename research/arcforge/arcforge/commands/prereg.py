@@ -3,8 +3,12 @@
 lint    expand every rule's applies_to over the PREREG branch table and prove each in-scope
         rule computable: every field it reads exists in arc-report/1 and the run plan
         produces it non-null. --frozen also requires every MDE (each tau = max(floor, MDE)).
-freeze  write the R00 MDEs into a copy of the rules template (comments kept).
-hash    print the sha256 of rules.yaml, the schema and PREREG.md, as report.run records them.
+freeze  write the R00 MDEs into a copy of the rules template (comments kept); the diff against
+        the template touches mde_r00 only, and freeze proves it.
+render  PREREG.pre.md from the rules template (--pre), or PREREG.md from PREREG.pre.md, the
+        frozen rules and the R00 values (--values JSON); every placeholder filled, none unknown.
+hash    print the sha256 of rules.yaml, the schema, the plan, PREREG.pre.md (what the s0
+        commitment records) and PREREG.md, as report.run records them.
 """
 
 from __future__ import annotations
@@ -59,12 +63,44 @@ def freeze(args: argparse.Namespace) -> int:
     except (ValueError, OSError, RulesError) as error:
         print(f'arcforge prereg freeze: {error}', file=sys.stderr)
         return EXIT_USAGE
+    from arcforge.contract.rules import freeze_diff
+
+    changed = freeze_diff(template.read_text(encoding='utf-8'), frozen)
+    if changed is None:
+        print('arcforge prereg freeze: the frozen copy changes more than mde_r00', file=sys.stderr)
+        return EXIT_FAIL
     out = Path(args.out)
     if out.exists() and not args.force:
         print(f'arcforge prereg freeze: {out} exists (use --force to replace it)', file=sys.stderr)
         return EXIT_USAGE
     out.write_text(frozen, encoding='utf-8')
-    print(f'wrote {out}')
+    print(f'wrote {out} (changed: {", ".join(changed)})')
+    return EXIT_OK
+
+
+def render(args: argparse.Namespace) -> int:
+    from arcforge.contract import prereg_doc
+    from arcforge.contract.rules import RulesError, load_rules
+
+    try:
+        if args.pre:
+            text = prereg_doc.render_pre(load_rules(_rules_path(args.rules)))
+        else:
+            if not args.values:
+                print('arcforge prereg render: --values is required without --pre', file=sys.stderr)
+                return EXIT_USAGE
+            rules = load_rules(_rules_path(args.rules))
+            extra = json.loads(Path(args.values).read_text(encoding='utf-8'))
+            template = Path(args.template or prereg_doc.PRE_PATH).read_text(encoding='utf-8')
+            text = prereg_doc.fill(template, prereg_doc.values_for(rules, extra))
+    except (RulesError, prereg_doc.PreregError, OSError, ValueError) as error:
+        print(f'arcforge prereg render: {error}', file=sys.stderr)
+        return EXIT_FAIL
+    if args.out:
+        Path(args.out).write_text(text, encoding='utf-8')
+        print(f'wrote {args.out}')
+    else:
+        sys.stdout.write(text)
     return EXIT_OK
 
 
@@ -73,11 +109,14 @@ def hash_files(args: argparse.Namespace) -> int:
     from arcforge.contract.lint import PRODUCES_PATH
     from arcforge.contract.rules import TEMPLATE_PATH, sha256_bytes
 
+    from arcforge.contract.prereg_doc import PRE_PATH
+
     rules = Path(_rules_path(args.rules) or TEMPLATE_PATH)
     files = {
         'rules_sha256': rules,
         'schema_sha256': schema.REPORT_SCHEMA_PATH,
         'plan_sha256': Path(args.plan or PRODUCES_PATH),
+        'prereg_pre_sha256': Path(args.prereg_pre or PRE_PATH),
     }
     if args.prereg:
         files['prereg_sha256'] = Path(args.prereg)
@@ -105,7 +144,7 @@ def register(subparsers) -> None:
         description=DESCRIPTION,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    sub = parser.add_subparsers(dest='prereg_command', metavar='<lint|freeze|hash>')
+    sub = parser.add_subparsers(dest='prereg_command', metavar='<lint|freeze|render|hash>')
     parser.set_defaults(func=lambda _args: (parser.print_help(), EXIT_USAGE)[1])
 
     p_lint = sub.add_parser('lint', help='prove every in-scope rule computable on every branch')
@@ -136,6 +175,16 @@ def register(subparsers) -> None:
     p_freeze.add_argument('--force', action='store_true', help='replace --out if it exists')
     p_freeze.set_defaults(func=freeze)
 
+    p_render = sub.add_parser(
+        'render', help='write PREREG.pre.md (--pre) or the filled PREREG.md (--values)'
+    )
+    p_render.add_argument('--pre', action='store_true', help='render the template from the rules')
+    p_render.add_argument('--rules', help='rules file (the template for --pre, else the frozen copy)')
+    p_render.add_argument('--template', help='PREREG.pre.md to fill (default: prereg/PREREG.pre.md)')
+    p_render.add_argument('--values', metavar='JSON', help='the non-rule placeholder values')
+    p_render.add_argument('--out', help='write here (default: stdout)')
+    p_render.set_defaults(func=render)
+
     p_hash = sub.add_parser(
         'hash', help='print the sha256 of rules.yaml, the schema, the plan and PREREG.md'
     )
@@ -144,5 +193,6 @@ def register(subparsers) -> None:
     )
     p_hash.add_argument('--plan', help='run plan (default: the packaged produces.yaml)')
     p_hash.add_argument('--prereg', help='PREREG.md, when it exists')
+    p_hash.add_argument('--prereg-pre', help='PREREG.pre.md (default: prereg/PREREG.pre.md)')
     p_hash.add_argument('--json', action='store_true')
     p_hash.set_defaults(func=hash_files)
