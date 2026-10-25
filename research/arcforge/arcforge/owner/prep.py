@@ -16,6 +16,7 @@ Files and the step that writes them:
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -57,6 +58,14 @@ def _str(value: object, where: str, *, required: bool = True) -> str:
     if value is None and not required:
         return ''
     raise PrepInvalid(f'{where} must be a non-empty string')
+
+
+def _passage(value: object, where: str) -> str:
+    """A passage keeps its paragraph breaks (the page shows them), trimmed to a sane length."""
+    if not isinstance(value, str) or not value.strip():
+        raise PrepInvalid(f'{where} must be non-empty strings')
+    lines = [' '.join(line.split()) for line in value.strip().splitlines()]
+    return re.sub(r'\n{3,}', '\n\n', '\n'.join(lines))[:MAX_PASSAGE_CHARS]
 
 
 def _id(value: object, where: str) -> str:
@@ -198,7 +207,7 @@ def _pairs(raw: dict, records: Mapping[str, Record], limit: int | None) -> dict:
         slug = _id(card.get('slug'), f'{where}.record.slug')
         known = records.get(slug)
         passages = [
-            _str(p, f'{where}.passages')[:MAX_PASSAGE_CHARS]
+            _passage(p, f'{where}.passages')
             for p in _items(pair.get('passages', []), f'{where}.passages')[:2]
         ]
         # Whitelist: nothing else from the pair (judge grades, systems, ranks) reaches the page.

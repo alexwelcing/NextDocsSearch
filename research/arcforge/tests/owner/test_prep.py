@@ -46,6 +46,14 @@ def test_audit_pairs_are_reduced_to_what_a_blind_audit_may_show(home, records, p
     assert 'gemini' not in str(state.to_json()) and 'B4' not in str(state.to_json())
 
 
+def test_passages_keep_their_paragraphs(home, records, prep, fixtures):
+    doc = fixtures['pairs']('audit', 1)
+    doc['pairs'][0]['passages'] = ['First  line.\n\n\n\nSecond   paragraph.', 'x' * 5000]
+    prep('audit-pairs.json', doc)
+    passages = _load(home, 'audit', records).data['pairs'][0]['passages']
+    assert passages[0] == 'First line.\n\nSecond paragraph.' and len(passages[1]) == 4000
+
+
 def test_adjudicate_holds_at_most_30(home, records, prep, fixtures):
     prep('adjudicate-pairs.json', fixtures['pairs']('adjudicate', 31))
     state = _load(home, 'adjudicate', records)

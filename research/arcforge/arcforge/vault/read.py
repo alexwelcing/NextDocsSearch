@@ -152,7 +152,10 @@ def _gate(run_id: str, branch: str, paths: Paths) -> tuple[list[dict], int]:
 
 
 def _commitments(paths: Paths) -> dict:
-    doc = read_json(paths.commitments)
+    try:
+        doc = read_json(paths.commitments)
+    except ValueError as error:
+        raise ReadError(f'{paths.commitments} is not valid JSON ({error})') from None
     if not isinstance(doc, dict) or 'sealed_sha256' not in doc:
         raise ReadError(f'no vault commitments at {paths.commitments}')
     try:

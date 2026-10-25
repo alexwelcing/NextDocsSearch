@@ -456,7 +456,7 @@ input[type='checkbox'] { accent-color: var(--green); width: 17px; height: 17px; 
   function setOffline(on) {
     if (on === offline) return
     offline = on
-    if (on) banner('The desk server is not answering. Is <code>arcforge owner</code> still running? Your edits are kept in this window and save as soon as it is back.', 'warn')
+    if (on) banner('The desk server is not answering. Is <code>python3 -m arcforge owner</code> still running in Terminal? Your edits are kept in this window and save as soon as it is back.', 'warn')
     else banner(null)
   }
 
@@ -688,7 +688,8 @@ input[type='checkbox'] { accent-color: var(--green); width: 17px; height: 17px; 
     add(main,
       head('Your R00 checklist',
         'About 2 h 27 min of your time in all: about 1 h 41 min before launch, and about 46 min at the R00 owner gate. Every tab saves as you type, so you can stop at any point and come back.',
-        h('div', { class: 'meter' }, h('span', { class: 'big' }, mins(p.minutes_left)), h('span', {}, 'left of ' + mins(p.minutes)))),
+        h('div', { class: 'meter' }, h('span', { class: 'big' }, mins(p.minutes_left)),
+          h('span', {}, `left of ${mins(p.minutes)}`, before ? ` · ${mins(before)} of it before launch` : ''))),
     )
     for (const [key, section] of Object.entries(p.sections)) {
       add(main,
@@ -1284,7 +1285,7 @@ input[type='checkbox'] { accent-color: var(--green); width: 17px; height: 17px; 
       if (next !== null) setTimeout(() => move(next), 160)
     }
     const onKey = (e) => {
-      if (e.target.matches('input, select, textarea, button') || e.metaKey || e.ctrlKey || e.altKey) return
+      if (e.target.matches('input, select, textarea') || e.metaKey || e.ctrlKey || e.altKey) return
       if (/^[0-3]$/.test(e.key)) { setGrade(Number(e.key)); e.preventDefault() }
       else if (e.key === 'ArrowLeft') { move(index - 1); e.preventDefault() }
       else if (e.key === 'ArrowRight') { move(index + 1); e.preventDefault() }
@@ -1338,7 +1339,7 @@ input[type='checkbox'] { accent-color: var(--green); width: 17px; height: 17px; 
     } catch (error) {
       setSave('bad', 'cannot reach the desk')
       add(clear($('#main')), h('div', { class: 'card bad' }, h('h2', {}, 'The desk server is not answering'),
-        h('p', {}, 'Start it from research/arcforge with ', h('code', {}, 'uv run arcforge owner'), ' (or ', h('code', {}, 'python3 -m arcforge owner'), '), then reload this page.'),
+        h('p', {}, 'Start it again from research/arcforge with ', h('code', {}, 'python3 -m arcforge owner'), ' (or ', h('code', {}, 'uv run arcforge owner'), '), then reload this page.'),
         h('p', { class: 'small mono' }, String(error.message || error))))
     }
   }

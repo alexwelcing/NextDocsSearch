@@ -42,6 +42,7 @@ def test_run_split_writes_s0_and_locks_the_desk(home, write_queries):
     # The record in a withheld series carried its FRONTIER tag through.
     q7 = next(q for q in vault_file['queries'] + opened['open_dev'] if q['id'] == 'q-0007')
     assert q7['frontier'] is True
+    assert os.stat(home / 'arc-owner').st_mode & 0o777 == 0o700
     lock = json.loads((home / 'arc-owner' / 's0-lock.json').read_text())
     assert lock['queries_commitment_sha256'] == result.commitment
     desk = Desk(None, recipient_file=home / 'none')
@@ -68,6 +69,12 @@ def test_incomplete_queries_are_refused(home, write_queries, make_queries, mutat
     with pytest.raises(SplitError, match=message):
         run_split(salt=SALT)
     assert not (home / 'arc-owner' / 's0-lock.json').exists()
+
+
+def test_broken_queries_file(home, write_queries):
+    write_queries().write_text('{"queries": [')
+    with pytest.raises(SplitError, match='not valid JSON'):
+        run_split()
 
 
 def test_no_queries_yet(home):

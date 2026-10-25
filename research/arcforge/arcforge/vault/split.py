@@ -106,7 +106,10 @@ def run_split(
             'anyone re-roll which queries are sealed, so it is refused.'
         )
     queries_path = queries_path or owner / model.DOCS['queries'][0]
-    doc = read_json(queries_path)
+    try:
+        doc = read_json(queries_path)
+    except ValueError as error:
+        raise SplitError(f'{queries_path} is not valid JSON ({error})') from None
     if not isinstance(doc, dict):
         raise SplitError(f'no owner queries at {queries_path}; write them in the Owner Desk first')
     main, frontier = check_queries(doc)
@@ -150,6 +153,7 @@ def run_split(
         'salt_sha256': sha256_hex(salt),
     }
     write_json_atomic(out / 's0-commitment.json', public, mode=0o644)
+    ensure_private_dir(owner)
     write_json_atomic(
         lock_path,
         {

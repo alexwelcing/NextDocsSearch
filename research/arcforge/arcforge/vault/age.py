@@ -134,7 +134,7 @@ def read_recipient_file(path: Path) -> str:
     except FileNotFoundError:
         raise AgeError(
             f'no vault recipient at {path}. The owner creates it once with '
-            '`uv run arcforge vault keygen`.'
+            '`python3 -m arcforge vault keygen` in Terminal.'
         ) from None
     entries = [line.strip() for line in lines if line.strip() and not line.startswith('#')]
     if len(entries) != 1 or not is_recipient(entries[0]):

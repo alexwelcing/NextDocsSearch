@@ -205,7 +205,7 @@ def _status(args) -> int:
     if args.json:
         print(json.dumps(status, indent=2))
         return 0
-    missing = 'missing: the owner runs `uv run arcforge vault keygen` in Terminal'
+    missing = 'missing: the owner runs `python3 -m arcforge vault keygen` in Terminal'
     print(f'recipient    {recipient or missing}')
     print(f'age          {"installed" if status["age_installed"] else "missing: brew install age"}')
     if commitments:

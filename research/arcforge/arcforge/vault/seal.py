@@ -38,8 +38,15 @@ class Sealed:
     commitments: dict
 
 
+def _read(path: Path) -> object:
+    try:
+        return read_json(path)
+    except ValueError as error:
+        raise SealError(f'{path} is not valid JSON ({error})') from None
+
+
 def _load_vault_queries(path: Path) -> tuple[bytes, list[dict], str]:
-    doc = read_json(path)
+    doc = _read(path)
     if not isinstance(doc, dict) or doc.get('schema') != 'arc-vault-queries/1':
         raise SealError(f'{path} is not an arc-vault-queries/1 file (from `arcforge vault split`)')
     try:
@@ -59,7 +66,7 @@ def _load_vault_queries(path: Path) -> tuple[bytes, list[dict], str]:
 
 def _load_qrels(path: Path, vault_ids: set[str]) -> dict[str, dict[str, int]]:
     """{query_id: {slug: grade}} for vault queries only, grades 0-3, in sorted order."""
-    doc = read_json(path)
+    doc = _read(path)
     rows = doc.get('qrels') if isinstance(doc, dict) else None
     if not isinstance(rows, dict) or doc.get('schema') != QRELS_SCHEMA:
         raise SealError(

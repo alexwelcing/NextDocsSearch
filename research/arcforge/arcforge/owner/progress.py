@@ -29,7 +29,7 @@ class Step:
 
 
 STEPS: tuple[Step, ...] = (
-    Step(1, 'vault', 'Create the vault key', 'Terminal: uv run arcforge vault keygen', 2, 'A'),
+    Step(1, 'vault', 'Create the vault key', 'Terminal: python3 -m arcforge vault keygen', 2, 'A'),
     Step(2, 'queries', 'Write 100 queries from memory', 'Queries', 60, 'A'),
     Step(3, 'frontier', 'Write 8 frontier queries', 'Queries › Frontier', 4, 'A'),
     Step(4, 'voices', 'Write 25 few-shot examples', 'Voices', 15, 'A'),
