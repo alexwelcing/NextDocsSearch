@@ -38,7 +38,7 @@ WILDCARD = '*'
 _IDENT = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 _MACRO = re.compile(r'^[A-Z][A-Z0-9_]*$')
 _TOP_KEYS = frozenset(
-    {'schema', 'stats', 'sets', 'branch_table', 'decisions', 'vault_read_budget', 'mde_r00',
+    {'schema', 'stats', 'sets', 'branch_table', 'decisions', 'proxy_vault_read_budget', 'mde_r00',
      'defines', 'rules'}
 )  # fmt: skip
 _RULE_KEYS = frozenset(
@@ -49,7 +49,7 @@ _ROW_KEYS = frozenset(
     {'kind', 'arm_a', 'arm_b', 'stratum', 'metric', 'unit', 'tau_floor', 'mde', 'holm',
      'registered', 'fires', 'passes', 'prediction', 'estimator'}
 )  # fmt: skip
-# A rule's outcome may be NOT_COMPUTABLE (vault.read's missing read) but never NOT_APPLICABLE,
+# A rule's outcome may be NOT_COMPUTABLE (proxy_vault.read's missing read) but never NOT_APPLICABLE,
 # which only scope decides.
 _OUTCOME_STATUSES = frozenset(STATUSES) - {NOT_APPLICABLE} | {NOT_COMPUTABLE}
 # Row fields no expression may read: they are outcomes (and the blind pass strips some of them).
@@ -166,7 +166,7 @@ class Rules:
     sets: Mapping[str, tuple[str, ...]]
     branch_table: Mapping[str, tuple[tuple[str, str], ...]]
     decisions: tuple[Decision, ...]
-    vault_read_budget: Mapping[str, int]
+    proxy_vault_read_budget: Mapping[str, int]
     mde_r00: Mapping[str, float | None]
     defines: Mapping[str, Expr]
     rules: tuple[Rule, ...]
@@ -349,7 +349,7 @@ def parse_rules(data: Any, sha256: str = '', path: str | None = None) -> Rules:
     stats = _parse_stats(data.get('stats'), problems)
     sets = _parse_sets(data.get('sets') or {}, problems)
     branch_table = _parse_branch_table(data.get('branch_table'), problems)
-    vault_budget = _parse_budget(data.get('vault_read_budget'), branch_table, problems)
+    vault_budget = _parse_budget(data.get('proxy_vault_read_budget'), branch_table, problems)
     mde = _parse_mde(data.get('mde_r00'), problems)
     defines = _parse_defines(data.get('defines') or {}, 'defines', problems)
 
@@ -389,7 +389,7 @@ def parse_rules(data: Any, sha256: str = '', path: str | None = None) -> Rules:
         sets=sets,
         branch_table=branch_table,
         decisions=decisions,
-        vault_read_budget=vault_budget,
+        proxy_vault_read_budget=vault_budget,
         mde_r00=mde,
         defines=defines,
         rules=tuple(sorted(rules, key=lambda r: RULE_IDS.index(r.id) if r.id in RULE_IDS else 99)),
@@ -478,19 +478,23 @@ def _parse_branch_table(raw: Any, problems: _Problems) -> dict[str, tuple[tuple[
 
 def _parse_budget(raw: Any, table: Mapping[str, Any], problems: _Problems) -> dict[str, int]:
     if not isinstance(raw, dict):
-        problems.add('vault_read_budget', 'must map each branch path to its number of reads')
+        problems.add(
+            'proxy_vault_read_budget', 'must map each branch path to its number of reads'
+        )
         return {}
     out = {}
     for name, value in raw.items():
         if name not in table:
-            problems.add('vault_read_budget', f'{name!r} is not a branch path')
+            problems.add('proxy_vault_read_budget', f'{name!r} is not a branch path')
         if not isinstance(value, int) or isinstance(value, bool) or not 0 <= value <= 3:
-            problems.add(f'vault_read_budget.{name}', f'must be 0..3 (reads_max 3), got {value!r}')
+            problems.add(
+                f'proxy_vault_read_budget.{name}', f'must be 0..3 (reads_max 3), got {value!r}'
+            )
             continue
         out[str(name)] = value
     for name in table:
         if name not in out:
-            problems.add('vault_read_budget', f'no budget for path {name!r}')
+            problems.add('proxy_vault_read_budget', f'no budget for path {name!r}')
     return out
 
 

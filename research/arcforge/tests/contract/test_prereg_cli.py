@@ -13,7 +13,7 @@ MDE = 'AB=0.045,D=0.03,CE=0.05,G=0.045,vault=0.09,frontier=0.1'
 def test_lint_the_template(capsys):
     assert cli.main(['prereg', 'lint']) == 0
     out = capsys.readouterr().out
-    assert 'lint ok: 0 errors, 1 warnings' in out and '139 in-scope' in out
+    assert 'lint ok: 0 errors, 1 warnings' in out and '145 in-scope' in out
 
 
 def test_lint_frozen_fails_on_the_template(capsys):

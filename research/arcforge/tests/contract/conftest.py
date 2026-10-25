@@ -29,8 +29,15 @@ def rules(frozen: tuple[Path, Rules]) -> Rules:
     return frozen[1]
 
 
+GOOD_I1 = {
+    'probe_min_acc': 0.95,
+    'kappa_qw_median': 0.72,
+    'alpha_families': 0.63,
+    'min_kendall_ci_lo': 0.68,
+    'delta_ci_hi': 0.21,
+}
 GOOD_INPUTS = {
-    'I1': {'kappa_qw_owner': 0.72, 'min_kendall_ci_lo': 0.68},
+    'I1': GOOD_I1,
     'I1_prior_pass': True,
     'I2': {'inflation_ratio': 2.4},
     'I3': {
@@ -41,6 +48,7 @@ GOOD_INPUTS = {
     },
     'I4': {'flip_rate': 0.02},
     'I5': {'kappa_drop': 0.07},
+    'I6': {'fleiss_kappa': 0.71, 'placebo_rerate': 0.12, 'random_rerate': 0.06},
 }
 
 
@@ -55,7 +63,7 @@ def numeric_row(
         stratum=spec.stratum, metric=spec.metric, unit=spec.unit, n_queries=48, n_clusters=28,
         point=point, ci_lo_raw=lo, ci_hi_raw=hi, holm_family=spec.hypothesis, ci_lo_adj=lo, ci_hi_adj=hi,
         p_raw=0.001, tau=rules.tau(spec), tau_floor=spec.tau_floor, mde_r00=rules.mde_value(spec),
-        seed_sd=0.001, n_seeds=5, nested=True, vault_read=False,
+        seed_sd=0.001, n_seeds=5, nested=True, proxy_vault_read=False,
         prediction=spec.prediction.source if spec.prediction else None,
         scores_file=f'scores/{cid}.json', scores_sha256='0' * 64,
     )  # fmt: skip
@@ -106,15 +114,16 @@ def make_doc(rules: Rules) -> MakeDoc:
         rows: Mapping[str, Any] | None = None,
         *,
         gates_inputs: Mapping[str, Any] | None = None,
-        vault: Mapping[str, Any] | None = None,
+        proxy_vault: Mapping[str, Any] | None = None,
         **overrides: Any,
     ) -> dict[str, Any]:
         built = []
         for cid, value in (rows or {}).items():
             built.append(value if isinstance(value, dict) else numeric_row(rules, cid, *value))
-        reading = rules.in_scope('vault.read', run_id, branch)
+        reading = rules.in_scope('proxy_vault.read', run_id, branch)
         doc = {
             'schema': 'arc-verdicts/1',
+            'schema_version': '1.1',
             'run': {
                 'id': run_id,
                 'branch': branch,
@@ -122,11 +131,13 @@ def make_doc(rules: Rules) -> MakeDoc:
                 'prereg_sha256': None,
                 'rules_sha256': rules.sha256,
             },
-            'vault': {
+            'proxy_vault': {
                 'read_this_run': reading,
                 'read_index': 1 if reading else None,
                 'hybrid_minus_b2_ndcg10': 0.03 if reading else None,
                 'sign': 1 if reading else None,
+                'basis': 'judged' if reading else None,
+                'compromised': False,
             },
             'gates_inputs': {
                 key: (value if _gate_in_scope(rules, key, run_id, branch) else None)
@@ -137,7 +148,7 @@ def make_doc(rules: Rules) -> MakeDoc:
             'signoff_inputs': None,
         }
         doc['gates_inputs'].update(gates_inputs or {})
-        doc['vault'].update(vault or {})
+        doc['proxy_vault'].update(proxy_vault or {})
         doc['adoption'] = default_adoption(rules, run_id, branch)
         doc.update(overrides)
         return finish_rows(rules, doc)
