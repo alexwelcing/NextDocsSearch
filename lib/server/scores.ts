@@ -35,7 +35,7 @@ export interface LeaderboardEntry {
   created_at: string
 }
 
-/** A filed score as stored (INSERT … RETURNING *). */
+/** A filed score as stored (INSERT ... RETURNING *). */
 export interface ScoreEntry extends LeaderboardEntry {
   id: number
   accuracy: number
@@ -80,7 +80,7 @@ returning *`
 export function sanitizeName(name: string): string {
   // Strip control characters, zero-width chars, and normalize whitespace
   return name
-    .replace(/[\u0000-\u001F\u007F-\u009F​-‏﻿]/g, '')
+    .replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\uFEFF]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
 }
