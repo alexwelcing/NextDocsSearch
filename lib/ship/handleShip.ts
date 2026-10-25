@@ -5,7 +5,8 @@
 import type { ChatProvider } from '../ai/chatProvider'
 import { resolveShipTrick } from '../ai/shipTricks'
 import type { ArchiveRecord } from '../archive/types'
-import { OPERATOR_DOCS } from '../retrieval/chunk'
+import { OPERATOR_PANELS } from '../immersive/operatorData'
+import { OPERATOR_DOCS, operatorBlocks } from '../retrieval/chunk'
 import { getShipContext } from '../retrieval/shipContext'
 import type {
   RetrievalDeps,
@@ -77,15 +78,38 @@ const json = (status: number, body: unknown, headers: Record<string, string> = {
 const OPERATOR_PANEL_OF = new Map(OPERATOR_DOCS.map((doc) => [doc.slug, doc.panel]))
 
 /**
- * Only slugs the scene can open: operator ids with their own panel, or articles in the records
- * (every record is prerendered). With no records to check against, the index's own docs stand.
+ * The operator panels as records, mirroring the operator docs the index builds, so record-level
+ * ranking (all there is while the index is unavailable) still answers "who is Alex?".
+ */
+const OPERATOR_RECORDS: ArchiveRecord[] = OPERATOR_DOCS.map(({ slug, panel, title }) => {
+  const blocks = operatorBlocks(OPERATOR_PANELS[panel])
+  return {
+    slug,
+    title,
+    date: '',
+    description: blocks.find((block) => block.t === 'p')?.x ?? OPERATOR_PANELS[panel].title,
+    type: 'operator',
+    minutes: 1,
+    keywords: [],
+    domains: [],
+    mechanics: [],
+    searchText: blocks.map((block) => block.x).join(' '),
+    hero: null,
+  }
+})
+
+/**
+ * Only what the scene can open: an operator id opens its Data panel (record-level ranking cannot
+ * know that), an article must be in the records (every record is prerendered). With no records
+ * to check against, the index's own docs stand.
  */
 function openableItems(items: RetrievalItem[], records: ArchiveRecord[]): RetrievalItem[] {
   const slugs = new Set(records.map((record) => record.slug))
-  return items.filter((item) => {
-    if (item.target.type === 'data') return OPERATOR_PANEL_OF.get(item.slug) === item.target.panel
-    if (item.slug.includes('#') || OPERATOR_PANEL_OF.has(item.slug)) return false
-    return !slugs.size || slugs.has(item.slug)
+  return items.flatMap((item): RetrievalItem[] => {
+    const panel = OPERATOR_PANEL_OF.get(item.slug)
+    if (panel) return [{ ...item, target: { type: 'data', panel } }]
+    if (item.target.type !== 'article' || item.slug.includes('#')) return []
+    return !slugs.size || slugs.has(item.slug) ? [item] : []
   })
 }
 
@@ -227,7 +251,7 @@ export async function handleShip(request: Request, deps: ShipDeps): Promise<Resp
       retrieval = await getShipContext(
         trick.searchQuery || input.prompt,
         { fetchAsset: deps.fetchAsset, embedQuery: deps.embedQuery?.bind(deps) },
-        { manifest, records, model: deps.embedModel }
+        { manifest, records: [...records, ...OPERATOR_RECORDS], model: deps.embedModel }
       )
     } catch (error) {
       log(`[ship] retrieval failed: ${message(error)}`)

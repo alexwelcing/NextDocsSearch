@@ -344,6 +344,19 @@ describe('handleShip retrieval', () => {
     expect((await events(response))[0]).toMatchObject({ retrieval: 'records' })
   })
 
+  it('still finds the operator panels by record ranking alone', async () => {
+    const list = await events(
+      await handleShip(post({ prompt: 'who is alex welcing?' }), await deps({ manifest: null }))
+    )
+    expect(list[0]).toMatchObject({ type: 'instant-results', retrieval: 'records' })
+    if (list[0].type !== 'instant-results') throw new Error('unreachable')
+    expect(list[0].items[0]).toMatchObject({
+      slug: 'about',
+      target: { type: 'data', panel: 'about' },
+    })
+    expect(finalOf(list).answer).toContain('1. About Alex Welcing — 15 years of experience')
+  })
+
   it('still answers when nothing is indexed at all', async () => {
     const list = await events(
       await handleShip(
@@ -351,7 +364,7 @@ describe('handleShip retrieval', () => {
         await deps({ manifest: null, records: async () => Promise.reject(new Error('gone')) })
       )
     )
-    expect(list[0]).toMatchObject({ retrieval: 'none', items: [] })
+    expect(list[0]).toMatchObject({ retrieval: 'records', items: [] })
     expect(finalOf(list).answer).toContain('no strong match for "photon polarization"')
   })
 })
