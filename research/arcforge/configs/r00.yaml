@@ -1,0 +1,211 @@
+# R00 — INSTRUMENT AND FLOOR. RE-MEANING: The Calibration Runs (model: arc-lexeme).
+#
+# The config surface every run carries (program.training_recipe, CONFIG SURFACE), validated
+# against configs/arc-config-1.schema.json. Later runs are `extends: r00.yaml` plus their one
+# change: mappings merge key by key, lists and scalars are replaced whole.
+#
+#   uv run arcforge plan r00                                    # dry-run price, $0
+#   uv run arcforge run r00 --prep                              # laptop: S0-S2
+#   uv run arcforge run configs/r00.yaml --seed 1729 --budget 20   # the VM part
+#   uv run arcforge run r00 --resume                            # laptop tail
+#
+# Values that are null here are pinned before launch (the teacher revision, the person map and
+# registers the owner confirms, the corpus git SHA at S0, rules.yaml's sha at the end of R00).
+# Quote anything YAML could read as a boolean or a date ('N', 'off', '2026-10-24').
+schema: arc-config/1
+
+run:
+  id: r00
+  branch: 'N'
+  h1_provisional: null
+  parent_by_fold: {'1': null, '2': null, '3': null}   # R00: the three folds start from identical parents
+  seed: 1729
+  one_change: 'instrument and floor: ARC-Bench v1, the baseline zoo, the judges and the power analysis'
+  prediction: 'every H rule NOT_APPLICABLE; I1 passes or its registered fallback is engaged'
+  adopt_if: null          # no adoption in R00
+  kill_path: auto
+
+corpus:
+  git_sha: null           # pinned at S0; null reads the worktree and hashes its files
+  mdx_dir: pages/docs/articles
+  records_dir: public/arc/records
+  chunker: lib/retrieval@v2
+  strip_rules: chrome-v2
+  frontier:
+    withheld: [the-echo-chamber, the-residue]   # owner ruling 3: out of the main line from S0
+    rejoin: r09
+  rename_map:
+    threshold-03-the-blacksmiths-choice: threshold-03-the-weight-of-the-hammer
+  ghosts_by_default: [inheritance-03-the-gesture-archive]   # the Owner Desk's Settings checkbox
+  person_map_sha256: null
+  registers_sha256: null
+
+lexicon:
+  npmi: 0.5
+  min_count: 3
+  entities: person_map
+  alias_rewrite: doc_local
+  general_words: 10000
+  ngram_buckets: 4096
+
+teacher:
+  id: google/embeddinggemma-2
+  revision: null          # pinned by SHA in R00
+  dtype: bf16
+  prompts:
+    query: 'task: search result | query: '
+    document: 'title: {title} | text: '
+
+init:
+  mode: isolated
+  prompt_bias: false
+  max_occ: 200
+
+weights: sif
+
+queries:
+  generator: qwen3.5-9b
+  bank: generic
+  persona_fewshot_sha256: null   # the owner's 25, frozen pre-R00
+  per_chunk: 6
+  bridge: 2
+  exclude: [lab-notebook, frontier, briefs]
+
+eval_queries:
+  generator: ministral-3-8b-instruct-2512
+
+supervision:
+  tokenlearn: 1.0
+  contrastive: false
+  graph_positives: false
+  rewired_control: false
+  softmax: full_corpus
+  masks: positive_aware
+
+train:
+  device: cuda
+  lr: 0.05
+  epochs: 5
+  batch: 512
+  mrl: [32, 64, 128, 256]
+  anchor_gamma: 1.0e-3
+  folds: 3
+  seeds: 5
+  concurrency: 6
+
+compress:
+  dims: 128
+  rows: 27000
+  quant: int8
+  model_bundle_max_mb: 4.0
+
+index:
+  mode: symmetric
+  vector_source: data/search/arc-lexeme.d128
+  layout: int8-row
+  mrl: true
+
+eval:
+  bench: v1
+  strata: [A, B, C, D, E, F, G, T]
+  pool_depth: {default: 10, C: 20, E: 20}
+  judges:
+    primary: gemini-3.1-flash-lite
+    adjudicate: gemini-3-flash
+    adjudicate_fraction: 0.20
+    audit: qwen3.5-9b
+    audit_fraction: 0.25
+  gold: {via: orchestrator, runs: [r00, r10]}
+  rules: null             # rules.yaml@sha, hashed into PREREG at the end of R00
+  exploratory_predictions:
+    surrogate: 'rho_static - rho_IG >= 0'
+
+vault:
+  recipient: configs/vault.recipient
+  read_points_by_branch:
+    'N': [r04, r06, r10]
+    N-F: [r04, r06, r10K]
+    S-F: [r04, r10K]
+    S-C: [r04, r07, r10]
+    S-C-F: [r04, r07, r10K]
+  reads_max: 3
+
+compute:
+  project: witching-606c6
+  region: us-central1
+  zones: [us-central1-a, us-central1-b, us-central1-c]
+  shape: g2-standard-8
+  gpu: nvidia-l4
+  provisioning: spot
+  fallback: on_demand
+  max_run_hours: 3
+
+llm:
+  vertex: {project: witching-606c6, location: us-central1}
+  vllm: [qwen3.5-9b, ministral-3-8b-instruct-2512]
+  anthropic_key: none
+
+growth:
+  briefs: {gaps: 10, ghosts: 5, model: gemini-3.1-flash-lite, optional: true}
+
+ship:
+  flag: data/search/arc-lexeme.flag.json
+
+budget:
+  prices: prices/2026-10.yaml
+  cap: 20
+  plan_ceiling: 20        # R00 only: the ceiling equals the cap; every later run plans to $17
+  reserve: 3
+  contingency: 0.15
+  dividend_priority: [pools, judged_at_10, new_queries]
+  dividend: []            # R00 has no dividend lines
+  first_cut: {line: S12.adjudication, scale: 0.75, note: 'adjudication from 20% to 15%'}
+
+# What `arcforge plan` prices. VM minutes are billed runner-VM minutes (the L4 is attached for
+# the VM's whole life), priced at the on-demand rate. Token counts are planning estimates that
+# reproduce the program's R00 lines; actual cost is booked by the runner and S13.
+plan:
+  S0:
+    - {kind: laptop, item: 'snapshot of S0 and S0⁻', minutes: 1}
+  S1:
+    - {kind: laptop, item: 'graph, rationales and counts', minutes: 1}
+  S2:
+    - {kind: llm, id: cards, item: 'glossary and entity cards, 327 records', model: gemini-3-flash, tokens_in: 780000, tokens_out: 390000}
+  S3:
+    - {kind: vm, item: lexicon and tokenizer (CPU), minutes: 2}
+  S4:
+    - {kind: vm, item: 'EmbeddingGemma-2 featurization, plus S0⁻ aggregates', minutes: 14}
+  S5:
+    - {kind: vm, item: training queries, model: qwen3.5-9b, tokens_in: 1500000, tokens_out: 600000, minutes: 13}
+  S6:
+    - {kind: vm, item: eval queries, model: ministral-3-8b-instruct-2512, tokens_in: 2500000, tokens_out: 410000, minutes: 15}
+  S7:
+    - {kind: vm, item: teacher top-30 mining and masks, minutes: 2}
+  S8:
+    - {kind: vm, item: PCA and initialization, minutes: 2}
+  S9:
+    - {kind: vm, item: 'W0 and W1 x 5 seeds', minutes: 14}
+  S10:
+    - {kind: vm, item: int8 compression (CPU), minutes: 1}
+  S11:
+    - {kind: vm, item: vector source and register classifier (CPU), minutes: 1}
+  S12:
+    - {kind: vm, item: 'zoo 5, reranker 6, I3 2, Qwen audit 5, I5 4 GPU-min', minutes: 22}
+    - {kind: llm, id: judging, item: 'Flash-Lite listwise, about 37k pairs', model: gemini-3.1-flash-lite, tokens_in: 14800000, tokens_out: 680000}
+    - {kind: llm, id: adjudication, item: 'adjudication of 20%', model: gemini-3-flash, tokens_in: 2960000, tokens_out: 130000}
+    - {kind: llm, id: i5, item: 'I5 re-grade with keywords shown', model: gemini-3.1-flash-lite, tokens_in: 280000, tokens_out: 20000}
+    - {kind: workers_ai, item: 'Workers AI embeddinggemma-300m and qwen3-embedding rows', neurons_k: 1.8}
+  S13:
+    - {kind: vm, item: 'held-out scoring, report.json, verdicts.json', minutes: 11}
+  S13b:
+    - {kind: llm, id: briefs, item: '10 gap and 5 ghost briefs', model: gemini-3.1-flash-lite, tokens_in: 120000, tokens_out: 20000}
+  S14:
+    - {kind: vm, item: publish and delete the VM, minutes: 3}
+    - {kind: vm, item: 'boot, container and model pulls, slack', minutes: 15}
+    - {kind: storage, item: 'GCS cache and model mirror, pro rata', gb_month: 14}
+  gate:
+    - {kind: owner, item: 'blind audit (150 pairs) and adjudication', minutes: 46}
+    - {kind: orchestrator, item: 'Fable gold audit #1, 60 queries x 12 candidates'}
+  tail:
+    - {kind: laptop, item: 'I1, power analysis, PREREG, lint, vault seal', minutes: 10}
+    - {kind: orchestrator, item: Fable PREREG sign-off}
