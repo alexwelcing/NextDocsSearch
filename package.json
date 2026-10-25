@@ -5,6 +5,11 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "tsx scripts/run-steps.ts pre && next build --webpack && tsx scripts/run-steps.ts post",
+    "build:cf": "NEXT_OUTPUT=export pnpm run build && tsx scripts/cf-finalize.ts",
+    "cf:dev": "wrangler dev",
+    "cf:types": "wrangler types worker/worker-configuration.d.ts",
+    "cf:typecheck": "wrangler types worker/worker-configuration.d.ts --check && tsc -p worker/tsconfig.json",
+    "cf:dry-run": "wrangler deploy --dry-run --outdir .wrangler/dry",
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
