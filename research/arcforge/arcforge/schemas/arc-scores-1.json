@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:arc-scores-1",
+  "title": "arc-scores/1",
+  "description": "The per-query score file behind one VerdictRow (rows[].scores_file). `arcforge verdict` recomputes the row's point, CIs, p-value and seed SD from it (arcforge/contract/stats.py). Estimators: 'pigeonhole' (difference rows: two-way bootstrap over source and target records), 'cluster_ratio' (ratio rows: record-clustered bootstrap over target records), 'refit_pooled' (P@k rows: the labelled-item bootstrap pooled over the point fit and every refit).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "comparison_id", "arm_a", "arm_b", "stratum", "metric", "estimator"],
+  "properties": {
+    "schema": {"const": "arc-scores/1"},
+    "comparison_id": {"type": "string", "minLength": 1},
+    "arm_a": {"type": "string", "minLength": 1},
+    "arm_b": {"type": ["string", "null"]},
+    "stratum": {"type": "string", "minLength": 1},
+    "metric": {"type": "string", "minLength": 1},
+    "estimator": {"enum": ["pigeonhole", "cluster_ratio", "refit_pooled"]},
+    "seeds": {
+      "description": "Seed labels, one per column of every item's a/b arrays (an arm with one column is deterministic and is broadcast).",
+      "type": "array", "minItems": 1, "items": {"type": ["integer", "string"]}
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "part", "source", "targets", "a", "b"],
+        "properties": {
+          "id": {"description": "Query (or pair, or lexeme) id; unique.", "type": "string", "minLength": 1},
+          "part": {"description": "Sub-stratum for macro-averaging: AB pools A and B with equal weight; single-stratum rows use one part.", "type": "string", "minLength": 1},
+          "source": {"description": "The source record (cluster) of the query, or null.", "type": ["string", "null"]},
+          "targets": {"description": "The relevant target records (clusters). A query's bootstrap weight is its source multiplicity x the mean multiplicity of its targets. An item with neither is its own cluster.", "type": "array", "items": {"type": "string"}},
+          "a": {"type": "array", "minItems": 1, "items": {"type": "number"}},
+          "b": {"type": "array", "minItems": 1, "items": {"type": "number"}}
+        }
+      }
+    },
+    "k": {"description": "refit_pooled: the cut-off of P@k (100).", "type": "integer", "minimum": 1},
+    "labels": {
+      "description": "refit_pooled: the owner's blind labels (1 = re-meant). Ranked items without a label count as not re-meant (conservative).",
+      "type": "object", "additionalProperties": {"enum": [0, 1]}
+    },
+    "fits": {
+      "description": "refit_pooled: the point fit (id 'point') and every refit, each with arm_a's and arm_b's ranking (most re-meant first).",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "a", "b"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "a": {"type": "array", "items": {"type": "string"}},
+          "b": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"estimator": {"const": "refit_pooled"}}},
+      "then": {"required": ["k", "labels", "fits"], "not": {"anyOf": [{"required": ["items"]}, {"required": ["seeds"]}]}},
+      "else": {"required": ["seeds", "items"], "not": {"anyOf": [{"required": ["k"]}, {"required": ["labels"]}, {"required": ["fits"]}]}}
+    }
+  ]
+}

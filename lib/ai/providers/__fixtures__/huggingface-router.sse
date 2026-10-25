@@ -1,0 +1,11 @@
+: Hugging Face router (router.huggingface.co/v1/chat/completions, stream: true): OpenAI
+: chunks, content split mid-word (the tests also replay it with CRLF line endings).
+
+data: {"id":"hf-1","object":"chat.completion.chunk","created":1761330000,"model":"meta-llama/Llama-3.1-8B-Instruct","choices":[{"index":0,"delta":{"role":"assistant","content":"Alex Wel"},"finish_reason":null}]}
+
+data: {"id":"hf-1","object":"chat.completion.chunk","created":1761330000,"model":"meta-llama/Llama-3.1-8B-Instruct","choices":[{"index":0,"delta":{"content":"cing builds AI products."},"finish_reason":null}]}
+
+data: {"id":"hf-1","object":"chat.completion.chunk","created":1761330000,"model":"meta-llama/Llama-3.1-8B-Instruct","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

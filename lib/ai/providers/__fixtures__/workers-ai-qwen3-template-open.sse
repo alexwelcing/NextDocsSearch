@@ -1,0 +1,15 @@
+: Workers AI @cf/qwen/qwen3-30b-a3b-fp8 when its chat template opened the <think> block: the
+: content starts inside the reasoning with no opening tag, and the close tag arrives chunks later,
+: split. Hand-written to the documented chat.completion.chunk shape, not a live recording.
+
+data: {"id":"chatcmpl-7c21","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"role":"assistant","content":"Okay, let me"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-7c21","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":" look at the context. It mentions BB84."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-7c21","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":"</th"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-7c21","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":"ink>\n\nQuantum key distribution "},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-7c21","object":"chat.completion.chunk","created":1761330000,"model":"@cf/qwen/qwen3-30b-a3b-fp8","choices":[{"index":0,"delta":{"content":"uses photon polarization."},"finish_reason":"stop"}]}
+
+data: [DONE]

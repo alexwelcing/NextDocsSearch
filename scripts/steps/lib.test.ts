@@ -55,6 +55,7 @@ describe('the build registry', () => {
       '50-article-manifest.ts',
       '60-archive-index.ts',
       '70-sitemaps.ts',
+      '80-search-index.ts',
     ])
     expect(listSteps(path.join(STEPS_DIR, 'post'))).toEqual(['10-verify-sitemaps.ts'])
   })

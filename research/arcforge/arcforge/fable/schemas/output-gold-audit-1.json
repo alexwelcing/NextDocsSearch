@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arcforge:schema:fable-output-gold-audit-1",
+  "title": "arc-fable-output/1: gold_audit",
+  "description": "output.json of a gold audit: one UMBRELA 0-3 grade for every (query, candidate) pair of inputs/pairs.json, or a refusal with its reason.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kind", "status", "reason", "result"],
+  "properties": {
+    "schema": {"const": "arc-fable-output/1"},
+    "kind": {"const": "gold_audit"},
+    "status": {"enum": ["ok", "refused"]},
+    "reason": {"type": ["string", "null"]},
+    "result": {"anyOf": [{"$ref": "#/$defs/Result"}, {"type": "null"}]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ok"}}, "required": ["status"]},
+      "then": {"properties": {"result": {"$ref": "#/$defs/Result"}, "reason": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "refused"}}, "required": ["status"]},
+      "then": {"properties": {"result": {"type": "null"}, "reason": {"type": "string", "minLength": 1}}}
+    }
+  ],
+  "$defs": {
+    "Result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grades"],
+      "properties": {
+        "grades": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["query_id", "candidate_id", "grade", "note"],
+            "properties": {
+              "query_id": {"type": "string", "minLength": 1},
+              "candidate_id": {"type": "string", "minLength": 1},
+              "grade": {"enum": [0, 1, 2, 3]},
+              "note": {"type": ["string", "null"], "maxLength": 400}
+            }
+          }
+        }
+      }
+    }
+  }
+}

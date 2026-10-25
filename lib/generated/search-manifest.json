@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "chunkerVersion": "v1",
+  "tokenizer": "archive-v2",
+  "docs": 330,
+  "chunks": 2533,
+  "hashes": "6c9e9c04002e08f8",
+  "assets": {
+    "chunks": "/search/chunks.75ca049e6550.json",
+    "bm25": "/search/bm25.5128834c21ac.json"
+  },
+  "vectors": []
+}

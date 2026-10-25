@@ -45,9 +45,15 @@ const nextConfig = {
     ],
   },
 
-  // The archive server source reads this generated file at runtime.
+  // The archive server source reads this generated file at runtime, and Ship reads the search
+  // index from disk (lib/ship/node.ts) rather than self-fetching it.
   outputFileTracingIncludes: {
     '/api/arc/archive': ['./lib/generated/article-manifest.json'],
+    '/api/vector-search': [
+      './lib/generated/article-manifest.json',
+      './lib/generated/search-manifest.json',
+      './public/search/**',
+    ],
   },
 
   // Redirects for SEO: fix broken /docs/articles/ URLs and normalize domain
