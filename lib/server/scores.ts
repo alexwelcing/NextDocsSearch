@@ -141,7 +141,7 @@ function json(status: number, body: unknown, headers: Record<string, string> = {
 }
 
 /** Cloudflare always sets CF-Connecting-IP. X-Forwarded-For is only a fallback for other hosts. */
-function clientIp(headers: Headers): string {
+export function clientIp(headers: Headers): string {
   return (
     headers.get('cf-connecting-ip') ||
     headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||

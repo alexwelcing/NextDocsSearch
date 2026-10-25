@@ -1,0 +1,96 @@
+# The Vercel vs Cloudflare parity crawl (WS2-B), on demand: scripts/verify/parity-crawl.ts compares
+# every sitemap page, archive record, reader JSON, search asset and must-serve file of B against A,
+# and scripts/verify/range-check.sh proves MP4 byte ranges on both. Run it from the commit both
+# origins deployed (the search index assets are content-hashed). Nothing here deploys or changes
+# either origin; the reports land in the job summary and the parity-report artifact.
+name: Parity crawl
+
+on:
+  workflow_dispatch:
+    inputs:
+      b_origin:
+        description: Origin under test, e.g. https://next.alexwelcing.com or a workers.dev URL
+        required: true
+        type: string
+      a_origin:
+        description: Reference origin
+        required: true
+        default: https://alexwelcing.com
+        type: string
+      b_x_robots:
+        description: What B must send as X-Robots-Tag on HTML/PDF (noindex while it is staging)
+        required: true
+        default: noindex
+        type: choice
+        options: [noindex, absent, any]
+      strict:
+        description: Fail on warnings too
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parity-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  parity:
+    name: Parity crawl
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # Inputs reach the scripts as environment variables, never spliced into the shell source.
+      A_ORIGIN: ${{ inputs.a_origin }}
+      B_ORIGIN: ${{ inputs.b_origin }}
+      B_X_ROBOTS: ${{ inputs.b_x_robots }}
+      STRICT: ${{ inputs.strict }}
+    steps:
+      # The crawl reads only scripts/ and lib/ (must-serve.txt, the search manifest), so the films
+      # and images in public/ are not checked out.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts
+            lib
+            patches
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Parity crawl
+        id: crawl
+        run: |
+          args=("$B_ORIGIN" --a "$A_ORIGIN" --b-x-robots "$B_X_ROBOTS")
+          [ "$STRICT" = true ] && args+=(--strict)
+          pnpm exec tsx scripts/verify/parity-crawl.ts "${args[@]}"
+
+      - name: MP4 range check
+        if: always()
+        run: bash scripts/verify/range-check.sh "$A_ORIGIN" "$B_ORIGIN"
+
+      - name: Job summary
+        if: always()
+        run: |
+          if [ -f test-output/parity/report.md ]; then
+            cat test-output/parity/report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'The parity crawl wrote no report (it could not run; see its log).' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: parity-report
+          path: test-output/parity/
+          if-no-files-found: ignore
+          retention-days: 30

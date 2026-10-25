@@ -52,3 +52,6 @@ next-env.d.ts
 # sitemaps: generated every build by scripts/steps/pre/70-sitemaps.ts
 /public/sitemap*.xml
 /public/video-sitemap.xml
+
+# Cloudflare target: wrangler's local state and dry-run bundles (the export itself is /out/ above)
+/.wrangler/

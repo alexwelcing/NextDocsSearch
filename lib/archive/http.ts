@@ -31,13 +31,17 @@ function isRecord(value: unknown): value is ArchiveRecord {
 export class HttpIndexSource implements ArchiveSource {
   /**
    * The URL is fetched exactly as given. The default is the static full index; the legacy API
-   * alias serves the same records at '/api/arc/archive?view=full'.
+   * alias serves the same records at '/api/arc/archive?view=full'. `fetcher` replaces the global
+   * fetch, e.g. the Worker reads the file through its env.ASSETS binding.
    */
-  constructor(private readonly url = ARCHIVE_FULL_URL) {}
+  constructor(
+    private readonly url = ARCHIVE_FULL_URL,
+    private readonly fetcher: (url: string) => Promise<Response> = (url) => fetch(url)
+  ) {}
 
   async load(): Promise<ArchiveRecord[]> {
     // Keep the default request relative so it works on any deployed origin.
-    const response = await fetch(this.url)
+    const response = await this.fetcher(this.url)
     if (!response.ok) throw new Error(`archive: HTTP ${response.status}`)
     const payload: unknown = await response.json()
     const records =

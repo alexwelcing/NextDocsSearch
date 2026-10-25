@@ -1,0 +1,50 @@
+// The Cloudflare target: one Worker serving the static export (out/, from `pnpm run build:cf`) as
+// Workers Static Assets, with worker/index.ts answering /api/* only. Vercel stays production until
+// the apex cutover, which is a separate, deliberate change (see the routes note below).
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "alexwelcing-site",
+  "main": "worker/index.ts",
+  // No later than the installed workerd supports (workerd 1.20261019.1 → 2026-10-19).
+  "compatibility_date": "2026-10-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    // about.html serves /about and 307s /about/ (next.config.js exports with trailingSlash false).
+    "html_handling": "auto-trailing-slash",
+    // An unknown path gets out/404.html with status 404, as /articles/<unknown> does on Vercel.
+    "not_found_handling": "404-page",
+    // /api/* is the Worker's own; the film directories are static files the Worker serves with
+    // byte ranges, which Static Assets do not (worker/policy.ts RANGED_PREFIXES).
+    "run_worker_first": ["/api/*", "/images/article-videos/*", "/videos/articles/*"]
+  },
+  "ai": { "binding": "AI" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "alexwelcing-game",
+      "database_id": "42fb23ca-3b9c-4eb7-ae85-aa5fe648e466",
+      "migrations_dir": "worker/migrations"
+    }
+  ],
+  "ratelimits": [
+    { "name": "SHIP_LIMITER", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } },
+    { "name": "SCORE_LIMITER", "namespace_id": "1002", "simple": { "limit": 5, "period": 60 } }
+  ],
+  "vars": {
+    "SITE_URL": "https://alexwelcing.com",
+    "EMBED_MODEL": "@cf/qwen/qwen3-embedding-0.6b",
+    // Empty: DEFAULT_WORKERS_AI_MODELS (lib/ai/providers/workersAi.ts). A comma-separated list
+    // overrides the ladder without a code change.
+    "SHIP_CHAT_MODELS": "",
+    "AI_GATEWAY_ID": ""
+  },
+  "observability": { "enabled": true },
+  "upload_source_maps": true,
+  // Staging only. The apex and www are attached ONLY in the deliberate, atomic cutover change (or
+  // through the dashboard), never here: a non-interactive deploy overrides conflicting DNS records.
+  "routes": [{ "pattern": "next.alexwelcing.com", "custom_domain": true }]
+}
