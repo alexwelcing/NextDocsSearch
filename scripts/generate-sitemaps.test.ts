@@ -158,6 +158,29 @@ describe('verifyPrerendered', () => {
       /\/about has robots "noindex" but is listed in the sitemap[\s\S]*\/articles\/short has robots "index, follow" but is left out of the sitemap[\s\S]*\/articles\/tech-stub was not prerendered/
     )
   })
+
+  it('accepts getStaticProps pages a deployment adapter took, when the manifest lists them', async () => {
+    await fixture()
+    // As on Vercel: onBuildComplete has moved the getStaticProps HTML out of .next, leaving the
+    // automatically static pages and the prerender manifest.
+    const automatic = ['/about', '/current-work', '/pitch']
+    await prerender(Object.fromEntries(automatic.map((route) => [route, 'index, follow'])))
+    const plan = planSitemaps(root, TODAY)
+    const ssg = [
+      ...plan.urls.map((url) => url.path),
+      '/articles/short',
+      '/articles/tech-stub',
+    ].filter((route) => !automatic.includes(route))
+    await put('.next/prerender-manifest.json', {
+      routes: Object.fromEntries(ssg.map((route) => [route, {}])),
+    })
+    expect(() => verifyPrerendered(root, plan)).not.toThrow()
+
+    await put('.next/prerender-manifest.json', {
+      routes: Object.fromEntries(ssg.filter((r) => r !== '/videos/essay').map((r) => [r, {}])),
+    })
+    expect(() => verifyPrerendered(root, plan)).toThrow(/\/videos\/essay was not prerendered/)
+  })
 })
 
 describe('robotsMeta', () => {

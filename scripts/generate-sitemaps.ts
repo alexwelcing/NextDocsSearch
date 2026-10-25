@@ -1,5 +1,5 @@
-// Post-build step: public/sitemap.xml and public/video-sitemap.xml, generated from the manifests
-// (replacing next-sitemap), then checked against the prerendered HTML.
+// public/sitemap.xml and public/video-sitemap.xml, generated from the manifests (replacing
+// next-sitemap), and a post-build check of the prerendered pages against them.
 //
 // - sitemap.xml: the static routes, every indexable article and every film page. A <lastmod> is
 //   written only when the manifest carries a real `updated` or `published` date; the `date` field
@@ -7,11 +7,16 @@
 // - video-sitemap.xml: one entry per film in public/arc/media.json, all on this domain: the
 //   /videos/<slug> page, the MP4 under /images/article-videos/, and the record's og:image poster.
 // - Thin records (lib/seo/records.ts thinReason) stay prerendered but are left out; their pages
-//   carry noindex. verifyPrerendered() then reads the built HTML and fails the build unless every
-//   sitemap URL was prerendered and the noindex pages are exactly the articles left out.
+//   carry noindex.
 //
-// Both files are build outputs (gitignored). Runs as scripts/steps/post/10-sitemaps.ts, or directly
-// after a build: `tsx scripts/generate-sitemaps.ts`.
+// The files are written BEFORE next build (scripts/steps/pre/70-sitemaps.ts): Vercel's deployment
+// adapter (onBuildComplete) and a static export both collect public/ during next build, so a file
+// written afterwards never ships. That is why next-sitemap's post-build output never reached
+// production, which kept serving the committed sitemap. The files are gitignored build outputs.
+//
+// After the build, scripts/steps/post/10-verify-sitemaps.ts runs verifyPrerendered(): every
+// sitemap URL must have been prerendered, and the noindex pages must be exactly the articles the
+// sitemap leaves out. Directly: `tsx scripts/generate-sitemaps.ts [--verify]`.
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -163,20 +168,11 @@ export function planSitemaps(
 
 export function writeSitemaps(root: string = process.cwd(), siteUrl = SITE_URL): SitemapPlan {
   const plan = planSitemaps(root)
-  const files: Record<string, string> = {
-    'sitemap.xml': urlsetXml(siteUrl, plan.urls),
-    'video-sitemap.xml': videoSitemapXml(siteUrl, plan.films),
-  }
-  // Under `output: 'export'` next build has already copied public/ into out/, so a static export
-  // gets its copy written there too.
-  const dirs = [path.join(root, 'public'), path.join(root, 'out')].filter((dir) =>
-    fs.existsSync(dir)
+  fs.writeFileSync(path.join(root, 'public', 'sitemap.xml'), urlsetXml(siteUrl, plan.urls))
+  fs.writeFileSync(
+    path.join(root, 'public', 'video-sitemap.xml'),
+    videoSitemapXml(siteUrl, plan.films)
   )
-  for (const dir of dirs) {
-    for (const [name, contents] of Object.entries(files)) {
-      fs.writeFileSync(path.join(dir, name), contents)
-    }
-  }
 
   console.log(
     `[sitemaps] sitemap.xml: ${plan.urls.length} URLs; video-sitemap.xml: ${plan.films.length} films`
@@ -196,6 +192,13 @@ function prerenderedHtml(root: string, route: string): string | null {
   return candidates.find((file) => fs.existsSync(file)) ?? null
 }
 
+/** The routes next build prerendered with getStaticProps (.next/prerender-manifest.json). */
+function prerenderManifestRoutes(root: string): Set<string> {
+  const file = path.join(root, '.next', 'prerender-manifest.json')
+  if (!fs.existsSync(file)) return new Set()
+  return new Set(Object.keys((readJson(file) as { routes?: object }).routes ?? {}))
+}
+
 /** The content of a page's <meta name="robots">, or null when it has none. */
 export function robotsMeta(html: string): string | null {
   for (const tag of html.match(/<meta\b[^>]*>/gi) ?? []) {
@@ -208,13 +211,20 @@ export function robotsMeta(html: string): string | null {
 /**
  * The crawl assertion: every sitemap URL was prerendered without noindex, and every left-out
  * article was prerendered with it. Throws with every problem found.
+ *
+ * A deployment adapter (Vercel's onBuildComplete) moves getStaticProps HTML out of .next before
+ * this runs. Such a route still counts as prerendered when the prerender manifest lists it, but its
+ * robots meta cannot be read there; CI and plain `next build` check every page's HTML.
  */
 export function verifyPrerendered(root: string, plan: SitemapPlan): void {
   const problems: string[] = []
+  const prerendered = prerenderManifestRoutes(root)
+  let handedOff = 0
   const check = (route: string, expectNoindex: boolean) => {
     const file = prerenderedHtml(root, route)
     if (!file) {
-      problems.push(`${route} was not prerendered`)
+      if (prerendered.has(route)) handedOff += 1
+      else problems.push(`${route} was not prerendered`)
       return
     }
     const robots = robotsMeta(fs.readFileSync(file, 'utf8')) ?? '(none)'
@@ -231,13 +241,19 @@ export function verifyPrerendered(root: string, plan: SitemapPlan): void {
       `[sitemaps] the prerendered pages disagree with the sitemap:\n  ${problems.join('\n  ')}`
     )
   }
-  console.log(`[sitemaps] verified ${plan.urls.length + plan.noindex.length} prerendered pages`)
+  const pages = plan.urls.length + plan.noindex.length
+  const note = handedOff
+    ? ` (${handedOff} already handed to the deployment adapter: route only)`
+    : ''
+  console.log(`[sitemaps] verified ${pages} prerendered pages against the sitemap${note}`)
 }
 
-// CLI entry. Importing the module (the build step, the tests) only defines the functions.
+// CLI entry. Importing the module (the build steps, the tests) only defines the functions.
 if (/generate-sitemaps\.ts$/.test(process.argv[1] ?? '')) {
   try {
-    verifyPrerendered(process.cwd(), writeSitemaps())
+    if (process.argv.includes('--verify'))
+      verifyPrerendered(process.cwd(), planSitemaps(process.cwd()))
+    else writeSitemaps()
   } catch (err) {
     console.error(err instanceof Error ? err.message : err)
     process.exit(1)

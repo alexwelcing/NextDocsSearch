@@ -45,6 +45,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# sitemaps: generated every build by scripts/steps/post/10-sitemaps.ts
+# sitemaps: generated every build by scripts/steps/pre/70-sitemaps.ts
 /public/sitemap*.xml
 /public/video-sitemap.xml
