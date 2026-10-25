@@ -1,78 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
+// GET /api/game/get-leaderboard on Vercel. The ledger lives in D1 behind the Cloudflare Worker,
+// which serves this path with lib/server/scores.ts and env.DB. Vercel has no D1 binding, so until
+// the DNS cutover this answers what production has answered since Supabase went dark: 503
+// 'Leaderboard not configured' (GameTab shows the ledger offline). Deleted in P4.
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { LEADERBOARD_UNAVAILABLE, METHOD_NOT_ALLOWED } from '@/lib/server/scores'
 
-interface LeaderboardEntry {
-  id: number;
-  player_name: string;
-  score: number;
-  combo_max: number;
-  accuracy: number;
-  total_clicks: number;
-  successful_clicks: number;
-  created_at: string;
-  session_id: string;
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Only allow GET requests
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  try {
-    // Check for required environment variables
-    if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('Missing Supabase credentials');
-      return res.status(503).json({
-        success: false,
-        leaderboard: [],
-        error: 'Leaderboard not configured',
-      });
-    }
-
-    // Create Supabase client
-    const supabaseClient = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    });
-
-    // Get top 5 scores
-    const { data, error } = await supabaseClient
-      .from('sphere_hunter_scores')
-      .select('*')
-      .order('score', { ascending: false })
-      .order('created_at', { ascending: true })
-      .limit(5);
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return res.status(500).json({
-        success: false,
-        leaderboard: [],
-        error: 'Failed to fetch leaderboard',
-      });
-    }
-
-    // Return leaderboard
-    return res.status(200).json({
-      success: true,
-      leaderboard: data || [],
-    });
-  } catch (error: unknown) {
-    console.error('Error fetching leaderboard:', error);
-    // Always return valid JSON, even on error
-    return res.status(500).json({
-      success: false,
-      leaderboard: [],
-      error: error instanceof Error ? error.message : 'Internal server error',
-    });
-  }
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') return res.status(405).json(METHOD_NOT_ALLOWED)
+  res.status(503).json(LEADERBOARD_UNAVAILABLE)
 }
