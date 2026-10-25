@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:arcforge:schema:gold-pairs-1",
   "title": "arc-gold-pairs/1",
-  "description": "The input of a gold audit (#1 at R00, #2 at R10/R10K): 60 queries x 12 candidates, each candidate shown as the judge sees it (card, best 2 chunks, glossary entity card with person-map ids).",
+  "description": "The input of a gold audit (#1 at R00, #2 at R10/R10K): 60 queries x 12 candidates, each candidate shown as the judge sees it (card, best 2 chunks, and its record-local entity card: A0 rule 6, built only from that record's own mentions, so no person-map merge reaches a grade).",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema", "run_id", "audit_index", "queries"],
@@ -27,7 +27,7 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["candidate_id", "record_id", "card", "chunks", "entity_card"],
+              "required": ["candidate_id", "record_id", "card", "chunks", "entity_card", "entity_card_scope"],
               "properties": {
                 "candidate_id": {"type": "string", "minLength": 1},
                 "record_id": {"type": "string", "minLength": 1},
@@ -38,7 +38,8 @@
                   "properties": {"title": {"type": "string"}, "description": {"type": "string"}}
                 },
                 "chunks": {"type": "array", "minItems": 1, "maxItems": 2, "items": {"type": "string"}},
-                "entity_card": {"type": ["string", "null"]}
+                "entity_card": {"description": "The people this record itself names, with record-local ids; null when it names none.", "type": ["string", "null"]},
+                "entity_card_scope": {"const": "record-local"}
               }
             }
           }

@@ -4,8 +4,8 @@ Every row is recomputed from its per-query score file, every rule re-decided und
 and the result diffed against the stored verdicts.json (and report.json). Any mismatch, any
 in-scope rule that reads a null (NOT_COMPUTABLE) and any contract error fails the run: exit 1.
 
-With --inputs, the producer's input document (run, vault, gates_inputs, adoption,
-signoff_inputs and rows of {comparison_id, scores_file, nested, vault_read}) is built into a
+With --inputs, the producer's input document (run, proxy_vault, gates_inputs, adoption,
+signoff_inputs and rows of {comparison_id, scores_file, nested, proxy_vault_read}) is built into a
 verdicts.json instead, which --emit writes.
 """
 

@@ -64,8 +64,12 @@ def test_retry_then_fail_closed(pairs, rubric, root, agent):
     agent.write(retry, 'gold_audit', {'grades': []})
     code, result, _ = fable('check', packed['packet_root'], '--session', 's2', '--model', FABLE)
     assert code == 20 and result['decision'] == 'failed_closed' and result['status'] == 'failed'
+    diff = Path(packed['packet_root']).parent / 'fix.diff'
+    diff.write_text('x\n')
+    code, _, err = fable('repair', packed['packet_root'], '--diff', str(diff), '--rules', str(diff))
+    assert code == 1 and 'only a refused PREREG sign-off' in err
     code, _, err = fable('owner-sign', packed['packet_root'], '--note', 'x')
-    assert code == 1 and 'only the PREREG sign-off' in err
+    assert code == 2  # A0: there is no manual sign
 
 
 def test_errors_are_reported_not_raised(tmp_path):

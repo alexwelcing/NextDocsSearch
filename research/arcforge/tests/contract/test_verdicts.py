@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 
+from arcforge.contract import synth
 from arcforge.contract.ids import NOT_APPLICABLE, RULE_IDS, STRIPPED_FIELDS
 from arcforge.contract.rules import Rules
 from arcforge.contract.verdicts import (
@@ -42,6 +43,20 @@ def scope_rows(rules: Rules, run_id: str, branch: str, **overrides: Any) -> dict
         assert cid in rows, f'{cid} is not read at {run_id}/{branch}'
         rows[cid] = value
     return rows
+
+
+GOOD_I1 = {
+    'probe_min_acc': 0.95,
+    'kappa_qw_median': 0.72,
+    'alpha_families': 0.63,
+    'min_kendall_ci_lo': 0.68,
+    'delta_ci_hi': 0.21,
+}
+GOOD_I1_FAILING_B = {**GOOD_I1, 'kappa_qw_median': 0.52}
+
+
+def basis_for(i1_outcome: str) -> dict[str, str]:
+    return {'basis': 'judged' if i1_outcome == 'PASS' else 'intent_only'}
 
 
 def statuses(outcome) -> dict[str, str]:
@@ -82,19 +97,13 @@ def test_out_of_scope_rules_are_not_applicable_and_read_nothing(make_doc, rules)
         'I1_pass': None,
         'I1_pass_effective': True,
         'I4_pass': True,
+        'I6_pass': None,
         'futility_fired': None,
     }
 
 
 def test_every_h_rule_is_not_applicable_at_r00(make_doc, rules):
-    signoff = {
-        'lint_ok': True,
-        'report_valid': True,
-        'vault_sealed': True,
-        'i1_fallback_scheduled': False,
-        'i2_scheduled': True,
-        'i4_scheduled': True,
-    }
+    signoff = synth.signoff_inputs()
     outcome = run(make_doc, rules, 'r00', 'N', signoff_inputs=signoff)
     assert outcome.ok, outcome.problems()
     in_scope = {k for k, v in statuses(outcome).items() if v != NOT_APPLICABLE}
@@ -106,11 +115,11 @@ def test_every_h_rule_is_not_applicable_at_r00(make_doc, rules):
 
 
 def test_a_planted_null_vault_sign_makes_h1_not_computable(make_doc, rules):
-    outcome = run(make_doc, rules, 'r06', 'N', vault={'sign': None})
+    outcome = run(make_doc, rules, 'r06', 'N', proxy_vault={'sign': None})
     assert not outcome.ok
     failed = {n.rule: n.fields for n in outcome.not_computable}
-    assert set(failed) == {'H1', 'vault.read'}
-    assert 'vault.sign' in failed['H1']
+    assert set(failed) == {'H1', 'proxy_vault.read'}
+    assert 'proxy_vault.sign' in failed['H1']
     assert statuses(outcome)['H1'] == 'NOT_COMPUTABLE'
 
 
@@ -144,22 +153,52 @@ def test_vault_read_in_scope_without_a_read_is_not_computable(make_doc, rules):
         rules,
         'r04',
         'N',
-        vault={'read_this_run': False, 'read_index': None, 'sign': None},
+        proxy_vault={'read_this_run': False, 'read_index': None, 'sign': None, 'basis': None},
     )
-    assert {n.rule for n in outcome.not_computable} == {'vault.read', 'FUT'}
+    assert {n.rule for n in outcome.not_computable} == {'proxy_vault.read', 'FUT'}
 
 
-def test_a_lost_key_is_a_read_with_sign_unavailable(make_doc, rules):
-    outcome = run(
-        make_doc, rules, 'r04', 'N', vault={'sign': 'unavailable', 'hybrid_minus_b2_ndcg10': None}
-    )
+UNAVAILABLE = {'sign': 'unavailable', 'hybrid_minus_b2_ndcg10': None, 'compromised': True}
+
+
+def test_a_compromised_read_is_a_read_with_sign_unavailable(make_doc, rules):
+    outcome = run(make_doc, rules, 'r04', 'N', proxy_vault=UNAVAILABLE)
     assert outcome.ok, outcome.problems()
-    assert statuses(outcome)['vault.read'] == 'DONE'
+    assert statuses(outcome)['proxy_vault.read'] == 'DONE'
+
+
+@pytest.mark.parametrize(
+    ('vault', 'message'),
+    [
+        ({'compromised': True}, "the sign must be 'unavailable'"),
+        ({'sign': 'unavailable', 'hybrid_minus_b2_ndcg10': None}, 'needs proxy_vault.compromised'),
+        ({'basis': 'intent_only'}, "so the registered value is 'judged'"),
+    ],
+)
+def test_the_proxy_vault_invariants(make_doc, rules, vault, message):
+    outcome = run(make_doc, rules, 'r04', 'N', proxy_vault=vault)
+    assert any(message in e for e in outcome.errors), outcome.errors
+
+
+def test_an_i1_failure_makes_the_registered_vault_value_intent_only(make_doc, rules):
+    failed = {'I1_prior_pass': False}  # I1 failed at R00 and was not passed at R01
+    judged = run(
+        make_doc, rules, 'r04', 'N', gates_inputs=failed, proxy_vault={'basis': 'judged'}
+    )
+    assert any("so the registered value is 'intent_only'" in e for e in judged.errors)
+    intent = run(
+        make_doc, rules, 'r04', 'N', gates_inputs=failed, proxy_vault={'basis': 'intent_only'}
+    )
+    assert intent.ok, intent.problems()
 
 
 def test_a_vault_read_outside_the_read_points_fails(make_doc, rules):
     outcome = run(
-        make_doc, rules, 'r05', 'N', vault={'read_this_run': True, 'read_index': 2, 'sign': 1}
+        make_doc,
+        rules,
+        'r05',
+        'N',
+        proxy_vault={'read_this_run': True, 'read_index': 2, 'sign': 1, 'basis': 'judged'},
     )
     assert any('not a registered read point' in e for e in outcome.errors)
 
@@ -172,7 +211,7 @@ def test_a_vault_read_outside_the_read_points_fails(make_doc, rules):
     [
         ({}, {}, 'SUPPORTED'),
         ({}, {'sign': 0}, 'INCONCLUSIVE'),
-        ({}, {'sign': 'unavailable', 'hybrid_minus_b2_ndcg10': None}, 'INCONCLUSIVE'),
+        ({}, UNAVAILABLE, 'INCONCLUSIVE'),
         ({'H1__c1': (0.0, -0.01, 0.0199)}, {}, 'FALSIFIED'),
         ({'H1__c1': (0.0, -0.01, 0.02)}, {}, 'INCONCLUSIVE'),
         ({'H1__g1': (-0.03, -0.05, -0.001)}, {}, 'FALSIFIED'),
@@ -187,7 +226,7 @@ def test_a_vault_read_outside_the_read_points_fails(make_doc, rules):
     ],
 )
 def test_h1_outcomes(make_doc, rules, rows, vault, expected):
-    outcome = run(make_doc, rules, 'r06', 'N', rows, vault=vault)
+    outcome = run(make_doc, rules, 'r06', 'N', rows, proxy_vault=vault)
     assert outcome.ok, outcome.problems()
     assert statuses(outcome)['H1'] == expected
 
@@ -227,6 +266,7 @@ def test_the_i1_fallback_family_is_c1_and_c3(make_doc, rules):
         'N',
         {'H1__c2': weak, 'H1__c4': weak},
         gates_inputs={'I1_prior_pass': False},
+        proxy_vault={'basis': 'intent_only'},
     )
     assert outcome.ok, outcome.problems()
     assert statuses(outcome)['H1'] == 'SUPPORTED'
@@ -247,6 +287,7 @@ def test_fusion_only_under_the_i1_fallback_needs_only_c1(make_doc, rules):
         'N',
         {'H1__c2': weak, 'H1__c3': weak},
         gates_inputs={'I1_prior_pass': False},
+        proxy_vault={'basis': 'intent_only'},
     )
     assert statuses(outcome)['H1'] == 'FUSION_ONLY'
 
@@ -282,7 +323,8 @@ def test_h1_kill_only_checkpoint(make_doc, rules, rows, expected):
     ],
 )
 def test_futility(make_doc, rules, c1, sign, expected):
-    outcome = run(make_doc, rules, 'r04', 'N', {'FUT__c1': c1}, vault={'sign': sign})
+    vault = UNAVAILABLE if sign == 'unavailable' else {'sign': sign}
+    outcome = run(make_doc, rules, 'r04', 'N', {'FUT__c1': c1}, proxy_vault=vault)
     assert outcome.ok, outcome.problems()
     assert statuses(outcome)['FUT'] == expected
     assert outcome.doc['gates_summary']['futility_fired'] is (expected == 'FIRED')
@@ -445,12 +487,23 @@ def test_k1(make_doc, rules, rows, expected):
 
 
 @pytest.mark.parametrize(
-    ('i1', 'expected'),
-    [((0.6, 0.6), 'PASS'), ((0.59, 0.9), 'FAIL'), ((0.9, 0.599), 'FAIL')],
-)
-def test_i1(make_doc, rules, i1, expected):
-    gates = {'I1': {'kappa_qw_owner': i1[0], 'min_kendall_ci_lo': i1[1]}}
-    outcome = run(make_doc, rules, 'r10', 'N', gates_inputs=gates)
+    ('changes', 'expected'),
+    [
+        ({}, 'PASS'),
+        # Every A0 component at its boundary: I1a probes >= 0.90, I1b kappa >= 0.6 and
+        # alpha >= 0.5, I1c Kendall CI lower bound >= 0.6, I1d ci_hi(delta) <= 0.30.
+        ({'probe_min_acc': 0.90, 'kappa_qw_median': 0.6, 'alpha_families': 0.5,
+          'min_kendall_ci_lo': 0.6, 'delta_ci_hi': 0.30}, 'PASS'),
+        ({'probe_min_acc': 0.899}, 'FAIL'),
+        ({'kappa_qw_median': 0.599}, 'FAIL'),
+        ({'alpha_families': 0.499}, 'FAIL'),
+        ({'min_kendall_ci_lo': 0.599}, 'FAIL'),
+        ({'delta_ci_hi': 0.301}, 'FAIL'),
+    ],
+)  # fmt: skip
+def test_i1(make_doc, rules, changes, expected):
+    gates = {'I1': {**GOOD_I1, **changes}, 'I1_prior_pass': not (expected == 'PASS')}
+    outcome = run(make_doc, rules, 'r10', 'N', gates_inputs=gates, proxy_vault=basis_for(expected))
     assert statuses(outcome)['I1'] == expected
     assert outcome.doc['gates_summary']['I1_pass'] is (expected == 'PASS')
     # In scope, I1_pass_effective is this run's own pass, whatever was carried in.
@@ -460,9 +513,53 @@ def test_i1(make_doc, rules, i1, expected):
 
 def test_i1_failing_at_r10_moves_h1_to_the_fallback_family(make_doc, rules):
     weak = (0.01, -0.01, 0.03)
-    gates = {'I1': {'kappa_qw_owner': 0.5, 'min_kendall_ci_lo': 0.5}, 'I1_prior_pass': True}
-    outcome = run(make_doc, rules, 'r10', 'N', {'H1__c2': weak}, gates_inputs=gates)
+    gates = {'I1': GOOD_I1_FAILING_B, 'I1_prior_pass': True}
+    outcome = run(
+        make_doc, rules, 'r10', 'N', {'H1__c2': weak}, gates_inputs=gates,
+        proxy_vault={'basis': 'intent_only'},
+    )  # fmt: skip
+    # (no history is given, so only arc_summary is missing)
+    assert [e for e in outcome.errors if 'arc_summary' not in e] == []
+    assert not outcome.not_computable
     assert statuses(outcome)['H1'] == 'SUPPORTED'
+
+
+def test_a_null_i1_component_input_is_not_computable(make_doc, rules):
+    outcome = run(
+        make_doc, rules, 'r10', 'N', gates_inputs={'I1': {**GOOD_I1, 'delta_ci_hi': None}}
+    )
+    assert any(
+        n.rule == 'I1' and 'gates_inputs.I1.delta_ci_hi' in n.fields for n in outcome.not_computable
+    )
+
+
+@pytest.mark.parametrize(
+    ('i6', 'h3_rows', 'expected_i6', 'expected_h3'),
+    [
+        ({}, {}, 'PASS', 'SUPPORTED'),
+        ({'fleiss_kappa': 0.6, 'placebo_rerate': 0.16, 'random_rerate': 0.06}, {}, 'PASS', 'SUPPORTED'),
+        ({'fleiss_kappa': 0.599}, {}, 'FAIL', 'INCONCLUSIVE'),
+        ({'placebo_rerate': 0.17, 'random_rerate': 0.06}, {}, 'FAIL', 'INCONCLUSIVE'),
+        # A falsifying c1 is not FALSIFIED unless I6 passes (A0 rule 4).
+        ({}, {'H3__c1': (0.0, -0.1, 0.0499)}, 'PASS', 'FALSIFIED'),
+        ({'fleiss_kappa': 0.4}, {'H3__c1': (0.0, -0.1, 0.0499)}, 'FAIL', 'INCONCLUSIVE'),
+    ],
+)  # fmt: skip
+def test_i6_gates_h3(make_doc, rules, i6, h3_rows, expected_i6, expected_h3):
+    gates = {'I6': {'fleiss_kappa': 0.71, 'placebo_rerate': 0.12, 'random_rerate': 0.06, **i6}}
+    rows = {'H3__c1': (0.4, 0.2, 0.6), 'H3__c2': (0.4, 0.2, 0.6), **h3_rows}
+    outcome = run(make_doc, rules, 'r03', 'N', rows, gates_inputs=gates)
+    assert outcome.ok, outcome.problems()
+    assert statuses(outcome)['I6'] == expected_i6
+    assert statuses(outcome)['H3'] == expected_h3
+    assert outcome.doc['gates_summary']['I6_pass'] is (expected_i6 == 'PASS')
+    assert outcome.derived['gates.I6.pass'] is (expected_i6 == 'PASS')
+
+
+def test_a_null_i6_makes_h3_not_computable(make_doc, rules):
+    outcome = run(make_doc, rules, 'r03', 'N', gates_inputs={'I6': None})
+    failed = {n.rule for n in outcome.not_computable}
+    assert failed == {'I6', 'H3'}
 
 
 @pytest.mark.parametrize(('flip', 'expected'), [(0.049, 'PASS'), (0.05, 'FAIL')])
@@ -495,19 +592,20 @@ def test_i2_and_i5_are_reported_with_their_predictions(make_doc, rules):
         ({}, False, 'FAIL'),
         ({'i1_fallback_scheduled': True}, False, 'PASS'),
         ({'i4_scheduled': False}, True, 'FAIL'),
+        # The A0 preconditions, each necessary.
+        ({'a0_witness_first': False}, True, 'FAIL'),
+        ({'s0_witnessed': False}, True, 'FAIL'),
+        ({'r00_sets_witnessed': False}, True, 'FAIL'),
+        ({'model_choice_present': False}, True, 'FAIL'),
+        ({'contamination_present': False}, True, 'FAIL'),
+        ({'precutoff_lookups_resolved': False}, True, 'FAIL'),
+        ({'provenance_present': False}, True, 'FAIL'),
+        ({'report_valid': False}, True, 'FAIL'),
     ],
 )
 def test_signoff(make_doc, rules, changes, i1_pass, expected):
-    signoff = {
-        'lint_ok': True,
-        'report_valid': True,
-        'vault_sealed': True,
-        'i1_fallback_scheduled': False,
-        'i2_scheduled': True,
-        'i4_scheduled': True,
-    }
-    signoff.update(changes)
-    i1 = {'kappa_qw_owner': 0.7 if i1_pass else 0.5, 'min_kendall_ci_lo': 0.7}
+    signoff = synth.signoff_inputs(**changes)
+    i1 = GOOD_I1 if i1_pass else GOOD_I1_FAILING_B
     outcome = run(make_doc, rules, 'r00', 'N', gates_inputs={'I1': i1}, signoff_inputs=signoff)
     assert outcome.ok, outcome.problems()
     assert statuses(outcome)['signoff'] == expected
@@ -516,6 +614,11 @@ def test_signoff(make_doc, rules, changes, i1_pass, expected):
 def test_signoff_without_its_inputs_is_not_computable(make_doc, rules):
     outcome = run(make_doc, rules, 'r00', 'N', signoff_inputs=None)
     assert {n.rule for n in outcome.not_computable} == {'signoff'}
+    planted = synth.signoff_inputs(precutoff_lookups_resolved=None)
+    outcome = run(make_doc, rules, 'r00', 'N', signoff_inputs=planted)
+    assert any(
+        'signoff_inputs.precutoff_lookups_resolved' in n.fields for n in outcome.not_computable
+    )
 
 
 # ---- adoption ---------------------------------------------------------------------------------
@@ -672,5 +775,12 @@ def test_diff_reports_paths():
 
 
 def test_vault_numbers_without_a_read_fail(make_doc, rules):
-    outcome = run(make_doc, rules, 'r05', 'N', vault={'read_this_run': False, 'sign': 1})
-    assert any('vault.sign given without a read this run' in e for e in outcome.errors)
+    outcome = run(make_doc, rules, 'r05', 'N', proxy_vault={'read_this_run': False, 'sign': 1})
+    assert any('proxy_vault.sign given without a read this run' in e for e in outcome.errors)
+
+
+def test_the_doc_carries_schema_1_1(make_doc, rules):
+    outcome = run(make_doc, rules, 'r02', 'N')
+    assert outcome.doc['schema_version'] == '1.1'
+    old = run(make_doc, rules, 'r02', 'N', schema_version='1.0')
+    assert any("schema_version must be '1.1'" in e for e in old.errors)

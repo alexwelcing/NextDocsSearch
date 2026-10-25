@@ -7,8 +7,8 @@ Verification:
 3. every row is recomputed from its score file under rules.yaml (contract/build.py) and the whole
    document is re-derived (contract/verdicts.py); any difference, any NOT_COMPUTABLE and any
    contract error fails;
-4. report.json agrees with verdicts.json: verdicts_doc is the same document; run, vault and gate
-   inputs match; derived values (remeaning.label, the gate passes) follow the statuses; adoption
+4. report.json agrees with verdicts.json: verdicts_doc is the same document; run, proxy_vault and
+   gate inputs match (the A0 I1 inputs are projected from gates.I1's probes, ref, kendall and diff); derived values (remeaning.label, the gate passes) follow the statuses; adoption
    decisions match; every score file is a listed artifact with its sha256;
 5. verdicts.json is under 25 KB.
 At R10/R10K the verdicts.json of every earlier run of the realized path is loaded from the runs
@@ -26,7 +26,7 @@ from typing import Any
 from arcforge.contract import schema as report_schema
 from arcforge.contract.branches import PathError, path_of_final
 from arcforge.contract.build import build_verdicts
-from arcforge.contract.ids import NOT_APPLICABLE, RULE_IDS
+from arcforge.contract.ids import NOT_APPLICABLE, PROXY_VAULT_AGGREGATE, RULE_IDS
 from arcforge.contract.rules import Rules
 from arcforge.contract.verdicts import FINAL_RUNS, Outcome, close, diff
 
@@ -118,6 +118,26 @@ def _walk(report: Mapping[str, Any], path: str) -> tuple[bool, Any]:
     return True, node
 
 
+def project_i1(i1: Mapping[str, Any]) -> dict[str, Any]:
+    """gates_inputs.I1 as report.gates.I1 (A0 form) determines it.
+
+    probe_min_acc is the lowest accuracy over the gated probe types (n >= 20); kappa_qw_median and
+    alpha_families come from the three-family reference; min_kendall_ci_lo is the lowest Kendall
+    CI bound over the three judge pairs; delta_ci_hi is the lineage differential's upper bound.
+    """
+    gated = [p.get('acc') for p in (i1.get('probes') or {}).values() if p.get('gated')]
+    kendall = [k.get('ci_lo') for k in i1.get('kendall') or []]
+    ref = i1.get('ref') or {}
+    lineage = i1.get('diff') or {}
+    return {
+        'probe_min_acc': min(gated) if gated and None not in gated else None,
+        'kappa_qw_median': ref.get('kappa_qw_median'),
+        'alpha_families': ref.get('alpha_families'),
+        'min_kendall_ci_lo': min(kendall) if kendall and None not in kendall else None,
+        'delta_ci_hi': lineage.get('ci_hi'),
+    }
+
+
 def cross_check(report: Mapping[str, Any], doc: Mapping[str, Any], outcome: Outcome) -> list[str]:
     """report.json against its verdicts.json and the recomputed outcome."""
     errors = [
@@ -135,30 +155,27 @@ def cross_check(report: Mapping[str, Any], doc: Mapping[str, Any], outcome: Outc
         errors.append(
             f'report.run.schema_sha256 is {run.get("schema_sha256")}, arc-report-1.json hashes to {schema_sha}'
         )
-    vault, d_vault = report.get('vault') or {}, doc.get('vault') or {}
-    for key in ('read_this_run', 'read_index', 'hybrid_minus_b2_ndcg10', 'sign'):
+    vault, d_vault = report.get('proxy_vault') or {}, doc.get('proxy_vault') or {}
+    for key in PROXY_VAULT_AGGREGATE:
         if not close(vault.get(key), d_vault.get(key)):
             errors.append(
-                f'report.vault.{key} is {vault.get(key)!r}, verdicts.json says {d_vault.get(key)!r}'
+                f'report.proxy_vault.{key} is {vault.get(key)!r}, verdicts.json says {d_vault.get(key)!r}'
             )
 
     gates, inputs = report.get('gates') or {}, doc.get('gates_inputs') or {}
     i1 = gates.get('I1')
-    expected_i1 = None
-    if i1 is not None:
-        kendall = [k.get('ci_lo') for k in i1.get('kendall') or []]
-        expected_i1 = {
-            'kappa_qw_owner': i1.get('kappa_qw_owner'),
-            'min_kendall_ci_lo': min(kendall) if kendall else None,
-        }
+    i6 = gates.get('I6')
     projections = {
-        'I1': expected_i1,
+        'I1': None if i1 is None else project_i1(i1),
         'I2': None
         if gates.get('I2') is None
         else {'inflation_ratio': gates['I2'].get('inflation_ratio')},
         'I3': gates.get('I3'),
         'I4': None if gates.get('I4') is None else {'flip_rate': gates['I4'].get('flip_rate')},
         'I5': None if gates.get('I5') is None else {'kappa_drop': gates['I5'].get('kappa_drop')},
+        'I6': None
+        if i6 is None
+        else {k: i6.get(k) for k in ('fleiss_kappa', 'placebo_rerate', 'random_rerate')},
     }
     for key, value in projections.items():
         for problem in diff(value, inputs.get(key), f'gates_inputs.{key}'):

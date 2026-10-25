@@ -34,6 +34,7 @@
         }
       }
     },
-    "stripped": {"description": "The verdicts.json fields removed for a blind pass (empty otherwise).", "type": "array", "items": {"type": "string"}}
+    "stripped": {"description": "The verdicts.json fields removed for a blind pass (empty otherwise).", "type": "array", "items": {"type": "string"}},
+    "repair_cycle": {"description": "Sign-off only (A0 repair or halt): 0 for the first submission, 1 or 2 for a repaired resubmission, which carries every earlier refusal verbatim and the diff under inputs/repair/.", "enum": [0, 1, 2]}
   }
 }
