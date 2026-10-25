@@ -1,0 +1,10 @@
+# Upload only what the Dockerfile copies (the build context is research/arcforge).
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!arcforge/
+!arcforge/**
+!container/
+!container/Dockerfile
+**/__pycache__/

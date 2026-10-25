@@ -10,7 +10,8 @@ dist/
 .arcforge-cache/
 runs/
 artifacts/
-models/
+# Anchored: arcforge/models/ and tests/models/ are source (the model code), not downloads.
+/models/
 *.safetensors
 *.onnx
 *.bin

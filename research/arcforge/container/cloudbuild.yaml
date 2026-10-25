@@ -1,0 +1,35 @@
+# Cloud Build recipe for the arcforge runner container (see container/Dockerfile).
+# Submitted from research/arcforge by `python -m arcforge.runner image build`, which passes
+# _COMMIT and reads back the pushed digest into arcforge/runner/pinned/image.json.
+#
+# The previous build is pulled as a layer cache (tag buildcache), so a code-only change rebuilds
+# one thin layer instead of re-installing torch. Runner VMs never use a tag: they pull by digest.
+steps:
+  - id: cache
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args: ['-c', 'docker pull ${_IMAGE}:buildcache || echo "no build cache yet"']
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    env: ['DOCKER_BUILDKIT=1']
+    args:
+      - build
+      - --file=container/Dockerfile
+      - --cache-from=${_IMAGE}:buildcache
+      - --build-arg=BUILDKIT_INLINE_CACHE=1
+      - --build-arg=ARCFORGE_COMMIT=${_COMMIT}
+      - --tag=${_IMAGE}:${_COMMIT}
+      - --tag=${_IMAGE}:buildcache
+      - .
+images:
+  - ${_IMAGE}:${_COMMIT}
+  - ${_IMAGE}:buildcache
+substitutions:
+  _IMAGE: us-central1-docker.pkg.dev/${PROJECT_ID}/arcforge/arcforge
+  _COMMIT: unknown
+options:
+  dynamicSubstitutions: true
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
+timeout: 3600s
+tags: ['arcforge', 'managed-by-claude']
