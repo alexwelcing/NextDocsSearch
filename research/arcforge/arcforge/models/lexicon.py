@@ -107,6 +107,9 @@ class TokenizerSpec:
         return hashlib.sha256(canonical_json(self.to_json()).encode()).hexdigest()
 
 
+DEFAULT_SPEC = TokenizerSpec()
+
+
 @dataclass(frozen=True)
 class LexiconEntry:
     key: str
@@ -195,7 +198,7 @@ def build_lexicon(
     entries: Iterable[LexiconEntry],
     *,
     bucket_base: int,
-    spec: TokenizerSpec = TokenizerSpec(),
+    spec: TokenizerSpec = DEFAULT_SPEC,
     block_size: int = 16,
 ) -> bytes:
     """Serialize entries (any order) into lexicon.bin bytes; deterministic for a given input."""

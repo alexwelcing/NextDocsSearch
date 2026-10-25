@@ -6,9 +6,11 @@
    pin's arguments: text-only (Qwen --language-model-only, Ministral image limit 0), Qwen fp8
    on the fly, Ministral FP8 as published with an fp8 KV cache, max-model-len 8192;
 2. proves the load is text-only: a request with an image must be refused;
-3. Qwen: 256 training-query requests (S5's shape) at 64-way concurrency, thinking disabled;
-   the gate reads aggregate decode tokens/s (completion tokens over wall time). It also runs
-   the audit-judge prompt at temperature 0 and reports its schema validity.
+3. Qwen: 256 training-query requests (S5's prompts) at 64-way concurrency, thinking disabled,
+   each decoding exactly 256 tokens; the gate reads the aggregate decode tokens/s (completion
+   tokens over wall time). The same prompts under guided JSON, with answers of the length the
+   model chooses, are reported as the workload rate, and the audit-judge prompt runs at
+   temperature 0 with its schema validity reported.
    Ministral: the 200-prompt fixture at 64-way, temperature 0.8 with a per-prompt seed,
    structured outputs (guided JSON); the gate reads how many answers validate. Throughput is
    reported.
@@ -238,6 +240,8 @@ def serve_command(pin: ModelPin, model_dir: Path, name: str, port: int) -> list[
 class Server:
     """`vllm serve` as a context manager; the log goes to log_path."""
 
+    poll_seconds = 5.0
+
     def __init__(self, command: list[str], port: int, log_path: Path, timeout: float = 1800):
         self.command, self.port, self.log_path, self.timeout = command, port, log_path, timeout
         self.load_seconds = 0.0
@@ -249,26 +253,30 @@ class Server:
     def __enter__(self) -> Server:
         self.log = open(self.log_path, 'w')
         start = time.time()
-        # The venv's bin first: vLLM's JIT kernels look for ninja on PATH.
-        path = f'{Path(sys.executable).parent}{os.pathsep}{os.environ.get("PATH", "")}'
-        env = {**os.environ, 'PATH': path, 'VLLM_NO_USAGE_STATS': '1'}
+        # The lock ships no FlashInfer cubins and the runner has no C++ toolchain to JIT them, so
+        # vLLM's own top-k/top-p sampler is used (vLLM otherwise picks FlashInfer's regardless).
+        env = {'VLLM_USE_FLASHINFER_SAMPLER': '0', **os.environ, 'VLLM_NO_USAGE_STATS': '1'}
         self.process = subprocess.Popen(
             self.command, stdout=self.log, stderr=subprocess.STDOUT, env=env
         )
-        while time.time() - start < self.timeout:
-            if self.process.poll() is not None:
-                raise RuntimeError(
-                    f'vllm exited with {self.process.returncode}; see {self.log_path}'
-                )
-            try:
-                with urllib.request.urlopen(f'{self.base_url}/health', timeout=5) as response:
-                    if response.status == 200:
-                        self.load_seconds = round(time.time() - start, 1)
-                        return self
-            except (urllib.error.URLError, ConnectionError, TimeoutError):
-                pass
-            time.sleep(5)
-        raise TimeoutError(f'vllm not healthy after {self.timeout}s; see {self.log_path}')
+        try:
+            while time.time() - start < self.timeout:
+                if self.process.poll() is not None:
+                    raise RuntimeError(
+                        f'vllm exited with {self.process.returncode}; see {self.log_path}'
+                    )
+                try:
+                    with urllib.request.urlopen(f'{self.base_url}/health', timeout=5) as response:
+                        if response.status == 200:
+                            self.load_seconds = round(time.time() - start, 1)
+                            return self
+                except (urllib.error.URLError, ConnectionError, TimeoutError):
+                    pass
+                time.sleep(self.poll_seconds)
+            raise TimeoutError(f'vllm not healthy after {self.timeout}s; see {self.log_path}')
+        except BaseException:
+            self.__exit__()
+            raise
 
     def __exit__(self, *_exc) -> None:
         self.process.terminate()
@@ -316,55 +324,85 @@ def check(
         'command': command,
         'fetch_seconds': fetch_seconds,
     }
-    qwen = model_key.startswith('qwen')
     with Server(command, port, out_dir / f'{model_key}.vllm.log') as server:
         report['load_seconds'] = server.load_seconds
         report['gpu_memory_mib'] = gpu_memory_mib()
         report['image_probe'] = probe_image_refused(server.base_url, model_key)
-        if qwen:
-            # Qwen3.5 non-thinking sampling (model card), seeded per request.
-            sampling = lambda i: {
-                'temperature': 0.7,
-                'top_p': 0.8,
-                'top_k': 20,
-                'max_tokens': 512,
-                'seed': SEED + i,
-            }
-            send = make_sender(server.base_url, model_key, sampling, guided=True, thinking=False)
-            training = [
-                prompts.training_query_case(cards[i % len(cards)], i) for i in range(requests)
-            ]
-            run_concurrent(send, training[:concurrency], concurrency)  # warm-up wave, not measured
-            results = run_concurrent(send, training, concurrency)
-            report['throughput'] = throughput(results)
-            report['training_json'] = _summary(json_validity(results, training))
-            judge = make_sender(
-                server.base_url,
-                model_key,
-                lambda i: {'temperature': 0.0, 'max_tokens': 256, 'seed': SEED},
-                guided=True,
-                thinking=False,
-            )
-            audit = prompts.audit_fixture(cards, 64)
-            report['audit_judge_json'] = _summary(
-                json_validity(run_concurrent(judge, audit, concurrency), audit)
-            )
-            gate = pins.qwen_gate(report['throughput']['decode_tokens_per_s'], concurrency)
-        else:
-            sampling = lambda i: {'temperature': 0.8, 'max_tokens': 600, 'seed': SEED + i}
-            send = make_sender(server.base_url, model_key, sampling, guided=True, thinking=None)
-            fixture = prompts.ministral_fixture(cards)
-            results = run_concurrent(send, fixture, concurrency)
-            report['throughput'] = throughput(results)
-            validity = json_validity(results, fixture)
-            report['fixture_json'] = _summary(validity)
-            report['samples'] = [r.text for r in results[:3]]
-            gate = pins.ministral_gate(
-                report['image_probe']['refused'], validity['valid'], validity['total']
-            )
-    report['gate'] = {'pin': gate.pin.repo, 'passed': gate.passed, 'reason': gate.reason}
+        measure = _measure_qwen if model_key.startswith('qwen') else _measure_ministral
+        report.update(measure(server.base_url, model_key, cards, requests, concurrency))
+    gate = _gate(model_key, report, concurrency)
+    report['gate'] = gate and {'pin': gate.pin.repo, 'passed': gate.passed, 'reason': gate.reason}
     (out_dir / f'{model_key}.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
+
+
+DECODE_TOKENS = 256
+
+
+def _measure_qwen(base_url: str, model: str, cards: list, requests: int, concurrency: int) -> dict:
+    def sampling(i: int) -> dict:
+        # S5's sampling: Qwen3.5 non-thinking (model card), seeded per request.
+        return {'temperature': 0.7, 'top_p': 0.8, 'top_k': 20, 'max_tokens': 512, 'seed': SEED + i}
+
+    def capacity(i: int) -> dict:
+        # Every request decodes exactly DECODE_TOKENS: the rate is the engine's, not the
+        # answer length's.
+        return {
+            **sampling(i),
+            'max_tokens': DECODE_TOKENS,
+            'min_tokens': DECODE_TOKENS,
+            'ignore_eos': True,
+        }
+
+    def judging(_i: int) -> dict:
+        return {'temperature': 0.0, 'max_tokens': 256, 'seed': SEED}
+
+    training = [prompts.training_query_case(cards[i % len(cards)], i) for i in range(requests)]
+    decode = make_sender(base_url, model, capacity, guided=False, thinking=False)
+    run_concurrent(decode, training[:concurrency], concurrency)  # warm-up wave, not measured
+    decode_results = run_concurrent(decode, training, concurrency)
+    workload = make_sender(base_url, model, sampling, guided=True, thinking=False)
+    results = run_concurrent(workload, training, concurrency)
+    judge = make_sender(base_url, model, judging, guided=True, thinking=False)
+    audit = prompts.audit_fixture(cards, 64)
+    return {
+        # The gate: aggregate decode tokens/s with `concurrency` requests in flight.
+        'throughput': throughput(decode_results),
+        # S5's own shape (guided JSON, answers of the length the model chooses), reported.
+        'workload_throughput': throughput(results),
+        'training_json': _summary(json_validity(results, training)),
+        'audit_judge_json': _summary(
+            json_validity(run_concurrent(judge, audit, concurrency), audit)
+        ),
+    }
+
+
+def _measure_ministral(
+    base_url: str, model: str, cards: list, _requests: int, concurrency: int
+) -> dict:
+    def sampling(i: int) -> dict:
+        return {'temperature': 0.8, 'max_tokens': 600, 'seed': SEED + i}
+
+    send = make_sender(base_url, model, sampling, guided=True, thinking=None)
+    fixture = prompts.ministral_fixture(cards)
+    results = run_concurrent(send, fixture, concurrency)
+    return {
+        'throughput': throughput(results),
+        'fixture_json': _summary(json_validity(results, fixture)),
+        'samples': [r.text for r in results[:3]],
+    }
+
+
+def _gate(model_key: str, report: dict, concurrency: int) -> pins.GateResult | None:
+    """The M1 gate is defined on the primary models; a fallback's run is reported, not gated."""
+    if model_key == 'qwen3.5-9b':
+        return pins.qwen_gate(report['throughput']['decode_tokens_per_s'], concurrency)
+    if model_key == 'ministral-3-8b':
+        fixture = report['fixture_json']
+        return pins.ministral_gate(
+            report['image_probe']['refused'], fixture['valid'], fixture['total']
+        )
+    return None
 
 
 def _summary(validity: dict) -> dict:

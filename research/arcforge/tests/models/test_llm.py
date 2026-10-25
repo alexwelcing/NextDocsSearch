@@ -1,4 +1,5 @@
 import json
+import sys
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -50,6 +51,16 @@ class FakeOpenAI(BaseHTTPRequestHandler):
         if isinstance(content, list):
             self._send(
                 400, {'error': {'message': 'At most 0 image(s) may be provided in one prompt.'}}
+            )
+            return
+        if 'response_format' not in body:
+            n = body.get('min_tokens', 20)
+            self._send(
+                200,
+                {
+                    'choices': [{'message': {'content': 'x ' * n}}],
+                    'usage': {'prompt_tokens': 10, 'completion_tokens': n},
+                },
             )
             return
         schema = body['response_format']['json_schema']['schema']
@@ -140,3 +151,43 @@ def test_request_errors_are_results_not_exceptions():
     failed = send(0, case)
     assert not failed.ok and failed.status == 0 and failed.error
     assert llm.json_validity([failed], [case])['valid'] == 0
+
+
+def test_gate_applies_to_primary_models_only():
+    report = {
+        'throughput': {'decode_tokens_per_s': 1200.0},
+        'image_probe': {'refused': True},
+        'fixture_json': {'valid': 199, 'total': 200},
+    }
+    assert llm._gate('qwen3.5-9b', report, 64).pin is pins.QWEN_9B
+    assert llm._gate('ministral-3-8b', report, 64).pin is pins.MINISTRAL_8B
+    assert llm._gate('qwen3.5-4b', report, 64) is None
+    assert llm._gate('ministral-3-3b', report, 64) is None
+
+
+def test_server_that_exits_is_reported_and_cleaned_up(tmp_path):
+    server = llm.Server([sys.executable, '-c', 'raise SystemExit(3)'], 9, tmp_path / 'log')
+    server.poll_seconds = 0.05
+    with pytest.raises(RuntimeError, match='exited with 3'):
+        server.__enter__()
+    assert server.log.closed
+
+
+def test_server_that_never_gets_healthy_is_killed(tmp_path):
+    server = llm.Server(
+        [sys.executable, '-c', 'import time; time.sleep(60)'], 9, tmp_path / 'log', timeout=0.3
+    )
+    server.poll_seconds = 0.05
+    with pytest.raises(TimeoutError):
+        server.__enter__()
+    assert server.process.poll() is not None
+
+
+def test_measurements_against_an_openai_compatible_server(server):
+    qwen = llm._measure_qwen(server, 'm', CARDS, 64, 16)
+    # The gate run decodes exactly DECODE_TOKENS per request.
+    assert qwen['throughput']['completion_tokens'] == 64 * llm.DECODE_TOKENS
+    assert qwen['workload_throughput']['completion_tokens'] == 64 * 20
+    assert qwen['training_json']['valid'] == 64 and qwen['audit_judge_json']['valid'] == 64
+    ministral = llm._measure_ministral(server, 'm', CARDS, 0, 16)
+    assert ministral['fixture_json']['total'] == 200 and len(ministral['samples']) == 3

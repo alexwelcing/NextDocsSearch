@@ -46,6 +46,9 @@ class PlannedShape:
     vector_set_rows: int = 2_521  # chunks × (dims + 4 B scale): data/search/arc-lexeme.d128.bin
 
 
+PLANNED = PlannedShape()
+
+
 def corpus_texts(records_dir: Path) -> Iterable[str]:
     """Every block of every public/arc/records/<slug>.json, titles included, in slug order."""
     for path in sorted(Path(records_dir).glob('*.json')):
@@ -80,12 +83,12 @@ def mine_vocabulary(texts: Iterable[str], shape: PlannedShape) -> dict[str, list
                 if key.count(' ') == 1 and all(keep_word(w) for w in key.split()):
                     name_counts[key] += 1
 
-    def top(counter: Counter[str], n: int, exclude: set[str] = set()) -> list[str]:
+    def top(counter: Counter[str], n: int, exclude: frozenset[str] = frozenset()) -> list[str]:
         ranked = sorted((k for k in counter if k not in exclude), key=lambda k: (-counter[k], k))
         return ranked[:n]
 
     names = top(name_counts, shape.entities)
-    multiwords = top(gram_counts, shape.multiwords, exclude=set(names))
+    multiwords = top(gram_counts, shape.multiwords, exclude=frozenset(names))
     return {'words': top(word_counts, shape.corpus_words), 'multiwords': multiwords, 'names': names}
 
 
@@ -266,7 +269,7 @@ def build_and_measure(
     *,
     records_dir: Path | None = None,
     general_vocab: Path | None = None,
-    shape: PlannedShape = PlannedShape(),
+    shape: PlannedShape = PLANNED,
     seed: int = 1729,
 ) -> dict:
     """Write the planned-shape bundle to out_dir and measure every file raw and gzipped."""
