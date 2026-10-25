@@ -22,6 +22,10 @@ case "$*" in *instance/name*) echo arc-run-r00-3a74fb4 ;; *instance/zone*) echo 
 ''',
     'gcloud': '''#!/bin/bash
 echo "gcloud $*" >>"$STUB_LOG"
+if [ "$1 $2" = "storage cp" ] && [ "${3#gs://}" != "$3" ]; then
+  echo '{"fetched": true}' >"$4"  # a download: gs:// → local
+  exit 0
+fi
 if [ "$1 $2" = "storage cp" ]; then
   dest="$GCS/${4#gs://}"; mkdir -p "$(dirname "$dest")"
   if [ "$3" = "-" ]; then cat >"$dest"; else cp "$3" "$dest"; fi
@@ -88,10 +92,15 @@ def test_job_validation():
         Job()
     with pytest.raises(ValueError, match='invalid environment'):
         Job(image=IMAGE, env={'lower': '1'})
+    with pytest.raises(ValueError, match='plain names'):
+        Job(image=IMAGE, files={'../etc/passwd': 'gs://b/x'})
+    with pytest.raises(ValueError, match='plain names'):
+        Job(image=IMAGE, files={'config.json': '/tmp/config.json'})
 
 
 def test_happy_path_runs_the_container_and_reports_done(vm):
-    rc, calls, gcs = vm(Job(image=IMAGE, argv=('version',), env={'ARCFORGE_X': '1'}, host_script='echo host-ok'))
+    rc, calls, gcs = vm(Job(image=IMAGE, argv=('version',), env={'ARCFORGE_X': '1'}, host_script='echo host-ok',
+                            files={'config.json': 'gs://bkt/runs/r00/vm/config.json'}))
     assert rc == 0
     status = json.loads((gcs / 'status.json').read_text())
     assert status['phase'] == 'done' and status['exit_code'] == 0
@@ -101,6 +110,11 @@ def test_happy_path_runs_the_container_and_reports_done(vm):
     assert f'docker pull --quiet {IMAGE}' in calls
     run_line = next(line for line in calls.splitlines() if line.startswith('docker run'))
     assert '--gpus all' in run_line and run_line.endswith(f'{IMAGE} version')
+    assert '-w /work' in run_line and '/in:/work' in run_line
+    # Job files are fetched into the container's working directory before it starts.
+    fetch = next(line for line in calls.splitlines() if 'gs://bkt/runs/r00/vm/config.json' in line)
+    assert fetch.startswith('gcloud storage cp gs://bkt/runs/r00/vm/config.json ') and fetch.split()[4].endswith('/in/config.json')
+    assert json.loads((Path(fetch.split()[4])).read_text()) == {'fetched': True}
     assert '-e ARCFORGE_X=1' in run_line and '-e ARCFORGE_ATTEMPT=2' in run_line and '-e ARCFORGE_RUN_ID=r00' in run_line
     assert 'gcloud auth configure-docker us-central1-docker.pkg.dev --quiet' in calls
     # VM-side exit trap: try to delete itself; the stub refuses, so it powers off instead.

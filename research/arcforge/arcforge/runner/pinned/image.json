@@ -1,9 +1,9 @@
 {
   "comment": "The runner container, built by `python -m arcforge.runner image build` (Cloud Build) from container/Dockerfile. Runner VMs pull it by digest only.",
   "repository": "us-central1-docker.pkg.dev/witching-606c6/arcforge/arcforge",
-  "digest": null,
-  "built_from": null,
-  "built_utc": null,
+  "digest": "sha256:d9a807e7cada04aacea1163892808f8017286b203188b7c68c49cbd1f75e3e34",
+  "built_from": "29f273c9eea48f800c6ccecca9da42840b7670ad",
+  "built_utc": "2026-10-25T00:45:19Z",
   "cuda": "13.0.3",
-  "torch": null
+  "torch": "2.14.1"
 }

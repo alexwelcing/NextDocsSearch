@@ -59,14 +59,18 @@ job() {
     status host
     bash -euo pipefail -c "$ARC_HOST_SCRIPT" || return $?
   fi
+  mkdir -p "$WORK/in"
+  for pair in ${ARC_FILES[@]+"${ARC_FILES[@]}"}; do
+    gcloud storage cp "${pair#*=}" "$WORK/in/${pair%%=*}" --quiet || return $?
+  done
   if [ -n "$ARC_IMAGE" ]; then
     status pulling
     gcloud auth configure-docker "${ARC_IMAGE%%/*}" --quiet || return $?
     docker pull --quiet "$ARC_IMAGE" || return $?
     status running
     # ${a[@]+"${a[@]}"} expands an empty array under `set -u` on any bash, not only >= 4.4.
-    docker run --rm --gpus all --network host "${ARC_DOCKER_ENV[@]}" ${ARC_ENTRYPOINT[@]+"${ARC_ENTRYPOINT[@]}"} \
-      "$ARC_IMAGE" ${ARC_ARGV[@]+"${ARC_ARGV[@]}"} || return $?
+    docker run --rm --gpus all --network host -v "$WORK/in:/work" -w /work "${ARC_DOCKER_ENV[@]}" \
+      ${ARC_ENTRYPOINT[@]+"${ARC_ENTRYPOINT[@]}"} "$ARC_IMAGE" ${ARC_ARGV[@]+"${ARC_ARGV[@]}"} || return $?
   fi
   return 0
 }

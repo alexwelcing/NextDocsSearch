@@ -38,18 +38,9 @@ print('device', torch.cuda.get_device_name(0), 'matmul sum', float((x @ x).sum()
 
 
 def _git_sha() -> str:
-    """HEAD of the checkout this package runs from (names and labels the VMs).
+    from arcforge.runner.remote import code_sha
 
-    ARCFORGE_COMMIT overrides it, as for `arcforge version`, where the code was synced from a
-    checkout elsewhere.
-    """
-    override = os.environ.get('ARCFORGE_COMMIT', '').removesuffix('-dirty')
-    if override:
-        return override
-    out = SubprocessShell().run(['git', '-C', str(Path(__file__).resolve().parent), 'rev-parse', 'HEAD'])
-    if not out.ok:
-        raise SystemExit('arcforge.runner: not a git checkout; VM names carry the code SHA')
-    return out.stdout.strip()
+    return code_sha(SubprocessShell())
 
 
 def _print_job_log(session: RunnerSession) -> None:
@@ -93,18 +84,23 @@ def cmd_smoke(args: argparse.Namespace) -> int:
     job = Job(host_script=SMOKE_HOST, image=image, entrypoint='python' if image else None,
               argv=('-c', SMOKE_CONTAINER) if image else ())
     run_id = 'smoke-' + time.strftime('%Y%m%d%H%M%S', time.gmtime())
-    ssh_done: list[bool] = []
+    ssh_tries: list[int] = []
 
     def on_poll(sess, inst, status):
-        if args.ssh and not ssh_done and status and status.get('phase') in ('host', 'pulling', 'running'):
-            ssh_done.append(True)
-            result = sess.shell.run(ssh_argv(sess.cfg, inst.name, inst.zone, 'echo iap-ssh-ok; uptime'), timeout=180)
-            print(f'iap ssh: exit {result.returncode}: {(result.stdout or result.stderr).strip()[-300:]}')
+        # A fresh instance-level SSH key takes a few polls to reach the guest agent: retry.
+        if not args.ssh or len(ssh_tries) >= 4 or 0 in ssh_tries or not status or status.get('phase') == 'booting':
+            return
+        result = sess.shell.run(ssh_argv(sess.cfg, inst.name, inst.zone, 'echo iap-ssh-ok; uptime'), timeout=180)
+        ssh_tries.append(result.returncode)
+        print(f'iap ssh (try {len(ssh_tries)}): exit {result.returncode}: {(result.stdout or result.stderr).strip()[-200:]}')
 
     with _session(args, run_id) as session:
         result = session.run(job, on_poll=on_poll)
         _print_job_log(session)
         report = {'run_id': run_id, 'outcome': result.outcome, 'exit_code': result.exit_code, 'vm': session.vm_report()}
+        if args.ssh:
+            report['iap_ssh'] = 'ok' if 0 in ssh_tries else f'failed (exit codes {ssh_tries})'
+
     report['all_deleted'] = _confirm_gone(session.shell, session.cfg, run_id)
     print(json.dumps(report, indent=2))
     return 0 if result.ok and report['all_deleted'] else 1

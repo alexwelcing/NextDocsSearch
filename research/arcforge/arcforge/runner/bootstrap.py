@@ -10,6 +10,7 @@ from pathlib import Path
 
 BODY = Path(__file__).resolve().parent / 'bootstrap.sh'
 _ENV_KEY = re.compile(r'[A-Z_][A-Z0-9_]*')
+_FILE_NAME = re.compile(r'[A-Za-z0-9][A-Za-z0-9._-]*')
 
 
 @dataclass(frozen=True)
@@ -28,6 +29,8 @@ class Job:
     env: Mapping[str, str] = field(default_factory=dict)
     host_script: str = ''
     entrypoint: str | None = None  # overrides the image's `arcforge` entrypoint (e.g. python)
+    # {name: gs:// URL}: fetched by the host into the container's working directory, /work.
+    files: Mapping[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if not self.image and not self.host_script:
@@ -37,6 +40,9 @@ class Job:
         bad = [k for k in self.env if not _ENV_KEY.fullmatch(k)]
         if bad:
             raise ValueError(f'invalid environment variable names: {bad}')
+        bad = [n for n, url in self.files.items() if not _FILE_NAME.fullmatch(n) or not url.startswith('gs://')]
+        if bad:
+            raise ValueError(f'job files are plain names fetched from gs:// URLs: {bad}')
 
 
 def _array(name: str, items: Sequence[str]) -> str:
@@ -57,6 +63,7 @@ def render(job: Job, *, run_id: str, attempt: int, status_url: str) -> str:
         f'ARC_HOST_SCRIPT={shlex.quote(job.host_script)}',
         _array('ARC_ENTRYPOINT', ['--entrypoint', job.entrypoint] if job.entrypoint else []),
         _array('ARC_ARGV', job.argv),
+        _array('ARC_FILES', [f'{name}={job.files[name]}' for name in sorted(job.files)]),
         _array('ARC_DOCKER_ENV', docker_env),
     ]
     return '\n'.join(header) + '\n' + BODY.read_text()

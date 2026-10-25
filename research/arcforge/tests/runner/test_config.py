@@ -11,17 +11,22 @@ def test_defaults_are_the_programs_runner():
     assert (cfg.boot_disk_gb, cfg.boot_disk_type) == (200, 'pd-balanced')
     assert cfg.service_account == 'arcforge-runner@witching-606c6.iam.gserviceaccount.com'
     assert cfg.spec == {'vcpus': 8, 'ram_gib': 32, 'gpus': 1}
+    assert cfg.boot_image.startswith('arcforge-runner-') and cfg.boot_image_project == 'witching-606c6'
 
 
 def test_from_compute_reads_the_config_surface():
+    """The compute block exactly as configs/arc-config-1.schema.json (and configs/r00.yaml) write it."""
     cfg = RunnerConfig.from_compute({
-        'project': 'witching-606c6', 'region': 'us-central1', 'zones': ['a', 'b', 'c'],
-        'shape': 'g2-standard-16', 'provisioning': 'spot', 'fallback': 'on_demand', 'max_run_hours': 3,
-        'labels': {'extra': 'yes'},
+        'project': 'witching-606c6', 'region': 'us-central1', 'zones': ['us-central1-a', 'us-central1-b', 'us-central1-c'],
+        'shape': 'g2-standard-16', 'gpu': 'nvidia-l4', 'provisioning': 'spot', 'fallback': 'on_demand',
+        'max_run_hours': 3,
     })
     assert cfg.shape == 'g2-standard-16' and cfg.spec['vcpus'] == 16
-    assert cfg.zones == ('a', 'b', 'c')
-    assert cfg.labels == {'managed-by': 'claude', 'purpose': 'arcforge', 'extra': 'yes'}
+    assert cfg.zone_names == ['us-central1-a', 'us-central1-b', 'us-central1-c']
+    assert RunnerConfig.from_compute({'fallback': 'none'}).fallback is None
+    assert RunnerConfig.from_compute({'zones': ['c', 'a']}).zone_names == ['us-central1-c', 'us-central1-a']
+    labeled = RunnerConfig.from_compute({'labels': {'extra': 'yes'}})
+    assert labeled.labels == {'managed-by': 'claude', 'purpose': 'arcforge', 'extra': 'yes'}
 
 
 @pytest.mark.parametrize('compute', [
@@ -31,7 +36,8 @@ def test_from_compute_reads_the_config_surface():
     {'provisioning': 'preemptible'},
     {'fallback': 'spot'},
     {'zones': []},
-    {'zones': ['us-central1-a']},
+    {'zones': ['europe-west4-a']},
+    {'zones': ['us-central1-z']},
     {'typo_key': 1},
 ])
 def test_rejects_anything_outside_the_program(compute):
