@@ -1,7 +1,9 @@
 // Build the static hybrid search index from public/arc/records and the operator panels. Network
 // free: vectors come only from data/search/<model>.{json,bin} (joined by chunk hash), so a chunk
 // without one stays lexical-only and is reported here. Emits content-hashed assets into
-// public/search/ plus lib/generated/search-manifest.json, which the Ship runtime imports.
+// public/search/ plus lib/generated/search-manifest.json, which FIND and the Ship runtime import.
+// pnpm build runs it as pre step 80-search-index; the assets are git-ignored build output, while
+// the manifest is committed, so CI's generated-files check catches an index nobody rebuilt.
 //
 //   pnpm exec tsx scripts/generate-search-index.ts [--dry-run] [--embed-input <file.jsonl>]
 //

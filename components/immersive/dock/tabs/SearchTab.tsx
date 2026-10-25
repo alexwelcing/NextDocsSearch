@@ -1,4 +1,4 @@
-// SEARCH: live lexical search over the archive index, typed directly on the terminal (keystrokes
+// SEARCH: live full-text search over the archive, typed directly on the terminal (keystrokes
 // are captured while the tab is active — no DOM input on desktop; touch devices get a hidden
 // input via useTouchTextInput so the OS keyboard opens).
 
@@ -10,6 +10,10 @@ import { ScreenList } from '../widgets/ScreenList'
 import { useTabKeys } from '../useTabKeys'
 import { isTouchTextTarget, useTouchTextInput } from '../../hooks/useTouchTextInput'
 import { HttpIndexSource, listRecords, searchRecords, type ArchiveRecord } from '@/lib/archive'
+import { searchFullText } from '@/lib/archive/search'
+import searchManifest from '@/lib/generated/search-manifest.json'
+import { loadCoreIndex, type CoreIndex } from '@/lib/retrieval/load'
+import type { SearchManifest } from '@/lib/retrieval/types'
 import { prefetchRecord } from '@/lib/immersive/prefetch'
 import { openModal } from '@/lib/immersive/navigation'
 import { playSound } from '@/lib/immersive/audio'
@@ -22,9 +26,19 @@ const MAX_QUERY = 60
 // search index to ImmersiveApp's compact landing-page preload.
 const source = new HttpIndexSource()
 
+// The full-text BM25F index: content-hashed public/search/ assets named by the build's manifest,
+// fetched the first time FIND opens and kept for the page's lifetime. Until it is ready, or if
+// it cannot load, FIND ranks the archive records with searchRecords exactly as before.
+let fullText: CoreIndex | null = null
+const loadFullText = () =>
+  loadCoreIndex(searchManifest as SearchManifest, (path) => fetch(path)).then(
+    (index) => (fullText = index)
+  )
+
 export function SearchTab({ active, width }: { active: boolean; width: number }) {
   const router = useRouter()
   const [records, setRecords] = useState<ArchiveRecord[]>([])
+  const [index, setIndex] = useState<CoreIndex | null>(fullText)
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [attempt, setAttempt] = useState(0)
   const [query, setQuery] = useState('')
@@ -49,6 +63,20 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
     }
   }, [active, attempt])
 
+  useEffect(() => {
+    if (!active || index) return
+    let live = true
+    loadFullText().then(
+      (loaded) => {
+        if (live) setIndex(loaded)
+      },
+      (error: unknown) => console.warn('[find] full-text index unavailable, using records:', error)
+    )
+    return () => {
+      live = false
+    }
+  }, [active, index])
+
   const retry = () => setAttempt((value) => value + 1)
 
   // Hidden DOM input for touch keyboards; desktop keys are handled below.
@@ -61,11 +89,12 @@ export function SearchTab({ active, width }: { active: boolean; width: number })
     type: 'search',
   })
 
-  const results = useMemo(
-    () => (status === 'ready' ? searchRecords(records, query, 40) : []),
-    [records, query, status]
-  )
-  useEffect(() => setSel(0), [query])
+  const results = useMemo(() => {
+    if (status !== 'ready') return []
+    return index ? searchFullText(index, records, query, 40) : searchRecords(records, query, 40)
+  }, [records, index, query, status])
+  // A new query, or the full-text index replacing record ranking, starts again at the top.
+  useEffect(() => setSel(0), [query, index])
   const selected = results[sel]
   useEffect(() => {
     if (active && selected) prefetchRecord(selected.record.slug)

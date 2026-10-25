@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { searchRecords } from '../archive/search'
 import { buildBm25, loadBm25, searchBm25, type Bm25Fields } from './bm25'
 import { FIXTURE_ARCHIVE } from './testing'
-import { findMatch, matchingTermRange, normalizedTokens, queryTerms } from './tokenize'
+import { findMatch, foldText, matchingTermRange, normalizedTokens, queryTerms } from './tokenize'
 import { readBuildRecords } from './nodeSources'
 
 function index(docs: Bm25Fields[]) {
@@ -16,7 +16,7 @@ function matches(docs: Bm25Fields[], term: string): number[] {
 }
 
 describe('tokenizer exports', () => {
-  it('re-exports FIND tokenization unchanged', () => {
+  it('tokenizes ASCII exactly as FIND always has', () => {
     expect(normalizedTokens('The AI-driven VR headset, v2 and 3D!')).toEqual([
       'ai',
       'driven',
@@ -49,32 +49,51 @@ describe('BM25 tokenization parity with searchRecords', () => {
     'A reagent in the lab.',
     'vrml scenes and ai2 models',
     'Immersive VR and mixed reality.',
+    'Solène met Tomáš in Tromsø, a naïve résumé of Tūhoe history.',
   ]
   const docs = texts.map((body) => ({ body }))
   const parity = (term: string) =>
-    texts
-      .map((text, i) => (findMatch(text.toLowerCase(), term) >= 0 ? i : -1))
-      .filter((i) => i >= 0)
+    texts.map((text, i) => (findMatch(foldText(text), term) >= 0 ? i : -1)).filter((i) => i >= 0)
 
-  it.each(['ai', 'vr', 'agent', 'agents', 'immers', 'reality', 'lab'])(
-    "matches '%s' exactly where findMatch does",
-    (term) => {
-      expect(matches(docs, term)).toEqual(parity(term))
-    }
-  )
+  it.each([
+    'ai',
+    'vr',
+    'agent',
+    'agents',
+    'immers',
+    'reality',
+    'lab',
+    'solene',
+    'tomas',
+    'tromso',
+    'naive',
+    'resum',
+    'tuhoe',
+    'sol',
+    'na',
+    'ne',
+  ])("matches '%s' exactly where findMatch does", (term) => {
+    expect(matches(docs, term)).toEqual(parity(term))
+  })
 
-  it('agrees with findMatch over real records', () => {
-    const records = readBuildRecords().slice(0, 60)
-    const fields = records.map((record) => ({
-      title: record.title,
-      body: record.blocks.map((block) => block.x).join(' '),
-    }))
+  it('agrees with findMatch over real records, accented names included', () => {
+    const fields = readBuildRecords()
+      .map((record) => ({
+        title: record.title,
+        body: record.blocks.map((block) => block.x).join(' '),
+      }))
+      // The first 60, plus every record with an accented Latin letter (Solène, Tomáš, Tūhoe, ...).
+      .filter((doc, i) => i < 60 || /[\u00c0-\u024f]/.test(doc.body))
     const terms = ['ai', 'vr', 'agent', 'align', 'quantum', 'neural', 'cartograph', 'legal', 'eval']
+    terms.push('solene', 'tomas', 'tuhoe', 'maori', 'tromso', 'lodz', 'cafe')
+    const built = index(fields)
+    const texts = fields.map((doc) => foldText(`${doc.title} ${doc.body}`))
     for (const term of terms) {
-      const expected = fields
-        .map((doc, i) => (findMatch(`${doc.title} ${doc.body}`.toLowerCase(), term) >= 0 ? i : -1))
+      const expected = texts
+        .map((text, i) => (findMatch(text, term) >= 0 ? i : -1))
         .filter((i) => i >= 0)
-      expect(matches(fields, term)).toEqual(expected)
+      const found = searchBm25(built, term, fields.length).map((hit) => hit.doc)
+      expect(found.sort((a, b) => a - b)).toEqual(expected)
     }
   })
 
