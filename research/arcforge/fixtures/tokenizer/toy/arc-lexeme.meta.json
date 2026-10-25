@@ -1,0 +1,43 @@
+{
+  "corpus_id": "fixture",
+  "dims": 16,
+  "files": {
+    "bias": {
+      "bytes": 64,
+      "path": "bias.f16",
+      "sha256": "0878669c9ab4307331dc910d7b7dd33f255cbcb64fc1b8353286c85c8df602b4"
+    },
+    "lexicon": {
+      "bytes": 2132,
+      "path": "lexicon.bin",
+      "sha256": "ffe1663ae943d8b502af39459cf51410db550c6fc4cd42f9610eb356fb75284a"
+    },
+    "scales": {
+      "bytes": 764,
+      "path": "scales.f16",
+      "sha256": "ab6ff2395b0f7b54ee37a87181d78959d23794a0dbeda6e2a3a923969efb02ac"
+    },
+    "vectors": {
+      "bytes": 6112,
+      "path": "vectors16.i8",
+      "sha256": "3169fdd5856e57baf515563c01d4ecb40625d6e8608eb1626f45cec3de22ac44"
+    },
+    "weights": {
+      "bytes": 764,
+      "path": "weights.f16",
+      "sha256": "3195de6ae1e698de841ff9adbe418e4576e74fddbf8704ca3141e17ed958e6d7"
+    }
+  },
+  "model": "arc-lexeme@toy",
+  "mrl": true,
+  "pooling": "sum",
+  "quant": "int8-row-f16",
+  "rows": 382,
+  "run_id": "toy",
+  "schema": "arc-lexeme-bundle/1",
+  "tokenizer": {
+    "spec_sha256": "05423d7fc09639e04ec6313d477c7f996352f32aa1c239c092b05eda1479535b",
+    "version": "arc-lexeme-tok/1"
+  },
+  "verdict_status": "FIXTURE"
+}
