@@ -51,7 +51,8 @@ TEACHER = ModelPin(
         'Exists on the Hub (2026-10-06, ungated, 744M multimodal; 270M text path). No substitution '
         'for google/embeddinggemma-300m was needed. Load text-only (vision_config=None, '
         'audio_config=None) in bf16 (fp16 gives NaNs); mean pooling with include_prompt, '
-        'Normalize, no Dense; needs sentence-transformers>=6.1.'
+        'Normalize, no Dense; needs sentence-transformers>=6.1 and transformers>=5.18 '
+        '(M1 ran 6.2.0 / 5.19.0: 271.0M text-path parameters).'
     ),
 )
 
