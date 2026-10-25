@@ -7,7 +7,12 @@ import { resolveShipTrick } from '../ai/shipTricks'
 import type { ArchiveRecord } from '../archive/types'
 import { OPERATOR_DOCS } from '../retrieval/chunk'
 import { getShipContext } from '../retrieval/shipContext'
-import type { RetrievalDeps, RetrievalItem, RetrievalResult, SearchManifest } from '../retrieval/types'
+import type {
+  RetrievalDeps,
+  RetrievalItem,
+  RetrievalResult,
+  SearchManifest,
+} from '../retrieval/types'
 import { NDJSON_HEADERS, createNdjsonStream, type NdjsonStream, type ShipSource } from './ndjson'
 import {
   SHIP_GENERATION,
@@ -161,7 +166,7 @@ async function respond(turn: Turn, deps: ShipDeps, stream: NdjsonStream, log: (m
       retrieval: turn.retrieval.mode,
       items: turn.items,
     })
-    if (turn.input.mode === 'retrieve') return
+    if (turn.input.mode === 'retrieve' || stream.signal.aborted) return
     const { answer: text, provider } = await answer(turn, deps, stream, log)
     await stream.send({
       type: 'final-answer',
@@ -184,7 +189,13 @@ async function respond(turn: Turn, deps: ShipDeps, stream: NdjsonStream, log: (m
 function faultResponse(): Response {
   const lines = [
     { type: 'instant-results', question: '', retrieval: 'none', items: [] },
-    { type: 'final-answer', question: '', answer: SYSTEM_FAULT_NOTICE, provider: 'local-archive', sources: [] },
+    {
+      type: 'final-answer',
+      question: '',
+      answer: SYSTEM_FAULT_NOTICE,
+      provider: 'local-archive',
+      sources: [],
+    },
   ]
   return new Response(lines.map((line) => `${JSON.stringify(line)}\n`).join(''), {
     status: 200,
@@ -222,7 +233,11 @@ export async function handleShip(request: Request, deps: ShipDeps): Promise<Resp
       log(`[ship] retrieval failed: ${message(error)}`)
     }
     // Lexical without an embedder is the expected path today; anything else is worth a line.
-    if (retrieval.mode === 'records' || retrieval.mode === 'none' || (deps.embedQuery && retrieval.mode !== 'hybrid')) {
+    if (
+      retrieval.mode === 'records' ||
+      retrieval.mode === 'none' ||
+      (deps.embedQuery && retrieval.mode !== 'hybrid')
+    ) {
       log(`[ship] retrieval ${retrieval.mode}: ${retrieval.fallbackReason ?? 'no match'}`)
     }
 

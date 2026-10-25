@@ -73,6 +73,8 @@ export function createNdjsonStream(): NdjsonStream {
   const gone = new AbortController()
   let tail: Promise<void> = Promise.resolve()
   let finalSent = false
+  // A cancelled body errors the writable side at once, so generation stops without a new write.
+  writer.closed.catch(() => gone.abort())
   return {
     readable,
     send(event) {

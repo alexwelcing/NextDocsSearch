@@ -110,7 +110,9 @@ export function payloadText(payload: unknown): string {
   if (!payload || typeof payload !== 'object') return typeof payload === 'string' ? payload : ''
   const record = payload as Record<string, unknown>
   if (typeof record.response === 'string') return record.response
-  const choice = Array.isArray(record.choices) ? (record.choices[0] as Record<string, unknown>) : null
+  const choice = Array.isArray(record.choices)
+    ? (record.choices[0] as Record<string, unknown>)
+    : null
   if (!choice || typeof choice !== 'object') return ''
   const delta = choice.delta as Record<string, unknown> | undefined
   if (delta && typeof delta === 'object') return textOf(delta.content)

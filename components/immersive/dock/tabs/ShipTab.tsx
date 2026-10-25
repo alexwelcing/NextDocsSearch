@@ -114,12 +114,12 @@ export function ShipTab({ active, width }: { active: boolean; width: number }) {
     phase === 'thinking'
       ? 'SHIP MIND ENGAGED…'
       : phase === 'streaming'
-        ? 'RECEIVING'
-        : phase === 'error'
-          ? 'FAULT'
-          : phase === 'done'
-            ? 'COMPLETE'
-            : 'STANDING BY'
+      ? 'RECEIVING'
+      : phase === 'error'
+      ? 'FAULT'
+      : phase === 'done'
+      ? 'COMPLETE'
+      : 'STANDING BY'
 
   return (
     <group>

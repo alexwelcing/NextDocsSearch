@@ -1,0 +1,19 @@
+: Workers AI @cf/google/gemma-4-26b-a4b-it, env.AI.run(..., { stream: true }): OpenAI-style
+: chat.completion.chunk events (schema: cloudflare-docs src/content/workers-ai-models/
+: gemma-4-26b-a4b-it.json). A stray reasoning_content delta must never reach the answer, and the
+: closing usage chunk has no choices.
+
+data: {"id":"chatcmpl-5f1c","object":"chat.completion.chunk","created":1761330000,"model":"@cf/google/gemma-4-26b-a4b-it","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-5f1c","object":"chat.completion.chunk","created":1761330000,"model":"@cf/google/gemma-4-26b-a4b-it","choices":[{"index":0,"delta":{"reasoning_content":"The user wants a profile answer."},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-5f1c","object":"chat.completion.chunk","created":1761330000,"model":"@cf/google/gemma-4-26b-a4b-it","choices":[{"index":0,"delta":{"content":"Alex Welcing builds "},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-5f1c","object":"chat.completion.chunk","created":1761330000,"model":"@cf/google/gemma-4-26b-a4b-it","choices":[{"index":0,"delta":{"content":"AI products for regulated industries."},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-5f1c","object":"chat.completion.chunk","created":1761330000,"model":"@cf/google/gemma-4-26b-a4b-it","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
+
+data: {"id":"chatcmpl-5f1c","object":"chat.completion.chunk","created":1761330000,"model":"@cf/google/gemma-4-26b-a4b-it","choices":[],"usage":{"prompt_tokens":812,"completion_tokens":11,"total_tokens":823,"completion_tokens_details":{"reasoning_tokens":0}}}
+
+data: [DONE]
+

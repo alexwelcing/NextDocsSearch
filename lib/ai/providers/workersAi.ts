@@ -7,7 +7,11 @@ import { modelLadder, payloadText, streamSseText, type ChatProvider } from '../c
 
 /** The slice of the Workers AI binding this provider uses (no generated worker types in lib/). */
 export interface AiBindingLike {
-  run(model: string, inputs: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>
+  run(
+    model: string,
+    inputs: Record<string, unknown>,
+    options?: Record<string, unknown>
+  ): Promise<unknown>
 }
 
 export interface WorkersAiModelSpec {
@@ -34,7 +38,11 @@ export const WORKERS_AI_MODELS: Record<string, WorkersAiModelSpec> = {
     thinkingSwitch: true,
     reasoning: true,
   },
-  '@cf/qwen/qwen3-30b-a3b-fp8': { maxTokensKey: 'max_tokens', thinkingSwitch: false, reasoning: true },
+  '@cf/qwen/qwen3-30b-a3b-fp8': {
+    maxTokensKey: 'max_tokens',
+    thinkingSwitch: false,
+    reasoning: true,
+  },
   '@cf/meta/llama-4-scout-17b-16e-instruct': {
     maxTokensKey: 'max_tokens',
     thinkingSwitch: false,
