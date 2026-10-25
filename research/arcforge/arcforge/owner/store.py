@@ -21,7 +21,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from arcforge.owner.paths import ensure_private_dir
+from arcforge.owner.paths import ensure_private_dir, make_dirs_private
 
 HISTORY_KEEP = 50
 
@@ -37,7 +37,7 @@ def dumps(obj: Any) -> str:
 
 
 def write_bytes_atomic(path: Path, data: bytes, *, mode: int = 0o600) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    make_dirs_private(path.parent)
     fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f'.{path.name}.', suffix='.tmp')
     try:
         with os.fdopen(fd, 'wb') as handle:
@@ -80,6 +80,17 @@ def _envelope(payload: dict, *, rev: int, updated_utc: str | None) -> dict:
     return {**head, **{k: v for k, v in payload.items() if k not in head}}
 
 
+class DocCorrupt(Exception):
+    """A document file exists but cannot be read; the desk leaves it alone."""
+
+    def __init__(self, path: Path, reason: str) -> None:
+        super().__init__(
+            f'{path.name} cannot be read ({reason[:200]}). The desk will not overwrite it: fix it, '
+            f'or restore the last good copy from {path.parent / "history"}/.'
+        )
+        self.path = path
+
+
 class Conflict(Exception):
     """A save was based on an older rev than the one on disk."""
 
@@ -103,11 +114,21 @@ class DocStore:
     def path(self, name: str) -> Path:
         return self.root / self.defaults[name][0]
 
+    def empty(self, name: str) -> dict:
+        return _envelope(self.defaults[name][1](), rev=0, updated_utc=None)
+
     def load(self, name: str) -> dict:
-        filename, factory = self.defaults[name]
-        doc = read_json(self.root / filename)
-        if not isinstance(doc, dict):
-            doc = _envelope(factory(), rev=0, updated_utc=None)
+        """The document, its empty form when there is no file yet, or DocCorrupt. A file that
+        cannot be read is never treated as empty, so a save can never overwrite it."""
+        path = self.path(name)
+        try:
+            doc = read_json(path)
+        except (OSError, ValueError) as error:  # bad JSON and bad UTF-8 are ValueErrors
+            raise DocCorrupt(path, f'{type(error).__name__}: {error}') from None
+        if doc is None:
+            return self.empty(name)
+        if not isinstance(doc, dict) or not isinstance(doc.get('rev'), int):
+            raise DocCorrupt(path, 'it is not a desk document')
         return doc
 
     def save(self, name: str, payload: dict, base_rev: int) -> dict:
@@ -115,12 +136,12 @@ class DocStore:
         with self._lock:
             ensure_private_dir(self.root)
             current = self.load(name)
-            if int(current.get('rev', 0)) != base_rev:
+            if current['rev'] != base_rev:
                 raise Conflict(current)
             doc = _envelope(payload, rev=base_rev + 1, updated_utc=utc_now())
             target = self.path(name)
             if target.exists():
-                self._archive(name, target, int(current.get('rev', 0)))
+                self._archive(name, target, current['rev'])
             write_json_atomic(target, doc)
             return doc
 

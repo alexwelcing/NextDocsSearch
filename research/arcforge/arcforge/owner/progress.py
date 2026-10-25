@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from arcforge.owner.model import FRONTIER_PER_SERIES
+
 SECTIONS = {
     'A': 'Any time before launch',
     'B': 'After the prep pass',
@@ -67,6 +69,18 @@ def _row(step: Step, status: str, done: int | None, total: int | None, note: str
     }
 
 
+def _review_row(step: Step, prep_status: str, derived: dict) -> dict:
+    """A step over a pipeline file: waiting until the file arrives, then counted."""
+    if prep_status == 'missing':
+        when = 'after the prep pass' if step.section == 'B' else 'at the owner gate'
+        return _row(step, 'waiting', None, None, f'arrives {when}')
+    if prep_status == 'invalid':
+        return _row(step, 'waiting', None, None, 'the file is unreadable; see the tab')
+    done = derived['reviewed'] if 'reviewed' in derived else derived['graded']
+    total = derived['total']
+    return _row(step, 'done' if total == 0 else _counted(done, total), done, total, '')
+
+
 def _counted(done: int, total: int) -> str:
     if total == 0:
         return 'todo'
@@ -89,13 +103,17 @@ def compute(state: dict) -> dict:
             rows.append(_row(step, 'done' if present else 'todo', None, None, note))
         elif step.key == 'queries':
             done = min(q['main_filled'], q['main_target'])
-            note = f'{q["main_frontier_tagged"]} tagged FRONTIER' if q['main_frontier_tagged'] else ''
+            note = (
+                f'{q["main_frontier_tagged"]} tagged FRONTIER' if q['main_frontier_tagged'] else ''
+            )
             if q['duplicates']:
-                note = (note + '; ' if note else '') + f'{len(q["duplicates"])} duplicates'
+                note = (note + '; ' if note else '') + f'{len(q["duplicates"])} duplicated'
             rows.append(_row(step, _counted(done, q['main_target']), done, q['main_target'], note))
         elif step.key == 'frontier':
-            done = sum(min(n, 4) for n in q['frontier_filled'].values())
-            rows.append(_row(step, _counted(done, q['frontier_target']), done, q['frontier_target'], ''))
+            done = sum(min(n, FRONTIER_PER_SERIES) for n in q['frontier_filled'].values())
+            rows.append(
+                _row(step, _counted(done, q['frontier_target']), done, q['frontier_target'], '')
+            )
         elif step.key == 'voices':
             status = _counted(v['filled'], v['target'])
             if status == 'done' and v['copies']:
@@ -108,19 +126,11 @@ def compute(state: dict) -> dict:
             note = 'renamed (A = 178)' if renamed else 'default: a ghost query (A = 177)'
             rows.append(_row(step, 'done' if confirmed else 'todo', None, None, note))
         elif step.key == 'doctor':
-            rows.append(_row(step, 'done' if launched else 'manual', None, None, 'skip it if all green'))
+            rows.append(
+                _row(step, 'done' if launched else 'manual', None, None, 'skip it if all green')
+            )
         elif step.key in ('people', 'registers', 'audit', 'adjudicate'):
-            d = derived[step.key]
-            if prep[step.key]['status'] == 'missing':
-                when = 'after the prep pass' if step.key in ('people', 'registers') else 'at the owner gate'
-                rows.append(_row(step, 'waiting', None, None, f'arrives {when}'))
-            elif prep[step.key]['status'] == 'invalid':
-                rows.append(_row(step, 'waiting', None, None, 'the file is unreadable; see the tab'))
-            else:
-                total = d['total']
-                status = 'done' if total == 0 else _counted(d['reviewed' if 'reviewed' in d else 'graded'], total)
-                done = d['reviewed' if 'reviewed' in d else 'graded']
-                rows.append(_row(step, status, done, total, ''))
+            rows.append(_review_row(step, prep[step.key]['status'], derived[step.key]))
         elif step.key == 'launch':
             note = docs['launch']['requested_utc'] or ''
             rows.append(_row(step, 'done' if launched else 'todo', None, None, note))
@@ -160,7 +170,9 @@ def launch_blockers(state: dict, rows: list[dict]) -> list[str]:
         blockers.append('Reword or delete the duplicate queries.')
     frontier = by_key['frontier']
     if frontier['done'] < frontier['total']:
-        blockers.append(f'Write {frontier["total"] - frontier["done"]} more frontier queries (step 3).')
+        blockers.append(
+            f'Write {frontier["total"] - frontier["done"]} more frontier queries (step 3).'
+        )
     v = state['derived']['voices']
     if v['filled'] < v['target']:
         blockers.append(f'Write {v["target"] - v["filled"]} more voice examples (step 4).')

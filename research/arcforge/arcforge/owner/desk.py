@@ -12,10 +12,10 @@ from pathlib import Path
 
 from arcforge import __version__
 from arcforge.owner import model, progress
-from arcforge.owner.paths import ensure_private_dir, owner_dir, prep_dir, recipient_path
+from arcforge.owner.paths import owner_dir, prep_dir, recipient_path
 from arcforge.owner.prep import PREP_FILES, PrepFile, load_prep
 from arcforge.owner.records import FRONTIER_SERIES, RecordIndex, load_records
-from arcforge.owner.store import Conflict, DocStore, read_json, utc_now
+from arcforge.owner.store import Conflict, DocCorrupt, DocStore, read_json, utc_now
 
 S0_LOCK = 's0-lock.json'
 
@@ -32,7 +32,7 @@ class Desk:
         recipient_file: Path | None = None,
         records: RecordIndex | None = None,
     ) -> None:
-        self.root = ensure_private_dir(owner_dir())
+        self.root = owner_dir()  # created, private, on the first save
         self.prep_root = prep_dir()
         self.repo_root = repo_root
         self.recipient_file = recipient_file or recipient_path()
@@ -79,8 +79,20 @@ class Desk:
 
     # ---- state ---------------------------------------------------------------------------------
 
+    def _load_docs(self) -> tuple[dict[str, dict], dict[str, str]]:
+        """Every document, and why any of them cannot be read (shown empty, never written)."""
+        docs: dict[str, dict] = {}
+        broken: dict[str, str] = {}
+        for name in model.DOCS:
+            try:
+                docs[name] = self.store.load(name)
+            except DocCorrupt as error:
+                docs[name] = self.store.empty(name)
+                broken[name] = str(error)
+        return docs, broken
+
     def _assemble(self) -> dict:
-        docs = {name: self.store.load(name) for name in model.DOCS}
+        docs, broken = self._load_docs()
         prep = self.prep()
         ctx = self.context(docs, prep)
         derived = {name: model.derive(name, doc, ctx) for name, doc in docs.items()}
@@ -89,6 +101,7 @@ class Desk:
             'version': __version__,
             'owner_dir': str(self.root),
             'docs': docs,
+            'broken': broken,
             'derived': derived,
             'prep': {name: p.to_json() for name, p in prep.items()},
             'lock': lock,
@@ -132,22 +145,28 @@ class Desk:
 
     def save(self, name: str, base_rev: int, payload: object) -> dict:
         """Validate and write one document. Raises KeyError (unknown name), Locked, Conflict or
-        model.ValidationError; returns {doc, derived, progress} on success."""
+        model.ValidationError (also for a document whose file cannot be read); returns
+        {doc, derived, derived_all, progress} on success."""
         if name not in model.DOCS:
             raise KeyError(name)
         with self._lock:
             if name in model.LOCKED_AT_S0 and self.s0_lock() is not None:
                 raise Locked(f'{name} was frozen at S0 and is read-only now')
-            docs = {n: self.store.load(n) for n in model.DOCS}
+            docs, broken = self._load_docs()
+            if name in broken:
+                raise model.ValidationError(broken[name])
             prep = self.prep()
             ctx = self.context(docs, prep)
             clean = model.normalize(name, payload, ctx, utc_now())
-            if name == 'launch' and clean['requested_utc'] and not docs['launch'].get('requested_utc'):
+            if (
+                name == 'launch'
+                and clean['requested_utc']
+                and not docs['launch'].get('requested_utc')
+            ):
                 blockers = self._assemble()['progress']['blockers']
                 if blockers:
                     raise model.ValidationError('Not ready to launch: ' + ' '.join(blockers))
             doc = self.store.save(name, clean, base_rev)
-            docs[name] = doc
             state = self._assemble()
             return {
                 'doc': doc,

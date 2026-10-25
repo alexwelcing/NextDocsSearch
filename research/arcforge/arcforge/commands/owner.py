@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 DESCRIPTION = """\
@@ -34,12 +35,13 @@ def _desk(args):
 
 
 def _minutes(m: float) -> str:
+    """'30 s', '82 min', '2 h 27 min' (halves round up, as on the page)."""
     if m <= 0:
         return '0 min'
     if m < 1:
-        return f'{round(m * 60)} s'
-    whole = round(m)
-    return f'{whole // 60} h {whole % 60:02d} min' if whole >= 60 else f'{whole} min'
+        return f'{math.floor(m * 60 + 0.5)} s'
+    whole = math.floor(m + 0.5)
+    return f'{whole // 60} h {whole % 60:02d} min' if whole >= 90 else f'{whole} min'
 
 
 def render_status(state: dict) -> str:
@@ -56,7 +58,9 @@ def render_status(state: dict) -> str:
         )
         for step in (s for s in progress['steps'] if s['section'] == key):
             count = f'{step["done"]}/{step["total"]}' if step['total'] else step['status']
-            left = '' if step['status'] in ('done', 'info') else f'≈ {_minutes(step["minutes_left"])}'
+            left = (
+                '' if step['status'] in ('done', 'info') else f'≈ {_minutes(step["minutes_left"])}'
+            )
             note = f'  ({step["note"]})' if step['note'] else ''
             lines.append(
                 f' {step["number"]:>2} {STATUS_MARK.get(step["status"], " ")} {step["title"]:<44} '
@@ -75,7 +79,16 @@ def _run(args) -> int:
     if args.action == 'status':
         state = _desk(args).state()
         if args.json:
-            print(json.dumps({'owner_dir': state['owner_dir'], 'progress': state['progress'], 'lock': state['lock']}, indent=2))
+            print(
+                json.dumps(
+                    {
+                        'owner_dir': state['owner_dir'],
+                        'progress': state['progress'],
+                        'lock': state['lock'],
+                    },
+                    indent=2,
+                )
+            )
         else:
             print(render_status(state))
         return 0
@@ -91,9 +104,13 @@ def register(subparsers) -> None:
         description=DESCRIPTION,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('action', nargs='?', choices=('serve', 'status'), default='serve', help='default: serve')
+    parser.add_argument(
+        'action', nargs='?', choices=('serve', 'status'), default='serve', help='default: serve'
+    )
     parser.add_argument('--port', type=int, default=PORT, help=f'default {PORT}')
     parser.add_argument('--no-browser', action='store_true', help='do not open a browser tab')
-    parser.add_argument('--repo', help='the NextDocsSearch checkout to read records from (default: found from here)')
+    parser.add_argument(
+        '--repo', help='the NextDocsSearch checkout to read records from (default: found from here)'
+    )
     parser.add_argument('--json', action='store_true', help='status as JSON')
     parser.set_defaults(func=_run)

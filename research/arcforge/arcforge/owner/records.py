@@ -97,7 +97,9 @@ def load_records(repo_root: Path | None) -> RecordIndex:
     if isinstance(rows, list):
         records = [r for r in (_record(row) for row in rows if isinstance(row, dict)) if r]
         if records:
-            return RecordIndex(source='lib/generated/article-manifest.json', records=_sorted(records))
+            return RecordIndex(
+                source='lib/generated/article-manifest.json', records=_sorted(records)
+            )
     bodies = repo_root / 'public' / 'arc' / 'records'
     records = []
     for path in sorted(bodies.glob('*.json')) if bodies.is_dir() else []:

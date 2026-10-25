@@ -17,6 +17,7 @@ import json
 import os
 from pathlib import Path
 
+from arcforge.owner.paths import make_dirs_private
 from arcforge.vault.digest import canonical_json, sha256_hex
 
 GENESIS = '0' * 64
@@ -68,7 +69,7 @@ def append(path: Path, entry: dict) -> dict:
     if chained.get('event') not in EVENTS:
         raise ValueError(f'unknown read-log event {chained.get("event")!r}')
     chained['entry_sha256'] = _entry_hash(chained)
-    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    make_dirs_private(path.parent)
     fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
     with os.fdopen(fd, 'a', encoding='utf-8') as handle:
         handle.write(json.dumps(chained, ensure_ascii=False, sort_keys=True) + '\n')

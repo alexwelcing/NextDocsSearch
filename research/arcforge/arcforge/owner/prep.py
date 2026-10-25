@@ -157,7 +157,10 @@ def _registers(raw: dict, records: Mapping[str, Record]) -> dict:
         if not isinstance(reg, dict):
             raise PrepInvalid(f'registers[{i}] must be an object')
         registers.append(
-            {'id': _id(reg.get('id'), f'registers[{i}].id'), 'label': _str(reg.get('label'), f'registers[{i}].label')}
+            {
+                'id': _id(reg.get('id'), f'registers[{i}].id'),
+                'label': _str(reg.get('label'), f'registers[{i}].label'),
+            }
         )
     if not registers:
         raise PrepInvalid('registers is empty')
@@ -206,7 +209,9 @@ def _pairs(raw: dict, records: Mapping[str, Record], limit: int | None) -> dict:
                 'record': {
                     'slug': slug,
                     'title': _title(slug, card.get('title'), records),
-                    'date': _str(card.get('date') or (known.date if known else ''), 'date', required=False),
+                    'date': _str(
+                        card.get('date') or (known.date if known else ''), 'date', required=False
+                    ),
                     'description': _str(
                         card.get('description') or (known.description if known else ''),
                         'description',
@@ -254,5 +259,8 @@ def load_prep(root: Path, name: str, records: Mapping[str, Record]) -> PrepFile:
             raise PrepInvalid(f'{filename}: schema must be {schema!r}, not {raw.get("schema")!r}')
         data = _PARSERS[name](raw, records)
     except (OSError, ValueError) as error:  # PrepInvalid and JSONDecodeError are ValueErrors
-        return PrepFile(name, 'invalid', f'{type(error).__name__}: {error}'[:500], None, signature)
+        message = (
+            str(error) if isinstance(error, PrepInvalid) else f'{type(error).__name__}: {error}'
+        )
+        return PrepFile(name, 'invalid', message[:500], None, signature)
     return PrepFile(name, 'ok', None, data, signature)

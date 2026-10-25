@@ -36,7 +36,11 @@ VOICES: tuple[tuple[str, str, str], ...] = (
     ('mood-seeker', 'Mood-seeker', 'Asks for a feeling, an atmosphere or a kind of story.'),
     ('lost-visitor', 'Lost visitor', 'Half-remembers something and gropes for it, vaguely.'),
     ('practitioner', 'Practitioner', 'Brings a professional problem in their own working jargon.'),
-    ('thread-follower', 'Thread-follower', 'Follows a character, a series or an idea to the next record.'),
+    (
+        'thread-follower',
+        'Thread-follower',
+        'Follows a character, a series or an idea to the next record.',
+    ),
 )
 VOICE_IDS = tuple(voice for voice, _, _ in VOICES)
 
@@ -244,11 +248,15 @@ def derive_queries(doc: dict, ctx: Context) -> dict:
         if len(ids) > 1
         for qid in ids
     }
-    unknown = [q['id'] for q in queries if q['record'] and ctx.records and q['record'] not in ctx.records]
+    unknown = [
+        q['id'] for q in queries if q['record'] and ctx.records and q['record'] not in ctx.records
+    ]
     mismatch = [
         q['id']
         for q in queries
-        if q['section'] == 'frontier' and q['record'] and frontier_series_of(q['record']) != q['series']
+        if q['section'] == 'frontier'
+        and q['record']
+        and frontier_series_of(q['record']) != q['series']
     ]
     frontier_filled = {
         series: sum(1 for q in queries if q['series'] == series and q['text'])
@@ -296,7 +304,12 @@ def voice_flag(text: str, queries: list[tuple[str, str]], earlier: list[str]) ->
     grams = char_ngrams(text)
     best = max(((jaccard(grams, char_ngrams(q)), qid, q) for qid, q in queries), default=None)
     if best and best[0] >= COPY_JACCARD:
-        return {'kind': 'close', 'query_id': best[1], 'query': best[2], 'jaccard': round(best[0], 2)}
+        return {
+            'kind': 'close',
+            'query_id': best[1],
+            'query': best[2],
+            'jaccard': round(best[0], 2),
+        }
     if norm in earlier:
         return {'kind': 'repeat'}
     return None
@@ -391,7 +404,9 @@ def derive_people(doc: dict, ctx: Context) -> dict:
         name = next(n for n in names if n['name_id'] == name_id)
         mentions = {mention_key(r) for c in name['clusters'] for r in c['records']}
         clusters = {c['cluster_id'] for c in name['clusters']} | set(NEW_PEOPLE)
-        bad = [k for k, v in decision['assignment'].items() if k not in mentions or v not in clusters]
+        bad = [
+            k for k, v in decision['assignment'].items() if k not in mentions or v not in clusters
+        ]
         if bad or any(other not in known for other in decision['merge_with']):
             stale.append(name_id)
     return {
@@ -434,7 +449,9 @@ def derive_registers(doc: dict, ctx: Context) -> dict:
     slugs = {r['slug'] for r in proposal.get('records', [])}
     groups = sorted({r['register'] for r in proposal.get('records', [])})
     stale = sorted(
-        slug for slug, reg in doc.get('overrides', {}).items() if slug not in slugs or reg not in registers
+        slug
+        for slug, reg in doc.get('overrides', {}).items()
+        if slug not in slugs or reg not in registers
     )
     return {
         'groups': groups,

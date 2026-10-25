@@ -1,7 +1,7 @@
 """The desk's HTTP shell: one page and a small JSON API on 127.0.0.1 only.
 
 Routes:
-  GET  /                  the page (static/desk.html, with this session's token filled in)
+  GET  /                  the page (static/desk.html, with the desk token filled in)
   GET  /api/state         everything the page renders
   GET  /api/ping          the cheap poll (prep files, lock, vault recipient)
   GET  /api/records       the record index for the autocomplete
@@ -12,32 +12,53 @@ Routes:
 Other web pages open in the same browser must not be able to read or write the owner's files:
 - the server binds 127.0.0.1, and a Host header other than 127.0.0.1/localhost:<port> is refused,
   which defeats DNS rebinding;
-- every /api call needs this session's random token in X-Arc-Token. The token is written only
-  into the page this server serves, and a custom header forces a CORS preflight that the server
-  never answers, so a cross-site request cannot carry it;
+- every /api call needs the desk's random token in X-Arc-Token. The token lives only in
+  ~/arc-owner/desk-token (0600) and in the page this server serves, and a custom header forces
+  a CORS preflight that the server never answers, so a cross-site request cannot carry it. The
+  token survives a restart, so an open tab keeps saving once the desk is started again;
 - writes must be application/json, and a present Origin must be this server's own.
 """
 
 from __future__ import annotations
 
+import errno
 import hmac
 import json
 import re
 import secrets
 import sys
+import traceback
+from collections.abc import Callable
+from functools import wraps
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
+from pathlib import Path
 from urllib.parse import urlsplit
 
 from arcforge.owner import model
 from arcforge.owner.desk import Desk, Locked
-from arcforge.owner.store import Conflict
+from arcforge.owner.paths import ensure_private_dir
+from arcforge.owner.store import Conflict, write_bytes_atomic
 
 DEFAULT_PORT = 8765
 MAX_BODY = 2 * 1024 * 1024
 TOKEN_PLACEHOLDER = '__ARC_DESK_TOKEN__'
+TOKEN_FILE = 'desk-token'
 _DOC_RE = re.compile(r'^/api/docs/([a-z]+)$')
+
+
+def desk_token(root: Path) -> str:
+    """The desk's token, created once in the owner's private directory."""
+    path = ensure_private_dir(root) / TOKEN_FILE
+    try:
+        token = path.read_text(encoding='ascii').strip()
+    except (FileNotFoundError, UnicodeDecodeError):
+        token = ''
+    if len(token) < 32:
+        token = secrets.token_urlsafe(32)
+        write_bytes_atomic(path, token.encode('ascii'), mode=0o600)
+    return token
 
 
 def page_html(token: str) -> bytes:
@@ -47,11 +68,14 @@ def page_html(token: str) -> bytes:
 
 class DeskServer(ThreadingHTTPServer):
     daemon_threads = True
-    allow_reuse_address = False  # a second desk on the same port must fail loudly, not share it
+    # Rebind right after a restart (TIME_WAIT), but never share a port: a second desk on a busy
+    # port fails loudly instead of splitting requests with the first.
+    allow_reuse_address = True
+    allow_reuse_port = False
 
     def __init__(self, desk: Desk, port: int = DEFAULT_PORT, token: str | None = None) -> None:
         self.desk = desk
-        self.token = token or secrets.token_urlsafe(32)
+        self.token = token or desk_token(desk.root)
         super().__init__(('127.0.0.1', port), DeskHandler)
         self.port = self.server_address[1]
         self.page = page_html(self.token)
@@ -64,10 +88,27 @@ class DeskServer(ThreadingHTTPServer):
         return {f'127.0.0.1:{self.port}', f'localhost:{self.port}'}
 
 
+def _guarded(route: Callable[[DeskHandler], None]) -> Callable[[DeskHandler], None]:
+    """A bug in one request answers 500 with a reason instead of dropping the connection."""
+
+    @wraps(route)
+    def run(self: DeskHandler) -> None:
+        try:
+            route(self)
+        except Exception as error:  # noqa: BLE001 — report it to the page and the terminal
+            traceback.print_exc(file=sys.stderr)
+            self._error(
+                HTTPStatus.INTERNAL_SERVER_ERROR, f'desk error: {type(error).__name__}: {error}'
+            )
+
+    return run
+
+
 class DeskHandler(BaseHTTPRequestHandler):
     server: DeskServer
     server_version = 'arc-owner-desk'
     sys_version = ''
+    timeout = 30  # a request that stalls mid-body cannot hold a thread forever
 
     # Request lines hold no owner text, but stay quiet anyway: the terminal is the owner's.
     def log_message(self, format: str, *args) -> None:  # noqa: A002
@@ -133,6 +174,7 @@ class DeskHandler(BaseHTTPRequestHandler):
 
     # ---- routes --------------------------------------------------------------------------------
 
+    @_guarded
     def do_GET(self) -> None:  # noqa: N802
         path = urlsplit(self.path).path
         if path in ('/', '/index.html'):
@@ -155,12 +197,15 @@ class DeskHandler(BaseHTTPRequestHandler):
         elif path == '/api/ping':
             self._json(HTTPStatus.OK, desk.ping())
         elif path == '/api/records':
-            self._json(HTTPStatus.OK, {'source': desk.records.source, 'records': desk.records_json()})
+            self._json(
+                HTTPStatus.OK, {'source': desk.records.source, 'records': desk.records_json()}
+            )
         else:
             self._error(HTTPStatus.NOT_FOUND, 'not found')
 
     do_HEAD = do_GET
 
+    @_guarded
     def do_PUT(self) -> None:  # noqa: N802
         match = _DOC_RE.match(urlsplit(self.path).path)
         if not match or match.group(1) not in model.DOCS:
@@ -202,11 +247,13 @@ class DeskHandler(BaseHTTPRequestHandler):
         self._error(HTTPStatus.METHOD_NOT_ALLOWED, 'no cross-origin access')
 
 
-def serve(desk: Desk, port: int = DEFAULT_PORT, *, open_browser: bool = True, out=sys.stdout) -> int:
+def serve(
+    desk: Desk, port: int = DEFAULT_PORT, *, open_browser: bool = True, out=sys.stdout
+) -> int:
     try:
         server = DeskServer(desk, port)
     except OSError as error:
-        if getattr(error, 'errno', None) in (48, 98):  # EADDRINUSE on macOS, Linux
+        if error.errno == errno.EADDRINUSE:
             print(
                 f'Port {port} is busy. The desk may already be running: open http://127.0.0.1:{port}/\n'
                 f'(or start another with --port).',
@@ -215,8 +262,10 @@ def serve(desk: Desk, port: int = DEFAULT_PORT, *, open_browser: bool = True, ou
             return 1
         raise
     records = desk.records
-    source = f'{len(records.records)} records from {records.source}' if records.source else (
-        'none found (autocomplete off; queries still save)'
+    source = (
+        f'{len(records.records)} records from {records.source}'
+        if records.source
+        else ('none found (autocomplete off; queries still save)')
     )
     print(
         'ARC OWNER DESK\n'

@@ -95,6 +95,24 @@ def aggregate(scores: dict[str, tuple[float, float]]) -> tuple[float, int]:
     return mean, (mean > 0) - (mean < 0)
 
 
+def _checked(scores: object, ids: set[str]) -> dict[str, tuple[float, float]]:
+    """The scorer's output as {id: (hyb, b2)}: every vault query, each score in [0, 1]."""
+    if not isinstance(scores, dict) or set(scores) != ids:
+        raise ReadError(
+            'the scorer must return (hyb, B2) nDCG@10 for every vault query; nothing released'
+        )
+    out = {}
+    for qid, pair in scores.items():
+        try:
+            hyb, b2 = (float(x) for x in pair)
+        except (TypeError, ValueError):
+            raise ReadError(f'the scorer returned {pair!r} for {qid}; nothing released') from None
+        if not (0.0 <= hyb <= 1.0 and 0.0 <= b2 <= 1.0):  # also false for NaN
+            raise ReadError(f'nDCG@10 outside [0, 1] for {qid}; nothing released')
+        out[qid] = (hyb, b2)
+    return out
+
+
 def _base(run_id: str, branch: str) -> dict:
     return {'run_id': run_id, 'branch': branch, 'utc': utc_now(), 'host': HOST}
 
@@ -107,11 +125,28 @@ def _gate(run_id: str, branch: str, paths: Paths) -> tuple[list[dict], int]:
     try:
         entries = readlog.load(paths.log)
     except readlog.LogCorrupt as error:
-        raise ReadRefused(f'the read log does not verify ({error}); restore it before any read') from None
+        raise ReadRefused(
+            f'the read log does not verify ({error}); restore it before any read'
+        ) from None
+    # The chain catches edits, deletions and reordering, but not a cut-off tail. Each release
+    # also leaves a release file, so a release missing from the log is caught here; the public
+    # log copied into every report.json is the outside anchor for the rest.
+    released = readlog.released_runs(entries)
+    orphans = sorted(
+        path.name
+        for path in paths.releases.glob('release-*.json')
+        if path.stem.removeprefix('release-') not in released
+    )
+    if orphans:
+        raise ReadRefused(
+            f'the read log is missing releases that happened ({", ".join(orphans)}); restore it'
+        )
     try:
-        index = check_read(run_id, branch, readlog.released_runs(entries))
+        index = check_read(run_id, branch, released)
     except ReadRefused as refusal:
-        readlog.append(paths.log, {**_base(run_id, branch), 'event': 'refused', 'reason': str(refusal)})
+        readlog.append(
+            paths.log, {**_base(run_id, branch), 'event': 'refused', 'reason': str(refusal)}
+        )
         raise
     return entries, index
 
@@ -150,10 +185,15 @@ def read_vault(
     score = load_scorer(scorer) if isinstance(scorer, str) else scorer
     identity = key_source().strip()
     if not age.is_identity(identity):
-        raise ReadError('that is not an age secret key (it starts with AGE-SECRET-KEY-1); nothing was opened')
+        raise ReadError(
+            'that is not an age secret key (it starts with AGE-SECRET-KEY-1); nothing was opened'
+        )
     if age.recipient_of(identity) != commitments['recipient']:
         raise ReadError('this key does not belong to the vault’s recipient; nothing was opened')
-    readlog.append(paths.log, {**_base(run_id, branch), 'event': 'open', 'sealed_sha256': commitments['sealed_sha256']})
+    readlog.append(
+        paths.log,
+        {**_base(run_id, branch), 'event': 'open', 'sealed_sha256': commitments['sealed_sha256']},
+    )
     plaintext = age.decrypt(paths.sealed, identity)
     try:
         payload = json.loads(plaintext)
@@ -165,11 +205,9 @@ def read_vault(
     if queries_commitment(salt, payload['queries']) != commitments['queries_commitment_sha256']:
         raise ReadError('the vault queries do not match the S0 commitment; refusing to score')
 
-    scores = score(payload, run_id, branch)
     ids = {q['id'] for q in payload['queries']}
-    if not isinstance(scores, dict) or set(scores) != ids:
-        raise ReadError('the scorer must return (hyb, B2) nDCG@10 for every vault query; nothing released')
-    value, sign = aggregate({qid: (float(a), float(b)) for qid, (a, b) in scores.items()})
+    scores = _checked(score(payload, run_id, branch), ids)
+    value, sign = aggregate(scores)
 
     release = {
         'schema': 'arc-vault-release/1',
@@ -197,7 +235,12 @@ def read_vault(
     if run_id in OPEN_RUNS:  # R10/R10K: the vault opens per query
         release['salt_hex'] = payload['salt_hex']
         release['per_query'] = [
-            {'id': q['id'], 'text': q['text'], 'hyb_ndcg10': scores[q['id']][0], 'b2_ndcg10': scores[q['id']][1]}
+            {
+                'id': q['id'],
+                'text': q['text'],
+                'hyb_ndcg10': scores[q['id']][0],
+                'b2_ndcg10': scores[q['id']][1],
+            }
             for q in payload['queries']
         ]
     write_json_atomic(paths.releases / f'release-{run_id}.json', release)

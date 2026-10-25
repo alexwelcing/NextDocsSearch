@@ -23,6 +23,7 @@ from arcforge.vault.digest import canonical_json, queries_commitment, sha256_hex
 
 PAYLOAD_SCHEMA = 'arc-vault/1'
 COMMITMENTS_SCHEMA = 'arc-vault-commitments/1'
+QRELS_SCHEMA = 'arc-vault-qrels/1'
 GRADES = (0, 1, 2, 3)
 
 
@@ -50,22 +51,29 @@ def _load_vault_queries(path: Path) -> tuple[bytes, list[dict], str]:
         raise SealError(f'{path} holds no queries')
     commitment = queries_commitment(salt, queries)
     if doc.get('queries_commitment_sha256') not in (None, commitment):
-        raise SealError(f'{path} no longer matches its S0 commitment; it was edited after the split')
+        raise SealError(
+            f'{path} no longer matches its S0 commitment; it was edited after the split'
+        )
     return salt, queries, commitment
 
 
 def _load_qrels(path: Path, vault_ids: set[str]) -> dict[str, dict[str, int]]:
+    """{query_id: {slug: grade}} for vault queries only, grades 0-3, in sorted order."""
     doc = read_json(path)
     rows = doc.get('qrels') if isinstance(doc, dict) else None
-    if not isinstance(rows, dict):
-        raise SealError(f'{path} must hold {{"schema": "arc-vault-qrels/1", "qrels": {{id: {{slug: grade}}}}}}')
+    if not isinstance(rows, dict) or doc.get('schema') != QRELS_SCHEMA:
+        raise SealError(
+            f'{path} must be {QRELS_SCHEMA}: {{"qrels": {{query_id: {{slug: grade}}}}}}'
+        )
     out: dict[str, dict[str, int]] = {}
     for qid, grades in rows.items():
         if qid not in vault_ids:
             raise SealError(f'{path}: {qid} is not a vault query')
-        if not isinstance(grades, dict) or not all(
-            isinstance(slug, str) and not isinstance(g, bool) and g in GRADES for slug, g in grades.items()
-        ):
+        valid = isinstance(grades, dict) and all(
+            isinstance(slug, str) and not isinstance(g, bool) and g in GRADES
+            for slug, g in grades.items()
+        )
+        if not valid:
             raise SealError(f'{path}: {qid} must map record slugs to grades 0-3')
         out[qid] = dict(sorted(grades.items()))
     return dict(sorted(out.items()))
@@ -94,7 +102,9 @@ def seal(
     shred_inputs: bool = True,
 ) -> Sealed:
     if out.exists():
-        raise SealError(f'{out} exists; a vault is sealed once (move it aside deliberately to reseal)')
+        raise SealError(
+            f'{out} exists; a vault is sealed once (move it aside deliberately to reseal)'
+        )
     recipient = age.read_recipient_file(recipient_file)
     salt, queries, commitment = _load_vault_queries(vault_queries)
     vault_ids = {q['id'] for q in queries}

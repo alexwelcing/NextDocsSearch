@@ -52,8 +52,8 @@ a { color: var(--green); }
 [hidden] { display: none !important; }
 
 /* ---- frame ---------------------------------------------------------------------------------- */
+.chrome { position: sticky; top: 0; z-index: 20; }
 .top {
-  position: sticky; top: 0; z-index: 20;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 12px 24px;
   background: rgba(2, 6, 4, 0.92);
@@ -72,15 +72,15 @@ a { color: var(--green); }
 .save.bad::before { content: '▲ '; }
 
 .tabs {
-  display: flex; flex-wrap: wrap; gap: 2px;
+  display: flex; flex-wrap: nowrap; gap: 0; overflow-x: auto; scrollbar-width: thin;
   padding: 0 24px;
   border-bottom: 1px solid var(--line);
   background: rgba(3, 12, 7, 0.85);
 }
 .tab {
   appearance: none; border: 0; background: none; cursor: pointer;
-  padding: 11px 14px 10px;
-  font: 13px var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+  flex: none; padding: 11px 10px 10px;
+  font: 13px var(--mono); letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--muted);
   border-bottom: 2px solid transparent;
 }
@@ -91,6 +91,7 @@ a { color: var(--green); }
 .tab .badge.attn { color: var(--amber); }
 
 main { max-width: 1080px; margin: 0 auto; padding: 28px 24px 80px; outline: none; }
+main:focus-visible { outline: none; }
 footer { max-width: 1080px; margin: 0 auto; padding: 0 24px 40px; color: var(--faint); font-size: 12.5px; font-family: var(--mono); }
 
 .banner {
@@ -170,6 +171,7 @@ input:disabled, select:disabled { color: var(--muted); background: #020805; }
 input::placeholder { color: #4f7a5c; }
 select { padding: 5px 8px; font-size: 13.5px; }
 label { cursor: pointer; }
+input[type='checkbox'] { accent-color: var(--green); width: 17px; height: 17px; }
 
 /* ---- overview ------------------------------------------------------------------------------- */
 .steps { width: 100%; border-collapse: collapse; }
@@ -194,10 +196,10 @@ label { cursor: pointer; }
 .count { font: 12px var(--mono); color: var(--faint); min-width: 44px; text-align: right; }
 .count.full { color: var(--amber); }
 .qlist { list-style: none; margin: 14px 0 0; padding: 0; }
-.qrow { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: start; padding: 9px 4px; border-top: 1px solid var(--line); }
+.qrow { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: start; padding: 7px 4px; border-top: 1px solid var(--line); }
 .qrow .num { font: 13px/36px var(--mono); color: var(--faint); text-align: right; }
 .qrow input.qtext { width: 100%; }
-.qmeta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; min-height: 26px; }
+.qmeta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 5px; min-height: 24px; }
 .qrow.flagged input.qtext { border-color: #7a5420; }
 
 .picker { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
@@ -219,6 +221,7 @@ label { cursor: pointer; }
 .series { display: grid; gap: 10px; }
 .slot { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: start; }
 .slot .num { font: 13px/36px var(--mono); color: var(--faint); }
+.slot input, .qrow input.qtext { width: 100%; }
 
 /* ---- voices --------------------------------------------------------------------------------- */
 .voice .brief { color: var(--muted); margin: 4px 0 12px; font-size: 14px; }
@@ -233,7 +236,8 @@ label { cursor: pointer; }
 .person .clusters { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin: 12px 0; }
 .cluster { border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; background: #04140a; }
 .cluster ul { list-style: none; margin: 8px 0 0; padding: 0; }
-.cluster li { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 6px 0; border-top: 1px solid var(--line); }
+.cluster li { padding: 8px 0; border-top: 1px solid var(--line); }
+.cluster li select { display: block; width: 100%; margin-top: 6px; font-size: 13px; }
 .cluster li:first-child { border-top: 0; }
 .cluster .rtitle { font-size: 14px; }
 .cluster .role { display: block; color: var(--muted); font-size: 13px; }
@@ -266,17 +270,22 @@ label { cursor: pointer; }
   .top, .tabs, main, footer { padding-left: 14px; padding-right: 14px; }
   .brand .sub { display: none; }
   .grades { grid-template-columns: repeat(2, 1fr); }
+  .composer { grid-template-columns: 1fr auto; }
+  .composer input { grid-column: 1 / -1; }
+  .qrow { grid-template-columns: 30px 1fr auto; gap: 6px; }
   .reg-row { grid-template-columns: 1fr; }
   .steps .w { display: none; }
 }
 </style>
 </head>
 <body>
+<div class="chrome">
 <header class="top">
   <div class="brand">ARC OWNER DESK<span class="cursor" aria-hidden="true"></span><span class="sub">RE-MEANING · THE CALIBRATION RUNS</span></div>
   <div id="save" class="save" role="status" aria-live="polite">connecting…</div>
 </header>
 <nav id="tabs" class="tabs" role="tablist" aria-label="Desk tabs"></nav>
+</div>
 <div id="banner" class="banner" role="alert" hidden></div>
 <main id="main" tabindex="-1"><p class="muted">Loading the desk…</p></main>
 <footer id="foot"></footer>
@@ -327,8 +336,12 @@ label { cursor: pointer; }
       else if (k.startsWith('on')) el.addEventListener(k.slice(2), v)
       else el.setAttribute(k, v === true ? '' : v)
     }
+    return add(el, ...kids)
+  }
+  // Append children, skipping null/undefined/false/'' (native append would print "null").
+  function add(el, ...kids) {
     for (const kid of kids.flat(Infinity)) {
-      if (kid === null || kid === undefined || kid === false) continue
+      if (kid === null || kid === undefined || kid === false || kid === '') continue
       el.append(kid instanceof Node ? kid : String(kid))
     }
     return el
@@ -339,9 +352,9 @@ label { cursor: pointer; }
   const pct = (done, total) => (total ? Math.min(100, Math.round((100 * done) / total)) : 0)
   const mins = (m) => {
     if (m <= 0) return '0 min'
-    if (m < 1) return `${Math.round(m * 60)} s`
-    const whole = Math.round(m)
-    return whole >= 60 ? `${Math.floor(whole / 60)} h ${String(whole % 60).padStart(2, '0')} min` : `${whole} min`
+    if (m < 1) return `${Math.floor(m * 60 + 0.5)} s`
+    const whole = Math.floor(m + 0.5)
+    return whole >= 90 ? `${Math.floor(whole / 60)} h ${String(whole % 60).padStart(2, '0')} min` : `${whole} min`
   }
   const clock = (iso) => (iso ? new Date(iso).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '')
   const nowIso = () => new Date().toISOString().replace(/\.\d+Z$/, 'Z')
@@ -434,7 +447,7 @@ label { cursor: pointer; }
       await reload()
     } else {
       d.error = (r.json && r.json.error) || `HTTP ${r.status}`
-      if (r.status === 401) d.error = 'the desk restarted; reload this page'
+      if (r.status === 401) d.error = 'the desk token changed; reload this page'
       if (view && view.refresh) view.refresh(name)
     }
     showSaved()
@@ -468,15 +481,15 @@ label { cursor: pointer; }
     clear(el)
     const msg = h('div')
     msg.innerHTML = html // only ever our own static strings
-    el.append(msg, h('button', { class: 'ghost', onclick: () => banner(null), 'aria-label': 'Dismiss' }, '×'))
+    add(el, msg, h('button', { class: 'ghost', onclick: () => banner(null), 'aria-label': 'Dismiss' }, '×'))
     el.hidden = false
   }
 
   let toastTimer = null
   function toast(text, action) {
     const el = $('#toast')
-    clear(el).append(h('span', { text }))
-    if (action) el.append(h('button', { onclick: () => { el.hidden = true; action.run() } }, action.label))
+    add(clear(el), h('span', { text }))
+    if (action) add(el, h('button', { onclick: () => { el.hidden = true; action.run() } }, action.label))
     el.hidden = false
     clearTimeout(toastTimer)
     toastTimer = setTimeout(() => { el.hidden = true }, action ? 8000 : 4000)
@@ -541,7 +554,7 @@ label { cursor: pointer; }
     const nav = clear($('#tabs'))
     for (const [key, label] of TABS) {
       const [badge, cls] = badgeFor(key)
-      nav.append(
+      add(nav,
         h('button', { class: 'tab', role: 'tab', 'aria-selected': String(key === tab), onclick: () => go(key) },
           label, badge ? h('span', { class: 'badge ' + cls }, badge) : null),
       )
@@ -554,7 +567,11 @@ label { cursor: pointer; }
 
   function render() {
     renderTabs()
+    const broken = Object.values(S.broken || {})
+    const active = $('#tabs [aria-selected="true"]')
+    if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest', inline: 'nearest' })
     const main = clear($('#main'))
+    if (broken.length) add(main, h('div', { class: 'card bad' }, h('h2', {}, 'A saved file cannot be read'), broken.map((m) => h('p', { class: 'small' }, m))))
     view = (VIEWS[tab] || VIEWS.overview)(main) || null
     $('#foot').textContent = `saves only to ${S.owner_dir} · works offline · arcforge ${S.version}`
   }
@@ -612,7 +629,7 @@ label { cursor: pointer; }
       clear(box)
       if (slug) {
         const r = BY_SLUG.get(slug)
-        box.append(
+        add(box,
           h('span', { class: 'rec', title: slug },
             h('span', { class: 'title' }, r ? r.title : slug),
             r && r.date ? h('span', { class: 'date' }, r.date.slice(0, 4)) : null,
@@ -621,8 +638,8 @@ label { cursor: pointer; }
           ),
         )
       } else if (!disabled) {
-        if (!RECORDS.length) { box.append(h('span', { class: 'faint small' }, 'no record index')); return }
-        box.append(h('button', { class: 'pick', onclick: () => open() }, label || '+ record you meant (optional)'))
+        if (!RECORDS.length) { add(box, h('span', { class: 'faint small' }, 'no record index')); return }
+        add(box, h('button', { class: 'pick', onclick: () => open() }, label || '+ record you meant (optional)'))
       }
     }
     const open = () => {
@@ -634,9 +651,9 @@ label { cursor: pointer; }
       let active = 0
       const paint = () => {
         clear(list)
-        if (!items.length) { list.append(h('li', { class: 'empty' }, 'no matching record')); return }
+        if (!items.length) { add(list, h('li', { class: 'empty' }, 'no matching record')); return }
         items.forEach((r, i) => {
-          list.append(
+          add(list,
             h('li', { role: 'option', 'aria-selected': String(i === active), onmousedown: (e) => { e.preventDefault(); pick(r) } },
               h('span', { class: 't' }, r.title),
               h('span', { class: 's' }, [r.slug, r.date ? r.date.slice(0, 4) : '', r.frontier ? 'FRONTIER' : ''].filter(Boolean).join(' · ')),
@@ -654,7 +671,7 @@ label { cursor: pointer; }
         else if (e.key === 'Escape') { show(current); e.preventDefault() }
       })
       input.addEventListener('blur', () => setTimeout(() => { if (box.contains(input)) show(current) }, 120))
-      box.append(input, list)
+      add(box, input, list)
       update()
       input.focus()
     }
@@ -668,13 +685,13 @@ label { cursor: pointer; }
   VIEWS.overview = (main) => {
     const p = S.progress
     const before = p.sections.A.minutes_left + p.sections.B.minutes_left
-    main.append(
+    add(main,
       head('Your R00 checklist',
         'About 2 h 27 min of your time in all: about 1 h 41 min before launch, and about 46 min at the R00 owner gate. Every tab saves as you type, so you can stop at any point and come back.',
         h('div', { class: 'meter' }, h('span', { class: 'big' }, mins(p.minutes_left)), h('span', {}, 'left of ' + mins(p.minutes)))),
     )
     for (const [key, section] of Object.entries(p.sections)) {
-      main.append(
+      add(main,
         h('div', { class: 'section-head' },
           h('h2', {}, `${key} · ${section.title}`),
           h('span', { class: 'mono' }, `${mins(section.minutes)} budget · ${mins(section.minutes_left)} left`)),
@@ -689,9 +706,9 @@ label { cursor: pointer; }
           h('td', { class: 'm' }, s.minutes ? mins(s.minutes) : ''),
           h('td', { class: 's' }, label ? chip(s.status, label) : null, s.status !== 'done' && s.status !== 'info' && s.minutes_left ? h('div', { class: 'faint small' }, `≈ ${mins(s.minutes_left)} left`) : null),
         )
-        table.append(row)
+        add(table, row)
       }
-      main.append(table)
+      add(main, table)
     }
 
     const launch = S.docs.launch
@@ -712,12 +729,12 @@ label { cursor: pointer; }
         h('span', { class: 'faint small' }, ready ? 'Everything is in place.' : `${p.blockers.length} thing${p.blockers.length === 1 ? '' : 's'} first`)) : null,
       errorLine('launch'),
     )
-    main.append(launchCard)
+    add(main, launchCard)
 
     const notifyBtn = 'Notification' in window && Notification.permission === 'default'
       ? h('button', { class: 'ghost', onclick: async () => { await Notification.requestPermission(); render() } }, 'Notify me when prep or the gate is ready')
       : null
-    main.append(
+    add(main,
       h('div', { class: 'card' },
         h('div', { class: 'spread' }, h('h2', {}, 'Waiting on the pipeline'), notifyBtn),
         h('ul', { class: 'plain small' },
@@ -744,20 +761,20 @@ label { cursor: pointer; }
     const frozen = locked('queries')
     const lim = S.limits
 
-    main.append(
+    add(main,
       head('Queries',
         'Write the way you would type into FIND: 60 characters or fewer, partial words are fine, and don’t look anything up. Aim them at the archive outside The Echo Chamber and The Residue.'),
     )
     if (frozen) {
-      main.append(h('div', { class: 'card hi' }, h('b', {}, 'Frozen at S0'), S.lock && S.lock.locked_utc ? ` on ${clock(S.lock.locked_utc)}` : '', '. The queries were split into 70 sealed and 30 open-dev by salted hash, so they are read-only now.'))
+      add(main, h('div', { class: 'card hi' }, h('b', {}, 'Frozen at S0'), S.lock && S.lock.locked_utc ? ` on ${clock(S.lock.locked_utc)}` : '', '. The queries were split into 70 sealed and 30 open-dev by salted hash, so they are read-only now.'))
     }
     const subs = h('div', { class: 'subtabs', role: 'group', 'aria-label': 'Query sections' },
       h('button', { 'aria-pressed': String(sub === 'main'), onclick: () => go('queries') }, 'The 100'),
       h('button', { 'aria-pressed': String(sub === 'frontier'), onclick: () => go('queries', 'frontier') }, 'Frontier · 4 + 4'),
     )
-    main.append(subs)
+    add(main, subs)
     const body = h('div')
-    main.append(body)
+    add(main, body)
 
     if (sub === 'frontier') return frontierPane(body, frozen)
 
@@ -770,7 +787,7 @@ label { cursor: pointer; }
       const step = stepOf('queries')
       const pace = paceSeconds()
       const left = Math.max(0, d.main_target - d.main_filled)
-      clear(meter).append(
+      add(clear(meter),
         h('span', { class: 'big' }, `${d.main_filled} / ${d.main_target}`),
         bar(d.main_filled, d.main_target),
         h('span', {}, left ? `≈ ${mins(pace ? (left * pace) / 60 : step.minutes_left)} left` + (pace ? ` at your pace (${Math.round(pace)} s each)` : '') : 'all 100 written'),
@@ -779,7 +796,7 @@ label { cursor: pointer; }
       )
       clear(err)
       const e = errorLine('queries')
-      if (e) err.append(e)
+      if (e) add(err, e)
     }
 
     const mainRows = () => q().queries.filter((x) => x.section === 'main')
@@ -825,7 +842,7 @@ label { cursor: pointer; }
     const paintList = () => {
       const numbers = numberOf()
       clear(list)
-      for (const item of [...mainRows()].reverse()) list.append(row(item, numbers))
+      for (const item of [...mainRows()].reverse()) add(list, row(item, numbers))
     }
 
     const refreshFlags = () => {
@@ -834,7 +851,7 @@ label { cursor: pointer; }
         const item = q().queries.find((x) => x.id === li.dataset.id)
         if (!item) continue
         const flags = li.querySelector('.flags')
-        clear(flags).append(...flagsFor(item, numbers))
+        add(clear(flags), ...flagsFor(item, numbers))
         li.classList.toggle('flagged', flags.children.length > 0 && !item.frontier)
       }
     }
@@ -851,7 +868,7 @@ label { cursor: pointer; }
     if (!frozen) {
       const counter = h('span', { class: 'count' }, `0/${lim.max_chars}`)
       const input = h('input', { type: 'text', id: 'new-query', maxlength: lim.max_chars, placeholder: 'Type a query from memory and press Enter', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'New query' })
-      const add = () => {
+      const addQuery = () => {
         const text = input.value.trim()
         if (!text) return
         if (mainRows().length >= lim.main_target) { toast(`That’s ${lim.main_target}. Edit or delete one to add another.`); return }
@@ -869,20 +886,20 @@ label { cursor: pointer; }
         counter.textContent = `${len16(input.value)}/${lim.max_chars}`
         counter.classList.toggle('full', len16(input.value) >= lim.max_chars)
       })
-      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); add() } })
-      body.append(
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addQuery() } })
+      add(body,
         h('div', { class: 'card hi' },
           meter,
-          h('div', { class: 'composer', style: 'margin-top:14px' }, input, counter, h('button', { class: 'primary', onclick: add }, 'Add ↵')),
+          h('div', { class: 'composer', style: 'margin-top:14px' }, input, counter, h('button', { class: 'primary', onclick: addQuery }, 'Add ↵')),
           h('p', { class: 'small muted' }, 'Optionally attach the record you meant from the autocomplete under each query: it becomes a grade-3 label. A query aimed at a record in The Echo Chamber or The Residue is re-tagged FRONTIER automatically. Don’t decide which queries get sealed: at S0 arcforge splits them by salted hash into 70 vault and 30 open-dev.'),
         ),
         err,
       )
       setTimeout(() => input.focus(), 0)
     } else {
-      body.append(h('div', { class: 'card' }, meter))
+      add(body, h('div', { class: 'card' }, meter))
     }
-    body.append(list)
+    add(body, list)
     paintMeter()
     paintList()
     refreshFlags()
@@ -907,16 +924,16 @@ label { cursor: pointer; }
 
   function frontierPane(body, frozen) {
     const lim = S.limits
-    body.append(h('p', { class: 'lede' }, 'Write 4 queries for The Echo Chamber and 4 for The Residue. These two series are withheld from training until R09, when they rejoin and these queries test how the model handles growth. About 4 minutes.'))
+    add(body, h('p', { class: 'lede' }, 'Write 4 queries for The Echo Chamber and 4 for The Residue. These two series are withheld from training until R09, when they rejoin and these queries test how the model handles growth. About 4 minutes.'))
     const meter = h('div', { class: 'meter' })
     const paintMeter = () => {
       const d = S.derived.queries
       const done = Object.values(d.frontier_filled).reduce((a, n) => a + Math.min(n, SERIES_LIMIT), 0)
-      clear(meter).append(h('span', { class: 'big' }, `${done} / ${d.frontier_target}`), bar(done, d.frontier_target))
+      add(clear(meter), h('span', { class: 'big' }, `${done} / ${d.frontier_target}`), bar(done, d.frontier_target))
     }
-    body.append(h('div', { class: 'card' }, meter), errorLine('queries'))
+    add(body, h('div', { class: 'card' }, meter), errorLine('queries'))
     const grid = h('div', { class: 'grid2' })
-    body.append(grid)
+    add(body, grid)
 
     const slotsOf = (series) => docs.queries.data.queries.filter((x) => x.section === 'frontier' && x.series === series)
     const cards = {}
@@ -931,11 +948,11 @@ label { cursor: pointer; }
       const warn = h('span')
       const paintPicker = () => {
         const it = bound()
-        clear(pickerBox).append(it ? picker({ value: it.record, disabled: frozen, filter: (r) => r.frontier === series, label: '+ record (optional)', onChange: (slug) => edit('queries', (d) => { d.queries.find((x) => x.id === boundId).record = slug }, 0) }) : '')
+        add(clear(pickerBox), it ? picker({ value: it.record, disabled: frozen, filter: (r) => r.frontier === series, label: '+ record (optional)', onChange: (slug) => edit('queries', (d) => { d.queries.find((x) => x.id === boundId).record = slug }, 0) }) : '')
       }
       const paintWarn = () => {
         const it = bound()
-        clear(warn).append(it && S.derived.queries.series_mismatch.includes(it.id) ? h('span', { class: 'chip warn' }, 'record is outside this series') : '')
+        add(clear(warn), it && S.derived.queries.series_mismatch.includes(it.id) ? h('span', { class: 'chip warn' }, 'record is outside this series') : '')
       }
       const input = h('input', {
         type: 'text', value: item ? item.text : '', maxlength: lim.max_chars, disabled: frozen, autocomplete: 'off', spellcheck: 'false',
@@ -973,9 +990,9 @@ label { cursor: pointer; }
       const mine = slotsOf(series)
       countEls[series] = h('span', { class: 'mono muted' })
       const wrap = h('div', { class: 'series' })
-      for (let i = 0; i < SERIES_LIMIT; i++) wrap.append(slot(series, mine[i], i))
+      for (let i = 0; i < SERIES_LIMIT; i++) add(wrap, slot(series, mine[i], i))
       cards[series] = h('div', { class: 'card' }, h('div', { class: 'spread' }, h('h2', {}, lim.frontier_series[series]), countEls[series]), wrap)
-      grid.append(cards[series])
+      add(grid, cards[series])
     }
     const paintCounts = () => {
       for (const [series, el] of Object.entries(countEls)) el.textContent = `${slotsOf(series).filter((x) => x.text).length}/${SERIES_LIMIT}`
@@ -988,23 +1005,23 @@ label { cursor: pointer; }
   // ---- voices ------------------------------------------------------------------------------
   VIEWS.voices = (main) => {
     const lim = S.limits
-    main.append(head('Voices',
+    add(main, head('Voices',
       'Write 5 short queries in each of these 5 voices, the way that kind of visitor would type into FIND. Write fresh ones: the tab flags any that copy one of your 108 queries. They are frozen into PREREG and used only for R06’s persona bank. About 15 minutes.'))
     const meter = h('div', { class: 'meter' })
     const err = h('div')
-    main.append(h('div', { class: 'card hi' }, meter), err)
+    add(main, h('div', { class: 'card hi' }, meter), err)
     const grid = h('div', { class: 'grid2' })
-    main.append(grid)
+    add(main, grid)
     const flagEls = {}
     const paintMeter = () => {
       const d = S.derived.voices
-      clear(meter).append(h('span', { class: 'big' }, `${d.filled} / ${d.target}`), bar(d.filled, d.target),
+      add(clear(meter), h('span', { class: 'big' }, `${d.filled} / ${d.target}`), bar(d.filled, d.target),
         h('span', {}, d.filled < d.target ? `≈ ${mins(stepOf('voices').minutes_left)} left` : 'all 25 written'),
-        d.copies ? chip('active', `${d.copies} copy a query`) : null,
+        d.copies ? h('span', { class: 'chip bad' }, `${d.copies} copy a query`) : null,
         d.close ? h('span', { class: 'chip warn' }, `${d.close} close to a query`) : null)
       clear(err)
       const e = errorLine('voices')
-      if (e) err.append(e)
+      if (e) add(err, e)
     }
     const paintFlags = () => {
       const flags = S.derived.voices.flags
@@ -1025,7 +1042,7 @@ label { cursor: pointer; }
         const counter = h('span', { class: 'count' }, `${len16(text)}/${lim.max_chars}`)
         const flag = h('div', { class: 'vflag' })
         flagEls[`${voice.id}#${i}`] = flag
-        card.append(
+        add(card,
           h('div', { class: 'vslot' },
             h('input', {
               type: 'text', value: text, maxlength: lim.max_chars, autocomplete: 'off', spellcheck: 'false',
@@ -1035,7 +1052,7 @@ label { cursor: pointer; }
             counter),
           flag)
       })
-      grid.append(card)
+      add(grid, card)
     }
     paintMeter()
     paintFlags()
@@ -1045,18 +1062,18 @@ label { cursor: pointer; }
   // ---- settings ----------------------------------------------------------------------------
   VIEWS.settings = (main) => {
     const frozen = locked('settings')
-    main.append(head('Settings', 'One setting before S0. Leave the default alone unless you know otherwise. About 30 seconds.'))
+    add(main, head('Settings', 'One setting before S0. Leave the default alone unless you know otherwise. About 30 seconds.'))
     const card = h('div', { class: 'card hi' })
-    main.append(card)
+    add(main, card)
     const paint = () => {
       const d = docs.settings.data
-      clear(card).append(
+      add(clear(card),
         h('label', { class: 'row', style: 'align-items:flex-start;gap:12px' },
           h('input', { type: 'checkbox', style: 'margin-top:4px;width:18px;height:18px', checked: d.inheritance03_renamed, disabled: frozen,
             onchange: (e) => { const v = e.target.checked; edit('settings', (x) => { x.inheritance03_renamed = v; x.confirmed_utc = null }, 0); setTimeout(paint, 0) } }),
           h('span', {}, h('code', {}, 'inheritance-03-the-gesture-archive'), ' was renamed to ', h('code', {}, 'inheritance-03-the-seed-vault'))),
         h('ul', { class: 'plain small muted', style: 'margin-top:12px' },
-          h('li', {}, 'Git shows no rename: both records appeared in the same commit (c362ee2).'),
+          h('li', {}, 'Git shows no rename: no record called the gesture archive was ever committed, and the seed vault was added as a new file.'),
           h('li', {}, 'Unchecked (the default): the one rationale sentence that links to the gesture archive leaves stratum A and stays a ghost query in F. A = 177.'),
           h('li', {}, 'Checked: that sentence is scored against inheritance-03-the-seed-vault and stays in A. A = 178.')),
         h('div', { class: 'row', style: 'margin-top:12px' },
@@ -1090,12 +1107,12 @@ label { cursor: pointer; }
 
   // ---- people ------------------------------------------------------------------------------
   VIEWS.people = (main) => {
-    main.append(head('People', 'Confirm, split or merge the 30 most frequent person names. Your ruling: collisions are different people. About 7 minutes.'))
+    add(main, head('People', 'Confirm, split or merge the 30 most frequent person names. Your ruling: collisions are different people. About 7 minutes.'))
     const waiting = prepState('people', 'People', ['The prep pass (', h('code', {}, 'arcforge run r00 --prep'), ', about 10 minutes on this laptop, no VM) proposes the person map. When it finishes, the 30 most frequent names appear here with their proposed clusters.'], 'Available after R00 prep')
-    if (waiting) { main.append(waiting); return null }
+    if (waiting) { add(main, waiting); return null }
     const names = S.prep.people.data.names
     const meter = h('div', { class: 'meter' })
-    main.append(
+    add(main,
       h('div', { class: 'card hi' }, meter,
         h('ul', { class: 'plain small muted', style: 'margin-top:10px' },
           h('li', {}, 'The same full name inside the saga’s named series is one person, unless the roles conflict.'),
@@ -1104,10 +1121,10 @@ label { cursor: pointer; }
       errorLine('people'))
     const paintMeter = () => {
       const d = S.derived.people
-      clear(meter).append(h('span', { class: 'big' }, `${d.reviewed} / ${d.total}`), bar(d.reviewed, d.total), h('span', {}, d.reviewed < d.total ? `≈ ${mins(stepOf('people').minutes_left)} left` : 'all confirmed'), d.edited ? h('span', { class: 'faint' }, `${d.edited} edited`) : null)
+      add(clear(meter), h('span', { class: 'big' }, `${d.reviewed} / ${d.total}`), bar(d.reviewed, d.total), h('span', {}, d.reviewed < d.total ? `≈ ${mins(stepOf('people').minutes_left)} left` : 'all confirmed'), d.edited ? h('span', { class: 'faint' }, `${d.edited} edited`) : null)
     }
     const list = h('div')
-    main.append(list)
+    add(main, list)
     const decision = (id) => docs.people.data.decisions[id] || { reviewed: false, assignment: {}, merge_with: [] }
     const ensure = (d, id) => (d.decisions[id] = d.decisions[id] || { reviewed: false, assignment: {}, merge_with: [] })
     const keyOf = (m) => m.mention_id || m.slug
@@ -1120,7 +1137,7 @@ label { cursor: pointer; }
         const where = (m) => dec.assignment[keyOf(m)] || m.proposed
         const edited = Object.keys(dec.assignment).length || dec.merge_with.length
         card.classList.toggle('done', !!dec.reviewed)
-        clear(card).append(
+        add(clear(card),
           h('div', { class: 'spread' },
             h('div', { class: 'row' }, h('h2', {}, name.name), h('span', { class: 'faint mono small' }, `${name.mentions} mentions`)),
             dec.reviewed ? chip('done', edited ? 'confirmed · edited' : 'confirmed') : chip('todo', edited ? 'edited' : 'to review')),
@@ -1130,7 +1147,7 @@ label { cursor: pointer; }
         for (const person of people) {
           const mine = mentions.filter((m) => where(m) === person.id)
           if (!mine.length) continue
-          grid.append(
+          add(grid,
             h('div', { class: 'cluster' }, h('h3', {}, person.label),
               h('ul', {}, mine.map((m) =>
                 h('li', { class: m.proposed !== person.id ? 'moved' : '' },
@@ -1139,16 +1156,16 @@ label { cursor: pointer; }
                     people.map((p) => h('option', { value: p.id, selected: p.id === person.id }, p.label))))))),
           )
         }
-        card.append(grid)
+        add(card, grid)
         for (const variant of name.variants) {
           const other = names.find((n) => n.name_id === variant.name_id)
-          card.append(
+          add(card,
             h('label', { class: 'row small', style: 'margin:6px 0 10px' },
               h('input', { type: 'checkbox', checked: dec.merge_with.includes(variant.name_id),
                 onchange: (e) => { const on = e.target.checked; edit('people', (d) => { const x = ensure(d, name.name_id); x.merge_with = on ? [...new Set([...x.merge_with, variant.name_id])] : x.merge_with.filter((v) => v !== variant.name_id) }, 0); setTimeout(paint, 0) } }),
               h('span', {}, `Same person as “${other ? other.name : variant.name_id}”`, variant.reason ? h('span', { class: 'chip warn', style: 'margin-left:8px' }, variant.reason) : null)))
         }
-        card.append(
+        add(card,
           h('div', { class: 'row' },
             h('button', { class: dec.reviewed ? '' : 'primary', onclick: () => { edit('people', (d) => { ensure(d, name.name_id).reviewed = true }, 0); setTimeout(paint, 0) } }, dec.reviewed ? 'Confirmed ✓' : 'Confirm'),
             name.clusters.length > 1 ? h('button', { onclick: () => { edit('people', (d) => { const x = ensure(d, name.name_id); for (const m of mentions) x.assignment[keyOf(m)] = name.clusters[0].cluster_id }, 0); setTimeout(paint, 0) } }, 'Merge into one person') : null,
@@ -1158,27 +1175,27 @@ label { cursor: pointer; }
       paint()
       return card
     }
-    for (const name of names) list.append(cardFor(name))
+    for (const name of names) add(list, cardFor(name))
     paintMeter()
     return { refresh: () => { paintMeter(); renderTabs() } }
   }
 
   // ---- registers ---------------------------------------------------------------------------
   VIEWS.registers = (main) => {
-    main.append(head('Registers', 'All records, grouped by the register the pipeline proposes. Scan each group, fix the exceptions, then mark the group reviewed. These labels stratify the folds. About 8 minutes.'))
+    add(main, head('Registers', 'All records, grouped by the register the pipeline proposes. Scan each group, fix the exceptions, then mark the group reviewed. These labels stratify the folds. About 8 minutes.'))
     const waiting = prepState('registers', 'Registers', ['The prep pass proposes a register for every record: Chronicles, backstory, tech stubs, mechanic essays, PM essays and 2023 posts. They appear here when it finishes.'], 'Available after R00 prep')
-    if (waiting) { main.append(waiting); return null }
+    if (waiting) { add(main, waiting); return null }
     const data = S.prep.registers.data
     const label = new Map(data.registers.map((r) => [r.id, r.label]))
     const meter = h('div', { class: 'meter' })
     const filter = h('input', { type: 'text', placeholder: 'filter by title or slug', 'aria-label': 'Filter records', style: 'width:260px' })
-    main.append(h('div', { class: 'card hi spread' }, meter, filter), errorLine('registers'))
+    add(main, h('div', { class: 'card hi spread' }, meter, filter), errorLine('registers'))
     const paintMeter = () => {
       const d = S.derived.registers
-      clear(meter).append(h('span', { class: 'big' }, `${d.reviewed} / ${d.total}`), h('span', {}, 'groups reviewed'), bar(d.reviewed, d.total), d.overrides ? chip('active', `${d.overrides} changed`) : null)
+      add(clear(meter), h('span', { class: 'big' }, `${d.reviewed} / ${d.total}`), h('span', {}, 'groups reviewed'), bar(d.reviewed, d.total), d.overrides ? chip('active', `${d.overrides} changed`) : null)
     }
     const groupsEl = h('div')
-    main.append(groupsEl)
+    add(main, groupsEl)
     const groups = [...new Set(data.records.map((r) => r.register))]
     groups.sort((a, b) => data.registers.findIndex((r) => r.id === a) - data.registers.findIndex((r) => r.id === b))
     const paintGroup = (section, group) => {
@@ -1186,7 +1203,7 @@ label { cursor: pointer; }
       const reviewed = docs.registers.data.reviewed_groups.includes(group)
       const term = filter.value.trim().toLowerCase()
       const visible = rows.filter((r) => !term || r.title.toLowerCase().includes(term) || r.slug.includes(term))
-      clear(section).append(
+      add(clear(section),
         h('div', { class: 'spread' },
           h('div', { class: 'row' }, h('h2', {}, label.get(group) || group), h('span', { class: 'faint mono small' }, `${rows.length} records`)),
           reviewed
@@ -1204,7 +1221,7 @@ label { cursor: pointer; }
         }),
       )
     }
-    const sections = groups.map((g) => { const s = h('section', { class: 'card reg-group' }); groupsEl.append(s); paintGroup(s, g); return [s, g] })
+    const sections = groups.map((g) => { const s = h('section', { class: 'card reg-group' }); add(groupsEl, s); paintGroup(s, g); return [s, g] })
     filter.addEventListener('input', () => sections.forEach(([s, g]) => paintGroup(s, g)))
     paintMeter()
     return { refresh: () => { paintMeter(); renderTabs() } }
@@ -1212,14 +1229,14 @@ label { cursor: pointer; }
 
   // ---- graded pairs: audit and adjudicate ---------------------------------------------------
   function gradedPairs(main, name, opts) {
-    main.append(head(opts.title, opts.lede))
+    add(main, head(opts.title, opts.lede))
     const waiting = prepState(name, opts.title, opts.waitText, opts.waitTitle)
-    if (waiting) { main.append(waiting); return null }
+    if (waiting) { add(main, waiting); return null }
     const pairs = S.prep[name].data.pairs
-    if (!pairs.length) { main.append(h('div', { class: 'card' }, h('p', {}, opts.emptyText))); return null }
+    if (!pairs.length) { add(main, h('div', { class: 'card' }, h('p', {}, opts.emptyText))); return null }
     const meter = h('div', { class: 'meter' })
     const card = h('section', { class: 'card hi pair', 'aria-live': 'polite' })
-    main.append(h('div', { class: 'card' }, meter), errorLine(name), card,
+    add(main, h('div', { class: 'card' }, meter), errorLine(name), card,
       h('details', { class: 'card small' }, h('summary', { class: 'mono' }, 'The grading scale'),
         h('ul', { class: 'plain' }, GRADE_TEXT.map(([t, d], g) => h('li', {}, h('b', {}, `${g} ${t}`), ` — ${d}`))),
         h('p', { class: 'muted' }, 'Grade what the query means, not its exact words. A record about a different person with the same name is a 0. No judge grades or system names are ever shown here, and your labels win over every model.')))
@@ -1227,7 +1244,7 @@ label { cursor: pointer; }
     const labels = () => docs[name].data.labels
     const paintMeter = () => {
       const d = S.derived[name]
-      clear(meter).append(h('span', { class: 'big' }, `${d.graded} / ${d.total}`), bar(d.graded, d.total),
+      add(clear(meter), h('span', { class: 'big' }, `${d.graded} / ${d.total}`), bar(d.graded, d.total),
         h('span', {}, d.graded < d.total ? `≈ ${mins(stepOf(name).minutes_left)} left` : 'all graded, thank you'),
         h('span', { class: 'faint' }, 'keys: 0-3 grade · ← → move · u next ungraded'))
     }
@@ -1241,7 +1258,7 @@ label { cursor: pointer; }
     const paint = () => {
       const pair = pairs[index]
       const grade = labels()[pair.pair_id]
-      clear(card).append(
+      add(clear(card),
         h('div', { class: 'spread' }, h('h2', {}, `Pair ${index + 1} of ${pairs.length}`),
           h('div', { class: 'row' },
             h('button', { class: 'ghost', disabled: index === 0, onclick: () => move(index - 1), 'aria-label': 'Previous pair' }, '←'),
@@ -1295,9 +1312,9 @@ label { cursor: pointer; }
   })
 
   VIEWS.remeaning = (main) => {
-    main.append(head('Re-meaning', 'The blind re-meaning audit, in R03: about 60 minutes, binary labels on candidate words whose meaning drifted in this archive.'))
+    add(main, head('Re-meaning', 'The blind re-meaning audit, in R03: about 60 minutes, binary labels on candidate words whose meaning drifted in this archive.'))
     const p = S.prep.remeaning
-    main.append(h('div', { class: 'card waiting' },
+    add(main, h('div', { class: 'card waiting' },
       h('h2', {}, h('span', { class: 'pulse', 'aria-hidden': 'true' }), 'Opens in R03'),
       h('p', { class: 'lede' }, 'Nothing to do now. This tab switches on when R03 is ready, and the orchestrator will tell you.'),
       p.status === 'ok' ? h('p', { class: 'small muted' }, `R03 material has arrived (${p.data.items} items); its grader ships with R03.`) : null,
@@ -1320,7 +1337,7 @@ label { cursor: pointer; }
       poll()
     } catch (error) {
       setSave('bad', 'cannot reach the desk')
-      clear($('#main')).append(h('div', { class: 'card bad' }, h('h2', {}, 'The desk server is not answering'),
+      add(clear($('#main')), h('div', { class: 'card bad' }, h('h2', {}, 'The desk server is not answering'),
         h('p', {}, 'Start it from research/arcforge with ', h('code', {}, 'uv run arcforge owner'), ' (or ', h('code', {}, 'python3 -m arcforge owner'), '), then reload this page.'),
         h('p', { class: 'small mono' }, String(error.message || error))))
     }

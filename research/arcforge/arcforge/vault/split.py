@@ -80,7 +80,9 @@ def check_queries(doc: dict) -> tuple[list[dict], list[dict]]:
     return main, frontier
 
 
-def split(queries: list[dict], salt: bytes, n_vault: int = N_VAULT) -> tuple[list[dict], list[dict]]:
+def split(
+    queries: list[dict], salt: bytes, n_vault: int = N_VAULT
+) -> tuple[list[dict], list[dict]]:
     """(vault, open) by salted hash; each list sorted by query id. Deterministic given salt."""
     if not 0 <= n_vault <= len(queries):
         raise ValueError(f'cannot seal {n_vault} of {len(queries)} queries')

@@ -35,7 +35,7 @@ def interactive() -> bool:
 def recipient_text(recipient: str) -> str:
     return (
         '# The RE-MEANING vault recipient: the owner’s public age key. Safe to commit.\n'
-        f'# Created {utc_now()} by `arcforge vault keygen`. The private key is held only by the owner.\n'
+        f'# Created {utc_now()} by `arcforge vault keygen`. Only the owner holds the private key.\n'
         f'{recipient}\n'
     )
 
@@ -64,7 +64,8 @@ def keygen(
     identity, recipient = age.generate_identity()
     rule = '─' * 74
     print(
-        f'\n{rule}\n  YOUR VAULT KEY  (shown once, never stored)\n{rule}\n\n  {identity}\n\n{rule}\n'
+        f'\n{rule}\n  YOUR VAULT KEY  (shown once, never stored)\n{rule}\n\n'
+        f'  {identity}\n\n{rule}\n'
         '  1. Save it in your password manager as "arc vault key".\n'
         '  2. Make one offline copy (paper, or a USB stick kept apart).\n'
         '  3. Never paste it into chat, an agent, the repo, the VM, GCS or HF.\n'
@@ -73,7 +74,10 @@ def keygen(
         file=out,
         flush=True,
     )
-    while ask('Type SAVED once both copies exist (or Ctrl-C to abandon this key): ').strip() != 'SAVED':
+    while (
+        ask('Type SAVED once both copies exist (or Ctrl-C to abandon this key): ').strip()
+        != 'SAVED'
+    ):
         print('  Not yet: type SAVED, in capitals.', file=out)
     for attempt in range(1, VERIFY_TRIES + 1):
         pasted = ask_hidden('Now paste it back from your password manager (hidden) to check it: ')
@@ -91,7 +95,9 @@ def keygen(
     if cleared:
         out.write(CLEAR_SCREEN)
     print(
-        'Vault key saved by you, and only by you.' + (' The screen was cleared.' if cleared else '') + '\n'
+        'Vault key saved by you, and only by you.'
+        + (' The screen was cleared.' if cleared else '')
+        + '\n'
         f'Public recipient written to {recipient_file}:\n  {recipient}\n'
         'It is safe to commit. Nothing secret was written anywhere.',
         file=out,

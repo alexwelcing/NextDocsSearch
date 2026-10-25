@@ -37,9 +37,21 @@ def recipient_path() -> Path:
     return PACKAGE_ROOT / 'configs' / 'vault.recipient'
 
 
+def make_dirs_private(path: Path) -> None:
+    """Create `path` and any missing parents with mode 0700. Existing directories are untouched,
+    so ~/arc-owner/ is never left world-readable by whichever command happened to create it."""
+    missing = []
+    while not path.exists():
+        missing.append(path)
+        path = path.parent
+    for folder in reversed(missing):
+        folder.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(folder, 0o700)  # mkdir's mode is filtered by the umask
+
+
 def ensure_private_dir(path: Path) -> Path:
     """Create `path` (and parents) readable by the owner only, and tighten it if it exists."""
-    path.mkdir(mode=0o700, parents=True, exist_ok=True)
+    make_dirs_private(path)
     os.chmod(path, 0o700)
     return path
 

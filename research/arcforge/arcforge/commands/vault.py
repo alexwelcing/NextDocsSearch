@@ -28,7 +28,9 @@ realized branch, and at most three times in the arc.
   shred    overwrite and delete plaintext files
 """
 
-READ_POINTS_HELP = 'N: r04 r06 r10 · N-F: r04 r06 r10K · S-F: r04 r10K · S-C: r04 r07 r10 · S-C-F: r04 r07 r10K'
+READ_POINTS_HELP = (
+    'N: r04 r06 r10 · N-F: r04 r06 r10K · S-F: r04 r10K · S-C: r04 r07 r10 · S-C-F: r04 r07 r10K'
+)
 
 
 def _fail(message: str, code: int = 1) -> int:
@@ -42,11 +44,16 @@ def _keygen(args) -> int:
     from arcforge.vault.keygen import KeygenError, keygen
 
     try:
-        keygen(Path(args.recipient_file) if args.recipient_file else recipient_path(), force=args.force)
+        keygen(
+            Path(args.recipient_file) if args.recipient_file else recipient_path(), force=args.force
+        )
     except (KeygenError, age.AgeError) as error:
         return _fail(str(error))
     except (KeyboardInterrupt, EOFError):
-        print('\nAbandoned: nothing was written, and the key that was shown is now useless.', file=sys.stderr)
+        print(
+            '\nAbandoned: nothing was written, and the key that was shown is now useless.',
+            file=sys.stderr,
+        )
         return 130
     return 0
 
@@ -65,7 +72,7 @@ def _split(args) -> int:
         f'{len(result.frontier)} frontier.\n'
         f'  queries commitment  {result.commitment}\n'
         f'  files               {result.out_dir}\n'
-        '  The desk\'s Queries and Settings tabs are frozen now.\n'
+        "  The desk's Queries and Settings tabs are frozen now.\n"
         '  vault-queries.json is plaintext: it goes to the R00 VM only, and `arcforge vault seal` '
         'shreds it.'
     )
@@ -90,13 +97,15 @@ def _seal(args) -> int:
     except (SealError, age.AgeError) as error:
         return _fail(str(error))
     c = sealed.commitments
+    qrels = ' with qrels' if c['has_qrels'] else ''
+    kept = 'were kept (--keep-plaintext)' if args.keep_plaintext else 'shredded'
     print(
-        f'Sealed {c["n_queries"]} vault queries{" with qrels" if c["has_qrels"] else ""} to the owner.\n'
+        f'Sealed {c["n_queries"]} vault queries{qrels} to the owner.\n'
         f'  sealed file         {sealed.sealed_path}\n'
         f'  sealed sha256       {c["sealed_sha256"]}\n'
         f'  queries commitment  {c["queries_commitment_sha256"]}\n'
-        f'  commitments         {sealed.commitments_path}  (publish both numbers in the bench card)\n'
-        + ('  plaintext inputs were kept (--keep-plaintext)' if args.keep_plaintext else '  plaintext inputs shredded')
+        f'  commitments         {sealed.commitments_path}  (publish both in the bench card)\n'
+        f'  plaintext inputs {kept}'
     )
     return 0
 
@@ -135,15 +144,20 @@ def _read(args) -> int:
         if args.key_lost:
             if not sys.stdin.isatty():
                 return _fail('--key-lost needs your confirmation in a terminal')
-            if input(f'Record the read at {run_id} as "unavailable" because the key is lost? Type LOST: ').strip() != 'LOST':
+            prompt = f'Record the read at {run_id} as "unavailable": the key is lost? Type LOST: '
+            if input(prompt).strip() != 'LOST':
                 return _fail('not recorded')
             release = record_lost_key(run_id, branch, paths=paths)
         else:
-            release = read_vault(run_id, branch, key_source=_ask_key, scorer=args.scorer, paths=paths)
+            release = read_vault(
+                run_id, branch, key_source=_ask_key, scorer=args.scorer, paths=paths
+            )
     except ReadRefused as refusal:
         return _fail(f'refused: {refusal}', 4)
     except (ReadError, age.AgeError) as error:
         return _fail(str(error))
+    except (KeyboardInterrupt, EOFError):
+        return _fail('read abandoned; nothing was released', 130)
     value = release['hybrid_minus_b2_ndcg10']
     print(
         f'Vault read {release["read_index"]} of {release["reads_budget_branch"]} at {run_id} '
@@ -151,7 +165,11 @@ def _read(args) -> int:
         f'  hyb(champion) - B2, nDCG@10:  {"unavailable" if value is None else f"{value:+.2f}"}'
         f'   sign {release["sign"]}\n'
         f'  release file: {paths.releases / f"release-{run_id}.json"}'
-        + ('\n  R10: the vault is open per query in the release file.' if 'per_query' in release else '')
+        + (
+            '\n  R10: the vault is open per query in the release file.'
+            if 'per_query' in release
+            else ''
+        )
     )
     return 0
 
@@ -187,7 +205,8 @@ def _status(args) -> int:
     if args.json:
         print(json.dumps(status, indent=2))
         return 0
-    print(f'recipient    {recipient or "missing: run `uv run arcforge vault keygen` (the owner, in Terminal)"}')
+    missing = 'missing: the owner runs `uv run arcforge vault keygen` in Terminal'
+    print(f'recipient    {recipient or missing}')
     print(f'age          {"installed" if status["age_installed"] else "missing: brew install age"}')
     if commitments:
         print(f'sealed       {commitments.get("sealed_sha256")}')
@@ -221,22 +240,36 @@ def register(subparsers) -> None:
     actions = parser.add_subparsers(dest='vault_action', metavar='<action>')
 
     keygen = actions.add_parser('keygen', help='make the owner key once (in your own Terminal)')
-    keygen.add_argument('--recipient-file', help='where the public recipient goes (default configs/vault.recipient)')
-    keygen.add_argument('--force', action='store_true', help='replace an existing recipient (only before anything is sealed)')
+    keygen.add_argument(
+        '--recipient-file', help='where the public recipient goes (default configs/vault.recipient)'
+    )
+    keygen.add_argument(
+        '--force',
+        action='store_true',
+        help='replace an existing recipient (only before anything is sealed)',
+    )
     keygen.set_defaults(func=_keygen)
 
     split = actions.add_parser('split', help='S0: salted-hash split into 70 vault / 30 open-dev')
-    split.add_argument('--queries', help='the owner queries file (default ~/arc-owner/queries.json)')
+    split.add_argument(
+        '--queries', help='the owner queries file (default ~/arc-owner/queries.json)'
+    )
     split.add_argument('--out', help='output directory (default ~/arc-owner/vault/s0)')
     split.set_defaults(func=_split)
 
     seal = actions.add_parser('seal', help='encrypt the vault queries (+ qrels) to the recipient')
-    seal.add_argument('--vault-queries', required=True, help='vault-queries.json from `arcforge vault split`')
+    seal.add_argument(
+        '--vault-queries', required=True, help='vault-queries.json from `arcforge vault split`'
+    )
     seal.add_argument('--qrels', help='arc-vault-qrels/1 file for the vault queries (end of R00)')
     seal.add_argument('--recipient-file', help='default configs/vault.recipient')
     seal.add_argument('--out', help='the sealed file (default ~/arc-owner/vault/sealed/vault.age)')
-    seal.add_argument('--commitments', help='default vault-commitments.json next to the sealed file')
-    seal.add_argument('--keep-plaintext', action='store_true', help='do not shred the inputs (debugging only)')
+    seal.add_argument(
+        '--commitments', help='default vault-commitments.json next to the sealed file'
+    )
+    seal.add_argument(
+        '--keep-plaintext', action='store_true', help='do not shred the inputs (debugging only)'
+    )
     seal.set_defaults(func=_seal)
 
     read = actions.add_parser(
@@ -246,15 +279,27 @@ def register(subparsers) -> None:
         'The key is asked for on stdin (hidden in a terminal), never as an argument.',
     )
     read.add_argument('run', help='the run id, e.g. r04 or r10K')
-    read.add_argument('--branch', required=True, help='the realized branch: N, N-F, S-F, S-C or S-C-F')
-    read.add_argument('--scorer', default='arcforge.models.vault_scorer:score', help='module:function that scores the vault')
-    read.add_argument('--key-lost', action='store_true', help='record this read as sign "unavailable" (key lost)')
+    read.add_argument(
+        '--branch', required=True, help='the realized branch: N, N-F, S-F, S-C or S-C-F'
+    )
+    read.add_argument(
+        '--scorer',
+        default='arcforge.models.vault_scorer:score',
+        help='module:function that scores the vault',
+    )
+    read.add_argument(
+        '--key-lost', action='store_true', help='record this read as sign "unavailable" (key lost)'
+    )
     for flag in ('sealed', 'commitments', 'log', 'releases'):
-        read.add_argument(f'--{flag}', help=f'override the default {flag} path under ~/arc-owner/vault/')
+        read.add_argument(
+            f'--{flag}', help=f'override the default {flag} path under ~/arc-owner/vault/'
+        )
     read.set_defaults(func=_read)
 
     status = actions.add_parser('status', help='recipient, commitments and the read log')
-    status.add_argument('--json', action='store_true', help='machine-readable (for doctor and the orchestrator)')
+    status.add_argument(
+        '--json', action='store_true', help='machine-readable (for doctor and the orchestrator)'
+    )
     status.add_argument('--recipient-file', help='default configs/vault.recipient')
     for flag in ('sealed', 'commitments', 'log', 'releases'):
         status.add_argument(f'--{flag}', help=argparse.SUPPRESS)
