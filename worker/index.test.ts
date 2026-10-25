@@ -17,7 +17,7 @@ import type { ShipEvent } from '../lib/ship/ndjson'
 import type { AssetsLike, WorkerEnv } from './env'
 import worker, { ROUTES, handle } from './index'
 import { HSTS, MEDIA_CACHE, RANGED_PREFIXES } from './policy'
-import { parseRange, sliceStream } from './routes/media'
+import { parseRange, resetKnownSizes, sliceStream } from './routes/media'
 import { EMBED_INSTRUCTION, denseVectorSet, shipDeps } from './routes/ship'
 
 vi.mock('../lib/generated/search-manifest.json', async () => {
@@ -73,18 +73,27 @@ async function fakeEnv(
   files.set('/arc/archive.json', envelopeJson(FIXTURE_ARCHIVE.map(({ slug }) => ({ slug }))))
   files.set('/about.html', '<html>about</html>')
   const fetched: string[] = []
+  const film = { methods: [] as string[], ranges: [] as (string | null)[], chunksRead: 0 }
   const ASSETS: AssetsLike = {
-    // Like the assets service: Range is ignored, a HEAD has no body.
+    // Like the assets binding (measured on workers.dev): Range is ignored, and the film's body
+    // reaches the Worker without a Content-Length header, in chunks.
     fetch: async (request) => {
       const { pathname } = new URL(request.url)
       fetched.push(pathname)
       if (pathname === FILM_PATH) {
-        return new Response(request.method === 'HEAD' ? null : FILM, {
-          headers: {
-            'Content-Type': 'video/mp4',
-            'Content-Length': String(FILM.length),
-            ETag: '"film"',
+        film.methods.push(request.method)
+        film.ranges.push(request.headers.get('range'))
+        let offset = 0
+        const body = new ReadableStream<Uint8Array>({
+          pull(controller) {
+            if (offset >= FILM.length) return controller.close()
+            film.chunksRead += 1
+            controller.enqueue(FILM.slice(offset, offset + 100))
+            offset += 100
           },
+        })
+        return new Response(request.method === 'HEAD' ? null : body, {
+          headers: { 'Content-Type': 'video/mp4', ETag: '"film"' },
         })
       }
       const body = files.get(pathname)
@@ -115,7 +124,7 @@ async function fakeEnv(
     AI_GATEWAY_ID: '',
     ...options.overrides,
   }
-  return { env, fetched, runs, shipKeys: ship.keys, scoreKeys: score.keys }
+  return { env, fetched, film, runs, shipKeys: ship.keys, scoreKeys: score.keys }
 }
 
 const request = (path: string, init: RequestInit = {}, origin = STAGING) =>
@@ -153,6 +162,7 @@ async function events(response: Response): Promise<ShipEvent[]> {
 
 afterEach(() => {
   resetSearchIndexCache()
+  resetKnownSizes()
 })
 
 describe('worker router', () => {
@@ -484,6 +494,49 @@ describe('films with byte ranges', () => {
     expect(response.headers.get('content-range')).toBe('bytes 0-99/1000')
     expect(response.headers.get('content-length')).toBe('100')
     expect(response.body).toBeNull()
+  })
+
+  it('answers a plain HEAD with the length the assets service leaves out', async () => {
+    const { env, film: seen } = await fakeEnv()
+    const response = await handle(film({}, 'HEAD'), env)
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-length')).toBe('1000')
+    expect(response.headers.get('accept-ranges')).toBe('bytes')
+    expect(response.body).toBeNull()
+    // The assets service is always asked for the plain file: a GET without the range.
+    expect(seen.methods).toEqual(['GET'])
+  })
+
+  it('learns a size once per isolate, then streams only the requested slice', async () => {
+    const { env, film: seen } = await fakeEnv()
+    const first = await handle(film({ Range: 'bytes=0-1' }), env)
+    expect(Array.from(await bytes(first))).toEqual([0, 1])
+    expect(seen.chunksRead).toBe(10)
+
+    const second = await handle(film({ Range: 'bytes=0-1' }), env)
+    expect(second.status).toBe(206)
+    expect(second.headers.get('content-range')).toBe('bytes 0-1/1000')
+    expect(Array.from(await bytes(second))).toEqual([0, 1])
+    // One more chunk, not the whole file again.
+    expect(seen.chunksRead).toBeLessThanOrEqual(12)
+
+    const middle = await handle(film({ Range: 'bytes=250-449' }), env)
+    expect(Array.from(await bytes(middle))).toEqual(Array.from(FILM.subarray(250, 450)))
+    expect(seen.ranges).toEqual([null, null, null])
+  })
+
+  it('slices a body whose length the assets service does send', async () => {
+    const { env } = await fakeEnv()
+    env.ASSETS = {
+      fetch: async () =>
+        new Response(FILM, {
+          headers: { 'Content-Type': 'video/mp4', 'Content-Length': String(FILM.length) },
+        }),
+    }
+    const response = await handle(film({ Range: 'bytes=10-19' }), env)
+    expect(response.status).toBe(206)
+    expect(response.headers.get('content-range')).toBe('bytes 10-19/1000')
+    expect(Array.from(await bytes(response))).toEqual(Array.from(FILM.subarray(10, 20)))
   })
 
   it('passes a 206 or a 404 from the assets service through', async () => {

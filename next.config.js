@@ -70,9 +70,12 @@ const nextConfig = {
   // Compiler optimizations
   compiler: {
     styledComponents: true,
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error', 'warn'],
-    } : false,
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? {
+            exclude: ['error', 'warn'],
+          }
+        : false,
   },
 
   // Experimental features for better performance
@@ -90,11 +93,7 @@ function serverOnly() {
   return {
     // Prevent Vercel from bundling public/ assets into serverless functions
     outputFileTracingExcludes: {
-      '*': [
-        'public/images/**',
-        'public/background/**',
-        'public/splats/**',
-      ],
+      '*': ['public/images/**', 'public/background/**', 'public/splats/**'],
     },
 
     // The archive server source reads this generated file at runtime, and Ship reads the search
@@ -129,7 +128,7 @@ function serverOnly() {
           destination: '/articles',
           permanent: true,
         },
-      ];
+      ]
     },
 
     // Headers for caching and security
@@ -153,7 +152,7 @@ function serverOnly() {
             },
           ],
         },
-      ];
+      ]
     },
   }
 }

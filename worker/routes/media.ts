@@ -1,9 +1,15 @@
 // The films (RANGED_PREFIXES) through the Worker, with byte ranges. Workers Static Assets ignore a
 // Range header and send the whole file with a 200, and Safari will not play a video that way, so
-// this route reads the file from env.ASSETS and answers a single `bytes=` range itself with 206
-// Partial Content, or 416 when the range lies past the end. A 206 from the assets service, should
-// it start sending one, passes straight through. Everything stays a stream: a `bytes=0-1` probe
-// reads one chunk and cancels the rest.
+// this route reads the plain file from env.ASSETS and answers a single `bytes=` range itself with
+// 206 Partial Content, or 416 when the range lies past the end. A 206 from the assets service,
+// should it start sending one, passes straight through.
+//
+// The assets binding hands the Worker a body without a Content-Length header (the runtime knows
+// the length and sends it on a whole-file 200, but the Worker cannot read it), and its HEAD answer
+// carries no length either (both measured on workers.dev). So the first ranged request or HEAD for
+// a film in an isolate reads the file once to learn its size; every later one streams only the
+// requested slice, and a `bytes=0-1` probe then reads one chunk and cancels the rest. The films
+// are a few MiB at most and the per-file cap is 25 MiB, well inside an isolate's memory.
 import type { WorkerEnv } from '../env'
 import { MEDIA_CACHE } from '../policy'
 
@@ -77,15 +83,15 @@ function mediaHeaders(asset: Response): Headers {
 }
 
 /**
- * The request without its range. The assets service does not answer a Range with a 206, and its
- * answer to one is not the plain file (it carries no length), so ranges are cut from the plain
- * file here.
+ * The plain-file request for the assets service: always a GET (its HEAD answer has no length) and
+ * without the range headers (it never answers them with a 206). Conditional headers stay, so a
+ * revalidation still gets its 304.
  */
-function withoutRange(request: Request): Request {
+function plainGet(request: Request): Request {
   const headers = new Headers(request.headers)
   headers.delete('range')
   headers.delete('if-range')
-  return new Request(request.url, { method: request.method, headers })
+  return new Request(request.url, { method: 'GET', headers })
 }
 
 /** The body's length from Content-Length, or null when it is absent or malformed. */
@@ -96,34 +102,82 @@ function contentLength(response: Response): number | null {
   return Number.isSafeInteger(length) ? length : null
 }
 
+/** File sizes learned in this isolate, by path and version. A deploy starts new isolates. */
+const knownSizes = new Map<string, number>()
+const KNOWN_SIZES_MAX = 512
+
+function sizeKey(request: Request, asset: Response): string {
+  return `${new URL(request.url).pathname} ${asset.headers.get('etag') ?? ''}`
+}
+
+function rememberSize(key: string, size: number): void {
+  if (knownSizes.size >= KNOWN_SIZES_MAX) knownSizes.clear()
+  knownSizes.set(key, size)
+}
+
+/** Forgets the learned sizes (tests). */
+export function resetKnownSizes(): void {
+  knownSizes.clear()
+}
+
+function discard(body: ReadableStream | null): void {
+  body?.cancel().catch(() => undefined)
+}
+
 export async function media(request: Request, env: WorkerEnv): Promise<Response> {
+  const head = request.method === 'HEAD'
   const rangeHeader = request.headers.get('range')
-  const asset = await env.ASSETS.fetch(rangeHeader ? withoutRange(request) : request)
-  const debug = `${asset.status};cl=${asset.headers.get('content-length')};te=${asset.headers.get('transfer-encoding')};body=${asset.body ? 1 : 0}`
+  const asset = await env.ASSETS.fetch(plainGet(request))
   if (asset.status === 206) {
-    return new Response(asset.body, { status: 206, headers: mediaHeaders(asset) })
+    if (head) discard(asset.body)
+    return new Response(head ? null : asset.body, { status: 206, headers: mediaHeaders(asset) })
   }
-  // 304, the 404 page, a refused method: as the assets service answered.
-  if (asset.status !== 200) return asset
+  // 304, the 404 page: as the assets service answered (without the body, for a HEAD).
+  if (asset.status !== 200) {
+    if (!head) return asset
+    discard(asset.body)
+    return new Response(null, { status: asset.status, headers: asset.headers })
+  }
 
   const headers = mediaHeaders(asset)
-  headers.set('X-Asset-Debug', debug)
-  const size = contentLength(asset)
-  const range =
-    size !== null && ifRangeMatches(request, asset) ? parseRange(rangeHeader, size) : null
-  if (range === null) return new Response(asset.body, { status: 200, headers })
+  const key = sizeKey(request, asset)
+  const wantsRange = rangeHeader !== null && ifRangeMatches(request, asset)
+  let size = contentLength(asset) ?? knownSizes.get(key) ?? null
+  // Read once to learn the size, only when a range or a HEAD needs it.
+  let bytes: Uint8Array | null = null
+  if (size === null && (wantsRange || head)) {
+    bytes = new Uint8Array(await asset.arrayBuffer())
+    size = bytes.byteLength
+    rememberSize(key, size)
+  }
+  const range = size !== null && wantsRange ? parseRange(rangeHeader, size) : null
+  const unread = bytes === null
+
+  if (range === null) {
+    if (size !== null) headers.set('Content-Length', String(size))
+    if (head) {
+      if (unread) discard(asset.body)
+      return new Response(null, { status: 200, headers })
+    }
+    return new Response(bytes ?? asset.body, { status: 200, headers })
+  }
 
   if (range === 'unsatisfiable') {
-    asset.body?.cancel().catch(() => undefined)
+    if (unread) discard(asset.body)
     headers.delete('Content-Length')
     headers.set('Content-Range', `bytes */${size}`)
     return new Response(null, { status: 416, headers })
   }
+
   const length = range.end - range.start + 1
   headers.set('Content-Range', `bytes ${range.start}-${range.end}/${size}`)
   headers.set('Content-Length', String(length))
-  if (request.method === 'HEAD' || !asset.body) {
-    asset.body?.cancel().catch(() => undefined)
+  if (bytes) {
+    const slice = head ? null : bytes.subarray(range.start, range.end + 1)
+    return new Response(slice, { status: 206, headers })
+  }
+  if (head || !asset.body) {
+    discard(asset.body)
     return new Response(null, { status: 206, headers })
   }
   const body = exactLength(asset.body.pipeThrough(sliceStream(range)), length)
