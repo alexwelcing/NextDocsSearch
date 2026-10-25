@@ -32,6 +32,7 @@ import { ARC, FONT, rgba } from '@/lib/immersive/theme'
 import { WindfoilText } from '../text/WindfoilText'
 import { DockChassis } from '../dock/DockChassis'
 import { CrtScreen } from '../dock/CrtScreen'
+import { createOrbField } from '../game/SphereHunter'
 import { TitleScrim } from './WorldTitleCard'
 
 const DISTANCE = 0.5 // metres down the gaze — inside the frustum, in front of the whole world
@@ -98,6 +99,14 @@ export function WarmupRig() {
       textures.video.dispose()
     }
   }, [textures])
+
+  // Sphere Hunter's own quarry — the same factory, so the same two instanced draws (lit
+  // translucent orbs; additive, fog-free rings with per-instance color). Every instance starts
+  // collapsed to zero scale, but the draws still issue, so both pipelines build unseen. three
+  // still generates each InstancedMesh's shader afresh (its cache key carries the object's
+  // uuid), but the game's own field emits the same WGSL, so it lands on these warm pipelines.
+  const orbField = useMemo(() => createOrbField(), [])
+  useEffect(() => orbField.dispose, [orbField])
 
   useEffect(() => {
     if (!armed) {
@@ -183,28 +192,9 @@ export function WarmupRig() {
           <boxGeometry args={[0.07, 0.04, 0.018]} />
           <meshStandardMaterial color={ARC.chassis} roughness={0.55} emissive={ARC.greenDim} />
         </mesh>
-        {/* Sphere Hunter orb and its burst (wireframe = line topology) */}
-        <mesh position={[-0.2, 0, 0]} scale={0.03}>
-          <icosahedronGeometry args={[1, 1]} />
-          <meshStandardMaterial
-            color={ARC.green}
-            emissive={ARC.green}
-            emissiveIntensity={0.7}
-            transparent
-            opacity={0.92}
-          />
-        </mesh>
-        <mesh position={[-0.12, 0, 0]} scale={0.03}>
-          <icosahedronGeometry args={[1, 1]} />
-          <meshStandardMaterial
-            color={ARC.green}
-            emissive={ARC.green}
-            emissiveIntensity={2.5}
-            transparent
-            opacity={0.5}
-            wireframe
-          />
-        </mesh>
+        {/* Sphere Hunter's orb field and burst rings */}
+        <primitive object={orbField.orbs} />
+        <primitive object={orbField.rings} />
         {/* flat UI fills: opaque / translucent, fogged / fog-free, and the invisible hit pads */}
         <mesh position={[-0.04, 0, 0]}>
           <planeGeometry args={[0.05, 0.05]} />
