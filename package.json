@@ -55,7 +55,6 @@
     "mdast-util-to-markdown": "^1.5.0",
     "mdast-util-to-string": "^3.2.0",
     "micromark-extension-mdxjs": "^1.0.1",
-    "next-sitemap": "^4.2.3",
     "opentype.js": "^2.0.0",
     "playwright": "1.61.1",
     "postcss": "^8.4.41",
