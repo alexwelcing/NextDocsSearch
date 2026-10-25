@@ -1,6 +1,9 @@
 // Article deep link: server-renders the complete record as semantic HTML (the SEO layer and the
 // no-WebGPU reading surface), while the persistent immersive app resolves the same URL to the
 // in-scene ARC reader. Body blocks come from the generated public/arc/records JSON.
+//
+// Every manifest slug is prerendered at build (fallback: false, no ISR), so the pages export as
+// static HTML. Thin records still render but carry noindex (see lib/seo/records.ts).
 
 import Head from 'next/head'
 import Link from 'next/link'
@@ -9,6 +12,13 @@ import path from 'node:path'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import StructuredData from '@/components/StructuredData'
 import { SITE_URL } from '@/lib/site-url'
+import {
+  bodyWords,
+  ogImagePath,
+  readImageManifest,
+  readImageSize,
+  thinReason,
+} from '@/lib/seo/records'
 
 interface RecordBlock {
   t: 'h' | 'p' | 'l' | 'q'
@@ -23,61 +33,60 @@ interface ArticlePageProps {
   hero: string | null
   keywords: string[]
   blocks: RecordBlock[]
+  indexable: boolean
+  /** Site-relative og:image path; see ogImagePath(). */
+  ogPath: string
+  ogWidth: number | null
+  ogHeight: number | null
 }
 
-const RECORDS_DIR = path.join(process.cwd(), 'public', 'arc', 'records')
+const ROOT = process.cwd()
+const RECORDS_DIR = path.join(ROOT, 'public', 'arc', 'records')
+
+type ManifestEntry = { slug: string; keywords?: string[] }
+
+// Read at build time, once per build worker rather than once per page.
+let manifest: ManifestEntry[] | undefined
+function articleManifest(): ManifestEntry[] {
+  const file = path.join(ROOT, 'lib/generated/article-manifest.json')
+  return (manifest ??= JSON.parse(fs.readFileSync(file, 'utf8')) as ManifestEntry[])
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  let slugs: string[] = []
-  try {
-    const manifest = JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), 'lib/generated/article-manifest.json'), 'utf8')
-    ) as { slug: string; date?: string }[]
-    slugs = manifest
-      .slice()
-      .sort((a, b) => ((a.date ?? '') < (b.date ?? '') ? 1 : -1))
-      .slice(0, 30)
-      .map((a) => a.slug)
-  } catch {
-    /* manifest arrives during build */
-  }
-  return { paths: slugs.map((slug) => ({ params: { slug } })), fallback: 'blocking' }
+  const slugs = articleManifest().map((a) => a.slug)
+  // An empty manifest means the generators lost the content; fail rather than export no pages.
+  if (slugs.length === 0) throw new Error('articles: lib/generated/article-manifest.json is empty')
+  return { paths: slugs.map((slug) => ({ params: { slug } })), fallback: false }
 }
 
 export const getStaticProps: GetStaticProps<ArticlePageProps> = async ({ params }) => {
   const slug = String(params?.slug ?? '')
   if (!/^[a-z0-9-]+$/i.test(slug)) return { notFound: true }
-  try {
-    const record = JSON.parse(fs.readFileSync(path.join(RECORDS_DIR, `${slug}.json`), 'utf8')) as {
-      title: string
-      date: string
-      description: string
-      hero: string | null
-      blocks: RecordBlock[]
-    }
-    let keywords: string[] = []
-    try {
-      const manifest = JSON.parse(
-        fs.readFileSync(path.join(process.cwd(), 'lib/generated/article-manifest.json'), 'utf8')
-      ) as { slug: string; keywords?: string[] }[]
-      keywords = manifest.find((a) => a.slug === slug)?.keywords ?? []
-    } catch {
-      /* keywords optional */
-    }
-    return {
-      props: {
-        slug,
-        title: record.title,
-        date: record.date,
-        description: record.description,
-        hero: record.hero,
-        keywords,
-        blocks: record.blocks,
-      },
-      revalidate: 86400,
-    }
-  } catch {
-    return { notFound: true }
+  // Only manifest slugs reach here, and each must have a record: a missing one fails the build
+  // instead of quietly exporting a 404 for a URL the sitemap and the scene both link.
+  const record = JSON.parse(fs.readFileSync(path.join(RECORDS_DIR, `${slug}.json`), 'utf8')) as {
+    title: string
+    date: string
+    description: string
+    hero: string | null
+    blocks: RecordBlock[]
+  }
+  const ogPath = ogImagePath(record.hero, readImageManifest(ROOT)[slug])
+  const size = readImageSize(path.join(ROOT, 'public', ogPath))
+  return {
+    props: {
+      slug,
+      title: record.title,
+      date: record.date,
+      description: record.description,
+      hero: record.hero,
+      keywords: articleManifest().find((a) => a.slug === slug)?.keywords ?? [],
+      blocks: record.blocks,
+      indexable: thinReason(slug, bodyWords(record.blocks)) === null,
+      ogPath,
+      ogWidth: size?.width ?? null,
+      ogHeight: size?.height ?? null,
+    },
   }
 }
 
@@ -89,9 +98,13 @@ export default function ArticlePage({
   hero,
   keywords,
   blocks,
+  indexable,
+  ogPath,
+  ogWidth,
+  ogHeight,
 }: ArticlePageProps) {
   const url = `${SITE_URL}/articles/${slug}`
-  const ogImage = hero ? `${SITE_URL}${hero}` : `${SITE_URL}/social-preview.png`
+  const ogImage = `${SITE_URL}${ogPath}`
   return (
     <>
       <Head>
@@ -99,13 +112,15 @@ export default function ArticlePage({
         <meta name="description" content={description} />
         {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index, follow" />
+        <meta name="robots" content={indexable ? 'index, follow' : 'noindex,follow'} />
         <link rel="canonical" href={url} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={url} />
         <meta property="og:image" content={ogImage} />
+        {ogWidth !== null && <meta property="og:image:width" content={String(ogWidth)} />}
+        {ogHeight !== null && <meta property="og:image:height" content={String(ogHeight)} />}
         <meta name="twitter:card" content="summary_large_image" />
         {date && <meta property="article:published_time" content={date} />}
       </Head>

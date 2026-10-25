@@ -53,8 +53,9 @@ describe('the build registry', () => {
       '30-image-manifest.ts',
       '40-media-manifest.ts',
       '50-article-manifest.ts',
+      '60-archive-index.ts',
     ])
-    expect(listSteps(path.join(STEPS_DIR, 'post'))).toEqual(['10-next-sitemap.ts'])
+    expect(listSteps(path.join(STEPS_DIR, 'post'))).toEqual(['10-sitemaps.ts'])
   })
 
   it('every step default-exports a function', async () => {
