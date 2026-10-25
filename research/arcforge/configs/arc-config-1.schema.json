@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/alexwelcing/NextDocsSearch/research/arcforge/configs/arc-config-1.schema.json",
+  "title": "arc-config/1: one RE-MEANING run (configs/rNN.yaml, after extends and overrides)",
+  "description": "The config surface of program.training_recipe. Cross-field budget rules (ceiling <= cap <= $20; R00 plans to the cap, later runs to $17) are checked in arcforge.core.config.validate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "run", "corpus", "lexicon", "teacher", "init", "weights", "queries", "eval_queries",
+    "supervision", "train", "compress", "index", "eval", "vault", "compute", "llm", "growth",
+    "ship", "budget", "plan"
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha256_or_null": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "run_id": {"enum": ["r00", "r01", "r02", "r03", "r04", "r05", "r06", "r07", "r08", "r09", "r10", "r05K", "r07K", "r08K", "r09K", "r10K"]},
+    "branch": {"enum": ["N", "N-F", "S", "S-F", "S-C", "S-C-F"]},
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "usd": {"type": "number", "minimum": 0},
+    "model": {"type": "string", "minLength": 1},
+    "plan_line": {
+      "type": "object",
+      "required": ["kind", "item"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["vm", "llm", "workers_ai", "storage", "orchestrator", "laptop", "owner"]},
+        "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "item": {"type": "string", "minLength": 1},
+        "model": {"$ref": "#/$defs/model"},
+        "endpoint": {"enum": ["us-central1", "global"]},
+        "minutes": {"type": "number", "minimum": 0},
+        "tokens_in": {"type": "integer", "minimum": 0},
+        "tokens_out": {"type": "integer", "minimum": 0},
+        "neurons_k": {"type": "number", "minimum": 0},
+        "gb_month": {"type": "number", "minimum": 0},
+        "cached": {"type": "boolean"}
+      }
+    },
+    "dividend_item": {
+      "type": "object",
+      "required": ["priority", "stage", "item", "model", "unit", "tokens_in_per_unit", "tokens_out_per_unit", "max_units"],
+      "additionalProperties": false,
+      "properties": {
+        "priority": {"type": "string"},
+        "stage": {"type": "string"},
+        "item": {"type": "string", "minLength": 1},
+        "model": {"$ref": "#/$defs/model"},
+        "unit": {"type": "string"},
+        "tokens_in_per_unit": {"type": "integer", "minimum": 0},
+        "tokens_out_per_unit": {"type": "integer", "minimum": 0},
+        "max_units": {"type": "integer", "minimum": 0}
+      }
+    }
+  },
+  "properties": {
+    "schema": {"const": "arc-config/1"},
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "branch", "h1_provisional", "parent_by_fold", "seed", "one_change", "prediction", "adopt_if", "kill_path"],
+      "properties": {
+        "id": {"$ref": "#/$defs/run_id"},
+        "branch": {"$ref": "#/$defs/branch"},
+        "h1_provisional": {"enum": ["SUPPORTED", "FUSION_ONLY", "INCONCLUSIVE", "FALSIFIED", "NOT_FALSIFIED", null]},
+        "parent_by_fold": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["1", "2", "3"],
+          "properties": {
+            "1": {"$ref": "#/$defs/sha256_or_null"},
+            "2": {"$ref": "#/$defs/sha256_or_null"},
+            "3": {"$ref": "#/$defs/sha256_or_null"}
+          }
+        },
+        "seed": {"type": "integer", "minimum": 0},
+        "one_change": {"type": "string", "minLength": 1},
+        "prediction": {"type": "string", "minLength": 1},
+        "adopt_if": {
+          "anyOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["primary", "rule"],
+              "additionalProperties": false,
+              "properties": {
+                "primary": {
+                  "type": "object",
+                  "required": ["stratum", "metric"],
+                  "properties": {"stratum": {"type": "string"}, "metric": {"type": "string"}}
+                },
+                "rule": {"enum": ["default", "squeeze"]}
+              }
+            }
+          ]
+        },
+        "kill_path": {"const": "auto"}
+      }
+    },
+    "corpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["git_sha", "corpus_id", "main_corpus_id", "mdx_dir", "records_dir", "chunker", "strip_rules", "frontier", "rename_map", "ghosts_by_default", "person_map_sha256", "registers_sha256"],
+      "properties": {
+        "git_sha": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{40}$"}, {"type": "null"}]},
+        "corpus_id": {"$ref": "#/$defs/sha256_or_null"},
+        "main_corpus_id": {"$ref": "#/$defs/sha256_or_null"},
+        "mdx_dir": {"type": "string", "minLength": 1},
+        "records_dir": {"type": "string", "minLength": 1},
+        "chunker": {"type": "string"},
+        "strip_rules": {"type": "string"},
+        "frontier": {
+          "type": "object",
+          "required": ["withheld", "rejoin"],
+          "additionalProperties": false,
+          "properties": {
+            "withheld": {"type": "array", "items": {"$ref": "#/$defs/slug"}, "uniqueItems": true},
+            "rejoin": {"$ref": "#/$defs/run_id"}
+          }
+        },
+        "rename_map": {"type": "object", "additionalProperties": {"$ref": "#/$defs/slug"}},
+        "ghosts_by_default": {"type": "array", "items": {"$ref": "#/$defs/slug"}, "uniqueItems": true},
+        "person_map_sha256": {"$ref": "#/$defs/sha256_or_null"},
+        "registers_sha256": {"$ref": "#/$defs/sha256_or_null"}
+      }
+    },
+    "lexicon": {
+      "type": "object",
+      "required": ["npmi", "min_count", "entities", "alias_rewrite", "general_words", "ngram_buckets"],
+      "properties": {
+        "npmi": {"type": "number"},
+        "min_count": {"type": "integer", "minimum": 1},
+        "entities": {"type": "string"},
+        "alias_rewrite": {"type": "string"},
+        "general_words": {"type": "integer", "minimum": 0},
+        "ngram_buckets": {"type": "integer", "minimum": 0}
+      }
+    },
+    "teacher": {
+      "type": "object",
+      "required": ["id", "revision", "dtype", "prompts"],
+      "properties": {
+        "id": {"type": "string"},
+        "revision": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{40}$"}, {"type": "null"}]},
+        "dtype": {"enum": ["bf16"]},
+        "prompts": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "init": {
+      "type": "object",
+      "required": ["mode", "prompt_bias", "max_occ"],
+      "properties": {
+        "mode": {"enum": ["isolated", "context_sum"]},
+        "prompt_bias": {"type": "boolean"},
+        "max_occ": {"type": "integer", "minimum": 1}
+      }
+    },
+    "weights": {"enum": ["sif", "two_world", "two_world_x_disp"]},
+    "queries": {
+      "type": "object",
+      "required": ["generator", "bank", "persona_fewshot_sha256", "per_chunk", "bridge", "exclude"],
+      "properties": {
+        "generator": {"enum": ["qwen3.5-9b", "qwen3.5-4b", "gemini-3.1-flash-lite"]},
+        "bank": {"enum": ["generic", "constraint", "persona"]},
+        "persona_fewshot_sha256": {"$ref": "#/$defs/sha256_or_null"},
+        "per_chunk": {"type": "integer", "minimum": 0},
+        "bridge": {"type": "integer", "minimum": 0},
+        "exclude": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "eval_queries": {
+      "type": "object",
+      "required": ["generator"],
+      "properties": {"generator": {"enum": ["ministral-3-8b-instruct-2512", "ministral-3-3b-instruct-2512"]}}
+    },
+    "supervision": {
+      "type": "object",
+      "required": ["tokenlearn", "contrastive", "graph_positives", "rewired_control", "softmax", "masks"],
+      "properties": {
+        "tokenlearn": {"type": "number", "minimum": 0},
+        "contrastive": {"type": "boolean"},
+        "graph_positives": {"type": "boolean"},
+        "rewired_control": {"type": "boolean"},
+        "softmax": {"const": "full_corpus"},
+        "masks": {"type": "string"}
+      }
+    },
+    "train": {
+      "type": "object",
+      "required": ["device", "lr", "epochs", "batch", "mrl", "anchor_gamma", "folds", "seeds", "concurrency"],
+      "properties": {
+        "device": {"enum": ["cuda", "cpu"]},
+        "lr": {"type": "number", "exclusiveMinimum": 0},
+        "epochs": {"type": "integer", "minimum": 1, "maximum": 5},
+        "batch": {"type": "integer", "minimum": 1},
+        "mrl": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+        "anchor_gamma": {"type": "number", "minimum": 0},
+        "folds": {"const": 3},
+        "seeds": {"type": "integer", "minimum": 1},
+        "concurrency": {"type": "integer", "minimum": 1}
+      }
+    },
+    "compress": {
+      "type": "object",
+      "required": ["dims", "rows", "quant", "model_bundle_max_mb"],
+      "properties": {
+        "dims": {"enum": [32, 64, 128, 256]},
+        "rows": {"type": "integer", "minimum": 1},
+        "quant": {"enum": ["int8", "int4"]},
+        "model_bundle_max_mb": {"type": "number", "exclusiveMinimum": 0, "maximum": 4.0}
+      }
+    },
+    "index": {
+      "type": "object",
+      "required": ["mode", "vector_source"],
+      "properties": {
+        "mode": {"enum": ["symmetric", "asymmetric"]},
+        "vector_source": {"type": "string"},
+        "layout": {"type": "string"},
+        "mrl": {"type": "boolean"}
+      }
+    },
+    "eval": {
+      "type": "object",
+      "required": ["bench", "strata", "pool_depth", "judges", "gold", "rules"],
+      "properties": {
+        "bench": {"type": "string", "pattern": "^v(1|N|[0-9]+)$"},
+        "strata": {"type": "array", "items": {"type": "string"}},
+        "pool_depth": {"type": "object", "required": ["default"], "additionalProperties": {"type": "integer", "minimum": 1}},
+        "judges": {"type": "object", "required": ["primary", "adjudicate", "audit"]},
+        "gold": {"type": "object"},
+        "rules": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+        "exploratory_predictions": {"type": "object"}
+      }
+    },
+    "vault": {
+      "type": "object",
+      "required": ["recipient", "read_points_by_branch", "reads_max"],
+      "properties": {
+        "recipient": {"type": "string"},
+        "read_points_by_branch": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/branch"},
+          "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/run_id"}, "maxItems": 3}
+        },
+        "reads_max": {"type": "integer", "minimum": 0, "maximum": 3}
+      }
+    },
+    "compute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project", "region", "zones", "shape", "gpu", "provisioning", "fallback", "max_run_hours"],
+      "properties": {
+        "project": {"const": "witching-606c6"},
+        "region": {"const": "us-central1"},
+        "zones": {"type": "array", "items": {"type": "string", "pattern": "^us-central1-[a-f]$"}, "minItems": 1},
+        "shape": {"enum": ["g2-standard-8", "g2-standard-16"]},
+        "gpu": {"const": "nvidia-l4"},
+        "provisioning": {"enum": ["spot", "on_demand"]},
+        "fallback": {"enum": ["on_demand", "none"]},
+        "max_run_hours": {"type": "number", "exclusiveMinimum": 0, "maximum": 3}
+      }
+    },
+    "llm": {
+      "type": "object",
+      "required": ["vertex", "vllm", "anthropic_key"],
+      "properties": {
+        "vertex": {"type": "object", "required": ["project", "location"]},
+        "vllm": {"type": "array", "items": {"type": "string"}},
+        "anthropic_key": {"const": "none"}
+      }
+    },
+    "growth": {"type": "object"},
+    "ship": {"type": "object", "required": ["flag"]},
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prices", "cap", "plan_ceiling", "reserve", "contingency", "dividend_priority", "dividend", "first_cut"],
+      "properties": {
+        "prices": {"type": "string", "pattern": "^prices/[0-9]{4}-[0-9]{2}\\.yaml$"},
+        "cap": {"$ref": "#/$defs/usd"},
+        "plan_ceiling": {"$ref": "#/$defs/usd"},
+        "reserve": {"$ref": "#/$defs/usd"},
+        "contingency": {"type": "number", "minimum": 0, "maximum": 1},
+        "dividend_priority": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "dividend": {"type": "array", "items": {"$ref": "#/$defs/dividend_item"}},
+        "first_cut": {
+          "anyOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["line", "scale"],
+              "additionalProperties": false,
+              "properties": {
+                "line": {"type": "string", "pattern": "^[A-Za-z0-9]+\\.[a-z0-9_]+$"},
+                "scale": {"type": "number", "minimum": 0, "maximum": 1},
+                "note": {"type": "string"}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/plan_line"}}
+    }
+  }
+}
