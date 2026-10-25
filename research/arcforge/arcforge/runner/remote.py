@@ -50,7 +50,7 @@ def _validate(spec: Mapping[str, Any]) -> None:
         raise RunnerError(f'{REQUEST_SCHEMA} request lacks {missing}')
     argv = list(spec['argv'])
     if not argv or argv[0] != 'arcforge':
-        raise RunnerError(f"argv must be an arcforge command line, got {argv[:3]}")
+        raise RunnerError(f'argv must be an arcforge command line, got {argv[:3]}')
     if not str(spec['cache_url']).startswith('gs://'):
         raise RunnerError('the VM needs a gs:// cache')
 
@@ -72,12 +72,17 @@ def execute_remote(
         raise RunnerError('no pinned runner image: python -m arcforge.runner image build')
     sha = code_sha(shell)
     if image.built_from and image.built_from != sha:
-        log(f'runner: warning: the pinned image was built from {image.built_from[:12]}, this checkout is {sha[:12]}; '
-            'the VM runs the image\'s code')
+        log(
+            f'runner: warning: the pinned image was built from {image.built_from[:12]}, '
+            f'this checkout is {sha[:12]}; '
+            "the VM runs the image's code"
+        )
 
     config_url = f'gs://{cfg.bucket}/runs/{run_id}/vm/config.json'
     body = json.dumps(spec['config'], indent=1, sort_keys=True) + '\n'
-    check(shell.run(['gcloud', 'storage', 'cp', '-', config_url, '--quiet'], input=body, timeout=120))
+    check(
+        shell.run(['gcloud', 'storage', 'cp', '-', config_url, '--quiet'], input=body, timeout=120)
+    )
     job = Job(image=image.ref, argv=tuple(spec['argv'][1:]), files={'config.json': config_url})
 
     with session_factory(cfg, run_id=run_id, code_sha=sha, shell=shell, log=log) as session:
@@ -86,9 +91,20 @@ def execute_remote(
         rates = session.rates_report()
         log_url = f'{session.status_url(session.instances[-1].name)}/job.log'
     if not result.ok:
-        raise RunnerError(f'the VM job exited {result.exit_code}; its log: gcloud storage cat {log_url}')
-    latest = check(shell.run(['gcloud', 'storage', 'cat', f'{str(spec["cache_url"]).rstrip("/")}/runs/{run_id}/latest'],
-                             timeout=60)).stdout.strip()
+        raise RunnerError(
+            f'the VM job exited {result.exit_code}; its log: gcloud storage cat {log_url}'
+        )
+    latest = check(
+        shell.run(
+            [
+                'gcloud',
+                'storage',
+                'cat',
+                f'{str(spec["cache_url"]).rstrip("/")}/runs/{run_id}/latest',
+            ],
+            timeout=60,
+        )
+    ).stdout.strip()
     return {
         'schema': REPLY_SCHEMA,
         'manifest_sha256': latest,

@@ -42,8 +42,12 @@ def register(subparsers) -> None:
             'delete themselves (exit traps and --max-run-duration); this catches the rest.'
         ),
     )
-    parser.add_argument('--max-age-hours', type=float, default=3.0, help='age threshold (default: 3)')
-    parser.add_argument('--dry-run', action='store_true', help='list what would be deleted, delete nothing')
+    parser.add_argument(
+        '--max-age-hours', type=float, default=3.0, help='age threshold (default: 3)'
+    )
+    parser.add_argument(
+        '--dry-run', action='store_true', help='list what would be deleted, delete nothing'
+    )
     parser.add_argument('--project', default=PROJECT, help=f'GCP project (default: {PROJECT})')
     parser.add_argument('--json', action='store_true', help='print the stale instances as JSON')
     parser.set_defaults(func=run)

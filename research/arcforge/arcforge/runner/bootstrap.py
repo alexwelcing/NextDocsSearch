@@ -40,7 +40,11 @@ class Job:
         bad = [k for k in self.env if not _ENV_KEY.fullmatch(k)]
         if bad:
             raise ValueError(f'invalid environment variable names: {bad}')
-        bad = [n for n, url in self.files.items() if not _FILE_NAME.fullmatch(n) or not url.startswith('gs://')]
+        bad = [
+            n
+            for n, url in self.files.items()
+            if not _FILE_NAME.fullmatch(n) or not url.startswith('gs://')
+        ]
         if bad:
             raise ValueError(f'job files are plain names fetched from gs:// URLs: {bad}')
 
@@ -50,7 +54,12 @@ def _array(name: str, items: Sequence[str]) -> str:
 
 
 def render(job: Job, *, run_id: str, attempt: int, status_url: str) -> str:
-    env = {**job.env, 'ARCFORGE_RUN_ID': run_id, 'ARCFORGE_ATTEMPT': str(attempt), 'ARCFORGE_STATUS_URL': status_url}
+    env = {
+        **job.env,
+        'ARCFORGE_RUN_ID': run_id,
+        'ARCFORGE_ATTEMPT': str(attempt),
+        'ARCFORGE_STATUS_URL': status_url,
+    }
     docker_env: list[str] = []
     for key in sorted(env):
         docker_env += ['-e', f'{key}={env[key]}']

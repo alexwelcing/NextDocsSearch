@@ -45,7 +45,9 @@ class FakeShell:
         self.rules.insert(0, (words, responders))  # later rules win
         return self
 
-    def run(self, argv: Sequence[str], *, input: str | None = None, timeout: float | None = None) -> Result:
+    def run(
+        self, argv: Sequence[str], *, input: str | None = None, timeout: float | None = None
+    ) -> Result:
         argv = tuple(argv)
         self.calls.append(argv)
         return self._scripted(argv)
@@ -90,7 +92,9 @@ class FakeCloud(FakeShell):
     sleeps.
     """
 
-    def __init__(self, plans: dict[int, list], *, start: str = '2026-10-24T10:00:00Z', stockouts=()):
+    def __init__(
+        self, plans: dict[int, list], *, start: str = '2026-10-24T10:00:00Z', stockouts=()
+    ):
         super().__init__()
         from datetime import datetime
 
@@ -136,29 +140,45 @@ class FakeCloud(FakeShell):
             inst['status'] = 'TERMINATED'
 
     def op(self, name: str, kind: str) -> None:
-        self.ops.append({'operationType': kind, 'targetLink': f'.../instances/{name}', 'status': 'DONE',
-                         'insertTime': self.clock(), 'endTime': self.clock()})
+        self.ops.append(
+            {
+                'operationType': kind,
+                'targetLink': f'.../instances/{name}',
+                'status': 'DONE',
+                'insertTime': self.clock(),
+                'endTime': self.clock(),
+            }
+        )
 
     # the CLI ------------------------------------------------------------------------------
     def run(self, argv, *, input=None, timeout=None) -> Result:
         argv = tuple(argv)
         self.calls.append(argv)
         joined = ' '.join(argv)
-        flag = {a.split('=', 1)[0]: a.split('=', 1)[1] for a in argv if a.startswith('--') and '=' in a}
+        flag = {
+            a.split('=', 1)[0]: a.split('=', 1)[1] for a in argv if a.startswith('--') and '=' in a
+        }
         if 'compute instances create' in joined:
             name, zone, model = argv[4], flag['--zone'], flag['--provisioning-model']
             if (zone, model) in self.stockouts:
                 return Result(argv, 1, '', 'ZONE_RESOURCE_POOL_EXHAUSTED')
             attempt = int(flag['--labels'].split('arcforge-attempt=')[1].split(',')[0])
             run = flag['--labels'].split('arcforge-run=')[1].split(',')[0]
-            self.instances[name] = {'zone': zone, 'status': 'RUNNING', 'created': self.now, 'run': run,
-                                    'plan': list(self.plans.get(attempt, []))}
+            self.instances[name] = {
+                'zone': zone,
+                'status': 'RUNNING',
+                'created': self.now,
+                'run': run,
+                'plan': list(self.plans.get(attempt, [])),
+            }
             self.created.append((name, zone, model))
             self.op(name, 'insert')
             return Result(argv, 0, json.dumps([{'name': name, 'creationTimestamp': self.clock()}]))
         if 'compute instances describe' in joined:
             inst = self.instances.get(argv[4])
-            return Result(argv, 0, json.dumps({'status': inst['status']})) if inst else NOT_FOUND(argv)
+            return (
+                Result(argv, 0, json.dumps({'status': inst['status']})) if inst else NOT_FOUND(argv)
+            )
         if 'compute instances delete' in joined:
             if argv[4] not in self.instances:
                 return NOT_FOUND(argv)
@@ -167,10 +187,16 @@ class FakeCloud(FakeShell):
             return Result(argv, 0)
         if 'compute operations list' in joined:
             name = flag['--filter'].rsplit('/', 1)[1].rstrip('$')
-            return Result(argv, 0, json.dumps([o for o in self.ops if o['targetLink'].endswith('/' + name)]))
+            return Result(
+                argv, 0, json.dumps([o for o in self.ops if o['targetLink'].endswith('/' + name)])
+            )
         if 'storage cat' in joined:
             body = self.objects.get(argv[3])
-            return Result(argv, 0, body) if body is not None else Result(argv, 1, '', 'matched no objects')
+            return (
+                Result(argv, 0, body)
+                if body is not None
+                else Result(argv, 1, '', 'matched no objects')
+            )
         return self._scripted(argv)
 
 

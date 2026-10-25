@@ -12,8 +12,17 @@ JOB = Job(image=IMAGE, argv=('run', 'configs/r00.yaml'))
 
 
 def session(cloud, rates, cfg: RunnerConfig | None = None) -> RunnerSession:
-    return RunnerSession(cfg or RunnerConfig(), run_id='r00', code_sha=SHA, shell=cloud, rates=rates,
-                         clock=cloud.clock, sleep=cloud.sleep, poll_seconds=60, log=lambda _m: None)
+    return RunnerSession(
+        cfg or RunnerConfig(),
+        run_id='r00',
+        code_sha=SHA,
+        shell=cloud,
+        rates=rates,
+        clock=cloud.clock,
+        sleep=cloud.sleep,
+        poll_seconds=60,
+        log=lambda _m: None,
+    )
 
 
 def test_a_clean_run_books_one_spot_vm(rates, make_cloud):
@@ -25,7 +34,11 @@ def test_a_clean_run_books_one_spot_vm(rates, make_cloud):
     assert cloud.instances == {}  # deleted
     assert vm['preemptions'] == 0 and vm['shape'] == 'g2-standard-8' and vm['gpu'] == 'nvidia-l4'
     (inst,) = vm['instances']
-    assert inst['name'] == 'arc-run-r00-3a74fb4' and inst['provisioning'] == 'SPOT' and inst['zone'] == 'us-central1-a'
+    assert (
+        inst['name'] == 'arc-run-r00-3a74fb4'
+        and inst['provisioning'] == 'SPOT'
+        and inst['zone'] == 'us-central1-a'
+    )
     assert inst['billed_min'] == 10.0  # created 10:00, done seen at the 10-min poll, deleted then
     assert inst['rate_usd_per_h'] == round(rates['spot'].usd_per_hour, 4)
     assert inst['usd'] == round(10 / 60 * rates['spot'].usd_per_hour, 2)
@@ -39,7 +52,9 @@ def test_a_failed_job_is_reported_not_retried(rates, make_cloud):
 
 
 def test_preemption_recreates_on_spot_once_more_and_books_both(rates, make_cloud):
-    cloud = make_cloud({1: [(60, 'running'), (300, 'preempt')], 2: [(60, 'running'), (240, ('done', 0))]})
+    cloud = make_cloud(
+        {1: [(60, 'running'), (300, 'preempt')], 2: [(60, 'running'), (240, ('done', 0))]}
+    )
     with session(cloud, rates) as runner:
         result = runner.run(JOB)
         vm = runner.vm_report()
@@ -143,14 +158,31 @@ def test_cost_lines_follow_arc_report_1(rates, make_cloud):
         runner.run(JOB)
         lines = runner.cost_lines('S14')
     assert len(lines) == 2
-    assert all(line['provider'] == 'gcp' and line['endpoint'] == 'us-central1' and line['stage'] == 'S14' for line in lines)
-    assert set(lines[0]) == {'stage', 'item', 'provider', 'endpoint', 'model', 'tokens_in', 'tokens_out', 'gpu_min',
-                             'usd', 'cached', 'dividend'}
+    assert all(
+        line['provider'] == 'gcp' and line['endpoint'] == 'us-central1' and line['stage'] == 'S14'
+        for line in lines
+    )
+    assert set(lines[0]) == {
+        'stage',
+        'item',
+        'provider',
+        'endpoint',
+        'model',
+        'tokens_in',
+        'tokens_out',
+        'gpu_min',
+        'usd',
+        'cached',
+        'dividend',
+    }
 
 
 def test_status_urls_are_per_run_and_instance(rates, make_cloud):
     runner = session(make_cloud({}), rates)
-    assert runner.status_url('arc-run-r00-3a74fb4') == 'gs://witching-606c6-arcforge/runs/r00/vm/arc-run-r00-3a74fb4'
+    assert (
+        runner.status_url('arc-run-r00-3a74fb4')
+        == 'gs://witching-606c6-arcforge/runs/r00/vm/arc-run-r00-3a74fb4'
+    )
 
 
 def _flaky_describe(cloud, failures):
@@ -164,7 +196,12 @@ def _flaky_describe(cloud, failures):
         if 'instances describe' in ' '.join(argv) and left[0] > 0:
             left[0] -= 1
             cloud.calls.append(tuple(argv))
-            return Result(tuple(argv), 1, '', 'ERROR: (gcloud) There was a problem refreshing your current auth tokens')
+            return Result(
+                tuple(argv),
+                1,
+                '',
+                'ERROR: (gcloud) There was a problem refreshing your current auth tokens',
+            )
         return real(argv, **kw)
 
     cloud.run = run

@@ -17,7 +17,7 @@ stops the run.
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -35,7 +35,11 @@ STOCKOUT_MARKERS = (
 # Quota is regional: on a quota error the other zones cannot help, but the other provisioning
 # model can (spot and on-demand L4s are separate quotas).
 QUOTA_MARKERS = ('QUOTA_EXCEEDED', 'Quota exceeded', "Quota '")
-UNAVAILABLE_MARKERS = ('does not exist in zone', 'is not available in zone', 'UNSUPPORTED_OPERATION')
+UNAVAILABLE_MARKERS = (
+    'does not exist in zone',
+    'is not available in zone',
+    'UNSUPPORTED_OPERATION',
+)
 GONE_STATES = frozenset({'STOPPING', 'STOPPED', 'TERMINATED', 'SUSPENDING', 'SUSPENDED'})
 
 
@@ -66,7 +70,7 @@ def _label_value(text: str) -> str:
 
 
 def instance_name(run_id: str, code_sha: str, attempt: int = 1) -> str:
-    """arc-run-<run>-<sha7>, plus -<attempt> for a recreated VM (the first keeps the program's name)."""
+    """arc-run-<run>-<sha7>, plus -<attempt> for a recreated VM (the first: the program's name)."""
     if not re.fullmatch(r'[0-9a-f]{7,40}', code_sha):
         raise ValueError(f'code_sha must be hex, got {code_sha!r}')
     run = _label_value(run_id).replace('_', '-').strip('-')
@@ -96,7 +100,11 @@ def create_argv(
 ) -> list[str]:
     meta = {'block-project-ssh-keys': 'TRUE', 'install-nvidia-driver': 'True', **(metadata or {})}
     return [
-        'gcloud', 'compute', 'instances', 'create', name,
+        'gcloud',
+        'compute',
+        'instances',
+        'create',
+        name,
         f'--project={cfg.project}',
         f'--zone={zone}',
         f'--machine-type={cfg.shape}',  # g2 shapes carry their L4; no --accelerator flag
@@ -139,7 +147,7 @@ def create(
     labels: Mapping[str, str],
     startup_script: Path,
     attempt: int = 1,
-    log=print,
+    log: Callable[[str], None] = print,
 ) -> Instance:
     """Create the VM in the first zone × provisioning model that has capacity."""
     tried: list[str] = []
@@ -155,6 +163,10 @@ def create(
             kind = _classify(result)
             tried.append(f'{zone}/{provisioning}: {kind}')
             if kind == 'error':
+                # A failed or timed-out create can still leave an instance behind; it must not
+                # outlive this call, because no session knows its name yet.
+                if describe(shell, cfg, name, zone) is not None:
+                    delete(shell, cfg, name, zone)
                 raise CommandError(result)
             log(f'runner: {zone} {provisioning}: {kind}, trying the next option')
             if kind == 'quota':
@@ -165,7 +177,16 @@ def create(
 def describe(shell: Shell, cfg: RunnerConfig, name: str, zone: str) -> dict[str, Any] | None:
     """The instance resource, or None once it no longer exists."""
     result = shell.run(
-        ['gcloud', 'compute', 'instances', 'describe', name, f'--project={cfg.project}', f'--zone={zone}', '--format=json'],
+        [
+            'gcloud',
+            'compute',
+            'instances',
+            'describe',
+            name,
+            f'--project={cfg.project}',
+            f'--zone={zone}',
+            '--format=json',
+        ],
         timeout=120,
     )
     if is_not_found(result):
@@ -176,7 +197,16 @@ def describe(shell: Shell, cfg: RunnerConfig, name: str, zone: str) -> dict[str,
 def delete(shell: Shell, cfg: RunnerConfig, name: str, zone: str) -> bool:
     """Delete and wait. True if this call deleted it, False if it was already gone."""
     result = shell.run(
-        ['gcloud', 'compute', 'instances', 'delete', name, f'--project={cfg.project}', f'--zone={zone}', '--quiet'],
+        [
+            'gcloud',
+            'compute',
+            'instances',
+            'delete',
+            name,
+            f'--project={cfg.project}',
+            f'--zone={zone}',
+            '--quiet',
+        ],
         timeout=600,
     )
     if is_not_found(result):
@@ -186,11 +216,17 @@ def delete(shell: Shell, cfg: RunnerConfig, name: str, zone: str) -> bool:
 
 
 def operations(shell: Shell, cfg: RunnerConfig, name: str, zone: str) -> list[dict[str, Any]]:
-    """Zone operations that targeted this instance (insert, delete, compute.instances.preempted…)."""
+    """Zone operations that targeted this instance (insert, delete, …instances.preempted)."""
     ops = gcloud_json(
         shell,
-        ['compute', 'operations', 'list', f'--project={cfg.project}', f'--zones={zone}',
-         f'--filter=targetLink ~ /instances/{name}$'],
+        [
+            'compute',
+            'operations',
+            'list',
+            f'--project={cfg.project}',
+            f'--zones={zone}',
+            f'--filter=targetLink ~ /instances/{name}$',
+        ],
     )
     return sorted(ops or [], key=lambda op: op.get('insertTime', ''))
 
@@ -202,7 +238,9 @@ def end_time(ops: Sequence[Mapping[str, Any]]) -> tuple[str | None, bool]:
     delete op (termination action DELETE deletes in the same step) gives the preemption time.
     """
     preempted = [op for op in ops if op.get('operationType') == 'compute.instances.preempted']
-    deletes = [op for op in ops if op.get('operationType') == 'delete' and op.get('status') == 'DONE']
+    deletes = [
+        op for op in ops if op.get('operationType') == 'delete' and op.get('status') == 'DONE'
+    ]
     if deletes:
         return max(op.get('endTime') or op['insertTime'] for op in deletes), bool(preempted)
     if preempted:
@@ -212,7 +250,16 @@ def end_time(ops: Sequence[Mapping[str, Any]]) -> tuple[str | None, bool]:
 
 def list_runners(shell: Shell, cfg: RunnerConfig) -> list[dict[str, Any]]:
     """Every instance in the project that carries the runner label."""
-    return gcloud_json(
-        shell,
-        ['compute', 'instances', 'list', f'--project={cfg.project}', f'--filter=labels.{RUN_LABEL}:*'],
-    ) or []
+    return (
+        gcloud_json(
+            shell,
+            [
+                'compute',
+                'instances',
+                'list',
+                f'--project={cfg.project}',
+                f'--filter=labels.{RUN_LABEL}:*',
+            ],
+        )
+        or []
+    )

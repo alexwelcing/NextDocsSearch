@@ -72,7 +72,9 @@ class RateCard:
 
     def to_json(self) -> dict[str, Any]:
         out = asdict(self)
-        out['components'] = [{**asdict(c), 'usd_per_hour': round(c.usd_per_hour, 6)} for c in self.components]
+        out['components'] = [
+            {**asdict(c), 'usd_per_hour': round(c.usd_per_hour, 6)} for c in self.components
+        ]
         out['usd_per_hour'] = round(self.usd_per_hour, 6)
         return out
 
@@ -112,8 +114,11 @@ def _descriptions(shape: str, gpu: str, disk_type: str, provisioning: str) -> di
     return {
         'vcpu': rf'{prefix}{family} Instance Core running in \w[\w ]*',
         'ram': rf'{prefix}{family} Instance Ram running in \w[\w ]*',
-        'gpu': (rf'{_GPU[gpu]} attached to Spot Preemptible VMs running in \w[\w ]*' if spot
-                else rf'{_GPU[gpu]} running in \w[\w ]*'),
+        'gpu': (
+            rf'{_GPU[gpu]} attached to Spot Preemptible VMs running in \w[\w ]*'
+            if spot
+            else rf'{_GPU[gpu]} running in \w[\w ]*'
+        ),
         'disk': re.escape(_DISK[disk_type]),
     }
 
@@ -124,24 +129,41 @@ def rate_card(
     """The rate of cfg.shape (+ boot disk) in cfg.region under `provisioning`, from catalog SKUs."""
     usage = {'spot': 'Preemptible', 'on_demand': 'OnDemand'}[provisioning]
     spec = cfg.spec
-    quantity = {'vcpu': spec['vcpus'], 'ram': spec['ram_gib'], 'gpu': spec['gpus'], 'disk': cfg.boot_disk_gb}
+    quantity = {
+        'vcpu': spec['vcpus'],
+        'ram': spec['ram_gib'],
+        'gpu': spec['gpus'],
+        'disk': cfg.boot_disk_gb,
+    }
     in_region = [s for s in skus if cfg.region in s.get('serviceRegions', ())]
     components = []
     effective = set()
-    for item, pattern in _descriptions(cfg.shape, cfg.gpu, cfg.boot_disk_type, provisioning).items():
+    for item, pattern in _descriptions(
+        cfg.shape, cfg.gpu, cfg.boot_disk_type, provisioning
+    ).items():
         # Disks have no spot SKU: a spot VM's boot disk bills at the standard rate.
         want_usage = 'OnDemand' if item == 'disk' else usage
         matches = [
-            s for s in in_region
-            if re.fullmatch(pattern, s['description']) and s['category'].get('usageType') == want_usage
+            s
+            for s in in_region
+            if re.fullmatch(pattern, s['description'])
+            and s['category'].get('usageType') == want_usage
         ]
         if len(matches) != 1:
             names = sorted(s['description'] for s in matches)
-            raise BillingError(f'expected one {provisioning} {item} SKU in {cfg.region}, found {names or "none"}')
+            raise BillingError(
+                f'expected one {provisioning} {item} SKU in {cfg.region}, found {names or "none"}'
+            )
         sku = matches[0]
         effective.add(_price(sku)[2])
-        components.append(Component(item, sku['skuId'], sku['description'], quantity[item], _usd_per_unit_hour(sku)))
-    return RateCard(cfg.shape, cfg.region, provisioning, tuple(components), max(effective), fetched_utc)
+        components.append(
+            Component(
+                item, sku['skuId'], sku['description'], quantity[item], _usd_per_unit_hour(sku)
+            )
+        )
+    return RateCard(
+        cfg.shape, cfg.region, provisioning, tuple(components), max(effective), fetched_utc
+    )
 
 
 # --- fetching -------------------------------------------------------------------------------
@@ -155,7 +177,9 @@ def _urllib_fetch(url: str, headers: Mapping[str, str]) -> Mapping[str, Any]:
         return json.load(response)
 
 
-def fetch_skus(shell: Shell, *, fetch: Fetch = _urllib_fetch, service: str = COMPUTE_SERVICE) -> list[dict[str, Any]]:
+def fetch_skus(
+    shell: Shell, *, fetch: Fetch = _urllib_fetch, service: str = COMPUTE_SERVICE
+) -> list[dict[str, Any]]:
     """Every SKU of a service, all pages, priced in USD.
 
     The bearer token comes from the active gcloud credential and only ever lives in this
@@ -167,14 +191,18 @@ def fetch_skus(shell: Shell, *, fetch: Fetch = _urllib_fetch, service: str = COM
     page = ''
     while True:
         query = {'currencyCode': 'USD', 'pageSize': '5000', **({'pageToken': page} if page else {})}
-        body = fetch(f'{CATALOG_URL.format(service=service)}?{urllib.parse.urlencode(query)}', headers)
+        body = fetch(
+            f'{CATALOG_URL.format(service=service)}?{urllib.parse.urlencode(query)}', headers
+        )
         skus.extend(body.get('skus', []))
         page = body.get('nextPageToken', '')
         if not page:
             return skus
 
 
-def rate_cards(skus: Sequence[Mapping[str, Any]], cfg: RunnerConfig, *, fetched_utc: str) -> dict[str, RateCard]:
+def rate_cards(
+    skus: Sequence[Mapping[str, Any]], cfg: RunnerConfig, *, fetched_utc: str
+) -> dict[str, RateCard]:
     return {p: rate_card(skus, cfg, p, fetched_utc=fetched_utc) for p in ('spot', 'on_demand')}
 
 
@@ -196,4 +224,8 @@ def book(created_utc: str, deleted_utc: str, card: RateCard) -> dict[str, float]
     """The cost fields of one report.vm.instances[] entry."""
     minutes = billed_minutes(created_utc, deleted_utc)
     rate = card.usd_per_hour
-    return {'billed_min': minutes, 'rate_usd_per_h': round(rate, 4), 'usd': round(minutes / 60 * rate, 2)}
+    return {
+        'billed_min': minutes,
+        'rate_usd_per_h': round(rate, 4),
+        'usd': round(minutes / 60 * rate, 2),
+    }

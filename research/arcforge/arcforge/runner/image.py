@@ -33,7 +33,9 @@ def cuda_version(dockerfile: Path = DOCKERFILE) -> str:
 
 
 def locked_version(package: str, lock: Path = UV_LOCK) -> str | None:
-    match = re.search(rf'^name = "{re.escape(package)}"\nversion = "([^"]+)"', lock.read_text(), re.M)
+    match = re.search(
+        rf'^name = "{re.escape(package)}"\nversion = "([^"]+)"', lock.read_text(), re.M
+    )
     return match.group(1) if match else None
 
 
@@ -46,7 +48,10 @@ def tag_for(commit: str) -> str:
 
 def submit_argv(cfg: RunnerConfig, commit: str, source: Path = PACKAGE_ROOT) -> list[str]:
     return [
-        'gcloud', 'builds', 'submit', str(source),
+        'gcloud',
+        'builds',
+        'submit',
+        str(source),
         f'--project={cfg.project}',
         f'--region={cfg.region}',
         '--config=container/cloudbuild.yaml',
@@ -70,12 +75,18 @@ def build(
     """Submit, wait for the build, and return the pin of what it pushed (not yet written)."""
     submitted = check(shell.run(submit_argv(cfg, commit), timeout=900)).json()
     build_id = submitted['id'] if 'id' in submitted else submitted['metadata']['build']['id']
-    log(f'image: Cloud Build {build_id} submitted (logs: gcloud builds log {build_id} --region={cfg.region})')
+    log(
+        f'image: Cloud Build {build_id} submitted '
+        f'(logs: gcloud builds log {build_id} --region={cfg.region})'
+    )
     status = submitted.get('status', 'QUEUED')
     info = submitted
     while status not in DONE:
         sleep(poll_seconds)
-        info = gcloud_json(shell, ['builds', 'describe', build_id, f'--project={cfg.project}', f'--region={cfg.region}'])
+        info = gcloud_json(
+            shell,
+            ['builds', 'describe', build_id, f'--project={cfg.project}', f'--region={cfg.region}'],
+        )
         if info.get('status') != status:
             status = info.get('status', '?')
             log(f'image: {status}')
@@ -84,7 +95,9 @@ def build(
     images = (info.get('results') or {}).get('images') or []
     repository = image_repository(cfg.project, cfg.region)
     # The commit tag and the buildcache tag name the same manifest.
-    digests = sorted({i['digest'] for i in images if i.get('name', '').startswith(repository + ':')})
+    digests = sorted(
+        {i['digest'] for i in images if i.get('name', '').startswith(repository + ':')}
+    )
     if len(digests) != 1:
         raise BuildError(f'expected one pushed {repository} digest, got {images}')
     return pins.ImagePin(

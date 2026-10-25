@@ -47,16 +47,29 @@ def render_script() -> str:
 
 def builder_argv(cfg: RunnerConfig, name: str, zone: str, script: Path) -> list[str]:
     return [
-        'gcloud', 'compute', 'instances', 'create', name,
-        f'--project={cfg.project}', f'--zone={zone}', f'--machine-type={BUILDER_SHAPE}',
+        'gcloud',
+        'compute',
+        'instances',
+        'create',
+        name,
+        f'--project={cfg.project}',
+        f'--zone={zone}',
+        f'--machine-type={BUILDER_SHAPE}',
         '--provisioning-model=STANDARD',
         # The safety net: a builder that hangs is deleted after an hour, disk and all.
-        '--max-run-duration=3600s', '--instance-termination-action=DELETE',
-        f'--image={SOURCE_IMAGE}', f'--image-project={SOURCE_PROJECT}',
-        '--boot-disk-size=60GB', '--boot-disk-type=pd-balanced',  # auto-deleted with the builder
+        '--max-run-duration=3600s',
+        '--instance-termination-action=DELETE',
+        f'--image={SOURCE_IMAGE}',
+        f'--image-project={SOURCE_PROJECT}',
+        '--boot-disk-size=60GB',
+        '--boot-disk-type=pd-balanced',  # auto-deleted with the builder
         f'--network-interface=network={cfg.network}',  # an external address: apt needs the internet
-        '--no-service-account', '--no-scopes',
-        '--labels=' + ','.join(f'{k}={v}' for k, v in sorted({**cfg.labels, 'arcforge-run': 'base-image'}.items())),
+        '--no-service-account',
+        '--no-scopes',
+        '--labels='
+        + ','.join(
+            f'{k}={v}' for k, v in sorted({**cfg.labels, 'arcforge-run': 'base-image'}.items())
+        ),
         '--metadata=block-project-ssh-keys=TRUE',
         f'--metadata-from-file=startup-script={script}',
         '--format=json',
@@ -67,8 +80,14 @@ _VERDICT = re.compile(r'(?:^|startup-script: )ARCFORGE-BASE (.+)$', re.M)
 
 
 def _wait_for_verdict(
-    shell: Shell, cfg: RunnerConfig, builder: str, zone: str, *, sleep: Callable[[float], None],
-    poll_seconds: float, timeout_s: float,
+    shell: Shell,
+    cfg: RunnerConfig,
+    builder: str,
+    zone: str,
+    *,
+    sleep: Callable[[float], None],
+    poll_seconds: float,
+    timeout_s: float,
 ) -> str:
     """The builder's last ARCFORGE-BASE line, once it has powered off.
 
@@ -83,18 +102,36 @@ def _wait_for_verdict(
             raise BaseImageError(f'{builder} disappeared before finishing')
         status = resource.get('status')
         if status in ('RUNNING', 'STOPPING'):
-            serial = shell.run(['gcloud', 'compute', 'instances', 'get-serial-port-output', builder,
-                                f'--project={cfg.project}', f'--zone={zone}'], timeout=120)
+            serial = shell.run(
+                [
+                    'gcloud',
+                    'compute',
+                    'instances',
+                    'get-serial-port-output',
+                    builder,
+                    f'--project={cfg.project}',
+                    f'--zone={zone}',
+                ],
+                timeout=120,
+            )
             lines = _VERDICT.findall(serial.stdout) if serial.ok else []
             if lines:
                 verdict = lines[-1].strip()
                 # What the script printed just before its verdict: the reason, on a failure.
-                script_lines = [ln.split('startup-script: ', 1)[1] for ln in serial.stdout.splitlines() if 'startup-script: ' in ln]
+                script_lines = [
+                    ln.split('startup-script: ', 1)[1]
+                    for ln in serial.stdout.splitlines()
+                    if 'startup-script: ' in ln
+                ]
                 context = '\n'.join(script_lines[-40:])
         if status == 'TERMINATED':
             if not verdict:
                 return 'no ARCFORGE-BASE line seen on the serial port before it stopped'
-            return verdict if verdict.startswith('OK') else f'{verdict}\n--- builder output ---\n{context}'
+            return (
+                verdict
+                if verdict.startswith('OK')
+                else f'{verdict}\n--- builder output ---\n{context}'
+            )
         if waited > timeout_s:
             raise BaseImageError(f'{builder} still {status} after {timeout_s:.0f}s')
         sleep(poll_seconds)
@@ -112,7 +149,7 @@ def build(
     timeout_s: float = 1800,
     log: Callable[[str], None] = print,
 ) -> str:
-    """Build the image and return its name. The builder VM (and with it its disk) is always deleted."""
+    """Build the image and return its name. The builder VM (and its disk) is always deleted."""
     name = image_name(date, code_sha)
     builder = lifecycle.instance_name('base', code_sha)
     zone = cfg.zone_names[0]
@@ -122,18 +159,33 @@ def build(
         check(shell.run(builder_argv(cfg, builder, zone, script), timeout=600))
     log(f'base-image: builder {builder} started in {zone}')
     try:
-        verdict = _wait_for_verdict(shell, cfg, builder, zone, sleep=sleep, poll_seconds=poll_seconds, timeout_s=timeout_s)
+        verdict = _wait_for_verdict(
+            shell, cfg, builder, zone, sleep=sleep, poll_seconds=poll_seconds, timeout_s=timeout_s
+        )
         if not verdict.startswith('OK'):
             raise BaseImageError(f'builder failed: {verdict}')
         log(f'base-image: {verdict}')
-        check(shell.run([
-            'gcloud', 'compute', 'images', 'create', name, f'--project={cfg.project}',
-            f'--source-disk={builder}', f'--source-disk-zone={zone}', f'--family={FAMILY}',
-            f'--storage-location={cfg.region}',
-            '--labels=' + ','.join(f'{k}={v}' for k, v in sorted(cfg.labels.items())),
-            f'--description=arcforge runner boot image: {SOURCE_IMAGE} + docker.io {DOCKER_VERSION} + '
-            f'nvidia-container-toolkit {CTK_VERSION}; built from {code_sha[:12]}',
-        ], timeout=1800))
+        check(
+            shell.run(
+                [
+                    'gcloud',
+                    'compute',
+                    'images',
+                    'create',
+                    name,
+                    f'--project={cfg.project}',
+                    f'--source-disk={builder}',
+                    f'--source-disk-zone={zone}',
+                    f'--family={FAMILY}',
+                    f'--storage-location={cfg.region}',
+                    '--labels=' + ','.join(f'{k}={v}' for k, v in sorted(cfg.labels.items())),
+                    f'--description=arcforge runner boot image: {SOURCE_IMAGE} + '
+                    f'docker.io {DOCKER_VERSION} + '
+                    f'nvidia-container-toolkit {CTK_VERSION}; built from {code_sha[:12]}',
+                ],
+                timeout=1800,
+            )
+        )
         log(f'base-image: created {name} (family {FAMILY})')
         return name
     finally:

@@ -42,7 +42,9 @@ def test_image_pin_round_trip(tmp_path):
     path = tmp_path / 'image.json'
     path.write_text(json.dumps({'comment': 'keep me', 'repository': 'r', 'digest': None}))
     assert pins.load_image(path).ref is None
-    pin = pins.ImagePin(repository='r', digest='sha256:' + 'd' * 64, built_from='abc', cuda='13.0.3', torch='2.14.1')
+    pin = pins.ImagePin(
+        repository='r', digest='sha256:' + 'd' * 64, built_from='abc', cuda='13.0.3', torch='2.14.1'
+    )
     pins.write_image(pin, path)
     again = pins.load_image(path)
     assert again.ref == 'r@sha256:' + 'd' * 64 and again.torch == '2.14.1'

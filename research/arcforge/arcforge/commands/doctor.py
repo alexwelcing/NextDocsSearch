@@ -1,4 +1,4 @@
-"""`arcforge doctor` — preflight: gcloud, Vertex, Secret Manager, quota, bucket, image, mirror, age, uv."""
+"""`arcforge doctor` — the read-only launch preflight (checks in arcforge/runner/doctor.py)."""
 
 from __future__ import annotations
 
@@ -30,7 +30,11 @@ def register(subparsers) -> None:
             'grants nothing, and prints the fix for anything missing. Exits 1 on any FAIL.'
         ),
     )
-    parser.add_argument('--local', action='store_true', help='only the local tools (no cloud calls)')
-    parser.add_argument('--json', action='store_true', help='machine-readable output (the Owner Desk reads this)')
+    parser.add_argument(
+        '--local', action='store_true', help='only the local tools (no cloud calls)'
+    )
+    parser.add_argument(
+        '--json', action='store_true', help='machine-readable output (the Owner Desk reads this)'
+    )
     parser.add_argument('--project', default=PROJECT, help=f'GCP project (default: {PROJECT})')
     parser.set_defaults(func=run)

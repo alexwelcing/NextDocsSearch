@@ -59,7 +59,9 @@ class RunnerConfig:
     service_account: str = f'{RUNNER_SA_NAME}@{PROJECT}.iam.gserviceaccount.com'
     network: str = 'default'
     bucket: str = BUCKET
-    labels: Mapping[str, str] = field(default_factory=lambda: {'managed-by': 'claude', 'purpose': 'arcforge'})
+    labels: Mapping[str, str] = field(
+        default_factory=lambda: {'managed-by': 'claude', 'purpose': 'arcforge'}
+    )
 
     def __post_init__(self) -> None:
         if self.shape not in SHAPES:
@@ -69,9 +71,17 @@ class RunnerConfig:
         if self.fallback not in (None, 'on_demand'):
             raise ConfigError("compute.fallback must be 'on_demand' or 'none'")
         if not 0 < self.max_run_hours <= 3:
-            raise ConfigError('compute.max_run_hours must be in (0, 3]: a lost laptop must never leave a GPU billing')
-        if not self.zones or any(not re.fullmatch(rf'{re.escape(self.region)}-[a-f]', z) for z in self.zones):
-            raise ConfigError(f'compute.zones must be zones of {self.region}, e.g. [{self.region}-a, {self.region}-b]')
+            raise ConfigError(
+                'compute.max_run_hours must be in (0, 3]: '
+                'a lost laptop must never leave a GPU billing'
+            )
+        if not self.zones or any(
+            not re.fullmatch(rf'{re.escape(self.region)}-[a-f]', z) for z in self.zones
+        ):
+            raise ConfigError(
+                f'compute.zones must be zones of {self.region}, '
+                f'e.g. [{self.region}-a, {self.region}-b]'
+            )
 
     @classmethod
     def from_compute(cls, compute: Mapping[str, Any] | None, **overrides: Any) -> RunnerConfig:

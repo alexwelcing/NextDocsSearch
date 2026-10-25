@@ -37,7 +37,16 @@ def stale(instances: list[dict[str, Any]], *, now_utc: str, max_age_hours: float
         age = (now - billing.parse_utc(inst['creationTimestamp'])).total_seconds() / 3600
         if age >= max_age_hours:
             zone = inst['zone'].rsplit('/', 1)[-1]
-            out.append(Stale(inst['name'], zone, inst.get('status', '?'), inst['creationTimestamp'], round(age, 2), run))
+            out.append(
+                Stale(
+                    inst['name'],
+                    zone,
+                    inst.get('status', '?'),
+                    inst['creationTimestamp'],
+                    round(age, 2),
+                    run,
+                )
+            )
     return sorted(out, key=lambda s: s.created_utc)
 
 

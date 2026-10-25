@@ -10,7 +10,9 @@ from arcforge.runner.pins import ModelPin
 from arcforge.runner.shell import Result
 
 REV = 'c202236235762e1c871ad0ccb60c8ee5ba337b9a'
-PIN = ModelPin(key='toy', repo='Org/Toy-1B', revision=REV, role='test', exclude=('consolidated.safetensors',))
+PIN = ModelPin(
+    key='toy', repo='Org/Toy-1B', revision=REV, role='test', exclude=('consolidated.safetensors',)
+)
 WEIGHTS = b'\x00weights' * 1000
 CONFIG = b'{"hidden": 8}\n'
 
@@ -20,12 +22,23 @@ def git_blob(data: bytes) -> str:
 
 
 HUB_INFO = {
-    'id': 'Org/Toy-1B', 'sha': REV, 'gated': False, 'lastModified': '2026-03-02T00:51:43.000Z',
+    'id': 'Org/Toy-1B',
+    'sha': REV,
+    'gated': False,
+    'lastModified': '2026-03-02T00:51:43.000Z',
     'siblings': [
         {'rfilename': 'config.json', 'size': len(CONFIG), 'blobId': git_blob(CONFIG)},
-        {'rfilename': 'model.safetensors', 'size': len(WEIGHTS), 'blobId': 'x',
-         'lfs': {'sha256': hashlib.sha256(WEIGHTS).hexdigest(), 'size': len(WEIGHTS)}},
-        {'rfilename': 'consolidated.safetensors', 'size': 99, 'lfs': {'sha256': '0' * 64, 'size': 99}},
+        {
+            'rfilename': 'model.safetensors',
+            'size': len(WEIGHTS),
+            'blobId': 'x',
+            'lfs': {'sha256': hashlib.sha256(WEIGHTS).hexdigest(), 'size': len(WEIGHTS)},
+        },
+        {
+            'rfilename': 'consolidated.safetensors',
+            'size': 99,
+            'lfs': {'sha256': '0' * 64, 'size': 99},
+        },
     ],
 }
 
@@ -47,7 +60,10 @@ def hub(files=None, info=None):
 
 def test_resolve_lists_wanted_files_and_checks_the_revision():
     resolved = mirror.resolve(PIN, open_url=hub())
-    assert [f.path for f in resolved.files] == ['config.json', 'model.safetensors']  # consolidated excluded
+    assert [f.path for f in resolved.files] == [
+        'config.json',
+        'model.safetensors',
+    ]  # consolidated excluded
     assert resolved.files[1].sha256 == hashlib.sha256(WEIGHTS).hexdigest()
     assert resolved.total_bytes == len(CONFIG) + len(WEIGHTS)
     with pytest.raises(mirror.MirrorError, match='resolved'):
@@ -69,9 +85,17 @@ def test_gcs_layout_is_repo_at_revision():
 def test_download_verifies_lfs_and_git_hashes(tmp_path):
     resolved = mirror.resolve(PIN, open_url=hub())
     config, weights = resolved.files
-    assert mirror.download(PIN, weights, tmp_path / 'w', open_url=hub()) == hashlib.sha256(WEIGHTS).hexdigest()
-    assert mirror.download(PIN, config, tmp_path / 'c', open_url=hub()) == hashlib.sha256(CONFIG).hexdigest()
-    corrupt = hub(files={'config.json': b'{"hidden": 9}\n', 'model.safetensors': WEIGHTS[:-1] + b'!'})
+    assert (
+        mirror.download(PIN, weights, tmp_path / 'w', open_url=hub())
+        == hashlib.sha256(WEIGHTS).hexdigest()
+    )
+    assert (
+        mirror.download(PIN, config, tmp_path / 'c', open_url=hub())
+        == hashlib.sha256(CONFIG).hexdigest()
+    )
+    corrupt = hub(
+        files={'config.json': b'{"hidden": 9}\n', 'model.safetensors': WEIGHTS[:-1] + b'!'}
+    )
     with pytest.raises(mirror.MirrorError, match='sha256'):
         mirror.download(PIN, weights, tmp_path / 'w', open_url=corrupt)
     with pytest.raises(mirror.MirrorError, match='git blob'):
@@ -101,12 +125,17 @@ class Bucket:
 
     def cat(self, argv):
         obj = self.objects.get(argv[3])
-        return Result(argv, 0, obj[0].decode()) if obj else Result(argv, 1, '', 'matched no objects')
+        return (
+            Result(argv, 0, obj[0].decode()) if obj else Result(argv, 1, '', 'matched no objects')
+        )
 
     def ls(self, argv):
         prefix = argv[4].removesuffix('**')
-        rows = [{'name': url.removeprefix('gs://witching-606c6-arcforge/'), 'generation': str(gen)}
-                for url, (_, gen) in self.objects.items() if url.startswith(prefix)]
+        rows = [
+            {'name': url.removeprefix('gs://witching-606c6-arcforge/'), 'generation': str(gen)}
+            for url, (_, gen) in self.objects.items()
+            if url.startswith(prefix)
+        ]
         return Result(argv, 0, json.dumps(rows))
 
     def describe(self, argv):
@@ -116,11 +145,22 @@ class Bucket:
 def test_mirror_uploads_verified_files_then_the_manifest(shell, tmp_path):
     bucket = Bucket(shell)
     resolved = mirror.resolve(PIN, open_url=hub())
-    manifest = mirror.mirror(shell, resolved, bucket='witching-606c6-arcforge', workdir=tmp_path,
-                             now_utc='2026-10-24T12:00:00Z', open_url=hub(), log=lambda _m: None)
+    manifest = mirror.mirror(
+        shell,
+        resolved,
+        bucket='witching-606c6-arcforge',
+        workdir=tmp_path,
+        now_utc='2026-10-24T12:00:00Z',
+        open_url=hub(),
+        log=lambda _m: None,
+    )
     prefix = PIN.gcs_prefix()
     uploads = [c[4] for c in shell.called('storage cp')]
-    assert uploads == [prefix + 'config.json', prefix + 'model.safetensors', prefix + 'MANIFEST.json']  # manifest last
+    assert uploads == [
+        prefix + 'config.json',
+        prefix + 'model.safetensors',
+        prefix + 'MANIFEST.json',
+    ]  # manifest last
     assert bucket.objects[prefix + 'model.safetensors'][0] == WEIGHTS
     assert [f['path'] for f in manifest['files']] == ['config.json', 'model.safetensors']
     assert manifest['files'][1]['sha256'] == hashlib.sha256(WEIGHTS).hexdigest()
@@ -132,19 +172,45 @@ def test_mirror_uploads_verified_files_then_the_manifest(shell, tmp_path):
 def test_rerun_skips_what_is_already_mirrored(shell, tmp_path):
     Bucket(shell)
     resolved = mirror.resolve(PIN, open_url=hub())
-    mirror.mirror(shell, resolved, bucket='witching-606c6-arcforge', workdir=tmp_path, now_utc='t', open_url=hub(), log=lambda _m: None)
+    mirror.mirror(
+        shell,
+        resolved,
+        bucket='witching-606c6-arcforge',
+        workdir=tmp_path,
+        now_utc='t',
+        open_url=hub(),
+        log=lambda _m: None,
+    )
     again = hub()
-    mirror.mirror(shell, resolved, bucket='witching-606c6-arcforge', workdir=tmp_path, now_utc='t', open_url=again, log=lambda _m: None)
+    mirror.mirror(
+        shell,
+        resolved,
+        bucket='witching-606c6-arcforge',
+        workdir=tmp_path,
+        now_utc='t',
+        open_url=again,
+        log=lambda _m: None,
+    )
     assert again.opened == []  # nothing downloaded the second time
 
 
 def test_verify_catches_a_replaced_object(shell, tmp_path):
     bucket = Bucket(shell)
     resolved = mirror.resolve(PIN, open_url=hub())
-    mirror.mirror(shell, resolved, bucket='witching-606c6-arcforge', workdir=tmp_path, now_utc='t', open_url=hub(), log=lambda _m: None)
+    mirror.mirror(
+        shell,
+        resolved,
+        bucket='witching-606c6-arcforge',
+        workdir=tmp_path,
+        now_utc='t',
+        open_url=hub(),
+        log=lambda _m: None,
+    )
     url = PIN.gcs_prefix() + 'model.safetensors'
     bucket.objects[url] = (b'tampered', 9999)
-    assert mirror.verify(shell, PIN, 'witching-606c6-arcforge') == ['model.safetensors: generation 9999 != manifest 1002']
+    assert mirror.verify(shell, PIN, 'witching-606c6-arcforge') == [
+        'model.safetensors: generation 9999 != manifest 1002'
+    ]
 
 
 def test_gated_repos_are_refused(shell, tmp_path):

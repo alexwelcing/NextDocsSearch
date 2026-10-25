@@ -1,7 +1,8 @@
 """RunnerSession: one run's VMs, from creation to the exit-trap delete, with preemption recovery.
 
-    with RunnerSession(RunnerConfig.from_compute(cfg['compute']), run_id='r00', code_sha=sha) as runner:
-        result = runner.run(Job(argv=('run', 'configs/r00.yaml', '--on-vm'), image=pins.load_image().ref))
+    cfg = RunnerConfig.from_compute(config['compute'])
+    with RunnerSession(cfg, run_id='r00', code_sha=sha) as runner:
+        result = runner.run(Job(argv=('run', 'config.json'), image=pins.load_image().ref))
     report['vm'] = runner.vm_report()
 
 What it guarantees:
@@ -95,13 +96,17 @@ class RunnerSession:
     # --- the exit trap ---------------------------------------------------------------------
 
     def __enter__(self) -> RunnerSession:
+        # Rates first: if the catalog is unreachable the run never starts, and no handler is left
+        # installed by an __enter__ that raised (__exit__ would not run to restore it).
+        if self.rates is None:
+            self.rates = billing.rate_cards(
+                billing.fetch_skus(self.shell), self.cfg, fetched_utc=self.clock()
+            )
         for sig in (signal.SIGTERM, signal.SIGHUP):
             try:
                 self._saved_handlers[sig] = signal.signal(sig, self._on_signal)
             except ValueError:  # not the main thread: the caller owns signal handling
                 break
-        if self.rates is None:
-            self.rates = billing.rate_cards(billing.fetch_skus(self.shell), self.cfg, fetched_utc=self.clock())
         return self
 
     def __exit__(self, *_exc: object) -> None:
@@ -139,7 +144,9 @@ class RunnerSession:
                 except Exception as error:  # noqa: BLE001 — keep deleting the rest
                     failed.append(f'{inst.name} ({error})')
         if failed:
-            raise RunnerError('could not delete ' + ', '.join(failed) + '; run `arcforge gc` to retry')
+            raise RunnerError(
+                'could not delete ' + ', '.join(failed) + '; run `arcforge gc` to retry'
+            )
 
     # --- running a job ---------------------------------------------------------------------
 
@@ -157,7 +164,10 @@ class RunnerSession:
             if outcome in ('done', 'failed'):
                 return JobResult(outcome, exit_code, list(self.instances))
             if outcome == 'expired':
-                raise RunnerError(f'{inst.name} reached --max-run-duration ({self.cfg.max_run_hours} h) before finishing')
+                raise RunnerError(
+                    f'{inst.name} reached --max-run-duration ({self.cfg.max_run_hours} h) '
+                    'before finishing'
+                )
             if inst.provisioning == 'spot':
                 spot_preemptions += 1
             self.log(f'runner: {inst.name} was {outcome}; recreating and resuming from the cache')
@@ -166,7 +176,11 @@ class RunnerSession:
     def _create(self, job: Job, attempt: int, *, spot: bool) -> Instance:
         name = lifecycle.instance_name(self.run_id, self.code_sha, attempt)
         script = Path(self._scratch.name) / f'startup-{attempt}.sh'
-        script.write_text(bootstrap.render(job, run_id=self.run_id, attempt=attempt, status_url=self.status_url(name)))
+        script.write_text(
+            bootstrap.render(
+                job, run_id=self.run_id, attempt=attempt, status_url=self.status_url(name)
+            )
+        )
         inst = lifecycle.create(
             self.shell,
             self.cfg,
@@ -181,7 +195,9 @@ class RunnerSession:
         return inst
 
     def read_status(self, inst: Instance, obj: str = 'status.json') -> dict[str, Any] | None:
-        result = self.shell.run(['gcloud', 'storage', 'cat', f'{self.status_url(inst.name)}/{obj}'], timeout=60)
+        result = self.shell.run(
+            ['gcloud', 'storage', 'cat', f'{self.status_url(inst.name)}/{obj}'], timeout=60
+        )
         if not result.ok:
             return None
         try:
@@ -197,7 +213,9 @@ class RunnerSession:
         return None
 
     def _age_seconds(self, inst: Instance) -> float:
-        return (billing.parse_utc(self.clock()) - billing.parse_utc(inst.created_utc)).total_seconds()
+        return (
+            billing.parse_utc(self.clock()) - billing.parse_utc(inst.created_utc)
+        ).total_seconds()
 
     def _wait(self, inst: Instance, on_poll: PollHook | None) -> tuple[str, int | None]:
         last_phase = None
@@ -216,7 +234,9 @@ class RunnerSession:
                         return finished
                     if self._age_seconds(inst) >= self.cfg.max_run_seconds - EXPIRY_MARGIN_S:
                         return 'expired', None
-                    _, preempted = lifecycle.end_time(lifecycle.operations(self.shell, self.cfg, inst.name, inst.zone))
+                    _, preempted = lifecycle.end_time(
+                        lifecycle.operations(self.shell, self.cfg, inst.name, inst.zone)
+                    )
                     return ('preempted' if preempted else 'lost'), None
                 errors = 0
             except CommandError as error:
@@ -233,7 +253,9 @@ class RunnerSession:
         """Make sure the instance is gone, then record when it stopped billing."""
         inst.ended = outcome
         lifecycle.delete(self.shell, self.cfg, inst.name, inst.zone)
-        ended, _ = lifecycle.end_time(lifecycle.operations(self.shell, self.cfg, inst.name, inst.zone))
+        ended, _ = lifecycle.end_time(
+            lifecycle.operations(self.shell, self.cfg, inst.name, inst.zone)
+        )
         inst.deleted_utc = ended or self.clock()
         self.log(f'runner: {inst.name} deleted ({outcome})')
 
@@ -267,19 +289,22 @@ class RunnerSession:
         """One arc-report/1 cost line per instance, provider 'gcp', at the booked actual rate."""
         lines = []
         for booked in self.vm_report()['instances']:
-            lines.append({
-                'stage': stage,
-                'item': f'vm {booked["name"]} ({booked["provisioning"].lower()}, {self.cfg.shape})',
-                'provider': 'gcp',
-                'endpoint': self.cfg.region,
-                'model': None,
-                'tokens_in': 0,
-                'tokens_out': 0,
-                'gpu_min': booked['billed_min'],
-                'usd': booked['usd'],
-                'cached': False,
-                'dividend': False,
-            })
+            lines.append(
+                {
+                    'stage': stage,
+                    'item': f'vm {booked["name"]} '
+                    f'({booked["provisioning"].lower()}, {self.cfg.shape})',
+                    'provider': 'gcp',
+                    'endpoint': self.cfg.region,
+                    'model': None,
+                    'tokens_in': 0,
+                    'tokens_out': 0,
+                    'gpu_min': booked['billed_min'],
+                    'usd': booked['usd'],
+                    'cached': False,
+                    'dividend': False,
+                }
+            )
         return lines
 
     def rates_report(self) -> dict[str, Any]:

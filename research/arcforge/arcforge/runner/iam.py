@@ -31,16 +31,20 @@ def setup_commands(cfg: RunnerConfig) -> list[str]:
         "--display-name='arcforge runner VM' --description='RE-MEANING runner VMs (arc-run-*)'",
     ]
     cmds += [
-        f'gcloud projects add-iam-policy-binding {cfg.project} --member={member} --role={role} --condition=None'
+        f'gcloud projects add-iam-policy-binding {cfg.project} --member={member} '
+        f'--role={role} --condition=None'
         for role in PROJECT_ROLES
     ]
     cmds += [
-        f'gcloud secrets add-iam-policy-binding {secret} --project={cfg.project} --member={member} --role={SECRET_ROLE}'
+        f'gcloud secrets add-iam-policy-binding {secret} --project={cfg.project} '
+        f'--member={member} --role={SECRET_ROLE}'
         for secret in SECRETS
     ]
     cmds += [
-        f'gcloud storage buckets add-iam-policy-binding gs://{cfg.bucket} --member={member} --role=roles/storage.objectAdmin',
-        f'gcloud artifacts repositories add-iam-policy-binding {AR_REPOSITORY} --project={cfg.project} '
+        f'gcloud storage buckets add-iam-policy-binding gs://{cfg.bucket} '
+        f'--member={member} --role=roles/storage.objectAdmin',
+        f'gcloud artifacts repositories add-iam-policy-binding {AR_REPOSITORY} '
+        f'--project={cfg.project} '
         f'--location={cfg.region} --member={member} --role=roles/artifactregistry.reader',
     ]
     return cmds

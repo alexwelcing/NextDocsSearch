@@ -34,9 +34,11 @@ def run(args: argparse.Namespace) -> int:
     for pin in selected:
         try:
             resolved = mirror.resolve(pin)
-            print(f'{pin.key}: {pin.repo}@{pin.revision} exists on the Hub, '
-                  f'{len(resolved.files)} files, {resolved.total_bytes / 1e9:.2f} GB'
-                  + (' (GATED)' if resolved.gated else ''))
+            print(
+                f'{pin.key}: {pin.repo}@{pin.revision} exists on the Hub, '
+                f'{len(resolved.files)} files, {resolved.total_bytes / 1e9:.2f} GB'
+                + (' (GATED)' if resolved.gated else '')
+            )
             if args.check:
                 for line in mirror.iter_lines(resolved):
                     print(line)
@@ -58,16 +60,29 @@ def register(subparsers) -> None:
         description=(
             'Copy the model revisions pinned in arcforge/runner/pinned/models.json from the '
             'Hugging Face Hub to gs://<bucket>/models/<owner>/<name>@<revision>/, verifying every '
-            'file against the Hub\'s hashes and writing MANIFEST.json last. With no KEY, mirrors '
+            "file against the Hub's hashes and writing MANIFEST.json last. With no KEY, mirrors "
             'the default pins (not the pre-named fallbacks). Run it inside us-central1 (the forge '
             'VM): the copy streams through local disk.'
         ),
     )
-    parser.add_argument('keys', nargs='*', metavar='KEY', help='model keys to mirror (default: every default pin)')
+    parser.add_argument(
+        'keys', nargs='*', metavar='KEY', help='model keys to mirror (default: every default pin)'
+    )
     parser.add_argument('--all', action='store_true', help='include the pre-named fallback models')
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument('--check', action='store_true', help='only confirm the revisions exist on the Hub and list their files')
-    mode.add_argument('--list', action='store_true', help='show each pin and whether its mirror is complete')
+    mode.add_argument(
+        '--check',
+        action='store_true',
+        help='only confirm the revisions exist on the Hub and list their files',
+    )
+    mode.add_argument(
+        '--list', action='store_true', help='show each pin and whether its mirror is complete'
+    )
     parser.add_argument('--bucket', default=BUCKET, help=f'mirror bucket (default: {BUCKET})')
-    parser.add_argument('--workdir', type=Path, default=None, help='scratch directory, one file at a time (default: ~/.cache/arcforge/mirror-tmp)')
+    parser.add_argument(
+        '--workdir',
+        type=Path,
+        default=None,
+        help='scratch directory, one file at a time (default: ~/.cache/arcforge/mirror-tmp)',
+    )
     parser.set_defaults(func=run)

@@ -34,7 +34,8 @@ class Result:
     def describe(self) -> str:
         """A one-line summary for errors: the command and the last line of stderr."""
         tail = (self.stderr or self.stdout).strip().splitlines()
-        return f'`{shlex.join(self.argv)}` exited {self.returncode}: {tail[-1] if tail else "(no output)"}'
+        last = tail[-1] if tail else '(no output)'
+        return f'`{shlex.join(self.argv)}` exited {self.returncode}: {last}'
 
 
 class Shell(Protocol):

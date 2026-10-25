@@ -40,7 +40,9 @@ class ModelPin:
 
     def __post_init__(self) -> None:
         if not _SHA1.fullmatch(self.revision):
-            raise PinError(f'{self.key}: revision must be a full 40-hex commit SHA, got {self.revision!r}')
+            raise PinError(
+                f'{self.key}: revision must be a full 40-hex commit SHA, got {self.revision!r}'
+            )
         if self.repo.count('/') != 1:
             raise PinError(f'{self.key}: repo must be owner/name, got {self.repo!r}')
 
@@ -70,10 +72,7 @@ class ImagePin:
 
 def load_models(path: Path = MODELS_FILE) -> list[ModelPin]:
     raw = json.loads(path.read_text())['models']
-    pins = [
-        ModelPin(**{**entry, 'exclude': tuple(entry.get('exclude', ()))})
-        for entry in raw
-    ]
+    pins = [ModelPin(**{**entry, 'exclude': tuple(entry.get('exclude', ()))}) for entry in raw]
     keys = [p.key for p in pins]
     if len(set(keys)) != len(keys):
         raise PinError(f'duplicate model keys in {path.name}')
@@ -87,7 +86,9 @@ def model(key: str, path: Path = MODELS_FILE) -> ModelPin:
     for pin in load_models(path):
         if pin.key == key:
             return pin
-    raise PinError(f'no pinned model {key!r} (known: {", ".join(p.key for p in load_models(path))})')
+    raise PinError(
+        f'no pinned model {key!r} (known: {", ".join(p.key for p in load_models(path))})'
+    )
 
 
 def load_image(path: Path = IMAGE_FILE) -> ImagePin:

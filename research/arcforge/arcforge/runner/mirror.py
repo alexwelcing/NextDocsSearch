@@ -74,17 +74,33 @@ def resolve(pin: ModelPin, *, open_url: Open = _open) -> Resolved:
         with open_url(url) as response:
             info = json.load(response)
     except urllib.error.HTTPError as error:
-        raise MirrorError(f'{pin.repo}@{pin.revision[:12]}: the Hub answered {error.code}') from error
+        raise MirrorError(
+            f'{pin.repo}@{pin.revision[:12]}: the Hub answered {error.code}'
+        ) from error
     if info.get('sha') != pin.revision:
-        raise MirrorError(f'{pin.repo}: asked for {pin.revision}, the Hub resolved {info.get("sha")}')
+        raise MirrorError(
+            f'{pin.repo}: asked for {pin.revision}, the Hub resolved {info.get("sha")}'
+        )
     files = []
     for sibling in info.get('siblings', []):
         path = sibling['rfilename']
         if not pin.wanted(path):
             continue
         lfs = sibling.get('lfs') or {}
-        files.append(HubFile(path, int(sibling.get('size') or lfs.get('size') or 0), lfs.get('sha256'), sibling.get('blobId')))
-    return Resolved(pin, tuple(sorted(files, key=lambda f: f.path)), bool(info.get('gated')), info.get('lastModified'))
+        files.append(
+            HubFile(
+                path,
+                int(sibling.get('size') or lfs.get('size') or 0),
+                lfs.get('sha256'),
+                sibling.get('blobId'),
+            )
+        )
+    return Resolved(
+        pin,
+        tuple(sorted(files, key=lambda f: f.path)),
+        bool(info.get('gated')),
+        info.get('lastModified'),
+    )
 
 
 def file_url(pin: ModelPin, path: str) -> str:
@@ -94,7 +110,7 @@ def file_url(pin: ModelPin, path: str) -> str:
 def download(pin: ModelPin, hub_file: HubFile, dest: Path, *, open_url: Open = _open) -> str:
     """Stream one file to dest, verifying size and hash. Returns its sha256."""
     sha256 = hashlib.sha256()
-    git = hashlib.sha1(f'blob {hub_file.size}\0'.encode())  # noqa: S324 — git's object id, not security
+    git = hashlib.sha1(f'blob {hub_file.size}\0'.encode())  # noqa: S324 — git's id, not security
     size = 0
     with open_url(file_url(pin, hub_file.path)) as response, dest.open('wb') as out:
         for chunk in iter(lambda: response.read(CHUNK), b''):
@@ -106,9 +122,11 @@ def download(pin: ModelPin, hub_file: HubFile, dest: Path, *, open_url: Open = _
     if size != hub_file.size:
         raise MirrorError(f'{hub_file.path}: got {size} bytes, the Hub lists {hub_file.size}')
     if hub_file.sha256 and digest != hub_file.sha256:
-        raise MirrorError(f'{hub_file.path}: sha256 {digest} != the Hub\'s {hub_file.sha256}')
+        raise MirrorError(f"{hub_file.path}: sha256 {digest} != the Hub's {hub_file.sha256}")
     if not hub_file.sha256 and hub_file.blob_id and git.hexdigest() != hub_file.blob_id:
-        raise MirrorError(f'{hub_file.path}: git blob id {git.hexdigest()} != the Hub\'s {hub_file.blob_id}')
+        raise MirrorError(
+            f"{hub_file.path}: git blob id {git.hexdigest()} != the Hub's {hub_file.blob_id}"
+        )
     return digest
 
 
@@ -116,7 +134,9 @@ def download(pin: ModelPin, hub_file: HubFile, dest: Path, *, open_url: Open = _
 
 
 def read_manifest(shell: Shell, pin: ModelPin, bucket: str) -> dict[str, Any] | None:
-    result = shell.run(['gcloud', 'storage', 'cat', pin.gcs_prefix(bucket) + 'MANIFEST.json'], timeout=60)
+    result = shell.run(
+        ['gcloud', 'storage', 'cat', pin.gcs_prefix(bucket) + 'MANIFEST.json'], timeout=60
+    )
     return json.loads(result.stdout) if result.ok else None
 
 
@@ -124,9 +144,13 @@ def object_generations(shell: Shell, pin: ModelPin, bucket: str) -> dict[str, st
     """{relative path: generation} of every object under the revision's prefix."""
     prefix = pin.gcs_prefix(bucket)
     name_prefix = prefix.removeprefix(f'gs://{bucket}/')
-    objects = check(shell.run(['gcloud', 'storage', 'objects', 'list', prefix + '**', '--format=json'], timeout=300)).json()
+    objects = check(
+        shell.run(
+            ['gcloud', 'storage', 'objects', 'list', prefix + '**', '--format=json'], timeout=300
+        )
+    ).json()
     return {
-        obj['name'][len(name_prefix):]: str(obj['generation'])
+        obj['name'][len(name_prefix) :]: str(obj['generation'])
         for obj in objects or []
         if obj.get('name', '').startswith(name_prefix)
     }
@@ -135,7 +159,9 @@ def object_generations(shell: Shell, pin: ModelPin, bucket: str) -> dict[str, st
 def upload(shell: Shell, local: Path, url: str) -> str:
     """Upload and return the new object's generation."""
     check(shell.run(['gcloud', 'storage', 'cp', str(local), url, '--quiet'], timeout=3600))
-    described = check(shell.run(['gcloud', 'storage', 'objects', 'describe', url, '--format=json'], timeout=60)).json()
+    described = check(
+        shell.run(['gcloud', 'storage', 'objects', 'describe', url, '--format=json'], timeout=60)
+    ).json()
     return str(described['generation'])
 
 
@@ -168,8 +194,11 @@ def mirror(
     workdir.mkdir(parents=True, exist_ok=True)
     for hub_file in resolved.files:
         old = previous.get(hub_file.path)
-        if old and old['size'] == hub_file.size and live.get(hub_file.path) == old['gcs_generation'] and (
-            not hub_file.sha256 or old['sha256'] == hub_file.sha256
+        if (
+            old
+            and old['size'] == hub_file.size
+            and live.get(hub_file.path) == old['gcs_generation']
+            and (not hub_file.sha256 or old['sha256'] == hub_file.sha256)
         ):
             log(f'mirror: {pin.key}: {hub_file.path} already mirrored')
             records.append(FileRecord(**old))
@@ -200,7 +229,10 @@ def mirror(
         upload(shell, body, prefix + 'MANIFEST.json')
     finally:
         body.unlink(missing_ok=True)
-    log(f'mirror: {pin.key}: {len(records)} files, {manifest["total_bytes"] / 1e9:.2f} GB at {prefix}')
+    log(
+        f'mirror: {pin.key}: {len(records)} files, '
+        f'{manifest["total_bytes"] / 1e9:.2f} GB at {prefix}'
+    )
     return manifest
 
 
@@ -220,7 +252,9 @@ def verify(shell: Shell, pin: ModelPin, bucket: str) -> list[str]:
 
 
 def default_workdir() -> Path:
-    return Path(os.environ.get('ARCFORGE_MIRROR_TMP', Path.home() / '.cache' / 'arcforge' / 'mirror-tmp'))
+    return Path(
+        os.environ.get('ARCFORGE_MIRROR_TMP', Path.home() / '.cache' / 'arcforge' / 'mirror-tmp')
+    )
 
 
 def select(pins: Sequence[ModelPin], keys: Sequence[str], *, all_pins: bool) -> list[ModelPin]:

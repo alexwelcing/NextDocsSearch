@@ -17,10 +17,13 @@ pytestmark = pytest.mark.skipif(BASH is None, reason='needs bash')
 # Stubs record every call to $STUB_LOG. `gcloud storage cp SRC gs://…` writes into $GCS/<path>,
 # so the test reads back exactly what the VM would have uploaded.
 STUBS = {
-    'curl': '''#!/bin/bash
-case "$*" in *instance/name*) echo arc-run-r00-3a74fb4 ;; *instance/zone*) echo projects/1/zones/us-central1-b ;; esac
-''',
-    'gcloud': '''#!/bin/bash
+    'curl': """#!/bin/bash
+case "$*" in
+  *instance/name*) echo arc-run-r00-3a74fb4 ;;
+  *instance/zone*) echo projects/1/zones/us-central1-b ;;
+esac
+""",
+    'gcloud': """#!/bin/bash
 echo "gcloud $*" >>"$STUB_LOG"
 if [ "$1 $2" = "storage cp" ] && [ "${3#gs://}" != "$3" ]; then
   echo '{"fetched": true}' >"$4"  # a download: gs:// → local
@@ -33,11 +36,11 @@ if [ "$1 $2" = "storage cp" ]; then
 fi
 if [ "$1 $2 $3" = "compute instances delete" ]; then exit "${SELF_DELETE_RC:-1}"; fi
 exit 0
-''',
-    'docker': '''#!/bin/bash
+""",
+    'docker': """#!/bin/bash
 echo "docker $*" >>"$STUB_LOG"
 if [ "$1" = run ]; then echo "container says hi"; exit "${DOCKER_RC:-0}"; fi
-''',
+""",
     'nvidia-smi': '#!/bin/bash\necho "NVIDIA L4, 580.95.05, 23034 MiB"\n',
     'poweroff': '#!/bin/bash\necho poweroff >>"$STUB_LOG"\n',
     'sleep': '#!/bin/bash\nexit 1\n',  # ends the heartbeat loop at once
@@ -61,26 +64,46 @@ def vm(tmp_path):
 
     def boot(job: Job, **extra_env: str) -> tuple[int, str, Path]:
         script = tmp_path / 'startup.sh'
-        script.write_text(render(job, run_id='r00', attempt=2, status_url='gs://bkt/runs/r00/vm/arc-run-r00-3a74fb4'))
-        out = subprocess.run([BASH, str(script)], env={**env, **extra_env}, capture_output=True, text=True, timeout=60)
+        script.write_text(
+            render(
+                job, run_id='r00', attempt=2, status_url='gs://bkt/runs/r00/vm/arc-run-r00-3a74fb4'
+            )
+        )
+        out = subprocess.run(
+            [BASH, str(script)],
+            env={**env, **extra_env},
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
         calls = Path(env['STUB_LOG']).read_text() if Path(env['STUB_LOG']).exists() else ''
-        return out.returncode, calls, tmp_path / 'gcs' / 'bkt' / 'runs' / 'r00' / 'vm' / 'arc-run-r00-3a74fb4'
+        return (
+            out.returncode,
+            calls,
+            tmp_path / 'gcs' / 'bkt' / 'runs' / 'r00' / 'vm' / 'arc-run-r00-3a74fb4',
+        )
 
     return boot
 
 
 def test_render_quotes_everything():
-    script = render(Job(image=IMAGE, argv=('run', "it's", '$HOME'), env={'X': 'a b'}, entrypoint='python'),
-                    run_id='r00', attempt=1, status_url='gs://b/runs/r00/vm/n/')
+    script = render(
+        Job(image=IMAGE, argv=('run', "it's", '$HOME'), env={'X': 'a b'}, entrypoint='python'),
+        run_id='r00',
+        attempt=1,
+        status_url='gs://b/runs/r00/vm/n/',
+    )
     assert script.startswith('#!/bin/bash\n')
     assert "ARC_ARGV=(run 'it'\"'\"'s' '$HOME')" in script
-    assert "ARC_ENTRYPOINT=(--entrypoint python)" in script
-    assert "ARC_STATUS_URL=gs://b/runs/r00/vm/n\n" in script
+    assert 'ARC_ENTRYPOINT=(--entrypoint python)' in script
+    assert 'ARC_STATUS_URL=gs://b/runs/r00/vm/n\n' in script
     assert "'X=a b'" in script and 'ARCFORGE_ATTEMPT=1' in script
 
 
 def test_rendered_script_is_valid_bash():
-    script = render(Job(image=IMAGE, argv=('version',)), run_id='r00', attempt=1, status_url='gs://b/x')
+    script = render(
+        Job(image=IMAGE, argv=('version',)), run_id='r00', attempt=1, status_url='gs://b/x'
+    )
     out = subprocess.run([BASH, '-n'], input=script, capture_output=True, text=True)
     assert out.returncode == 0, out.stderr
 
@@ -99,8 +122,15 @@ def test_job_validation():
 
 
 def test_happy_path_runs_the_container_and_reports_done(vm):
-    rc, calls, gcs = vm(Job(image=IMAGE, argv=('version',), env={'ARCFORGE_X': '1'}, host_script='echo host-ok',
-                            files={'config.json': 'gs://bkt/runs/r00/vm/config.json'}))
+    rc, calls, gcs = vm(
+        Job(
+            image=IMAGE,
+            argv=('version',),
+            env={'ARCFORGE_X': '1'},
+            host_script='echo host-ok',
+            files={'config.json': 'gs://bkt/runs/r00/vm/config.json'},
+        )
+    )
     assert rc == 0
     status = json.loads((gcs / 'status.json').read_text())
     assert status['phase'] == 'done' and status['exit_code'] == 0
@@ -113,12 +143,20 @@ def test_happy_path_runs_the_container_and_reports_done(vm):
     assert '-w /work' in run_line and '/in:/work' in run_line
     # Job files are fetched into the container's working directory before it starts.
     fetch = next(line for line in calls.splitlines() if 'gs://bkt/runs/r00/vm/config.json' in line)
-    assert fetch.startswith('gcloud storage cp gs://bkt/runs/r00/vm/config.json ') and fetch.split()[4].endswith('/in/config.json')
+    assert fetch.startswith(
+        'gcloud storage cp gs://bkt/runs/r00/vm/config.json '
+    ) and fetch.split()[4].endswith('/in/config.json')
     assert json.loads((Path(fetch.split()[4])).read_text()) == {'fetched': True}
-    assert '-e ARCFORGE_X=1' in run_line and '-e ARCFORGE_ATTEMPT=2' in run_line and '-e ARCFORGE_RUN_ID=r00' in run_line
+    assert (
+        '-e ARCFORGE_X=1' in run_line
+        and '-e ARCFORGE_ATTEMPT=2' in run_line
+        and '-e ARCFORGE_RUN_ID=r00' in run_line
+    )
     assert 'gcloud auth configure-docker us-central1-docker.pkg.dev --quiet' in calls
     # VM-side exit trap: try to delete itself; the stub refuses, so it powers off instead.
-    assert 'gcloud compute instances delete arc-run-r00-3a74fb4 --zone us-central1-b --quiet' in calls
+    assert (
+        'gcloud compute instances delete arc-run-r00-3a74fb4 --zone us-central1-b --quiet' in calls
+    )
     assert calls.rstrip().endswith('poweroff')
 
 
@@ -131,11 +169,18 @@ def test_a_failing_job_reports_its_exit_code(vm):
     rc, _, gcs = vm(Job(image=IMAGE, argv=('run',)), DOCKER_RC='7')
     assert rc == 7
     assert json.loads((gcs / 'status.json').read_text()) | {'updated_utc': None} == {
-        'phase': 'done', 'exit_code': 7, 'instance': 'arc-run-r00-3a74fb4', 'zone': 'us-central1-b', 'updated_utc': None}
+        'phase': 'done',
+        'exit_code': 7,
+        'instance': 'arc-run-r00-3a74fb4',
+        'zone': 'us-central1-b',
+        'updated_utc': None,
+    }
 
 
 def test_a_failing_host_script_skips_the_container(vm):
-    rc, calls, gcs = vm(Job(image=IMAGE, argv=('run',), host_script='echo before; exit 3; echo after'))
+    rc, calls, gcs = vm(
+        Job(image=IMAGE, argv=('run',), host_script='echo before; exit 3; echo after')
+    )
     assert rc == 3 and 'docker run' not in calls
     log = (gcs / 'job.log').read_text()
     assert 'before' in log and 'after' not in log
