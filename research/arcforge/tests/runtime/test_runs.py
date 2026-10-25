@@ -10,6 +10,7 @@ import pytest
 from arcforge import cli
 from arcforge.core import executor as executor_mod
 from arcforge.core.cache import open_store
+from arcforge.core.config import load_config
 from arcforge.core.dag import RunEnv
 from arcforge.core.executor import (
     ExecutorUnavailable,
@@ -184,10 +185,28 @@ def test_the_vm_part_needs_the_runner_and_a_gcs_cache(repo, tmp_path, capsys, mo
     assert cli.main([*base, '--cache', str(tmp_path / 'c')]) == 3
     assert 'needs a gs:// cache' in capsys.readouterr().err
     assert cli.main([*base, '--cache', 'gs://witching-606c6-arcforge/cache']) == 3
+    assert 'needs corpus.git_sha pinned' in capsys.readouterr().err
+    pinned = [*base, '--set', f'corpus.git_sha="{"a" * 40}"']
+    assert cli.main([*pinned, '--cache', 'gs://witching-606c6-arcforge/cache']) == 3
     assert 'runner_not_installed_for_this_test' in capsys.readouterr().err
 
 
-def test_vm_executor_hands_the_runner_a_complete_spec(repo, config, tmp_path, monkeypatch):
+@pytest.fixture
+def pinned(tmp_path, make_repo, git, config):
+    """A committed corpus and a config that pins it, as the VM part requires."""
+    repo = make_repo(tmp_path / 'pinned')
+    git(repo, 'init', '-q')
+    git(repo, 'add', '-A')
+    git(repo, 'commit', '-q', '-m', 'corpus')
+    keys = ('corpus.frontier.withheld', 'corpus.rename_map', 'corpus.ghosts_by_default')
+    overrides = {k: config.get(k) for k in keys} | {
+        'corpus.git_sha': git(repo, 'rev-parse', 'HEAD')
+    }
+    return repo, load_config('r00', overrides)
+
+
+def test_vm_executor_hands_the_runner_a_complete_spec(pinned, tmp_path, monkeypatch):
+    repo, config = pinned
     seen = {}
     local_cache = tmp_path / 'cache'
 
@@ -216,11 +235,8 @@ def test_vm_executor_hands_the_runner_a_complete_spec(repo, config, tmp_path, mo
     # The VM wrote to the shared cache; here that is the local stand-in.
     monkeypatch.setattr(executor_mod, 'open_store', lambda _url: open_store(str(local_cache)))
     outcome = VMExecutor('fake_runner').execute(request, lambda _m: None)
-    assert (
-        seen['schema'] == 'arc-vm-request/1'
-        and seen['stages'] == ['S0', 'S1']
-        and seen['force'] == ['S1']
-    )
+    assert seen['schema'] == 'arc-vm-request/1' and seen['stages'] == ['S0', 'S1']
+    assert seen['force'] == ['S1'] and seen['budget_usd'] == 20
     assert seen['config'] == config.data and seen['run']['config_sha256'] == config.sha256
     assert seen['argv'][:3] == ['arcforge', 'run', 'config.json'] and '--stages' in seen['argv']
     assert seen['compute']['shape'] == 'g2-standard-8'
@@ -228,7 +244,31 @@ def test_vm_executor_hands_the_runner_a_complete_spec(repo, config, tmp_path, mo
     assert vm_spec(request) == seen
 
 
-def test_vm_executor_explains_a_runner_without_the_hook(monkeypatch, config, repo):
+def test_vm_executor_refuses_a_manifest_for_another_config(pinned, tmp_path, monkeypatch, config):
+    repo, pinned_config = pinned
+    local_cache = tmp_path / 'cache'
+
+    def execute_remote(spec):
+        request = RunRequest(
+            config=config, stages=['S0'], cache_url=str(local_cache), env=RunEnv(repo)
+        )
+        return {
+            'manifest_sha256': LocalExecutor().execute(request, lambda _m: None).manifest_sha256
+        }
+
+    monkeypatch.setitem(
+        sys.modules, 'odd_runner', types.SimpleNamespace(execute_remote=execute_remote)
+    )
+    monkeypatch.setattr(executor_mod, 'open_store', lambda _url: open_store(str(local_cache)))
+    request = RunRequest(
+        config=pinned_config, stages=['S0'], cache_url='gs://b/c', env=RunEnv(repo)
+    )
+    with pytest.raises(ExecutorUnavailable, match='different config'):
+        VMExecutor('odd_runner').execute(request, lambda _m: None)
+
+
+def test_vm_executor_explains_a_runner_without_the_hook(monkeypatch, pinned):
+    repo, config = pinned
     monkeypatch.setitem(sys.modules, 'hookless_runner', types.SimpleNamespace())
     request = RunRequest(config=config, stages=['S0'], cache_url='gs://b/c', env=RunEnv(repo))
     with pytest.raises(ExecutorUnavailable, match='execute_remote'):

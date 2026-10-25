@@ -12,6 +12,10 @@ selection, closed over its inputs, against the content-addressed cache:
 every stage in-process (the forge, the tests, and the runner VM itself). Cached stages replay
 from the cache, so a rerun is byte-identical and costs $0. The run manifest (run.json) goes to
 the cache and, with every artifact, to --out (default runs/<run id>/).
+
+The prep pass, the VM part and the tail must share one cache: run them all with
+--cache gs://witching-606c6-arcforge/cache (or ARCFORGE_CACHE), and pin corpus.git_sha before
+the VM part, or the runner would snapshot a different corpus and pay for S2 again.
 """
 
 from __future__ import annotations
@@ -103,6 +107,11 @@ def _run(args: argparse.Namespace) -> int:
         f'via {executor_name}, cache {request.cache_url}, plan ${plan_doc["plan_usd"]:.2f} '
         f'of ${plan.limit:.2f}'
     )
+    if phase == 'prep' and not request.cache_url.startswith('gs://'):
+        log(
+            'note: the VM part reads its prep stages from the shared GCS cache; this prep pass '
+            'writes to a local one'
+        )
     outcome = get_executor(executor_name).execute(request, log)
     summary = {
         'run': config.run_id,

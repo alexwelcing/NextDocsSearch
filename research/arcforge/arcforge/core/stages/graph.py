@@ -93,7 +93,8 @@ def run(ctx: StageContext) -> dict[str, bytes]:
     for row in corpus:
         source = row['slug']
         meta, body = parse_frontmatter(row['mdx'])
-        for target in meta.get('relatedArticles') or []:
+        related = meta.get('relatedArticles')
+        for target in related if isinstance(related, list) else []:
             if isinstance(target, str) and target and target != source:
                 edges.setdefault((source, target), set()).add('related')
         for match in LINK.finditer(body):

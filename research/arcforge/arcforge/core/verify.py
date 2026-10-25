@@ -69,6 +69,8 @@ def verify_run(
             row['problems'].append('stage record missing from the cache')
         elif record['outputs'] != entry['outputs'] or record['digest'] != entry['digest']:
             row['problems'].append('stage record disagrees with the manifest')
+        elif stage_key(record['key_material']) != entry['key']:
+            row['problems'].append('stage record key material does not hash to its key')
         if outputs_digest(entry['outputs']) != entry['digest']:
             row['problems'].append('manifest digest does not match its outputs')
         data: dict[str, bytes] = {}

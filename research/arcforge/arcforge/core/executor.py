@@ -161,6 +161,11 @@ class VMExecutor:
                 f'(got {request.cache_url}); '
                 'pass --cache gs://witching-606c6-arcforge/cache'
             )
+        if not request.config.get('corpus.git_sha'):
+            raise ExecutorUnavailable(
+                'the VM part needs corpus.git_sha pinned, so the runner snapshots the same corpus '
+                'as the laptop prep pass (an unpinned worktree would re-run S0-S2 on the VM)'
+            )
         hook = self.hook()
         log(f'vm: handing {len(request.stages)} stages to {self.module}.{RUNNER_HOOK}')
         reply = hook(vm_spec(request))
@@ -168,6 +173,11 @@ class VMExecutor:
         if not isinstance(digest, str):
             raise ExecutorUnavailable(f'{self.module}.{RUNNER_HOOK} returned no manifest_sha256')
         doc = json.loads(open_store(request.cache_url).get_manifest(request.config.run_id, digest))
+        if doc.get('run', {}).get('config_sha256') != request.config.sha256:
+            raise ExecutorUnavailable(
+                f'{self.module}.{RUNNER_HOOK} returned a manifest for a different config '
+                f'({doc.get("run", {}).get("config_sha256")} != {request.config.sha256})'
+            )
         return RunOutcome(doc, digest)
 
 
