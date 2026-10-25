@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   STATIC_ROUTES,
   knownLastmod,
+  metaContent,
   planSitemaps,
   robotsMeta,
   urlsetXml,
@@ -16,12 +17,25 @@ const SITE = 'https://alexwelcing.com'
 const TODAY = '2026-10-24'
 const words = (n: number) => Array.from({ length: n }, (_, i) => `word${i}`).join(' ')
 
+/** The 24 bytes of a PNG header that carry its size. */
+function png(width: number, height: number): Buffer {
+  const header = Buffer.alloc(24)
+  header.writeUInt32BE(0x89504e47, 0)
+  header.writeUInt32BE(0x0d0a1a0a, 4)
+  header.writeUInt32BE(13, 8)
+  header.write('IHDR', 12, 'ascii')
+  header.writeUInt32BE(width, 16)
+  header.writeUInt32BE(height, 20)
+  return header
+}
+
 let root: string
 
 async function put(file: string, contents: unknown) {
   const target = path.join(root, file)
   await mkdir(path.dirname(target), { recursive: true })
-  await writeFile(target, typeof contents === 'string' ? contents : JSON.stringify(contents))
+  const raw = typeof contents === 'string' || contents instanceof Uint8Array
+  await writeFile(target, raw ? contents : JSON.stringify(contents))
 }
 
 /** A tiny generated tree: one full essay with a film, one short record, one tech stub. */
@@ -37,6 +51,8 @@ async function fixture() {
     { slug: 'tech-stub', title: 'Stub', updated: '2099-01-01' },
   ])
   await put('lib/generated/image-manifest.json', { essay: { ogImage: '/images/og/essay.jpg' } })
+  await put('public/images/og/essay.jpg', png(1200, 630))
+  await put('public/social-preview.png', png(1280, 640))
   await put('public/arc/media.json', { films: ['essay'], plates: {} })
   await put('public/arc/records/essay.json', { hero: null, blocks: [{ t: 'p', x: words(400) }] })
   await put('public/arc/records/short.json', { hero: null, blocks: [{ t: 'p', x: words(120) }] })
@@ -46,13 +62,14 @@ async function fixture() {
   })
 }
 
-/** Prerendered HTML as next build leaves it, with the given robots meta per route. */
-async function prerender(pages: Record<string, string>) {
+/** Prerendered HTML as next build leaves it, with the given robots meta and og:image per route. */
+async function prerender(pages: Record<string, string>, ogImages: Record<string, string> = {}) {
   for (const [route, robots] of Object.entries(pages)) {
     const name = route === '/' ? 'index' : route.slice(1)
+    const og = ogImages[route] ? `<meta property="og:image" content="${ogImages[route]}"/>` : ''
     await put(
       `.next/server/pages/${name}.html`,
-      `<head><meta name="robots" content="${robots}"/></head>`
+      `<head><meta name="robots" content="${robots}"/>${og}</head>`
     )
   }
 }
@@ -130,6 +147,12 @@ describe('planSitemaps', () => {
     ])
     expect(plan.urls.map((url) => url.path)).not.toContain('/explore')
   })
+
+  it('gives a film whose social card is gone the site preview, never a 404', async () => {
+    await fixture()
+    await rm(path.join(root, 'public/images/og/essay.jpg'))
+    expect(planSitemaps(root, TODAY).films[0].thumbnail).toBe('/social-preview.png')
+  })
 })
 
 describe('verifyPrerendered', () => {
@@ -157,6 +180,33 @@ describe('verifyPrerendered', () => {
     expect(() => verifyPrerendered(root, planSitemaps(root, TODAY))).toThrow(
       /\/about has robots "noindex" but is listed in the sitemap[\s\S]*\/articles\/short has robots "index, follow" but is left out of the sitemap[\s\S]*\/articles\/tech-stub was not prerendered/
     )
+  })
+
+  it('fails on an own-domain og:image that is not under public/', async () => {
+    await fixture()
+    await prerender(
+      {
+        ...indexed,
+        '/articles/short': 'noindex,follow',
+        '/articles/tech-stub': 'noindex,follow',
+      },
+      {
+        '/': `${SITE}/social-preview.png`,
+        '/articles/essay': `${SITE}/images/og/essay.jpg`,
+        '/videos/essay': `${SITE}/images/articles/gone.jpg`,
+        '/about': 'https://cdn.example.com/elsewhere.jpg',
+      }
+    )
+    let problems: string[] = []
+    try {
+      verifyPrerendered(root, planSitemaps(root, TODAY), SITE)
+    } catch (err) {
+      problems = (err as Error).message.split('\n').slice(1)
+    }
+    // The other host's image is not checked; the existing own-domain images pass.
+    expect(problems).toEqual([
+      '  /videos/essay has og:image public/images/articles/gone.jpg, which does not exist',
+    ])
   })
 
   it('accepts getStaticProps pages a deployment adapter took, when the manifest lists them', async () => {
@@ -190,5 +240,14 @@ describe('robotsMeta', () => {
     ).toBe('noindex,follow')
     expect(robotsMeta('<meta content="index, follow" name="robots">')).toBe('index, follow')
     expect(robotsMeta('<meta name="description" content="robots"/>')).toBeNull()
+  })
+
+  it('reads property metas too, by exact key', () => {
+    const html =
+      '<meta property="og:image:width" content="1200"/>' +
+      '<meta content="https://x.test/a.jpg" property="og:image"/>'
+    expect(metaContent(html, 'og:image')).toBe('https://x.test/a.jpg')
+    expect(metaContent(html, 'og:image:width')).toBe('1200')
+    expect(metaContent(html, 'og:video')).toBeNull()
   })
 })

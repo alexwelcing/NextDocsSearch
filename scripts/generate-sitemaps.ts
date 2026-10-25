@@ -15,13 +15,14 @@
 // production, which kept serving the committed sitemap. The files are gitignored build outputs.
 //
 // After the build, scripts/steps/post/10-verify-sitemaps.ts runs verifyPrerendered(): every
-// sitemap URL must have been prerendered, and the noindex pages must be exactly the articles the
-// sitemap leaves out. Directly: `tsx scripts/generate-sitemaps.ts [--verify]`.
+// sitemap URL must have been prerendered, the noindex pages must be exactly the articles the
+// sitemap leaves out, and every og:image must exist. Directly:
+// `tsx scripts/generate-sitemaps.ts [--verify]`.
 
 import fs from 'node:fs'
 import path from 'node:path'
 import { SITE_URL } from '../lib/site-url'
-import { bodyWords, ogImagePath, readImageManifest, thinReason } from '../lib/seo/records'
+import { bodyWords, readImageManifest, resolveOgImage, thinReason } from '../lib/seo/records'
 
 /** The non-record pages under pages/ worth indexing (404, API routes and redirects are not). */
 export const STATIC_ROUTES = [
@@ -158,7 +159,7 @@ export function planSitemaps(
       slug,
       title: entry?.title ?? slug.replace(/-/g, ' '),
       description: entry?.description ?? `Video companion to the record "${slug}".`,
-      thumbnail: ogImagePath(heroes.get(slug), images[slug]),
+      thumbnail: resolveOgImage(root, heroes.get(slug), images[slug]).path,
     }
   })
   for (const film of filmPages) urls.push({ path: `/videos/${film.slug}` })
@@ -199,24 +200,38 @@ function prerenderManifestRoutes(root: string): Set<string> {
   return new Set(Object.keys((readJson(file) as { routes?: object }).routes ?? {}))
 }
 
-/** The content of a page's <meta name="robots">, or null when it has none. */
-export function robotsMeta(html: string): string | null {
+/** The content of a page's first <meta name="key"> or <meta property="key">, or null. */
+export function metaContent(html: string, key: string): string | null {
   for (const tag of html.match(/<meta\b[^>]*>/gi) ?? []) {
-    if (!/\bname="robots"/i.test(tag)) continue
+    const named = /\b(?:name|property)="([^"]*)"/i.exec(tag)?.[1]
+    if (named?.toLowerCase() !== key.toLowerCase()) continue
     return /\bcontent="([^"]*)"/i.exec(tag)?.[1] ?? ''
   }
   return null
 }
 
+/** The content of a page's <meta name="robots">, or null when it has none. */
+export const robotsMeta = (html: string) => metaContent(html, 'robots')
+
+/** The public/ file an own-domain og:image URL serves, or null for another host or none. */
+function ogImageFile(root: string, html: string, siteUrl: string): string | null {
+  const content = metaContent(html, 'og:image')
+  if (!content) return null
+  const url = new URL(content, siteUrl)
+  if (url.origin !== new URL(siteUrl).origin) return null
+  return path.join(root, 'public', decodeURIComponent(url.pathname))
+}
+
 /**
- * The crawl assertion: every sitemap URL was prerendered without noindex, and every left-out
- * article was prerendered with it. Throws with every problem found.
+ * The crawl assertion: every sitemap URL was prerendered without noindex, every left-out article
+ * was prerendered with it, and every page's own-domain og:image is a file under public/. Throws
+ * with every problem found.
  *
  * A deployment adapter (Vercel's onBuildComplete) moves getStaticProps HTML out of .next before
  * this runs. Such a route still counts as prerendered when the prerender manifest lists it, but its
- * robots meta cannot be read there; CI and plain `next build` check every page's HTML.
+ * robots meta and og:image cannot be read there; CI and plain `next build` check every page's HTML.
  */
-export function verifyPrerendered(root: string, plan: SitemapPlan): void {
+export function verifyPrerendered(root: string, plan: SitemapPlan, siteUrl = SITE_URL): void {
   const problems: string[] = []
   const prerendered = prerenderManifestRoutes(root)
   let handedOff = 0
@@ -227,10 +242,15 @@ export function verifyPrerendered(root: string, plan: SitemapPlan): void {
       else problems.push(`${route} was not prerendered`)
       return
     }
-    const robots = robotsMeta(fs.readFileSync(file, 'utf8')) ?? '(none)'
+    const html = fs.readFileSync(file, 'utf8')
+    const robots = robotsMeta(html) ?? '(none)'
     if (/noindex/i.test(robots) !== expectNoindex) {
       const listed = expectNoindex ? 'left out of' : 'listed in'
       problems.push(`${route} has robots "${robots}" but is ${listed} the sitemap`)
+    }
+    const ogImage = ogImageFile(root, html, siteUrl)
+    if (ogImage && !fs.existsSync(ogImage)) {
+      problems.push(`${route} has og:image ${path.relative(root, ogImage)}, which does not exist`)
     }
   }
   for (const url of plan.urls) check(url.path, false)

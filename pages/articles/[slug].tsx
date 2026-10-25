@@ -12,13 +12,7 @@ import path from 'node:path'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import StructuredData from '@/components/StructuredData'
 import { SITE_URL } from '@/lib/site-url'
-import {
-  bodyWords,
-  ogImagePath,
-  readImageManifest,
-  readImageSize,
-  thinReason,
-} from '@/lib/seo/records'
+import { bodyWords, readImageManifest, resolveOgImage, thinReason } from '@/lib/seo/records'
 
 interface RecordBlock {
   t: 'h' | 'p' | 'l' | 'q'
@@ -34,10 +28,10 @@ interface ArticlePageProps {
   keywords: string[]
   blocks: RecordBlock[]
   indexable: boolean
-  /** Site-relative og:image path; see ogImagePath(). */
+  /** Site-relative og:image path; see resolveOgImage(). */
   ogPath: string
-  ogWidth: number | null
-  ogHeight: number | null
+  ogWidth: number
+  ogHeight: number
 }
 
 const ROOT = process.cwd()
@@ -71,8 +65,7 @@ export const getStaticProps: GetStaticProps<ArticlePageProps> = async ({ params 
     hero: string | null
     blocks: RecordBlock[]
   }
-  const ogPath = ogImagePath(record.hero, readImageManifest(ROOT)[slug])
-  const size = readImageSize(path.join(ROOT, 'public', ogPath))
+  const og = resolveOgImage(ROOT, record.hero, readImageManifest(ROOT)[slug])
   return {
     props: {
       slug,
@@ -83,9 +76,9 @@ export const getStaticProps: GetStaticProps<ArticlePageProps> = async ({ params 
       keywords: articleManifest().find((a) => a.slug === slug)?.keywords ?? [],
       blocks: record.blocks,
       indexable: thinReason(slug, bodyWords(record.blocks)) === null,
-      ogPath,
-      ogWidth: size?.width ?? null,
-      ogHeight: size?.height ?? null,
+      ogPath: og.path,
+      ogWidth: og.width,
+      ogHeight: og.height,
     },
   }
 }
@@ -119,8 +112,8 @@ export default function ArticlePage({
         <meta property="og:type" content="article" />
         <meta property="og:url" content={url} />
         <meta property="og:image" content={ogImage} />
-        {ogWidth !== null && <meta property="og:image:width" content={String(ogWidth)} />}
-        {ogHeight !== null && <meta property="og:image:height" content={String(ogHeight)} />}
+        <meta property="og:image:width" content={String(ogWidth)} />
+        <meta property="og:image:height" content={String(ogHeight)} />
         <meta name="twitter:card" content="summary_large_image" />
         {date && <meta property="article:published_time" content={date} />}
       </Head>

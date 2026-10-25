@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import fs from 'node:fs'
+import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import handler from '../../pages/api/arc/archive'
 import { buildArchiveIndex } from '../../scripts/generate-archive-index'
@@ -110,12 +112,20 @@ describe('/api/arc/archive compatibility', () => {
     expect(browserRecords[0].description).toBe(fixture[0].description)
   })
 
-  it('serves exactly the records and order of the static index files', async () => {
+  it('serves exactly the records and order of the committed static index files', async () => {
     const actual = await vi.importActual<typeof import('./server')>('./server')
     vi.mocked(listRecords).mockImplementation(actual.listRecords)
     const { files } = await buildArchiveIndex(manifest)
 
-    expect((await request()).body).toEqual(JSON.parse(files[ARCHIVE_URL]))
-    expect((await request({ view: 'full' })).body).toEqual(JSON.parse(files[ARCHIVE_FULL_URL]))
+    for (const [url, view] of [
+      [ARCHIVE_URL, undefined],
+      [ARCHIVE_FULL_URL, 'full'],
+    ] as const) {
+      const committed = fs.readFileSync(path.join(process.cwd(), 'public', url), 'utf8')
+      // Byte-identical to what the pre step writes from the committed manifest, so a stale copy
+      // fails here as well as in CI's generated-files check after the build.
+      expect(committed).toBe(files[url])
+      expect((await request({ view })).body).toEqual(JSON.parse(committed))
+    }
   })
 })

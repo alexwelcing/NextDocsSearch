@@ -9,7 +9,7 @@ import path from 'node:path'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 import StructuredData from '@/components/StructuredData'
 import { SITE_URL } from '@/lib/site-url'
-import { ogImagePath, readImageManifest, readImageSize } from '@/lib/seo/records'
+import { readImageManifest, resolveOgImage } from '@/lib/seo/records'
 
 interface VideoPageProps {
   slug: string
@@ -17,10 +17,10 @@ interface VideoPageProps {
   date: string
   description: string
   hasArticle: boolean
-  /** Site-relative poster: the record's og:image (see ogImagePath()). */
+  /** Site-relative poster: the record's og:image (see resolveOgImage()). */
   ogPath: string
-  ogWidth: number | null
-  ogHeight: number | null
+  ogWidth: number
+  ogHeight: number
 }
 
 const ROOT = process.cwd()
@@ -64,8 +64,7 @@ export const getStaticProps: GetStaticProps<VideoPageProps> = async ({ params })
   const hero = fs.existsSync(recordFile)
     ? (JSON.parse(fs.readFileSync(recordFile, 'utf8')) as { hero: string | null }).hero
     : null
-  const ogPath = ogImagePath(hero, readImageManifest(ROOT)[slug])
-  const size = readImageSize(path.join(ROOT, 'public', ogPath))
+  const og = resolveOgImage(ROOT, hero, readImageManifest(ROOT)[slug])
 
   return {
     props: {
@@ -74,9 +73,9 @@ export const getStaticProps: GetStaticProps<VideoPageProps> = async ({ params })
       date: entry?.date ?? '',
       description: entry?.description ?? `Video companion to the record "${slug}".`,
       hasArticle: Boolean(entry),
-      ogPath,
-      ogWidth: size?.width ?? null,
-      ogHeight: size?.height ?? null,
+      ogPath: og.path,
+      ogWidth: og.width,
+      ogHeight: og.height,
     },
   }
 }
@@ -108,8 +107,8 @@ export default function VideoPage({
         <meta property="og:url" content={url} />
         <meta property="og:video" content={contentUrl} />
         <meta property="og:image" content={poster} />
-        {ogWidth !== null && <meta property="og:image:width" content={String(ogWidth)} />}
-        {ogHeight !== null && <meta property="og:image:height" content={String(ogHeight)} />}
+        <meta property="og:image:width" content={String(ogWidth)} />
+        <meta property="og:image:height" content={String(ogHeight)} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <StructuredData

@@ -58,20 +58,47 @@ export function readImageManifest(root: string): Record<string, OgImageCandidate
 }
 
 /**
- * og:image for a record: the image manifest's ogImage (the 1200x630 card in public/images/og/, or
- * the curated selected plate), else a raster hero, else the site preview. SVG never qualifies:
- * X and most scrapers reject it.
+ * og:image candidates for a record, best first: the image manifest's ogImage (the 1200x630 card in
+ * public/images/og/, or the curated selected plate), then the raster heroes, then the site preview.
+ * SVG never qualifies: X and most scrapers reject it.
  */
-export function ogImagePath(hero: string | null | undefined, images?: OgImageCandidates): string {
-  const candidates = [images?.ogImage, hero, images?.heroImage]
-  return (
-    candidates.find((p): p is string => typeof p === 'string' && RASTER.test(p)) ?? DEFAULT_OG_IMAGE
+export function ogImageCandidates(
+  hero: string | null | undefined,
+  images?: OgImageCandidates
+): string[] {
+  const raster = [images?.ogImage, hero, images?.heroImage].filter(
+    (p): p is string => typeof p === 'string' && RASTER.test(p)
   )
+  return [...new Set([...raster, DEFAULT_OG_IMAGE])]
 }
 
 export interface ImageSize {
   width: number
   height: number
+}
+
+export interface OgImage extends ImageSize {
+  /** Site-relative path under public/. */
+  path: string
+}
+
+/**
+ * A record's og:image (also the film poster and video-sitemap thumbnail): the first candidate that
+ * is on disk under root/public with a readable size, so a deleted or renamed hero falls through to
+ * the next one instead of shipping a social card that 404s. Throws when not even the site preview
+ * qualifies, which fails the build.
+ */
+export function resolveOgImage(
+  root: string,
+  hero: string | null | undefined,
+  images?: OgImageCandidates
+): OgImage {
+  const candidates = ogImageCandidates(hero, images)
+  for (const candidate of candidates) {
+    const size = readImageSize(path.join(root, 'public', candidate))
+    if (size) return { path: candidate, ...size }
+  }
+  throw new Error(`og:image: none of ${candidates.join(', ')} is a readable image under public/`)
 }
 
 /**
