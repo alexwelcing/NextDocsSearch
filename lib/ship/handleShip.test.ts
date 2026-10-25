@@ -336,6 +336,23 @@ describe('handleShip retrieval', () => {
     expect(finalOf(list).provider).toBe('local-archive')
   })
 
+  it('still finds the operator panels when the index assets cannot load', async () => {
+    const fetchAsset = vi.fn(async () => {
+      throw new Error('ENOENT')
+    })
+    const response = await handleShip(
+      post({ prompt: 'active research threads', mode: 'retrieve' }),
+      await deps({ fetchAsset })
+    )
+    expect(response.headers.get('x-ship-retrieval')).toBe('records')
+    const [first] = await events(response)
+    if (first.type !== 'instant-results') throw new Error('unreachable')
+    expect(first.items[0]).toMatchObject({
+      slug: 'current-work',
+      target: { type: 'data', panel: 'work' },
+    })
+  })
+
   it('ranks whole records when the build emitted no search index', async () => {
     const response = await handleShip(
       post({ prompt: 'photon polarization' }),

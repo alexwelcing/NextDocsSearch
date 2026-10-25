@@ -145,6 +145,29 @@ function groundProfile(retrieval: RetrievalResult): RetrievalResult {
   }
 }
 
+/**
+ * Index retrieval ranks the operator docs itself, so the operator records join record-level
+ * ranking only without an index, or, ranking again, when the index did not load.
+ */
+async function retrieve(
+  query: string,
+  deps: ShipDeps,
+  manifest: SearchManifest | null,
+  records: ArchiveRecord[]
+): Promise<RetrievalResult> {
+  const retrievalDeps = { fetchAsset: deps.fetchAsset, embedQuery: deps.embedQuery?.bind(deps) }
+  const withOperators = [...records, ...OPERATOR_RECORDS]
+  if (!manifest) return getShipContext(query, retrievalDeps, { records: withOperators })
+  const indexed = await getShipContext(query, retrievalDeps, {
+    manifest,
+    records,
+    model: deps.embedModel,
+  })
+  if (indexed.mode === 'lexical' || indexed.mode === 'hybrid') return indexed
+  const ranked = await getShipContext(query, retrievalDeps, { records: withOperators })
+  return { ...ranked, fallbackReason: indexed.fallbackReason ?? ranked.fallbackReason }
+}
+
 /** Retrieval lines already logged for an expected absence, so they appear once per process. */
 const loggedOnce = new Set<string>()
 
@@ -298,11 +321,7 @@ export async function handleShip(request: Request, deps: ShipDeps): Promise<Resp
     ])
     let retrieval = EMPTY_RETRIEVAL
     try {
-      retrieval = await getShipContext(
-        trick.searchQuery || input.prompt,
-        { fetchAsset: deps.fetchAsset, embedQuery: deps.embedQuery?.bind(deps) },
-        { manifest, records: [...records, ...OPERATOR_RECORDS], model: deps.embedModel }
-      )
+      retrieval = await retrieve(trick.searchQuery || input.prompt, deps, manifest, records)
     } catch (error) {
       log(`[ship] retrieval failed: ${message(error)}`)
     }
