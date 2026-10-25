@@ -65,3 +65,11 @@ def test_pins_follow_the_measurements():
     measured = pins.llm_pins(pins.M1_MEASURED)
     assert report['llm']['queries']['pin']['repo'] == measured['queries'].pin.repo
     assert report['llm']['eval_queries']['pin']['repo'] == measured['eval_queries'].pin.repo
+
+
+def test_m1_outcome():
+    """M1 measured Qwen3.5-9B under the gate and Ministral-3-8B over it (see M1_MEASURED)."""
+    gates = pins.llm_pins()
+    assert gates['queries'].pin is pins.QWEN_4B and gates['queries'].passed is False
+    assert gates['eval_queries'].pin is pins.MINISTRAL_8B and gates['eval_queries'].passed is True
+    assert pins.M1_MEASURED['teacher']['min_reconstruction_cosine'] > 0.9999

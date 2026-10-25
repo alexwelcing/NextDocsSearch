@@ -11,9 +11,10 @@ are pre-registered gates measured once in M1 on an L4 (python -m arcforge.models
   on at least 99% of the 200-prompt fixture; otherwise Ministral-3-3B is pinned. Throughput is
   reported, not gated.
 
-M1_MEASURED holds what M1 measured; LLM_PINS is derived from it by the gate functions, so the
-pin can never drift from the evidence. None means not measured yet (the gate then keeps the
-primary model and says so).
+M1_MEASURED holds what M1 measured; llm_pins() derives the pins from it with the gate
+functions, so a pin cannot drift from its evidence. M1's result: Qwen3.5-9B decodes 679 tok/s at
+64-way, so Qwen3.5-4B is pinned (it measures 751 tok/s, also under 1,000, which lengthens S5
+rather than changing the pin); Ministral-3-8B returns 199/200 schema-valid and is kept.
 """
 
 from __future__ import annotations
@@ -68,11 +69,15 @@ QWEN_4B = ModelPin(
     vllm_args=('--language-model-only', '--dtype', 'bfloat16', '--max-model-len', '8192'),
     note='The pre-registered fallback: bf16, same family and chat template.',
 )
+# An fp8 KV cache on an L4 (Ada) rules out FlashAttention, and vLLM's next pick, FlashInfer,
+# JIT-compiles its kernels (no cubins in the lock, no C++ toolchain on the runner): Triton it is.
 _MINISTRAL_ARGS = (
     '--tokenizer-mode',
     'mistral',
     '--kv-cache-dtype',
     'fp8',
+    '--attention-backend',
+    'TRITON_ATTN',
     '--max-model-len',
     '8192',
     '--limit-mm-per-prompt',
@@ -178,11 +183,37 @@ def ministral_gate(text_only: bool | None, valid: int | None, total: int | None)
     )
 
 
-# What M1 measured on an L4 (filled in from `llm-check` / `teacher-check` reports).
+# What M1 measured (2026-10-25) on a spot g2-standard-8 (1x L4, driver 580, CUDA 13.0) with the
+# locked stack (vLLM 0.32.0, torch 2.13.0, transformers 5.19.0, sentence-transformers 6.2.0),
+# from `python -m arcforge.models llm-check` and `teacher-check`. The gates read the first keys
+# of each entry; the rest is the evidence the PR reports.
 M1_MEASURED: dict = {
-    'qwen': {'decode_tokens_per_s': None, 'concurrency': QWEN_CONCURRENCY},
-    'ministral': {'text_only_load': None, 'valid': None, 'total': None},
-    'teacher': {'min_reconstruction_cosine': None},
+    'qwen': {
+        # Qwen3.5-9B, fp8 on the fly: 256 S5 prompts × exactly 256 decoded tokens at 64-way.
+        'decode_tokens_per_s': 679.4,
+        'concurrency': QWEN_CONCURRENCY,
+        'workload_tokens_per_s': 371.5,  # guided JSON, answers of the model's own length
+        'training_json_valid': [255, 256],
+        'audit_judge_json_valid': [64, 64],
+        'text_only': True,  # an image input is refused (HTTP 400)
+        # The pinned fallback, bf16, same protocol: it does not reach 1,000 either.
+        'fallback_qwen3.5-4b': {'decode_tokens_per_s': 751.1, 'workload_tokens_per_s': 502.8},
+    },
+    'ministral': {
+        # Ministral-3-8B, FP8 as published, fp8 KV, Triton attention, guided JSON, T = 0.8.
+        'text_only_load': True,
+        'valid': 199,
+        'total': MINISTRAL_FIXTURE_PROMPTS,
+        'decode_tokens_per_s': 585.0,
+        'fallback_ministral-3-3b': {'valid': 198, 'decode_tokens_per_s': 1045.7},
+    },
+    'teacher': {
+        # Same-pass reconstruction over 160 documents + 160 queries; the gate is > 0.9999.
+        'min_reconstruction_cosine': 0.99999518,
+        'cases': 320,
+        'min_cosine_vs_batched_encode': 0.99989066,  # bf16 batch-padding drift, reported
+        'mean_cosine_prompt_plus_lexemes': 0.98696,
+    },
 }
 
 
