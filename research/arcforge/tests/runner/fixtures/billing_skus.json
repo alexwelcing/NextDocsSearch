@@ -1,0 +1,1014 @@
+{
+ "skus": [
+  {
+   "category": {
+    "resourceFamily": "Storage",
+    "resourceGroup": "SSD",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "Regional Balanced PD Capacity",
+   "geoTaxonomy": {
+    "regions": [
+     "asia-east1",
+     "europe-west1",
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/0FE3-CAB9-E7E3",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 2875910101401600.0,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 200000000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.mo",
+      "usageUnitDescription": "gibibyte month"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-central2",
+    "us-east1",
+    "us-west1",
+    "asia-east1",
+    "europe-west1"
+   ],
+   "skuId": "0FE3-CAB9-E7E3"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "N1Standard",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "N1 Predefined Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/2E27-4F75-95CD",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 31611000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "2E27-4F75-95CD"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "CPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "G2 Sole Tenancy Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/4550-F5C7-CA89",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 24988212,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "4550-F5C7-CA89"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "CPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "Preemptible"
+   },
+   "description": "Spot Preemptible G2 Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/59A6-9C49-BDDB",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 14950000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "59A6-9C49-BDDB"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "RAM",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "CmtCudPremium"
+   },
+   "description": "Committed Use Discount Premium for G2 Custom Instance Ram running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/6457-373E-7C4C",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 3865470566400,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 65867,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.h",
+      "usageUnitDescription": "gibibyte hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "6457-373E-7C4C"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "RAM",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "Preemptible"
+   },
+   "description": "Spot Preemptible G2 Custom Instance Ram running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-central2",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/68E2-2B10-686E",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 3865470566400,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 1839000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.h",
+      "usageUnitDescription": "gibibyte hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "68E2-2B10-686E"
+  },
+  {
+   "category": {
+    "resourceFamily": "Storage",
+    "resourceGroup": "SSD",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "Balanced PD Capacity",
+   "geoTaxonomy": {
+    "regions": [
+     "asia-east1",
+     "europe-west1",
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/6AE1-525F-8B80",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 2875910101401600.0,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 100000000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.mo",
+      "usageUnitDescription": "gibibyte month"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-central2",
+    "us-east1",
+    "us-west1",
+    "asia-east1",
+    "europe-west1"
+   ],
+   "skuId": "6AE1-525F-8B80"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "CPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "G2 Custom Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-central2",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/7B15-0995-7995",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 26237620,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "7B15-0995-7995"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "GPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "Nvidia L4 GPU running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/A88A-5A60-E821",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 560040239,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "A88A-5A60-E821"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "RAM",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "G2 Sole Tenancy Instance Ram running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/AD94-7362-E27D",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 3865470566400,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 2927448,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.h",
+      "usageUnitDescription": "gibibyte hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "AD94-7362-E27D"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "GPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "Preemptible"
+   },
+   "description": "Nvidia L4 GPU attached to Spot Preemptible VMs running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/AEC2-3D5C-61BF",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 335200000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "AEC2-3D5C-61BF"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "RAM",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "Sole Tenancy Premium for G2 Sole Tenancy Instance Ram running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/BA4F-1BCC-FAC3",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 3865470566400,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 292744,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.h",
+      "usageUnitDescription": "gibibyte hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "BA4F-1BCC-FAC3"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "RAM",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "G2 Custom Instance Ram running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-central2",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/BE2B-1D28-59BC",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 3865470566400,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 3073821,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.h",
+      "usageUnitDescription": "gibibyte hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "BE2B-1D28-59BC"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "RAM",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "Preemptible"
+   },
+   "description": "Spot Preemptible G2 Instance Ram running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/BF80-650A-78E6",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 3865470566400,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 1751000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.h",
+      "usageUnitDescription": "gibibyte hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "BF80-650A-78E6"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "CPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "Sole Tenancy Premium for G2 Sole Tenancy Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/C659-3CFF-13A2",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 2498821,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "C659-3CFF-13A2"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "CPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "G2 Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/D18E-3563-415F",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 24988212,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "D18E-3563-415F"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "CPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "CmtCudPremium"
+   },
+   "description": "Committed Use Discount Premium for G2 Custom Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/E379-5FA6-D201",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 562234,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "E379-5FA6-D201"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "CPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "Preemptible"
+   },
+   "description": "Spot Preemptible G2 Custom Instance Core running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-central2",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/EC45-055B-A1E0",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 15700000,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "EC45-055B-A1E0"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "RAM",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "G2 Instance Ram running in Americas",
+   "geoTaxonomy": {
+    "regions": [
+     "us-central1",
+     "us-east1",
+     "us-west1"
+    ],
+    "type": "MULTI_REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/F0A4-E3D3-33BD",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "By.s",
+      "baseUnitConversionFactor": 3865470566400,
+      "baseUnitDescription": "byte second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 2927448,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "GiBy.h",
+      "usageUnitDescription": "gibibyte hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "us-central1",
+    "us-east1",
+    "us-west1"
+   ],
+   "skuId": "F0A4-E3D3-33BD"
+  },
+  {
+   "category": {
+    "resourceFamily": "Compute",
+    "resourceGroup": "GPU",
+    "serviceDisplayName": "Compute Engine",
+    "usageType": "OnDemand"
+   },
+   "description": "Nvidia L4 GPU running in Singapore",
+   "geoTaxonomy": {
+    "regions": [
+     "asia-southeast1"
+    ],
+    "type": "REGIONAL"
+   },
+   "name": "services/6F81-5844-456A/skus/0117-733F-6A96",
+   "pricingInfo": [
+    {
+     "currencyConversionRate": 1,
+     "effectiveTime": "2026-10-24T07:00:00Z",
+     "pricingExpression": {
+      "baseUnit": "s",
+      "baseUnitConversionFactor": 3600,
+      "baseUnitDescription": "second",
+      "displayQuantity": 1,
+      "tieredRates": [
+       {
+        "startUsageAmount": 0,
+        "unitPrice": {
+         "currencyCode": "USD",
+         "nanos": 690921600,
+         "units": "0"
+        }
+       }
+      ],
+      "usageUnit": "h",
+      "usageUnitDescription": "hour"
+     },
+     "summary": ""
+    }
+   ],
+   "serviceProviderName": "Google",
+   "serviceRegions": [
+    "asia-southeast1"
+   ],
+   "skuId": "0117-733F-6A96"
+  }
+ ]
+}
