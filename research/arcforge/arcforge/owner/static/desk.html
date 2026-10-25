@@ -1,0 +1,1332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC Owner Desk</title>
+<!--
+  The Owner Desk: one self-contained page served by `arcforge owner` from 127.0.0.1. No network
+  beyond its own server, no fonts or scripts from anywhere, no browser storage: every edit is
+  sent to the desk server, which writes ~/arc-owner/. Validation, the FRONTIER re-tag, the copy
+  flags and all progress numbers are computed by the server (arcforge/owner/model.py and
+  progress.py) and rendered here, so they have exactly one implementation.
+-->
+<style>
+:root {
+  --bg: #020403;
+  --screen: #04130a;
+  --panel: #061a0e;
+  --panel-hi: #0a2516;
+  --line: #173824;
+  --line-hi: #2a5c3d;
+  --green: #70ff8f;
+  --green-bright: #a8ffbe;
+  --green-dim: #2f7a44;
+  --text: #dcf3e2;
+  --muted: #93bd9f;
+  --faint: #6a9878;
+  --amber: #ffb454;
+  --amber-bg: #2a1d0b;
+  --red: #ff6b57;
+  --red-bg: #2c0f0b;
+  --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --radius: 6px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% -20%, #0b2a17 0%, var(--bg) 60%) fixed, var(--bg);
+  color: var(--text);
+  font: 15px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+code, kbd, .mono { font-family: var(--mono); font-size: 0.92em; }
+code { color: var(--green-bright); background: #031008; border: 1px solid var(--line); border-radius: 4px; padding: 0 0.3em; }
+kbd { border: 1px solid var(--line-hi); border-bottom-width: 2px; border-radius: 4px; padding: 0 0.35em; color: var(--green-bright); }
+a { color: var(--green); }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+/* ---- frame ---------------------------------------------------------------------------------- */
+.top {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 24px;
+  background: rgba(2, 6, 4, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { font-family: var(--mono); letter-spacing: 0.14em; color: var(--green); font-size: 15px; text-shadow: 0 0 8px rgba(112, 255, 143, 0.45); white-space: nowrap; }
+.brand .cursor { display: inline-block; width: 0.6em; height: 1.05em; margin-left: 2px; vertical-align: -0.15em; background: var(--green); animation: blink 1.1s steps(1) infinite; }
+.brand .sub { color: var(--faint); letter-spacing: 0.08em; margin-left: 12px; text-shadow: none; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .brand .cursor, .pulse { animation: none !important; } }
+.save { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55vw; }
+.save.ok::before { content: '● '; color: var(--green); }
+.save.busy::before { content: '◌ '; color: var(--amber); }
+.save.bad { color: var(--red); }
+.save.bad::before { content: '▲ '; }
+
+.tabs {
+  display: flex; flex-wrap: wrap; gap: 2px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(3, 12, 7, 0.85);
+}
+.tab {
+  appearance: none; border: 0; background: none; cursor: pointer;
+  padding: 11px 14px 10px;
+  font: 13px var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+.tab:hover { color: var(--green-bright); }
+.tab[aria-selected='true'] { color: var(--green); border-bottom-color: var(--green); text-shadow: 0 0 6px rgba(112, 255, 143, 0.4); }
+.tab .badge { margin-left: 7px; font-size: 11px; letter-spacing: 0.02em; color: var(--faint); text-transform: none; }
+.tab .badge.done { color: var(--green-dim); }
+.tab .badge.attn { color: var(--amber); }
+
+main { max-width: 1080px; margin: 0 auto; padding: 28px 24px 80px; outline: none; }
+footer { max-width: 1080px; margin: 0 auto; padding: 0 24px 40px; color: var(--faint); font-size: 12.5px; font-family: var(--mono); }
+
+.banner {
+  max-width: 1080px; margin: 16px auto 0; padding: 12px 16px;
+  border: 1px solid var(--amber); border-radius: var(--radius);
+  background: var(--amber-bg); color: #ffe2b8;
+  display: flex; gap: 12px; align-items: center; justify-content: space-between;
+}
+.banner.info { border-color: var(--green-dim); background: #08200f; color: var(--text); }
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 30;
+  display: flex; gap: 14px; align-items: center;
+  padding: 10px 16px; border-radius: var(--radius);
+  background: #0b2716; border: 1px solid var(--line-hi); color: var(--text);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- type ----------------------------------------------------------------------------------- */
+h1, h2, h3 { font-family: var(--mono); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin: 0; }
+h1 { font-size: 20px; text-shadow: 0 0 10px rgba(112, 255, 143, 0.35); }
+h2 { font-size: 14px; }
+h3 { font-size: 12.5px; color: var(--green-bright); }
+.lede { color: var(--text); max-width: 72ch; margin: 10px 0 0; }
+.muted { color: var(--muted); }
+.faint { color: var(--faint); }
+.small { font-size: 13px; }
+p { margin: 8px 0; }
+ul.plain { margin: 6px 0; padding-left: 20px; }
+ul.plain li { margin: 3px 0; }
+
+/* ---- building blocks ------------------------------------------------------------------------ */
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin: 14px 0; }
+.card.hi { border-color: var(--line-hi); background: var(--panel-hi); }
+.card.warn { border-color: var(--amber); }
+.card.bad { border-color: var(--red); background: var(--red-bg); }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.spread { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+
+.meter { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.meter .big { font-size: 22px; color: var(--green); letter-spacing: 0.04em; }
+.bar { position: relative; width: 220px; height: 8px; background: #03100a; border: 1px solid var(--line-hi); border-radius: 4px; overflow: hidden; }
+.bar > i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, var(--green-dim), var(--green)); box-shadow: 0 0 8px rgba(112, 255, 143, 0.5); }
+
+.chip { display: inline-block; font: 11px/1.7 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 0 7px; border-radius: 3px; border: 1px solid var(--line-hi); color: var(--muted); white-space: nowrap; }
+.chip.done { color: var(--green); border-color: var(--green-dim); }
+.chip.active { color: var(--green-bright); border-color: var(--green-dim); background: #0a2514; }
+.chip.wait { color: var(--faint); border-style: dashed; }
+.chip.manual { color: var(--muted); }
+.chip.frontier { color: #c9b6ff; border-color: #5b4a99; background: #140f2a; }
+.chip.warn { color: var(--amber); border-color: #7a5420; background: var(--amber-bg); }
+.chip.bad { color: var(--red); border-color: #7a2c22; background: var(--red-bg); }
+
+button, .btn {
+  appearance: none; cursor: pointer;
+  font: 13px var(--mono); letter-spacing: 0.05em;
+  color: var(--green); background: #05170c;
+  border: 1px solid var(--green-dim); border-radius: 4px;
+  padding: 7px 12px;
+}
+button:hover:not(:disabled) { background: #0a2716; color: var(--green-bright); border-color: var(--green); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+button.primary { background: #0f3a1f; border-color: var(--green); color: var(--green-bright); }
+button.ghost { border-color: transparent; background: none; color: var(--muted); }
+button.ghost:hover:not(:disabled) { border-color: var(--line-hi); }
+button.icon { padding: 4px 9px; line-height: 1; color: var(--faint); border-color: transparent; background: none; font-size: 16px; }
+button.icon:hover:not(:disabled) { color: var(--red); border-color: #5a2a22; background: var(--red-bg); }
+
+input[type='text'], input:not([type]), select, textarea {
+  font: 15px var(--sans); color: var(--text);
+  background: #010a05; border: 1px solid var(--line-hi); border-radius: 4px;
+  padding: 8px 10px; caret-color: var(--green);
+}
+input:focus, select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(112, 255, 143, 0.14); }
+input:disabled, select:disabled { color: var(--muted); background: #020805; }
+input::placeholder { color: #4f7a5c; }
+select { padding: 5px 8px; font-size: 13.5px; }
+label { cursor: pointer; }
+
+/* ---- overview ------------------------------------------------------------------------------- */
+.steps { width: 100%; border-collapse: collapse; }
+.steps td { padding: 9px 10px; border-top: 1px solid var(--line); vertical-align: top; }
+.steps tr.go { cursor: pointer; }
+.steps tr.go:hover td { background: #0a2414; }
+.steps .n { width: 34px; font-family: var(--mono); color: var(--faint); }
+.steps .t { font-weight: 600; }
+.steps .w { color: var(--muted); font-size: 13px; }
+.steps .m { width: 90px; text-align: right; font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
+.steps .s { width: 170px; text-align: right; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; margin-top: 22px; }
+.section-head .mono { color: var(--muted); font-size: 13px; }
+.never { border-color: #7a2c22; }
+.never h2 { color: var(--red); }
+
+/* ---- queries -------------------------------------------------------------------------------- */
+.subtabs { display: flex; gap: 8px; margin: 4px 0 16px; }
+.subtabs button[aria-pressed='true'] { background: #0f3a1f; color: var(--green-bright); border-color: var(--green); }
+.composer { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; }
+.composer input { font-size: 17px; padding: 11px 13px; }
+.count { font: 12px var(--mono); color: var(--faint); min-width: 44px; text-align: right; }
+.count.full { color: var(--amber); }
+.qlist { list-style: none; margin: 14px 0 0; padding: 0; }
+.qrow { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: start; padding: 9px 4px; border-top: 1px solid var(--line); }
+.qrow .num { font: 13px/36px var(--mono); color: var(--faint); text-align: right; }
+.qrow input.qtext { width: 100%; }
+.qmeta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; min-height: 26px; }
+.qrow.flagged input.qtext { border-color: #7a5420; }
+
+.picker { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
+.picker .pick { padding: 3px 9px; font-size: 12px; color: var(--muted); border-style: dashed; border-color: var(--line-hi); background: none; }
+.picker .pick:hover { color: var(--green-bright); }
+.picker input { width: min(420px, 70vw); padding: 5px 9px; font-size: 13.5px; }
+.picker .rec { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 2px 4px 2px 10px; border: 1px solid var(--green-dim); border-radius: 4px; background: #07200f; font-size: 13px; }
+.picker .rec .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 46ch; }
+.picker .rec .date { font: 11.5px var(--mono); color: var(--faint); }
+.picker .rec button { padding: 0 6px; font-size: 14px; border: 0; background: none; color: var(--faint); }
+.picker .rec button:hover { color: var(--red); background: none; }
+.listbox { position: absolute; top: calc(100% + 4px); left: 0; z-index: 15; width: min(560px, 86vw); max-height: 340px; overflow: auto; margin: 0; padding: 4px; list-style: none; background: #041309; border: 1px solid var(--green-dim); border-radius: 6px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); }
+.listbox li { padding: 7px 9px; border-radius: 4px; cursor: pointer; }
+.listbox li[aria-selected='true'], .listbox li:hover { background: #0e3019; }
+.listbox .t { display: block; color: var(--text); font-size: 14px; }
+.listbox .s { display: block; font: 11.5px var(--mono); color: var(--faint); }
+.listbox .empty { color: var(--faint); cursor: default; }
+
+.series { display: grid; gap: 10px; }
+.slot { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: start; }
+.slot .num { font: 13px/36px var(--mono); color: var(--faint); }
+
+/* ---- voices --------------------------------------------------------------------------------- */
+.voice .brief { color: var(--muted); margin: 4px 0 12px; font-size: 14px; }
+.vslot { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 7px 0 2px; }
+.vflag { font-size: 12.5px; margin: 0 0 4px; min-height: 0; }
+.vflag.copy { color: var(--red); }
+.vflag.close, .vflag.repeat { color: var(--amber); }
+
+/* ---- people / registers --------------------------------------------------------------------- */
+.person { padding: 16px 18px; }
+.person.done { border-color: var(--green-dim); }
+.person .clusters { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin: 12px 0; }
+.cluster { border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; background: #04140a; }
+.cluster ul { list-style: none; margin: 8px 0 0; padding: 0; }
+.cluster li { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 6px 0; border-top: 1px solid var(--line); }
+.cluster li:first-child { border-top: 0; }
+.cluster .rtitle { font-size: 14px; }
+.cluster .role { display: block; color: var(--muted); font-size: 13px; }
+.cluster li.moved .rtitle::before { content: '↪ '; color: var(--amber); }
+.reg-group { margin: 18px 0; }
+.reg-row { display: grid; grid-template-columns: 1fr 210px; gap: 12px; align-items: center; padding: 7px 4px; border-top: 1px solid var(--line); }
+.reg-row .slug { display: block; font: 11.5px var(--mono); color: var(--faint); }
+.reg-row .why { display: block; font-size: 12.5px; color: var(--muted); }
+.reg-row.changed { background: #1a1408; }
+.reg-row.changed select { border-color: var(--amber); }
+
+/* ---- audit ---------------------------------------------------------------------------------- */
+.pair .label { font: 11.5px var(--mono); letter-spacing: 0.12em; color: var(--faint); text-transform: uppercase; margin: 16px 0 6px; }
+.pair .q { font: 22px/1.35 var(--mono); color: var(--green-bright); text-shadow: 0 0 8px rgba(112, 255, 143, 0.25); word-break: break-word; }
+.pair .q::before { content: '> '; color: var(--green-dim); }
+.pair .rtitle { font-size: 17px; font-weight: 600; }
+.passage { border-left: 2px solid var(--line-hi); padding: 4px 0 4px 14px; margin: 8px 0; color: var(--text); white-space: pre-wrap; }
+.grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px; }
+.grades button { padding: 12px 8px; text-align: left; line-height: 1.35; }
+.grades button b { display: block; font-size: 20px; color: var(--green); }
+.grades button span { font-family: var(--sans); font-size: 12.5px; color: var(--muted); letter-spacing: 0; }
+.grades button[aria-pressed='true'] { background: #14502a; border-color: var(--green-bright); box-shadow: 0 0 0 2px rgba(112, 255, 143, 0.25); }
+.grades button[aria-pressed='true'] span { color: var(--text); }
+
+.waiting { text-align: left; padding: 26px 24px; }
+.pulse { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--green-dim); margin-right: 8px; animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 50% { background: var(--green); box-shadow: 0 0 10px var(--green); } }
+
+@media (max-width: 720px) {
+  .top, .tabs, main, footer { padding-left: 14px; padding-right: 14px; }
+  .brand .sub { display: none; }
+  .grades { grid-template-columns: repeat(2, 1fr); }
+  .reg-row { grid-template-columns: 1fr; }
+  .steps .w { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">ARC OWNER DESK<span class="cursor" aria-hidden="true"></span><span class="sub">RE-MEANING · THE CALIBRATION RUNS</span></div>
+  <div id="save" class="save" role="status" aria-live="polite">connecting…</div>
+</header>
+<nav id="tabs" class="tabs" role="tablist" aria-label="Desk tabs"></nav>
+<div id="banner" class="banner" role="alert" hidden></div>
+<main id="main" tabindex="-1"><p class="muted">Loading the desk…</p></main>
+<footer id="foot"></footer>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+'use strict'
+;(() => {
+  const TOKEN = '__ARC_DESK_TOKEN__'
+  const TABS = [
+    ['overview', 'Overview'],
+    ['queries', 'Queries'],
+    ['voices', 'Voices'],
+    ['settings', 'Settings'],
+    ['people', 'People'],
+    ['registers', 'Registers'],
+    ['audit', 'Audit'],
+    ['adjudicate', 'Adjudicate'],
+    ['remeaning', 'Re-meaning'],
+  ]
+  const GRADE_TEXT = [
+    ['Not relevant', 'Nothing to do with the query, or a different person with the same name.'],
+    ['Related', 'On the topic, but not what the query is after.'],
+    ['Relevant', 'Answers part of it, or is a good second choice.'],
+    ['Exactly it', 'The record the query is looking for.'],
+  ]
+  const SERIES_LIMIT = 4
+  const POLL_MS = 10000
+
+  let S = null // the last /api/state
+  let RECORDS = []
+  let BY_SLUG = new Map()
+  let tab = 'overview'
+  let sub = 'main'
+  let view = null // the current tab's {refresh()} hooks
+  const docs = {} // name -> {data, rev, dirty, inflight, timer, error, retry}
+  let lastPing = null
+  let offline = false
+
+  // ---- tiny DOM helper ---------------------------------------------------------------------
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag)
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v === null || v === undefined || v === false) continue
+      if (k === 'class') el.className = v
+      else if (k === 'text') el.textContent = v
+      else if (k === 'value') el.value = v
+      else if (k.startsWith('on')) el.addEventListener(k.slice(2), v)
+      else el.setAttribute(k, v === true ? '' : v)
+    }
+    for (const kid of kids.flat(Infinity)) {
+      if (kid === null || kid === undefined || kid === false) continue
+      el.append(kid instanceof Node ? kid : String(kid))
+    }
+    return el
+  }
+  const $ = (sel, root = document) => root.querySelector(sel)
+  const clear = (el) => { while (el.firstChild) el.firstChild.remove(); return el }
+  const len16 = (s) => s.length // a JS string's length is in UTF-16 units, like maxLength
+  const pct = (done, total) => (total ? Math.min(100, Math.round((100 * done) / total)) : 0)
+  const mins = (m) => {
+    if (m <= 0) return '0 min'
+    if (m < 1) return `${Math.round(m * 60)} s`
+    const whole = Math.round(m)
+    return whole >= 60 ? `${Math.floor(whole / 60)} h ${String(whole % 60).padStart(2, '0')} min` : `${whole} min`
+  }
+  const clock = (iso) => (iso ? new Date(iso).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '')
+  const nowIso = () => new Date().toISOString().replace(/\.\d+Z$/, 'Z')
+  const bar = (done, total) => h('span', { class: 'bar', 'aria-hidden': 'true' }, h('i', { style: `width:${pct(done, total)}%` }))
+  const locked = (name) => S.locked_docs.includes(name)
+  const stepOf = (key) => S.progress.steps.find((s) => s.key === key)
+
+  // ---- server ------------------------------------------------------------------------------
+  async function api(method, path, body) {
+    const headers = { 'X-Arc-Token': TOKEN }
+    if (body !== undefined) headers['Content-Type'] = 'application/json'
+    const res = await fetch(path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body), cache: 'no-store' })
+    let json = null
+    try { json = await res.json() } catch (_) { json = null }
+    return { ok: res.ok, status: res.status, json }
+  }
+
+  function payloadOf(doc) {
+    const copy = JSON.parse(JSON.stringify(doc))
+    delete copy.rev
+    delete copy.updated_utc
+    return copy
+  }
+
+  function adopt(name, doc) {
+    docs[name] = { data: payloadOf(doc), rev: doc.rev, dirty: false, inflight: false, timer: null, error: null, retry: 0 }
+    S.docs[name] = doc
+  }
+
+  function setSave(kind, text) {
+    const el = $('#save')
+    el.className = 'save ' + kind
+    el.textContent = text
+  }
+
+  function busy() { return Object.values(docs).some((d) => d.dirty || d.inflight) }
+
+  function showSaved() {
+    const errors = Object.entries(docs).filter(([, d]) => d.error)
+    if (errors.length) setSave('bad', `not saved: ${errors[0][1].error}`)
+    else if (busy()) setSave('busy', 'saving…')
+    else setSave('ok', `saved ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`)
+  }
+
+  // Apply `mutate` to the local copy of a document and save it shortly after (autosave).
+  function edit(name, mutate, delay = 350) {
+    const d = docs[name]
+    mutate(d.data)
+    d.dirty = true
+    d.error = null
+    setSave('busy', 'saving…')
+    clearTimeout(d.timer)
+    d.timer = setTimeout(() => flush(name), delay)
+  }
+
+  async function flush(name) {
+    const d = docs[name]
+    clearTimeout(d.timer)
+    if (d.inflight || !d.dirty) return
+    d.inflight = true
+    d.dirty = false
+    let r = null
+    try {
+      r = await api('PUT', `/api/docs/${name}`, { rev: d.rev, data: d.data })
+    } catch (_) {
+      r = null
+    }
+    d.inflight = false
+    if (!r) {
+      d.dirty = true
+      d.retry = Math.min(15000, (d.retry || 500) * 2)
+      setOffline(true)
+      d.timer = setTimeout(() => flush(name), d.retry)
+      return
+    }
+    setOffline(false)
+    d.retry = 0
+    if (r.ok) {
+      d.rev = r.json.doc.rev
+      S.docs[name] = r.json.doc
+      S.derived = r.json.derived_all
+      S.progress = r.json.progress
+      if (!d.dirty) d.data = payloadOf(r.json.doc)
+      if (view && view.refresh) view.refresh(name)
+      renderTabs()
+      if (d.dirty) flush(name)
+    } else if (r.status === 409 && r.json && r.json.current) {
+      adopt(name, r.json.current)
+      toast('This was changed in another window, so the desk reloaded it.')
+      await reload()
+    } else {
+      d.error = (r.json && r.json.error) || `HTTP ${r.status}`
+      if (r.status === 401) d.error = 'the desk restarted; reload this page'
+      if (view && view.refresh) view.refresh(name)
+    }
+    showSaved()
+  }
+
+  function setOffline(on) {
+    if (on === offline) return
+    offline = on
+    if (on) banner('The desk server is not answering. Is <code>arcforge owner</code> still running? Your edits are kept in this window and save as soon as it is back.', 'warn')
+    else banner(null)
+  }
+
+  const PREP_VIEWS = new Set(['overview', 'people', 'registers', 'audit', 'adjudicate', 'remeaning'])
+
+  async function reload(rerender = true) {
+    const r = await api('GET', '/api/state')
+    if (!r.ok) throw new Error((r.json && r.json.error) || `HTTP ${r.status}`)
+    S = r.json
+    for (const name of Object.keys(S.docs)) {
+      if (!docs[name] || (!docs[name].dirty && !docs[name].inflight)) adopt(name, S.docs[name])
+    }
+    if (rerender) render()
+    else renderTabs()
+  }
+
+  // ---- banner, toast, notifications -------------------------------------------------------
+  function banner(html, kind = 'warn') {
+    const el = $('#banner')
+    if (!html) { el.hidden = true; return }
+    el.className = 'banner ' + (kind === 'info' ? 'info' : '')
+    clear(el)
+    const msg = h('div')
+    msg.innerHTML = html // only ever our own static strings
+    el.append(msg, h('button', { class: 'ghost', onclick: () => banner(null), 'aria-label': 'Dismiss' }, '×'))
+    el.hidden = false
+  }
+
+  let toastTimer = null
+  function toast(text, action) {
+    const el = $('#toast')
+    clear(el).append(h('span', { text }))
+    if (action) el.append(h('button', { onclick: () => { el.hidden = true; action.run() } }, action.label))
+    el.hidden = false
+    clearTimeout(toastTimer)
+    toastTimer = setTimeout(() => { el.hidden = true }, action ? 8000 : 4000)
+  }
+
+  function notify(title, body) {
+    document.title = '● ARC Owner Desk'
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try { new Notification(title, { body }) } catch (_) { /* some browsers need a service worker */ }
+    }
+  }
+  window.addEventListener('focus', () => { document.title = 'ARC Owner Desk' })
+  document.addEventListener('keydown', (e) => { if (view && view.onKey) view.onKey(e) })
+
+  async function poll() {
+    try {
+      const r = await api('GET', '/api/ping')
+      if (r.ok) {
+        setOffline(false)
+        const sig = JSON.stringify(r.json)
+        if (lastPing && sig !== lastPing) {
+          const before = JSON.parse(lastPing)
+          const after = r.json
+          await reload(PREP_VIEWS.has(tab) || before.locked !== after.locked)
+          const arrived = (k) => before.prep[k] !== 'ok' && after.prep[k] === 'ok'
+          if (arrived('people')) { notify('Prep is done', 'People and Registers are ready in the Owner Desk.'); banner('Prep is done: People and Registers are ready.', 'info') }
+          if (arrived('audit')) { notify('The R00 owner gate is open', 'The blind audit is ready.'); banner('The R00 owner gate is open: the blind audit is ready.', 'info') }
+          if (arrived('adjudicate')) notify('Adjudication is ready', 'Up to 30 pairs.')
+        }
+        lastPing = sig
+      }
+    } catch (_) {
+      setOffline(true)
+    }
+    setTimeout(poll, POLL_MS)
+  }
+
+  // ---- frame -------------------------------------------------------------------------------
+  function badgeFor(key) {
+    const step = (k) => stepOf(k)
+    const counted = (s) => (s.status === 'waiting' ? ['waiting', ''] : s.status === 'done' ? ['✓', 'done'] : [`${s.done ?? 0}/${s.total ?? 0}`, s.status === 'active' ? 'attn' : ''])
+    switch (key) {
+      case 'overview': return S.progress.ready ? ['ready', 'done'] : [mins(S.progress.minutes_left) + ' left', '']
+      case 'queries': {
+        const q = step('queries'), f = step('frontier')
+        if (locked('queries')) return ['frozen', 'done']
+        return [`${q.done}/${q.total} · ${f.done}/${f.total}`, q.status === 'done' && f.status === 'done' ? 'done' : '']
+      }
+      case 'voices': {
+        const v = step('voices')
+        const copies = S.derived.voices.copies
+        return copies ? [`${copies} copy`, 'attn'] : counted(v)
+      }
+      case 'settings': return step('settings').status === 'done' ? ['✓', 'done'] : ['check', '']
+      case 'people': case 'registers': case 'audit': case 'adjudicate': return counted(step(key))
+      case 'remeaning': return ['R03', '']
+    }
+    return ['', '']
+  }
+
+  function renderTabs() {
+    const nav = clear($('#tabs'))
+    for (const [key, label] of TABS) {
+      const [badge, cls] = badgeFor(key)
+      nav.append(
+        h('button', { class: 'tab', role: 'tab', 'aria-selected': String(key === tab), onclick: () => go(key) },
+          label, badge ? h('span', { class: 'badge ' + cls }, badge) : null),
+      )
+    }
+  }
+
+  function go(key, subKey) {
+    location.hash = subKey ? `${key}/${subKey}` : key
+  }
+
+  function render() {
+    renderTabs()
+    const main = clear($('#main'))
+    view = (VIEWS[tab] || VIEWS.overview)(main) || null
+    $('#foot').textContent = `saves only to ${S.owner_dir} · works offline · arcforge ${S.version}`
+  }
+
+  function fromHash() {
+    const [key, subKey] = location.hash.replace(/^#/, '').split('/')
+    tab = TABS.some(([k]) => k === key) ? key : 'overview'
+    if (tab === 'queries') sub = subKey === 'frontier' ? 'frontier' : 'main'
+  }
+  window.addEventListener('hashchange', () => { fromHash(); if (S) { render(); $('#main').focus({ preventScroll: true }); window.scrollTo(0, 0) } })
+  window.addEventListener('beforeunload', (e) => {
+    if (busy()) { Object.keys(docs).forEach(flush); e.preventDefault(); e.returnValue = '' }
+  })
+
+  function head(title, lede, ...extra) {
+    return h('div', { class: 'head' }, h('div', {}, h('h1', { text: title }), lede ? h('p', { class: 'lede' }, lede) : null), ...extra)
+  }
+
+  function chip(status, text) {
+    const cls = { done: 'done', active: 'active', waiting: 'wait', manual: 'manual', todo: '', info: '' }[status] ?? ''
+    return h('span', { class: 'chip ' + cls }, text)
+  }
+
+  function errorLine(name) {
+    const d = docs[name]
+    return d && d.error ? h('p', { class: 'card bad small' }, `Not saved: ${d.error}`) : null
+  }
+
+  // ---- record picker -----------------------------------------------------------------------
+  const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+  function matches(text, filter) {
+    const terms = text.toLowerCase().split(/\s+/).filter(Boolean)
+    const pool = filter ? RECORDS.filter(filter) : RECORDS
+    if (!terms.length) return pool.slice(0, 8)
+    const scored = []
+    for (const r of pool) {
+      const title = r.title.toLowerCase()
+      const hay = `${title} ${r.slug}`
+      if (!terms.every((t) => hay.includes(t))) continue
+      let score = 0
+      for (const t of terms) score += title.startsWith(t) ? 3 : new RegExp('\\b' + escapeRe(t)).test(title) ? 2 : 1
+      scored.push([score, r])
+    }
+    scored.sort((a, b) => b[0] - a[0] || a[1].title.localeCompare(b[1].title))
+    return scored.slice(0, 8).map(([, r]) => r)
+  }
+
+  // value: a slug or null. onChange(slug|null). filter: optional record predicate.
+  function picker({ value, onChange, filter, disabled, label }) {
+    const box = h('span', { class: 'picker' })
+    let current = value
+    const show = (slug) => {
+      current = slug
+      clear(box)
+      if (slug) {
+        const r = BY_SLUG.get(slug)
+        box.append(
+          h('span', { class: 'rec', title: slug },
+            h('span', { class: 'title' }, r ? r.title : slug),
+            r && r.date ? h('span', { class: 'date' }, r.date.slice(0, 4)) : null,
+            r ? null : h('span', { class: 'chip warn' }, 'not in the manifest'),
+            disabled ? null : h('button', { 'aria-label': 'Remove the record', title: 'Remove the record', onclick: () => { onChange(null); show(null) } }, '×'),
+          ),
+        )
+      } else if (!disabled) {
+        if (!RECORDS.length) { box.append(h('span', { class: 'faint small' }, 'no record index')); return }
+        box.append(h('button', { class: 'pick', onclick: () => open() }, label || '+ record you meant (optional)'))
+      }
+    }
+    const open = () => {
+      clear(box)
+      const id = 'lb' + Math.random().toString(36).slice(2, 8)
+      const input = h('input', { type: 'text', role: 'combobox', 'aria-expanded': 'true', 'aria-controls': id, 'aria-autocomplete': 'list', placeholder: 'search titles…', autocomplete: 'off', spellcheck: 'false' })
+      const list = h('ul', { class: 'listbox', role: 'listbox', id })
+      let items = []
+      let active = 0
+      const paint = () => {
+        clear(list)
+        if (!items.length) { list.append(h('li', { class: 'empty' }, 'no matching record')); return }
+        items.forEach((r, i) => {
+          list.append(
+            h('li', { role: 'option', 'aria-selected': String(i === active), onmousedown: (e) => { e.preventDefault(); pick(r) } },
+              h('span', { class: 't' }, r.title),
+              h('span', { class: 's' }, [r.slug, r.date ? r.date.slice(0, 4) : '', r.frontier ? 'FRONTIER' : ''].filter(Boolean).join(' · ')),
+            ),
+          )
+        })
+      }
+      const pick = (r) => { onChange(r.slug); show(r.slug) }
+      const update = () => { items = matches(input.value, filter); active = 0; paint() }
+      input.addEventListener('input', update)
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { active = Math.min(items.length - 1, active + 1); paint(); e.preventDefault() }
+        else if (e.key === 'ArrowUp') { active = Math.max(0, active - 1); paint(); e.preventDefault() }
+        else if (e.key === 'Enter') { if (items[active]) pick(items[active]); e.preventDefault() }
+        else if (e.key === 'Escape') { show(current); e.preventDefault() }
+      })
+      input.addEventListener('blur', () => setTimeout(() => { if (box.contains(input)) show(current) }, 120))
+      box.append(input, list)
+      update()
+      input.focus()
+    }
+    show(value)
+    return box
+  }
+
+  // ---- views -------------------------------------------------------------------------------
+  const VIEWS = {}
+
+  VIEWS.overview = (main) => {
+    const p = S.progress
+    const before = p.sections.A.minutes_left + p.sections.B.minutes_left
+    main.append(
+      head('Your R00 checklist',
+        'About 2 h 27 min of your time in all: about 1 h 41 min before launch, and about 46 min at the R00 owner gate. Every tab saves as you type, so you can stop at any point and come back.',
+        h('div', { class: 'meter' }, h('span', { class: 'big' }, mins(p.minutes_left)), h('span', {}, 'left of ' + mins(p.minutes)))),
+    )
+    for (const [key, section] of Object.entries(p.sections)) {
+      main.append(
+        h('div', { class: 'section-head' },
+          h('h2', {}, `${key} · ${section.title}`),
+          h('span', { class: 'mono' }, `${mins(section.minutes)} budget · ${mins(section.minutes_left)} left`)),
+      )
+      const table = h('table', { class: 'steps' })
+      for (const s of p.steps.filter((x) => x.section === key)) {
+        const target = { queries: 'queries', frontier: 'queries/frontier', voices: 'voices', settings: 'settings', people: 'people', registers: 'registers', audit: 'audit', adjudicate: 'adjudicate' }[s.key]
+        const label = s.status === 'waiting' ? 'waiting' : s.status === 'manual' ? 'in Terminal' : s.status === 'info' ? '' : s.total ? `${s.done}/${s.total}` : s.status
+        const row = h('tr', { class: target ? 'go' : '', onclick: target ? () => { location.hash = target } : null },
+          h('td', { class: 'n' }, String(s.number)),
+          h('td', {}, h('div', { class: 't' }, s.title), h('div', { class: 'w' }, [s.where, s.note].filter(Boolean).join(' · '))),
+          h('td', { class: 'm' }, s.minutes ? mins(s.minutes) : ''),
+          h('td', { class: 's' }, label ? chip(s.status, label) : null, s.status !== 'done' && s.status !== 'info' && s.minutes_left ? h('div', { class: 'faint small' }, `≈ ${mins(s.minutes_left)} left`) : null),
+        )
+        table.append(row)
+      }
+      main.append(table)
+    }
+
+    const launch = S.docs.launch
+    const ready = p.ready
+    const launchCard = h('div', { class: 'card ' + (ready ? 'hi' : '') },
+      h('div', { class: 'spread' },
+        h('h2', {}, 'Step 9 · Launch R00'),
+        launch.requested_utc ? chip('done', 'requested ' + clock(launch.requested_utc)) : null),
+      launch.requested_utc
+        ? h('p', {}, 'Launch requested. The orchestrator starts the VM part: about 2 h on a spot VM that deletes itself. The gate opens about 100 minutes after launch, and this desk tells you.')
+        : h('p', {}, 'When steps 1-8 are done, click Launch or tell the orchestrator “go R00”. The VM part then runs unattended.'),
+      !launch.requested_utc && p.blockers.length ? h('ul', { class: 'plain small muted' }, p.blockers.map((b) => h('li', {}, b))) : null,
+      !launch.requested_utc ? h('div', { class: 'row' },
+        h('button', { class: 'primary', disabled: !ready, onclick: () => {
+          if (!confirm('Launch R00 now? The orchestrator starts the VM part (about 2 h, self-deleting spot VM).')) return
+          edit('launch', (d) => { d.requested_utc = nowIso() }, 0)
+        } }, 'Launch R00'),
+        h('span', { class: 'faint small' }, ready ? 'Everything is in place.' : `${p.blockers.length} thing${p.blockers.length === 1 ? '' : 's'} first`)) : null,
+      errorLine('launch'),
+    )
+    main.append(launchCard)
+
+    const notifyBtn = 'Notification' in window && Notification.permission === 'default'
+      ? h('button', { class: 'ghost', onclick: async () => { await Notification.requestPermission(); render() } }, 'Notify me when prep or the gate is ready')
+      : null
+    main.append(
+      h('div', { class: 'card' },
+        h('div', { class: 'spread' }, h('h2', {}, 'Waiting on the pipeline'), notifyBtn),
+        h('ul', { class: 'plain small' },
+          h('li', {}, 'People and Registers open after the prep pass (', h('code', {}, 'arcforge run r00 --prep'), ', about 10 min on this laptop, no VM).'),
+          h('li', {}, 'Audit and Adjudicate open at the R00 owner gate, about 100 minutes after launch. The VM is already deleted by then, so waiting costs nothing.'),
+          h('li', {}, 'This page checks every 10 seconds and switches the tabs on by itself.')),
+      ),
+      h('div', { class: 'card never' },
+        h('h2', {}, 'Never'),
+        h('ul', { class: 'plain' },
+          h('li', {}, h('b', {}, 'Never paste the vault key into chat'), ', an agent, the repo, the VM, GCS or HF. Only ', h('code', {}, 'arcforge vault read'), ' on this laptop ever asks for it.'),
+          h('li', {}, 'Never paste a token into chat or the repo. A missing secret goes into Secret Manager in the GCP console, by you.'),
+          h('li', {}, 'Don’t look things up while writing queries, and don’t try to choose which ones get sealed: arcforge splits them by salted hash.'),
+          h('li', {}, 'Don’t copy your queries into the Voices tab; write fresh ones.')),
+      ),
+    )
+    return { refresh: () => render() }
+  }
+
+  // ---- queries -----------------------------------------------------------------------------
+  VIEWS.queries = (main) => {
+    const q = () => docs.queries.data
+    const der = () => S.derived.queries
+    const frozen = locked('queries')
+    const lim = S.limits
+
+    main.append(
+      head('Queries',
+        'Write the way you would type into FIND: 60 characters or fewer, partial words are fine, and don’t look anything up. Aim them at the archive outside The Echo Chamber and The Residue.'),
+    )
+    if (frozen) {
+      main.append(h('div', { class: 'card hi' }, h('b', {}, 'Frozen at S0'), S.lock && S.lock.locked_utc ? ` on ${clock(S.lock.locked_utc)}` : '', '. The queries were split into 70 sealed and 30 open-dev by salted hash, so they are read-only now.'))
+    }
+    const subs = h('div', { class: 'subtabs', role: 'group', 'aria-label': 'Query sections' },
+      h('button', { 'aria-pressed': String(sub === 'main'), onclick: () => go('queries') }, 'The 100'),
+      h('button', { 'aria-pressed': String(sub === 'frontier'), onclick: () => go('queries', 'frontier') }, 'Frontier · 4 + 4'),
+    )
+    main.append(subs)
+    const body = h('div')
+    main.append(body)
+
+    if (sub === 'frontier') return frontierPane(body, frozen)
+
+    const meter = h('div', { class: 'meter' })
+    const list = h('ol', { class: 'qlist', 'aria-label': 'Your queries, newest first' })
+    const err = h('div')
+
+    const paintMeter = () => {
+      const d = der()
+      const step = stepOf('queries')
+      const pace = paceSeconds()
+      const left = Math.max(0, d.main_target - d.main_filled)
+      clear(meter).append(
+        h('span', { class: 'big' }, `${d.main_filled} / ${d.main_target}`),
+        bar(d.main_filled, d.main_target),
+        h('span', {}, left ? `≈ ${mins(pace ? (left * pace) / 60 : step.minutes_left)} left` + (pace ? ` at your pace (${Math.round(pace)} s each)` : '') : 'all 100 written'),
+        d.main_frontier_tagged ? chip('active', `${d.main_frontier_tagged} tagged FRONTIER`) : null,
+        d.with_record ? h('span', { class: 'faint' }, `${d.with_record} with a record`) : null,
+      )
+      clear(err)
+      const e = errorLine('queries')
+      if (e) err.append(e)
+    }
+
+    const mainRows = () => q().queries.filter((x) => x.section === 'main')
+    const numberOf = () => new Map(mainRows().map((x, i) => [x.id, i + 1]))
+
+    const flagsFor = (item, numbers) => {
+      const d = der()
+      const out = []
+      if (item.frontier) {
+        const series = item.record ? (BY_SLUG.get(item.record) || {}).frontier : null
+        out.push(h('span', { class: 'chip frontier', title: 'This record is in a withheld series, so the query is measured at R09 instead of the main line.' }, 'FRONTIER' + (series ? ` · ${lim.frontier_series[series]}` : '')))
+      }
+      if (d.duplicates[item.id]) out.push(h('span', { class: 'chip warn' }, 'same as ' + d.duplicates[item.id].map((o) => '#' + (numbers.get(o) || o)).join(', ')))
+      if (!item.text) out.push(h('span', { class: 'chip bad' }, 'empty'))
+      if (d.unknown_records.includes(item.id)) out.push(h('span', { class: 'chip warn' }, 'record not found'))
+      return out
+    }
+
+    const row = (item, numbers) => {
+      const counter = h('span', { class: 'count' }, `${len16(item.text)}/${lim.max_chars}`)
+      const flags = h('span', { class: 'flags row' }, flagsFor(item, numbers))
+      const input = h('input', {
+        type: 'text', class: 'qtext', value: item.text, maxlength: lim.max_chars, disabled: frozen,
+        'aria-label': `Query ${numbers.get(item.id)}`, autocomplete: 'off', spellcheck: 'false',
+        oninput: (e) => {
+          const text = e.target.value
+          counter.textContent = `${len16(text)}/${lim.max_chars}`
+          counter.classList.toggle('full', len16(text) >= lim.max_chars)
+          edit('queries', (d) => { d.queries.find((x) => x.id === item.id).text = text })
+        },
+      })
+      const recordBox = picker({
+        value: item.record, disabled: frozen,
+        onChange: (slug) => edit('queries', (d) => { d.queries.find((x) => x.id === item.id).record = slug }, 0),
+      })
+      const del = frozen ? h('span') : h('button', { class: 'icon', title: `Delete query ${numbers.get(item.id)}`, 'aria-label': `Delete query ${numbers.get(item.id)}`, onclick: () => remove(item.id) }, '×')
+      return h('li', { class: 'qrow', 'data-id': item.id },
+        h('span', { class: 'num' }, '#' + numbers.get(item.id)),
+        h('div', {}, input, h('div', { class: 'qmeta' }, counter, recordBox, flags)),
+        del)
+    }
+
+    const paintList = () => {
+      const numbers = numberOf()
+      clear(list)
+      for (const item of [...mainRows()].reverse()) list.append(row(item, numbers))
+    }
+
+    const refreshFlags = () => {
+      const numbers = numberOf()
+      for (const li of list.querySelectorAll('.qrow')) {
+        const item = q().queries.find((x) => x.id === li.dataset.id)
+        if (!item) continue
+        const flags = li.querySelector('.flags')
+        clear(flags).append(...flagsFor(item, numbers))
+        li.classList.toggle('flagged', flags.children.length > 0 && !item.frontier)
+      }
+    }
+
+    const remove = (id) => {
+      const index = q().queries.findIndex((x) => x.id === id)
+      const removed = q().queries[index]
+      const n = numberOf().get(id)
+      edit('queries', (d) => { d.queries.splice(index, 1) }, 0)
+      paintList()
+      toast(`Deleted query #${n}.`, { label: 'Undo', run: () => { edit('queries', (d) => { d.queries.splice(index, 0, removed) }, 0); paintList() } })
+    }
+
+    if (!frozen) {
+      const counter = h('span', { class: 'count' }, `0/${lim.max_chars}`)
+      const input = h('input', { type: 'text', id: 'new-query', maxlength: lim.max_chars, placeholder: 'Type a query from memory and press Enter', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'New query' })
+      const add = () => {
+        const text = input.value.trim()
+        if (!text) return
+        if (mainRows().length >= lim.main_target) { toast(`That’s ${lim.main_target}. Edit or delete one to add another.`); return }
+        edit('queries', (d) => {
+          const id = 'q-' + String(d.next_seq).padStart(4, '0')
+          d.next_seq += 1
+          d.queries.push({ id, text, record: null, section: 'main', series: null, created_utc: nowIso() })
+        }, 0)
+        input.value = ''
+        counter.textContent = `0/${lim.max_chars}`
+        paintList()
+        paintMeter()
+      }
+      input.addEventListener('input', () => {
+        counter.textContent = `${len16(input.value)}/${lim.max_chars}`
+        counter.classList.toggle('full', len16(input.value) >= lim.max_chars)
+      })
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); add() } })
+      body.append(
+        h('div', { class: 'card hi' },
+          meter,
+          h('div', { class: 'composer', style: 'margin-top:14px' }, input, counter, h('button', { class: 'primary', onclick: add }, 'Add ↵')),
+          h('p', { class: 'small muted' }, 'Optionally attach the record you meant from the autocomplete under each query: it becomes a grade-3 label. A query aimed at a record in The Echo Chamber or The Residue is re-tagged FRONTIER automatically. Don’t decide which queries get sealed: at S0 arcforge splits them by salted hash into 70 vault and 30 open-dev.'),
+        ),
+        err,
+      )
+      setTimeout(() => input.focus(), 0)
+    } else {
+      body.append(h('div', { class: 'card' }, meter))
+    }
+    body.append(list)
+    paintMeter()
+    paintList()
+    refreshFlags()
+    return { refresh: () => { paintMeter(); refreshFlags(); renderTabs() } }
+  }
+
+  function paceSeconds() {
+    const times = docs.queries.data.queries
+      .filter((x) => x.section === 'main' && x.created_utc)
+      .map((x) => Date.parse(x.created_utc))
+      .filter((t) => !Number.isNaN(t))
+      .sort((a, b) => a - b)
+    const gaps = []
+    for (let i = 1; i < times.length; i++) {
+      const gap = (times[i] - times[i - 1]) / 1000
+      if (gap > 0 && gap <= 300) gaps.push(gap)
+    }
+    if (gaps.length < 5) return null
+    gaps.sort((a, b) => a - b)
+    return gaps[Math.floor(gaps.length / 2)]
+  }
+
+  function frontierPane(body, frozen) {
+    const lim = S.limits
+    body.append(h('p', { class: 'lede' }, 'Write 4 queries for The Echo Chamber and 4 for The Residue. These two series are withheld from training until R09, when they rejoin and these queries test how the model handles growth. About 4 minutes.'))
+    const meter = h('div', { class: 'meter' })
+    const paintMeter = () => {
+      const d = S.derived.queries
+      const done = Object.values(d.frontier_filled).reduce((a, n) => a + Math.min(n, SERIES_LIMIT), 0)
+      clear(meter).append(h('span', { class: 'big' }, `${done} / ${d.frontier_target}`), bar(done, d.frontier_target))
+    }
+    body.append(h('div', { class: 'card' }, meter), errorLine('queries'))
+    const grid = h('div', { class: 'grid2' })
+    body.append(grid)
+
+    const slotsOf = (series) => docs.queries.data.queries.filter((x) => x.section === 'frontier' && x.series === series)
+    const cards = {}
+    const refreshers = []
+    // One slot is bound to one query id. Typing into an empty slot creates its query; clearing a
+    // slot that has no record deletes it, so half-used slots never leave empty rows behind.
+    const slot = (series, item, i) => {
+      let boundId = item ? item.id : null
+      const bound = () => (boundId ? docs.queries.data.queries.find((x) => x.id === boundId) : null)
+      const counter = h('span', { class: 'count' }, `${item ? len16(item.text) : 0}/${lim.max_chars}`)
+      const pickerBox = h('span')
+      const warn = h('span')
+      const paintPicker = () => {
+        const it = bound()
+        clear(pickerBox).append(it ? picker({ value: it.record, disabled: frozen, filter: (r) => r.frontier === series, label: '+ record (optional)', onChange: (slug) => edit('queries', (d) => { d.queries.find((x) => x.id === boundId).record = slug }, 0) }) : '')
+      }
+      const paintWarn = () => {
+        const it = bound()
+        clear(warn).append(it && S.derived.queries.series_mismatch.includes(it.id) ? h('span', { class: 'chip warn' }, 'record is outside this series') : '')
+      }
+      const input = h('input', {
+        type: 'text', value: item ? item.text : '', maxlength: lim.max_chars, disabled: frozen, autocomplete: 'off', spellcheck: 'false',
+        'aria-label': `${lim.frontier_series[series]} query ${i + 1}`, placeholder: 'a query from memory',
+        oninput: (e) => {
+          const text = e.target.value
+          counter.textContent = `${len16(text)}/${lim.max_chars}`
+          const before = boundId
+          edit('queries', (d) => {
+            let target = boundId && d.queries.find((x) => x.id === boundId)
+            if (!target && text) {
+              if (d.queries.filter((x) => x.section === 'frontier' && x.series === series).length >= SERIES_LIMIT) return
+              target = { id: 'q-' + String(d.next_seq).padStart(4, '0'), text: '', record: null, section: 'frontier', series, created_utc: nowIso() }
+              d.next_seq += 1
+              d.queries.push(target)
+              boundId = target.id
+            }
+            if (!target) return
+            target.text = text
+            if (!text && !target.record) {
+              d.queries.splice(d.queries.indexOf(target), 1)
+              boundId = null
+            }
+          })
+          if (before !== boundId) paintPicker()
+        },
+      })
+      paintPicker()
+      paintWarn()
+      refreshers.push(paintWarn)
+      return h('div', { class: 'slot' }, h('span', { class: 'num' }, String(i + 1)), h('div', {}, input, h('div', { class: 'qmeta' }, counter, pickerBox, warn)))
+    }
+    const countEls = {}
+    for (const series of Object.keys(lim.frontier_series)) {
+      const mine = slotsOf(series)
+      countEls[series] = h('span', { class: 'mono muted' })
+      const wrap = h('div', { class: 'series' })
+      for (let i = 0; i < SERIES_LIMIT; i++) wrap.append(slot(series, mine[i], i))
+      cards[series] = h('div', { class: 'card' }, h('div', { class: 'spread' }, h('h2', {}, lim.frontier_series[series]), countEls[series]), wrap)
+      grid.append(cards[series])
+    }
+    const paintCounts = () => {
+      for (const [series, el] of Object.entries(countEls)) el.textContent = `${slotsOf(series).filter((x) => x.text).length}/${SERIES_LIMIT}`
+    }
+    paintMeter()
+    paintCounts()
+    return { refresh: () => { paintMeter(); paintCounts(); refreshers.forEach((f) => f()); renderTabs() } }
+  }
+
+  // ---- voices ------------------------------------------------------------------------------
+  VIEWS.voices = (main) => {
+    const lim = S.limits
+    main.append(head('Voices',
+      'Write 5 short queries in each of these 5 voices, the way that kind of visitor would type into FIND. Write fresh ones: the tab flags any that copy one of your 108 queries. They are frozen into PREREG and used only for R06’s persona bank. About 15 minutes.'))
+    const meter = h('div', { class: 'meter' })
+    const err = h('div')
+    main.append(h('div', { class: 'card hi' }, meter), err)
+    const grid = h('div', { class: 'grid2' })
+    main.append(grid)
+    const flagEls = {}
+    const paintMeter = () => {
+      const d = S.derived.voices
+      clear(meter).append(h('span', { class: 'big' }, `${d.filled} / ${d.target}`), bar(d.filled, d.target),
+        h('span', {}, d.filled < d.target ? `≈ ${mins(stepOf('voices').minutes_left)} left` : 'all 25 written'),
+        d.copies ? chip('active', `${d.copies} copy a query`) : null,
+        d.close ? h('span', { class: 'chip warn' }, `${d.close} close to a query`) : null)
+      clear(err)
+      const e = errorLine('voices')
+      if (e) err.append(e)
+    }
+    const paintFlags = () => {
+      const flags = S.derived.voices.flags
+      for (const [key, el] of Object.entries(flagEls)) {
+        const [voice, i] = key.split('#')
+        const f = flags[voice][Number(i)]
+        clear(el)
+        el.className = 'vflag ' + (f ? f.kind : '')
+        if (!f) continue
+        if (f.kind === 'copy') el.textContent = `Copies your query “${f.query}”. Write a fresh one.`
+        else if (f.kind === 'close') el.textContent = `Close to your query “${f.query}”. Fine if intended; fresher is better.`
+        else el.textContent = 'Same as another example here.'
+      }
+    }
+    for (const voice of lim.voices) {
+      const card = h('div', { class: 'card voice' }, h('h2', {}, voice.label), h('p', { class: 'brief' }, voice.brief))
+      docs.voices.data.voices[voice.id].forEach((text, i) => {
+        const counter = h('span', { class: 'count' }, `${len16(text)}/${lim.max_chars}`)
+        const flag = h('div', { class: 'vflag' })
+        flagEls[`${voice.id}#${i}`] = flag
+        card.append(
+          h('div', { class: 'vslot' },
+            h('input', {
+              type: 'text', value: text, maxlength: lim.max_chars, autocomplete: 'off', spellcheck: 'false',
+              'aria-label': `${voice.label} example ${i + 1}`, placeholder: `${voice.label.toLowerCase()} ${i + 1}`,
+              oninput: (e) => { counter.textContent = `${len16(e.target.value)}/${lim.max_chars}`; const v = e.target.value; edit('voices', (d) => { d.voices[voice.id][i] = v }) },
+            }),
+            counter),
+          flag)
+      })
+      grid.append(card)
+    }
+    paintMeter()
+    paintFlags()
+    return { refresh: () => { paintMeter(); paintFlags() } }
+  }
+
+  // ---- settings ----------------------------------------------------------------------------
+  VIEWS.settings = (main) => {
+    const frozen = locked('settings')
+    main.append(head('Settings', 'One setting before S0. Leave the default alone unless you know otherwise. About 30 seconds.'))
+    const card = h('div', { class: 'card hi' })
+    main.append(card)
+    const paint = () => {
+      const d = docs.settings.data
+      clear(card).append(
+        h('label', { class: 'row', style: 'align-items:flex-start;gap:12px' },
+          h('input', { type: 'checkbox', style: 'margin-top:4px;width:18px;height:18px', checked: d.inheritance03_renamed, disabled: frozen,
+            onchange: (e) => { const v = e.target.checked; edit('settings', (x) => { x.inheritance03_renamed = v; x.confirmed_utc = null }, 0); setTimeout(paint, 0) } }),
+          h('span', {}, h('code', {}, 'inheritance-03-the-gesture-archive'), ' was renamed to ', h('code', {}, 'inheritance-03-the-seed-vault'))),
+        h('ul', { class: 'plain small muted', style: 'margin-top:12px' },
+          h('li', {}, 'Git shows no rename: both records appeared in the same commit (c362ee2).'),
+          h('li', {}, 'Unchecked (the default): the one rationale sentence that links to the gesture archive leaves stratum A and stays a ghost query in F. A = 177.'),
+          h('li', {}, 'Checked: that sentence is scored against inheritance-03-the-seed-vault and stays in A. A = 178.')),
+        h('div', { class: 'row', style: 'margin-top:12px' },
+          d.confirmed_utc
+            ? chip('done', 'checked ' + clock(d.confirmed_utc))
+            : h('button', { class: 'primary', disabled: frozen, onclick: () => { edit('settings', (x) => { x.confirmed_utc = nowIso() }, 0); setTimeout(paint, 0) } }, d.inheritance03_renamed ? 'Keep: it was renamed' : 'Keep the default'),
+          frozen ? h('span', { class: 'faint small' }, 'Frozen at S0.') : null),
+        errorLine('settings'),
+      )
+    }
+    paint()
+    return { refresh: () => { paint(); renderTabs() } }
+  }
+
+  // ---- waiting states ----------------------------------------------------------------------
+  function prepState(name, title, body, whenText) {
+    const p = S.prep[name]
+    if (p.status === 'ok') return null
+    const file = { people: 'people.json', registers: 'registers.json', audit: 'audit-pairs.json', adjudicate: 'adjudicate-pairs.json', remeaning: 'remeaning-pairs.json' }[name]
+    if (p.status === 'invalid') {
+      return h('div', { class: 'card bad' }, h('h2', {}, `${title}: the file is unreadable`),
+        h('p', {}, h('code', {}, `~/arc-owner/prep/${file}`), ' arrived but could not be read:'),
+        h('p', { class: 'mono small' }, p.error),
+        h('p', { class: 'small' }, 'Tell the orchestrator; nothing you have saved is affected.'))
+    }
+    return h('div', { class: 'card waiting' },
+      h('h2', {}, h('span', { class: 'pulse', 'aria-hidden': 'true' }), whenText),
+      h('p', { class: 'lede' }, ...body),
+      h('p', { class: 'small faint' }, 'Waiting for ', h('code', {}, `~/arc-owner/prep/${file}`), '. This tab switches on by itself.'))
+  }
+
+  // ---- people ------------------------------------------------------------------------------
+  VIEWS.people = (main) => {
+    main.append(head('People', 'Confirm, split or merge the 30 most frequent person names. Your ruling: collisions are different people. About 7 minutes.'))
+    const waiting = prepState('people', 'People', ['The prep pass (', h('code', {}, 'arcforge run r00 --prep'), ', about 10 minutes on this laptop, no VM) proposes the person map. When it finishes, the 30 most frequent names appear here with their proposed clusters.'], 'Available after R00 prep')
+    if (waiting) { main.append(waiting); return null }
+    const names = S.prep.people.data.names
+    const meter = h('div', { class: 'meter' })
+    main.append(
+      h('div', { class: 'card hi' }, meter,
+        h('ul', { class: 'plain small muted', style: 'margin-top:10px' },
+          h('li', {}, 'The same full name inside the saga’s named series is one person, unless the roles conflict.'),
+          h('li', {}, 'Standalone records get their own people. Bylines are not people.'),
+          h('li', {}, 'Move a mention to another person with its menu; “Merge into one person” says they are all the same.'))),
+      errorLine('people'))
+    const paintMeter = () => {
+      const d = S.derived.people
+      clear(meter).append(h('span', { class: 'big' }, `${d.reviewed} / ${d.total}`), bar(d.reviewed, d.total), h('span', {}, d.reviewed < d.total ? `≈ ${mins(stepOf('people').minutes_left)} left` : 'all confirmed'), d.edited ? h('span', { class: 'faint' }, `${d.edited} edited`) : null)
+    }
+    const list = h('div')
+    main.append(list)
+    const decision = (id) => docs.people.data.decisions[id] || { reviewed: false, assignment: {}, merge_with: [] }
+    const ensure = (d, id) => (d.decisions[id] = d.decisions[id] || { reviewed: false, assignment: {}, merge_with: [] })
+    const keyOf = (m) => m.mention_id || m.slug
+    const cardFor = (name) => {
+      const card = h('article', { class: 'card person' })
+      const paint = () => {
+        const dec = decision(name.name_id)
+        const people = [...name.clusters.map((c) => ({ id: c.cluster_id, label: c.label })), ...S.limits.new_people.map((id, i) => ({ id, label: `New person ${i + 1}` }))]
+        const mentions = name.clusters.flatMap((c) => c.records.map((m) => ({ ...m, proposed: c.cluster_id })))
+        const where = (m) => dec.assignment[keyOf(m)] || m.proposed
+        const edited = Object.keys(dec.assignment).length || dec.merge_with.length
+        card.classList.toggle('done', !!dec.reviewed)
+        clear(card).append(
+          h('div', { class: 'spread' },
+            h('div', { class: 'row' }, h('h2', {}, name.name), h('span', { class: 'faint mono small' }, `${name.mentions} mentions`)),
+            dec.reviewed ? chip('done', edited ? 'confirmed · edited' : 'confirmed') : chip('todo', edited ? 'edited' : 'to review')),
+          name.note ? h('p', { class: 'small muted' }, name.note) : null,
+        )
+        const grid = h('div', { class: 'clusters' })
+        for (const person of people) {
+          const mine = mentions.filter((m) => where(m) === person.id)
+          if (!mine.length) continue
+          grid.append(
+            h('div', { class: 'cluster' }, h('h3', {}, person.label),
+              h('ul', {}, mine.map((m) =>
+                h('li', { class: m.proposed !== person.id ? 'moved' : '' },
+                  h('span', {}, h('span', { class: 'rtitle' }, m.title), m.role ? h('span', { class: 'role' }, m.role) : null),
+                  h('select', { 'aria-label': `Person for ${m.title}`, onchange: (e) => { const to = e.target.value; edit('people', (d) => { ensure(d, name.name_id).assignment[keyOf(m)] = to }, 0); setTimeout(paint, 0) } },
+                    people.map((p) => h('option', { value: p.id, selected: p.id === person.id }, p.label))))))),
+          )
+        }
+        card.append(grid)
+        for (const variant of name.variants) {
+          const other = names.find((n) => n.name_id === variant.name_id)
+          card.append(
+            h('label', { class: 'row small', style: 'margin:6px 0 10px' },
+              h('input', { type: 'checkbox', checked: dec.merge_with.includes(variant.name_id),
+                onchange: (e) => { const on = e.target.checked; edit('people', (d) => { const x = ensure(d, name.name_id); x.merge_with = on ? [...new Set([...x.merge_with, variant.name_id])] : x.merge_with.filter((v) => v !== variant.name_id) }, 0); setTimeout(paint, 0) } }),
+              h('span', {}, `Same person as “${other ? other.name : variant.name_id}”`, variant.reason ? h('span', { class: 'chip warn', style: 'margin-left:8px' }, variant.reason) : null)))
+        }
+        card.append(
+          h('div', { class: 'row' },
+            h('button', { class: dec.reviewed ? '' : 'primary', onclick: () => { edit('people', (d) => { ensure(d, name.name_id).reviewed = true }, 0); setTimeout(paint, 0) } }, dec.reviewed ? 'Confirmed ✓' : 'Confirm'),
+            name.clusters.length > 1 ? h('button', { onclick: () => { edit('people', (d) => { const x = ensure(d, name.name_id); for (const m of mentions) x.assignment[keyOf(m)] = name.clusters[0].cluster_id }, 0); setTimeout(paint, 0) } }, 'Merge into one person') : null,
+            edited ? h('button', { class: 'ghost', onclick: () => { edit('people', (d) => { const x = ensure(d, name.name_id); x.assignment = {}; x.merge_with = [] }, 0); setTimeout(paint, 0) } }, 'Reset to the proposal') : null),
+        )
+      }
+      paint()
+      return card
+    }
+    for (const name of names) list.append(cardFor(name))
+    paintMeter()
+    return { refresh: () => { paintMeter(); renderTabs() } }
+  }
+
+  // ---- registers ---------------------------------------------------------------------------
+  VIEWS.registers = (main) => {
+    main.append(head('Registers', 'All records, grouped by the register the pipeline proposes. Scan each group, fix the exceptions, then mark the group reviewed. These labels stratify the folds. About 8 minutes.'))
+    const waiting = prepState('registers', 'Registers', ['The prep pass proposes a register for every record: Chronicles, backstory, tech stubs, mechanic essays, PM essays and 2023 posts. They appear here when it finishes.'], 'Available after R00 prep')
+    if (waiting) { main.append(waiting); return null }
+    const data = S.prep.registers.data
+    const label = new Map(data.registers.map((r) => [r.id, r.label]))
+    const meter = h('div', { class: 'meter' })
+    const filter = h('input', { type: 'text', placeholder: 'filter by title or slug', 'aria-label': 'Filter records', style: 'width:260px' })
+    main.append(h('div', { class: 'card hi spread' }, meter, filter), errorLine('registers'))
+    const paintMeter = () => {
+      const d = S.derived.registers
+      clear(meter).append(h('span', { class: 'big' }, `${d.reviewed} / ${d.total}`), h('span', {}, 'groups reviewed'), bar(d.reviewed, d.total), d.overrides ? chip('active', `${d.overrides} changed`) : null)
+    }
+    const groupsEl = h('div')
+    main.append(groupsEl)
+    const groups = [...new Set(data.records.map((r) => r.register))]
+    groups.sort((a, b) => data.registers.findIndex((r) => r.id === a) - data.registers.findIndex((r) => r.id === b))
+    const paintGroup = (section, group) => {
+      const rows = data.records.filter((r) => r.register === group)
+      const reviewed = docs.registers.data.reviewed_groups.includes(group)
+      const term = filter.value.trim().toLowerCase()
+      const visible = rows.filter((r) => !term || r.title.toLowerCase().includes(term) || r.slug.includes(term))
+      clear(section).append(
+        h('div', { class: 'spread' },
+          h('div', { class: 'row' }, h('h2', {}, label.get(group) || group), h('span', { class: 'faint mono small' }, `${rows.length} records`)),
+          reviewed
+            ? h('button', { onclick: () => { edit('registers', (d) => { d.reviewed_groups = d.reviewed_groups.filter((g) => g !== group) }, 0); setTimeout(() => paintGroup(section, group), 0) } }, 'Reviewed ✓')
+            : h('button', { class: 'primary', onclick: () => { edit('registers', (d) => { d.reviewed_groups = [...new Set([...d.reviewed_groups, group])] }, 0); setTimeout(() => paintGroup(section, group), 0) } }, 'Mark group reviewed')),
+        visible.map((r) => {
+          const now = docs.registers.data.overrides[r.slug] || r.register
+          const rec = BY_SLUG.get(r.slug)
+          return h('div', { class: 'reg-row' + (now !== r.register ? ' changed' : '') },
+            h('div', {}, h('span', {}, r.title), rec && rec.frontier ? h('span', { class: 'chip frontier', style: 'margin-left:8px' }, 'withheld') : null,
+              h('span', { class: 'slug' }, r.slug), r.why ? h('span', { class: 'why' }, r.why) : null,
+              now !== r.register ? h('span', { class: 'why' }, `proposed: ${label.get(r.register) || r.register}`) : null),
+            h('select', { 'aria-label': `Register for ${r.title}`, onchange: (e) => { const v = e.target.value; edit('registers', (d) => { if (v === r.register) delete d.overrides[r.slug]; else d.overrides[r.slug] = v }, 0); setTimeout(() => paintGroup(section, group), 0) } },
+              data.registers.map((reg) => h('option', { value: reg.id, selected: reg.id === now }, reg.label))))
+        }),
+      )
+    }
+    const sections = groups.map((g) => { const s = h('section', { class: 'card reg-group' }); groupsEl.append(s); paintGroup(s, g); return [s, g] })
+    filter.addEventListener('input', () => sections.forEach(([s, g]) => paintGroup(s, g)))
+    paintMeter()
+    return { refresh: () => { paintMeter(); renderTabs() } }
+  }
+
+  // ---- graded pairs: audit and adjudicate ---------------------------------------------------
+  function gradedPairs(main, name, opts) {
+    main.append(head(opts.title, opts.lede))
+    const waiting = prepState(name, opts.title, opts.waitText, opts.waitTitle)
+    if (waiting) { main.append(waiting); return null }
+    const pairs = S.prep[name].data.pairs
+    if (!pairs.length) { main.append(h('div', { class: 'card' }, h('p', {}, opts.emptyText))); return null }
+    const meter = h('div', { class: 'meter' })
+    const card = h('section', { class: 'card hi pair', 'aria-live': 'polite' })
+    main.append(h('div', { class: 'card' }, meter), errorLine(name), card,
+      h('details', { class: 'card small' }, h('summary', { class: 'mono' }, 'The grading scale'),
+        h('ul', { class: 'plain' }, GRADE_TEXT.map(([t, d], g) => h('li', {}, h('b', {}, `${g} ${t}`), ` — ${d}`))),
+        h('p', { class: 'muted' }, 'Grade what the query means, not its exact words. A record about a different person with the same name is a 0. No judge grades or system names are ever shown here, and your labels win over every model.')))
+    let index = S.derived[name].next_index ?? 0
+    const labels = () => docs[name].data.labels
+    const paintMeter = () => {
+      const d = S.derived[name]
+      clear(meter).append(h('span', { class: 'big' }, `${d.graded} / ${d.total}`), bar(d.graded, d.total),
+        h('span', {}, d.graded < d.total ? `≈ ${mins(stepOf(name).minutes_left)} left` : 'all graded, thank you'),
+        h('span', { class: 'faint' }, 'keys: 0-3 grade · ← → move · u next ungraded'))
+    }
+    const nextOpen = (from) => {
+      for (let k = 1; k <= pairs.length; k++) {
+        const i = (from + k) % pairs.length
+        if (!(pairs[i].pair_id in labels())) return i
+      }
+      return null
+    }
+    const paint = () => {
+      const pair = pairs[index]
+      const grade = labels()[pair.pair_id]
+      clear(card).append(
+        h('div', { class: 'spread' }, h('h2', {}, `Pair ${index + 1} of ${pairs.length}`),
+          h('div', { class: 'row' },
+            h('button', { class: 'ghost', disabled: index === 0, onclick: () => move(index - 1), 'aria-label': 'Previous pair' }, '←'),
+            h('button', { class: 'ghost', disabled: index === pairs.length - 1, onclick: () => move(index + 1), 'aria-label': 'Next pair' }, '→'))),
+        h('div', { class: 'label' }, 'Query'),
+        h('div', { class: 'q' }, pair.query),
+        h('div', { class: 'label' }, 'Record'),
+        h('div', { class: 'rtitle' }, pair.record.title, pair.record.date ? h('span', { class: 'faint mono small', style: 'margin-left:10px' }, pair.record.date.slice(0, 10)) : null),
+        pair.record.description ? h('p', { class: 'muted' }, pair.record.description) : null,
+        pair.passages.length ? h('div', { class: 'label' }, 'Passages') : null,
+        pair.passages.map((text) => h('div', { class: 'passage' }, text)),
+        h('div', { class: 'label' }, 'Your grade'),
+        h('div', { class: 'grades' }, GRADE_TEXT.map(([t, d], g) =>
+          h('button', { 'aria-pressed': String(grade && grade.grade === g), onclick: () => setGrade(g), title: d }, h('b', {}, String(g)), h('span', {}, t)))),
+      )
+    }
+    const move = (i) => { index = Math.max(0, Math.min(pairs.length - 1, i)); paint() }
+    const setGrade = (g) => {
+      const id = pairs[index].pair_id
+      edit(name, (d) => { d.labels[id] = { grade: g, utc: nowIso() } }, 0)
+      paint()
+      const next = nextOpen(index)
+      if (next !== null) setTimeout(() => move(next), 160)
+    }
+    const onKey = (e) => {
+      if (e.target.matches('input, select, textarea, button') || e.metaKey || e.ctrlKey || e.altKey) return
+      if (/^[0-3]$/.test(e.key)) { setGrade(Number(e.key)); e.preventDefault() }
+      else if (e.key === 'ArrowLeft') { move(index - 1); e.preventDefault() }
+      else if (e.key === 'ArrowRight') { move(index + 1); e.preventDefault() }
+      else if (e.key === 'u') { const n = nextOpen(index); if (n !== null) move(n) }
+    }
+    paintMeter()
+    paint()
+    return { refresh: () => { paintMeter(); renderTabs() }, onKey }
+  }
+
+  VIEWS.audit = (main) => gradedPairs(main, 'audit', {
+    title: 'Audit',
+    lede: '150 query-record pairs, one at a time: the query, the record card and two passages. Grade each 0-3. About 40 minutes; you can stop and resume.',
+    waitTitle: 'Opens at the R00 owner gate',
+    waitText: ['About 100 minutes after launch the VM part finishes and is deleted, and the 150 blind audit pairs arrive here. The blind audit grades R00’s own judged pools, so it cannot happen earlier. About 40 minutes.'],
+    emptyText: 'The pairs file is empty.',
+  })
+
+  VIEWS.adjudicate = (main) => gradedPairs(main, 'adjudicate', {
+    title: 'Adjudicate',
+    lede: 'Up to 30 pairs from your own queries where the judges disagree by 2 or more grades. Grade them the same way. Anything beyond 30 goes to gemini-3-flash and is flagged. Up to 6 minutes.',
+    waitTitle: 'Opens at the R00 owner gate',
+    waitText: ['These arrive with the audit pairs at the owner gate.'],
+    emptyText: 'No disagreements to adjudicate this time: nothing to do here.',
+  })
+
+  VIEWS.remeaning = (main) => {
+    main.append(head('Re-meaning', 'The blind re-meaning audit, in R03: about 60 minutes, binary labels on candidate words whose meaning drifted in this archive.'))
+    const p = S.prep.remeaning
+    main.append(h('div', { class: 'card waiting' },
+      h('h2', {}, h('span', { class: 'pulse', 'aria-hidden': 'true' }), 'Opens in R03'),
+      h('p', { class: 'lede' }, 'Nothing to do now. This tab switches on when R03 is ready, and the orchestrator will tell you.'),
+      p.status === 'ok' ? h('p', { class: 'small muted' }, `R03 material has arrived (${p.data.items} items); its grader ships with R03.`) : null,
+      p.status === 'invalid' ? h('p', { class: 'small' }, 'remeaning-pairs.json is present but unreadable: ', h('span', { class: 'mono' }, p.error)) : null))
+    return null
+  }
+
+  // ---- boot --------------------------------------------------------------------------------
+  async function boot() {
+    fromHash()
+    try {
+      const [state, records] = await Promise.all([api('GET', '/api/state'), api('GET', '/api/records')])
+      if (!state.ok) throw new Error((state.json && state.json.error) || `HTTP ${state.status}`)
+      S = state.json
+      RECORDS = records.ok ? records.json.records : []
+      BY_SLUG = new Map(RECORDS.map((r) => [r.slug, r]))
+      for (const name of Object.keys(S.docs)) adopt(name, S.docs[name])
+      setSave('ok', 'all saved')
+      render()
+      poll()
+    } catch (error) {
+      setSave('bad', 'cannot reach the desk')
+      clear($('#main')).append(h('div', { class: 'card bad' }, h('h2', {}, 'The desk server is not answering'),
+        h('p', {}, 'Start it from research/arcforge with ', h('code', {}, 'uv run arcforge owner'), ' (or ', h('code', {}, 'python3 -m arcforge owner'), '), then reload this page.'),
+        h('p', { class: 'small mono' }, String(error.message || error))))
+    }
+  }
+  boot()
+})()
+</script>
+</body>
+</html>
