@@ -51,6 +51,7 @@ python -m arcforge.runner iam                    # the owner's one-time service-
 
 Runners run as `arcforge-runner@witching-606c6.iam.gserviceaccount.com` with Vertex AI User on
 the project, Secret Manager accessor on `hf-write-token` and `cf-workers-ai-token` only,
-object admin on the arcforge bucket and reader on the arcforge Artifact Registry repository.
+object admin on the arcforge bucket, reader on the arcforge Artifact Registry repository, and
+log writer.
 Granting roles is the owner's step (`python -m arcforge.runner iam` prints it; `arcforge doctor`
 checks it).

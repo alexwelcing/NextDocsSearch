@@ -21,7 +21,10 @@ def run(args: argparse.Namespace) -> int:
     if args.list:
         bad = 0
         for pin in selected:
-            problems = mirror.verify(shell, pin, args.bucket)
+            try:
+                problems = mirror.verify(shell, pin, args.bucket)
+            except CommandError as error:
+                problems = [str(error)]
             bad += bool(problems)
             state = 'ok' if not problems else '; '.join(problems[:3])
             print(f'{pin.key:22} {pin.repo}@{pin.revision[:12]}  {state}')

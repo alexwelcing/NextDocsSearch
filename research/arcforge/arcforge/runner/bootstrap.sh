@@ -64,8 +64,9 @@ job() {
     gcloud auth configure-docker "${ARC_IMAGE%%/*}" --quiet || return $?
     docker pull --quiet "$ARC_IMAGE" || return $?
     status running
-    docker run --rm --gpus all --network host "${ARC_DOCKER_ENV[@]}" "${ARC_ENTRYPOINT[@]}" \
-      "$ARC_IMAGE" "${ARC_ARGV[@]}" || return $?
+    # ${a[@]+"${a[@]}"} expands an empty array under `set -u` on any bash, not only >= 4.4.
+    docker run --rm --gpus all --network host "${ARC_DOCKER_ENV[@]}" ${ARC_ENTRYPOINT[@]+"${ARC_ENTRYPOINT[@]}"} \
+      "$ARC_IMAGE" ${ARC_ARGV[@]+"${ARC_ARGV[@]}"} || return $?
   fi
   return 0
 }

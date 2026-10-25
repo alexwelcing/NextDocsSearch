@@ -21,7 +21,9 @@ curl -fsSL https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-contai
   | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' \
   >/etc/apt/sources.list.d/nvidia-container-toolkit.list
 apt-get update -q
-apt-get install -y -q --no-install-recommends \
+# The source image may already carry (and hold) an older toolkit; the pin wins.
+dpkg -l | grep -E 'nvidia-container|docker' || true
+apt-get install -y -q --no-install-recommends --allow-change-held-packages --allow-downgrades \
   "nvidia-container-toolkit=${CTK_VERSION}" "nvidia-container-toolkit-base=${CTK_VERSION}" \
   "libnvidia-container-tools=${CTK_VERSION}" "libnvidia-container1=${CTK_VERSION}"
 apt-mark hold docker.io nvidia-container-toolkit nvidia-container-toolkit-base libnvidia-container-tools libnvidia-container1

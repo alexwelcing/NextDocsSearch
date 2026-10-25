@@ -75,7 +75,7 @@ def _wait_for_verdict(
     The serial port is read while the VM is still up: Compute Engine stops serving a VM's serial
     output once it is TERMINATED.
     """
-    verdict = ''
+    verdict, context = '', ''
     waited = 0.0
     while True:
         resource = lifecycle.describe(shell, cfg, builder, zone)
@@ -86,9 +86,15 @@ def _wait_for_verdict(
             serial = shell.run(['gcloud', 'compute', 'instances', 'get-serial-port-output', builder,
                                 f'--project={cfg.project}', f'--zone={zone}'], timeout=120)
             lines = _VERDICT.findall(serial.stdout) if serial.ok else []
-            verdict = lines[-1].strip() if lines else verdict
+            if lines:
+                verdict = lines[-1].strip()
+                # What the script printed just before its verdict: the reason, on a failure.
+                script_lines = [ln.split('startup-script: ', 1)[1] for ln in serial.stdout.splitlines() if 'startup-script: ' in ln]
+                context = '\n'.join(script_lines[-40:])
         if status == 'TERMINATED':
-            return verdict or 'no ARCFORGE-BASE line seen on the serial port before it stopped'
+            if not verdict:
+                return 'no ARCFORGE-BASE line seen on the serial port before it stopped'
+            return verdict if verdict.startswith('OK') else f'{verdict}\n--- builder output ---\n{context}'
         if waited > timeout_s:
             raise BaseImageError(f'{builder} still {status} after {timeout_s:.0f}s')
         sleep(poll_seconds)
