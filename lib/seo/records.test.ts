@@ -66,9 +66,9 @@ describe('thin-content guard', () => {
   })
 
   it('flags the stub families at any length, but not the backstory-shadows series', () => {
-    expect(thinReason('tech-neural-ode', 2000)).toBe('tech-* stub family')
-    expect(thinReason('backstory-07-fusion-nanotech-2027-09', 2000)).toBe(
-      'backstory-NN fragment family'
+    expect(thinReason('tech-neural-ode', 2000)).toBe('tech-* stub family, 2000 words')
+    expect(thinReason('backstory-07-fusion-nanotech-2027-09', 20)).toBe(
+      'backstory-NN fragment family, 20 words'
     )
     expect(thinReason('backstory-shadows-01-the-test-subjects-garden', 1580)).toBeNull()
   })

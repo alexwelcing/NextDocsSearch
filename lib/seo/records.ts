@@ -31,7 +31,7 @@ export function bodyWords(blocks: readonly { x: string }[]): number {
 /** Why a record must not be indexed, or null when it may be. */
 export function thinReason(slug: string, words: number): string | null {
   const family = STUB_FAMILIES.find((f) => f.match.test(slug))
-  if (family) return family.name
+  if (family) return `${family.name}, ${words} words`
   return words < THIN_WORDS ? `${words} words < ${THIN_WORDS}` : null
 }
 
@@ -58,8 +58,8 @@ export function readImageManifest(root: string): Record<string, OgImageCandidate
 }
 
 /**
- * og:image for a record: its prepared social card (public/images/og/<slug>.jpg, which the image
- * manifest lists as ogImage), else a raster hero, else the site preview. SVG never qualifies:
+ * og:image for a record: the image manifest's ogImage (the 1200x630 card in public/images/og/, or
+ * the curated selected plate), else a raster hero, else the site preview. SVG never qualifies:
  * X and most scrapers reject it.
  */
 export function ogImagePath(hero: string | null | undefined, images?: OgImageCandidates): string {

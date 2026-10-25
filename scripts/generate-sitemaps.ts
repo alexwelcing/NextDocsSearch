@@ -31,8 +31,6 @@ export const STATIC_ROUTES = [
   '/the-interface',
 ]
 
-export const SITEMAP_FILES = ['sitemap.xml', 'video-sitemap.xml']
-
 /** Google's limit for <video:description>. */
 const VIDEO_DESCRIPTION_MAX = 2048
 
@@ -96,20 +94,19 @@ export function urlsetXml(siteUrl: string, urls: SitemapUrl[]): string {
 }
 
 export function videoSitemapXml(siteUrl: string, films: Film[]): string {
-  const entries = films.map((film) =>
-    [
-      `<url><loc>${xml(`${siteUrl}/videos/${film.slug}`)}</loc><video:video>`,
-      `<video:thumbnail_loc>${xml(siteUrl + film.thumbnail)}</video:thumbnail_loc>`,
-      `<video:title>${xml(film.title)}</video:title>`,
-      `<video:description>${xml(
-        film.description.slice(0, VIDEO_DESCRIPTION_MAX)
-      )}</video:description>`,
-      `<video:content_loc>${xml(
-        `${siteUrl}/images/article-videos/${film.slug}.mp4`
-      )}</video:content_loc>`,
-      '</video:video></url>',
-    ].join('')
-  )
+  const entries = films.map((film) => {
+    const page = `${siteUrl}/videos/${film.slug}`
+    const mp4 = `${siteUrl}/images/article-videos/${film.slug}.mp4`
+    const description = film.description.slice(0, VIDEO_DESCRIPTION_MAX)
+    return (
+      `<url><loc>${xml(page)}</loc><video:video>` +
+      `<video:thumbnail_loc>${xml(siteUrl + film.thumbnail)}</video:thumbnail_loc>` +
+      `<video:title>${xml(film.title)}</video:title>` +
+      `<video:description>${xml(description)}</video:description>` +
+      `<video:content_loc>${xml(mp4)}</video:content_loc>` +
+      '</video:video></url>'
+    )
+  })
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' +
@@ -133,16 +130,17 @@ export function planSitemaps(
   const films = (readJson(path.join(root, 'public', 'arc', 'media.json')) as { films: string[] })
     .films
   const images = readImageManifest(root)
-  const recordOf = (slug: string) =>
-    readJson(path.join(root, 'public', 'arc', 'records', `${slug}.json`)) as {
-      hero: string | null
-      blocks: { x: string }[]
-    }
 
   const urls: SitemapUrl[] = STATIC_ROUTES.map((route) => ({ path: route }))
   const noindex: SitemapPlan['noindex'] = []
+  const heroes = new Map<string, string | null>()
   for (const entry of manifest) {
-    const reason = thinReason(entry.slug, bodyWords(recordOf(entry.slug).blocks))
+    const record = readJson(path.join(root, 'public', 'arc', 'records', `${entry.slug}.json`)) as {
+      hero: string | null
+      blocks: { x: string }[]
+    }
+    heroes.set(entry.slug, record.hero)
+    const reason = thinReason(entry.slug, bodyWords(record.blocks))
     if (reason) noindex.push({ slug: entry.slug, reason })
     else urls.push({ path: `/articles/${entry.slug}`, lastmod: knownLastmod(entry, today) })
   }
@@ -150,14 +148,12 @@ export function planSitemaps(
   const bySlug = new Map(manifest.map((entry) => [entry.slug, entry]))
   const filmPages = films.map((slug): Film => {
     const entry = bySlug.get(slug)
-    const recordFile = path.join(root, 'public', 'arc', 'records', `${slug}.json`)
-    const hero = fs.existsSync(recordFile) ? recordOf(slug).hero : null
-    // Same fallbacks as pages/videos/[slug].tsx.
+    // Same fallbacks and poster as pages/videos/[slug].tsx.
     return {
       slug,
       title: entry?.title ?? slug.replace(/-/g, ' '),
       description: entry?.description ?? `Video companion to the record "${slug}".`,
-      thumbnail: ogImagePath(hero, images[slug]),
+      thumbnail: ogImagePath(heroes.get(slug), images[slug]),
     }
   })
   for (const film of filmPages) urls.push({ path: `/videos/${film.slug}` })
@@ -177,8 +173,9 @@ export function writeSitemaps(root: string = process.cwd(), siteUrl = SITE_URL):
     fs.existsSync(dir)
   )
   for (const dir of dirs) {
-    for (const [name, contents] of Object.entries(files))
+    for (const [name, contents] of Object.entries(files)) {
       fs.writeFileSync(path.join(dir, name), contents)
+    }
   }
 
   console.log(

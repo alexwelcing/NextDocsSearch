@@ -118,7 +118,7 @@ describe('planSitemaps', () => {
     ])
     expect(plan.noindex).toEqual([
       { slug: 'short', reason: '120 words < 300' },
-      { slug: 'tech-stub', reason: 'tech-* stub family' },
+      { slug: 'tech-stub', reason: 'tech-* stub family, 900 words' },
     ])
     expect(plan.films).toEqual([
       {
