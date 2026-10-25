@@ -1,33 +1,20 @@
 import re
-import unicodedata
 from pathlib import Path
 
 import pytest
 
 from arcforge.models import fixtures
 from arcforge.models.fold import (
-    LETTER_FOLDS,
     STOP_WORDS,
     fold,
     keep_word,
     normalized_tokens,
+    utf16_len,
     words,
     words_with_offsets,
 )
 
 REPO = Path(__file__).resolve().parents[4]
-
-
-def whole_string_words(text: str) -> list[str]:
-    """The TS implementation, transcribed: whole-string fold (lexemeEmbed.ts foldLexemeText)."""
-    if text.isascii():
-        folded = text.lower()
-    else:
-        no_symbols = ''.join(' ' if unicodedata.category(c)[0] == 'S' else c for c in text)
-        decomposed = unicodedata.normalize('NFKD', no_symbols)
-        stripped = ''.join(c for c in decomposed if unicodedata.category(c)[0] != 'M')
-        folded = ''.join(LETTER_FOLDS.get(c, c) for c in stripped.lower())
-    return re.findall('[a-z0-9]+', folded)
 
 
 @pytest.mark.parametrize(
@@ -40,9 +27,13 @@ def whole_string_words(text: str) -> list[str]:
         ),
         ('ﬁnd ＦＵＬＬ e\u0301te ½', ['find', 'full', 'ete', '1', '2']),
         ('Pro™max', ['pro', 'max']),
-        ('İstanbul KelvinK', ['istanbul', 'kelvink']),
+        ('İstanbul Kelvin\u212a', ['istanbul', 'kelvink']),
         ('The pause, a B-plan', ['the', 'pause', 'a', 'b', 'plan']),
-        ('Σοφία 東京 😀', []),
+        # Letters and digits of any script, as in the site tokenizer.
+        ('Σοφία 東京 😀', ['σοφια', '東京']),
+        # Lowercased as a whole, like JavaScript: a final capital sigma becomes 'ς'.
+        ('ΟΔΟΣ ΣΑΣ.', ['οδος', 'σας']),
+        ('\U0001d400\U0001d401 ꟹ', ['ab', 'oe']),
         ('', []),
     ],
 )
@@ -54,9 +45,9 @@ def test_ascii_fold_only_lowercases():
     assert fold('Plain ASCII, Only') == 'plain ascii, only'
 
 
-def test_per_character_fold_equals_whole_string_fold_on_parity_strings():
+def test_offset_words_equal_words_on_parity_strings():
     for text in fixtures.parity_strings():
-        assert words(text) == whole_string_words(text), text
+        assert [w for w, _, _ in words_with_offsets(text)] == words(text), text
 
 
 def test_offsets_cover_each_word():
@@ -66,7 +57,8 @@ def test_offsets_cover_each_word():
         previous_end = 0
         for word, start, end in spans:
             assert previous_end <= start < end <= len(text)
-            assert word in words(text[start:end])
+            # Out of context a final sigma may lowercase differently ('ΣΑΣ' alone ends in ς).
+            assert word.replace('ς', 'σ') in [w.replace('ς', 'σ') for w in words(text[start:end])]
             previous_end = start
 
 
@@ -79,10 +71,13 @@ def test_keep_word_is_the_site_filter():
     assert not keep_word('a') and not keep_word('the') and not keep_word('they')
     assert keep_word('ai') and keep_word('pause')
     assert normalized_tokens('The pause is a threshold') == ['pause', 'threshold']
+    # JavaScript counts UTF-16 units: one astral letter is two, a BMP letter one.
+    assert utf16_len('\U00020000') == 2 and keep_word('\U00020000')
+    assert not keep_word('東')
 
 
 def test_stop_words_match_the_site():
-    """The stop list is lib/retrieval's (on main it lives in lib/archive/search.ts)."""
+    """The stop list is lib/retrieval/tokenize.ts's (before M0 it lived in lib/archive/search.ts)."""
     for rel in ('lib/retrieval/tokenize.ts', 'lib/archive/search.ts'):
         path = REPO / rel
         if path.is_file():

@@ -74,3 +74,10 @@ def test_offsets_point_into_the_original_text():
 def test_mode_is_checked():
     with pytest.raises(ValueError, match='mode'):
         TOK.tokenize('pause', 'doc')  # type: ignore[arg-type]
+
+
+def test_ngrams_of_other_scripts_are_code_points_hashed_as_utf8():
+    buckets = ngram_buckets('мир', SPEC)
+    # '<мир>' is 5 code points: 3 trigrams, 2 four-grams, 1 five-gram.
+    assert len(buckets) == 6
+    assert buckets[0] == fnv1a32('<ми'.encode()) % 97

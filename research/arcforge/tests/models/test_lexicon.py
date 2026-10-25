@@ -101,3 +101,16 @@ def test_rejects_corrupt_files():
         Lexicon(data[:-1])
     with pytest.raises(ValueError, match='truncated'):
         Lexicon(data + b'\x00')
+
+
+def test_keys_in_other_scripts_round_trip_and_sort_by_utf8_bytes():
+    entries = [
+        *ENTRIES,
+        LexiconEntry('москва', Kind.WORD, 7),
+        LexiconEntry('новыи мир', Kind.MULTIWORD, 8),
+    ]
+    lexicon = Lexicon(build(entries, block_size=2))
+    assert lexicon.get('москва') == entries[-2] and lexicon.get('новыи мир') == entries[-1]
+    for surface in ('Москва', 'новый'):  # NFKD takes the breve off 'й'
+        with pytest.raises(ValueError, match='canonical'):
+            build([*ENTRIES, LexiconEntry(surface, Kind.WORD, 7)])

@@ -1,10 +1,10 @@
 """lexicon.bin: the arc-lexeme lexicon, a front-coded sorted key table read in place.
 
-A key is a lexeme in canonical form: its fold.words() joined by single spaces, so keys are
-ASCII [a-z0-9 ] and sort the same bytewise, in Python and in JavaScript. Sorted keys are an
-implicit trie (every trie node is a contiguous key range), so the table is the program's
-"flat trie read in place": the TS side binary-searches the block heads and decodes one block,
-with no load-time index.
+A key is a lexeme in canonical form: its fold.words() joined by single spaces, stored as
+UTF-8 and sorted bytewise (the archive's keys are almost all ASCII; the TS side compares the
+same bytes). Sorted keys are an implicit trie (every trie node is a contiguous key range), so
+the table is the program's "flat trie read in place": the TS side binary-searches the block
+heads and decodes one block, with no load-time index.
 
 Layout (little-endian):
 
@@ -36,7 +36,14 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from enum import IntEnum
 
-from arcforge.models.fold import FOLD_VERSION, MIN_WORD, SPLIT_PATTERN, STOP_WORDS, words
+from arcforge.models.fold import (
+    MIN_WORD,
+    SITE_TOKENIZER,
+    SPLIT_PATTERN,
+    STOP_WORDS,
+    utf16_len,
+    words,
+)
 
 MAGIC = b'ARCLEX01'
 FORMAT = 'arc-lexicon/1'
@@ -71,7 +78,7 @@ class TokenizerSpec:
     def to_json(self) -> dict:
         return {
             'version': TOKENIZER_VERSION,
-            'fold': FOLD_VERSION,
+            'fold': SITE_TOKENIZER,
             'split': SPLIT_PATTERN,
             'min_word': self.min_word,
             'stop_words': list(self.stop_words),
@@ -86,7 +93,7 @@ class TokenizerSpec:
 
     @classmethod
     def from_json(cls, value: dict) -> TokenizerSpec:
-        if value.get('version') != TOKENIZER_VERSION or value.get('fold') != FOLD_VERSION:
+        if value.get('version') != TOKENIZER_VERSION or value.get('fold') != SITE_TOKENIZER:
             raise ValueError(
                 f'lexicon: unsupported tokenizer {value.get("version")}/{value.get("fold")}'
             )
@@ -183,7 +190,7 @@ def validate_entries(entries: list[LexiconEntry], spec: TokenizerSpec, bucket_ba
             raise ValueError(f'lexicon: {key!r}: bucket rows have no lexicon entry')
         if entry.kind == Kind.MULTIWORD and n_words < 2:
             raise ValueError(f'lexicon: multiword {key!r} has one word')
-        if n_words == 1 and not (len(key) >= spec.min_word and key not in stop):
+        if n_words == 1 and not (utf16_len(key) >= spec.min_word and key not in stop):
             raise ValueError(f'lexicon: single word {key!r} is filtered by the site tokenizer')
         if not 0 <= entry.row < bucket_base:
             raise ValueError(f'lexicon: {key!r}: row {entry.row} outside [0, {bucket_base})')
@@ -292,7 +299,7 @@ class Lexicon:
                         r, pos = _read_varint(view, pos)
                         rows.append(r)
                     candidates = tuple(rows)
-                text = key.decode('ascii')
+                text = key.decode('utf-8')
                 self.entries[text] = LexiconEntry(text, kind, row, candidates)
         if len(self.entries) != header['entries']:
             raise ValueError('lexicon: entry count does not match the header')

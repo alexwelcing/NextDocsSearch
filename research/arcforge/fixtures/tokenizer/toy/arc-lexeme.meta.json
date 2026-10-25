@@ -5,38 +5,38 @@
     "bias": {
       "bytes": 64,
       "path": "bias.f16",
-      "sha256": "0878669c9ab4307331dc910d7b7dd33f255cbcb64fc1b8353286c85c8df602b4"
+      "sha256": "073e4cb2f2845d3bc2950b9d1a3faf5c169ef5bfddafe411741d8246c5e8c659"
     },
     "lexicon": {
-      "bytes": 2132,
+      "bytes": 2206,
       "path": "lexicon.bin",
-      "sha256": "ffe1663ae943d8b502af39459cf51410db550c6fc4cd42f9610eb356fb75284a"
+      "sha256": "d2b2de26dd8f66c5dced1fc82ebd29e06c1377032ae80504d79debaf09f224c0"
     },
     "scales": {
-      "bytes": 764,
+      "bytes": 774,
       "path": "scales.f16",
-      "sha256": "ab6ff2395b0f7b54ee37a87181d78959d23794a0dbeda6e2a3a923969efb02ac"
+      "sha256": "fd1fff7a6cfef1412416211b84ad62e45b7343832ff33eed169d2661e1ef6066"
     },
     "vectors": {
-      "bytes": 6112,
+      "bytes": 6192,
       "path": "vectors16.i8",
-      "sha256": "3169fdd5856e57baf515563c01d4ecb40625d6e8608eb1626f45cec3de22ac44"
+      "sha256": "424afba16cd0551ef1025519738ef575d86a8f070eff5fa12405385512206540"
     },
     "weights": {
-      "bytes": 764,
+      "bytes": 774,
       "path": "weights.f16",
-      "sha256": "3195de6ae1e698de841ff9adbe418e4576e74fddbf8704ca3141e17ed958e6d7"
+      "sha256": "c826c129b0b912b6f03bc3ac7c96aca5bbd2a5f55959395aff217b6ca842a181"
     }
   },
   "model": "arc-lexeme@toy",
   "mrl": true,
   "pooling": "sum",
   "quant": "int8-row-f16",
-  "rows": 382,
+  "rows": 387,
   "run_id": "toy",
   "schema": "arc-lexeme-bundle/1",
   "tokenizer": {
-    "spec_sha256": "05423d7fc09639e04ec6313d477c7f996352f32aa1c239c092b05eda1479535b",
+    "spec_sha256": "88348b4d22209838d91d20753b7ef8b314cbef843b60e8af89334a3dc655bf5a",
     "version": "arc-lexeme-tok/1"
   },
   "verdict_status": "FIXTURE"

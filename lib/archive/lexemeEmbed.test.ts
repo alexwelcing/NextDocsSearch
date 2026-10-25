@@ -16,7 +16,6 @@ import {
   LexemeLexicon,
   createLexemeEmbedder,
   embedLexemes,
-  foldLexemeText,
   halfToFloat,
   lexemeEvalPlugin,
   lexemeWords,
@@ -95,22 +94,18 @@ describe('fold and split', () => {
     expect(lexemeWords('ﬁnd ＦＵＬＬ e\u0301te ½')).toEqual(['find', 'full', 'ete', '1', '2'])
     // Symbols split words instead of being spelled out by NFKD ('™' → 'TM').
     expect(lexemeWords('Pro™max')).toEqual(['pro', 'max'])
-    expect(foldLexemeText('Plain ASCII, Only')).toBe('plain ascii, only')
+    // Letters and digits of any script are words, as in the site tokenizer.
+    expect(lexemeWords('Σοφία ΟΔΟΣ 東京 😀')).toEqual(['σοφια', 'οδος', '東京'])
   })
 
   it('keeps stop words and single characters for multiword matching', () => {
     expect(lexemeWords('The pause, a B-plan')).toEqual(['the', 'pause', 'a', 'b', 'plan'])
   })
 
-  it("filters single words exactly like the site's normalizedTokens on ASCII text", async () => {
+  it("yields the site's normalizedTokens as its single-word stream", async () => {
     const lexicon = (await loadToy()).lexicon
-    const { records } = readParity()
-    const ascii = records.map((record) => record.s).filter((s) => !/[^\x00-\x7f]/.test(s))
-    expect(ascii.length).toBeGreaterThan(1000)
-    for (const text of ascii) {
-      expect(lexemeWords(text).filter((word) => lexicon.keeps(word))).toEqual(
-        normalizedTokens(text)
-      )
+    for (const { s } of readParity().records) {
+      expect(lexemeWords(s).filter((word) => lexicon.keeps(word))).toEqual(normalizedTokens(s))
     }
   })
 })
@@ -122,6 +117,9 @@ describe('lexicon.bin', () => {
     expect(lexicon.lookup('adaeze')).toMatchObject({ kind: LEXEME_KIND.alias })
     expect(lexicon.lookup('adaeze')?.candidates).toHaveLength(2)
     expect(lexicon.lookup('house')?.row).toBe(lexicon.lookup('home')?.row)
+    expect(lexicon.lookup('москва')).toMatchObject({ kind: LEXEME_KIND.word })
+    // Stored folded: NFKD takes the breve off 'й'.
+    expect(lexicon.lookup('новыи мир')).toMatchObject({ kind: LEXEME_KIND.multiword })
     for (const missing of ['', '0', 'aaaa', 'the', 'pause ', 'the paus', 'zzzz', 'zuriz', 'zurí']) {
       expect(lexicon.lookup(missing)).toBeNull()
     }

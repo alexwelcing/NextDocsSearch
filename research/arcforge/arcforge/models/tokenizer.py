@@ -4,7 +4,7 @@ Over fold.words(text), left to right:
 
 1. the longest multiword key (2..max_words words) starting at this word, if any;
 2. otherwise the word itself, if it passes the site filter (2+ characters, not a stop word):
-   its lexicon row when it has one, else the hashed character 3-5-grams of '<word>', each
+   its lexicon row when it has one, else the hashed code-point 3-5-grams of '<word>', each
    weighted 1/k so an unknown word counts once;
 3. otherwise (a stop word or a single character) nothing.
 
@@ -22,7 +22,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Literal
 
-from arcforge.models.fold import words_with_offsets
+from arcforge.models.fold import utf16_len, words_with_offsets
 from arcforge.models.lexicon import Kind, Lexicon, TokenizerSpec
 
 Mode = Literal['query', 'document']
@@ -57,14 +57,15 @@ def fnv1a32(data: bytes) -> int:
 
 
 def ngram_buckets(word: str, spec: TokenizerSpec) -> list[int]:
-    """Bucket indexes of the character n-grams of '<word>', by n then position."""
+    """Bucket indexes of the code-point n-grams of '<word>' (each hashed as UTF-8), by n then
+    position."""
     if spec.buckets <= 0:
         return []
-    padded = f'<{word}>'.encode('ascii')
+    padded = f'<{word}>'
     out: list[int] = []
     for n in range(spec.ngram_min, spec.ngram_max + 1):
         for i in range(len(padded) - n + 1):
-            out.append(fnv1a32(padded[i : i + n]) % spec.buckets)
+            out.append(fnv1a32(padded[i : i + n].encode()) % spec.buckets)
     return out
 
 
@@ -75,7 +76,7 @@ class LexemeTokenizer:
         self._stop = frozenset(self.spec.stop_words)
 
     def keep(self, word: str) -> bool:
-        return len(word) >= self.spec.min_word and word not in self._stop
+        return utf16_len(word) >= self.spec.min_word and word not in self._stop
 
     def tokenize(
         self, text: str, mode: Mode = 'query', aliases: Mapping[int, int] | None = None

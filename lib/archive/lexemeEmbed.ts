@@ -3,10 +3,10 @@
 // A bundle is a handful of static assets loaded once per isolate through fetchAsset:
 // arc-lexeme.meta.json naming lexicon.bin (a front-coded sorted key table, read in place),
 // vectors<D>.i8 (per-row int8), scales.f16, weights.f16 (optional) and bias.f16 (b_query then
-// b_doc). A query is folded and split exactly like lib/retrieval/tokenize.ts (plus NFKD
-// folding), matched greedily against the lexicon (multiword, then entity or word, then hashed
-// character n-grams), and embedded as normalize(b + Σ p·w·e). Pure TypeScript, no WASM: well
-// under a millisecond once the bundle is loaded.
+// b_doc). A query is folded and split by lib/retrieval/tokenize.ts itself (foldText, then
+// normalizedTokens' split), matched greedily against the lexicon (multiword, then entity or
+// word, then hashed character n-grams), and embedded as normalize(b + Σ p·w·e). Pure
+// TypeScript, no WASM: well under a millisecond once the bundle is loaded.
 //
 // research/arcforge/arcforge/models is the Python twin (it builds the lexicon and the bundle).
 // lexemeEmbed.test.ts holds the two together: identical token streams on 10k strings and
@@ -19,56 +19,29 @@
 // committed data/search vector source already serves that model, embeds every chunk in memory
 // from the lookup table, as CI does for records added between GPU runs.
 import { embedText, sha256Hex } from '../retrieval/chunk'
+import { TOKENIZER_VERSION, foldText } from '../retrieval/tokenize'
 import type { VectorSource } from '../retrieval/build'
 import type { EvalPlugin } from '../retrieval/eval'
 import type { RetrievalDeps } from '../retrieval/types'
 
 export const LEXEME_TOKENIZER_VERSION = 'arc-lexeme-tok/1'
-export const LEXEME_FOLD_VERSION = 'nfkd-strip-marks/1'
 export const LEXEME_BUNDLE_SCHEMA = 'arc-lexeme-bundle/1'
 export const LEXEME_META_NAME = 'arc-lexeme.meta.json'
 
-// ---- Fold and split (fold.py) ----------------------------------------------------------------
+// ---- Words (fold.py) -------------------------------------------------------------------------
 
-const NON_ASCII = /[^\x00-\x7f]/
-const SYMBOL = /\p{S}/gu
-const MARKS = /\p{M}+/gu
-// Latin letters with no Unicode decomposition, folded the way they are typed in ASCII.
-const LETTER_FOLDS: Record<string, string> = {
-  ß: 'ss',
-  æ: 'ae',
-  œ: 'oe',
-  ø: 'o',
-  ł: 'l',
-  đ: 'd',
-  ð: 'd',
-  þ: 'th',
-  ı: 'i',
-}
-const UNDECOMPOSED = /[ßæœøłđðþı]/g
-const WORD = /[a-z0-9]+/g
+// normalizedTokens' word split (lib/retrieval/tokenize.ts): letters and digits of any script.
+const NON_WORD = /[^\p{L}\p{N}]+/u
+const SPLIT_PATTERN = '[^\\p{L}\\p{N}]+'
 
 /**
- * The search form of a text: lowercased; when it is not ASCII, symbols become spaces, then
- * NFKD with combining marks stripped and the undecomposed Latin letters spelled out, so 'Tomáš',
- * 'Tūhoe' and 'Solène' read 'tomas', 'tuhoe', 'solene'.
- */
-export function foldLexemeText(value: string): string {
-  if (!NON_ASCII.test(value)) return value.toLowerCase()
-  return value
-    .replace(SYMBOL, ' ')
-    .normalize('NFKD')
-    .replace(MARKS, '')
-    .toLowerCase()
-    .replace(UNDECOMPOSED, (letter) => LETTER_FOLDS[letter])
-}
-
-/**
- * Every [a-z0-9]+ word of the folded text, as lib/retrieval normalizedTokens splits it, but with
- * stop words and single characters kept: multiword lexemes ('the pause') span them.
+ * Every word of the site's folded text (foldText, then normalizedTokens' split), with stop words
+ * and single characters kept: multiword lexemes ('the pause') span them.
  */
 export function lexemeWords(value: string): string[] {
-  return foldLexemeText(value).match(WORD) ?? []
+  return foldText(value)
+    .split(NON_WORD)
+    .filter((word) => word.length > 0)
 }
 
 // ---- Lexicon (lexicon.py) --------------------------------------------------------------------
@@ -113,6 +86,7 @@ export interface LexiconHit {
 
 const MAGIC = 'ARCLEX01'
 const MAX_KEY_BYTES = 255
+const utf8 = new TextEncoder()
 
 /** lexicon.bin, read in place: binary search over block heads, then one block decoded. */
 export class LexemeLexicon {
@@ -138,11 +112,18 @@ export class LexemeLexicon {
     const header = JSON.parse(new TextDecoder().decode(bytes.subarray(12, 12 + headerLength)))
     if (header?.format !== 'arc-lexicon/1') throw new Error('lexicon: unsupported format')
     const spec = header.spec as LexemeTokenizerSpec
-    if (spec?.version !== LEXEME_TOKENIZER_VERSION || spec.fold !== LEXEME_FOLD_VERSION) {
-      throw new Error(`lexicon: unsupported tokenizer ${spec?.version}/${spec?.fold}`)
+    if (spec?.version !== LEXEME_TOKENIZER_VERSION) {
+      throw new Error(`lexicon: unsupported tokenizer ${spec?.version}`)
+    }
+    // The fold is the site's own foldText: a lexicon built for another version of it would be
+    // matched against differently folded words.
+    if (spec.fold !== TOKENIZER_VERSION) {
+      throw new Error(
+        `lexicon: built for site tokenizer ${spec.fold}, this build is ${TOKENIZER_VERSION}`
+      )
     }
     if (
-      spec.split !== '[^a-z0-9]+' ||
+      spec.split !== SPLIT_PATTERN ||
       spec.ngrams?.hash !== 'fnv1a32' ||
       spec.ngrams.pad?.join('') !== '<>'
     ) {
@@ -178,14 +159,8 @@ export class LexemeLexicon {
   }
 
   lookup(text: string): LexiconHit | null {
-    if (text.length > MAX_KEY_BYTES) return null
-    // Keys are ASCII by construction (folded [a-z0-9] words joined by spaces).
-    const key = new Uint8Array(text.length)
-    for (let i = 0; i < text.length; i++) {
-      const code = text.charCodeAt(i)
-      if (code > 0x7f) return null
-      key[i] = code
-    }
+    const key = utf8.encode(text)
+    if (key.length > MAX_KEY_BYTES) return null
     let lo = 0
     let hi = this.header.blocks - 1
     let block = -1
@@ -263,23 +238,30 @@ export interface LexemeToken {
 
 export type LexemeMode = 'query' | 'document'
 
-function fnv1a32(text: string, start: number, end: number): number {
+function fnv1a32(bytes: Uint8Array, start: number, end: number): number {
   let hash = 0x811c9dc5
   for (let i = start; i < end; i++) {
-    hash ^= text.charCodeAt(i)
+    hash ^= bytes[i]
     hash = Math.imul(hash, 0x01000193) >>> 0
   }
   return hash
 }
 
-/** Bucket indexes of the character n-grams of '<word>', by n then position. */
+/** Bucket indexes of the code-point n-grams of '<word>' (each hashed as UTF-8), by n then position. */
 export function ngramBuckets(word: string, spec: LexemeTokenizerSpec): number[] {
   const { min, max, buckets } = spec.ngrams
   if (!(buckets > 0)) return []
-  const padded = `<${word}>`
+  const bytes = utf8.encode(`<${word}>`)
+  // Byte offset of every code point, and one past the end.
+  const starts: number[] = []
+  for (let i = 0; i < bytes.length; i++) if ((bytes[i] & 0xc0) !== 0x80) starts.push(i)
+  starts.push(bytes.length)
+  const points = starts.length - 1
   const out: number[] = []
   for (let n = min; n <= max; n++) {
-    for (let i = 0; i + n <= padded.length; i++) out.push(fnv1a32(padded, i, i + n) % buckets)
+    for (let i = 0; i + n <= points; i++) {
+      out.push(fnv1a32(bytes, starts[i], starts[i + n]) % buckets)
+    }
   }
   return out
 }

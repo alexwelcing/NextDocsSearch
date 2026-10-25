@@ -29,7 +29,14 @@ import struct
 from pathlib import Path
 
 from arcforge.models.bundle import META_NAME, Bundle, quantize_rows, write_bundle
-from arcforge.models.lexicon import Kind, LexiconEntry, TokenizerSpec, build_lexicon, canonical_json
+from arcforge.models.lexicon import (
+    Kind,
+    LexiconEntry,
+    TokenizerSpec,
+    build_lexicon,
+    canonical_json,
+    canonical_key,
+)
 
 SEED = 1729
 N_STRINGS = 10_000
@@ -49,7 +56,9 @@ CORPUS_WORDS = (
     'blacksmith choice inheritance gesture echo chamber residue frontier vault ledger drift glyph '
     'atlas continent unnamed ghost ghosts register registers gloss glossary resonance trace '
     'radiologist daughter captain dr byline bylines editor note notes series footer stamp bio '
-    'interface emergent intelligence speculative futures 2067 2026 49 r00 l4 bm25 rrf mrl'
+    'interface emergent intelligence speculative futures 2067 2026 49 r00 l4 bm25 rrf mrl '
+    # Keys in other scripts: UTF-8 keys, compared bytewise on both sides.
+    'москва σοφια 東京 ελκα'
 ).split()
 GENERAL_WORDS = (
     'house home water river light lamp time clock people person world earth night evening '
@@ -69,6 +78,7 @@ MULTIWORDS = (
     'echo chamber',
     'the weight of the hammer',
     'a to z',
+    'новый мир',
 )
 ENTITIES = (
     'adaeze nwosu',
@@ -141,6 +151,12 @@ SEPARATORS = (
 STRESS_PIECES = (
     'Σοφία',
     'ΑΣ',
+    'ΟΔΟΣ',
+    'ΣΑΣ.',
+    'Новый Мир',
+    '\U00020000',
+    '\U0001d400\U0001d401',
+    'ꟹ',
     'Москва',
     'Ёлка',
     '東京',
@@ -240,8 +256,9 @@ def toy_entries() -> tuple[list[LexiconEntry], int]:
     for i, word in enumerate(GENERAL_WORDS):
         entries.append(LexiconEntry(word, Kind.GENERAL, row + i // 2))
     row += (len(GENERAL_WORDS) + 1) // 2
-    for key in MULTIWORDS:
-        entries.append(LexiconEntry(key, Kind.MULTIWORD, row))
+    for surface in MULTIWORDS:
+        # Written naturally, stored canonically ('новый мир' folds to 'новыи мир').
+        entries.append(LexiconEntry(canonical_key(surface), Kind.MULTIWORD, row))
         row += 1
     entity_row: dict[str, int] = {}
     for key in ENTITIES:
