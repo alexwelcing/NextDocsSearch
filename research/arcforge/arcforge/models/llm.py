@@ -14,7 +14,9 @@
    reported.
 
 Requests go through the OpenAI-compatible HTTP API with the standard library (threads +
-urllib), so this module needs nothing beyond the server itself.
+urllib), so this module needs nothing beyond the server itself. The environment's Python must
+ship its headers (Triton JIT-compiles a C helper): use a uv-managed interpreter, e.g.
+`uv sync --locked --extra gpu --extra vllm --managed-python`, not a distro python3 without -dev.
 """
 
 from __future__ import annotations
@@ -27,10 +29,10 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
 from arcforge.models import pins, prompts
 from arcforge.models.pins import ModelPin
@@ -98,13 +100,20 @@ def json_validity(results: list[RequestResult], cases: list[prompts.PromptCase])
                 extra.append({'id': r.id, 'problems': problems})
         else:
             invalid.append({'id': r.id, 'reason': why[:300]})
-    return {'valid': valid, 'total': len(results), 'invalid': invalid, 'expectation_problems': extra}
+    return {
+        'valid': valid,
+        'total': len(results),
+        'invalid': invalid,
+        'expectation_problems': extra,
+    }
 
 
 Sender = Callable[[int, prompts.PromptCase], RequestResult]
 
 
-def run_concurrent(send: Sender, cases: list[prompts.PromptCase], concurrency: int) -> list[RequestResult]:
+def run_concurrent(
+    send: Sender, cases: list[prompts.PromptCase], concurrency: int
+) -> list[RequestResult]:
     """Results in case order; send gets each case's index (its seed offset)."""
     with ThreadPoolExecutor(max_workers=concurrency) as pool:
         return list(pool.map(send, range(len(cases)), cases))
@@ -124,7 +133,9 @@ def _post(url: str, body: dict, timeout: float) -> tuple[int, dict]:
             return error.code, {}
 
 
-def chat_body(model: str, case: prompts.PromptCase, sampling: dict, guided: bool, thinking: bool | None) -> dict:
+def chat_body(
+    model: str, case: prompts.PromptCase, sampling: dict, guided: bool, thinking: bool | None
+) -> dict:
     body: dict = {'model': model, 'messages': case.messages, **sampling}
     if guided:
         body['response_format'] = {
@@ -136,8 +147,14 @@ def chat_body(model: str, case: prompts.PromptCase, sampling: dict, guided: bool
     return body
 
 
-def make_sender(base_url: str, model: str, sampling: Callable[[int], dict], guided: bool,
-                thinking: bool | None, timeout: float = 600) -> Sender:
+def make_sender(
+    base_url: str,
+    model: str,
+    sampling: Callable[[int], dict],
+    guided: bool,
+    thinking: bool | None,
+    timeout: float = 600,
+) -> Sender:
     def send(i: int, case: prompts.PromptCase) -> RequestResult:
         start = time.time()
         body = chat_body(model, case, sampling(i), guided, thinking)
@@ -147,11 +164,21 @@ def make_sender(base_url: str, model: str, sampling: Callable[[int], dict], guid
             return RequestResult(case.id, False, 0, '', 0, 0, start, time.time(), repr(error)[:300])
         end = time.time()
         if status != 200:
-            return RequestResult(case.id, False, status, '', 0, 0, start, end, json.dumps(data)[:300])
+            return RequestResult(
+                case.id, False, status, '', 0, 0, start, end, json.dumps(data)[:300]
+            )
         usage = data.get('usage') or {}
         text = data['choices'][0]['message'].get('content') or ''
-        return RequestResult(case.id, True, status, text, usage.get('prompt_tokens', 0),
-                             usage.get('completion_tokens', 0), start, end)
+        return RequestResult(
+            case.id,
+            True,
+            status,
+            text,
+            usage.get('prompt_tokens', 0),
+            usage.get('completion_tokens', 0),
+            start,
+            end,
+        )
 
     return send
 
@@ -162,10 +189,15 @@ def probe_image_refused(base_url: str, model: str) -> dict:
     body = {
         'model': model,
         'max_tokens': 4,
-        'messages': [{'role': 'user', 'content': [
-            {'type': 'text', 'text': 'What is in this image?'},
-            {'type': 'image_url', 'image_url': {'url': url}},
-        ]}],
+        'messages': [
+            {
+                'role': 'user',
+                'content': [
+                    {'type': 'text', 'text': 'What is in this image?'},
+                    {'type': 'image_url', 'image_url': {'url': url}},
+                ],
+            }
+        ],
     }
     status, data = _post(f'{base_url}/v1/chat/completions', body, 120)
     return {'status': status, 'refused': status >= 400, 'message': json.dumps(data)[:300]}
@@ -187,8 +219,20 @@ def fetch_model(pin: ModelPin, root: Path) -> Path:
 
 def serve_command(pin: ModelPin, model_dir: Path, name: str, port: int) -> list[str]:
     vllm = Path(sys.executable).with_name('vllm')
-    return [str(vllm), 'serve', str(model_dir), '--served-model-name', name, '--port', str(port),
-            '--seed', str(SEED), '--max-num-seqs', '64', *pin.vllm_args]
+    return [
+        str(vllm),
+        'serve',
+        str(model_dir),
+        '--served-model-name',
+        name,
+        '--port',
+        str(port),
+        '--seed',
+        str(SEED),
+        '--max-num-seqs',
+        '64',
+        *pin.vllm_args,
+    ]
 
 
 class Server:
@@ -205,11 +249,17 @@ class Server:
     def __enter__(self) -> Server:
         self.log = open(self.log_path, 'w')
         start = time.time()
-        self.process = subprocess.Popen(self.command, stdout=self.log, stderr=subprocess.STDOUT,
-                                        env={**os.environ, 'VLLM_NO_USAGE_STATS': '1'})
+        # The venv's bin first: vLLM's JIT kernels look for ninja on PATH.
+        path = f'{Path(sys.executable).parent}{os.pathsep}{os.environ.get("PATH", "")}'
+        env = {**os.environ, 'PATH': path, 'VLLM_NO_USAGE_STATS': '1'}
+        self.process = subprocess.Popen(
+            self.command, stdout=self.log, stderr=subprocess.STDOUT, env=env
+        )
         while time.time() - start < self.timeout:
             if self.process.poll() is not None:
-                raise RuntimeError(f'vllm exited with {self.process.returncode}; see {self.log_path}')
+                raise RuntimeError(
+                    f'vllm exited with {self.process.returncode}; see {self.log_path}'
+                )
             try:
                 with urllib.request.urlopen(f'{self.base_url}/health', timeout=5) as response:
                     if response.status == 200:
@@ -231,15 +281,27 @@ class Server:
 
 def gpu_memory_mib() -> int | None:
     try:
-        out = subprocess.run(['nvidia-smi', '--query-gpu=memory.used', '--format=csv,noheader,nounits'],
-                             capture_output=True, text=True, check=True)
+        out = subprocess.run(
+            ['nvidia-smi', '--query-gpu=memory.used', '--format=csv,noheader,nounits'],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
         return int(out.stdout.split()[0])
     except (OSError, subprocess.CalledProcessError, ValueError, IndexError):
         return None
 
 
-def check(model_key: str, *, records_dir: Path, models_root: Path, out_dir: Path, port: int = 8011,
-          requests: int = 256, concurrency: int = 64) -> dict:
+def check(
+    model_key: str,
+    *,
+    records_dir: Path,
+    models_root: Path,
+    out_dir: Path,
+    port: int = 8011,
+    requests: int = 256,
+    concurrency: int = 64,
+) -> dict:
     pin = MODELS[model_key]
     out_dir.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -247,8 +309,13 @@ def check(model_key: str, *, records_dir: Path, models_root: Path, out_dir: Path
     fetch_seconds = round(time.time() - t0, 1)
     cards = prompts.record_cards(records_dir, 327)
     command = serve_command(pin, model_dir, model_key, port)
-    report: dict = {'model': model_key, 'repo': pin.repo, 'revision': pin.revision, 'command': command,
-                    'fetch_seconds': fetch_seconds}
+    report: dict = {
+        'model': model_key,
+        'repo': pin.repo,
+        'revision': pin.revision,
+        'command': command,
+        'fetch_seconds': fetch_seconds,
+    }
     qwen = model_key.startswith('qwen')
     with Server(command, port, out_dir / f'{model_key}.vllm.log') as server:
         report['load_seconds'] = server.load_seconds
@@ -256,17 +323,32 @@ def check(model_key: str, *, records_dir: Path, models_root: Path, out_dir: Path
         report['image_probe'] = probe_image_refused(server.base_url, model_key)
         if qwen:
             # Qwen3.5 non-thinking sampling (model card), seeded per request.
-            sampling = lambda i: {'temperature': 0.7, 'top_p': 0.8, 'top_k': 20, 'max_tokens': 512, 'seed': SEED + i}
+            sampling = lambda i: {
+                'temperature': 0.7,
+                'top_p': 0.8,
+                'top_k': 20,
+                'max_tokens': 512,
+                'seed': SEED + i,
+            }
             send = make_sender(server.base_url, model_key, sampling, guided=True, thinking=False)
-            training = [prompts.training_query_case(cards[i % len(cards)], i) for i in range(requests)]
+            training = [
+                prompts.training_query_case(cards[i % len(cards)], i) for i in range(requests)
+            ]
             run_concurrent(send, training[:concurrency], concurrency)  # warm-up wave, not measured
             results = run_concurrent(send, training, concurrency)
             report['throughput'] = throughput(results)
             report['training_json'] = _summary(json_validity(results, training))
-            judge = make_sender(server.base_url, model_key, lambda i: {'temperature': 0.0, 'max_tokens': 256, 'seed': SEED},
-                                guided=True, thinking=False)
+            judge = make_sender(
+                server.base_url,
+                model_key,
+                lambda i: {'temperature': 0.0, 'max_tokens': 256, 'seed': SEED},
+                guided=True,
+                thinking=False,
+            )
             audit = prompts.audit_fixture(cards, 64)
-            report['audit_judge_json'] = _summary(json_validity(run_concurrent(judge, audit, concurrency), audit))
+            report['audit_judge_json'] = _summary(
+                json_validity(run_concurrent(judge, audit, concurrency), audit)
+            )
             gate = pins.qwen_gate(report['throughput']['decode_tokens_per_s'], concurrency)
         else:
             sampling = lambda i: {'temperature': 0.8, 'max_tokens': 600, 'seed': SEED + i}
@@ -277,12 +359,17 @@ def check(model_key: str, *, records_dir: Path, models_root: Path, out_dir: Path
             validity = json_validity(results, fixture)
             report['fixture_json'] = _summary(validity)
             report['samples'] = [r.text for r in results[:3]]
-            gate = pins.ministral_gate(report['image_probe']['refused'], validity['valid'], validity['total'])
+            gate = pins.ministral_gate(
+                report['image_probe']['refused'], validity['valid'], validity['total']
+            )
     report['gate'] = {'pin': gate.pin.repo, 'passed': gate.passed, 'reason': gate.reason}
     (out_dir / f'{model_key}.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
 
 
 def _summary(validity: dict) -> dict:
-    return {**validity, 'invalid': validity['invalid'][:10], 'fraction': round(validity['valid'] / max(1, validity['total']), 4)}
-
+    return {
+        **validity,
+        'invalid': validity['invalid'][:10],
+        'fraction': round(validity['valid'] / max(1, validity['total']), 4),
+    }

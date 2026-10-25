@@ -106,24 +106,126 @@ DIACRITICS = {
 }
 LIGATURES = {'fi': 'ﬁ', 'fl': 'ﬂ', 'ff': 'ﬀ', 'ffi': 'ﬃ'}
 SEPARATORS = (
-    ' ', ' ', ' ', '  ', '-', '—', '–', '_', '/', '.', ', ', '\n', '\t', ' ', '　',
-    '​', '’', "'", '"', '(', ')', '#', '&', '+', '™', '©', '€', '$', '…', '|', '·',
+    ' ',
+    ' ',
+    ' ',
+    '  ',
+    '-',
+    '—',
+    '–',
+    '_',
+    '/',
+    '.',
+    ', ',
+    '\n',
+    '\t',
+    '\u00a0',
+    '\u3000',
+    '\u200b',
+    '’',
+    "'",
+    '"',
+    '(',
+    ')',
+    '#',
+    '&',
+    '+',
+    '™',
+    '©',
+    '€',
+    '$',
+    '…',
+    '|',
+    '·',
 )
 STRESS_PIECES = (
-    'Σοφία', 'ΑΣ', 'Москва', 'Ёлка', '東京', '한국어', 'سلام', 'שלום', 'नमस्ते', 'ไทย',
-    '😀', '❤️', '👩‍💻', '👍🏽', '🇺🇸', '½', '¼', '²', '³', '①', 'Ⅻ', 'ⅷ', '℃', '№',
-    'Kelvin K', 'İstanbul', 'straße', 'STRASSE', 'Æther', 'Œuvre', 'Øresund', 'Łódź',
-    'Þórr', 'Đorđe', 'ıi', 'é', 'ñ', 'ǟ', '́lead', 'ＦＵＬＬ',
-    'ｗｉｄｔｈ', 'ｦ', '㎏', '㈱', 'ǅ', 'ǈ', 'ŉ', 'ſ', 'ﬆ', '‐', '‑', '⁄', ' ', '﻿',
-    'x­x', 'co­op', 'O’Brien', 'rock’n’roll', 'C++', 'A/B', '3.14', '10,000', 'R00',
-    'L4', '#49', 'e-mail', 'mid-2067',
+    'Σοφία',
+    'ΑΣ',
+    'Москва',
+    'Ёлка',
+    '東京',
+    '한국어',
+    'سلام',
+    'שלום',
+    'नमस्ते',
+    'ไทย',
+    '😀',
+    '❤\ufe0f',
+    '👩\u200d💻',
+    '👍🏽',
+    '🇺🇸',
+    '½',
+    '¼',
+    '²',
+    '³',
+    '①',
+    'Ⅻ',
+    'ⅷ',
+    '℃',
+    '№',
+    'Kelvin K',
+    'İstanbul',
+    'straße',
+    'STRASSE',
+    'Æther',
+    'Œuvre',
+    'Øresund',
+    'Łódź',
+    'Þórr',
+    'Đorđe',
+    'ıi',
+    'e\u0301',
+    'n\u0303',
+    'a\u0308\u0304',
+    '\u0301lead',
+    'ＦＵＬＬ',
+    'ｗｉｄｔｈ',
+    'ｦ',
+    '㎏',
+    '㈱',
+    'ǅ',
+    'ǈ',
+    'ŉ',
+    'ſ',
+    'ﬆ',
+    '‐',
+    '‑',
+    '⁄',
+    '\u2028',
+    '\ufeff',
+    'x\u00adx',
+    'co\u00adop',
+    'O’Brien',
+    'rock’n’roll',
+    'C++',
+    'A/B',
+    '3.14',
+    '10,000',
+    'R00',
+    'L4',
+    '#49',
+    'e-mail',
+    'mid-2067',
 )
 # Code point ranges fully assigned by Unicode 8.0 (see the module docstring).
 RANDOM_RANGES = (
-    (0x00A0, 0x00FF), (0x0100, 0x017F), (0x0180, 0x024F), (0x0300, 0x036F), (0x0391, 0x03A1),
-    (0x03B1, 0x03C9), (0x0400, 0x045F), (0x2010, 0x2027), (0x2100, 0x214F), (0x2150, 0x2182),
-    (0x2190, 0x21FF), (0x2460, 0x24FF), (0x4E00, 0x4FFF), (0xAC00, 0xACFF), (0xFB00, 0xFB06),
-    (0xFF01, 0xFF5E), (0x1F600, 0x1F64F),
+    (0x00A0, 0x00FF),
+    (0x0100, 0x017F),
+    (0x0180, 0x024F),
+    (0x0300, 0x036F),
+    (0x0391, 0x03A1),
+    (0x03B1, 0x03C9),
+    (0x0400, 0x045F),
+    (0x2010, 0x2027),
+    (0x2100, 0x214F),
+    (0x2150, 0x2182),
+    (0x2190, 0x21FF),
+    (0x2460, 0x24FF),
+    (0x4E00, 0x4FFF),
+    (0xAC00, 0xACFF),
+    (0xFB00, 0xFB06),
+    (0xFF01, 0xFF5E),
+    (0x1F600, 0x1F64F),
 )
 
 
@@ -165,7 +267,9 @@ def write_toy_bundle(out_dir: Path) -> dict:
     _, bucket_base = toy_entries()
     rows = bucket_base + TOY_BUCKETS
     rng = random.Random(SEED)
-    table = [[rng.gauss(0, 1) * rng.uniform(0.2, 3.0) for _ in range(TOY_DIMS)] for _ in range(rows)]
+    table = [
+        [rng.gauss(0, 1) * rng.uniform(0.2, 3.0) for _ in range(TOY_DIMS)] for _ in range(rows)
+    ]
     table[3] = [0.0] * TOY_DIMS  # one empty row (scale 0), as an unseen bucket would be
     int8_rows, scales = quantize_rows(table)
     weights = [rng.uniform(0.25, 2.0) for _ in range(rows)]
@@ -200,11 +304,13 @@ def _surface(rng: random.Random, key: str) -> str:
             options = DIACRITICS.get(c.lower())
             if options and rng.random() < 0.35:
                 accented = rng.choice(options)
-                chars[i] = accented.upper() if c.isupper() and accented.upper() != accented else accented
+                chars[i] = (
+                    accented.upper() if c.isupper() and accented.upper() != accented else accented
+                )
         text = ''.join(chars)
     if rng.random() < 0.08:
         # Decomposed: base letter + combining acute.
-        text = ''.join(c + '́' if c in 'aeiou' and rng.random() < 0.5 else c for c in text)
+        text = ''.join(c + '\u0301' if c in 'aeiou' and rng.random() < 0.5 else c for c in text)
     if rng.random() < 0.05:
         text = ''.join(chr(ord(c) + 0xFEE0) if 'a' <= c <= 'z' else c for c in text)
     if rng.random() < 0.1:

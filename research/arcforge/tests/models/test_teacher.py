@@ -2,7 +2,16 @@ import math
 
 import pytest
 
-from arcforge.models.teacher import OTHER, PROMPT, QUERY_PROMPT, add, assign_tokens, cosine, doc_prompt, sum_parts
+from arcforge.models.teacher import (
+    OTHER,
+    PROMPT,
+    QUERY_PROMPT,
+    add,
+    assign_tokens,
+    cosine,
+    doc_prompt,
+    sum_parts,
+)
 
 
 def test_prompts():
@@ -16,7 +25,16 @@ def test_assign_tokens():
     # <bos>, 'p:', ' ', 'the', ' pa', 'use', ' x', <eos>
     offsets = [(0, 0), (0, 2), (2, 3), (3, 6), (6, 9), (9, 12), (12, 14), (0, 0)]
     spans = [(0, 9)]  # 'the pause' in the text
-    assert assign_tokens(offsets, len(prompt), spans) == [PROMPT, PROMPT, PROMPT, 0, 0, 0, OTHER, PROMPT]
+    assert assign_tokens(offsets, len(prompt), spans) == [
+        PROMPT,
+        PROMPT,
+        PROMPT,
+        0,
+        0,
+        0,
+        OTHER,
+        PROMPT,
+    ]
 
 
 def test_a_token_straddling_two_occurrences_goes_to_the_first():
@@ -42,4 +60,3 @@ def test_cosine():
     assert cosine([1, 1], [2, 2]) == pytest.approx(1)
     assert cosine([0, 0], [1, 1]) == 0
     assert math.isclose(cosine([1, 2, 3], [-1, -2, -3]), -1)
-

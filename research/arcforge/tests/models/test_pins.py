@@ -7,8 +7,15 @@ from arcforge.models import pins
 
 
 def all_pins():
-    return [pins.TEACHER, pins.QWEN_9B, pins.QWEN_4B, pins.MINISTRAL_8B, pins.MINISTRAL_3B,
-            pins.RERANKER, *pins.R08_TEACHERS]
+    return [
+        pins.TEACHER,
+        pins.QWEN_9B,
+        pins.QWEN_4B,
+        pins.MINISTRAL_8B,
+        pins.MINISTRAL_3B,
+        pins.RERANKER,
+        *pins.R08_TEACHERS,
+    ]
 
 
 def test_every_pin_is_a_full_commit_sha():

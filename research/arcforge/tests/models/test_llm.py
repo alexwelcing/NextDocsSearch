@@ -34,7 +34,7 @@ def test_chat_body():
 def test_serve_command_uses_the_pin(tmp_path):
     command = llm.serve_command(pins.QWEN_9B, tmp_path, 'qwen3.5-9b', 8011)
     assert command[1:3] == ['serve', str(tmp_path)]
-    assert command[-len(pins.QWEN_9B.vllm_args):] == list(pins.QWEN_9B.vllm_args)
+    assert command[-len(pins.QWEN_9B.vllm_args) :] == list(pins.QWEN_9B.vllm_args)
     assert '--max-num-seqs' in command and '64' in command
 
 
@@ -48,21 +48,31 @@ class FakeOpenAI(BaseHTTPRequestHandler):
         body = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
         content = body['messages'][-1]['content']
         if isinstance(content, list):
-            self._send(400, {'error': {'message': 'At most 0 image(s) may be provided in one prompt.'}})
+            self._send(
+                400, {'error': {'message': 'At most 0 image(s) may be provided in one prompt.'}}
+            )
             return
         schema = body['response_format']['json_schema']['schema']
         if 'grades' in schema['properties']:
             k = schema['properties']['grades']['minItems']
             answer = {'grades': [{'id': i, 'grade': 1} for i in range(1, k + 1)]}
-        elif 'items' in schema['properties']['queries'] and schema['properties']['queries']['items'].get('type') == 'string':
+        elif (
+            'items' in schema['properties']['queries']
+            and schema['properties']['queries']['items'].get('type') == 'string'
+        ):
             answer = {'queries': ['query text'] * 6}
         else:
             family = schema['properties']['queries']['items']['properties']['family']['enum'][0]
             # Every tenth seed answers off-schema, so validity is measured, not assumed.
             n = 2 if body['seed'] % 10 == 0 else 3
             answer = {'queries': [{'text': 'abc', 'family': family, 'grade_hint': 2}] * n}
-        self._send(200, {'choices': [{'message': {'content': json.dumps(answer)}}],
-                         'usage': {'prompt_tokens': 10, 'completion_tokens': 20}})
+        self._send(
+            200,
+            {
+                'choices': [{'message': {'content': json.dumps(answer)}}],
+                'usage': {'prompt_tokens': 10, 'completion_tokens': 20},
+            },
+        )
 
     def _send(self, status, payload):
         data = json.dumps(payload).encode()
@@ -73,9 +83,15 @@ class FakeOpenAI(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
 
+class Server(ThreadingHTTPServer):
+    # The default backlog (5) resets connections under 16-way concurrency.
+    request_queue_size = 256
+    daemon_threads = True
+
+
 @pytest.fixture
 def server():
-    httpd = ThreadingHTTPServer(('127.0.0.1', 0), FakeOpenAI)
+    httpd = Server(('127.0.0.1', 0), FakeOpenAI)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
     yield f'http://127.0.0.1:{httpd.server_address[1]}'
@@ -84,11 +100,18 @@ def server():
 
 def test_fixture_round_trip_against_an_openai_compatible_server(server):
     fixture = prompts.ministral_fixture(CARDS)
-    send = llm.make_sender(server, 'm', lambda i: {'temperature': 0.8, 'seed': llm.SEED + i}, guided=True, thinking=None)
+    send = llm.make_sender(
+        server,
+        'm',
+        lambda i: {'temperature': 0.8, 'seed': llm.SEED + i},
+        guided=True,
+        thinking=None,
+    )
     results = llm.run_concurrent(send, fixture, 16)
     assert [r.id for r in results] == [c.id for c in fixture]
     validity = llm.json_validity(results, fixture)
     # Seeds 1729 + i with (1729 + i) % 10 == 0: i = 1, 11, ..., 191.
+    assert all(r.ok for r in results), [r.error for r in results if not r.ok][:3]
     assert validity['total'] == 200 and validity['valid'] == 180
     gate = pins.ministral_gate(True, validity['valid'], validity['total'])
     assert gate.pin is pins.MINISTRAL_3B
@@ -97,7 +120,9 @@ def test_fixture_round_trip_against_an_openai_compatible_server(server):
 
 def test_audit_round_trip(server):
     audit = prompts.audit_fixture(CARDS, 8)
-    send = llm.make_sender(server, 'm', lambda i: {'temperature': 0, 'seed': 1}, guided=True, thinking=False)
+    send = llm.make_sender(
+        server, 'm', lambda i: {'temperature': 0, 'seed': 1}, guided=True, thinking=False
+    )
     validity = llm.json_validity(llm.run_concurrent(send, audit, 4), audit)
     assert validity['valid'] == 8 and validity['expectation_problems'] == []
 
@@ -109,7 +134,9 @@ def test_image_probe(server):
 
 def test_request_errors_are_results_not_exceptions():
     case = prompts.training_query_case(CARDS[0], 0)
-    send = llm.make_sender('http://127.0.0.1:9', 'm', lambda i: {}, guided=False, thinking=None, timeout=2)
+    send = llm.make_sender(
+        'http://127.0.0.1:9', 'm', lambda i: {}, guided=False, thinking=None, timeout=2
+    )
     failed = send(0, case)
     assert not failed.ok and failed.status == 0 and failed.error
     assert llm.json_validity([failed], [case])['valid'] == 0

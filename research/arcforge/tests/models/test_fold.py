@@ -34,8 +34,11 @@ def whole_string_words(text: str) -> list[str]:
     ('text', 'expected'),
     [
         ('Tomáš Tūhoe Solène', ['tomas', 'tuhoe', 'solene']),
-        ('straße ÆTHER Øresund Łódź Þórr Đorđe', ['strasse', 'aether', 'oresund', 'lodz', 'thorr', 'dorde']),
-        ('ﬁnd ＦＵＬＬ éte ½', ['find', 'full', 'ete', '1', '2']),
+        (
+            'straße ÆTHER Øresund Łódź Þórr Đorđe',
+            ['strasse', 'aether', 'oresund', 'lodz', 'thorr', 'dorde'],
+        ),
+        ('ﬁnd ＦＵＬＬ e\u0301te ½', ['find', 'full', 'ete', '1', '2']),
         ('Pro™max', ['pro', 'max']),
         ('İstanbul KelvinK', ['istanbul', 'kelvink']),
         ('The pause, a B-plan', ['the', 'pause', 'a', 'b', 'plan']),
@@ -68,7 +71,7 @@ def test_offsets_cover_each_word():
 
 
 def test_offsets_include_trailing_marks():
-    text = 'café ok'
+    text = 'cafe\u0301 ok'
     assert words_with_offsets(text) == [('cafe', 0, 5), ('ok', 6, 8)]
 
 

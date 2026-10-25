@@ -27,9 +27,10 @@ import json
 import math
 import struct
 from array import array
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, Sequence
+from typing import Literal
 
 from arcforge.models.lexicon import TOKENIZER_VERSION, Kind, Lexicon
 from arcforge.models.tokenizer import LexemeTokenizer, Mode, Token
@@ -197,7 +198,9 @@ class Bundle:
         if len(self.b_doc) != self.dims:
             raise ValueError('bundle: bias file has the wrong size')
 
-    def embed(self, text: str, mode: Mode = 'query', aliases: dict[int, int] | None = None) -> Embedding:
+    def embed(
+        self, text: str, mode: Mode = 'query', aliases: dict[int, int] | None = None
+    ) -> Embedding:
         tokens = self.tokenizer.tokenize(text, mode, aliases)
         dims, vectors, scales, weights = self.dims, self.vectors, self.scales, self.weights
         acc = [0.0] * dims

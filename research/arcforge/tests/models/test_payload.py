@@ -38,8 +38,9 @@ def test_planned_shape_without_a_corpus(tmp_path):
 
 
 def test_general_words_share_the_leftover_rows(tmp_path):
-    planned = payload.planned_lexicon(records_dir=None, general_vocab=None, shape=SMALL,
-                                      rng=__import__('random').Random(1))
+    planned = payload.planned_lexicon(
+        records_dir=None, general_vocab=None, shape=SMALL, rng=__import__('random').Random(1)
+    )
     general_rows = Counter(e.row for e in planned.entries if e.kind == Kind.GENERAL)
     others = {e.row for e in planned.entries if e.kind != Kind.GENERAL}
     assert not others & set(general_rows)
@@ -51,11 +52,17 @@ def test_deterministic(tmp_path):
     a = payload.build_and_measure(tmp_path / 'a', shape=SMALL)
     b = payload.build_and_measure(tmp_path / 'b', shape=SMALL)
     assert a == b
-    assert (tmp_path / 'a' / 'lexicon.bin').read_bytes() == (tmp_path / 'b' / 'lexicon.bin').read_bytes()
+    assert (tmp_path / 'a' / 'lexicon.bin').read_bytes() == (
+        tmp_path / 'b' / 'lexicon.bin'
+    ).read_bytes()
 
 
 def test_mine_vocabulary():
-    texts = ['Marcus Chen saw the pause.', 'Marcus Chen and the pause again', 'the pause, the pause']
+    texts = [
+        'Marcus Chen saw the pause.',
+        'Marcus Chen and the pause again',
+        'the pause, the pause',
+    ]
     vocab = payload.mine_vocabulary(texts, SMALL)
     assert vocab['words'][0] == 'pause'
     assert 'marcus chen' in vocab['names']
@@ -63,7 +70,16 @@ def test_mine_vocabulary():
 
 
 def test_general_words_from_a_bpe_vocab(tmp_path):
-    vocab = {'Ġthe': 0, 'Ġhouse': 1, 'ĠHouse': 2, 'water': 3, 'Ġriver': 4, 'Ġx': 5, 'Ġcafé': 6, 'Ġlight': 7}
+    vocab = {
+        'Ġthe': 0,
+        'Ġhouse': 1,
+        'ĠHouse': 2,
+        'water': 3,
+        'Ġriver': 4,
+        'Ġx': 5,
+        'Ġcafé': 6,
+        'Ġlight': 7,
+    }
     path = tmp_path / 'vocab.json'
     path.write_text(json.dumps(vocab))
     assert payload.general_words_from_bpe_vocab(path, 2, {'river'}) == ['house', 'light']

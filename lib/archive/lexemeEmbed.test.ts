@@ -92,7 +92,7 @@ describe('fold and split', () => {
       'thorr',
       'dorde',
     ])
-    expect(lexemeWords('ﬁnd ＦＵＬＬ éte ½')).toEqual(['find', 'full', 'ete', '1', '2'])
+    expect(lexemeWords('ﬁnd ＦＵＬＬ e\u0301te ½')).toEqual(['find', 'full', 'ete', '1', '2'])
     // Symbols split words instead of being spelled out by NFKD ('™' → 'TM').
     expect(lexemeWords('Pro™max')).toEqual(['pro', 'max'])
     expect(foldLexemeText('Plain ASCII, Only')).toBe('plain ascii, only')
@@ -122,7 +122,7 @@ describe('lexicon.bin', () => {
     expect(lexicon.lookup('adaeze')).toMatchObject({ kind: LEXEME_KIND.alias })
     expect(lexicon.lookup('adaeze')?.candidates).toHaveLength(2)
     expect(lexicon.lookup('house')?.row).toBe(lexicon.lookup('home')?.row)
-    for (const missing of ['', '0', 'aaaa', 'the', 'pause ', 'the paus', 'zzzz', 'zuriz']) {
+    for (const missing of ['', '0', 'aaaa', 'the', 'pause ', 'the paus', 'zzzz', 'zuriz', 'zurí']) {
       expect(lexicon.lookup(missing)).toBeNull()
     }
   })

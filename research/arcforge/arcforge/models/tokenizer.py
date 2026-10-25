@@ -18,8 +18,9 @@ that knows who a document's bare names mean (the person map) passes them as `ali
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Literal, Mapping
+from typing import Literal
 
 from arcforge.models.fold import words_with_offsets
 from arcforge.models.lexicon import Kind, Lexicon, TokenizerSpec
@@ -117,6 +118,8 @@ class LexemeTokenizer:
                 buckets = ngram_buckets(ws[i], self.spec)
                 weight = 1.0 / len(buckets) if buckets else 0.0
                 base = lexicon.bucket_base
-                out.extend(Token(base + b, Kind.BUCKET, i, i + 1, weight, start, end) for b in buckets)
+                out.extend(
+                    Token(base + b, Kind.BUCKET, i, i + 1, weight, start, end) for b in buckets
+                )
             i += length
         return out

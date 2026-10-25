@@ -13,7 +13,9 @@ def test_ministral_fixture_has_200_prompts_over_every_family():
     cases = prompts.ministral_fixture(CARDS)
     assert len(cases) == prompts.MINISTRAL_FIXTURE_SIZE == 200
     assert len({c.id for c in cases}) == 200
-    families = [c.schema['properties']['queries']['items']['properties']['family']['enum'][0] for c in cases]
+    families = [
+        c.schema['properties']['queries']['items']['properties']['family']['enum'][0] for c in cases
+    ]
     assert set(families) == set(prompts.FAMILIES)
     for case in cases:
         jsonschema.Draft202012Validator.check_schema(case.schema)

@@ -11,8 +11,11 @@ of the states inside the occurrence, b_query / b_doc the expected prompt sums.
 The check, per text: one forward pass through the sentence-transformers pipeline, which
 returns both the token states and the model's own pooled sentence embedding; the tokenizer's
 offsets assign each token to a part; the parts are summed in float64 and the sum's cosine
-with the sentence embedding must exceed 0.9999. A second cosine compares against model.encode
-on the padded batch, the path production code uses.
+with that pass's sentence embedding must exceed 0.9999 (the gate). Two cosines are reported
+beside it: against model.encode over a padded batch (bf16 batch-padding drift, about 1e-4,
+which is why S4 takes token states and targets from the same pass), and of the prompt plus
+the lexeme occurrences alone (how much of the vector the lexemes carry without the stop
+words and punctuation between them).
 
 Only the pure helpers (assign_tokens, sum_parts, cosine) are importable without the gpu
 extra; everything touching the model imports torch and sentence-transformers inside.
@@ -22,9 +25,9 @@ from __future__ import annotations
 
 import math
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
 
 from arcforge.models.pins import TEACHER, ModelPin
 
@@ -60,7 +63,9 @@ def assign_tokens(
     return out
 
 
-def sum_parts(states: Sequence[Sequence[float]], assignment: Sequence[int]) -> dict[int, list[float]]:
+def sum_parts(
+    states: Sequence[Sequence[float]], assignment: Sequence[int]
+) -> dict[int, list[float]]:
     """Σ of the token states in each part, in float64."""
     if len(states) != len(assignment):
         raise ValueError('sum_parts: one part per token')
@@ -96,7 +101,9 @@ class Case:
     text: str
 
 
-def corpus_cases(records_dir: Path, n_docs: int, n_queries: int, max_chars: int = 1200) -> list[Case]:
+def corpus_cases(
+    records_dir: Path, n_docs: int, n_queries: int, max_chars: int = 1200
+) -> list[Case]:
     """Documents: the opening paragraphs of the first records by slug, under the titled document
     prompt. Queries: record descriptions, under the query prompt."""
     import json
@@ -105,11 +112,15 @@ def corpus_cases(records_dir: Path, n_docs: int, n_queries: int, max_chars: int 
     paths = sorted(Path(records_dir).glob('*.json'))
     for path in paths[:n_docs]:
         record = json.loads(path.read_text())
-        body = ' '.join(b['x'] for b in record.get('blocks', []) if isinstance(b, dict) and b.get('t') == 'p')
+        body = ' '.join(
+            b['x'] for b in record.get('blocks', []) if isinstance(b, dict) and b.get('t') == 'p'
+        )
         cases.append(Case('document', doc_prompt(record.get('title')), body[:max_chars]))
     for path in paths[:n_queries]:
         record = json.loads(path.read_text())
-        cases.append(Case('query', QUERY_PROMPT, str(record.get('description') or record.get('title'))))
+        cases.append(
+            Case('query', QUERY_PROMPT, str(record.get('description') or record.get('title')))
+        )
     return cases
 
 
@@ -137,7 +148,11 @@ def forward_one(model, full_text: str):
     import torch
 
     tokenizer = _text_tokenizer(model)
-    features = model.preprocess([full_text]) if hasattr(model, 'preprocess') else model.tokenize([full_text])
+    features = (
+        model.preprocess([full_text])
+        if hasattr(model, 'preprocess')
+        else model.tokenize([full_text])
+    )
     encoded = tokenizer(full_text, return_offsets_mapping=True, add_special_tokens=True)
     ids = features['input_ids'][0].tolist()
     if ids != encoded['input_ids']:
@@ -160,13 +175,19 @@ def reconstruction_check(model, cases: list[Case], tokenizer=None) -> dict:
     for kind in ('query', 'document'):
         group = [c for c in cases if c.kind == kind]
         if group:
-            vectors = model.encode([c.prompt + c.text for c in group], batch_size=16, convert_to_tensor=True)
+            vectors = model.encode(
+                [c.prompt + c.text for c in group], batch_size=16, convert_to_tensor=True
+            )
             for case, vector in zip(group, vectors):
                 encoded[id(case)] = vector.float().cpu()
     rows = []
     for case in cases:
         states, sentence, offsets = forward_one(model, case.prompt + case.text)
-        spans = [(t.start, t.end) for t in _dedupe(tokenizer.tokenize(case.text, 'document'))] if tokenizer else []
+        spans = (
+            [(t.start, t.end) for t in _dedupe(tokenizer.tokenize(case.text, 'document'))]
+            if tokenizer
+            else []
+        )
         assignment = assign_tokens(offsets, len(case.prompt), spans)
         parts = sum_parts(states.tolist(), assignment)
         total = add(list(parts.values()))
@@ -179,20 +200,22 @@ def reconstruction_check(model, cases: list[Case], tokenizer=None) -> dict:
                 'other_tokens': assignment.count(OTHER),
                 'lexeme_occurrences': len(spans),
                 'cos_parts_vs_pooled': cosine(total, sentence.tolist()),
-                'cos_parts_vs_encode': cosine(total, encoded[id(case)].tolist()),
+                'cos_parts_vs_batched_encode': cosine(total, encoded[id(case)].tolist()),
                 'cos_prompt_plus_lexemes': cosine(lexeme_only, sentence.tolist()),
                 'finite': bool(torch.isfinite(states).all()),
             }
         )
-    worst = min(min(r['cos_parts_vs_pooled'], r['cos_parts_vs_encode']) for r in rows)
+    worst = min(r['cos_parts_vs_pooled'] for r in rows)
+    finite = all(r['finite'] for r in rows)
     return {
         'cases': len(rows),
-        'min_cos_parts_vs_pooled': min(r['cos_parts_vs_pooled'] for r in rows),
-        'min_cos_parts_vs_encode': min(r['cos_parts_vs_encode'] for r in rows),
+        'min_cos_parts_vs_pooled': worst,
+        'min_cos_parts_vs_batched_encode': min(r['cos_parts_vs_batched_encode'] for r in rows),
         'mean_cos_prompt_plus_lexemes': sum(r['cos_prompt_plus_lexemes'] for r in rows) / len(rows),
-        'all_finite': all(r['finite'] for r in rows),
+        'mean_tokens': sum(r['tokens'] for r in rows) / len(rows),
+        'all_finite': finite,
         'threshold': MIN_RECONSTRUCTION_COSINE,
-        'pass': worst > MIN_RECONSTRUCTION_COSINE and all(r['finite'] for r in rows),
+        'pass': worst > MIN_RECONSTRUCTION_COSINE and finite,
         'seconds': round(time.time() - t0, 1),
         'rows': rows,
     }

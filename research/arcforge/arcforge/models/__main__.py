@@ -1,10 +1,10 @@
 """`python -m arcforge.models <command>`: the M1 model tools (see arcforge/models/__init__.py).
 
-    parity-fixtures   write (or --check) the committed tokenizer parity fixtures
-    payload           build a bundle of the planned shape and measure it raw and gzipped
-    pins              print every pinned model and the LLM gate decisions as JSON
-    teacher-check     EmbeddingGemma-2 context-sum reconstruction (gpu extra, an L4)
-    llm-check         text-only vLLM load + gate measurement for one LLM (vllm extra, an L4)
+parity-fixtures   write (or --check) the committed tokenizer parity fixtures
+payload           build a bundle of the planned shape and measure it raw and gzipped
+pins              print every pinned model and the LLM gate decisions as JSON
+teacher-check     EmbeddingGemma-2 context-sum reconstruction (gpu extra, an L4)
+llm-check         text-only vLLM load + gate measurement for one LLM (vllm extra, an L4)
 """
 
 from __future__ import annotations
@@ -50,7 +50,9 @@ def cmd_payload(args) -> int:
     records = args.records if args.records.is_dir() else None
     with tempfile.TemporaryDirectory() as tmp:
         out_dir = args.bundle_dir or Path(tmp)
-        report = payload.build_and_measure(out_dir, records_dir=records, general_vocab=args.general_vocab)
+        report = payload.build_and_measure(
+            out_dir, records_dir=records, general_vocab=args.general_vocab
+        )
     _emit(report, args.json)
     return 0 if report['bundle']['pass'] else 1
 
@@ -70,12 +72,18 @@ def cmd_teacher_check(args) -> int:
     from arcforge.models.tokenizer import LexemeTokenizer
 
     planned = payload.planned_lexicon(
-        records_dir=args.records, general_vocab=None, shape=payload.PlannedShape(), rng=random.Random(1729)
+        records_dir=args.records,
+        general_vocab=None,
+        shape=payload.PlannedShape(),
+        rng=random.Random(1729),
     )
     tokenizer = LexemeTokenizer(Lexicon(planned.lexicon))
     model = teacher.load_teacher(device=args.device)
     cases = teacher.corpus_cases(args.records, args.docs, args.queries)
-    report = {'teacher': teacher.TEACHER.id, **teacher.reconstruction_check(model, cases, tokenizer)}
+    report = {
+        'teacher': teacher.TEACHER.id,
+        **teacher.reconstruction_check(model, cases, tokenizer),
+    }
     if not args.rows:
         report.pop('rows')
     _emit(report, args.json)
@@ -101,26 +109,46 @@ def cmd_llm_check(args) -> int:
 def build_parser() -> argparse.ArgumentParser:
     from arcforge.models import fixtures
 
-    parser = argparse.ArgumentParser(prog='python -m arcforge.models', description=__doc__,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        prog='python -m arcforge.models',
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     sub = parser.add_subparsers(dest='command', metavar='<command>', required=True)
 
     p = sub.add_parser('parity-fixtures', help='write or check the tokenizer parity fixtures')
-    p.add_argument('--out', type=Path, default=fixtures.FIXTURE_DIR, help='fixture directory (default: %(default)s)')
+    p.add_argument(
+        '--out',
+        type=Path,
+        default=fixtures.FIXTURE_DIR,
+        help='fixture directory (default: %(default)s)',
+    )
     p.add_argument('--check', action='store_true', help='fail if the committed fixtures are stale')
     p.set_defaults(func=cmd_parity_fixtures)
 
-    p = sub.add_parser('payload', help='measure a planned-shape model bundle (target <= 4.0 MB raw)')
-    p.add_argument('--records', type=Path, default=RECORDS, help='corpus records (default: %(default)s)')
-    p.add_argument('--general-vocab', type=Path, help="a BPE vocab.json (e.g. Qwen's) for the 10k general words")
-    p.add_argument('--bundle-dir', type=Path, help='keep the written bundle here (default: a temp dir)')
+    p = sub.add_parser(
+        'payload', help='measure a planned-shape model bundle (target <= 4.0 MB raw)'
+    )
+    p.add_argument(
+        '--records', type=Path, default=RECORDS, help='corpus records (default: %(default)s)'
+    )
+    p.add_argument(
+        '--general-vocab',
+        type=Path,
+        help="a BPE vocab.json (e.g. Qwen's) for the 10k general words",
+    )
+    p.add_argument(
+        '--bundle-dir', type=Path, help='keep the written bundle here (default: a temp dir)'
+    )
     p.add_argument('--json', type=Path, help='also write the report here')
     p.set_defaults(func=cmd_payload)
 
     p = sub.add_parser('pins', help='print pinned models and LLM gate decisions')
     p.set_defaults(func=cmd_pins)
 
-    p = sub.add_parser('teacher-check', help='EmbeddingGemma-2 context-sum reconstruction (needs a GPU)')
+    p = sub.add_parser(
+        'teacher-check', help='EmbeddingGemma-2 context-sum reconstruction (needs a GPU)'
+    )
     p.add_argument('--records', type=Path, default=RECORDS)
     p.add_argument('--docs', type=int, default=64, help='document cases (default: %(default)s)')
     p.add_argument('--queries', type=int, default=64, help='query cases (default: %(default)s)')
@@ -130,12 +158,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_teacher_check)
 
     p = sub.add_parser('llm-check', help='text-only vLLM load and gate measurement (needs a GPU)')
-    p.add_argument('model', choices=['qwen3.5-9b', 'qwen3.5-4b', 'ministral-3-8b', 'ministral-3-3b'])
+    p.add_argument(
+        'model', choices=['qwen3.5-9b', 'qwen3.5-4b', 'ministral-3-8b', 'ministral-3-3b']
+    )
     p.add_argument('--records', type=Path, default=RECORDS)
     p.add_argument('--models-root', type=Path, default=Path.home() / 'models')
     p.add_argument('--out-dir', type=Path, default=Path('llm-check'))
     p.add_argument('--port', type=int, default=8011)
-    p.add_argument('--requests', type=int, default=256, help='measured Qwen requests (default: %(default)s)')
+    p.add_argument(
+        '--requests', type=int, default=256, help='measured Qwen requests (default: %(default)s)'
+    )
     p.add_argument('--concurrency', type=int, default=64)
     p.set_defaults(func=cmd_llm_check)
     return parser

@@ -69,15 +69,27 @@ QWEN_4B = ModelPin(
     note='The pre-registered fallback: bf16, same family and chat template.',
 )
 _MINISTRAL_ARGS = (
-    '--tokenizer-mode', 'mistral',
-    '--kv-cache-dtype', 'fp8',
-    '--max-model-len', '8192',
-    '--limit-mm-per-prompt', '{"image":0}',
+    '--tokenizer-mode',
+    'mistral',
+    '--kv-cache-dtype',
+    'fp8',
+    '--max-model-len',
+    '8192',
+    '--limit-mm-per-prompt',
+    '{"image":0}',
 )
 # consolidated.safetensors duplicates the HF shards; only the HF-format files are mirrored.
-_MINISTRAL_FILES = ('config.json', 'generation_config.json', 'model*.safetensors*', 'params.json',
-                    'processor_config.json', 'tekken.json', 'tokenizer*', 'chat_template.jinja',
-                    'SYSTEM_PROMPT.txt')
+_MINISTRAL_FILES = (
+    'config.json',
+    'generation_config.json',
+    'model*.safetensors*',
+    'params.json',
+    'processor_config.json',
+    'tekken.json',
+    'tokenizer*',
+    'chat_template.jinja',
+    'SYSTEM_PROMPT.txt',
+)
 MINISTRAL_8B = ModelPin(
     repo='mistralai/Ministral-3-8B-Instruct-2512',
     revision='5b26027e7b19eeb4b7352e1fed3926375dd2cb4d',
@@ -101,10 +113,18 @@ RERANKER = ModelPin(
     note='B7 ceiling, R00 only.',
 )
 R08_TEACHERS = (
-    ModelPin('Qwen/Qwen3-Embedding-0.6B', '97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3', 'apache-2.0',
-             note='R08 swap teacher (last-token pooling).'),
-    ModelPin('BAAI/bge-base-en-v1.5', 'a5beb1e3e68b9ab74eb54cfd186867f64f240e1a', 'mit',
-             note='R08 control teacher (CLS pooling).'),
+    ModelPin(
+        'Qwen/Qwen3-Embedding-0.6B',
+        '97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3',
+        'apache-2.0',
+        note='R08 swap teacher (last-token pooling).',
+    ),
+    ModelPin(
+        'BAAI/bge-base-en-v1.5',
+        'a5beb1e3e68b9ab74eb54cfd186867f64f240e1a',
+        'mit',
+        note='R08 control teacher (CLS pooling).',
+    ),
 )
 
 
@@ -120,27 +140,42 @@ def qwen_gate(tokens_per_s: float | None, concurrency: int = QWEN_CONCURRENCY) -
     """Qwen3.5-9B if it decodes >= 1,000 tok/s aggregate at 64-way, else Qwen3.5-4B."""
     evidence = {'decode_tokens_per_s': tokens_per_s, 'concurrency': concurrency}
     if tokens_per_s is None:
-        return GateResult(QWEN_9B, None, 'not measured: primary kept until M1 measures it', evidence)
+        return GateResult(
+            QWEN_9B, None, 'not measured: primary kept until M1 measures it', evidence
+        )
     if concurrency != QWEN_CONCURRENCY:
         raise ValueError(f'qwen gate is defined at {QWEN_CONCURRENCY}-way concurrency')
     if tokens_per_s >= QWEN_MIN_TOKENS_PER_S:
-        return GateResult(QWEN_9B, True, f'{tokens_per_s:.0f} >= {QWEN_MIN_TOKENS_PER_S:.0f} tok/s', evidence)
-    return GateResult(QWEN_4B, False, f'{tokens_per_s:.0f} < {QWEN_MIN_TOKENS_PER_S:.0f} tok/s: 4B pinned', evidence)
+        return GateResult(
+            QWEN_9B, True, f'{tokens_per_s:.0f} >= {QWEN_MIN_TOKENS_PER_S:.0f} tok/s', evidence
+        )
+    return GateResult(
+        QWEN_4B,
+        False,
+        f'{tokens_per_s:.0f} < {QWEN_MIN_TOKENS_PER_S:.0f} tok/s: 4B pinned',
+        evidence,
+    )
 
 
 def ministral_gate(text_only: bool | None, valid: int | None, total: int | None) -> GateResult:
     """Ministral-3-8B if it loads text-only and >= 99% of the 200 fixture outputs validate."""
     evidence = {'text_only_load': text_only, 'valid': valid, 'total': total}
     if text_only is None or valid is None or total is None:
-        return GateResult(MINISTRAL_8B, None, 'not measured: primary kept until M1 measures it', evidence)
+        return GateResult(
+            MINISTRAL_8B, None, 'not measured: primary kept until M1 measures it', evidence
+        )
     if total != MINISTRAL_FIXTURE_PROMPTS:
-        raise ValueError(f'ministral gate is defined on the {MINISTRAL_FIXTURE_PROMPTS}-prompt fixture')
+        raise ValueError(
+            f'ministral gate is defined on the {MINISTRAL_FIXTURE_PROMPTS}-prompt fixture'
+        )
     if not text_only:
         return GateResult(MINISTRAL_3B, False, 'no text-only load: 3B pinned', evidence)
     fraction = valid / total
     if fraction >= MINISTRAL_MIN_JSON_VALID:
         return GateResult(MINISTRAL_8B, True, f'{valid}/{total} schema-valid', evidence)
-    return GateResult(MINISTRAL_3B, False, f'{valid}/{total} schema-valid < 99%: 3B pinned', evidence)
+    return GateResult(
+        MINISTRAL_3B, False, f'{valid}/{total} schema-valid < 99%: 3B pinned', evidence
+    )
 
 
 # What M1 measured on an L4 (filled in from `llm-check` / `teacher-check` reports).
@@ -156,7 +191,9 @@ def llm_pins(measured: dict = M1_MEASURED) -> dict[str, GateResult]:
     ministral = measured['ministral']
     return {
         'queries': qwen_gate(qwen['decode_tokens_per_s'], qwen['concurrency']),
-        'eval_queries': ministral_gate(ministral['text_only_load'], ministral['valid'], ministral['total']),
+        'eval_queries': ministral_gate(
+            ministral['text_only_load'], ministral['valid'], ministral['total']
+        ),
     }
 
 
@@ -164,14 +201,25 @@ def pins_report(measured: dict = M1_MEASURED) -> dict:
     """Everything pinned, as JSON: what `python -m arcforge.models pins` prints."""
 
     def pin(p: ModelPin) -> dict:
-        return {'repo': p.repo, 'revision': p.revision, 'license': p.license,
-                'allow_patterns': list(p.allow_patterns), 'vllm_args': list(p.vllm_args), 'note': p.note}
+        return {
+            'repo': p.repo,
+            'revision': p.revision,
+            'license': p.license,
+            'allow_patterns': list(p.allow_patterns),
+            'vllm_args': list(p.vllm_args),
+            'note': p.note,
+        }
 
     gates = llm_pins(measured)
     return {
         'teacher': pin(TEACHER),
         'llm': {
-            role: {'pin': pin(g.pin), 'passed': g.passed, 'reason': g.reason, 'evidence': g.evidence}
+            role: {
+                'pin': pin(g.pin),
+                'passed': g.passed,
+                'reason': g.reason,
+                'evidence': g.evidence,
+            }
             for role, g in gates.items()
         },
         'fallbacks': {'queries': pin(QWEN_4B), 'eval_queries': pin(MINISTRAL_3B)},

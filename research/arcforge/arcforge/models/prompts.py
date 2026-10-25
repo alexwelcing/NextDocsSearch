@@ -79,7 +79,9 @@ def record_cards(records_dir: Path, n: int, excerpt_chars: int = 600) -> list[Ca
     for path in sorted(Path(records_dir).glob('*.json'))[:n]:
         record = json.loads(path.read_text())
         body = ' '.join(
-            b['x'] for b in record.get('blocks', []) if isinstance(b, dict) and b.get('t') in ('p', 'q', 'l')
+            b['x']
+            for b in record.get('blocks', [])
+            if isinstance(b, dict) and b.get('t') in ('p', 'q', 'l')
         )
         cards.append(
             Card(
@@ -151,7 +153,10 @@ def ministral_fixture(cards: list[Card], size: int = MINISTRAL_FIXTURE_SIZE) -> 
         cases.append(
             PromptCase(
                 id=f'ministral-{i:03d}-{family}',
-                messages=[{'role': 'system', 'content': SYSTEM_EVAL}, {'role': 'user', 'content': user}],
+                messages=[
+                    {'role': 'system', 'content': SYSTEM_EVAL},
+                    {'role': 'user', 'content': user},
+                ],
                 schema=eval_query_schema(family),
             )
         )
@@ -181,7 +186,10 @@ def training_query_case(card: Card, index: int) -> PromptCase:
     )
     return PromptCase(
         id=f'training-{index:04d}',
-        messages=[{'role': 'system', 'content': SYSTEM_TRAINING}, {'role': 'user', 'content': user}],
+        messages=[
+            {'role': 'system', 'content': SYSTEM_TRAINING},
+            {'role': 'user', 'content': user},
+        ],
         schema=TRAINING_SCHEMA,
     )
 
@@ -221,7 +229,10 @@ def audit_case(query: str, candidates: list[Card], index: int, person_map: str =
     lines.append(f'Return one grade for each of the {len(candidates)} candidates, by id.')
     return PromptCase(
         id=f'audit-{index:04d}',
-        messages=[{'role': 'system', 'content': SYSTEM_AUDIT}, {'role': 'user', 'content': '\n'.join(lines)}],
+        messages=[
+            {'role': 'system', 'content': SYSTEM_AUDIT},
+            {'role': 'user', 'content': '\n'.join(lines)},
+        ],
         schema=audit_schema(len(candidates)),
         expect={'ids': list(range(1, len(candidates) + 1))},
     )

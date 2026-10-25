@@ -32,9 +32,9 @@ from __future__ import annotations
 import hashlib
 import json
 import struct
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import Iterable
 
 from arcforge.models.fold import FOLD_VERSION, MIN_WORD, SPLIT_PATTERN, STOP_WORDS, words
 
@@ -87,7 +87,9 @@ class TokenizerSpec:
     @classmethod
     def from_json(cls, value: dict) -> TokenizerSpec:
         if value.get('version') != TOKENIZER_VERSION or value.get('fold') != FOLD_VERSION:
-            raise ValueError(f'lexicon: unsupported tokenizer {value.get("version")}/{value.get("fold")}')
+            raise ValueError(
+                f'lexicon: unsupported tokenizer {value.get("version")}/{value.get("fold")}'
+            )
         if value.get('split') != SPLIT_PATTERN:
             raise ValueError(f'lexicon: unsupported split {value.get("split")!r}')
         ngrams = value['ngrams']
@@ -168,7 +170,9 @@ def validate_entries(entries: list[LexiconEntry], spec: TokenizerSpec, bucket_ba
             raise ValueError(f'lexicon: duplicate key {key!r}')
         seen.add(key)
         if canonical_key(key) != key or not key:
-            raise ValueError(f'lexicon: key {key!r} is not canonical (fold + split + single spaces)')
+            raise ValueError(
+                f'lexicon: key {key!r} is not canonical (fold + split + single spaces)'
+            )
         if len(key.encode()) > MAX_KEY_BYTES:
             raise ValueError(f'lexicon: key {key[:40]!r}... is over {MAX_KEY_BYTES} bytes')
         n_words = key.count(' ') + 1
@@ -210,7 +214,9 @@ def build_lexicon(
         else:
             shared = _shared_prefix(previous, key)
         suffix = key[shared:]
-        data += bytes([shared, len(suffix)]) + suffix + bytes([int(entry.kind)]) + _varint(entry.row)
+        data += (
+            bytes([shared, len(suffix)]) + suffix + bytes([int(entry.kind)]) + _varint(entry.row)
+        )
         if entry.kind == Kind.ALIAS:
             data += _varint(len(entry.candidates))
             for row in entry.candidates:
@@ -298,4 +304,3 @@ class Lexicon:
     def from_file(cls, path) -> Lexicon:
         with open(path, 'rb') as handle:
             return cls(handle.read())
-

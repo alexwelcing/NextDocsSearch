@@ -6,7 +6,9 @@ from arcforge.models.__main__ import main
 
 
 def test_help_runs_without_the_gpu_extras():
-    out = subprocess.run([sys.executable, '-m', 'arcforge.models', '--help'], capture_output=True, text=True)
+    out = subprocess.run(
+        [sys.executable, '-m', 'arcforge.models', '--help'], capture_output=True, text=True
+    )
     assert out.returncode == 0, out.stderr
     for command in ('parity-fixtures', 'payload', 'pins', 'teacher-check', 'llm-check'):
         assert command in out.stdout

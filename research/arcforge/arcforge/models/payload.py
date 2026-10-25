@@ -21,9 +21,9 @@ import json
 import math
 import random
 from collections import Counter
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 from arcforge.models.bundle import META_NAME, quantize_row, write_bundle
 from arcforge.models.fold import STOP_WORDS, keep_word, words
@@ -98,7 +98,13 @@ def general_words_from_bpe_vocab(vocab_json: Path, n: int, exclude: set[str]) ->
         if not token.startswith('Ġ'):
             continue
         word = token[1:]
-        if word.isascii() and word.isalpha() and word.islower() and keep_word(word) and word not in exclude:
+        if (
+            word.isascii()
+            and word.isalpha()
+            and word.islower()
+            and keep_word(word)
+            and word not in exclude
+        ):
             out.append(word)
             exclude.add(word)
             if len(out) == n:
@@ -162,7 +168,9 @@ def planned_entries(
         aliases += 1
     remaining = bucket_base - row
     if remaining <= 0:
-        raise ValueError(f'payload: {row} lexeme rows leave no room under bucket_base {bucket_base}')
+        raise ValueError(
+            f'payload: {row} lexeme rows leave no room under bucket_base {bucket_base}'
+        )
     general = [w for w in general if w not in index]
     for i, word in enumerate(general):
         # Vocabulary quantization: general words share the remaining rows round-robin.
@@ -213,7 +221,9 @@ def planned_lexicon(
     """A lexicon of exactly the planned shape from the real corpus vocabulary, padded with
     pseudo-words where the corpus (or the general word list) runs short."""
     texts = list(corpus_texts(records_dir)) if records_dir else []
-    vocabulary = mine_vocabulary(texts, shape) if texts else {'words': [], 'multiwords': [], 'names': []}
+    vocabulary = (
+        mine_vocabulary(texts, shape) if texts else {'words': [], 'multiwords': [], 'names': []}
+    )
     taken = set(vocabulary['words']) | set(STOP_WORDS)
     lengths = [len(w) for w in vocabulary['words']] or [4, 5, 6, 7, 8, 9, 10]
     missing = shape.corpus_words - len(vocabulary['words'])
@@ -225,18 +235,28 @@ def planned_lexicon(
     if len(multiwords) > len(vocabulary['multiwords']):
         vocabulary['multiwords'] = sorted(multiwords)
     taken |= set(vocabulary['words'])
-    general = general_words_from_bpe_vocab(general_vocab, shape.general_words, set(taken)) if general_vocab else []
+    general = (
+        general_words_from_bpe_vocab(general_vocab, shape.general_words, set(taken))
+        if general_vocab
+        else []
+    )
     if len(general) < shape.general_words:
-        general += pseudo_words(shape.general_words - len(general), lengths, rng, taken | set(general))
+        general += pseudo_words(
+            shape.general_words - len(general), lengths, rng, taken | set(general)
+        )
     entries, bucket_base = planned_entries(vocabulary, general, shape)
     return PlannedLexicon(
-        lexicon=build_lexicon(entries, bucket_base=bucket_base, spec=TokenizerSpec(buckets=shape.buckets)),
+        lexicon=build_lexicon(
+            entries, bucket_base=bucket_base, spec=TokenizerSpec(buckets=shape.buckets)
+        ),
         entries=entries,
         bucket_base=bucket_base,
         corpus_id=hashlib.sha256('\x00'.join(texts).encode()).hexdigest() if texts else 'synthetic',
         sources={
             'corpus': f'{records_dir} ({len(texts)} blocks)' if texts else 'none (pseudo-words)',
-            'general_words': f'{Path(general_vocab).name} (BPE id order)' if general_vocab else 'pseudo-words',
+            'general_words': f'{Path(general_vocab).name} (BPE id order)'
+            if general_vocab
+            else 'pseudo-words',
         },
     )
 
@@ -251,7 +271,9 @@ def build_and_measure(
 ) -> dict:
     """Write the planned-shape bundle to out_dir and measure every file raw and gzipped."""
     rng = random.Random(seed)
-    planned = planned_lexicon(records_dir=records_dir, general_vocab=general_vocab, shape=shape, rng=rng)
+    planned = planned_lexicon(
+        records_dir=records_dir, general_vocab=general_vocab, shape=shape, rng=rng
+    )
     int8_rows, scales = random_unit_rows(shape.rows, shape.dims, rng)
     meta = write_bundle(
         out_dir,
@@ -294,5 +316,9 @@ def build_and_measure(
             'target_raw_mb': TARGET_RAW_MB,
             'pass': raw <= TARGET_RAW_MB * MB,
         },
-        'vector_set': {'rows': shape.vector_set_rows, 'raw': len(vector_set), 'gzip': _gz(vector_set)},
+        'vector_set': {
+            'rows': shape.vector_set_rows,
+            'raw': len(vector_set),
+            'gzip': _gz(vector_set),
+        },
     }

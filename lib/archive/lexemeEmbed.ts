@@ -179,8 +179,13 @@ export class LexemeLexicon {
 
   lookup(text: string): LexiconHit | null {
     if (text.length > MAX_KEY_BYTES) return null
+    // Keys are ASCII by construction (folded [a-z0-9] words joined by spaces).
     const key = new Uint8Array(text.length)
-    for (let i = 0; i < text.length; i++) key[i] = text.charCodeAt(i)
+    for (let i = 0; i < text.length; i++) {
+      const code = text.charCodeAt(i)
+      if (code > 0x7f) return null
+      key[i] = code
+    }
     let lo = 0
     let hi = this.header.blocks - 1
     let block = -1

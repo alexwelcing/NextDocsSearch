@@ -139,9 +139,29 @@ def test_alias_prompt(tmp_path):
 def test_write_bundle_checks_shapes(tmp_path):
     lexicon = build_lexicon(ENTRIES, bucket_base=6, spec=SPEC)
     with pytest.raises(ValueError, match='int8 values'):
-        write_bundle(tmp_path, lexicon=lexicon, dims=DIMS, int8_rows=b'\x00', scales=[0.0] * 13,
-                     b_query=[0.0] * DIMS, b_doc=[0.0] * DIMS, run_id='t', corpus_id='c', verdict_status='T')
+        write_bundle(
+            tmp_path,
+            lexicon=lexicon,
+            dims=DIMS,
+            int8_rows=b'\x00',
+            scales=[0.0] * 13,
+            b_query=[0.0] * DIMS,
+            b_doc=[0.0] * DIMS,
+            run_id='t',
+            corpus_id='c',
+            verdict_status='T',
+        )
     with pytest.raises(ValueError, match='pooling'):
-        write_bundle(tmp_path, lexicon=lexicon, dims=DIMS, int8_rows=bytes(13 * DIMS), scales=[0.0] * 13,
-                     b_query=[0.0] * DIMS, b_doc=[0.0] * DIMS, run_id='t', corpus_id='c', verdict_status='T',
-                     pooling='max')  # type: ignore[arg-type]
+        write_bundle(
+            tmp_path,
+            lexicon=lexicon,
+            dims=DIMS,
+            int8_rows=bytes(13 * DIMS),
+            scales=[0.0] * 13,
+            b_query=[0.0] * DIMS,
+            b_doc=[0.0] * DIMS,
+            run_id='t',
+            corpus_id='c',
+            verdict_status='T',
+            pooling='max',
+        )  # type: ignore[arg-type]
