@@ -54,6 +54,9 @@ export async function readSseStream(
   signal?.addEventListener('abort', cancel, { once: true })
   const decoder = new TextDecoder()
   let buffer = ''
+  // A chunk ending in '\r' may be half of a CRLF: hold it back, or the pair reads as two line
+  // ends and closes a multi-line event early.
+  let pendingCr = false
   const dispatch = (block: string) => {
     const data = block
       .split('\n')
@@ -63,21 +66,28 @@ export async function readSseStream(
       .trim()
     if (data && data !== '[DONE]') onData(data)
   }
+  const append = (text: string, final: boolean) => {
+    let value = pendingCr ? `\r${text}` : text
+    pendingCr = !final && value.endsWith('\r')
+    if (pendingCr) value = value.slice(0, -1)
+    buffer += value.replace(/\r\n?/g, '\n')
+    let end = buffer.indexOf('\n\n')
+    while (end >= 0) {
+      dispatch(buffer.slice(0, end))
+      buffer = buffer.slice(end + 2)
+      end = buffer.indexOf('\n\n')
+    }
+  }
   try {
     for (;;) {
       if (signal?.aborted) throw new Error('aborted')
       const { done, value } = await reader.read()
       if (done) break
-      buffer += decoder.decode(value, { stream: true }).replace(/\r\n?/g, '\n')
-      let end = buffer.indexOf('\n\n')
-      while (end >= 0) {
-        dispatch(buffer.slice(0, end))
-        buffer = buffer.slice(end + 2)
-        end = buffer.indexOf('\n\n')
-      }
+      append(decoder.decode(value, { stream: true }), false)
     }
     if (signal?.aborted) throw new Error('aborted')
-    dispatch(buffer + decoder.decode())
+    append(decoder.decode(), true)
+    dispatch(buffer)
   } catch (error) {
     cancel()
     throw error
@@ -103,13 +113,14 @@ function textOf(content: unknown): string {
 
 /**
  * The answer text in one payload, streamed or not: Workers AI's {response} chunks, OpenAI-style
- * choices[0].delta.content (string or parts) or choices[0].message.content. Reasoning fields
- * (reasoning_content, reasoning) are never read.
+ * choices[0].delta.content (string or parts) or choices[0].message.content. An empty response
+ * field defers to choices, for a chunk that carries both. Reasoning fields (reasoning_content,
+ * reasoning) are never read.
  */
 export function payloadText(payload: unknown): string {
   if (!payload || typeof payload !== 'object') return typeof payload === 'string' ? payload : ''
   const record = payload as Record<string, unknown>
-  if (typeof record.response === 'string') return record.response
+  if (typeof record.response === 'string' && record.response) return record.response
   const choice = Array.isArray(record.choices)
     ? (record.choices[0] as Record<string, unknown>)
     : null
@@ -169,15 +180,28 @@ function partialTagLength(text: string, tags: string[]): number {
   return 0
 }
 
+export interface ReasoningFilterOptions {
+  /**
+   * The chat template may open the <think> block itself, so reasoning can arrive with no opening
+   * tag. Output is then held until a </think> (it and everything before it are dropped) or the
+   * end of the stream (no reasoning after all: it is all released). A leading <think> means the
+   * model opened the block itself, and filtering streams as usual.
+   */
+  templateOpens?: boolean
+}
+
 /**
  * Drops <think>…</think> blocks from a streamed answer, tags split across chunks included, and
- * the leading whitespace a dropped block leaves behind. An orphan </think> (the chat template
- * opened the block) drops itself, plus everything before it while nothing has been emitted yet.
+ * the leading whitespace a dropped block leaves behind. An orphan </think> is dropped; the text
+ * before it only when none has been emitted yet, i.e. it arrived in the same push. Reasoning that
+ * a template opened and that spans chunks is only caught with `templateOpens`.
  */
-export function createReasoningFilter() {
+export function createReasoningFilter({ templateOpens = false }: ReasoningFilterOptions = {}) {
   let inside = false
   let carry = ''
   let started = false
+  let holding = templateOpens
+  let held = ''
 
   const emit = (text: string) => {
     const visible = started ? text : text.replace(/^\s+/, '')
@@ -185,45 +209,69 @@ export function createReasoningFilter() {
     return visible
   }
 
-  return {
-    push(chunk: string): string {
-      let text = carry + chunk
-      carry = ''
-      let out = ''
-      for (;;) {
-        if (inside) {
-          const close = text.indexOf(CLOSE)
-          if (close < 0) {
-            carry = text.slice(text.length - partialTagLength(text, [CLOSE]))
-            return out
-          }
-          text = text.slice(close + CLOSE.length)
-          inside = false
-          continue
-        }
-        const open = text.indexOf(OPEN)
+  const scan = (chunk: string): string => {
+    let text = carry + chunk
+    carry = ''
+    let out = ''
+    for (;;) {
+      if (inside) {
         const close = text.indexOf(CLOSE)
-        if (close >= 0 && (open < 0 || close < open)) {
-          if (started) out += emit(text.slice(0, close))
-          text = text.slice(close + CLOSE.length)
-          continue
+        if (close < 0) {
+          carry = text.slice(text.length - partialTagLength(text, [CLOSE]))
+          return out
         }
-        if (open >= 0) {
-          out += emit(text.slice(0, open))
-          text = text.slice(open + OPEN.length)
-          inside = true
-          continue
-        }
-        const hold = partialTagLength(text, [OPEN, CLOSE])
-        carry = text.slice(text.length - hold)
-        return out + emit(text.slice(0, text.length - hold))
+        text = text.slice(close + CLOSE.length)
+        inside = false
+        continue
       }
+      const open = text.indexOf(OPEN)
+      const close = text.indexOf(CLOSE)
+      if (close >= 0 && (open < 0 || close < open)) {
+        if (started) out += emit(text.slice(0, close))
+        text = text.slice(close + CLOSE.length)
+        continue
+      }
+      if (open >= 0) {
+        out += emit(text.slice(0, open))
+        text = text.slice(open + OPEN.length)
+        inside = true
+        continue
+      }
+      const hold = partialTagLength(text, [OPEN, CLOSE])
+      carry = text.slice(text.length - hold)
+      return out + emit(text.slice(0, text.length - hold))
+    }
+  }
+
+  return {
+    /** True while templateOpens output is held: text is arriving, none is visible yet. */
+    get holding() {
+      return holding
     },
-    /** End of stream: a dangling partial tag is text; an unclosed block is dropped. */
+    push(chunk: string): string {
+      if (!holding) return scan(chunk)
+      held += chunk
+      const open = held.indexOf(OPEN)
+      const close = held.indexOf(CLOSE)
+      if (close < 0 && open < 0) return ''
+      const text =
+        open >= 0 && (close < 0 || open < close) ? held : held.slice(close + CLOSE.length)
+      holding = false
+      held = ''
+      return scan(text)
+    },
+    /** End of stream: held text is answer; a dangling partial tag is text; an unclosed block is
+     *  dropped. */
     flush(): string {
+      let out = ''
+      if (holding) {
+        holding = false
+        out = scan(held)
+      }
+      held = ''
       const rest = inside ? '' : carry
       carry = ''
-      return emit(rest)
+      return out + emit(rest)
     },
   }
 }
@@ -241,6 +289,13 @@ export interface LadderOptions {
   ) => Promise<void>
   /** A model that has produced no visible text by then is abandoned for the next one. */
   firstTokenMs?: number
+  /**
+   * True for a model whose chat template may open the <think> block itself (a reasoning model
+   * with no thinking switch, or one the provider does not know): its output is held until
+   * </think> or the end of the stream (ReasoningFilterOptions.templateOpens), and held text
+   * counts as its first token, since it is answering, only not visibly yet.
+   */
+  templateReasoning?: (model: string) => boolean
   log?: (message: string) => void
 }
 
@@ -255,6 +310,7 @@ export function modelLadder({
   models,
   run,
   firstTokenMs = FIRST_TOKEN_MS,
+  templateReasoning = () => false,
   log = (message) => console.error(message),
 }: LadderOptions): ChatProvider {
   return {
@@ -267,7 +323,7 @@ export function modelLadder({
         const abort = () => controller.abort()
         request.signal?.addEventListener('abort', abort, { once: true })
         const timer = setTimeout(abort, firstTokenMs)
-        const filter = createReasoningFilter()
+        const filter = createReasoningFilter({ templateOpens: templateReasoning(model) })
         let text = ''
         const visible = (delta: string) => {
           if (!delta) return
@@ -281,7 +337,10 @@ export function modelLadder({
             maxTokens: request.maxTokens,
             temperature: request.temperature,
             signal: controller.signal,
-            onText: (raw) => visible(filter.push(raw)),
+            onText: (raw) => {
+              if (raw && filter.holding) clearTimeout(timer)
+              visible(filter.push(raw))
+            },
           })
           if (controller.signal.aborted) throw new Error('aborted')
           visible(filter.flush())

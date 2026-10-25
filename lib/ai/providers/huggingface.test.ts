@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import { byteStream, sseFixture } from '../testing'
-import { DEFAULT_HF_MODELS, createHuggingFaceChat, huggingFaceChatFromEnv } from './huggingface'
+import {
+  DEFAULT_HF_MODELS,
+  createHuggingFaceChat,
+  huggingFaceChatFromEnv,
+  huggingFaceTemplateReasoning,
+} from './huggingface'
 
 const REQUEST = {
   messages: [{ role: 'user' as const, content: 'who is alex?' }],
@@ -55,6 +60,30 @@ describe('createHuggingFaceChat', () => {
       text: 'From b.',
       provider: 'huggingface:b',
     })
+  })
+})
+
+describe('huggingFaceTemplateReasoning', () => {
+  it('streams the known defaults and holds any other model until </think>', async () => {
+    for (const model of DEFAULT_HF_MODELS) {
+      expect(huggingFaceTemplateReasoning(model)).toBe(false)
+      expect(huggingFaceTemplateReasoning(`${model}:novita`)).toBe(false)
+    }
+    expect(huggingFaceTemplateReasoning('Qwen/Qwen3-32B')).toBe(true)
+
+    const reasoning = ['Okay, let me', ' look.', '</think>\n\nAlex builds ', 'AI products.']
+    const body = reasoning
+      .map((content) => `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`)
+      .join('')
+    const chat = createHuggingFaceChat({
+      token: 'hf_test',
+      models: ['Qwen/Qwen3-32B'],
+      fetch: (async () => sse(body)) as typeof fetch,
+    })
+    const deltas: string[] = []
+    const result = await chat.stream({ ...REQUEST, onDelta: (delta) => deltas.push(delta) })
+    expect(result.text).toBe('Alex builds AI products.')
+    expect(deltas.join('')).toBe(result.text)
   })
 })
 

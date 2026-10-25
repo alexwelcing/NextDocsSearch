@@ -12,6 +12,14 @@ export const DEFAULT_HF_MODELS = [
 ]
 const HUGGING_FACE_CHAT_COMPLETIONS_URL = 'https://router.huggingface.co/v1/chat/completions'
 
+/**
+ * Only the defaults are known not to reason. Any other id (an HF_CHAT_MODEL override) may start
+ * inside a template-opened <think> block, so its output is held until </think> or the end.
+ */
+export function huggingFaceTemplateReasoning(model: string): boolean {
+  return !DEFAULT_HF_MODELS.includes(model.replace(/:[^/]*$/, ''))
+}
+
 export interface HuggingFaceChatOptions {
   token: string
   models?: string[]
@@ -31,6 +39,7 @@ export function createHuggingFaceChat({
     name: 'huggingface',
     models,
     firstTokenMs,
+    templateReasoning: huggingFaceTemplateReasoning,
     log,
     async run(model, request) {
       const response = await fetchImpl(HUGGING_FACE_CHAT_COMPLETIONS_URL, {

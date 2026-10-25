@@ -7,6 +7,7 @@ import {
 } from '../ai/chatProvider'
 import { createWorkersAiChat } from '../ai/providers/workersAi'
 import { shipPersona } from '../ai/shipPersona'
+import type { ArchiveRecord } from '../archive/types'
 import { byteStream, sseFixture } from '../ai/testing'
 import { ARCHIVE_FALLBACK_LEAD } from '../chat/shipHistory'
 import { resetSearchIndexCache } from '../retrieval/load'
@@ -357,6 +358,51 @@ describe('handleShip retrieval', () => {
     expect(finalOf(list).answer).toContain('1. About Alex Welcing — 15 years of experience')
   })
 
+  it('leads a bare "who is alex?" with the about panel when ranking whole records', async () => {
+    // Whole-record overlap alone ranks these above the about panel for "who" + "alex".
+    const fiction = ['The Student Who Stayed', 'The Witness Who Left', 'The Pilot Who Waited'].map(
+      (title, n): ArchiveRecord => ({
+        ...FIXTURE_ARCHIVE[0],
+        slug: `fiction-${n}`,
+        title,
+        description: 'Alex keeps the night shift.',
+        type: 'fiction',
+        keywords: [],
+        domains: [],
+        searchText: 'Who stayed? Alex did.',
+      })
+    )
+    const records = [...FIXTURE_ARCHIVE, ...fiction]
+    for (const prompt of ['who is alex?', 'who is Alex?']) {
+      const { chat, requests } = fakeChat()
+      const list = await events(
+        await handleShip(post({ prompt }), await deps({ manifest: null, records, chat }))
+      )
+      expect(list[0]).toMatchObject({ type: 'instant-results', retrieval: 'records' })
+      if (list[0].type !== 'instant-results') throw new Error('unreachable')
+      expect(list[0].items[0]).toMatchObject({
+        slug: 'about',
+        target: { type: 'data', panel: 'about' },
+      })
+      expect(list[0].items.slice(1, 4).map((item) => item.slug)).toEqual(
+        expect.arrayContaining(['fiction-0', 'fiction-1', 'fiction-2'])
+      )
+      expect(requests[0].temperature).toBe(0.35)
+      expect(requests[0].messages[1].content).toMatch(
+        /Owner profile evidence:\n1\. Northeast AI product leader .*Alex Welcing/
+      )
+    }
+
+    const list = await events(
+      await handleShip(post({ prompt: 'who is alex?' }), await deps({ manifest: null, records }))
+    )
+    const { answer, sources } = finalOf(list)
+    expect(sources[0].slug).toBe('about')
+    expect(answer).toContain('Northeast AI product leader — New York, NY')
+    expect(answer).toContain('15 years of experience')
+    expect(answer).toContain('1. About Alex Welcing')
+  })
+
   it('still answers when nothing is indexed at all', async () => {
     const list = await events(
       await handleShip(
@@ -366,6 +412,29 @@ describe('handleShip retrieval', () => {
     )
     expect(list[0]).toMatchObject({ retrieval: 'records', items: [] })
     expect(finalOf(list).answer).toContain('no strong match for "photon polarization"')
+  })
+})
+
+describe('handleShip logging', () => {
+  it('logs a build without the search index once, and an unavailable index every time', async () => {
+    vi.resetModules()
+    const fresh = (await import('./handleShip')).handleShip
+    const lines: string[] = []
+    const log = (line: string) => {
+      lines.push(line)
+    }
+    for (let n = 0; n < 3; n++) {
+      await events(await fresh(post({ prompt: 'photon' }), await deps({ manifest: null, log })))
+    }
+    expect(lines.filter((line) => line.includes('no search manifest'))).toHaveLength(1)
+
+    const fetchAsset = async (): Promise<Response> => {
+      throw new Error('ENOENT')
+    }
+    for (let n = 0; n < 2; n++) {
+      await events(await fresh(post({ prompt: 'photon' }), await deps({ fetchAsset, log })))
+    }
+    expect(lines.filter((line) => line.includes('index unavailable'))).toHaveLength(2)
   })
 })
 
@@ -401,6 +470,29 @@ describe('handleShip requests', () => {
     expect(response.status).toBe(status)
     expect(await response.json()).toEqual({ error: expect.any(String) })
     expect(requests).toHaveLength(0)
+  })
+
+  it('stops reading a chunked body without Content-Length at the cap', async () => {
+    let pulls = 0
+    let cancelled = false
+    const body = new ReadableStream<Uint8Array>({
+      pull(stream) {
+        pulls++
+        stream.enqueue(new Uint8Array(1024).fill(32))
+      },
+      cancel() {
+        cancelled = true
+      },
+    })
+    const request = new Request('http://ship.test/api/vector-search', {
+      method: 'POST',
+      body,
+      duplex: 'half',
+    } as RequestInit & { duplex: 'half' })
+    const response = await handleShip(request, await deps())
+    expect(response.status).toBe(413)
+    expect(cancelled).toBe(true)
+    expect(pulls).toBeLessThan(SHIP_LIMITS.bodyBytes / 1024 + 4)
   })
 
   it('only accepts POST', async () => {

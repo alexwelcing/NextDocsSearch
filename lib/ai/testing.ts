@@ -5,6 +5,7 @@ export type SseFixture =
   | 'workers-ai-gemma-4'
   | 'workers-ai-llama-4-scout'
   | 'workers-ai-qwen3-think'
+  | 'workers-ai-qwen3-template-open'
   | 'huggingface-router'
 
 export function sseFixture(name: SseFixture): string {

@@ -8,6 +8,7 @@ import {
   parseModelList,
   workersAiInputs,
   workersAiModelSpec,
+  workersAiTemplateReasoning,
   type AiBindingLike,
 } from './workersAi'
 
@@ -59,6 +60,18 @@ describe('workersAiInputs', () => {
       thinkingSwitch: false,
       reasoning: true,
     })
+  })
+
+  it('holds output only for reasoning models that cannot switch thinking off', () => {
+    expect(workersAiTemplateReasoning('@cf/qwen/qwen3-30b-a3b-fp8')).toBe(true)
+    expect(workersAiTemplateReasoning('@cf/unknown/new-model')).toBe(true)
+    for (const model of [
+      '@cf/google/gemma-4-26b-a4b-it',
+      '@cf/zai-org/glm-4.7-flash',
+      ...DEFAULT_WORKERS_AI_MODELS,
+    ]) {
+      expect(workersAiTemplateReasoning(model)).toBe(false)
+    }
   })
 })
 
@@ -123,6 +136,18 @@ describe('createWorkersAiChat', () => {
   it('strips qwen3 think blocks and reasoning_content from the answer', async () => {
     const { ai } = fakeAi({
       '@cf/qwen/qwen3-30b-a3b-fp8': () => byteStream(sseFixture('workers-ai-qwen3-think'), 9),
+    })
+    const deltas: string[] = []
+    const chat = createWorkersAiChat({ ai, models: ['@cf/qwen/qwen3-30b-a3b-fp8'] })
+    const result = await chat.stream({ ...REQUEST, onDelta: (delta) => deltas.push(delta) })
+    expect(result.text).toBe('Quantum key distribution uses photon polarization.')
+    expect(deltas.join('')).toBe(result.text)
+  })
+
+  it('drops qwen3 reasoning that its chat template opened, across chunks', async () => {
+    const { ai } = fakeAi({
+      '@cf/qwen/qwen3-30b-a3b-fp8': () =>
+        byteStream(sseFixture('workers-ai-qwen3-template-open'), 9),
     })
     const deltas: string[] = []
     const chat = createWorkersAiChat({ ai, models: ['@cf/qwen/qwen3-30b-a3b-fp8'] })

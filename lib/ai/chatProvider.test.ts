@@ -25,6 +25,10 @@ const EXPECTED: Record<SseFixture, string> = {
   // The raw content still carries the <think> block: the ladder's filter removes it.
   'workers-ai-qwen3-think':
     '<think>The context mentions BB84.</think>\n\nQuantum key distribution uses photon polarization.',
+  // Template-opened: only the close tag marks the reasoning, which a held filter drops.
+  'workers-ai-qwen3-template-open':
+    'Okay, let me look at the context. It mentions BB84.</think>\n\n' +
+    'Quantum key distribution uses photon polarization.',
   'huggingface-router': 'Alex Welcing builds AI products.',
 }
 
@@ -70,6 +74,23 @@ describe('streamSseText', () => {
     expect(data).toEqual(['{"response":\n"x"}'])
   })
 
+  it('keeps a multi-line CRLF event whole wherever a chunk splits its line ends', async () => {
+    const text = 'data: {"response":\r\ndata: "x"}\r\n\r\ndata: {"response":"y"}\r\n\r\n'
+    const bytes = new TextEncoder().encode(text)
+    for (let cut = 1; cut < bytes.length; cut++) {
+      const body = new ReadableStream<Uint8Array>({
+        start(stream) {
+          stream.enqueue(bytes.slice(0, cut))
+          stream.enqueue(bytes.slice(cut))
+          stream.close()
+        },
+      })
+      const data: string[] = []
+      await readSseStream(body, (value) => data.push(value))
+      expect(data).toEqual(['{"response":\n"x"}', '{"response":"y"}'])
+    }
+  })
+
   it('stops reading when aborted', async () => {
     const controller = new AbortController()
     const body = new ReadableStream<Uint8Array>({
@@ -107,6 +128,12 @@ describe('payloadText', () => {
     expect(payloadText({ choices: [] })).toBe('')
     expect(payloadText(null)).toBe('')
   })
+
+  it('reads choices when a chunk also carries an empty response', () => {
+    expect(payloadText({ response: '', choices: [{ delta: { content: 'hi' } }] })).toBe('hi')
+    expect(payloadText({ response: '' })).toBe('')
+    expect(payloadText({ response: 'r', choices: [{ delta: { content: 'c' } }] })).toBe('r')
+  })
 })
 
 describe('createReasoningFilter', () => {
@@ -130,6 +157,43 @@ describe('createReasoningFilter', () => {
   it('drops an unclosed block and an orphan close tag before any answer', () => {
     expect(run(['Answer. <think>never closed'])).toBe('Answer. ')
     expect(run(['template-opened reasoning</think>\nAnswer.'])).toBe('Answer.')
+  })
+
+  describe('when the template opens the block', () => {
+    function held(chunks: string[]) {
+      const filter = createReasoningFilter({ templateOpens: true })
+      const pushed = chunks.map((chunk) => filter.push(chunk))
+      return { pushed, text: pushed.join('') + filter.flush() }
+    }
+    const reasoning = ['Okay, let me', ' look at the context.', '</think>', '\n\nQuantum keys.']
+
+    it('drops reasoning that spans chunks before the close tag', () => {
+      const { pushed, text } = held(reasoning)
+      expect(text).toBe('Quantum keys.')
+      expect(pushed.slice(0, 3)).toEqual(['', '', ''])
+      // Without the hold, the first chunks have already gone out by the time </think> arrives.
+      expect(run(reasoning)).toContain('Okay, let me')
+    })
+
+    it('finds a close tag split anywhere', () => {
+      const text = 'Plan the answer.</think>\n\nThe answer.'
+      for (let cut = 0; cut <= text.length; cut++) {
+        expect(held([text.slice(0, cut), text.slice(cut)]).text).toBe('The answer.')
+      }
+      expect(held([...text]).text).toBe('The answer.')
+    })
+
+    it('releases everything at the end when no reasoning came', () => {
+      const { pushed, text } = held(['No reasoning ', 'here, a < b.'])
+      expect(pushed).toEqual(['', ''])
+      expect(text).toBe('No reasoning here, a < b.')
+    })
+
+    it('streams as usual once the model opens the block itself', () => {
+      const { pushed, text } = held(['\n<think>plan</think>', 'Visible ', 'at once.'])
+      expect(pushed).toEqual(['', 'Visible ', 'at once.'])
+      expect(text).toBe('Visible at once.')
+    })
   })
 })
 
@@ -202,6 +266,22 @@ describe('modelLadder', () => {
       { firstTokenMs: 20 }
     )
     expect(await chat.stream(request())).toEqual({ text: 'Fast.', provider: 'fake:m2' })
+  })
+
+  it('holds a template-reasoning model until </think>, and its held text beats the deadline', async () => {
+    const pause = () => new Promise((resolve) => setTimeout(resolve, 15))
+    const chat = ladder(
+      async (_model, req) => {
+        for (const chunk of ['Okay, let me', ' think it over.', '</think>\n\nQuantum ', 'keys.']) {
+          await pause()
+          req.onText(chunk)
+        }
+      },
+      { firstTokenMs: 20, templateReasoning: (model) => model === 'm1' }
+    )
+    const req = request()
+    expect(await chat.stream(req)).toEqual({ text: 'Quantum keys.', provider: 'fake:m1' })
+    expect(req.deltas.join('')).toBe('Quantum keys.')
   })
 
   it('rejects when every model fails, and stops when the caller aborts', async () => {

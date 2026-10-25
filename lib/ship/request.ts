@@ -29,19 +29,49 @@ const reject = (
   headers?: Record<string, string>
 ): ShipRequestResult => ({ ok: false, status, error, headers })
 
+/**
+ * The body as text, or null once it passes `limit` bytes. Reads the stream itself, so a chunked
+ * body with no Content-Length is cut off at the cap on every target instead of buffered whole.
+ */
+async function readCappedText(request: Request, limit: number): Promise<string | null> {
+  if (!request.body) return ''
+  const reader = request.body.getReader()
+  const chunks: Uint8Array[] = []
+  let size = 0
+  try {
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      size += value.byteLength
+      if (size > limit) {
+        reader.cancel().catch(() => undefined)
+        return null
+      }
+      chunks.push(value)
+    }
+  } finally {
+    reader.releaseLock()
+  }
+  const bytes = new Uint8Array(size)
+  let offset = 0
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset)
+    offset += chunk.byteLength
+  }
+  return new TextDecoder().decode(bytes)
+}
+
 export async function readShipRequest(request: Request): Promise<ShipRequestResult> {
   if (request.method !== 'POST') return reject(405, 'Method not allowed', { Allow: 'POST' })
   const declared = Number(request.headers.get('content-length') ?? 0)
   if (declared > SHIP_LIMITS.bodyBytes) return reject(413, 'Request body too large')
-  let text: string
+  let text: string | null
   try {
-    text = await request.text()
+    text = await readCappedText(request, SHIP_LIMITS.bodyBytes)
   } catch {
     return reject(400, 'Unreadable request body')
   }
-  if (new TextEncoder().encode(text).byteLength > SHIP_LIMITS.bodyBytes) {
-    return reject(413, 'Request body too large')
-  }
+  if (text === null) return reject(413, 'Request body too large')
   let body: unknown
   try {
     body = JSON.parse(text)

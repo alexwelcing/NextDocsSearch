@@ -6,8 +6,9 @@ import type { ChatProvider } from '../ai/chatProvider'
 import { resolveShipTrick } from '../ai/shipTricks'
 import type { ArchiveRecord } from '../archive/types'
 import { OPERATOR_PANELS } from '../immersive/operatorData'
-import { OPERATOR_DOCS, operatorBlocks } from '../retrieval/chunk'
-import { getShipContext } from '../retrieval/shipContext'
+import { OPERATOR_DOCS, chunkBlocks, operatorBlocks } from '../retrieval/chunk'
+import { PROFILE_SLUG } from '../retrieval/profile'
+import { SHIP_CONTEXT_LIMITS, getShipContext } from '../retrieval/shipContext'
 import type {
   RetrievalDeps,
   RetrievalItem,
@@ -79,7 +80,8 @@ const OPERATOR_PANEL_OF = new Map(OPERATOR_DOCS.map((doc) => [doc.slug, doc.pane
 
 /**
  * The operator panels as records, mirroring the operator docs the index builds, so record-level
- * ranking (all there is while the index is unavailable) still answers "who is Alex?".
+ * ranking (all there is while the index is unavailable) still finds them; groundProfile makes
+ * sure identity questions lead with the about panel.
  */
 const OPERATOR_RECORDS: ArchiveRecord[] = OPERATOR_DOCS.map(({ slug, panel, title }) => {
   const blocks = operatorBlocks(OPERATOR_PANELS[panel])
@@ -97,6 +99,54 @@ const OPERATOR_RECORDS: ArchiveRecord[] = OPERATOR_DOCS.map(({ slug, panel, titl
     hero: null,
   }
 })
+
+const collapse = (value: string) => value.replace(/\s+/g, ' ').trim()
+
+function clip(value: string, max: number): string {
+  const text = collapse(value)
+  return text.length <= max ? text : `${text.slice(0, Math.max(0, max - 4)).trim()} ...`
+}
+
+const ABOUT_RECORD = OPERATOR_RECORDS.find((record) => record.slug === PROFILE_SLUG)
+
+/** The about panel's leading chunks, read the way the index's profile facts read. */
+const ABOUT_FACTS = chunkBlocks(
+  { slug: PROFILE_SLUG, title: '', blocks: operatorBlocks(OPERATOR_PANELS.about) },
+  'operator'
+)
+  .slice(0, SHIP_CONTEXT_LIMITS.profileFacts)
+  .map((chunk) => clip(chunk.text, SHIP_CONTEXT_LIMITS.factChars))
+
+/**
+ * Record-level ranking has no profile facts, and whole-record term overlap ranks fiction above
+ * the about panel for a bare "who is alex?". When the index is unavailable and the question is
+ * about Alex, the about panel leads the results and grounds the answer, as it does lexically.
+ */
+function groundProfile(retrieval: RetrievalResult): RetrievalResult {
+  if (retrieval.mode !== 'records' || !retrieval.profileIntent || !ABOUT_RECORD) return retrieval
+  const ranked = retrieval.instantResults.find((item) => item.slug === PROFILE_SLUG)
+  const about: RetrievalItem = ranked ?? {
+    slug: ABOUT_RECORD.slug,
+    title: ABOUT_RECORD.title,
+    heading: '',
+    description: ABOUT_RECORD.description,
+    snippet: clip(ABOUT_RECORD.description, SHIP_CONTEXT_LIMITS.snippetChars),
+    articleType: ABOUT_RECORD.type,
+    score: retrieval.instantResults[0]?.score ?? 0,
+    keywords: [],
+    domains: [],
+    target: { type: 'data', panel: 'about' },
+  }
+  const rest = retrieval.instantResults.filter((item) => item.slug !== about.slug)
+  return {
+    ...retrieval,
+    profileFacts: retrieval.profileFacts.length ? retrieval.profileFacts : ABOUT_FACTS,
+    instantResults: [about, ...rest].slice(0, SHIP_CONTEXT_LIMITS.instantResults),
+  }
+}
+
+/** Retrieval lines already logged for an expected absence, so they appear once per process. */
+const loggedOnce = new Set<string>()
 
 /**
  * Only what the scene can open: an operator id opens its Data panel (record-level ranking cannot
@@ -256,13 +306,18 @@ export async function handleShip(request: Request, deps: ShipDeps): Promise<Resp
     } catch (error) {
       log(`[ship] retrieval failed: ${message(error)}`)
     }
-    // Lexical without an embedder is the expected path today; anything else is worth a line.
+    retrieval = groundProfile(retrieval)
+    // Lexical without an embedder is the expected path today; anything else is worth a line. A
+    // build without the search index is expected too (until it ships), so that one logs once.
     if (
       retrieval.mode === 'records' ||
       retrieval.mode === 'none' ||
       (deps.embedQuery && retrieval.mode !== 'hybrid')
     ) {
-      log(`[ship] retrieval ${retrieval.mode}: ${retrieval.fallbackReason ?? 'no match'}`)
+      const line = `[ship] retrieval ${retrieval.mode}: ${retrieval.fallbackReason ?? 'no match'}`
+      const expected = !manifest && retrieval.mode === 'records'
+      if (!expected || !loggedOnce.has(line)) log(line)
+      if (expected) loggedOnce.add(line)
     }
 
     const turn: Turn = {

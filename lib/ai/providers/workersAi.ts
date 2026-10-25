@@ -21,8 +21,9 @@ export interface WorkersAiModelSpec {
   thinkingSwitch: boolean
   /**
    * The catalog flags it as a reasoning model. Its reasoning never reaches the answer either way
-   * (payloadText reads content only and the ladder drops <think> blocks), but one with no switch
-   * still spends latency and tokens on it, so a ladder needs a non-reasoning fallback.
+   * (payloadText reads content only and the ladder drops <think> blocks; with no switch its
+   * output is also held until </think>, in case the template opened the block), but one with no
+   * switch still spends latency and tokens on it, so a ladder needs a non-reasoning fallback.
    */
   reasoning: boolean
 }
@@ -76,6 +77,12 @@ export function workersAiModelSpec(model: string): WorkersAiModelSpec {
   return WORKERS_AI_MODELS[model] ?? UNKNOWN_MODEL
 }
 
+/** A reasoning model that cannot be told not to think may start inside a template-opened block. */
+export function workersAiTemplateReasoning(model: string): boolean {
+  const spec = workersAiModelSpec(model)
+  return spec.reasoning && !spec.thinkingSwitch
+}
+
 /** A comma-separated SHIP_CHAT_MODELS override, else the default ladder. */
 export function parseModelList(value: string | undefined, fallback = DEFAULT_WORKERS_AI_MODELS) {
   const models = (value ?? '')
@@ -127,6 +134,7 @@ export function createWorkersAiChat({
     name: 'workers-ai',
     models,
     firstTokenMs,
+    templateReasoning: workersAiTemplateReasoning,
     log,
     async run(model, request) {
       const options: Record<string, unknown> = { signal: request.signal }
