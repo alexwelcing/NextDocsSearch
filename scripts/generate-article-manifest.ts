@@ -250,6 +250,9 @@ function main() {
     const slug = filename.replace('.mdx', '');
     const wordCount = content.split(/\s+/).filter(Boolean).length;
     const readingTime = Math.ceil(wordCount / 200);
+    // A preview for record-level ranking (FIND's fallback, Ship's record vote) and snippets. FIND
+    // searches whole articles through the chunk BM25F index (scripts/generate-search-index.ts),
+    // so this stays a preview and the archive payload stays small.
     const searchText = stripMdx(content).slice(0, 2400);
 
     const keywords = Array.isArray(data.keywords)

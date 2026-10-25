@@ -3,16 +3,20 @@
 // holds a beat, and fades. World-anchored (not camera-locked) on purpose — turn your head and
 // the title stays where the world put it, which is what sells it as a place-name and not a HUD
 // toast. This is the coverage shader's showcase: at this scale SDF text would visibly soften,
-// windfoil stays razor sharp.
+// windfoil stays razor sharp. On a narrow (portrait) view the blurb breaks into even lines and
+// the card shrinks just enough to sit inside the frame (lib/immersive/fit.ts); landscape views
+// keep the authored size and the single-line blurb.
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three/webgpu'
 import { float, smoothstep, uniform, uv, vec4 } from 'three/tsl'
-import { WindfoilText } from '../text/WindfoilText'
+import { WindfoilText, useFontAtlas } from '../text/WindfoilText'
 import { useImmersiveStore } from '@/stores/immersiveStore'
 import { worldById, type WorldDef } from '@/lib/immersive/worlds'
 import { ARC, FONT, rgba } from '@/lib/immersive/theme'
+import { FIT_MARGIN, fitScale, horizontalFov } from '@/lib/immersive/fit'
+import { measureText } from '@/lib/windfoil/layout'
 
 const DISTANCE = 7 // metres out — inside the panorama sphere, well past the dock
 const RISE = 0.8 // metres above eye line, so it crowns the view instead of blocking it
@@ -23,8 +27,80 @@ const BLURB_DELAY_MS = 650
 const HOLD_MS = 2400 // measured from the end of the title reveal
 const FADE_MS = 900
 const GAP = 0.12 // metres from the accent rule to the title's baseline box / the blurb's top
+export const TITLE_SIZE = 0.85 // metres per em, world name
+export const BLURB_SIZE = 0.17 // metres per em, blurb line
+export const RULE_W = 3.4 // metres, the accent rule
+
+/** Width the card may span when faced: fit.ts's share of the horizontal view at DISTANCE. */
+export function cardSpan(vFov: number, aspect: number): number {
+  return FIT_MARGIN * 2 * DISTANCE * Math.tan(horizontalFov(vFov, aspect) / 2)
+}
+
+/**
+ * Wrap width for a one-line caption (words split by spaces) that may outgrow `span`: undefined
+ * when it fits on one line, else the narrowest width that still breaks it into as few lines as
+ * `span` would — even lines rather than a full line and an orphan. Mirrors windfoil's greedy
+ * wrap (breakLines in lib/windfoil/layout.ts) token for token, so laying the text out at the
+ * returned width reproduces exactly that line count. `measure` is the layout's own advance.
+ */
+export function balancedWrapWidth(
+  text: string,
+  span: number,
+  measure: (s: string) => number
+): number | undefined {
+  const words = text.split(' ')
+  const widths = words.map((w) => (w ? measure(w) : 0))
+  const space = measure(' ')
+  const lineCount = (maxWidth: number) => {
+    let lines = 1
+    let width = 0
+    let empty = true
+    for (let i = 0; i < words.length; i++) {
+      if (i > 0 && !empty) width += space // a line swallows its leading spaces
+      if (!words[i]) continue
+      if (!empty && width + widths[i] > maxWidth) {
+        lines++
+        width = 0
+      }
+      width += widths[i]
+      empty = false
+    }
+    return lines
+  }
+  const lines = lineCount(span)
+  if (lines <= 1) return undefined
+  // No line is narrower than its widest word (the layout won't break inside one), and greedy
+  // line count only falls as the width grows: bisect above that for the narrowest that holds.
+  const longest = Math.max(...widths)
+  if (lineCount(longest) <= lines) return longest
+  let lo = longest
+  let hi = span
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2
+    if (lineCount(mid) <= lines) hi = mid
+    else lo = mid
+  }
+  return hi
+}
 
 type Box = { width: number; height: number }
+
+/**
+ * The card's fit scale for a view: shrink-only, about the rule, so it is 1 on every landscape
+ * view and the desktop card is untouched. Null until both text blocks have laid out, and the card
+ * stays hidden until then: the shrink can't be known before, and reduced motion has no reveal
+ * to cover a frame of an over-wide title (THE UNDERCROFT on a phone) at full width.
+ */
+export function cardScale(
+  title: Box | null,
+  blurb: Box | null,
+  vFov: number,
+  aspect: number
+): number | null {
+  if (!title || !blurb) return null
+  const width = Math.max(title.width, blurb.width, RULE_W)
+  return fitScale({ vFov, aspect, distance: DISTANCE, width })
+}
 
 // Legibility scrim: a feathered band of bezel-black behind the name and blurb. Without it the
 // white title and pale blurb dissolve into the bright worlds' skies (night-train, meridian); on
@@ -141,9 +217,31 @@ function CardInstance({
   const [blurbBox, setBlurbBox] = useState<Box | null>(null)
   const bornAt = useRef<number | null>(null)
   const done = useRef(false)
+  const fit = useRef<THREE.Group>(null)
 
-  useFrame(() => {
+  // The blurb wraps for the view the card arrives in and keeps that layout for its few seconds
+  // (a relayout would rebuild the text and replay its reveal); the per-frame fit below absorbs
+  // any later resize, rotation or zoom.
+  const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera
+  const [span] = useState(() => cardSpan(camera.fov, camera.aspect))
+  const blurbAtlas = useFontAtlas(FONT.mono)
+  const blurbWrap = useMemo(
+    () =>
+      blurbAtlas &&
+      balancedWrapWidth(card.world.blurb, span, (s) => measureText(blurbAtlas, s, BLURB_SIZE)),
+    [blurbAtlas, card.world.blurb, span]
+  )
+
+  useFrame((state) => {
     if (done.current) return
+    // Runs before this tick's render, so the first frame the card shows is already fitted.
+    const g = fit.current
+    if (g) {
+      const cam = state.camera as THREE.PerspectiveCamera
+      const scale = cardScale(titleBox, blurbBox, cam.fov, cam.aspect)
+      g.visible = scale !== null
+      if (scale !== null) g.scale.setScalar(scale)
+    }
     const now = performance.now()
     if (bornAt.current === null) bornAt.current = now
     const fadeStart = (reducedMotion ? 0 : TITLE_REVEAL_MS + BLURB_DELAY_MS) + HOLD_MS
@@ -161,7 +259,7 @@ function CardInstance({
   })
 
   return (
-    <group position={card.position} rotation={[0, card.rotationY, 0]}>
+    <group ref={fit} position={card.position} rotation={[0, card.rotationY, 0]}>
       {/* behind both blocks: title spans [GAP, GAP + titleH], blurb [-GAP - blurbH, -GAP] */}
       {titleBox && blurbBox && (
         <TitleScrim
@@ -173,7 +271,7 @@ function CardInstance({
       )}
       <WindfoilText
         font={FONT.display}
-        fontSize={0.85}
+        fontSize={TITLE_SIZE}
         color={rgba('#ffffff', 0.96)}
         anchorX="center"
         anchorY="bottom"
@@ -188,8 +286,10 @@ function CardInstance({
       </WindfoilText>
       <WindfoilText
         font={FONT.mono}
-        fontSize={0.17}
+        fontSize={BLURB_SIZE}
         color={rgba(card.world.particles.color, 0.85)}
+        maxWidth={blurbWrap}
+        align="center"
         anchorX="center"
         anchorY="top"
         position={[0, -GAP, 0]}
@@ -203,7 +303,7 @@ function CardInstance({
       </WindfoilText>
       {/* thin rule between name and blurb, in the world's own accent */}
       <mesh position={[0, 0, -0.001]} renderOrder={14}>
-        <planeGeometry args={[3.4, 0.014]} />
+        <planeGeometry args={[RULE_W, 0.014]} />
         <meshBasicMaterial
           color={card.world.particles.color}
           transparent

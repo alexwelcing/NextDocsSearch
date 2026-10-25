@@ -1,0 +1,14 @@
+: Workers AI @cf/meta/llama-4-scout-17b-16e-instruct, env.AI.run(..., { stream: true }): legacy
+: {response} chunks with a padding field, then a usage chunk (schema: cloudflare-docs
+: src/content/workers-ai-models/llama-4-scout-17b-16e-instruct.json).
+
+data: {"response":"Alex","p":"abcdefghijklmnopqrstu"}
+
+data: {"response":" Welcing builds","p":"abcdefghij"}
+
+data: {"response":" AI products for regulated industries.","p":"abcdefghijklmnop"}
+
+data: {"response":"","usage":{"prompt_tokens":812,"completion_tokens":11,"total_tokens":823}}
+
+data: [DONE]
+

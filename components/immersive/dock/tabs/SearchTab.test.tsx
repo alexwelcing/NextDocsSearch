@@ -85,6 +85,9 @@ vi.mock('../widgets/ScreenList', () => ({
 vi.mock('@/lib/immersive/audio', () => ({ playSound: vi.fn() }))
 vi.mock('@/lib/immersive/navigation', () => ({ openModal: vi.fn() }))
 vi.mock('@/lib/immersive/prefetch', () => ({ prefetchRecord: vi.fn() }))
+// These cases cover FIND's record-level path, which ranks until the full-text index arrives
+// (never, here); SearchTab.fulltext.test.tsx covers the index and the fallback to records.
+vi.mock('@/lib/retrieval/load', () => ({ loadCoreIndex: () => new Promise(() => {}) }))
 vi.mock('../DockKey', () => ({ stopLook: (event: Event) => event.stopPropagation() }))
 // Sphere Hunter (tested below): core three stands in for the WebGPU build, no render loop.
 vi.mock('three/webgpu', () => import('three'))
@@ -204,8 +207,8 @@ describe('FIND full archive integration', () => {
     await render(true)
     expect(fetcher).toHaveBeenCalledTimes(1)
     const url = new URL(String(fetcher.mock.calls[0][0]), 'https://archive.test')
-    expect(url.pathname).toBe('/api/arc/archive')
-    expect(url.searchParams.get('view')).toBe('full')
+    expect(url.pathname).toBe('/arc/archive-full.json')
+    expect(url.search).toBe('')
 
     await act(async () => root.render(null))
     expect(document.querySelector('input[aria-label="Search archive"]')).toBeNull()

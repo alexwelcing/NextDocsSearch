@@ -44,3 +44,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# full-text search index: rebuilt by pnpm build (scripts/steps/pre/80-search-index.ts); the committed
+# lib/generated/search-manifest.json pins its content hashes
+/public/search/
+
+# sitemaps: generated every build by scripts/steps/pre/70-sitemaps.ts
+/public/sitemap*.xml
+/public/video-sitemap.xml

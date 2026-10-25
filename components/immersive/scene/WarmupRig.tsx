@@ -15,7 +15,9 @@
 //
 // Pipelines key on shader code + blend/depth/cull/topology/winding state, not on material
 // identity, so one stand-in per variant covers every later mesh of that kind. When a new kind of
-// material lands in the scene, add its twin here; the reveal probe will show it otherwise.
+// material lands in the scene, add its twin here; the reveal probe will show it otherwise. The
+// exception is an InstancedMesh: its vertex shader names its own matrix buffer, so no twin can
+// stand in for it — the rig borrows the real meshes instead (Sphere Hunter's orb field).
 //
 // The network never holds the boot: the text stand-ins need both windfoil atlases (~800 KB), so
 // the burst waits for them only up to FONT_WAIT_MS, then warms everything else and leaves the
@@ -32,6 +34,7 @@ import { ARC, FONT, rgba } from '@/lib/immersive/theme'
 import { WindfoilText } from '../text/WindfoilText'
 import { DockChassis } from '../dock/DockChassis'
 import { CrtScreen } from '../dock/CrtScreen'
+import { useOrbField } from '../game/SphereHunter'
 import { TitleScrim } from './WorldTitleCard'
 
 const DISTANCE = 0.5 // metres down the gaze — inside the frustum, in front of the whole world
@@ -80,6 +83,7 @@ export function WarmupRig() {
   // The rig mounts only for its burst: once the fonts are in, or once FONT_WAIT_MS gives up.
   const [warming, setWarming] = useState(false)
   const rig = useRef<THREE.Group>(null)
+  const orbSlot = useRef<THREE.Group>(null)
   const frames = useRef(0)
   const done = useRef(false)
 
@@ -98,6 +102,13 @@ export function WarmupRig() {
       textures.video.dispose()
     }
   }, [textures])
+
+  // Sphere Hunter's quarry: the game's own two instanced meshes (lit translucent orbs; additive,
+  // fog-free rings with per-instance color), borrowed for the burst and handed back unparented —
+  // the pipelines outlive the detach; only a dispose releases them. Every instance sits at zero
+  // scale until a hunt goes live, but the draws still issue, so both pipelines build unseen.
+  const orbField = useOrbField()
+  const orbMeshes = [orbField.orbs, orbField.rings]
 
   useEffect(() => {
     if (!armed) {
@@ -126,28 +137,31 @@ export function WarmupRig() {
     }
   }, [armed, setShadersWarm])
 
+  const standDown = (g: THREE.Group) => {
+    done.current = true
+    g.visible = false
+    for (const m of orbMeshes) if (m.parent === orbSlot.current) m.removeFromParent()
+    setShadersWarm(true)
+  }
+
   useFrame(() => {
     const g = rig.current
     if (!g || done.current) return
     // Ahead of every frame of the burst, before this tick's render: the moment boot has ended some
     // other way (a skip, a watchdog), stand down unseen.
     if (!booting()) {
-      done.current = true
-      g.visible = false
-      setShadersWarm(true)
+      standDown(g)
       return
     }
     camera.getWorldDirection(forward)
     g.position.copy(camera.position).addScaledVector(forward, DISTANCE)
     g.quaternion.copy(camera.quaternion)
+    // the hunt can't be up during boot, so the field is free to borrow
+    if (frames.current === 0) for (const m of orbMeshes) if (!m.parent) orbSlot.current?.add(m)
     // Runs before this tick's render, so WARM_FRAMES real frames have drawn the rig by the time
     // the counter passes it.
     frames.current += 1
-    if (frames.current > WARM_FRAMES) {
-      done.current = true
-      g.visible = false
-      setShadersWarm(true)
-    }
+    if (frames.current > WARM_FRAMES) standDown(g)
   })
 
   if (!armed || !warming) return null
@@ -183,28 +197,8 @@ export function WarmupRig() {
           <boxGeometry args={[0.07, 0.04, 0.018]} />
           <meshStandardMaterial color={ARC.chassis} roughness={0.55} emissive={ARC.greenDim} />
         </mesh>
-        {/* Sphere Hunter orb and its burst (wireframe = line topology) */}
-        <mesh position={[-0.2, 0, 0]} scale={0.03}>
-          <icosahedronGeometry args={[1, 1]} />
-          <meshStandardMaterial
-            color={ARC.green}
-            emissive={ARC.green}
-            emissiveIntensity={0.7}
-            transparent
-            opacity={0.92}
-          />
-        </mesh>
-        <mesh position={[-0.12, 0, 0]} scale={0.03}>
-          <icosahedronGeometry args={[1, 1]} />
-          <meshStandardMaterial
-            color={ARC.green}
-            emissive={ARC.green}
-            emissiveIntensity={2.5}
-            transparent
-            opacity={0.5}
-            wireframe
-          />
-        </mesh>
+        {/* Sphere Hunter's orb field and burst rings, attached for the burst (see useOrbField) */}
+        <group ref={orbSlot} />
         {/* flat UI fills: opaque / translucent, fogged / fog-free, and the invisible hit pads */}
         <mesh position={[-0.04, 0, 0]}>
           <planeGeometry args={[0.05, 0.05]} />
