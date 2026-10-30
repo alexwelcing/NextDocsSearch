@@ -13,7 +13,8 @@ MDE = 'AB=0.045,D=0.03,CE=0.05,G=0.045,vault=0.09,frontier=0.1'
 def test_lint_the_template(capsys):
     assert cli.main(['prereg', 'lint']) == 0
     out = capsys.readouterr().out
-    assert 'lint ok: 0 errors, 1 warnings' in out and '145 in-scope' in out
+    assert 'lint ok: 0 errors, 2 warnings' in out and '145 in-scope' in out
+    assert 'reader-isolation-incomplete' in out
 
 
 def test_lint_frozen_fails_on_the_template(capsys):
@@ -21,39 +22,51 @@ def test_lint_frozen_fails_on_the_template(capsys):
     assert 'not-frozen' in capsys.readouterr().out
 
 
-def test_freeze_then_lint_frozen_passes(tmp_path, capsys):
+def test_freeze_then_lint_frozen_requires_reader_runtime(tmp_path, capsys, s0_commitment):
     out = tmp_path / 'rules.yaml'
-    assert cli.main(['prereg', 'freeze', '--mde', MDE, '--out', str(out)]) == 0
+    args = ['prereg', 'freeze', '--mde', MDE, '--s0-hashes', str(s0_commitment), '--out', str(out)]
+    assert cli.main(args) == 0
     assert load_rules(out).mde_r00['AB'] == 0.045
     lint_json = tmp_path / 'lint.json'
     assert (
-        cli.main(['prereg', 'lint', '--frozen', '--rules', str(out), '--out', str(lint_json)]) == 0
+        cli.main(['prereg', 'lint', '--frozen', '--rules', str(out), '--out', str(lint_json)]) == 1
     )
     report = json.loads(lint_json.read_text())
     assert (
-        report['ok']
+        not report['ok']
         and report['frozen']
         and report['rules']['sha256'] == sha256_bytes(out.read_bytes())
     )
+    assert [f['code'] for f in report['errors']] == ['reader-isolation-incomplete']
     capsys.readouterr()
-    assert (
-        cli.main(['prereg', 'freeze', '--mde', MDE, '--out', str(out)]) == 2
-    )  # no silent overwrite
+    assert cli.main(args) == 2  # no silent overwrite
     assert 'exists' in capsys.readouterr().err
-    assert cli.main(['prereg', 'freeze', '--mde', MDE, '--out', str(out), '--force']) == 0
+    assert cli.main([*args, '--force']) == 0
 
 
-def test_freeze_from_json_and_bad_input(tmp_path, capsys):
+def test_freeze_from_json_and_bad_input(tmp_path, capsys, s0_commitment):
     mde = tmp_path / 'mde.json'
     mde.write_text(
         json.dumps({'AB': 0.05, 'D': 0.03, 'CE': 0.05, 'G': 0.045, 'vault': 0.09, 'frontier': 0.1})
     )
     assert (
-        cli.main(['prereg', 'freeze', '--mde-json', str(mde), '--out', str(tmp_path / 'a.yaml')])
+        cli.main(
+            [
+                'prereg',
+                'freeze',
+                '--s0-hashes',
+                str(s0_commitment),
+                '--mde-json',
+                str(mde),
+                '--out',
+                str(tmp_path / 'a.yaml'),
+            ]
+        )
         == 0
     )
     assert (
-        cli.main(['prereg', 'freeze', '--mde', 'AB=0.05', '--out', str(tmp_path / 'b.yaml')]) == 2
+        cli.main(['prereg', 'freeze', '--s0-hashes', str(s0_commitment),
+                  '--mde', 'AB=0.05', '--out', str(tmp_path / 'b.yaml')]) == 2
     )
     assert cli.main(['prereg', 'freeze', '--mde', 'AB', '--out', str(tmp_path / 'c.yaml')]) == 2
     assert not (tmp_path / 'b.yaml').exists()
@@ -67,7 +80,11 @@ def test_hash(tmp_path, capsys):
     assert hashes['rules_sha256']['sha256'] == sha256_bytes(TEMPLATE_PATH.read_bytes())
     assert hashes['prereg_sha256']['sha256'] == sha256_bytes(b'# PREREG\n')
     assert set(hashes) == {
-        'rules_sha256', 'schema_sha256', 'plan_sha256', 'prereg_pre_sha256', 'prereg_sha256'
+        'rules_sha256',
+        'schema_sha256',
+        'plan_sha256',
+        'prereg_pre_sha256',
+        'prereg_sha256',
     }
 
 

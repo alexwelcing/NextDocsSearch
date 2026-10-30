@@ -14,8 +14,6 @@ from arcforge.contract.rules import TEMPLATE_PATH, freeze_diff, freeze_text, loa
 TEMPLATE = TEMPLATE_PATH.read_text(encoding='utf-8')
 EXTRA = {
     'a0_sha256': 'a' * 64,
-    'rules_sha256': 'b' * 64,
-    'schema_sha256': 'c' * 64,
     'code_sha': 'd' * 40,
     'witness_a0': '1001',
     'witness_s0': '1002',
@@ -92,11 +90,11 @@ def test_the_freeze_diff_touches_only_mde_r00():
     assert freeze_diff(TEMPLATE, frozen + 'extra: 1\n') is None
 
 
-def test_the_freeze_command_reports_what_it_changed(tmp_path, capsys):
+def test_the_freeze_command_reports_what_it_changed(tmp_path, capsys, s0_commitment):
     out = tmp_path / 'rules.yaml'
     code = cli.main(
         ['prereg', 'freeze', '--mde', 'AB=0.045,D=0.03,CE=0.05,G=0.045,vault=0.09,frontier=0.1',
-         '--out', str(out)]
+         '--s0-hashes', str(s0_commitment), '--out', str(out)]
     )  # fmt: skip
     assert code == 0 and 'changed: AB, D, CE, G, vault, frontier' in capsys.readouterr().out
     assert freeze_diff(TEMPLATE, out.read_text()) is not None
@@ -109,15 +107,28 @@ def test_s0_hashes_name_the_rules_template_and_the_template():
     assert hashes['prereg_pre_sha256'] == prereg_doc.sha256_file(prereg_doc.PRE_PATH)
 
 
-def test_render_and_hash_commands(tmp_path, frozen, capsys):
+def test_render_and_hash_commands(tmp_path, capsys, s0_commitment):
     out = tmp_path / 'pre.md'
     assert cli.main(['prereg', 'render', '--pre', '--out', str(out)]) == 0
     assert out.read_text() == prereg_doc.PRE_PATH.read_text()
     values = tmp_path / 'values.json'
     values.write_text(json.dumps(EXTRA))
     final = tmp_path / 'PREREG.md'
+    frozen = tmp_path / 'rules.yaml'
+    frozen.write_text(freeze_text(TEMPLATE, synth.DEFAULT_MDE))
     code = cli.main(
-        ['prereg', 'render', '--rules', str(frozen[0]), '--values', str(values), '--out', str(final)]
+        [
+            'prereg',
+            'render',
+            '--rules',
+            str(frozen),
+            '--s0-hashes',
+            str(s0_commitment),
+            '--values',
+            str(values),
+            '--out',
+            str(final),
+        ]
     )
     assert code == 0 and '{{' not in final.read_text()
     capsys.readouterr()

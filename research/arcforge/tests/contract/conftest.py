@@ -105,6 +105,17 @@ MakeDoc = Callable[..., dict[str, Any]]
 
 
 @pytest.fixture
+def s0_commitment(tmp_path: Path) -> Path:
+    import json
+
+    from arcforge.contract.prereg_doc import s0_hashes
+
+    path = tmp_path / 's0-hashes.json'
+    path.write_text(json.dumps(s0_hashes()), encoding='utf-8')
+    return path
+
+
+@pytest.fixture
 def make_doc(rules: Rules) -> MakeDoc:
     """make_doc(run_id, branch, rows={cid: (point, lo, hi) | row dict}, **top-level overrides)."""
 

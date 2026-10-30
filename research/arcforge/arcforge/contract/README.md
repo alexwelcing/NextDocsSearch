@@ -38,6 +38,37 @@ The contract is the approved program's as amended by PREREG Amendment A0 (zero o
   placeholders into PREREG.md (`arcforge prereg render --values`); `arcforge prereg freeze`
   refuses a frozen copy whose diff against the template touches anything but `mde_r00`.
 
+## s0 integrity and the R00 commands
+
+Before S0, retain the output of `arcforge prereg hash --json` as `s0-hashes.json` in the s0
+witness payload. At R00, supply those original hashes to both commands:
+
+```sh
+arcforge prereg freeze --s0-hashes s0-hashes.json --mde-json tail/mde.json --out prereg/rules.yaml
+arcforge prereg render --s0-hashes s0-hashes.json --rules prereg/rules.yaml --values tail/values.json --out prereg/PREREG.md
+arcforge prereg lint --frozen --rules prereg/rules.yaml
+```
+
+Both commands verify the rules **template**, PREREG.pre.md and report schema against the s0
+hashes. A custom registered template uses `freeze --rules`, `render --registered-rules`, and
+the corresponding `--prereg-pre` / `--template` path. Final rendering also checks the frozen
+rules against that template: only the six numeric MDE scalar tokens may differ, with comments,
+spacing and line endings preserved. MDEs and taus retain their numeric precision in PREREG.md.
+`values.json` supplies the non-rule R00 observations and witness metadata; it must not contain
+`mde_r00.*`, `tau.*`, `rules_sha256` or `schema_sha256`. The renderer derives those values.
+
+The JSON may be the flat `prereg_doc.s0_hashes()` mapping or the full CLI hash output. Its
+authenticity must come from the original public witness. Comparing local bytes with a newly
+regenerated JSON file does not establish a prior commitment. This change adds local verification;
+the X2 witness stage and Rekor/OpenTimestamps verification are not implemented in this checkout.
+
+Reader isolation is a static check of the supplied registry, with trusted output declarations
+and the registered S7←S6b screening exception. Missing registry imports fail lint. The legacy
+live registry lacks P1 and S6b, so template lint reports incomplete coverage and `--frozen` fails
+until the M2 reader runtime is registered. A passing synthetic-graph test does not verify the
+runtime's screening implementation. See [the independent PR #212 review](../../reviews/PR212-independent-review.md)
+for the traced dependencies, regressions and research decisions still needed.
+
 ## The pieces
 
 - **rules.yaml** (template): every rule — FUT, H1.F, H1–H7, H7.report, K1, I1–I6,
