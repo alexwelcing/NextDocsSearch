@@ -34,7 +34,7 @@ PLACEHOLDER = re.compile(r'\{\{([A-Za-z0-9_.\[\]-]+)\}\}')
 
 
 class PreregError(ValueError):
-    """A placeholder that is unknown, or left unfilled."""
+    """A commitment mismatch, invalid freeze or invalid placeholder value."""
 
 
 def sha256_file(path: str | Path) -> str:
@@ -42,7 +42,9 @@ def sha256_file(path: str | Path) -> str:
 
 
 def s0_hashes(
-    rules_path: str | Path | None = None, pre_path: str | Path | None = None
+    rules_path: str | Path | None = None,
+    pre_path: str | Path | None = None,
+    schema_path: str | Path | None = None,
 ) -> dict[str, str]:
     """What the s0 commitment records of the contract (A0 VJ-2): rules.yaml and PREREG.pre.md,
     plus the schema they are read against."""
@@ -52,8 +54,28 @@ def s0_hashes(
     return {
         'rules_sha256': sha256_file(rules_path or TEMPLATE_PATH),
         'prereg_pre_sha256': sha256_file(pre_path or PRE_PATH),
-        'schema_sha256': sha256_file(REPORT_SCHEMA_PATH),
+        'schema_sha256': sha256_file(schema_path or REPORT_SCHEMA_PATH),
     }
+
+
+def verify_s0_hashes(expected: Mapping[str, Any], **paths: Any) -> None:
+    """Compare all three files with the previously witnessed s0 hashes, never new hashes.
+
+    Accept s0_hashes()'s flat mapping or `prereg hash --json`'s {path, sha256} entries.
+    The caller is responsible for authenticating this commitment against the public witness;
+    this function checks local bytes, not Rekor/OpenTimestamps signatures or chronology.
+    """
+    actual = s0_hashes(**paths)
+    if not isinstance(expected, Mapping):
+        raise PreregError('s0 hashes must be a mapping with all three contract hashes')
+    for key, digest in actual.items():
+        wanted = expected.get(key)
+        if isinstance(wanted, Mapping):
+            wanted = wanted.get('sha256')
+        if not isinstance(wanted, str) or not re.fullmatch(r'[0-9a-f]{64}', wanted):
+            raise PreregError(f's0 commitment has no valid {key}')
+        if wanted != digest:
+            raise PreregError(f's0 commitment mismatch for {key}: expected {wanted}, got {digest}')
 
 
 # ---- placeholders -----------------------------------------------------------------------------
@@ -90,10 +112,22 @@ def values_for(rules: Rules, extra: Mapping[str, Any]) -> dict[str, str]:
     """Placeholder values for a FROZEN rules file: the MDEs and taus, plus `extra`."""
     if not rules.frozen:
         raise PreregError('PREREG.md is filled from the frozen rules (arcforge prereg freeze)')
+    if not isinstance(extra, Mapping):
+        raise PreregError('R00 values must be a mapping')
     values = {f'mde_r00.{k}': _num(v) for k, v in rules.mde_r00.items()}
     for cid, spec in rules.rows.items():
         if spec.tau_floor is not None:
             values[f'tau.{cid}'] = _num(rules.tau(spec))
+    from arcforge.contract.schema import REPORT_SCHEMA_PATH
+
+    values['rules_sha256'] = rules.sha256
+    values['schema_sha256'] = sha256_file(REPORT_SCHEMA_PATH)
+    overridden = sorted(set(extra) & set(values))
+    if overridden:
+        raise PreregError(f'R00 values cannot override contract-derived placeholders: {overridden}')
+    unknown = sorted(set(extra) - set(STATIC_PLACEHOLDERS))
+    if unknown:
+        raise PreregError(f'unknown R00 placeholders: {unknown}')
     for key, value in extra.items():
         values[key] = str(value)
     return values
@@ -102,7 +136,8 @@ def values_for(rules: Rules, extra: Mapping[str, Any]) -> dict[str, str]:
 def _num(value: float | None) -> str:
     if value is None:
         raise PreregError('a frozen rules file has every MDE and tau')
-    return f'{value:.4f}'.rstrip('0').rstrip('.') if value != int(value) else f'{value:.1f}'
+    # The registered value must round-trip; four decimal places can turn a small MDE into zero.
+    return repr(float(value))
 
 
 def fill(template: str, values: Mapping[str, str]) -> str:
@@ -114,7 +149,12 @@ def fill(template: str, values: Mapping[str, str]) -> str:
     missing = sorted(wanted - set(values))
     if missing:
         raise PreregError(f'placeholders left unfilled: {missing}')
-    return PLACEHOLDER.sub(lambda m: values[m.group(1)], template)
+    final = PLACEHOLDER.sub(lambda m: values[m.group(1)], template)
+    if placeholders(final):
+        raise PreregError(
+            f'placeholders left unfilled in substituted values: {placeholders(final)}'
+        )
+    return final
 
 
 # ---- the template -----------------------------------------------------------------------------
@@ -443,4 +483,3 @@ SECTION_R00 = """## 12. What R00 measured (filled by the tail)
 - I1 at R00: {{i1_r00}}
 - The r00-sets entry (C_open, frontier and quarantine sha256s): Rekor logIndex
   {{witness_r00_sets}}."""
-

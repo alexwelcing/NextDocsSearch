@@ -644,11 +644,22 @@ def _check_post_s0(rules: Rules, report: LintReport) -> None:
 def _check_reader_isolation(stages: Any, report: LintReport) -> None:
     if stages is None:
         report.add(
-            'warning',
+            'error',
             'reader-isolation',
             'the stage registry could not be imported; reader isolation was not checked',
         )
         return
+    if not isinstance(stages, Mapping):
+        stages = {stage.name: stage for stage in stages}
+    required = {'P1', 'S6b', *isolation.TRAINING_OR_SELECTION_STAGES}
+    missing = sorted(required - set(stages))
+    if missing:
+        report.add(
+            'error' if report.frozen else 'warning',
+            'reader-isolation-incomplete',
+            f'the reader runtime is incomplete (missing {missing}); graph checks do not '
+            'establish isolation for the M2 runtime, and cannot authorize R00 sign-off',
+        )
     for finding in isolation.check(stages):
         report.add('error', finding.code, f'{finding.stage}: {finding.message}')
 

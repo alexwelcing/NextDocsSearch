@@ -31,7 +31,7 @@ def codes(report) -> set[str]:
 def test_the_template_lints_clean():
     report = lint()
     assert report.ok, [str(f) for f in report.errors]
-    assert [f.code for f in report.warnings] == ['template']
+    assert [f.code for f in report.warnings] == ['template', 'reader-isolation-incomplete']
     assert report.scope['H1'] == [
         'r06/N',
         'r07/S-C',
@@ -45,12 +45,12 @@ def test_the_template_lints_clean():
 
 
 def test_frozen_requires_every_mde():
-    report = lint(frozen=True)
+    report = lint(frozen=True, stages=m2_stages())
     assert [f.code for f in report.errors] == ['not-frozen']
 
 
 def test_the_frozen_copy_lints_clean(frozen):
-    report = lint(frozen[0], frozen=True)
+    report = lint(frozen[0], frozen=True, stages=m2_stages())
     assert report.ok and not report.warnings, [str(f) for f in report.findings]
 
 
@@ -227,8 +227,8 @@ def test_lint_catches_an_owner_sourced_row(tmp_path):
     rules = replaced(
         RULES,
         (
-            "      k2: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: D.coinage+entity,",
-            "      k2: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: B.owner_authored,",
+            '      k2: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: D.coinage+entity,',
+            '      k2: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: B.owner_authored,',
         ),
     )
     report = lint(write(tmp_path, 'rules.yaml', rules))
@@ -282,8 +282,8 @@ def test_lint_catches_production_traffic_in_a_registered_row(tmp_path):
     rules = replaced(
         RULES,
         (
-            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: mrr@10, unit: fraction,",
-            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: shadow_ctr, unit: fraction,",
+            '      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: mrr@10, unit: fraction,',
+            '      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: shadow_ctr, unit: fraction,',
         ),
     )
     report = lint(write(tmp_path, 'rules.yaml', rules))
@@ -294,8 +294,8 @@ def test_lint_catches_a_row_on_post_s0_alone(tmp_path):
     rules = replaced(
         RULES,
         (
-            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: mrr@10, unit: fraction,",
-            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: POST_S0, metric: mrr@10, unit: fraction,",
+            '      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: mrr@10, unit: fraction,',
+            '      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: POST_S0, metric: mrr@10, unit: fraction,',
         ),
     )
     report = lint(write(tmp_path, 'rules.yaml', rules))
@@ -324,6 +324,7 @@ class FakeStage:
 def m2_stages(**overrides):
     """The R00 DAG's reader-relevant edges (INTERFACES-M2 B), as a fake registry."""
     stages = {
+        'S0': FakeStage('S0', outputs=['corpus.jsonl']),
         'S1': FakeStage('S1', ['S0'], ['graph.json', 'chunks.jsonl.gz']),
         'S2p': FakeStage('S2p', ['S1'], ['person_map.json']),
         'P1': FakeStage('P1', ['S1'], ['c_open.jsonl', 'c_frontier.jsonl', 'panel_diagnostics.json']),
@@ -349,7 +350,9 @@ def test_reader_isolation_passes_the_registered_m2_edges():
 
 def test_lint_catches_a_reader_output_in_a_training_input():
     # S5 reads the bench (which carries C_open) directly: a training input.
-    report = lint(stages=m2_stages(S5=FakeStage('S5', ['S1', 'S2p', 'S6b'], ['train_queries.raw.jsonl.gz'])))
+    report = lint(
+        stages=m2_stages(S5=FakeStage('S5', ['S1', 'S2p', 'S6b'], ['train_queries.raw.jsonl.gz']))
+    )
     assert any(f.code == 'reader-in-training' and 'S5' in f.message for f in report.errors)
     # S8 reads every S7 output, the bench-query embeddings included.
     report = lint(stages=m2_stages(S8=FakeStage('S8', ['S7'], ['init_rows.safetensors'])))
@@ -369,9 +372,10 @@ def test_lint_catches_bad_isolation_declarations():
     assert {'reader-outputs-unknown', 'consumes-unknown'} <= codes(report)
 
 
-def test_the_live_registry_passes_reader_isolation():
+def test_the_legacy_live_registry_has_no_reader_path_to_analyse():
     from arcforge.contract import isolation
 
     registry = isolation.live_registry()
     assert registry is not None
+    assert 'P1' not in registry and 'S6b' not in registry
     assert isolation.check(registry) == []

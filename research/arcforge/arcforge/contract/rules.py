@@ -11,6 +11,7 @@ after parsing is standard library, so `parse_rules()` also accepts an already-lo
 from __future__ import annotations
 
 import hashlib
+import math
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field
@@ -299,7 +300,11 @@ class _Problems:
 
 
 def _number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and (isinstance(value, int) or math.isfinite(value))
+    )
 
 
 def _expr(value: Any, where: str, problems: _Problems) -> Expr | None:
@@ -478,9 +483,7 @@ def _parse_branch_table(raw: Any, problems: _Problems) -> dict[str, tuple[tuple[
 
 def _parse_budget(raw: Any, table: Mapping[str, Any], problems: _Problems) -> dict[str, int]:
     if not isinstance(raw, dict):
-        problems.add(
-            'proxy_vault_read_budget', 'must map each branch path to its number of reads'
-        )
+        problems.add('proxy_vault_read_budget', 'must map each branch path to its number of reads')
         return {}
     out = {}
     for name, value in raw.items():
@@ -853,6 +856,8 @@ def freeze_text(text: str, mde: Mapping[str, float]) -> str:
 
     Only the values under `mde_r00:` change; the result is re-parsed to prove it is still valid.
     """
+    if not isinstance(mde, Mapping):
+        raise RulesError(['R00 measurements must be a mapping'])
     missing = [k for k in MDE_KEYS if k not in mde]
     extra = sorted(set(mde) - set(MDE_KEYS))
     if missing or extra:
@@ -862,30 +867,53 @@ def freeze_text(text: str, mde: Mapping[str, float]) -> str:
     for key, value in mde.items():
         if not _number(value) or value < 0:
             raise RulesError([f'mde_r00.{key} must be a number >= 0, got {value!r}'])
-    out: list[str] = []
-    in_block = False
-    seen: set[str] = set()
-    for line in text.splitlines(keepends=True):
-        body = line.rstrip('\r\n')
-        newline = line[len(body) :]
-        if re.match(r'^mde_r00:\s*(#.*)?$', body):
-            in_block = True
-        elif in_block:
-            match = re.match(r'^(\s+)([A-Za-z]+):[^#]*(#.*)?$', body)
-            if match and match.group(2) in MDE_KEYS:
-                indent, key, comment = match.group(1), match.group(2), match.group(3)
-                suffix = f'  {comment}' if comment else ''
-                out.append(f'{indent}{key}: {float(mde[key])!r}{suffix}{newline}')
-                seen.add(key)
-                continue
-            if body.strip() and not body.strip().startswith('#'):
-                in_block = False
-        out.append(line)
-    if seen != set(MDE_KEYS):
-        raise RulesError([f'no block-style mde_r00 with every key (found {sorted(seen)})'])
-    frozen = ''.join(out)
+    lines = text.splitlines(keepends=True)
+    for index, match in _mde_scalars(text).items():
+        value = repr(float(mde[match['key']]))
+        # PyYAML's YAML 1.1 float resolver requires a decimal point in scientific notation.
+        if 'e' in value and '.' not in value.split('e')[0]:
+            value = value.replace('e', '.0e', 1)
+        lines[index] = match['prefix'] + value + match['suffix'] + match['newline']
+    frozen = ''.join(lines)
     loads_rules(frozen)  # still valid
     return frozen
+
+
+_MDE_SCALAR = re.compile(
+    r'(?P<prefix>[ \t]+(?P<key>[A-Za-z]+):[ \t]*)'
+    r'(?P<value>null|[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)'
+    r'(?P<suffix>[ \t]*(?:#[^\r\n]*)?)(?P<newline>\r?\n|)\Z'
+)
+
+
+def _mde_scalars(text: str) -> dict[int, re.Match[str]]:
+    """Locate exactly six scalar tokens; never exempt an entire MDE line from byte checks."""
+    found: dict[int, re.Match[str]] = {}
+    seen: set[str] = set()
+    in_block = header_seen = False
+    for index, line in enumerate(text.splitlines(keepends=True)):
+        if re.fullmatch(r'mde_r00:[ \t]*(?:#[^\r\n]*)?(?:\r?\n)?', line):
+            if header_seen:
+                raise RulesError(['duplicate mde_r00 block'])
+            in_block = header_seen = True
+            continue
+        if not in_block or not line.strip() or line.lstrip().startswith('#'):
+            continue
+        if not line.startswith((' ', '\t')):
+            in_block = False
+            continue
+        match = _MDE_SCALAR.fullmatch(line)
+        if match is None or match['key'] not in MDE_KEYS or match['key'] in seen:
+            raise RulesError(['mde_r00 must contain exactly six plain numeric/null scalars'])
+        if match['value'] != 'null':
+            value = float(match['value'])
+            if not math.isfinite(value) or value < 0:
+                raise RulesError(['mde_r00 values must be finite numbers >= 0'])
+        seen.add(match['key'])
+        found[index] = match
+    if seen != set(MDE_KEYS):
+        raise RulesError([f'no block-style mde_r00 with every key (found {sorted(seen)})'])
+    return found
 
 
 def freeze_diff(template: str, frozen: str) -> list[str] | None:
@@ -897,23 +925,20 @@ def freeze_diff(template: str, frozen: str) -> list[str] | None:
     old, new = template.splitlines(keepends=True), frozen.splitlines(keepends=True)
     if len(old) != len(new):
         return None
+    try:
+        old_scalars, new_scalars = _mde_scalars(template), _mde_scalars(frozen)
+    except RulesError:
+        return None
     changed: list[str] = []
-    in_block = False
-    for a, b in zip(old, new, strict=True):
-        if re.match(r'^mde_r00:\s*(#.*)?$', a.rstrip('\r\n')):
-            in_block = True
-            if a != b:
-                return None
-            continue
-        if in_block and a.strip() and not a.startswith((' ', '#')):
-            in_block = False
+    for index, (a, b) in enumerate(zip(old, new, strict=True)):
         if a == b:
             continue
-        key_a = re.match(r'^\s+([A-Za-z]+):', a)
-        key_b = re.match(r'^\s+([A-Za-z]+):', b)
-        if not (in_block and key_a and key_b and key_a.group(1) == key_b.group(1)):
+        key_a, key_b = old_scalars.get(index), new_scalars.get(index)
+        if key_a is None or key_b is None:
             return None
-        if key_a.group(1) not in MDE_KEYS:
+        if any(key_a[group] != key_b[group] for group in ('prefix', 'suffix', 'newline')):
             return None
-        changed.append(key_a.group(1))
+        if key_b['value'] == 'null':
+            return None
+        changed.append(key_a['key'])
     return changed

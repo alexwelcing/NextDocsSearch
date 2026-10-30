@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -70,7 +71,21 @@ def signoff_files(tmp_path: Path, arc) -> dict[str, Path]:
     rules_path, _, runs = arc
     r00 = runs[0].run_dir
     lint_path = tmp_path / 'lint.json'
-    lint_path.write_text(json.dumps(lint(rules_path, frozen=True).to_json()))
+    # Packet tests simulate a complete, removal-only reader graph. The live legacy registry
+    # must fail frozen lint until the M2 runtime lands; it cannot certify this synthetic arc.
+    reader_stages = [
+        ('P1', (), ('c_open.jsonl',)),
+        ('S6b', ('P1',), ('bench.jsonl',)),
+        ('S5', (), ('raw_train.jsonl',)),
+        ('S7', ('S5', 'S6b'), ('train.jsonl',)),
+        ('S8', ('S7',), ('init.npz',)),
+        ('S9', ('S7', 'S8'), ('students.tar',)),
+    ]
+    registry = {name: SimpleNamespace(name=name, inputs=inputs, outputs=outputs)
+                for name, inputs, outputs in reader_stages}
+    lint_report = lint(rules_path, frozen=True, stages=registry)
+    assert lint_report.ok, lint_report.findings
+    lint_path.write_text(json.dumps(lint_report.to_json()))
     prereg = tmp_path / 'PREREG.md'
     prereg.write_text('# PREREG\n\nSynthetic pre-registration for the packet tests.\n')
     card = tmp_path / 'bench-card.md'

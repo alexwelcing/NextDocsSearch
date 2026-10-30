@@ -66,8 +66,8 @@ def _toposort(stages: Mapping[str, Any]) -> list[str]:
     done: list[str] = []
     while remaining:
         ready = [n for n in order if n in remaining and not remaining[n]]
-        if not ready:  # a cycle: the runtime rejects it elsewhere; analyse what is left as is
-            ready = [n for n in order if n in remaining][:1]
+        if not ready:
+            raise ValueError(f'stage cycle among: {", ".join(sorted(remaining))}')
         name = ready[0]
         done.append(name)
         del remaining[name]
@@ -83,7 +83,14 @@ def tainted_outputs(stages: Mapping[str, Any]) -> dict[str, set[str]]:
         stage = stages[name]
         outputs = set(getattr(stage, 'outputs', ()) or ())
         declared_attr = getattr(stage, 'reader_outputs', None)
-        declared = set(declared_attr or ()) | set(DEFAULT_READER_OUTPUTS.get(name, ()))
+        defaults = set(DEFAULT_READER_OUTPUTS.get(name, ()))
+        # The reader is a source, including new/renamed artifacts. The list of known filenames
+        # must not make an undeclared new reader output appear safe.
+        declared = (
+            outputs
+            if declared_attr is None and name in DEFAULT_READER_OUTPUTS
+            else set(declared_attr or ()) | (defaults & outputs)
+        )
         inherits = False
         for upstream in stage.inputs:
             if upstream not in stages or (name, upstream) in SCREEN_ONLY_EDGES:
@@ -111,6 +118,28 @@ def check(stages: Iterable[Any] | Mapping[str, Any]) -> list[IsolationFinding]:
     if not isinstance(stages, Mapping):
         stages = {s.name: s for s in stages}
     findings: list[IsolationFinding] = []
+    for name, stage in stages.items():
+        missing = sorted(set(stage.inputs) - set(stages))
+        if missing:
+            findings.append(
+                IsolationFinding(
+                    'reader-graph-invalid', name, f'depends on unknown stages {missing}'
+                )
+            )
+        if stage.name != name:
+            findings.append(
+                IsolationFinding(
+                    'reader-graph-invalid',
+                    name,
+                    f'registry key differs from stage name {stage.name!r}',
+                )
+            )
+    try:
+        _toposort(stages)
+    except ValueError as error:
+        findings.append(IsolationFinding('reader-graph-invalid', '', str(error)))
+    if findings:
+        return findings
     for name, stage in stages.items():
         declared = getattr(stage, 'reader_outputs', None)
         outputs = set(getattr(stage, 'outputs', ()) or ())

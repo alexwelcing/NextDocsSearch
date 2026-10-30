@@ -53,19 +53,49 @@ def _parse_mde(arg: str) -> dict[str, float]:
     return out
 
 
+def _s0_commitment(args: argparse.Namespace) -> dict:
+    from arcforge.contract.prereg_doc import PreregError
+
+    if not args.s0_hashes:
+        raise PreregError(
+            '--s0-hashes is required: supply the previously witnessed s0 hashes '
+            '(prereg hash --json), not hashes regenerated after R00'
+        )
+    return json.loads(Path(args.s0_hashes).read_bytes())
+
+
+def _registered_contract(args: argparse.Namespace, rules_path: Path, pre_path: Path) -> str:
+    from arcforge.contract import prereg_doc
+    from arcforge.contract.rules import loads_rules
+
+    prereg_doc.verify_s0_hashes(_s0_commitment(args), rules_path=rules_path, pre_path=pre_path)
+    # Read bytes explicitly: universal newline translation would erase committed CRLF edits.
+    text = rules_path.read_bytes().decode('utf-8')
+    rules = loads_rules(text)
+    if any(value is not None for value in rules.mde_r00.values()):
+        raise prereg_doc.PreregError('s0 rules must be the unmeasured template (all mde_r00 null)')
+    if pre_path.read_bytes().decode('utf-8') != prereg_doc.render_pre(rules):
+        raise prereg_doc.PreregError('s0 PREREG.pre.md does not match the registered rules render')
+    return text
+
+
 def freeze(args: argparse.Namespace) -> int:
+    from arcforge.contract import prereg_doc
     from arcforge.contract.rules import TEMPLATE_PATH, RulesError, freeze_text
 
     try:
         mde = _parse_mde(args.mde) if args.mde else json.loads(Path(args.mde_json).read_text())
         template = Path(args.rules) if args.rules else TEMPLATE_PATH
-        frozen = freeze_text(template.read_text(encoding='utf-8'), mde)
+        registered = _registered_contract(
+            args, template, Path(args.prereg_pre or prereg_doc.PRE_PATH)
+        )
+        frozen = freeze_text(registered, mde)
     except (ValueError, OSError, RulesError) as error:
         print(f'arcforge prereg freeze: {error}', file=sys.stderr)
         return EXIT_USAGE
     from arcforge.contract.rules import freeze_diff
 
-    changed = freeze_diff(template.read_text(encoding='utf-8'), frozen)
+    changed = freeze_diff(registered, frozen)
     if changed is None:
         print('arcforge prereg freeze: the frozen copy changes more than mde_r00', file=sys.stderr)
         return EXIT_FAIL
@@ -73,14 +103,20 @@ def freeze(args: argparse.Namespace) -> int:
     if out.exists() and not args.force:
         print(f'arcforge prereg freeze: {out} exists (use --force to replace it)', file=sys.stderr)
         return EXIT_USAGE
-    out.write_text(frozen, encoding='utf-8')
+    out.write_bytes(frozen.encode('utf-8'))
     print(f'wrote {out} (changed: {", ".join(changed)})')
     return EXIT_OK
 
 
 def render(args: argparse.Namespace) -> int:
     from arcforge.contract import prereg_doc
-    from arcforge.contract.rules import RulesError, load_rules
+    from arcforge.contract.rules import (
+        TEMPLATE_PATH,
+        RulesError,
+        freeze_diff,
+        load_rules,
+        loads_rules,
+    )
 
     try:
         if args.pre:
@@ -89,9 +125,17 @@ def render(args: argparse.Namespace) -> int:
             if not args.values:
                 print('arcforge prereg render: --values is required without --pre', file=sys.stderr)
                 return EXIT_USAGE
-            rules = load_rules(_rules_path(args.rules))
+            pre_path = Path(args.template or prereg_doc.PRE_PATH)
+            registered = _registered_contract(
+                args, Path(args.registered_rules or TEMPLATE_PATH), pre_path
+            )
+            frozen_path = Path(_rules_path(args.rules) or TEMPLATE_PATH)
+            frozen_text = frozen_path.read_bytes().decode('utf-8')
+            if freeze_diff(registered, frozen_text) is None:
+                raise prereg_doc.PreregError('frozen rules change more than mde_r00 relative to s0')
+            rules = loads_rules(frozen_text, path=str(frozen_path))
             extra = json.loads(Path(args.values).read_text(encoding='utf-8'))
-            template = Path(args.template or prereg_doc.PRE_PATH).read_text(encoding='utf-8')
+            template = pre_path.read_bytes().decode('utf-8')
             text = prereg_doc.fill(template, prereg_doc.values_for(rules, extra))
     except (RulesError, prereg_doc.PreregError, OSError, ValueError) as error:
         print(f'arcforge prereg render: {error}', file=sys.stderr)
@@ -171,6 +215,10 @@ def register(subparsers) -> None:
     group.add_argument('--mde', help='AB=0.045,D=0.03,CE=0.05,G=0.045,vault=0.09,frontier=0.1')
     group.add_argument('--mde-json', metavar='PATH', help='a JSON object with the same six keys')
     p_freeze.add_argument('--rules', help='the template to freeze (default: the packaged template)')
+    p_freeze.add_argument('--s0-hashes', help='previously witnessed s0 hashes (prereg hash --json)')
+    p_freeze.add_argument(
+        '--prereg-pre', help='the s0 PREREG.pre.md (default: prereg/PREREG.pre.md)'
+    )
     p_freeze.add_argument('--out', required=True, help='where to write the frozen rules.yaml')
     p_freeze.add_argument('--force', action='store_true', help='replace --out if it exists')
     p_freeze.set_defaults(func=freeze)
@@ -179,8 +227,18 @@ def register(subparsers) -> None:
         'render', help='write PREREG.pre.md (--pre) or the filled PREREG.md (--values)'
     )
     p_render.add_argument('--pre', action='store_true', help='render the template from the rules')
-    p_render.add_argument('--rules', help='rules file (the template for --pre, else the frozen copy)')
-    p_render.add_argument('--template', help='PREREG.pre.md to fill (default: prereg/PREREG.pre.md)')
+    p_render.add_argument(
+        '--rules', help='rules file (the template for --pre, else the frozen copy)'
+    )
+    p_render.add_argument(
+        '--template', help='PREREG.pre.md to fill (default: prereg/PREREG.pre.md)'
+    )
+    p_render.add_argument(
+        '--registered-rules', help='s0 rules template (default: the packaged template)'
+    )
+    p_render.add_argument(
+        '--s0-hashes', help='previously witnessed s0 hashes; required for final render'
+    )
     p_render.add_argument('--values', metavar='JSON', help='the non-rule placeholder values')
     p_render.add_argument('--out', help='write here (default: stdout)')
     p_render.set_defaults(func=render)
