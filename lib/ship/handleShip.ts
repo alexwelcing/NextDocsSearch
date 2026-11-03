@@ -153,14 +153,14 @@ async function retrieve(
   query: string,
   deps: ShipDeps,
   manifest: SearchManifest | null,
-  records: ArchiveRecord[]
+  records: Promise<ArchiveRecord[]>
 ): Promise<RetrievalResult> {
   const retrievalDeps = { fetchAsset: deps.fetchAsset, embedQuery: deps.embedQuery?.bind(deps) }
-  const withOperators = [...records, ...OPERATOR_RECORDS]
+  const withOperators = async () => [...(await records), ...OPERATOR_RECORDS]
   if (!manifest) return getShipContext(query, retrievalDeps, { records: withOperators })
   const indexed = await getShipContext(query, retrievalDeps, {
     manifest,
-    records,
+    records: () => records,
     model: deps.embedModel,
   })
   if (indexed.mode === 'lexical' || indexed.mode === 'hybrid') return indexed
@@ -315,16 +315,17 @@ export async function handleShip(request: Request, deps: ShipDeps): Promise<Resp
       })
     }
 
-    const [manifest, records] = await Promise.all([
-      resolveLazy(deps.manifest, null),
-      resolveLazy(deps.records, [] as ArchiveRecord[]),
-    ])
+    // Records need not finish before retrieval starts its independent index loads and embedding.
+    // resolveLazy handles failures immediately, even if the manifest is still loading.
+    const recordsReady = resolveLazy(deps.records, [] as ArchiveRecord[])
+    const manifest = await resolveLazy(deps.manifest, null)
     let retrieval = EMPTY_RETRIEVAL
     try {
-      retrieval = await retrieve(trick.searchQuery || input.prompt, deps, manifest, records)
+      retrieval = await retrieve(trick.searchQuery || input.prompt, deps, manifest, recordsReady)
     } catch (error) {
       log(`[ship] retrieval failed: ${message(error)}`)
     }
+    const records = await recordsReady
     retrieval = groundProfile(retrieval)
     // Lexical without an embedder is the expected path today; anything else is worth a line. A
     // build without the search index is expected too (until it ships), so that one logs once.

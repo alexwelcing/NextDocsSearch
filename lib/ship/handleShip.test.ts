@@ -10,6 +10,7 @@ import { shipPersona } from '../ai/shipPersona'
 import type { ArchiveRecord } from '../archive/types'
 import { byteStream, sseFixture } from '../ai/testing'
 import { ARCHIVE_FALLBACK_LEAD } from '../chat/shipHistory'
+import { CHUNKER_VERSION } from '../retrieval/chunk'
 import { resetSearchIndexCache } from '../retrieval/load'
 import { FIXTURE_ARCHIVE, fixtureIndex } from '../retrieval/testing'
 import { handleShip, type ShipDeps } from './handleShip'
@@ -80,6 +81,16 @@ function fakeChat(
 async function deps(overrides: Partial<ShipDeps> = {}): Promise<ShipDeps> {
   const { manifest, fetchAsset } = await fixtureIndex()
   return { fetchAsset, manifest, records: FIXTURE_ARCHIVE, log: () => undefined, ...overrides }
+}
+
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  let reject!: (error: Error) => void
+  const promise = new Promise<T>((yes, no) => {
+    resolve = yes
+    reject = no
+  })
+  return { promise, resolve, reject }
 }
 
 afterEach(() => {
@@ -309,6 +320,84 @@ describe('handleShip reasoning', () => {
 })
 
 describe('handleShip retrieval', () => {
+  it('starts index assets and query embedding while records are still loading', async () => {
+    const index = await fixtureIndex((hashes) => [
+      {
+        manifest: {
+          model: 'ship-test',
+          dims: 1,
+          quant: 'f32',
+          chunkerVersion: CHUNKER_VERSION,
+          hashes,
+        },
+        bytes: new Uint8Array(Float32Array.from(hashes, () => 1).buffer),
+      },
+    ])
+    const recordsReady = deferred<ArchiveRecord[]>()
+    const recordsStarted = deferred<void>()
+    const records = vi.fn(() => {
+      recordsStarted.resolve()
+      return recordsReady.promise
+    })
+    const embedQuery = vi.fn(async () => Float32Array.of(1))
+    const responseReady = handleShip(post({ prompt: 'agent credentials', mode: 'retrieve' }), {
+      ...index,
+      records,
+      embedQuery,
+      embedModel: 'ship-test',
+      log: () => undefined,
+    })
+    try {
+      await recordsStarted.promise
+      // Drain the work queued by request parsing, without releasing the records gate.
+      await new Promise<void>((resolve) => setImmediate(resolve))
+      expect(index.calls).toEqual(
+        expect.arrayContaining([
+          index.manifest.assets.chunks,
+          index.manifest.assets.bm25,
+          index.manifest.vectors[0].asset,
+        ])
+      )
+      expect(embedQuery).toHaveBeenCalledOnce()
+    } finally {
+      recordsReady.resolve(
+        FIXTURE_ARCHIVE.filter((record) => record.slug !== 'agent-authentication')
+      )
+    }
+    const [first] = await events(await responseReady)
+    expect(first).toMatchObject({ retrieval: 'hybrid' })
+    if (first.type !== 'instant-results') throw new Error('unreachable')
+    expect(first.items.map((item) => item.slug)).not.toContain('agent-authentication')
+    expect(records).toHaveBeenCalledOnce()
+  })
+
+  it('handles a records failure while the manifest is pending and keeps operator fallback', async () => {
+    const manifestReady = deferred<null>()
+    const recordsReady = deferred<ArchiveRecord[]>()
+    const recordsStarted = deferred<void>()
+    const records = vi.fn(() => {
+      recordsStarted.resolve()
+      return recordsReady.promise
+    })
+    const responseReady = handleShip(
+      post({ prompt: 'who is alex?', mode: 'retrieve' }),
+      await deps({ manifest: () => manifestReady.promise, records })
+    )
+    await recordsStarted.promise
+    recordsReady.reject(new Error('archive unavailable'))
+    // A rejection must already be handled while retrieval still awaits the manifest.
+    await new Promise<void>((resolve) => setImmediate(resolve))
+    manifestReady.resolve(null)
+    const [first] = await events(await responseReady)
+    expect(first).toMatchObject({ retrieval: 'records' })
+    if (first.type !== 'instant-results') throw new Error('unreachable')
+    expect(first.items[0]).toMatchObject({
+      slug: 'about',
+      target: { type: 'data', panel: 'about' },
+    })
+    expect(records).toHaveBeenCalledOnce()
+  })
+
   it('only cites slugs the scene can open', async () => {
     const records = FIXTURE_ARCHIVE.filter((record) => record.slug !== 'agent-authentication')
     const list = await events(
