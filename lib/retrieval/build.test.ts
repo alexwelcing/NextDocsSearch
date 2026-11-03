@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { OPERATOR_PANELS } from '../immersive/operatorData'
 import { buildSearchIndex, embedInputs, emitSearchIndex, type VectorSource } from './build'
 import { CHUNKER_VERSION, chunkHash } from './chunk'
@@ -30,6 +30,25 @@ function source(hashes: string[], dims: number, quant: 'int8-row' | 'f32' = 'int
 }
 
 describe('buildSearchIndex vector join', () => {
+  it('hashes independent chunks together and preserves their order', async () => {
+    const expected = await buildSearchIndex(input)
+    const digest = crypto.subtle.digest.bind(crypto.subtle)
+    const releases: (() => void)[] = []
+    const spy = vi.spyOn(crypto.subtle, 'digest').mockImplementation(
+      (algorithm, bytes) =>
+        new Promise((resolve, reject) => {
+          releases.push(() => void digest(algorithm, bytes).then(resolve, reject))
+        })
+    )
+    const pending = buildSearchIndex(input)
+    const started = spy.mock.calls.length
+    spy.mockRestore()
+    releases.reverse().forEach((release) => release())
+
+    expect(await pending).toEqual(expected)
+    expect(started).toBe(expected.chunks.chunks.length)
+  })
+
   it('aligns vectors to chunks by hash and reports chunks without one', async () => {
     const lexical = await buildSearchIndex(input)
     const chunks = lexical.chunks.chunks
@@ -150,5 +169,30 @@ describe('buildSearchIndex vector join', () => {
     const vec = assets[2].bytes
     expect(decodeInt8Rows(vec, hashes.length, 8)).toEqual(built.vectors[0].matrix)
     expect((await emitSearchIndex(built)).manifest).toEqual(manifest)
+  })
+
+  it('hashes emitted assets together without changing asset or vector order', async () => {
+    const lexical = await buildSearchIndex(input)
+    const hashes = lexical.chunks.chunks.map((chunk) => chunk.hash)
+    const built = await buildSearchIndex({
+      ...input,
+      vectorSources: [source(hashes, 8).vectorSource, source(hashes, 12).vectorSource],
+    })
+    const expected = await emitSearchIndex(built)
+    const digest = crypto.subtle.digest.bind(crypto.subtle)
+    const releases: (() => void)[] = []
+    const spy = vi.spyOn(crypto.subtle, 'digest').mockImplementation(
+      (algorithm, bytes) =>
+        new Promise((resolve, reject) => {
+          releases.push(() => void digest(algorithm, bytes).then(resolve, reject))
+        })
+    )
+    const pending = emitSearchIndex(built)
+    const started = spy.mock.calls.length
+    spy.mockRestore()
+    releases.reverse().forEach((release) => release())
+
+    expect(await pending).toEqual(expected)
+    expect(started).toBe(expected.assets.length)
   })
 })

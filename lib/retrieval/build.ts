@@ -177,11 +177,12 @@ export function joinVectors(source: VectorSource, chunks: SearchChunk[], warning
 export async function buildSearchIndex(input: BuildInput): Promise<BuiltIndex> {
   const warnings: string[] = []
   const { docs, drafts } = collectDrafts(input)
-  const chunks: SearchChunk[] = []
-  for (const { doc, draft } of drafts) {
-    const { id, kind, heading, b0, b1, text } = draft
-    chunks.push({ id, doc, kind, heading, b0, b1, text, hash: await chunkHash(draft.embedText) })
-  }
+  const chunks: SearchChunk[] = await Promise.all(
+    drafts.map(async ({ doc, draft }) => {
+      const { id, kind, heading, b0, b1, text } = draft
+      return { id, doc, kind, heading, b0, b1, text, hash: await chunkHash(draft.embedText) }
+    })
+  )
 
   const doc2query = input.doc2query ?? {}
   const fields: Bm25Fields[] = chunks.map((chunk) => {
@@ -277,18 +278,23 @@ export async function emitSearchIndex(
   base = '/search'
 ): Promise<{ assets: EmittedAsset[]; manifest: SearchManifest }> {
   const encoder = new TextEncoder()
-  const assets: EmittedAsset[] = []
-  const add = async (name: string, ext: string, bytes: Uint8Array) => {
+  const asset = async (name: string, ext: string, bytes: Uint8Array): Promise<EmittedAsset> => {
     const path = `${base}/${name}.${await sha256Hex(bytes, 12)}.${ext}`
-    assets.push({ path, bytes })
-    return path
+    return { path, bytes }
   }
-  const chunks = await add('chunks', 'json', encoder.encode(JSON.stringify(built.chunks)))
-  const bm25 = await add('bm25', 'json', encoder.encode(JSON.stringify(built.bm25)))
-  const vectors: VectorSetEntry[] = []
-  for (const set of built.vectors) {
-    vectors.push({ ...set.entry, asset: await add('vec', 'bin', encodeInt8Rows(set.matrix)) })
-  }
+  // Promise.all keeps the manifest and returned assets in source order even when hashes finish
+  // out of order; none of these content digests depends on another asset's path.
+  const assets = await Promise.all([
+    asset('chunks', 'json', encoder.encode(JSON.stringify(built.chunks))),
+    asset('bm25', 'json', encoder.encode(JSON.stringify(built.bm25))),
+    ...built.vectors.map((set) => asset('vec', 'bin', encodeInt8Rows(set.matrix))),
+  ])
+  const chunks = assets[0].path
+  const bm25 = assets[1].path
+  const vectors: VectorSetEntry[] = built.vectors.map((set, i) => ({
+    ...set.entry,
+    asset: assets[i + 2].path,
+  }))
   return {
     assets,
     manifest: {
