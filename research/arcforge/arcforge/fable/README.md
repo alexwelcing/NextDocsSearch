@@ -6,7 +6,7 @@ Batches, no server-side fallback. arcforge's side of the interface is this packa
 
 | Call | Run | Packet kind | Role (`report.fable[].role`) |
 | --- | --- | --- | --- |
-| Gold audit #1, 60 queries x 12 candidates, during the owner gate | R00 | `gold_audit` | `gold_audit_1` |
+| Gold audit #1, 60 queries x 12 candidates, during the R00 gate (A0: the unattended reference + gold gate) | R00 | `gold_audit` | `gold_audit_1` |
 | PREREG sign-off, after `arcforge prereg lint --frozen` | R00 | `prereg_signoff` | `signoff` |
 | Gold audit #2 | R10 / R10K | `gold_audit` | `gold_audit_2` |
 | End review, pass 1: blind recomputation of every verdict | R10 / R10K | `blind_recompute` | `end_review` |
@@ -28,7 +28,10 @@ plus jsonschema; no network). Each prints one JSON object on stdout.
 uv run python -m arcforge.fable pack gold-audit --pairs pairs.json --rubric rubric.md
 uv run python -m arcforge.fable pack signoff --prereg PREREG.md --rules rules.yaml \
     --schema arcforge/schemas/arc-report-1.json --lint lint.json \
-    --report runs/r00/report.json --verdicts runs/r00/verdicts.json --bench-card bench-card.md
+    --report runs/r00/report.json --verdicts runs/r00/verdicts.json --bench-card bench-card.md \
+    --amendment-a0 prereg/amendments/PREREG-A0.json --witness witness-index.json \
+    --model-choice prereg/model-choice-a0.json --contamination contamination.json \
+    --provenance provenance.json --panel panel-summary.json --quarantine quarantine.json
 uv run python -m arcforge.fable pack blind --prereg PREREG.md --rules rules.yaml \
     --verdicts runs/r00/verdicts.json runs/r01/verdicts.json … runs/r10/verdicts.json
 uv run python -m arcforge.fable pack mismatch --prereg PREREG.md --rules rules.yaml \
@@ -39,7 +42,8 @@ Output:
 
 ```json
 {"packet_root": "~/.cache/arcforge/fable/prereg_signoff-r00-3f2a…", "packet_sha256": "3f2a…",
- "kind": "prereg_signoff", "role": "signoff", "workdir": "…/attempt-1", "status": null}
+ "kind": "prereg_signoff", "role": "signoff", "repair_cycle": 0, "workdir": "…/attempt-1",
+ "status": null}
 ```
 
 The packet root defaults to `$ARCFORGE_FABLE_DIR`, else `~/.cache/arcforge/fable`, and is refused
@@ -72,7 +76,8 @@ uv run python -m arcforge.fable check <packet_root> --session <agent session id>
 | --- | --- | --- | --- |
 | 0 | `accepted` | Valid, complete, from Fable, inputs untouched, status `ok`. Copied byte for byte to `<packet_root>/output.json`. | proceeds (step 4). |
 | 10 | `retry` | Attempt 1 was invalid or refused. Its output moved to `rejected/`, its directory deleted; `workdir` is a fresh copy (`attempt-2`). | runs a **new** agent in the printed `workdir` (step 2), then checks again. |
-| 20 | `failed_closed` | Attempt 2 failed too: `status` is `failed` (invalid) or `refused`. | stops this stage (below). |
+| 20 | `failed_closed` | Attempt 2 failed too: `status` is `failed` (invalid) or `refused`; or a sign-off was refused (`refused`, at once). | stops this stage, or repairs a refused sign-off (below). |
+| 30 | `failed_closed` | The third refusal of the sign-off: `status` is `halted`. | halts the arc at R00. |
 | 1 | — | Not a packet, already final, unreadable input (message on stderr). | fixes the call; nothing was recorded. |
 | 3 | — | jsonschema is missing: run under `uv run`. | — |
 
@@ -80,14 +85,20 @@ The JSON on stdout also carries `attempt`, `outcome` (`ok` / `invalid` / `refuse
 the `errors` that made an attempt invalid.
 
 **Failing closed**, by kind:
-- `prereg_signoff`: no PREREG hash is made. The owner may sign manually, recorded as such
-  (`owner-sign`, allowed only after the sign-off failed closed):
-  `python -m arcforge.fable owner-sign <packet_root> --note "why the owner signs"`.
+- `prereg_signoff` (Amendment A0, repair or halt; there is no manual sign): a refusal is final for
+  its packet at once (exit 20, `status: refused`; no fresh-agent retry). The orchestrator corrects
+  exactly the defects Fable listed in `required_changes` and resubmits with the refusal and the
+  diff, at most twice:
+  `python -m arcforge.fable repair <refused packet_root> --diff fix.diff --rules rules.yaml …`
+  (only the corrected inputs are given; the rest are carried over). The new packet holds every
+  earlier refusal verbatim under `inputs/repair/` (publish them with the run). A refusal of the
+  second repair is the third refusal: `check` exits 30 with `status: halted`, and the arc halts at
+  R00. Two invalid outputs (`failed`) also stop the arc; nothing is substituted.
 - `blind_recompute` / `mismatch_review`: the end review is missing, never replaced:
   `python -m arcforge.fable mark-missing <packet_root> --reason "…"`.
 - `gold_audit`: the stage fails closed and no other model's labels stand in as gold. I1 then
-  lacks its Gemini|Fable and Qwen|Fable Kendall pairs; the R00 (or R10) tail must put that to the
-  owner rather than compute I1 without them.
+  lacks its Gemini|Fable and Qwen|Fable Kendall pairs, so I1c is not computable and the run
+  fails rather than compute I1 without them.
 
 ### 4. Record it in the run's report
 
@@ -97,19 +108,22 @@ uv run python -m arcforge.fable record <packet_root>
 
 prints the run's `report.json` `fable[]` entry (arc-report/1 `$defs/FableCall`): role, kind,
 `via: orchestrator`, `packet_sha256`, `output_sha256` (of the accepted output, else null),
-`agent_session`, `model_reported`, `attempts`, `status` (`ok`, `refused`, `failed`,
-`owner_signed`, `missing`, or null while pending) and, for the sign-off, `lint_ok`. Orchestrator
+`agent_session`, `model_reported`, `attempts`, `repair_cycle` and `refusals` (the sha256 of every
+refusal so far, sign-off only), `status` (`ok`, `refused`, `failed`, `halted`, `missing`, or null
+while pending) and, for the sign-off, `lint_ok`. Orchestrator
 cost lines are `$0` cash with tokens logged (`cost.lines[].provider: orchestrator`).
 
 ## The two sequences
 
 **R00** (the VM is already deleted; Fable never blocks it):
-1. During the owner gate: pack `gold-audit` from the judged pools (`audit_index` 1), run, check,
-   record. The runtime merges `output.json`'s grades as Fable gold (owner labels win).
-2. In the laptop tail, after I1, the power analysis, PREREG.md and `arcforge prereg freeze`:
-   `arcforge prereg lint --frozen --rules rules.yaml --out lint.json`, then pack `signoff`, run,
-   check, record. Only an accepted sign-off (or `owner_signed`) lets PREREG, rules.yaml and the
-   schema be hashed into arc-bench.
+1. In the gate stage: pack `gold-audit` from S12r's gold-frame views (`audit_index` 1; every
+   candidate's entity card is record-local), run, check, record. S13 merges `output.json`'s
+   grades as Fable gold (precedence: corpus links and intent labels, then Fable gold, then
+   adjudication, then the primary judge; reference grades never enter qrels).
+2. In the tail, after I1, the power analysis, PREREG.md and `arcforge prereg freeze`:
+   `arcforge prereg lint --frozen --rules rules.yaml --out lint.json`, then pack `signoff` (with
+   the A0 records), run, check, record; repair at most twice on a refusal. Only an accepted
+   sign-off lets PREREG, rules.yaml and the schema be hashed and witnessed (kind 'prereg').
 
 **R10 / R10K**:
 1. Gold audit #2 as above (`audit_index` 2).
@@ -128,7 +142,7 @@ cost lines are `$0` cash with tokens logged (`cost.lines[].provider: orchestrato
 | Kind | `inputs/` | `result` | Checked beyond the schema |
 | --- | --- | --- | --- |
 | `gold_audit` | `pairs.json` (`schemas/gold-pairs-1.json`), `rubric.md` | `grades[]`: `{query_id, candidate_id, grade 0-3, note}` | exactly one grade per pair, none invented |
-| `prereg_signoff` | `PREREG.md`, `rules.yaml`, `arc-report-1.json`, `lint.json`, `r00/report.json`, `r00/verdicts.json`, `bench-card.md` | `{decision, checks[11], required_changes, statement}` | every check id exactly once; `ok` means `sign` with all checks true |
+| `prereg_signoff` | `PREREG.md`, `rules.yaml`, `arc-report-1.json`, `lint.json`, `r00/report.json`, `r00/verdicts.json`, `bench-card.md`, `PREREG-A0.json`, `witness-index.json`, `model-choice-a0.json`, `contamination.json`, `provenance.json`, `panel-summary.json`, `quarantine.json`, and on a resubmission `repair/` | `{decision, checks[19], required_changes, statement}` | every A0 check id exactly once; `ok` means `sign` with all checks true |
 | `blind_recompute` | `PREREG.md`, `rules.yaml`, `verdicts/<run>.json` (stripped) | `runs[]` (statuses, verdict components, prediction_met, gates_summary, adoption) and `arc_summary` | every run, every rule per run, every row, every adoption decision, the arc_summary |
 | `mismatch_review` | `comparison.json`, `writeup.md`, `reports/<run>.json`, `PREREG.md`, `rules.yaml` | `{mismatches[], writeup_findings[], statement}` | every mismatch id exactly once |
 

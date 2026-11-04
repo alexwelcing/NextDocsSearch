@@ -13,8 +13,8 @@ rule can never reach into Python.
 Names:
 - a row alias of the rule (`c1`, `g1`, ...) or `x` inside a macro or row-level expression;
   `<row>.<field>` reads a VerdictRow field;
-- a namespace of verdicts.json: `run`, `vault`, `gates_inputs`, `gates_summary`, `signoff_inputs`;
-  `vault.sign` reads that field;
+- a namespace of verdicts.json: `run`, `proxy_vault`, `gates_inputs`, `gates_summary`,
+  `signoff_inputs`; `proxy_vault.sign` reads that field;
 - a `let` of the rule, which names a sub-expression (H1's active family F);
 - `status` and `in_scope` in gates_summary and derive expressions.
 
@@ -38,7 +38,9 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field, replace
 from typing import Any, NamedTuple
 
-NAMESPACES: tuple[str, ...] = ('run', 'vault', 'gates_inputs', 'gates_summary', 'signoff_inputs')
+NAMESPACES: tuple[str, ...] = (
+    'run', 'proxy_vault', 'gates_inputs', 'gates_summary', 'signoff_inputs',
+)  # fmt: skip
 BUILTINS: dict[str, Callable[..., Any]] = {'min': min, 'max': max, 'abs': abs}
 SPECIAL_FUNCTIONS: tuple[str, ...] = ('FIRES', 'OUT_OF_SCOPE')
 CONTEXT_NAMES: tuple[str, ...] = ('status', 'in_scope')
@@ -59,7 +61,7 @@ class Read(NamedTuple):
     """One field an expression reads: a VerdictRow field, or a dotted path in verdicts.json."""
 
     row: str | None  # comparison id, or None for a verdicts-doc path
-    path: str  # the row field, or e.g. 'vault.sign'
+    path: str  # the row field, or e.g. 'proxy_vault.sign'
 
     def __str__(self) -> str:
         return f'{self.row}.{self.path}' if self.row else self.path
@@ -447,7 +449,7 @@ class _Evaluator:
 
 
 def _same(a: Any, b: Any) -> bool:
-    """Equality that never confuses true/false with 1/0 (vault.sign is an int or a string)."""
+    """Equality that never confuses true/false with 1/0 (proxy_vault.sign is an int or a string)."""
     if isinstance(a, bool) != isinstance(b, bool):
         return False
     return a == b

@@ -10,7 +10,7 @@ On disk (default root: $ARCFORGE_FABLE_DIR, else ~/.cache/arcforge/fable):
       packet/        the canonical packet (never handed to an agent)
       attempt-1/     a copy of packet/: the ONLY directory the agent may see; it writes output.json
       attempt-2/     a fresh copy, created only for the single retry
-      rejected/      outputs of rejected attempts, moved out of the agent's sight
+      rejected/      outputs of rejected attempts (refusals included), moved out of the agent's sight
       ledger.json    attempts, outcomes and the final status (fable/ledger.py)
       output.json    the accepted output, byte for byte, once there is one
 
@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any
 
 from arcforge.contract.ids import RUN_IDS, STRIPPED_FIELDS
-from arcforge.fable.kinds import FABLE_MODEL_PREFIX, KINDS, render_brief
+from arcforge.fable.kinds import FABLE_MODEL_PREFIX, KINDS, MAX_REPAIRS, render_brief
 
 PACKET_SCHEMA = 'arc-fable-packet/1'
 LEDGER_SCHEMA = 'arc-fable-ledger/1'
@@ -59,6 +59,11 @@ class Packet:
     @property
     def ledger_path(self) -> Path:
         return self.root / 'ledger.json'
+
+
+def repair_cycle(packet: Packet) -> int:
+    """0 for a first submission; 1 or 2 for a repaired sign-off (A0 repair or halt)."""
+    return int(packet.manifest.get('repair_cycle', 0))
 
 
 def now_utc() -> str:
@@ -127,6 +132,7 @@ def build(
     stripped: Sequence[str] = (),
     expected_model: str = FABLE_MODEL_PREFIX,
     allow_in_repo: bool = False,
+    repair: int | None = None,
 ) -> Packet:
     """Write (or reuse) a packet. `inputs` are (path under inputs/, role, bytes)."""
     kind = KINDS[kind_name]
@@ -168,6 +174,8 @@ def build(
         ],
         'stripped': list(stripped),
     }
+    if repair is not None:
+        manifest['repair_cycle'] = repair
     manifest_bytes = canonical_bytes(manifest)
     digest = sha256_bytes(manifest_bytes)
     packet = Packet(root / f'{kind_name}-{run_id}-{digest[:12]}', digest, manifest)
@@ -198,7 +206,7 @@ def build(
         'attempts': [],
         'status': None,
         'output_sha256': None,
-        'owner_note': None,
+        'note': None,
     }
     (staging / 'ledger.json').write_text(json.dumps(ledger, indent=1) + '\n', encoding='utf-8')
     staging.rename(packet.root)
@@ -304,29 +312,133 @@ def pack_gold_audit(
     return build('gold_audit', role, doc['run_id'], inputs, context, **kwargs)
 
 
+# The A0 records the sign-off reads besides the R00 files (A0 rule 7): (argument, packet path).
+SIGNOFF_A0_INPUTS: tuple[tuple[str, str], ...] = (
+    ('amendment_a0', 'PREREG-A0.json'),
+    ('witness', 'witness-index.json'),
+    ('model_choice', 'model-choice-a0.json'),
+    ('contamination', 'contamination.json'),
+    ('provenance', 'provenance.json'),
+    ('panel', 'panel-summary.json'),
+    ('quarantine', 'quarantine.json'),
+)
+SIGNOFF_FILES: tuple[tuple[str, str], ...] = (
+    ('prereg', 'PREREG.md'),
+    ('rules', 'rules.yaml'),
+    ('schema', 'arc-report-1.json'),
+    ('lint', 'lint.json'),
+    ('report', 'r00/report.json'),
+    ('verdicts', 'r00/verdicts.json'),
+    ('bench_card', 'bench-card.md'),
+    *SIGNOFF_A0_INPUTS,
+)
+
+
 def pack_signoff(
     *, prereg: str | Path, rules: str | Path, schema: str | Path, lint: str | Path, report: str | Path,
-    verdicts: str | Path, bench_card: str | Path, **kwargs: Any,
+    verdicts: str | Path, bench_card: str | Path, amendment_a0: str | Path, witness: str | Path,
+    model_choice: str | Path, contamination: str | Path, provenance: str | Path, panel: str | Path,
+    quarantine: str | Path, **kwargs: Any,
 ) -> Packet:  # fmt: skip
-    """The R00 PREREG sign-off: PREREG.md, the frozen rules, the schema, lint.json, R00's files."""
+    """The R00 PREREG sign-off: PREREG.md, the frozen rules, the schema, lint.json, R00's files,
+    and the A0 records (PREREG-A0.json, the witness index, the model-choice record, the
+    contamination and provenance reports, the panel and quarantine summaries)."""
+    paths = {
+        'prereg': prereg, 'rules': rules, 'schema': schema, 'lint': lint, 'report': report,
+        'verdicts': verdicts, 'bench_card': bench_card, 'amendment_a0': amendment_a0,
+        'witness': witness, 'model_choice': model_choice, 'contamination': contamination,
+        'provenance': provenance, 'panel': panel, 'quarantine': quarantine,
+    }  # fmt: skip
+    inputs = _signoff_inputs({name: _read(path, name) for name, path in paths.items()})
+    return build('prereg_signoff', 'signoff', 'r00', inputs, _signoff_context(0), repair=0, **kwargs)
+
+
+def _signoff_context(cycle: int) -> dict[str, Any]:
+    if cycle == 0:
+        note = 'This is the first submission.'
+    else:
+        note = (
+            f'This is repaired resubmission {cycle} of {MAX_REPAIRS}. `inputs/repair/` holds every '
+            'earlier refusal, verbatim, and the diff of what the orchestrator changed; judge the '
+            'packet as it now stands. A refusal of this submission '
+            + ('halts the arc at R00.' if cycle >= MAX_REPAIRS else 'may be repaired once more.')
+        )
+    return {'run_id': 'r00', 'repair_note': note}
+
+
+def _signoff_inputs(data: dict[str, bytes]) -> list[tuple[str, str, bytes]]:
+    """Validate the sign-off files and lay them out as packet inputs."""
     from arcforge.contract import schema as report_schema
 
-    lint_doc = _read_json(lint, 'lint')
+    lint_doc = _parse(data['lint'], 'lint')
     _validate(lint_doc, report_schema.load(report_schema.SCHEMA_DIR / 'arc-lint-1.json'), 'lint')
-    verdicts_doc = _read_json(verdicts, 'verdicts')
+    verdicts_doc = _parse(data['verdicts'], 'verdicts')
     if (verdicts_doc.get('run') or {}).get('id') != 'r00':
         raise PacketError('verdicts: the sign-off reads the r00 verdicts.json')
-    _read_json(report, 'report')
-    inputs = [
-        ('PREREG.md', 'prereg', _read(prereg, 'prereg')),
-        ('rules.yaml', 'rules', _read(rules, 'rules')),
-        ('arc-report-1.json', 'schema', _read(schema, 'schema')),
-        ('lint.json', 'lint', _read(lint, 'lint')),
-        ('r00/report.json', 'report', _read(report, 'report')),
-        ('r00/verdicts.json', 'verdicts', _read(verdicts, 'verdicts')),
-        ('bench-card.md', 'bench_card', _read(bench_card, 'bench_card')),
+    for name in ('report', 'amendment_a0', 'witness', 'model_choice', 'contamination',
+                 'provenance', 'panel', 'quarantine'):  # fmt: skip
+        _parse(data[name], name)
+    return [(rel, name, data[name]) for name, rel in SIGNOFF_FILES]
+
+
+def _parse(data: bytes, what: str) -> Any:
+    try:
+        return json.loads(data)
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        raise PacketError(f'{what}: not JSON ({error})') from None
+
+
+def repair_signoff(
+    refused_root: str | Path, diff: str | Path, *, refusal: bytes,
+    overrides: Mapping[str, str | Path] | None = None, **kwargs: Any,
+) -> Packet:  # fmt: skip
+    """A0 repair or halt: the refused sign-off, corrected, resubmitted with the refusal and diff.
+
+    `overrides` maps sign-off input names (prereg, rules, lint, report, verdicts, ...) to the
+    corrected files; every other input is carried over unchanged from the refused packet. The diff
+    must be non-empty and at least one input must change. Every earlier refusal travels along
+    verbatim under inputs/repair/. At most MAX_REPAIRS repairs: a refusal of the last one halts.
+    """
+    refused = load(refused_root)
+    if refused.manifest['kind'] != 'prereg_signoff':
+        raise PacketError('only the PREREG sign-off is repaired; other kinds fail closed')
+    cycle = repair_cycle(refused)
+    if cycle >= MAX_REPAIRS:
+        raise PacketError(
+            f'{refused.root}: this was repair {cycle} of {MAX_REPAIRS}; its refusal halts the arc'
+        )
+    diff_bytes = _read(diff, 'diff')
+    if not diff_bytes.strip():
+        raise PacketError('diff: a repair names exactly what it changed (the diff is empty)')
+    by_path = {f['path']: f for f in refused.manifest['files']}
+    data: dict[str, bytes] = {}
+    for name, rel in SIGNOFF_FILES:
+        data[name] = (refused.canonical / 'inputs' / rel).read_bytes()
+    changed = []
+    for name, path in (overrides or {}).items():
+        if name not in data:
+            raise PacketError(f'{name!r} is not a sign-off input ({[n for n, _ in SIGNOFF_FILES]})')
+        new = _read(path, name)
+        if new != data[name]:
+            changed.append(name)
+        data[name] = new
+    if not changed:
+        raise PacketError('nothing was repaired: every input is the refused packet\'s own')
+    inputs = _signoff_inputs(data)
+    carried = [
+        (f['path'][len('inputs/') :], f['role'], (refused.canonical / f['path']).read_bytes())
+        for f in by_path.values()
+        if f['path'].startswith('inputs/repair/')
     ]
-    return build('prereg_signoff', 'signoff', 'r00', inputs, {'run_id': 'r00'}, **kwargs)
+    inputs += sorted(carried)
+    inputs += [
+        (f'repair/cycle-{cycle}.refusal.json', 'refusal', refusal),
+        (f'repair/cycle-{cycle + 1}.diff', 'repair_diff', diff_bytes),
+    ]
+    return build(
+        'prereg_signoff', 'signoff', 'r00', inputs, _signoff_context(cycle + 1),
+        repair=cycle + 1, **kwargs,
+    )  # fmt: skip
 
 
 def pack_blind(

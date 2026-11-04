@@ -1,3 +1,25 @@
+# Owner time under Amendment A0: zero
+
+**You do not need to do anything for RE-MEANING.** PREREG Amendment A0 (registered 2026-10-24,
+before S0) replaced every owner action with a mechanism or a pre-registered default: a proxy
+reader writes the memory queries, a just-in-time proxy vault replaces the key you would have held,
+a three-family model reference and known-answer probes replace your audit, the person map and the
+registers are mechanical, and Fable's sign-off is repair-or-halt with no manual sign. The arc runs
+unattended. The only thing that can make it wait is an expired gcloud login (about 2 minutes, and
+only if the arc says it is waiting on one) or a harness permission prompt.
+
+Everything you may still do is optional and never changes a registered verdict (A0
+`owner_optins_remaining`): write memory queries of your own (scored as a separate C_owner row on
+vN), blind-grade any pairs or re-meaning items (human-vs-model rows on vN), add rationale links
+(POST_S0), confirm, split or un-quarantine person clusters (vN only), turn on any default-off
+editorial item, merge the standing arc/main → main PR (or never), choose a licence, or read
+proposals.md, collisions.md and the provenance and contamination reports whenever you like.
+
+The Owner Desk below is the M1 design for the approved, owner-time version of R00. It is kept for
+those opt-ins only (it feeds vN rows); nothing in the R00 run reads it.
+
+---
+
 # The Owner Desk: your guide to R00
 
 You give RE-MEANING about **2 h 27 min** in all: about **1 h 41 min** before launch, and about

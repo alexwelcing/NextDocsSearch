@@ -24,7 +24,7 @@ from typing import Any
 from arcforge.contract import schema as report_schema
 from arcforge.contract.branches import Step, follow
 from arcforge.contract.build import build_verdicts, sha256_file
-from arcforge.contract.ids import NOT_APPLICABLE, SCORES_SCHEMA
+from arcforge.contract.ids import NOT_APPLICABLE, PROBE_EXPECT, SCHEMA_VERSION, SCORES_SCHEMA
 from arcforge.contract.rules import TEMPLATE_PATH, Rules, freeze_text, loads_rules
 from arcforge.contract.verdicts import Outcome, dumps_doc
 
@@ -138,14 +138,20 @@ class Scenario:
     `path` is a PREREG branch path. `statuses` overrides the status of a rule at a run, keyed
     (run_id, rule_id); otherwise the decision rules follow the path (FUT fires on the S paths,
     H1.F falsifies on S-F, H1 falsifies where the path turns to its K branch) and every other
-    hypothesis is SUPPORTED. `i1_pass` sets I1 at the runs where it is decided (default: pass).
+    hypothesis is SUPPORTED. `i1_pass` sets I1 at the runs where it is decided (default: pass);
+    `i1_fail_component` picks which A0 component fails when it does (I1a, I1b, I1c or I1d).
+    `i6_pass` sets I6 where H3 is decided (default: pass; a failing I6 leaves H3 INCONCLUSIVE).
+    `compromised_from` marks the proxy vault compromised from that run on (sign 'unavailable').
     `effects` overrides single rows, keyed (run_id, comparison_id).
     """
 
     path: str
     statuses: dict[tuple[str, str], str] = field(default_factory=dict)
     i1_pass: dict[str, bool] = field(default_factory=dict)
+    i1_fail_component: str = 'I1b'
+    i6_pass: dict[str, bool] = field(default_factory=dict)
     vault_sign: dict[str, int | str] = field(default_factory=dict)
+    compromised_from: str | None = None
     effects: dict[tuple[str, str], float] = field(default_factory=dict)
 
     def wanted(self, run_id: str, rule_id: str) -> str:
@@ -162,7 +168,16 @@ class Scenario:
             return 'SUPPORTED'
         if rule_id == 'H7.report':
             return 'REPORTED'
+        if rule_id == 'H3' and not self.i6_pass.get(run_id, True):
+            return 'INCONCLUSIVE'  # A0: H3 waits on I6, whatever its rows say
         return 'SUPPORTED'
+
+    def effect_status(self, run_id: str, rule_id: str) -> str:
+        """The status whose row effects are written (H3 under a failing I6 keeps strong rows)."""
+        if rule_id == 'H3' and (run_id, rule_id) not in self.statuses:
+            if not self.i6_pass.get(run_id, True):
+                return 'SUPPORTED'
+        return self.wanted(run_id, rule_id)
 
 
 # ---- score files ------------------------------------------------------------------------------
@@ -272,7 +287,7 @@ def _effects_for(rules: Rules, scenario: Scenario, run_id: str, branch: str) -> 
     for rule in rules.rules:
         if rule.id not in _EFFECTS or not rules.in_scope(rule.id, run_id, branch):
             continue
-        status = scenario.wanted(run_id, rule.id)
+        status = scenario.effect_status(run_id, rule.id)
         table = _EFFECTS[rule.id].get(status)
         if table is None:
             raise ValueError(f'synth cannot produce {rule.id} = {status}')
@@ -317,12 +332,30 @@ def _adoption_inputs(rules: Rules, run_id: str, branch: str) -> list[dict[str, A
     return out or None
 
 
-def _i1_inputs(passed: bool) -> dict[str, float]:
-    return (
-        {'kappa_qw_owner': 0.72, 'min_kendall_ci_lo': 0.68}
-        if passed
-        else {'kappa_qw_owner': 0.52, 'min_kendall_ci_lo': 0.61}
-    )
+I1_PASSING: dict[str, float] = {
+    'probe_min_acc': 0.95,
+    'kappa_qw_median': 0.72,
+    'alpha_families': 0.63,
+    'min_kendall_ci_lo': 0.68,
+    'delta_ci_hi': 0.21,
+}
+# One failing value per A0 component (the others stay passing).
+I1_FAILING: dict[str, dict[str, float]] = {
+    'I1a': {'probe_min_acc': 0.85},
+    'I1b': {'kappa_qw_median': 0.52},
+    'I1c': {'min_kendall_ci_lo': 0.55},
+    'I1d': {'delta_ci_hi': 0.34},
+}
+
+
+def _i1_inputs(passed: bool, component: str = 'I1b') -> dict[str, float]:
+    return dict(I1_PASSING) if passed else {**I1_PASSING, **I1_FAILING[component]}
+
+
+def _i6_inputs(passed: bool) -> dict[str, float]:
+    if passed:
+        return {'fleiss_kappa': 0.71, 'placebo_rerate': 0.12, 'random_rerate': 0.06}
+    return {'fleiss_kappa': 0.48, 'placebo_rerate': 0.12, 'random_rerate': 0.06}
 
 
 def write_run(
@@ -343,7 +376,7 @@ def write_run(
             'comparison_id': cid,
             'scores_file': write_scores(run_dir, rules, cid, effect, run_id),
             'nested': True,
-            'vault_read': False,
+            'proxy_vault_read': False,
         }
         for cid, effect in _effects_for(rules, scenario, run_id, branch).items()
     ]
@@ -352,10 +385,18 @@ def write_run(
         if doc['gates_summary'].get('I1_pass') is not None:
             prior_pass = doc['gates_summary']['I1_pass']
     i1_in_scope = rules.in_scope('I1', run_id, branch)
-    reading = rules.in_scope('vault.read', run_id, branch)
+    i1_passes = scenario.i1_pass.get(run_id, True)
+    effective = i1_passes if i1_in_scope else prior_pass
+    reading = rules.in_scope('proxy_vault.read', run_id, branch)
+    compromised = scenario.compromised_from is not None and any(
+        r == scenario.compromised_from
+        for r in [*(d['run']['id'] for d in history), run_id]
+    )
     sign = scenario.vault_sign.get(
         run_id, -1 if scenario.wanted(run_id, 'FUT') == 'FIRED' and run_id == 'r04' else 1
     )
+    if compromised:
+        sign = 'unavailable'
     h1_provisional = None
     for doc in history:
         for entry in doc['hypotheses']:
@@ -370,16 +411,18 @@ def write_run(
             'prereg_sha256': None if run_id == 'r00' else fake_sha('prereg'),
             'rules_sha256': rules.sha256,
         },
-        'vault': {
+        'proxy_vault': {
             'read_this_run': reading,
             'read_index': reads_so_far + 1 if reading else None,
             'hybrid_minus_b2_ndcg10': (0.03 if sign == 1 else -0.02 if sign in (-1, 0) else None)
             if reading
             else None,
             'sign': sign if reading else None,
+            'basis': ('judged' if effective else 'intent_only') if reading else None,
+            'compromised': compromised,
         },
         'gates_inputs': {
-            'I1': _i1_inputs(scenario.i1_pass.get(run_id, True)) if i1_in_scope else None,
+            'I1': _i1_inputs(i1_passes, scenario.i1_fail_component) if i1_in_scope else None,
             'I1_prior_pass': None if run_id == 'r00' else prior_pass,
             'I2': {'inflation_ratio': 2.4} if rules.in_scope('I2', run_id, branch) else None,
             'I3': {
@@ -390,20 +433,16 @@ def write_run(
             },
             'I4': {'flip_rate': 0.021} if rules.in_scope('I4', run_id, branch) else None,
             'I5': {'kappa_drop': 0.07} if rules.in_scope('I5', run_id, branch) else None,
+            'I6': _i6_inputs(scenario.i6_pass.get(run_id, True))
+            if rules.in_scope('I6', run_id, branch)
+            else None,
         },
         'rows': rows,
         'adoption': _adoption_inputs(rules, run_id, branch),
         'signoff_inputs': None,
     }
     if rules.in_scope('signoff', run_id, branch):
-        inputs['signoff_inputs'] = {
-            'lint_ok': True,
-            'report_valid': True,
-            'vault_sealed': True,
-            'i1_fallback_scheduled': not scenario.i1_pass.get(run_id, True),
-            'i2_scheduled': True,
-            'i4_scheduled': True,
-        }
+        inputs['signoff_inputs'] = signoff_inputs(fallback=not i1_passes)
     outcome = build_verdicts(rules, inputs, run_dir, history if run_id in ('r10', 'r10K') else None)
     if not outcome.ok:
         raise ValueError(f'synthetic {run_id}/{branch} does not verify: {outcome.problems()}')
@@ -422,6 +461,26 @@ def write_run(
     return SynthRun(run_id, branch, run_dir, outcome)
 
 
+def signoff_inputs(fallback: bool = False, **overrides: bool) -> dict[str, bool]:
+    """The A0 sign-off preconditions, all met (override any to plant a failure)."""
+    out = {
+        'lint_ok': True,
+        'report_valid': True,
+        'a0_witness_first': True,
+        's0_witnessed': True,
+        'r00_sets_witnessed': True,
+        'model_choice_present': True,
+        'contamination_present': True,
+        'precutoff_lookups_resolved': True,
+        'provenance_present': True,
+        'i1_fallback_scheduled': fallback,
+        'i2_scheduled': True,
+        'i4_scheduled': True,
+    }
+    out.update(overrides)
+    return out
+
+
 def write_path(root: str | Path, scenario: Scenario, rules: Rules | None = None) -> list[SynthRun]:
     """Every run of scenario.path under root/, rules.yaml at root/rules.yaml."""
     root = Path(root)
@@ -432,7 +491,7 @@ def write_path(root: str | Path, scenario: Scenario, rules: Rules | None = None)
     reads = 0
     for run_id, branch in rules.branch_table[scenario.path]:
         synth = write_run(root, rules, scenario, run_id, branch, history, reads_so_far=reads)
-        reads += int(synth.outcome.doc['vault']['read_this_run'])
+        reads += int(synth.outcome.doc['proxy_vault']['read_this_run'])
         history.append(synth.outcome.doc)
         runs.append(synth)
     follow(rules, [Step.from_doc(r.outcome.doc) for r in runs])  # the statuses route this path
@@ -456,61 +515,33 @@ def build_report(
     inputs = doc['gates_inputs']
     path_runs = [p[0] for p in rules.branch_table[scenario.path]]
     read_points = [
-        r for r, b in rules.branch_table[scenario.path] if rules.in_scope('vault.read', r, b)
+        r for r, b in rules.branch_table[scenario.path] if rules.in_scope('proxy_vault.read', r, b)
     ]
-    vault_log = []
+    reads = []
     index = 0
     for prior in [*history, doc]:
-        if prior['vault']['read_this_run']:
+        if prior['proxy_vault']['read_this_run']:
             index += 1
-            vault_log.append(
+            value = prior['proxy_vault']['hybrid_minus_b2_ndcg10']
+            reads.append(
                 {
                     'read_index': index,
                     'run_id': prior['run']['id'],
-                    'utc': '2026-11-01T12:00:00Z',
-                    'sealed_sha256': fake_sha('sealed'),
-                    'host': 'owner-laptop',
+                    'branch': prior['run']['branch'],
+                    'freeze_rekor': 1000 + index,
+                    'beacon_round': 9_000_000 + index,
+                    'n': 70,
+                    'value': value,
+                    'value_intent_only': value,
+                    'value_title_free': value,
+                    'value_degree_weighted': value,
+                    'identity_rate': 0.99,
+                    'uri': f'research/arcforge/runs/{prior["run"]["id"]}/vault/read{index}',
                 }
             )
     i1 = None
     if inputs['I1'] is not None:
-        lo = inputs['I1']['min_kendall_ci_lo']
-        i1 = {
-            'kappa_qw_owner': inputs['I1']['kappa_qw_owner'],
-            'n_owner_pairs': 150,
-            'check_pairs': 75,
-            'kendall': [
-                {'judges': 'gemini|qwen', 'tau': 0.81, 'ci_lo': lo, 'ci_hi': 0.9, 'tau_b': 0.8},
-                {
-                    'judges': 'gemini|fable',
-                    'tau': 0.84,
-                    'ci_lo': lo + 0.05,
-                    'ci_hi': 0.92,
-                    'tau_b': 0.83,
-                },
-                {
-                    'judges': 'qwen|fable',
-                    'tau': 0.8,
-                    'ci_lo': lo + 0.03,
-                    'ci_hi': 0.9,
-                    'tau_b': 0.79,
-                },
-            ],
-            'systems': [
-                'B0',
-                'B1',
-                'B2',
-                'B4',
-                'B3.potion8m',
-                'hyb(B4)',
-                'hyb(B3.potion8m)',
-                'B6.embeddinggemma-2-768',
-            ],
-            'owner_overrides_fable': 4,
-            'rejudged': False,
-            'pass': summary['I1_pass'],
-            'pass_effective': summary['I1_pass_effective'],
-        }
+        i1 = synth_i1_report(inputs['I1'], summary)
     derived = outcome.derived
     adoption = []
     for entry in doc['adoption'] or []:
@@ -544,6 +575,7 @@ def build_report(
     verdicts_sha = sha256_file(run_dir / 'verdicts.json')
     return {
         'schema': 'arc-report/1',
+        'schema_version': SCHEMA_VERSION,
         'run': {
             'id': run['id'],
             'branch': run['branch'],
@@ -589,6 +621,7 @@ def build_report(
             'used_for_verdicts': False,
             'flag': {'mode': 'shadow', 'model': None, 'verdicts_sha256': verdicts_sha},
         },
+        'ship': {'flag_branch': 'arc/main', 'production_branch_touched': False},
         'mde': {k: v for k, v in rules.mde_r00.items()},
         'power': None,
         'strata': [],
@@ -616,25 +649,29 @@ def build_report(
             if inputs['I5'] is None
             else {
                 'n_ref_pairs': 300,
-                'ref': 'owner150+fable150',
+                'ref': 'ref150+fable150',
                 'graders': ['gemini-3.1-flash-lite', 'qwen3.5-9b', 'ministral-3-8b'],
                 'kappa_drop': inputs['I5']['kappa_drop'],
                 'prediction': 0.05,
                 'prediction_met': derived.get('gates.I5.prediction_met'),
                 'self_pref_inflation': 0.01,
             },  # fmt: skip
+            'I6': None
+            if inputs['I6'] is None
+            else {
+                'families': ['olmo-2-13b-instruct', 'phi-4', 'qwen3.5-9b'],
+                'n_items': 420,
+                **inputs['I6'],
+                'archive_only_flagged': 7,
+                'pass': derived.get('gates.I6.pass'),
+            },  # fmt: skip
         },
-        'vault': {
+        'proxy_vault': {
             'reads_used': reads_used,
             'read_points': read_points,
-            'reads_budget_branch': rules.vault_read_budget[scenario.path],
-            'read_this_run': doc['vault']['read_this_run'],
-            'read_index': doc['vault']['read_index'],
-            'sealed_sha256': fake_sha('sealed'),
-            'queries_commitment_sha256': fake_sha('vault-queries'),
-            'hybrid_minus_b2_ndcg10': doc['vault']['hybrid_minus_b2_ndcg10'],
-            'sign': doc['vault']['sign'],
-            'log': vault_log,
+            'reads_budget_branch': rules.proxy_vault_read_budget[scenario.path],
+            **doc['proxy_vault'],
+            'reads': reads,
         },
         'verdicts_doc': doc,
         'sizes': {
@@ -653,12 +690,15 @@ def build_report(
         'remeaning': None
         if not h3_in_scope
         else {
-            'pool_size': 330,
-            'labelled': 300,
-            'unlabelled_counted_negative': 30,
+            'pool_size': 420,
+            'labelled': 420,
+            'unlabelled_counted_negative': 0,
             'p100': {'residualized': 0.8, 'raw': 0.4, 'logodds': 0.4},
             'label': derived.get('remeaning.label'),
             'coined_ranking_file': 'remeaning/coined.json',
+            'labelers': ['olmo-2-13b-instruct', 'phi-4', 'qwen3.5-9b'],
+            'contexts': ['archive', 'fineweb-edu'],
+            'placebo_rerate': 0.12,
         },  # fmt: skip
         'density': {
             'mean_5nn_gap_radius': 0.31,
@@ -672,7 +712,17 @@ def build_report(
             'definition': '1 − cos(Procrustes(W0), W1) per record, plus 10-NN rewiring',
         },
         'constraint_audit': None,
-        'collisions': None,
+        'collisions': None if run['id'] != 'r00' else synth_collisions(),
+        'panel': None if run['id'] != 'r00' else synth_panel(),
+        'provenance': None if run['id'] != 'r00' else synth_provenance(),
+        'contamination': None if run['id'] != 'r00' else synth_contamination(),
+        'witness': synth_witness(run['id']),
+        'claude_plan_tokens': {
+            'tokens': 450_000 if run['id'] == 'r00' else 0,
+            'run_cap': 500_000 if run['id'] == 'r00' else None,
+            'arc_to_date': 450_000,
+            'arc_cap': 800_000,
+        },
         'fable': [],
         'agreement': None,
         'determinism': {
@@ -682,6 +732,137 @@ def build_report(
         },
         'artifacts': artifacts,
     }
+
+
+def synth_i1_report(i1_inputs: Mapping[str, float], summary: Mapping[str, Any]) -> dict[str, Any]:
+    """report.gates.I1 (A0 form) around the given verdict inputs; check.project_i1 inverts it."""
+    lo = i1_inputs['min_kendall_ci_lo']
+    acc = i1_inputs['probe_min_acc']
+    probes = {}
+    for n, (ptype, expect) in enumerate(PROBE_EXPECT.items()):
+        gated = ptype != 'P3'  # one type below n = 20: reported, not gated
+        value = acc if n == 0 else min(1.0, round(acc + 0.02, 6)) if gated else 0.5
+        probes[ptype] = {
+            'expect': expect,
+            'n': 40 if gated else 12,
+            'acc': value,
+            'gated': gated,
+            'pass': (value >= 0.90) if gated else None,
+        }
+    components = {
+        'I1a': acc >= 0.90,
+        'I1b': i1_inputs['kappa_qw_median'] >= 0.6 and i1_inputs['alpha_families'] >= 0.5,
+        'I1c': lo >= 0.6,
+        'I1d': i1_inputs['delta_ci_hi'] <= 0.30,
+    }
+    return {
+        'probes': probes,
+        'ref': {
+            'n_pairs': 150,
+            'families': ['claude-opus-5-5', 'olmo-2-13b-instruct', 'phi-4'],
+            'kappa_qw_median': i1_inputs['kappa_qw_median'],
+            'kappa_qw_ipw': round(i1_inputs['kappa_qw_median'] - 0.02, 6),
+            'alpha_families': i1_inputs['alpha_families'],
+            'claude_leg_status': 'accepted',
+        },
+        'check_pairs': 75,
+        'kendall': [
+            {'judges': 'gemini|qwen', 'tau': 0.81, 'ci_lo': lo, 'ci_hi': 0.9, 'tau_b': 0.8},
+            {'judges': 'gemini|fable', 'tau': 0.84, 'ci_lo': round(lo + 0.05, 6), 'ci_hi': 0.92, 'tau_b': 0.83},
+            {'judges': 'qwen|fable', 'tau': 0.8, 'ci_lo': round(lo + 0.03, 6), 'ci_hi': 0.9, 'tau_b': 0.79},
+        ],  # fmt: skip
+        'diff': {
+            'n_dense_only': 150,
+            'n_bm25_only': 150,
+            'delta': round(i1_inputs['delta_ci_hi'] - 0.15, 6),
+            'ci_lo': round(i1_inputs['delta_ci_hi'] - 0.3, 6),
+            'ci_hi': i1_inputs['delta_ci_hi'],
+            'ref': 'mean(claude,phi-4)',
+        },
+        'systems': [
+            'B0', 'B1', 'B2', 'B4', 'B3.potion8m', 'hyb(B4)', 'hyb(B3.potion8m)',
+            'B6.embeddinggemma-2-768',
+        ],  # fmt: skip
+        'author_kendall': {'tau': 0.71, 'ci_lo': 0.52, 'ci_hi': 0.86},
+        'author_disagrees_fable': 6,
+        'null_fp_rate': 0.03,
+        'components': components,
+        'rejudged': False,
+        'pass': summary['I1_pass'],
+        'pass_effective': summary['I1_pass_effective'],
+    }
+
+
+def synth_collisions() -> dict[str, Any]:
+    return {
+        'file': 'collisions.md',
+        'sha256': fake_sha('collisions'),
+        'names': 41,
+        'clusters': 12,
+        'byline_overlaps': 3,
+        'spelling_variants': 2,
+        'rule_checked': 12,
+        'quarantined': [
+            {'cluster_id': 'q1:priya', 'name': 'Priya Chakrabarti / Chakraborty', 'rule': 'Q1'},
+            {'cluster_id': 'q3:adaeze', 'name': 'Adaeze', 'rule': 'Q3'},
+        ],
+    }
+
+
+def synth_panel() -> dict[str, Any]:
+    return {
+        'model': 'allenai/OLMo-2-1124-13B',
+        'revision': 'synthetic',
+        'quant': 'fp8',
+        'variant': '13b',
+        'beacon_round': 9_000_000,
+        'raw': 61,
+        'kept': 38,
+        'yield': 0.62,
+        'identity_rate': 1.0,
+        'sets': [
+            {'set_id': 'r00:c_open', 'kind': 'c_open', 'n': 30, 'sha256': fake_sha('c_open'), 'published': True},
+            {'set_id': 'r00:c_frontier', 'kind': 'c_frontier', 'n': 8, 'sha256': fake_sha('c_frontier'), 'published': False},
+        ],
+    }  # fmt: skip
+
+
+def synth_provenance() -> dict[str, Any]:
+    return {
+        'file': 'provenance.json',
+        'sha256': fake_sha('provenance'),
+        'commit': fake_sha('code')[:40],
+        'counts': {
+            'A': {'claude': 185},
+            'B_related': {'claude': 300, 'owner': 18, 'copilot': 15},
+            'inline_link': {'claude': 177},
+        },
+    }
+
+
+def synth_contamination() -> dict[str, Any]:
+    return {
+        'file': 'contamination.json',
+        'sha256': fake_sha('contamination'),
+        'indices': ['v4_olmo-2-1124-13b-instruct_llama', 'v4_olmo-mix-1124_llama'],
+        'lookups': 981,
+        'records_hit': [],
+        'precutoff': {
+            'slugs': [f'precutoff-{n}' for n in range(6)],
+            'lookups': 18,
+            'status': 'landed',
+            'outage': False,
+        },
+        'continuation': {'records': 50, 'hit_rate': 0.0, 'pos_rate': 0.85, 'neg_rate': 0.0},
+    }
+
+
+def synth_witness(run_id: str) -> list[dict[str, Any]]:
+    kinds = ['a0', 's0', 'r00-sets', 'ref-claude'] if run_id == 'r00' else []
+    return [
+        {'kind': kind, 'digest': fake_sha('witness', kind), 'mode': 'dry', 'log_index': n, 'integrated_time': 1_790_000_000 + n}
+        for n, kind in enumerate(kinds)
+    ]  # fmt: skip
 
 
 def statuses(outcome: Outcome) -> dict[str, str]:

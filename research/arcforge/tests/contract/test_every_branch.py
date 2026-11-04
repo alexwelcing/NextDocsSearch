@@ -59,9 +59,24 @@ SCENARIOS: dict[str, synth.Scenario] = {
     'S-C-F/k-supported': synth.Scenario(
         'S-C-F', statuses={('r08K', 'H7'): 'INCONCLUSIVE', ('r09K', 'H6'): 'INCONCLUSIVE'}
     ),
+    # A0: I1 fails at R00 on its lineage differential (I1d) alone; the fallback is engaged and
+    # the proxy-vault reads before R10 use intent-only qrels.
+    'N/i1d-fallback': synth.Scenario(
+        'N', i1_pass={'r00': False, 'r01': False}, i1_fail_component='I1d'
+    ),
+    # A0 rule 4: I6 fails at R03, so H3 is INCONCLUSIVE even with strong rows; it passes at R10.
+    'N/i6-fails': synth.Scenario('N', i6_pass={'r03': False}),
+    # VJ-7: the read at R06 is compromised; its sign and every later one is 'unavailable', which
+    # H1 never treats as +1.
+    'N/compromised': synth.Scenario(
+        'N',
+        compromised_from='r06',
+        statuses={('r06', 'H1'): 'INCONCLUSIVE', ('r10', 'H1'): 'INCONCLUSIVE'},
+    ),
 }
-GATES = {'I2': 'REPORTED', 'I3': 'REPORTED', 'I5': 'REPORTED', 'I4': 'PASS', 'vault.read': 'DONE',
-         'adoption.default': 'DONE', 'adoption.squeeze': 'DONE', 'signoff': 'PASS'}  # fmt: skip
+GATES = {'I2': 'REPORTED', 'I3': 'REPORTED', 'I5': 'REPORTED', 'I4': 'PASS',
+         'proxy_vault.read': 'DONE', 'adoption.default': 'DONE', 'adoption.squeeze': 'DONE',
+         'signoff': 'PASS'}  # fmt: skip
 
 
 @pytest.fixture(scope='module')
@@ -81,6 +96,8 @@ def expected_status(
         return NOT_APPLICABLE
     if rule_id == 'I1':
         return 'PASS' if scenario.i1_pass.get(run_id, True) else 'FAIL'
+    if rule_id == 'I6':
+        return 'PASS' if scenario.i6_pass.get(run_id, True) else 'FAIL'
     if rule_id in GATES:
         return GATES[rule_id]
     return scenario.wanted(run_id, rule_id)
@@ -154,14 +171,16 @@ def test_arc_summary_on_s_f_marks_h4_not_tested(written):
     assert summary['H1.F'] == ('FALSIFIED', 'r05K') and summary['H1'] == ('FALSIFIED', 'r10K')
     assert summary['H7'] == ('SUPPORTED', 'r07K') and summary['K1'] == ('SUPPORTED', 'r10K')
     assert summary['H5'] == ('SUPPORTED', 'r06') and summary['FUT'] == ('FIRED', 'r04')
-    reads = [r.run_id for r in written['S-F'][1] if r.outcome.doc['vault']['read_this_run']]
+    reads = [r.run_id for r in written['S-F'][1] if r.outcome.doc['proxy_vault']['read_this_run']]
     assert reads == ['r04', 'r10K']  # S-F takes two reads
 
 
 def test_vault_reads_follow_the_budget(written, rules):
     for name in ('N', 'N-F', 'S-F', 'S-C', 'S-C-F'):
-        reads = [r.run_id for r in written[name][1] if r.outcome.doc['vault']['read_this_run']]
-        assert len(reads) == rules.vault_read_budget[name] <= 3
+        reads = [
+            r.run_id for r in written[name][1] if r.outcome.doc['proxy_vault']['read_this_run']
+        ]
+        assert len(reads) == rules.proxy_vault_read_budget[name] <= 3
 
 
 def test_fusion_only_sets_h1_provisional(written):
@@ -200,6 +219,39 @@ def test_the_i1_fallback_family_end_to_end(written):
         for r in r10['rows']
         if r['hypothesis'] == 'H1' and r['kind'] == 'superiority'
     )
+    # The proxy-vault value is intent-only while I1_pass_effective is false, judged at R10.
+    assert runs['r04'].outcome.doc['proxy_vault']['basis'] == 'intent_only'
+    assert r06['proxy_vault']['basis'] == 'intent_only'
+    assert r10['proxy_vault']['basis'] == 'judged'
+
+
+def test_the_i1d_fallback_fails_i1_on_the_lineage_differential_alone(written):
+    runs = {r.run_id: r for r in written['N/i1d-fallback'][1]}
+    report = json.loads((runs['r00'].run_dir / 'report.json').read_text())
+    assert report['gates']['I1']['components'] == {
+        'I1a': True, 'I1b': True, 'I1c': True, 'I1d': False
+    }  # fmt: skip
+    assert report['gates']['I1']['pass'] is False
+    assert {h['id']: h['status'] for h in runs['r00'].outcome.doc['hypotheses']}['signoff'] == 'PASS'
+
+
+def test_a_failing_i6_leaves_h3_inconclusive(written):
+    runs = {r.run_id: r for r in written['N/i6-fails'][1]}
+    r03 = {h['id']: h['status'] for h in runs['r03'].outcome.doc['hypotheses']}
+    assert r03['I6'] == 'FAIL' and r03['H3'] == 'INCONCLUSIVE'
+    report = json.loads((runs['r03'].run_dir / 'report.json').read_text())
+    assert report['remeaning']['label'] == 'frequency lexicon'
+    assert arc(written, 'N/i6-fails')['H3'] == ('SUPPORTED', 'r10')
+
+
+def test_a_compromised_read_stays_unavailable(written):
+    runs = {r.run_id: r for r in written['N/compromised'][1]}
+    assert runs['r04'].outcome.doc['proxy_vault']['sign'] == 1
+    for run_id in ('r06', 'r10'):
+        vault = runs[run_id].outcome.doc['proxy_vault']
+        assert vault['compromised'] is True and vault['sign'] == 'unavailable'
+    assert runs['r08'].outcome.doc['proxy_vault']['compromised'] is True  # sticky between reads
+    assert arc(written, 'N/compromised')['H1'] == ('INCONCLUSIVE', 'r10')
 
 
 # ---- tampering --------------------------------------------------------------------------------
@@ -276,9 +328,9 @@ def test_a_changed_number_fails(run_copy, frozen):
 
 def test_report_and_verdicts_must_agree(run_copy, frozen):
     root, run_dir = run_copy
-    edit_json(run_dir / 'report.json', lambda d: d['vault'].__setitem__('sign', -1))
+    edit_json(run_dir / 'report.json', lambda d: d['proxy_vault'].__setitem__('sign', -1))
     code, out = verdict(root, 'r07', frozen[0])
-    assert code == 1 and 'report.vault.sign' in out
+    assert code == 1 and 'report.proxy_vault.sign' in out
 
 
 def test_every_rule_must_be_listed(run_copy, frozen):
@@ -331,14 +383,14 @@ def test_inputs_with_a_planted_null_fail_not_computable(written, frozen, tmp_pat
     root, runs = written['N']
     r06 = next(r for r in runs if r.run_id == 'r06')
     inputs = json.loads((r06.run_dir / 'verdicts.json').read_text())
-    inputs['vault']['sign'] = None
+    inputs['proxy_vault']['sign'] = None
     path = tmp_path / 'inputs.json'
     path.write_text(json.dumps(inputs))
     code, out = verdict(
         root, 'r06', frozen[0], '--inputs', str(path), '--emit', str(tmp_path / 'out.json')
     )
     assert code == 1
-    assert 'H1: NOT_COMPUTABLE (reads null' in out and 'vault.sign' in out
+    assert 'H1: NOT_COMPUTABLE (reads null' in out and 'proxy_vault.sign' in out
     assert not (tmp_path / 'out.json').exists()
 
 

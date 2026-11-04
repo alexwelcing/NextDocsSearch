@@ -13,8 +13,10 @@ in rules.yaml order, with
   R10/R10K the arc_summary over the realized branch path.
 
 It also checks the document's own consistency (rows that rules.yaml defines and an in-scope rule
-reads, row metadata and taus as rules.yaml fixes them, Holm ranks from p_raw, a vault read only
-at a read point). Those problems are `Outcome.errors`; like NOT_COMPUTABLE they fail the run.
+reads, row metadata and taus as rules.yaml fixes them, Holm ranks from p_raw, a proxy-vault read
+only at a read point, a compromised read only with sign 'unavailable', the registered value's
+basis as I1_pass_effective decides it). Those problems are `Outcome.errors`; like NOT_COMPUTABLE
+they fail the run.
 """
 
 from __future__ import annotations
@@ -34,6 +36,8 @@ from arcforge.contract.ids import (
     NOT_APPLICABLE,
     NOT_COMPUTABLE,
     NOT_TESTED,
+    PROXY_VAULT_AGGREGATE,
+    SCHEMA_VERSION,
     VERDICTS_SCHEMA,
 )
 from arcforge.contract.rules import Rule, Rules
@@ -42,10 +46,10 @@ ROW_FIELDS: tuple[str, ...] = (
     'comparison_id', 'hypothesis', 'registered', 'kind', 'arm_a', 'arm_b', 'stratum', 'metric',
     'unit', 'n_queries', 'n_clusters', 'point', 'ci_lo_raw', 'ci_hi_raw', 'holm_family', 'holm_m',
     'holm_rank', 'alpha_adj', 'ci_lo_adj', 'ci_hi_adj', 'p_raw', 'p_holm', 'tau', 'tau_floor',
-    'mde_r00', 'seed_sd', 'n_seeds', 'nested', 'vault_read', 'provisional', 'prediction',
+    'mde_r00', 'seed_sd', 'n_seeds', 'nested', 'proxy_vault_read', 'provisional', 'prediction',
     'prediction_met', 'verdict_component', 'scores_file', 'scores_sha256',
 )  # fmt: skip
-GATE_INPUT_KEYS: tuple[str, ...] = ('I1', 'I1_prior_pass', 'I2', 'I3', 'I4', 'I5')
+GATE_INPUT_KEYS: tuple[str, ...] = ('I1', 'I1_prior_pass', 'I2', 'I3', 'I4', 'I5', 'I6')
 FINAL_RUNS: tuple[str, ...] = ('r10', 'r10K')
 TOLERANCE = 1e-9
 # The blind pass (ids.STRIPPED_FIELDS): the whole gates_summary, and these keys of these lists.
@@ -208,7 +212,7 @@ class Context:
 
     def _terminal(self, rule: Rule, status: str, why: str) -> str:
         if status == NOT_COMPUTABLE:
-            # vault.read: in scope, a missing read is NOT_COMPUTABLE.
+            # proxy_vault.read: in scope, a missing read is NOT_COMPUTABLE.
             return self._not_computable(rule.id, [why])
         return status
 
@@ -422,18 +426,16 @@ def evaluate(
             )
 
     run = doc.get('run') or {}
-    vault = doc.get('vault') or {}
+    vault = doc.get('proxy_vault') or {}
     gates_inputs = doc.get('gates_inputs') or {}
     out_doc: dict[str, Any] = {
         'schema': VERDICTS_SCHEMA,
+        'schema_version': SCHEMA_VERSION,
         'run': {
             k: run.get(k)
             for k in ('id', 'branch', 'h1_provisional', 'prereg_sha256', 'rules_sha256')
         },
-        'vault': {
-            k: vault.get(k)
-            for k in ('read_this_run', 'read_index', 'hybrid_minus_b2_ndcg10', 'sign')
-        },
+        'proxy_vault': {k: vault.get(k) for k in PROXY_VAULT_AGGREGATE},
         'gates_inputs': {k: gates_inputs.get(k) for k in GATE_INPUT_KEYS},
         'gates_summary': summary,
         'rows': rows,
@@ -465,6 +467,10 @@ def check_structure(ctx: Context) -> list[str]:
     errors: list[str] = []
     if doc.get('schema') != VERDICTS_SCHEMA:
         errors.append(f'schema must be {VERDICTS_SCHEMA!r}, got {doc.get("schema")!r}')
+    if doc.get('schema_version', SCHEMA_VERSION) != SCHEMA_VERSION:
+        errors.append(
+            f'schema_version must be {SCHEMA_VERSION!r} (A0), got {doc.get("schema_version")!r}'
+        )
     if (ctx.run_id, ctx.branch) not in rules.realizable():
         errors.append(f'run {ctx.run_id}/{ctx.branch} is on no PREREG branch path')
     rules_sha = (doc.get('run') or {}).get('rules_sha256')
@@ -494,23 +500,56 @@ def check_structure(ctx: Context) -> list[str]:
         errors.extend(_check_row_metadata(ctx, row))
     errors.extend(_check_holm(ctx))
 
-    vault = doc.get('vault') or {}
-    if vault.get('read_this_run') and not ctx.in_scope('vault.read'):
-        errors.append(
-            f'a vault read is recorded at {ctx.run_id}/{ctx.branch}, which is not a registered '
-            'read point (the harness refuses such a read)'
-        )
-    if not vault.get('read_this_run'):
-        released = [
-            k for k in ('read_index', 'hybrid_minus_b2_ndcg10', 'sign') if vault.get(k) is not None
-        ]
-        if released:
-            errors.append(f'vault.{", vault.".join(released)} given without a read this run')
+    errors.extend(_check_proxy_vault(ctx))
     for entry in doc.get('adoption') or []:
         rule_id = f'adoption.{entry.get("rule")}'
         if rule_id not in (r.id for r in rules.rules) or not ctx.in_scope(rule_id):
             errors.append(
                 f'an adoption decision under {rule_id} is recorded, which is not in scope'
+            )
+    return errors
+
+
+def _check_proxy_vault(ctx: Context) -> list[str]:
+    """The proxy vault's own invariants (A0 rule 5, VJ-5, VJ-7).
+
+    - a read only at a registered read point (`arcforge vault freeze` refuses any other);
+    - without a read this run, no read_index, value, sign or basis;
+    - a compromised read has sign 'unavailable' (sticky: the flag stays set for every later read);
+    - the registered value's basis is 'intent_only' exactly when I1_pass_effective is false.
+    """
+    vault = ctx.doc.get('proxy_vault') or {}
+    errors: list[str] = []
+    reading = bool(vault.get('read_this_run'))
+    if reading and not ctx.in_scope('proxy_vault.read'):
+        errors.append(
+            f'a proxy-vault read is recorded at {ctx.run_id}/{ctx.branch}, which is not a '
+            'registered read point (vault freeze refuses such a read)'
+        )
+    if not reading:
+        released = [
+            k
+            for k in ('read_index', 'hybrid_minus_b2_ndcg10', 'sign', 'basis')
+            if vault.get(k) is not None
+        ]
+        if released:
+            errors.append(
+                f'proxy_vault.{", proxy_vault.".join(released)} given without a read this run'
+            )
+        return errors
+    if vault.get('compromised') is True and vault.get('sign') != 'unavailable':
+        errors.append(
+            f"proxy_vault.compromised is set, so the sign must be 'unavailable', got {vault.get('sign')!r}"
+        )
+    if vault.get('sign') == 'unavailable' and vault.get('compromised') is not True:
+        errors.append("proxy_vault.sign 'unavailable' needs proxy_vault.compromised (VJ-7)")
+    effective = ctx.summary('I1_pass_effective')
+    if effective is not None and vault.get('basis') is not None:
+        expected = 'judged' if effective else 'intent_only'
+        if vault['basis'] != expected:
+            errors.append(
+                f'proxy_vault.basis is {vault["basis"]!r}, but I1_pass_effective is {effective}, '
+                f'so the registered value is {expected!r}'
             )
     return errors
 

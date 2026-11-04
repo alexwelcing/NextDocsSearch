@@ -7,8 +7,17 @@
 # field this plan leaves null (or a row it does not produce).
 #
 # Field entries are verdicts.json paths. An entry promises that node non-null together with every
-# non-nullable field inside it (`gates_inputs.I1` covers kappa_qw_owner and min_kendall_ci_lo).
-# Fields that arc-report/1 never allows to be null (run.id, vault.read_this_run, ...) need no entry.
+# non-nullable field inside it (`gates_inputs.I1` covers probe_min_acc, kappa_qw_median,
+# alpha_families, min_kendall_ci_lo and delta_ci_hi).
+#
+# Amendment A0: the R00 plan is the unattended one (prep with the a0/s0 witness entries, the 18
+# pre-cutoff lookups, provenance and the person map; the VM with the proxy reader, probes and the
+# open REF legs; the laptop gate with the Claude REF leg and Fable gold audit #1; the tail with I1,
+# power, freeze, lint and the sign-off packet). I6 is measured wherever H3 is decided, and every
+# proxy-vault read promises its registered basis.
+#
+# Fields that arc-report/1 never allows to be null (run.id, proxy_vault.read_this_run, ...) need no
+# entry.
 # Lists may nest (YAML aliases below); the lint flattens them.
 #
 # When `arcforge plan` learns to emit this from configs/rNN.yaml, pass its output with
@@ -20,7 +29,7 @@ common:
   every_run: &every_run [gates_inputs.I3]
   # From r01 on: the drift panel, and the I1 pass carried forward from the last run that decided it.
   after_r00: &after_r00 [gates_inputs.I3, gates_inputs.I4, gates_inputs.I1_prior_pass]
-  vault_read: &vault_read [vault.sign, vault.read_index]
+  vault_read: &vault_read [proxy_vault.sign, proxy_vault.read_index, proxy_vault.basis]
   h1_rows: &h1_rows [H1.c1, H1.c2, H1.c3, H1.c4, H1.g1]
   h2_rows: &h2_rows [H2.c1, H2.c2, H2.c3]
   h3_rows: &h3_rows [H3.c1, H3.c2]
@@ -32,13 +41,16 @@ common:
 
 runs:
   r00:
-    # Instrument and floor: I1, I3, I5, and the sign-off preconditions the laptop tail measures
-    # (each may be null on its own, so each is promised).
+    # Instrument and floor: I1 (A0 form), I3, I5, and the A0 sign-off preconditions the R00 gate
+    # and tail measure (each may be null on its own, so each is promised).
     N:
       fields:
         - *every_run
         - [gates_inputs.I1, gates_inputs.I5, signoff_inputs]
-        - [signoff_inputs.lint_ok, signoff_inputs.report_valid, signoff_inputs.vault_sealed]
+        - [signoff_inputs.lint_ok, signoff_inputs.report_valid]
+        - [signoff_inputs.a0_witness_first, signoff_inputs.s0_witnessed, signoff_inputs.r00_sets_witnessed]
+        - [signoff_inputs.model_choice_present, signoff_inputs.contamination_present]
+        - [signoff_inputs.precutoff_lookups_resolved, signoff_inputs.provenance_present]
         - [signoff_inputs.i1_fallback_scheduled, signoff_inputs.i2_scheduled, signoff_inputs.i4_scheduled]
       rows: []
   r01:
@@ -47,9 +59,10 @@ runs:
   r02:
     N: {fields: [*after_r00, adoption], rows: *h2_rows}
   r03:
-    N: {fields: [*after_r00, adoption], rows: [*h3_rows, H3a.a1]}
+    # Re-meaning on the VM: the three-family paired-context labels, I6, then H3 (A0 rule 4).
+    N: {fields: [*after_r00, adoption, gates_inputs.I6], rows: [*h3_rows, H3a.a1]}
   r04:
-    # Contrastive training, the I2 leakage triad, vault read #1 and the futility look.
+    # Contrastive training, the I2 leakage triad, proxy-vault read #1 and the futility look.
     N: {fields: [*after_r00, gates_inputs.I2, adoption, *vault_read], rows: [FUT.c1]}
   r05:
     N: {fields: [*after_r00, adoption], rows: *h4_rows}
@@ -84,10 +97,10 @@ runs:
     S-F: {fields: *after_r00, rows: *h6_rows}
     S-C-F: {fields: *after_r00, rows: *h6_rows}
   r10:
-    # Confirmatory: H1, H2 and H3 re-decided, I1 and I5 repeated, vault read #3.
-    N: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows]}
-    S-C: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows]}
+    # Confirmatory: H1, H2 and H3 re-decided, I1, I5 and I6 repeated, proxy-vault read #3.
+    N: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, gates_inputs.I6, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows]}
+    S-C: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, gates_inputs.I6, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows]}
   r10K:
-    N-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}
-    S-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}
-    S-C-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}
+    N-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, gates_inputs.I6, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}
+    S-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, gates_inputs.I6, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}
+    S-C-F: {fields: [*after_r00, gates_inputs.I1, gates_inputs.I5, gates_inputs.I6, *vault_read], rows: [*h1_rows, *h2_rows, *h3_rows, *k1_rows]}

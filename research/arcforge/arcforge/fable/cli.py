@@ -6,7 +6,8 @@
                                            20 failed closed
   compare BLIND_PACKET --verdicts F...     the blind pass vs the reported verdicts (comparison.json)
   record PACKET                            the report.json fable[] entry
-  owner-sign PACKET --note TEXT            the owner's manual sign-off after a failed-closed one
+  repair PACKET --diff FILE [--rules ...]  resubmit a refused sign-off with the listed defects
+                                           corrected (A0: at most 2 repairs; exit 30 = halted)
   mark-missing PACKET --reason TEXT        an end review that never came
 
 The handoff is described in arcforge/fable/README.md.
@@ -20,6 +21,11 @@ import sys
 from pathlib import Path
 
 EXIT_OK, EXIT_ERROR, EXIT_USAGE, EXIT_UNAVAILABLE, EXIT_RETRY, EXIT_FAILED = 0, 1, 2, 3, 10, 20
+EXIT_HALTED = 30
+SIGNOFF_ARGS = (
+    'prereg', 'rules', 'schema', 'lint', 'report', 'verdicts', 'bench-card', 'amendment-a0',
+    'witness', 'model-choice', 'contamination', 'provenance', 'panel', 'quarantine',
+)  # fmt: skip
 
 
 def _print(obj: object) -> None:
@@ -40,10 +46,8 @@ def cmd_pack(args: argparse.Namespace) -> int:
     if args.kind == 'gold-audit':
         packet = packer.pack_gold_audit(args.pairs, args.rubric, shape=_shape(args.shape), **common)
     elif args.kind == 'signoff':
-        packet = packer.pack_signoff(
-            prereg=args.prereg, rules=args.rules, schema=args.schema, lint=args.lint, report=args.report,
-            verdicts=args.verdicts, bench_card=args.bench_card, **common,
-        )  # fmt: skip
+        files = {name.replace('-', '_'): getattr(args, name.replace('-', '_')) for name in SIGNOFF_ARGS}
+        packet = packer.pack_signoff(**files, **common)
     elif args.kind == 'blind':
         packet = packer.pack_blind(
             prereg=args.prereg, rules=args.rules, verdicts=args.verdicts, **common
@@ -53,21 +57,22 @@ def cmd_pack(args: argparse.Namespace) -> int:
             prereg=args.prereg, rules=args.rules, writeup=args.writeup, reports=args.reports,
             comparison=args.comparison, **common,
         )  # fmt: skip
+    _print(_packed(packet))
+    return EXIT_OK
+
+
+def _packed(packet) -> dict:
     ledger = json.loads(packet.ledger_path.read_text(encoding='utf-8'))
     open_attempt = next((a for a in reversed(ledger['attempts']) if a['outcome'] is None), None)
-    _print(
-        {
-            'packet_root': str(packet.root),
-            'packet_sha256': packet.sha256,
-            'kind': packet.manifest['kind'],
-            'role': packet.manifest['role'],
-            'workdir': None
-            if open_attempt is None
-            else str(packet.workdir(open_attempt['attempt'])),
-            'status': ledger['status'],
-        }
-    )
-    return EXIT_OK
+    return {
+        'packet_root': str(packet.root),
+        'packet_sha256': packet.sha256,
+        'kind': packet.manifest['kind'],
+        'role': packet.manifest['role'],
+        'repair_cycle': packet.manifest.get('repair_cycle'),
+        'workdir': None if open_attempt is None else str(packet.workdir(open_attempt['attempt'])),
+        'status': ledger['status'],
+    }
 
 
 def cmd_check(args: argparse.Namespace) -> int:
@@ -75,6 +80,8 @@ def cmd_check(args: argparse.Namespace) -> int:
 
     result = check(args.packet, session=args.session, model=args.model)
     _print(result.to_json())
+    if result.status == 'halted':
+        return EXIT_HALTED
     return {'accepted': EXIT_OK, 'retry': EXIT_RETRY, 'failed_closed': EXIT_FAILED}[result.decision]
 
 
@@ -110,10 +117,27 @@ def cmd_record(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
-def cmd_owner_sign(args: argparse.Namespace) -> int:
-    from arcforge.fable.ledger import owner_sign
+def cmd_repair(args: argparse.Namespace) -> int:
+    import json as _json
 
-    _print(owner_sign(args.packet, args.note))
+    from arcforge.fable.ledger import _ledger, repair
+    from arcforge.fable.packer import PacketError, load
+
+    overrides = {
+        name.replace('-', '_'): getattr(args, name.replace('-', '_'))
+        for name in SIGNOFF_ARGS
+        if getattr(args, name.replace('-', '_'), None)
+    }
+    try:
+        packet = repair(
+            args.packet, args.diff, overrides, root=args.root, allow_in_repo=args.allow_in_repo
+        )
+    except PacketError as error:
+        if _ledger(load(args.packet))['status'] == 'halted':
+            print(_json.dumps({'status': 'halted', 'error': str(error)}, indent=1))
+            return EXIT_HALTED
+        raise
+    _print(_packed(packet))
     return EXIT_OK
 
 
@@ -146,8 +170,8 @@ def build_parser() -> argparse.ArgumentParser:
     gold.add_argument(
         '--shape', default='60x12', help="queries x candidates to require (default 60x12; 'any')"
     )
-    signoff = kinds.add_parser('signoff', help='the R00 PREREG sign-off')
-    for name in ('prereg', 'rules', 'schema', 'lint', 'report', 'verdicts', 'bench-card'):
+    signoff = kinds.add_parser('signoff', help='the R00 PREREG sign-off (with the A0 records)')
+    for name in SIGNOFF_ARGS:
         signoff.add_argument(f'--{name}', required=True)
     blind = kinds.add_parser('blind', help="the end review's blind pass (verdicts are stripped)")
     blind.add_argument('--prereg', required=True)
@@ -184,12 +208,17 @@ def build_parser() -> argparse.ArgumentParser:
     rec.add_argument('packet')
     rec.set_defaults(func=cmd_record)
 
-    sign = sub.add_parser(
-        'owner-sign', help='record the owner signing PREREG after a failed-closed sign-off'
+    fix = sub.add_parser(
+        'repair',
+        help='resubmit a refused sign-off: the refusal verbatim, the diff, the corrected inputs',
     )
-    sign.add_argument('packet')
-    sign.add_argument('--note', required=True)
-    sign.set_defaults(func=cmd_owner_sign)
+    fix.add_argument('packet', help='the refused sign-off packet root')
+    fix.add_argument('--diff', required=True, help='the diff of exactly what was corrected')
+    fix.add_argument('--root', help='packet root (default: as pack)')
+    fix.add_argument('--allow-in-repo', action='store_true', help=argparse.SUPPRESS)
+    for name in SIGNOFF_ARGS:
+        fix.add_argument(f'--{name}', help='a corrected input (the others are carried over)')
+    fix.set_defaults(func=cmd_repair)
 
     missing = sub.add_parser('mark-missing', help='record an end review that never came')
     missing.add_argument('packet')

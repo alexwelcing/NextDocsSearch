@@ -64,11 +64,12 @@
               "gates_summary": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["I1_pass", "I1_pass_effective", "I4_pass", "futility_fired"],
+                "required": ["I1_pass", "I1_pass_effective", "I4_pass", "I6_pass", "futility_fired"],
                 "properties": {
                   "I1_pass": {"type": ["boolean", "null"]},
                   "I1_pass_effective": {"type": ["boolean", "null"]},
                   "I4_pass": {"type": ["boolean", "null"]},
+                  "I6_pass": {"type": ["boolean", "null"]},
                   "futility_fired": {"type": ["boolean", "null"]}
                 }
               },

@@ -55,8 +55,9 @@ def test_the_template_defines_every_rule_with_applies_to(template):
         ('I1', ['r00/N', 'r01/N', 'r10/N', 'r10/S-C', 'r10K/N-F', 'r10K/S-F', 'r10K/S-C-F']),
         ('I2', ['r04/N']),
         ('I5', ['r00/N', 'r10/N', 'r10/S-C', 'r10K/N-F', 'r10K/S-F', 'r10K/S-C-F']),
+        ('I6', ['r03/N', 'r10/N', 'r10/S-C', 'r10K/N-F', 'r10K/S-F', 'r10K/S-C-F']),
         (
-            'vault.read',
+            'proxy_vault.read',
             ['r04/N', 'r06/N', 'r07/S-C', 'r10/N', 'r10/S-C', 'r10K/N-F', 'r10K/S-F', 'r10K/S-C-F'],
         ),
         (
@@ -170,22 +171,22 @@ def edited(old: str, new: str) -> str:
         ),
         (
             edited(
-                "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05']",
-                "      - [FAILED, 'c1.ci_hi_raw < 0.05']",
+                "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass']",
+                "      - [FAILED, 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass']",
             ),
             "unknown status 'FAILED'",
         ),
         (
             edited(
-                "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05']",
-                "      - [FALSIFIED, 'c9.ci_hi_raw < 0.05']",
+                "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass']",
+                "      - [FALSIFIED, 'c9.ci_hi_raw < 0.05 and gates_summary.I6_pass']",
             ),
             "unknown name 'c9'",
         ),
         (
             edited(
-                "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05']",
-                "      - [FALSIFIED, 'c1.verdict_component == 1']",
+                "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass']",
+                "      - [FALSIFIED, 'c1.verdict_component == 1 and gates_summary.I6_pass']",
             ),
             'an outcome field no rule may read',
         ),
@@ -225,8 +226,8 @@ def edited(old: str, new: str) -> str:
         ),
         (
             edited(
-                'vault_read_budget: {N: 3, N-F: 3, S-F: 2, S-C: 3, S-C-F: 3}',
-                'vault_read_budget: {N: 3, N-F: 3, S-F: 4, S-C: 3, S-C-F: 3}',
+                'proxy_vault_read_budget: {N: 3, N-F: 3, S-F: 2, S-C: 3, S-C-F: 3}',
+                'proxy_vault_read_budget: {N: 3, N-F: 3, S-F: 4, S-C: 3, S-C-F: 3}',
             ),
             'must be 0..3',
         ),
@@ -256,7 +257,7 @@ def test_the_loader_collects_every_problem():
         '    rows:\n      a1:',
     )
     text = text.replace(
-        "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05']", "      - [FAILED, 'c1.ci_hi_raw < 0.05']"
+        "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass']", "      - [FAILED, 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass']"
     )
     with pytest.raises(RulesError) as caught:
         loads_rules(text)
@@ -276,12 +277,57 @@ def test_yaml_never_coerces_ids(template):
     assert re.search(r'^\s+N:\s+\[\[r00, N\]', TEMPLATE, re.M)
 
 
-def test_the_vault_read_points_agree_with_vault_read(template):
-    """arcforge.vault refuses reads outside its table; it must be vault.read's scope, per path."""
+def test_the_vault_read_points_agree_with_proxy_vault_read(template):
+    """arcforge.vault refuses reads outside its table; it must be proxy_vault.read's scope."""
     from arcforge.vault.readpoints import READ_POINTS
 
     assert set(READ_POINTS) == set(template.branch_table)
     for path, seq in template.branch_table.items():
-        reads = tuple(run for run, branch in seq if template.in_scope('vault.read', run, branch))
+        reads = tuple(
+            run for run, branch in seq if template.in_scope('proxy_vault.read', run, branch)
+        )
         assert reads == READ_POINTS[path], path
-        assert len(reads) == template.vault_read_budget[path]
+        assert len(reads) == template.proxy_vault_read_budget[path]
+
+
+def test_a0_rule_changes_are_in_the_template(template):
+    """A0: I1 is four components, H3 waits on I6, the sign-off has its A0 preconditions."""
+    i1 = template.rule('I1')
+    assert set(i1.lets) == {'I1a', 'I1b', 'I1c', 'I1d'}
+    assert [e.source for _, e in i1.outcomes] == ['I1a and I1b and I1c and I1d']
+    assert i1.lets['I1a'].source == 'gates_inputs.I1.probe_min_acc >= 0.90'
+    assert i1.lets['I1b'].source == (
+        'gates_inputs.I1.kappa_qw_median >= 0.6 and gates_inputs.I1.alpha_families >= 0.5'
+    )
+    assert i1.lets['I1c'].source == 'gates_inputs.I1.min_kendall_ci_lo >= 0.6'
+    assert i1.lets['I1d'].source == 'gates_inputs.I1.delta_ci_hi <= 0.30'
+    h3 = {s: e.source for s, e in template.rule('H3').outcomes}
+    assert h3 == {
+        'FALSIFIED': 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass',
+        'SUPPORTED': 'PASS(c1) and PASS(c2) and gates_summary.I6_pass',
+    }
+    assert template.rows['H3.c1'].tau_floor == 0.15 and template.rows['H3.c2'].tau_floor == 0.10
+    i6 = template.rule('I6')
+    assert [e.source for _, e in i6.outcomes] == [
+        'gates_inputs.I6.fleiss_kappa >= 0.6 and '
+        'gates_inputs.I6.placebo_rerate - gates_inputs.I6.random_rerate <= 0.10'
+    ]
+    signoff = template.rule('signoff').outcomes[0][1].source
+    for name in ('lint_ok', 'report_valid', 'i2_scheduled', 'i4_scheduled'):
+        assert f'signoff_inputs.{name}' in signoff
+    lets = ' '.join(e.source for e in template.rule('signoff').lets.values())
+    for name in (
+        'a0_witness_first', 's0_witnessed', 'r00_sets_witnessed', 'model_choice_present',
+        'contamination_present', 'precutoff_lookups_resolved', 'provenance_present',
+        'i1_fallback_scheduled',
+    ):  # fmt: skip
+        assert f'signoff_inputs.{name}' in lets
+    assert 'vault_sealed' not in TEMPLATE
+
+
+def test_the_judge_free_gloss_is_verbatim_in_the_rule_comments():
+    from arcforge.contract.ids import JUDGE_FREE_GLOSS
+
+    assert TEMPLATE.count('# ' + JUDGE_FREE_GLOSS) == 2  # the header and H1's judge-free rows
+    assert TEMPLATE.count('      # ' + JUDGE_FREE_GLOSS) == 1
+    assert 'LLM-free' not in TEMPLATE
