@@ -152,8 +152,8 @@ export default function CurrentWorkPage() {
             Interested in any of these threads? Reach me at{' '}
             <a href="mailto:alexwelcing@gmail.com">alexwelcing@gmail.com</a>, on{' '}
             <a href="https://www.linkedin.com/in/alexwelcing">LinkedIn</a>, or{' '}
-            <a href="https://github.com/alexwelcing">GitHub</a>. Or{' '}
-            <Link href="/articles">read the research</Link>.
+            <a href="https://github.com/alexwelcing">GitHub</a>. Or browse the{' '}
+            <Link href="/articles">archive of essays and fiction</Link>.
           </p>
         </section>
       </main>
