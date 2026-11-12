@@ -50,12 +50,7 @@ export default function CurrentWorkPage() {
           </p>
           <p>
             My research work at Lupine Science is done with AI coding and research agents under
-            rules that live in code. What those rules cover, and where the data goes, is written up
-            in{' '}
-            <a href="https://github.com/alexwelcing/lupine-rhizo/blob/main/docs/ai-and-data.md">
-              How we use AI agents and handle data
-            </a>
-            .
+            rules that live in code.
           </p>
           <p>
             The interesting technical question isn&apos;t &ldquo;which model is smartest.&rdquo;

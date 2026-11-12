@@ -4,10 +4,10 @@
   "tokenizer": "archive-v2",
   "docs": 330,
   "chunks": 2532,
-  "hashes": "a69543b6e617c12a",
+  "hashes": "bf6f37b5c575e335",
   "assets": {
-    "chunks": "/search/chunks.a038721f56ec.json",
-    "bm25": "/search/bm25.2bd61b5cc646.json"
+    "chunks": "/search/chunks.b34b20a3cde5.json",
+    "bm25": "/search/bm25.691b580c8a85.json"
   },
   "vectors": []
 }

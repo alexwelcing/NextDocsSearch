@@ -120,7 +120,7 @@ export const WORK_PANEL: OperatorPanel = {
     },
     {
       kind: 'paragraph',
-      text: 'My research work at Lupine Science is done with AI coding and research agents under rules that live in code. What those rules cover, and where the data goes, is written up in How we use AI agents and handle data (github.com/alexwelcing/lupine-rhizo, docs/ai-and-data.md).',
+      text: 'My research work at Lupine Science is done with AI coding and research agents under rules that live in code.',
     },
     {
       kind: 'paragraph',
