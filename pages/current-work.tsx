@@ -49,11 +49,13 @@ export default function CurrentWorkPage() {
             thread.
           </p>
           <p>
-            The Hermitage is my attempt to do that coordination programmatically. A dedicated VM
-            running an Agent Manager UI that dispatches tasks to Claude, Gemini, and local models
-            based on which one is best for the subtask, and a Covenant dashboard that tracks which
-            agent is holding which piece of state. It&apos;s a crude first draft of something that,
-            done right, would be worth the whole current model-wrapper app category put together.
+            My research work at Lupine Science is done with AI coding and research agents under
+            rules that live in code. What those rules cover, and where the data goes, is written up
+            in{' '}
+            <a href="https://github.com/alexwelcing/lupine-rhizo/blob/main/docs/ai-and-data.md">
+              How we use AI agents and handle data
+            </a>
+            .
           </p>
           <p>
             The interesting technical question isn&apos;t &ldquo;which model is smartest.&rdquo;
@@ -74,12 +76,7 @@ export default function CurrentWorkPage() {
           </p>
           <p>
             My first startup, LBR, was identity and access work. The problems I hit with agents now
-            are the same category, one abstraction layer up. I run my personal agents on a Compute
-            Engine VM via Chrome Remote Desktop specifically to sidestep credential delegation —
-            the agent acts through my actual logged-in browser, so there&apos;s no &ldquo;give
-            Claude my API token&rdquo; moment. That&apos;s not a solution; it&apos;s evidence that
-            the tooling is bad enough that operating a remote desktop is the least-bad available
-            option.
+            are the same category, one abstraction layer up.
           </p>
           <p>
             What I&apos;m watching for: scoped, revocable, time-bounded credentials built for
@@ -118,18 +115,20 @@ export default function CurrentWorkPage() {
         <section>
           <h2>Materials science and molecular dynamics</h2>
           <p>
-            The current build is <a href="https://lupine.science">glimPSE</a> — a WebGPU-powered
-            web app for LAMMPS molecular dynamics visualization. Drag a dump file into the browser,
-            first frame renders in under two seconds, rotate around millions of atoms at 60fps,
-            export a 4K publication image or an MP4 without installing anything. The competitive
-            field right now is OVITO (desktop, paid-per-seat for the features researchers actually
-            need for papers), VMD (1990s-era UI that routinely explodes to 220GB of RAM on a 4GB
-            trajectory), and 50-line matplotlib scripts that only produce 2D plots. Nobody else has
-            built a WebGPU-native molecular visualization tool for materials science, and they
-            should have.
+            I founded <a href="https://lupine.science">Lupine Science</a>, an early-stage research
+            company. Lupine Science measures where machine-learned models of atoms go wrong,
+            against published references and pass/fail gates set in advance, and publishes every
+            verdict, failures included. Nothing it has published is peer-reviewed yet.
           </p>
           <p>
-            glimPSE is the wedge for <strong>glim</strong> — a longer-horizon open-source platform
+            The browser viewer I described here as glimPSE is now{' '}
+            <a href="https://lupi.live">LUPI</a>: it opens structures and LAMMPS dump files in a
+            WebGPU-capable browser with no installation. The usual alternatives are OVITO (desktop,
+            paid-per-seat for the features researchers actually need for papers), VMD (a
+            1990s-era desktop UI), and 50-line matplotlib scripts that only produce 2D plots.
+          </p>
+          <p>
+            <strong>glim</strong> is a longer-horizon open-source platform
             meant to unify DFT (VASP-compatible plane-wave PAW), classical and reactive molecular
             dynamics (LAMMPS-compatible), and an ML interatomic potential pipeline into one stack.
             The current research tooling landscape is a chain of specialized command-line programs
@@ -142,9 +141,8 @@ export default function CurrentWorkPage() {
             DFT simulation produces training data for an ML potential, which enables a much larger
             MD simulation, which reveals a structural motif worth refining with more DFT. Nothing
             about that loop has to be hand-wired by a grad student, and nothing about the
-            visualization layer has to cost per-seat per-year. Live at{' '}
-            <a href="https://lupine.science">lupine.science</a>; code, product plan, and research
-            notes are public in the{' '}
+            visualization layer has to cost per-seat per-year. Lupine Science&apos;s program
+            record, code and evidence are public in the{' '}
             <a href="https://github.com/alexwelcing/lupine">lupine repo</a>.
           </p>
         </section>

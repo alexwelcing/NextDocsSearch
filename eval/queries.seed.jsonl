@@ -2,7 +2,7 @@
 {"id":"profile-02","query":"where does alex work right now","relevant":["about"],"tags":["profile"]}
 {"id":"profile-03","query":"alex's background in legal tech and regulated industries","relevant":{"about":2,"laws-legal-ai-checklist":1},"tags":["profile"]}
 {"id":"profile-04","query":"what is alex researching these days","relevant":["current-work"],"tags":["profile"]}
-{"id":"profile-05","query":"the hermitage: dispatching tasks across claude, gemini and local models","relevant":["current-work"],"tags":["profile"]}
+{"id":"profile-05","query":"coordinating a long-running research job across claude, gemini and local models","relevant":["current-work"],"tags":["profile"]}
 {"id":"profile-06","query":"glimpse webgpu viewer for lammps molecular dynamics","relevant":["current-work"],"tags":["profile"]}
 {"id":"profile-07","query":"is alex open to hiring conversations","relevant":["pitch"],"tags":["profile"]}
 {"id":"profile-08","query":"evals, retrieval and observability pillars","relevant":["pitch"],"tags":["profile"]}
