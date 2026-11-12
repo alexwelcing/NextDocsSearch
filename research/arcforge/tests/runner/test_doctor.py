@@ -179,7 +179,7 @@ def test_iap_rule_detection():
         'targetTags': ['arcforge-runner'],
     }
     assert doctor._allows_iap_ssh(iap, tag)
-    assert not doctor._allows_iap_ssh({**iap, 'targetTags': ['hermitage']}, tag)
+    assert not doctor._allows_iap_ssh({**iap, 'targetTags': ['other-vm']}, tag)
     assert not doctor._allows_iap_ssh(
         {**iap, 'allowed': [{'IPProtocol': 'tcp', 'ports': ['5432']}]}, tag
     )
