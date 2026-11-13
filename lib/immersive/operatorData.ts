@@ -120,7 +120,7 @@ export const WORK_PANEL: OperatorPanel = {
     },
     {
       kind: 'paragraph',
-      text: 'The Hermitage is my attempt to do that coordination programmatically: a dedicated VM running an Agent Manager UI that dispatches tasks to Claude, Gemini, and local models based on which one is best for the subtask, and a Covenant dashboard that tracks which agent is holding which piece of state.',
+      text: 'My research work at Lupine Science is done with AI coding and research agents under rules that live in code.',
     },
     {
       kind: 'paragraph',
@@ -133,7 +133,7 @@ export const WORK_PANEL: OperatorPanel = {
     },
     {
       kind: 'paragraph',
-      text: 'My first startup, LBR, was identity and access work; the agent problems now are the same category one abstraction layer up. I run my personal agents on a Compute Engine VM via Chrome Remote Desktop to sidestep credential delegation — the agent acts through my actual logged-in browser. That is not a solution; it is evidence the tooling is bad enough that operating a remote desktop is the least-bad option.',
+      text: 'My first startup, LBR, was identity and access work; the agent problems now are the same category one abstraction layer up.',
     },
     {
       kind: 'paragraph',
@@ -155,11 +155,15 @@ export const WORK_PANEL: OperatorPanel = {
     { kind: 'heading', text: 'THREAD 04 — MATERIALS SCIENCE & MOLECULAR DYNAMICS' },
     {
       kind: 'paragraph',
-      text: 'Current build: glimPSE — a WebGPU-powered web app for LAMMPS molecular dynamics visualization. Drag a dump file into the browser, first frame renders in under two seconds, rotate around millions of atoms at 60fps, export a 4K publication image or an MP4 without installing anything. The field today is OVITO (desktop, paid-per-seat), VMD (1990s-era UI that can explode to 220GB of RAM on a 4GB trajectory), and 50-line matplotlib scripts that only produce 2D plots. Nobody else has built a WebGPU-native molecular visualization tool for materials science.',
+      text: 'I founded Lupine Science, an early-stage research company. Lupine Science measures where machine-learned models of atoms go wrong, against published references and pass/fail gates set in advance, and publishes every verdict, failures included. Nothing it has published is peer-reviewed yet.',
     },
     {
       kind: 'paragraph',
-      text: 'glimPSE is the wedge for glim — a longer-horizon open-source platform meant to unify DFT (VASP-compatible plane-wave PAW), classical and reactive molecular dynamics (LAMMPS-compatible), and an ML interatomic potential pipeline into one stack. Current research tooling is a chain of specialized command-line programs with incompatible file formats, duplicated UIs, and paywalls at the quality-matters boundary — the same coordination-layer meta-problem as thread 01.',
+      text: 'The browser viewer I described here as glimPSE is now LUPI: it opens structures and LAMMPS dump files in a WebGPU-capable browser with no installation. The usual alternatives are OVITO (desktop, paid-per-seat), VMD (a 1990s-era desktop UI), and 50-line matplotlib scripts that only produce 2D plots.',
+    },
+    {
+      kind: 'paragraph',
+      text: 'glim is a longer-horizon open-source platform meant to unify DFT (VASP-compatible plane-wave PAW), classical and reactive molecular dynamics (LAMMPS-compatible), and an ML interatomic potential pipeline into one stack. Current research tooling is a chain of specialized command-line programs with incompatible file formats, duplicated UIs, and paywalls at the quality-matters boundary — the same coordination-layer meta-problem as thread 01.',
     },
     {
       kind: 'paragraph',
@@ -167,8 +171,8 @@ export const WORK_PANEL: OperatorPanel = {
     },
     {
       kind: 'item',
-      text: 'Live at lupine.science; code, product plan, and research notes public at github.com/alexwelcing/lupine.',
-      meta: 'glimPSE / glim',
+      text: 'lupine.science · lupi.live · program record, code and evidence at github.com/alexwelcing/lupine',
+      meta: 'Lupine Science / LUPI',
     },
   ],
 }

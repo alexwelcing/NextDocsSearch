@@ -55,3 +55,6 @@ next-env.d.ts
 
 # Cloudflare target: wrangler's local state and dry-run bundles (the export itself is /out/ above)
 /.wrangler/
+
+# Local agent working notes
+.hermes/
