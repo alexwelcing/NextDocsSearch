@@ -2,9 +2,9 @@
 
 The producer (S13) supplies, per row, only what rules.yaml cannot know:
 
-    {comparison_id, scores_file, nested, vault_read}
+    {comparison_id, scores_file, nested, proxy_vault_read}
 
-and, for the whole run, `run`, `vault`, `gates_inputs`, `adoption` and `signoff_inputs`. Every
+and, for the whole run, `run`, `proxy_vault`, `gates_inputs`, `adoption` and `signoff_inputs`. Every
 other row field follows from rules.yaml (kind, arms, stratum, metric, unit, tau, tau_floor,
 mde_r00, prediction), from the score file (n_queries, n_clusters, point, raw CI, p_raw, seed_sd,
 n_seeds, scores_sha256) or from the Holm family (holm_m, holm_rank, alpha_adj, adjusted CI,
@@ -138,7 +138,7 @@ def compute_rows(
             'seed_sd': row_stats.seed_sd,
             'n_seeds': row_stats.n_seeds,
             'nested': bool(item.get('nested', True)),
-            'vault_read': bool(item.get('vault_read', False)),
+            'proxy_vault_read': bool(item.get('proxy_vault_read', False)),
             'provisional': ctx.row_provisional(cid),
             'prediction': spec.prediction.source if spec.prediction else None,
             'scores_file': scores_file,
@@ -183,7 +183,8 @@ def build_verdicts(
     """The complete verdicts.json for a run, from its inputs and score files.
 
     `inputs` may be a stored verdicts.json (its numbers and statuses are ignored and recomputed;
-    only each row's comparison_id, scores_file, nested and vault_read are read) or the producer's own input document.
+    only each row's comparison_id, scores_file, nested and proxy_vault_read are read) or the
+    producer's own input document.
     """
     rows, errors = compute_rows(rules, inputs, Path(run_dir))
     outcome = evaluate(rules, {**inputs, 'rows': rows}, history)

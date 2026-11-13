@@ -57,7 +57,7 @@ def test_unsafe_or_unsupported_syntax_does_not_parse(source):
 
 
 def test_reads_cover_every_branch_and_macro():
-    expr = Expr('c1.ci_hi_raw < 0.02 or FIRES(g1) or (PASS(c2) and vault.sign == 1)')
+    expr = Expr('c1.ci_hi_raw < 0.02 or FIRES(g1) or (PASS(c2) and proxy_vault.sign == 1)')
     assert expr.reads(env()) == {
         Read('H1.c1', 'ci_hi_raw'),
         Read('H1.g1', 'point'),
@@ -66,7 +66,7 @@ def test_reads_cover_every_branch_and_macro():
         Read('H1.c2', 'tau'),
         Read('H1.c2', 'ci_lo_adj'),
         Read('H1.c2', 'seed_sd'),
-        Read(None, 'vault.sign'),
+        Read(None, 'proxy_vault.sign'),
     }
 
 
@@ -94,10 +94,10 @@ def test_in_scope_known_reads_only_the_arm_that_applies():
     ('source', 'message'),
     [
         ('c9.point > 0', "unknown name 'c9'"),
-        ('vault > 0', 'is a namespace'),
+        ('proxy_vault > 0', 'is a namespace'),
         ('c1.point.x > 0', 'a row has fields, not paths'),
         ('NOPE(c1)', "unknown function 'NOPE'"),
-        ('PASS(vault.sign)', 'is not a row'),
+        ('PASS(proxy_vault.sign)', 'is not a row'),
         ('FIRES(c1)', 'has no `fires` expression'),
         ('OUT_OF_SCOPE(c1)', 'takes rule ids as strings'),
         ('x.point > 0', '`x` is only defined'),
@@ -115,13 +115,13 @@ GUARD = {'point': -0.03, 'ci_hi_raw': -0.001}
 
 def test_evaluation():
     rows = {'H1.c1': ROW, 'H1.g1': GUARD, 'H1.c2': {**ROW, 'ci_lo_adj': 0.0}}
-    e = env(rows, {'vault': {'sign': 1}})
+    e = env(rows, {'proxy_vault': {'sign': 1}})
     assert Expr('PASS(c1)').evaluate(e) is True
     assert Expr('PASS(c1, c2)').evaluate(e) is False
     assert Expr('PASS([c1, [c1]])').evaluate(e) is True
     assert Expr('FIRES(g1)').evaluate(e) is True
-    assert Expr('vault.sign in (-1, 0)').evaluate(e) is False
-    assert Expr('vault.sign == 1 and not FIRES(g1)').evaluate(e) is False
+    assert Expr('proxy_vault.sign in (-1, 0)').evaluate(e) is False
+    assert Expr('proxy_vault.sign == 1 and not FIRES(g1)').evaluate(e) is False
     assert Expr('min(c1.point, g1.point) < 0').evaluate(e) is True
     assert Expr('abs(g1.point) - 0.03 == 0').evaluate(e) is True
     assert Expr('0 < c1.point < 1').evaluate(e) is True
@@ -130,27 +130,27 @@ def test_evaluation():
 
 
 def test_a_null_read_raises_null_read():
-    e = env({'H1.c1': {**ROW, 'tau': None}}, {'vault': {'sign': None}})
+    e = env({'H1.c1': {**ROW, 'tau': None}}, {'proxy_vault': {'sign': None}})
     with pytest.raises(NullRead) as caught:
         Expr('PASS(c1)').evaluate(e)
     assert caught.value.read == Read('H1.c1', 'tau')
     with pytest.raises(NullRead):
-        Expr('vault.sign == 1').evaluate(e)
+        Expr('proxy_vault.sign == 1').evaluate(e)
     with pytest.raises(NullRead):
         Expr('c2.point > 0').evaluate(e)  # an absent row reads as null
 
 
 def test_types_are_strict():
-    e = env({'H1.c1': ROW}, {'vault': {'sign': 'unavailable', 'read_this_run': True}})
+    e = env({'H1.c1': ROW}, {'proxy_vault': {'sign': 'unavailable', 'read_this_run': True}})
     with pytest.raises(ExprError, match='needs a number'):
-        Expr('vault.sign < 0').evaluate(e)
+        Expr('proxy_vault.sign < 0').evaluate(e)
     with pytest.raises(ExprError, match='needs true/false'):
         Expr('c1.point and True').evaluate(e)
     with pytest.raises(ExprError, match='needs a number'):
-        Expr('vault.read_this_run + 1 > 0').evaluate(e)
+        Expr('proxy_vault.read_this_run + 1 > 0').evaluate(e)
     # true never equals 1, and 'unavailable' is just a value
-    assert Expr('vault.read_this_run == 1').evaluate(e) is False
-    assert Expr("vault.sign == 'unavailable'").evaluate(e) is True
+    assert Expr('proxy_vault.read_this_run == 1').evaluate(e) is False
+    assert Expr("proxy_vault.sign == 'unavailable'").evaluate(e) is True
 
 
 def test_context_names_are_null_when_absent():

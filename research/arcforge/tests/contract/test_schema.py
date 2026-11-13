@@ -92,7 +92,9 @@ def _mutate(doc, change):
         (lambda d: d['rows'][0].__setitem__('arm_a', 'gpt-5'), 'rows/0'),
         (lambda d: d['rows'][0].__setitem__('scores_sha256', 'abc'), 'rows/0'),
         (lambda d: d['rows'][0].__setitem__('extra', 1), 'rows/0'),
-        (lambda d: d['vault'].__setitem__('sign', 2), 'vault/sign'),
+        (lambda d: d['proxy_vault'].__setitem__('sign', 2), 'proxy_vault/sign'),
+        (lambda d: d['proxy_vault'].__setitem__('basis', 'owner'), 'proxy_vault/basis'),
+        (lambda d: d.__setitem__('schema_version', '1.0'), 'schema_version'),
         (lambda d: d.__setitem__('gates_summary', {'I1_pass': True}), 'gates_summary'),
         (
             lambda d: d['hypotheses'][0].__setitem__('in_scope', True),
@@ -131,8 +133,13 @@ def test_the_verdicts_schema_is_strict(run, change, where):
         (lambda d: d['adoption'][0]['arms'][0].pop('control'), 'adoption/0/arms/0'),
         (lambda d: d['fable'].append({'role': 'signoff'}), 'fable/0'),
         (lambda d: d.pop('weirdness'), '(root)'),
+        # Schema 1.1 (A0): no owner sign, no production branch, no owner kappa.
+        (lambda d: d['fable'].append({**FABLE_CALL, 'status': 'owner_signed'}), 'fable/0/status'),
+        (lambda d: d['ship'].__setitem__('production_branch_touched', True), 'ship/production_branch_touched'),
+        (lambda d: d['gates'].__setitem__('I1', {**(d['gates']['I1'] or {}), 'kappa_qw_owner': 0.7}), 'gates/I1'),
+        (lambda d: d.__setitem__('vault', {}), '(root)'),
     ],
-)
+)  # fmt: skip
 def test_the_report_schema_is_strict(run, change, where):
     report, _ = run
     problems = schema.errors(_mutate(report, change))
@@ -144,8 +151,11 @@ def test_the_report_schema_is_strict(run, change, where):
     [
         ('verdicts_doc.rows[].ci_hi_raw', True, ()),
         ('verdicts_doc.rows[].tau', True, ('verdicts_doc.rows[].tau',)),
-        ('verdicts_doc.vault.sign', True, ('verdicts_doc.vault.sign',)),
-        ('verdicts_doc.gates_inputs.I1.kappa_qw_owner', True, ('verdicts_doc.gates_inputs.I1',)),
+        ('verdicts_doc.proxy_vault.sign', True, ('verdicts_doc.proxy_vault.sign',)),
+        ('verdicts_doc.gates_inputs.I1.delta_ci_hi', True, ('verdicts_doc.gates_inputs.I1',)),
+        ('verdicts_doc.gates_inputs.I6.fleiss_kappa', True, ('verdicts_doc.gates_inputs.I6',)),
+        ('verdicts_doc.vault.sign', False, ()),
+        ('verdicts_doc.gates_inputs.I1.kappa_qw_owner', False, ()),
         (
             'verdicts_doc.gates_summary.I1_pass_effective',
             True,
@@ -162,7 +172,30 @@ def test_lookup(path, exists, nullable):
     if exists:
         assert found.nullable_prefixes == nullable
     else:
-        assert found.missing_at == path
+        assert path.startswith(found.missing_at)
+
+
+FABLE_CALL = {
+    'role': 'signoff', 'kind': 'prereg_signoff', 'via': 'orchestrator', 'packet_sha256': '0' * 64,
+    'output_sha256': None, 'agent_session': None, 'model_reported': None, 'attempts': 2,
+    'repair_cycle': 0, 'refusals': [], 'status': 'halted', 'lint_ok': True,
+}  # fmt: skip
+
+
+def test_a_halted_signoff_validates(run):
+    report, _ = run
+    assert schema.errors(_mutate(report, lambda d: d['fable'].append(dict(FABLE_CALL)))) == []
+
+
+def test_the_schema_is_version_1_1():
+    assert SCHEMA['properties']['schema_version'] == {
+        'description': '1.1 = Amendment A0.',
+        'const': '1.1',
+    }
+    text = schema.REPORT_SCHEMA_PATH.read_text(encoding='utf-8')
+    for removed in ('kappa_qw_owner', 'n_owner_pairs', 'owner_overrides_fable', 'owner_checked',
+                    'owner_signed', 'sealed_sha256', 'vault_sealed', 'owner-laptop'):  # fmt: skip
+        assert removed not in text, removed
 
 
 def test_subschema_needs_a_known_definition():

@@ -10,7 +10,7 @@ write-up, you recompute every verdict of the arc from the registered rules alone
   FIRES, row kinds and verdict components, gates_summary, adoption.
 - `inputs/verdicts/<run>.json`: the verdicts file of every run of the realized branch path
   ({{runs}}), BLIND: these fields are stripped: {{stripped}}. Everything the rules read is kept:
-  run, vault, gates_inputs, adoption inputs, signoff inputs, every row's numbers, the in_scope
+  run, proxy_vault, gates_inputs, adoption inputs, signoff inputs, every row's numbers, the in_scope
   flags.
 
 ## Task

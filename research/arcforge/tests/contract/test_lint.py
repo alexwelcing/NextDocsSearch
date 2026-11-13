@@ -41,7 +41,7 @@ def test_the_template_lints_clean():
         'r10K/S-F',
         'r10K/S-C-F',
     ]
-    assert sum(len(v) for v in report.scope.values()) == 139
+    assert sum(len(v) for v in report.scope.values()) == 145
 
 
 def test_frozen_requires_every_mde():
@@ -58,7 +58,7 @@ def test_lint_catches_a_field_the_plan_leaves_null_in_an_in_scope_run(tmp_path):
     plan = replaced(
         PLAN,
         ('    N: {fields: [*after_r00, adoption, *vault_read], rows: [*h5_rows, *h1_rows]}',
-         '    N: {fields: [*after_r00, adoption, vault.read_index], rows: [*h5_rows, H1.c1, H1.c2, H1.c4, H1.g1]}'),
+         '    N: {fields: [*after_r00, adoption, proxy_vault.read_index], rows: [*h5_rows, H1.c1, H1.c2, H1.c4, H1.g1]}'),
     )  # fmt: skip
     report = lint(plan_path=write(tmp_path, 'plan.yaml', plan))
     found = {
@@ -68,9 +68,9 @@ def test_lint_catches_a_field_the_plan_leaves_null_in_an_in_scope_run(tmp_path):
         r == 'H1' and (run, b) == ('r06', 'N') and 'row H1.c3' in m for r, run, b, m in found
     )
     assert any(
-        r == 'H1' and (run, b) == ('r06', 'N') and 'vault.sign' in m for r, run, b, m in found
+        r == 'H1' and (run, b) == ('r06', 'N') and 'proxy_vault.sign' in m for r, run, b, m in found
     )
-    assert any(r == 'vault.read' and run == 'r06' for r, run, _, _ in found)
+    assert any(r == 'proxy_vault.read' and run == 'r06' for r, run, _, _ in found)
     # Every other (rule, run, branch) is still computable.
     assert {(f.run, f.branch) for f in report.errors} == {('r06', 'N')}
 
@@ -125,10 +125,13 @@ def test_lint_catches_unreachable_and_dead_clauses(tmp_path):
 def test_lint_checks_the_review3_fixes(tmp_path):
     rules = replaced(
         RULES,
-        ("      - [FALSIFIED, 'c1.ci_hi_raw < 0.05']", "      - [FALSIFIED, 'c1.ci_hi_raw < 0']"),
         (
-            'vault_read_budget: {N: 3, N-F: 3, S-F: 2, S-C: 3, S-C-F: 3}',
-            'vault_read_budget: {N: 3, N-F: 3, S-F: 3, S-C: 3, S-C-F: 3}',
+            "      - [FALSIFIED, 'c1.ci_hi_raw < 0.05 and gates_summary.I6_pass']",
+            "      - [FALSIFIED, 'c1.ci_hi_raw < 0 and gates_summary.I6_pass']",
+        ),
+        (
+            'proxy_vault_read_budget: {N: 3, N-F: 3, S-F: 2, S-C: 3, S-C-F: 3}',
+            'proxy_vault_read_budget: {N: 3, N-F: 3, S-F: 3, S-C: 3, S-C-F: 3}',
         ),
     )
     report = lint(write(tmp_path, 'rules.yaml', rules))
@@ -138,8 +141,8 @@ def test_lint_checks_the_review3_fixes(tmp_path):
 def test_lint_caps_vault_reads(tmp_path):
     rules = replaced(
         RULES,
-        ('      - {runs: [r10K], branches: [K]}\n    reads: [vault.sign, vault.read_index]',
-         '      - {runs: [r10K], branches: [K]}\n      - {runs: [r09], branches: [N]}\n    reads: [vault.sign, vault.read_index]'),
+        ('      - {runs: [r10K], branches: [K]}\n    reads: [proxy_vault.sign, proxy_vault.read_index, proxy_vault.basis]',
+         '      - {runs: [r10K], branches: [K]}\n      - {runs: [r09], branches: [N]}\n    reads: [proxy_vault.sign, proxy_vault.read_index, proxy_vault.basis]'),
     )  # fmt: skip
     report = lint(write(tmp_path, 'rules.yaml', rules))
     assert any(f.code == 'vault-budget' and 'path N:' in f.message for f in report.errors)
@@ -193,7 +196,7 @@ def test_the_lint_report_is_json(tmp_path):
     report = lint()
     data = report.to_json()
     assert data['schema'] == 'arc-lint/1' and data['ok'] is True and data['frozen'] is False
-    assert data['rules']['sha256'] == report.rules_sha256 and len(data['scope']) == 22
+    assert data['rules']['sha256'] == report.rules_sha256 and len(data['scope']) == 23
 
 
 def test_the_lint_report_validates_against_arc_lint_1(tmp_path):
@@ -203,3 +206,172 @@ def test_the_lint_report_validates_against_arc_lint_1(tmp_path):
     failing = lint(write(tmp_path, 'rules.yaml', RULES.replace('schema: arc-rules/1', 'schema: x')))
     for report in (lint(), lint(frozen=True), failing):
         assert schema.errors(report.to_json(), lint_schema) == []
+
+
+# ---- Amendment A0 lint additions ------------------------------------------------------------
+
+
+def test_lint_catches_an_owner_field_read(tmp_path):
+    rules = replaced(
+        RULES,
+        (
+            "      I1c: 'gates_inputs.I1.min_kendall_ci_lo >= 0.6'",
+            "      I1c: 'gates_inputs.I1.min_kendall_ci_lo >= 0.6 and gates_inputs.I1.kappa_qw_owner >= 0.6'",
+        ),
+    )
+    report = lint(write(tmp_path, 'rules.yaml', rules))
+    assert any(f.code == 'owner-field' and f.rule == 'I1' for f in report.errors)
+
+
+def test_lint_catches_an_owner_sourced_row(tmp_path):
+    rules = replaced(
+        RULES,
+        (
+            "      k2: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: D.coinage+entity,",
+            "      k2: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: B.owner_authored,",
+        ),
+    )
+    report = lint(write(tmp_path, 'rules.yaml', rules))
+    assert any(f.code == 'owner-field' and 'K1.k2' in f.message for f in report.errors)
+
+
+def test_lint_catches_an_owner_field_left_in_the_schema(tmp_path):
+    import json
+
+    from arcforge.contract import schema as report_schema
+
+    data = json.loads(report_schema.REPORT_SCHEMA_PATH.read_text(encoding='utf-8'))
+    collisions = data['$defs']['Collisions']['properties']
+    collisions['owner_checked'] = {'$ref': '#/$defs/count'}
+    data['$defs']['FableCall']['properties']['status']['enum'].append('owner_signed')
+    path = write(tmp_path, 'schema.json', json.dumps(data))
+    report = lint(schema_path=path)
+    messages = [f.message for f in report.errors if f.code == 'owner-field']
+    assert any("'owner_checked'" in m for m in messages)
+    assert any("'owner_signed'" in m for m in messages)
+
+
+def test_lint_catches_a_per_query_proxy_vault_read_before_r10(tmp_path):
+    rules = replaced(
+        RULES,
+        (
+            "      - [FIRED, 'FIRES(c1) and proxy_vault.sign in (-1, 0)']",
+            "      - [FIRED, 'FIRES(c1) and proxy_vault.sign in (-1, 0) and proxy_vault.per_query']",
+        ),
+    )
+    report = lint(write(tmp_path, 'rules.yaml', rules))
+    assert any(
+        f.code == 'proxy-vault-per-query' and f.rule == 'FUT' and 'r04/N' in f.message
+        for f in report.errors
+    )
+
+
+def test_lint_catches_a_row_on_the_vault_set_before_r10(tmp_path):
+    rules = replaced(
+        RULES,
+        (
+            "      c1: {kind: guard, arm_a: hyb(champ), arm_b: B2, stratum: AB, metric: mrr@10, unit: fraction,\n           fires: 'x.point < -0.02 and x.ci_hi_raw < 0'}\n    outcomes:\n      # 'unavailable'",
+            "      c1: {kind: guard, arm_a: hyb(champ), arm_b: B2, stratum: C_vault, metric: mrr@10, unit: fraction,\n           fires: 'x.point < -0.02 and x.ci_hi_raw < 0'}\n    outcomes:\n      # 'unavailable'",
+        ),
+    )
+    report = lint(write(tmp_path, 'rules.yaml', rules))
+    assert any(f.code == 'proxy-vault-per-query' and 'FUT.c1' in f.message for f in report.errors)
+
+
+def test_lint_catches_production_traffic_in_a_registered_row(tmp_path):
+    rules = replaced(
+        RULES,
+        (
+            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: mrr@10, unit: fraction,",
+            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: shadow_ctr, unit: fraction,",
+        ),
+    )
+    report = lint(write(tmp_path, 'rules.yaml', rules))
+    assert any(f.code == 'production-traffic' and 'K1.k1' in f.message for f in report.errors)
+
+
+def test_lint_catches_a_row_on_post_s0_alone(tmp_path):
+    rules = replaced(
+        RULES,
+        (
+            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: AB, metric: mrr@10, unit: fraction,",
+            "      k1: {kind: superiority, arm_a: B2, arm_b: B2w, stratum: POST_S0, metric: mrr@10, unit: fraction,",
+        ),
+    )
+    report = lint(write(tmp_path, 'rules.yaml', rules))
+    assert any(f.code == 'post-s0-alone' and 'K1.k1' in f.message for f in report.errors)
+
+
+def test_lint_requires_i6_in_h3(tmp_path):
+    rules = replaced(
+        RULES,
+        (
+            "      - [SUPPORTED, 'PASS(c1) and PASS(c2) and gates_summary.I6_pass']",
+            "      - [SUPPORTED, 'PASS(c1) and PASS(c2)']",
+        ),
+    )
+    report = lint(write(tmp_path, 'rules.yaml', rules))
+    assert 'a0-h3-i6' in codes(report)
+
+
+class FakeStage:
+    def __init__(self, name, inputs=(), outputs=(), **extra):
+        self.name, self.inputs, self.outputs = name, tuple(inputs), tuple(outputs)
+        for key, value in extra.items():
+            setattr(self, key, value)
+
+
+def m2_stages(**overrides):
+    """The R00 DAG's reader-relevant edges (INTERFACES-M2 B), as a fake registry."""
+    stages = {
+        'S1': FakeStage('S1', ['S0'], ['graph.json', 'chunks.jsonl.gz']),
+        'S2p': FakeStage('S2p', ['S1'], ['person_map.json']),
+        'P1': FakeStage('P1', ['S1'], ['c_open.jsonl', 'c_frontier.jsonl', 'panel_diagnostics.json']),
+        'S5': FakeStage('S5', ['S1', 'S2p'], ['train_queries.raw.jsonl.gz']),
+        'S6b': FakeStage('S6b', ['S1', 'P1'], ['bench_queries.jsonl', 'qrels_fixed.jsonl', 'fewshot.json']),
+        'S7': FakeStage('S7', ['S5', 'S6b'], ['train_queries.jsonl.gz', 'bench_query_emb.safetensors'],
+                        reader_outputs=('bench_query_emb.safetensors',)),
+        'S8': FakeStage('S8', ['S7'], ['init_rows.safetensors'],
+                        consumes={'S7': ('train_queries.jsonl.gz',)}),
+        'S9': FakeStage('S9', ['S2p', 'S7', 'S8'], ['students.tar'],
+                        consumes={'S7': ('train_queries.jsonl.gz',)}),
+        'S12a': FakeStage('S12a', ['S6b', 'S7'], ['rankings.jsonl.gz']),
+    }  # fmt: skip
+    for name, stage in overrides.items():
+        stages[name] = stage
+    return stages
+
+
+def test_reader_isolation_passes_the_registered_m2_edges():
+    report = lint(stages=m2_stages())
+    assert report.ok, [str(f) for f in report.errors]
+
+
+def test_lint_catches_a_reader_output_in_a_training_input():
+    # S5 reads the bench (which carries C_open) directly: a training input.
+    report = lint(stages=m2_stages(S5=FakeStage('S5', ['S1', 'S2p', 'S6b'], ['train_queries.raw.jsonl.gz'])))
+    assert any(f.code == 'reader-in-training' and 'S5' in f.message for f in report.errors)
+    # S8 reads every S7 output, the bench-query embeddings included.
+    report = lint(stages=m2_stages(S8=FakeStage('S8', ['S7'], ['init_rows.safetensors'])))
+    assert any(f.code == 'reader-in-training' and 'S8' in f.message and 'bench_query_emb' in f.message
+               for f in report.errors)  # fmt: skip
+    # S9 reads P1 itself.
+    report = lint(stages=m2_stages(S9=FakeStage('S9', ['S2p', 'S8', 'P1'], ['students.tar'])))
+    assert any(f.code == 'reader-in-training' and 'reads P1/' in f.message and 'c_open.jsonl' in f.message
+               for f in report.errors)  # fmt: skip
+
+
+def test_lint_catches_bad_isolation_declarations():
+    report = lint(stages=m2_stages(S7=FakeStage(
+        'S7', ['S5', 'S6b'], ['train_queries.jsonl.gz'], reader_outputs=('nope.json',),
+        consumes={'S4': ('x',)},
+    )))  # fmt: skip
+    assert {'reader-outputs-unknown', 'consumes-unknown'} <= codes(report)
+
+
+def test_the_live_registry_passes_reader_isolation():
+    from arcforge.contract import isolation
+
+    registry = isolation.live_registry()
+    assert registry is not None
+    assert isolation.check(registry) == []

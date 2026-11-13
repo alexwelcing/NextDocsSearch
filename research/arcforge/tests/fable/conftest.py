@@ -39,7 +39,8 @@ def pairs(tmp_path: Path) -> Path:
                 'record_id': f'record-{q}-{c}',
                 'card': {'title': f'Record {q}.{c}', 'description': 'A synthetic card.'},
                 'chunks': ['First chunk.', 'Second chunk.'],
-                'entity_card': None if c else 'Adaeze Nwosu (radiologist) [person:adaeze-1]',
+                'entity_card': None if c else 'Adaeze Nwosu (radiologist) [local:adaeze-1]',
+                'entity_card_scope': 'record-local',
             }
             for c in range(2)
         ]
@@ -76,6 +77,12 @@ def signoff_files(tmp_path: Path, arc) -> dict[str, Path]:
     card.write_text('# ARC-Bench v1\n\nvault sealed sha256: ' + '0' * 64 + '\n')
     from arcforge.contract.schema import REPORT_SCHEMA_PATH
 
+    records = {}
+    for name in ('amendment_a0', 'witness', 'model_choice', 'contamination', 'provenance',
+                 'panel', 'quarantine'):  # fmt: skip
+        path = tmp_path / f'{name}.json'
+        path.write_text(json.dumps({'schema': f'synthetic-{name}', 'synthetic': True}))
+        records[name] = path
     return {
         'prereg': prereg,
         'rules': rules_path,
@@ -84,6 +91,7 @@ def signoff_files(tmp_path: Path, arc) -> dict[str, Path]:
         'report': r00 / 'report.json',
         'verdicts': r00 / 'verdicts.json',
         'bench_card': card,
+        **records,
     }
 
 

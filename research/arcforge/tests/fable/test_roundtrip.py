@@ -125,7 +125,8 @@ def test_a_valid_output_is_accepted(pairs, rubric, root, agent):
     assert record == {
         'role': 'gold_audit_1', 'kind': 'gold_audit', 'via': 'orchestrator', 'packet_sha256': packet.sha256,
         'output_sha256': packer.sha256_bytes(accepted.read_bytes()), 'agent_session': 'sess-1',
-        'model_reported': FABLE, 'attempts': 1, 'status': 'ok', 'lint_ok': None,
+        'model_reported': FABLE, 'attempts': 1, 'repair_cycle': 0, 'refusals': [], 'status': 'ok',
+        'lint_ok': None,
     }  # fmt: skip
     assert ledger.accepted_output(packet.root)['result']['grades'][0]['grade'] == 2
     with pytest.raises(packer.PacketError, match='already final'):
@@ -165,8 +166,10 @@ def test_two_invalid_outputs_fail_closed(pairs, rubric, root, agent):
     assert_fable_call(record)
     assert (record['status'], record['output_sha256'], record['attempts']) == ('failed', None, 2)
     assert ledger.accepted_output(packet.root) is None
-    with pytest.raises(packer.PacketError, match='only the PREREG sign-off'):
-        ledger.owner_sign(packet.root, 'no')
+    diff = packet.root.parent / 'fix.diff'
+    diff.write_text('--- a\n+++ b\n')
+    with pytest.raises(packer.PacketError, match='only a refused PREREG sign-off'):
+        ledger.repair(packet.root, diff, {'rules': diff})
 
 
 def test_a_missing_output_is_invalid(pairs, rubric, root):
@@ -210,14 +213,20 @@ def test_the_sign_off_round_trip(signoff_files, root, agent):
         'inputs/r00/verdicts.json',
         'inputs/bench-card.md',
         'inputs/rules.yaml',
+        # the A0 records
+        'inputs/PREREG-A0.json',
+        'inputs/witness-index.json',
+        'inputs/model-choice-a0.json',
+        'inputs/contamination.json',
+        'inputs/provenance.json',
+        'inputs/panel-summary.json',
+        'inputs/quarantine.json',
     }
-    agent.write(
-        packet.workdir(1),
-        'prereg_signoff',
-        status='refused',
-        reason='lint failed',
-        result=agent.signature(ok=False),
-    )
+    instructions = (packet.workdir(1) / 'INSTRUCTIONS.md').read_text()
+    assert 'This is the first submission.' in instructions and 'owner may sign' not in instructions
+    assert packet.manifest['repair_cycle'] == 0
+    # An invalid output is still retried once in a fresh agent.
+    (packet.workdir(1) / 'output.json').write_text('{}')
     assert ledger.check(packet.root, session='s1', model=FABLE).decision == 'retry'
     agent.write(packet.workdir(2), 'prereg_signoff', agent.signature())
     accepted = ledger.check(packet.root, session='s2', model=FABLE)
@@ -230,6 +239,7 @@ def test_the_sign_off_round_trip(signoff_files, root, agent):
         'ok',
         True,
     )
+    assert (record['repair_cycle'], record['refusals']) == (0, [])
 
 
 def test_a_signature_must_pass_every_check(signoff_files, root, agent):
@@ -245,27 +255,101 @@ def test_a_signature_must_pass_every_check(signoff_files, root, agent):
     assert closed.status == 'failed' and any('appears twice' in e for e in closed.errors)
 
 
-def test_two_refusals_fail_closed_and_the_owner_may_sign(signoff_files, root, agent):
-    packet = packer.pack_signoff(**signoff_files, root=root)
-    with pytest.raises(packer.PacketError, match='only after the sign-off failed closed'):
-        ledger.owner_sign(packet.root, 'too early')
-    for attempt in (1, 2):
-        agent.write(
-            packet.workdir(attempt),
-            'prereg_signoff',
-            status='refused',
-            reason='I1 is not settled',
-            result=None,
-        )
-        result = ledger.check(packet.root, session=f's{attempt}', model=FABLE)
-    assert (result.decision, result.status) == ('failed_closed', 'refused')
-    record = ledger.owner_sign(
-        packet.root, 'Fable refused twice over I1; the owner signs as registered.'
+def test_the_a0_signoff_checks_match_the_schema():
+    from arcforge.fable.kinds import KINDS, SIGNOFF_CHECKS
+
+    schema_doc = KINDS['prereg_signoff'].schema()
+    checks = schema_doc['$defs']['Result']['properties']['checks']
+    assert tuple(checks['items']['properties']['id']['enum']) == SIGNOFF_CHECKS
+    assert checks['minItems'] == checks['maxItems'] == len(SIGNOFF_CHECKS) == 19
+    assert 'vault_seal_published_no_key_material' not in SIGNOFF_CHECKS
+    assert not hasattr(ledger, 'owner_sign')
+
+
+def refuse(packet, agent, attempt=1, why='lint failed'):
+    agent.write(
+        packet.workdir(attempt),
+        'prereg_signoff',
+        status='refused',
+        reason=why,
+        result=agent.signature(ok=False),
     )
+    return ledger.check(packet.root, session=f'refuse-{packet.sha256[:6]}', model=FABLE)
+
+
+def test_repair_or_halt(signoff_files, root, agent, tmp_path):
+    """A0: a refusal is final for its packet; repair at most twice; the third refusal halts."""
+    first = packer.pack_signoff(**signoff_files, root=root)
+    result = refuse(first, agent)
+    assert (result.decision, result.status) == ('failed_closed', 'refused')  # no fresh-agent retry
+    assert not first.workdir(2).exists()
+    refusal_1 = ledger.refusal_bytes(first.root)
+    assert json.loads(refusal_1)['reason'] == 'lint failed'
+
+    diff = tmp_path / 'fix-1.diff'
+    diff.write_text('--- a/rules.yaml\n+++ b/rules.yaml\n@@ fixed the lint @@\n')
+    fixed_rules = tmp_path / 'rules-fixed.yaml'
+    fixed_rules.write_text(signoff_files['rules'].read_text() + '# repaired\n')
+    empty = tmp_path / 'empty.diff'
+    empty.write_text('')
+    with pytest.raises(packer.PacketError, match='the diff is empty'):
+        ledger.repair(first.root, empty, {'rules': fixed_rules}, root=root)
+    with pytest.raises(packer.PacketError, match='nothing was repaired'):
+        ledger.repair(first.root, diff, {'rules': signoff_files['rules']}, root=root)
+
+    second = ledger.repair(first.root, diff, {'rules': fixed_rules}, root=root)
+    assert second.manifest['repair_cycle'] == 1
+    work = second.workdir(1)
+    assert (work / 'inputs' / 'repair' / 'cycle-0.refusal.json').read_bytes() == refusal_1
+    assert (work / 'inputs' / 'repair' / 'cycle-1.diff').read_text() == diff.read_text()
+    assert (work / 'inputs' / 'rules.yaml').read_text().endswith('# repaired\n')
+    assert 'repaired resubmission 1 of 2' in (work / 'INSTRUCTIONS.md').read_text()
+    assert refuse(second, agent, why='still wrong').status == 'refused'
+
+    diff_2 = tmp_path / 'fix-2.diff'
+    diff_2.write_text('--- a/PREREG.md\n+++ b/PREREG.md\n')
+    fixed_prereg = tmp_path / 'PREREG-fixed.md'
+    fixed_prereg.write_text('# PREREG\n\nrepaired twice\n')
+    third = ledger.repair(second.root, diff_2, {'prereg': fixed_prereg}, root=root)
+    assert third.manifest['repair_cycle'] == 2
+    names = files_in(third.workdir(1))
+    assert {'inputs/repair/cycle-0.refusal.json', 'inputs/repair/cycle-1.refusal.json',
+            'inputs/repair/cycle-1.diff', 'inputs/repair/cycle-2.diff'} <= names  # fmt: skip
+    assert 'halts the arc at R00' in (third.workdir(1) / 'INSTRUCTIONS.md').read_text()
+
+    halted = refuse(third, agent, why='third time')
+    assert (halted.decision, halted.status) == ('failed_closed', 'halted')
+    record = ledger.record(third.root)
     assert_fable_call(record)
-    assert record['status'] == 'owner_signed' and record['output_sha256'] is None
-    with pytest.raises(packer.PacketError, match='only after'):
-        ledger.owner_sign(packet.root, 'again')
+    assert record['status'] == 'halted' and record['repair_cycle'] == 2
+    assert len(record['refusals']) == 3  # every refusal, published verbatim
+    with pytest.raises(packer.PacketError, match='refused three times'):
+        ledger.repair(third.root, diff_2, {'prereg': signoff_files['prereg']}, root=root)
+
+
+def test_a_repair_can_still_be_signed(signoff_files, root, agent, tmp_path):
+    first = packer.pack_signoff(**signoff_files, root=root)
+    refuse(first, agent)
+    diff = tmp_path / 'fix.diff'
+    diff.write_text('fix\n')
+    lint_fixed = tmp_path / 'lint-fixed.json'
+    lint_fixed.write_text(signoff_files['lint'].read_text().replace('"frozen": true', '"frozen":true'))
+    second = ledger.repair(first.root, diff, {'lint': lint_fixed}, root=root)
+    agent.write(second.workdir(1), 'prereg_signoff', agent.signature())
+    assert ledger.check(second.root, session='s', model=FABLE).decision == 'accepted'
+    record = ledger.record(second.root)
+    assert (record['status'], record['repair_cycle'], len(record['refusals'])) == ('ok', 1, 1)
+
+
+def test_only_the_signoff_is_repaired(pairs, rubric, root, agent, tmp_path):
+    packet = packer.pack_gold_audit(pairs, rubric, shape=(3, 2), root=root)
+    for attempt in (1, 2):
+        agent.write(packet.workdir(attempt), 'gold_audit', status='refused', reason='no')
+        ledger.check(packet.root, session=f's{attempt}', model=FABLE)
+    diff = tmp_path / 'd.diff'
+    diff.write_text('x\n')
+    with pytest.raises(packer.PacketError, match='only a refused PREREG sign-off'):
+        ledger.repair(packet.root, diff, {})
 
 
 def test_the_sign_off_reads_r00(signoff_files, root, arc):
